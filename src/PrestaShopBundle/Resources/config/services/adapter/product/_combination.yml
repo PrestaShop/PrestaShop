@@ -59,7 +59,7 @@ services:
   prestashop.adapter.product.combination.query_handler.get_editable_combinations_list_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.core.grid.query_builder.product_combination'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
@@ -113,6 +113,8 @@ services:
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
 
   prestashop.adapter.product.combination.update.default_combination_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater

@@ -101,14 +101,14 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $combination->default_on = $isDefault;
         $combination->id_shop_list = [];
 
-        $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
+        $this->addObjectModel($combination, CannotAddCombinationException::class);
+//        $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
 
         return $combination;
     }
 
     /**
-     * @todo: This is for generating combination when it already exists in other shop. (so it doesnt create additional one with different id)
-     *        Also maybe this should be left internally in "create" method?
+     * Copies combination information from product_attribute table into product_attribute_shop for a dedicated shop
      */
     public function addToShop(CombinationId $combinationId, ShopId $shopId): void
     {
@@ -119,14 +119,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             CombinationNotFoundException::class
         );
 
-        $combination = new Combination(null, null, $shopId->getValue());
-        $combination->force_id = true;
-        $combination->id = $combinationFromOtherShop->id;
-        $combination->id_product = $combinationFromOtherShop->id_product;
-        //@todo: implement default combination handling
-
-        //@todo: dedicated exception and/or code
-        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CombinationException::class);
+        $this->updateObjectModelForShops($combinationFromOtherShop, [$shopId->getValue()], CombinationException::class);
     }
 
     /**

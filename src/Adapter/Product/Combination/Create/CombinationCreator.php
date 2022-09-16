@@ -31,9 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -71,21 +74,37 @@ class CombinationCreator
     private $combinationMultiShopRepository;
 
     /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
+     * @var StockAvailableMultiShopRepository
+     */
+    private $stockAvailableMultiShopRepository;
+
+    /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
      * @param CombinationMultiShopRepository $combinationMultiShopRepository
      * @param ProductRepository $productRepository
+     * @param StockAvailableRepository $stockAvailableRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationRepository $combinationRepository,
         CombinationMultiShopRepository $combinationMultiShopRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        StockAvailableRepository $stockAvailableRepository,
+        StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
     ) {
         $this->combinationGenerator = $combinationGenerator;
         $this->combinationRepository = $combinationRepository;
         $this->combinationMultiShopRepository = $combinationMultiShopRepository;
         $this->productRepository = $productRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
     }
 
     /**
@@ -146,13 +165,10 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $alreadyHasCombinations = $hasDefault = $this->combinationMultiShopRepository->findDefaultCombination(
-            $productId,
-            ShopConstraint::shop($shopId->getValue())
-        );
+        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombination($productId);
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            // Product already has combinations so we need to filter existing ones
+            // Product already has combinations, so we need to filter existing ones
             if ($alreadyHasCombinations) {
                 $attributeIds = array_values($generatedCombination);
                 $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
@@ -163,6 +179,12 @@ class CombinationCreator
 
                 if ($matchingCombinationId && !$associatedWithShop) {
                     $this->combinationMultiShopRepository->addToShop($matchingCombinationId, $shopId);
+                    $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
+                    $this->stockAvailableMultiShopRepository->addToShop(
+                        new StockId((int)$combinationGenericStock->id),
+                        $shopId
+                    );
+
                     continue;
                 }
             }

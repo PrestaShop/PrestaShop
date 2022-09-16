@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -99,6 +100,16 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             Shop::CONTEXT_SHOP,
             SharedStorage::getStorage()->get($shopReference)
         );
+    }
+
+    /**
+     * @Given multistore feature is enabled
+     */
+    public function enableMultistoreFeature(): void
+    {
+        /** @var FeatureInterface $multistoreFeature */
+        $multistoreFeature = $this->getContainer()->get('prestashop.adapter.multistore_feature');
+        $multistoreFeature->enable();
     }
 
     /**
