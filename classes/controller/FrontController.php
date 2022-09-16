@@ -1468,11 +1468,7 @@ class FrontControllerCore extends Controller
             }
 
             foreach ($assign_array as $assign_key => $assign_value) {
-                if ($this->ssl) {
-                    $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
-                } else {
-                    $urls[$assign_key] = $assign_value;
-                }
+                $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
             }
 
             $pages = [];
