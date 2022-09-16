@@ -278,7 +278,17 @@ export default class CombinationsListRenderer {
     const $finalPricePreview = $finalPrice.siblings(CombinationsMap.list.finalPricePreview);
     let combinationPrice = productPrice.plus(priceImpactTaxExcluded);
 
-    const ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    const combinationEcoTax = $(CombinationsMap.list.ecoTax, $row).val();
+
+    let ecoTax;
+
+    if (combinationEcoTax !== undefined) {
+      ecoTax = combinationEcoTax > 0
+        ? new BigNumber(combinationEcoTax.toString())
+        : this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    } else {
+      ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    }
 
     if (!ecoTax.isNaN()) {
       combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));

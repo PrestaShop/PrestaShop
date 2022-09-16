@@ -37,6 +37,7 @@ use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -126,6 +127,11 @@ class CombinationItemType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
                 'currency' => $this->defaultCurrency->iso_code,
+            ])
+            ->add('eco_tax', HiddenType::class, [
+                'attr' => [
+                    'class' => 'combination-eco-tax',
+                ],
             ])
             ->add('final_price_te', TextPreviewType::class, [
                 'attr' => [
