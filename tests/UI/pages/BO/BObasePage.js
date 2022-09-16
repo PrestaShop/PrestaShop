@@ -28,6 +28,7 @@ class BOBasePage extends CommonPage {
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
     this.userProfileFirstname = '.employee-wrapper-avatar .employee_profile';
+    this.userProfileAvatar = '.employee-avatar img';
     this.userProfileYourProfileLinkNonMigratedPages = '.employee-wrapper-profile > a.admin-link';
     this.userProfileYourProfileLink = '.employee-link.profile-link';
     this.userProfileLogoutLink = 'a#header_logout';
@@ -311,19 +312,18 @@ class BOBasePage extends CommonPage {
   }
 
   /**
-   * Returns the firstname of the current employee from the dropdown
+   * Returns the URL of the avatar for the current employee from the dropdown
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getFirstname(page) {
+  async getCurrentEmployeeAvatar(page) {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
       await page.click(this.userProfileIconNonMigratedPages);
     }
-    await this.waitForSelectorAndClick(page, this.userProfileFirstname);
 
-    return page.textContent(this.userProfileFirstname);
+    return page.getAttribute(this.userProfileAvatar, 'src');
   }
 
   /**

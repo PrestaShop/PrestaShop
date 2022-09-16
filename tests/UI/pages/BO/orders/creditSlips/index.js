@@ -15,6 +15,7 @@ class CreditSlips extends BOBasePage {
     super();
 
     this.pageTitle = 'Credit Slips •';
+    this.pageTitleFR = 'Avoirs •';
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
     this.successfulUpdateMessage = 'Update successful';
 

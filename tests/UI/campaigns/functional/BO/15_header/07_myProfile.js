@@ -9,11 +9,13 @@ const files = require('@utils/files');
 // Import BO commons tests
 const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/advancedParameters/createDeleteEmployee');
 const {setPermissions} = require('@commonTests/BO/advancedParameters/setPermissions');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const loginPage = require('@pages/BO/login/index');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products/index');
+const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const myProfilePage = require('@pages/BO/advancedParameters/team/myProfile');
 
@@ -77,7 +79,7 @@ describe('BO - My profile', async () => {
     });
 
     it('should go to \'Your profile\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await dashboardPage.goToMyProfile(page);
 
@@ -90,7 +92,7 @@ describe('BO - My profile', async () => {
 
   describe('Edit the profile', async () => {
     it('should update firstname and lastname with invalid values and check error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateProfile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidFirstNameAndLastName', baseContext);
 
       employeeData.firstName = 'Hello222';
       employeeData.lastName = 'World333';
@@ -108,7 +110,7 @@ describe('BO - My profile', async () => {
     });
 
     it('should update firstname with valid value and lastname with invalid value and check error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateProfile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkValidFirstNameAndInvalidLastName', baseContext);
 
       employeeData.firstName = 'Hello man';
 
@@ -125,7 +127,7 @@ describe('BO - My profile', async () => {
     });
 
     it('should update firstname and lastname with valid values', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateProfile', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkValidFirstNameAndLastName', baseContext);
 
       employeeData.firstName = 'Hello';
       employeeData.lastName = 'World';
@@ -147,6 +149,7 @@ describe('BO - My profile', async () => {
     });
 
     it('should upload an invalid format image and check error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvalidFormatImage', baseContext);
       await files.createSVGFile('.', 'image.svg');
 
       employeeData.avatarFile = 'image.svg';
@@ -156,10 +159,12 @@ describe('BO - My profile', async () => {
       const textResult = await myProfilePage.getAlertError(page);
       await expect(textResult).to.equal(myProfilePage.errorInvalidFormatImageMessage);
 
+      // Delete created file
       await files.deleteFile('image.svg');
     });
 
     it('should upload a valid format image', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkValidFormatImage', baseContext);
       await files.generateImage('image.jpg');
 
       employeeData.avatarFile = 'image.jpg';
@@ -169,20 +174,42 @@ describe('BO - My profile', async () => {
       const textResult = await myProfilePage.getAlertSuccess(page);
       await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
 
+      // Delete created file
       await files.deleteFile('image.jpg');
+      // Reset value
       employeeData.avatarFile = null;
     });
-  });
 
-  /*
-  describe('Edit the profile with valid values', async() => {
-    it('should go to \'Your profile\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfile', baseContext);
+    it('should enable Gravatar', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGravatar', baseContext);
+      employeeData.enableGravatar = true;
 
-      await dashboardPage.goToMyProfile(page);
+      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
-      const pageTitle = await myProfilePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myProfilePage.pageTitleEdit);
+      const textResult = await myProfilePage.getAlertSuccess(page);
+      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+
+      const isChecked = await myProfilePage.isChecked(page, myProfilePage.enableGravatarInput(1));
+      await expect(isChecked).to.be.true;
+
+      const avatarURL = await myProfilePage.getCurrentEmployeeAvatar(page);
+      await expect(avatarURL).to.contains('https://www.gravatar.com/avatar/');
+
+      // Reset value
+      employeeData.enableGravatar = false;
+    });
+
+    it('should update all others fields', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'updateAllOthersFields', baseContext);
+      employeeData.email = 'demo@prestashop.com';
+      employeeData.password = 'prestashop_demo';
+      employeeData.language = 'Français (French)';
+      employeeData.defaultPage = 'Credit Slips';
+
+      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+
+      const textResult = await myProfilePage.getAlertSuccess(page);
+      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
     });
 
     it('should logout from BO', async function () {
@@ -190,23 +217,29 @@ describe('BO - My profile', async () => {
     });
 
     it('should check the password and the default page', async function() {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordAndDefaultPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordAndDefaultPageAndLanguage', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
-      await loginPage.login(page, editEmployeeData.email, editEmployeeData.password);
+      await loginPage.login(page, employeeData.email, employeeData.password);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const pageTitle = await creditSlipsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(creditSlipsPage.pageTitleFR);
     });
 
-    it('should check the firstname', async function() {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkFirstname', baseContext);
+    it('should reset the language', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetLanguage', baseContext);
 
-      const firstname = await ordersPage.getFirstname(page);
-      await expect(firstname).to.contains(editEmployeeData.firstName);
+      await dashboardPage.goToMyProfile(page);
+
+      employeeData.language = 'English (English)';
+
+      await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
+
+      const textResult = await myProfilePage.getAlertSuccess(page);
+      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
     });
   });
-  */
+
   describe('Delete the account and check error', async () => {
     it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTeamPage', baseContext);
