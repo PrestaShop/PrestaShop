@@ -220,6 +220,17 @@ class BOBasePage extends CommonPage {
   }
 
   /**
+   * Click on link from Quick access dropdown toggle and get the opened Page
+   * @param page {Page} Browser tab
+   * @param linkId {number} Page ID
+   * @returns {Promise<Page>}
+   */
+  async quickAccessToPageNewWindow(page, linkId) {
+    await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
+    return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkId));
+  }
+
+  /**
    * Remove link from quick access
    * @param page {Page} Browser tab
    * @returns {Promise<string>}

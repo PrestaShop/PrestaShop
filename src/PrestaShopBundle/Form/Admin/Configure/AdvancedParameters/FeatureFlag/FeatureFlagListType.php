@@ -62,6 +62,7 @@ class FeatureFlagListType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => false,
+                'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig',
             ])
         ;
     }

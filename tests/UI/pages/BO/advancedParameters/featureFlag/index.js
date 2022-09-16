@@ -18,9 +18,11 @@ class FeatureFlag extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
-    this.newProductPageSwitchButton = toggle => `#feature_flag_stable_feature_flags_product_page_v2_enabled_${toggle}`;
-    this.submitButton = '#feature_flag_stable_submit';
+    this.newProductPageSwitchButton = toggle => `#feature_flag_beta_feature_flags_product_page_v2_enabled_${toggle}`;
+    this.submitButton = '#feature_flag_beta_submit';
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
+    this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';
+    this.enableExperimentalfeatureButton = `${this.modalSubmitFeatureFlag} button.btn-confirm-submit`;
   }
 
   /*
@@ -36,6 +38,10 @@ class FeatureFlag extends BOBasePage {
   async setNewProductPage(page, toEnable = true) {
     await this.setChecked(page, this.newProductPageSwitchButton(toEnable ? 1 : 0));
     await this.waitForSelectorAndClick(page, this.submitButton);
+    if (toEnable) {
+      await this.waitForVisibleSelector(page, this.modalSubmitFeatureFlag);
+      await this.clickAndWaitForNavigation(page, this.enableExperimentalfeatureButton);
+    }
 
     return this.getTextContent(page, this.alertSuccess);
   }

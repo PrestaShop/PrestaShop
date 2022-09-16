@@ -64,3 +64,11 @@ Feature: Legacy products have consistent product type through dynamic checking (
     And product "pack_product" type should be pack
     And product "pack_product" persisted type should be pack
     And product "pack_product" dynamic type should be pack
+
+  Scenario: I create a product with undefined type using legacy methods, this product as to be editable
+    Given there is a product in the catalog named "Undefined Product" with a price of 15.0 and 100 items in stock
+    Then there is a product "undefined_product" with name "Undefined Product"
+    And product "undefined_product" type should be standard
+    And product "undefined_product" persisted type should be undefined
+    And product "undefined_product" dynamic type should be standard
+    And product "Undefined Product" should be editable

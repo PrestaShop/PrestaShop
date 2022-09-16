@@ -71,6 +71,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var array|null */
     private $installedModules;
 
+    /** @var Module[] */
+    private $modulesFromHook;
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
@@ -103,7 +106,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $modules[] = $this->getModule($moduleName);
         }
 
-        return ModuleCollection::createFrom($this->mergeWithModulesFromHook($modules));
+        return ModuleCollection::createFrom($this->addModulesFromHook($modules));
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -146,7 +149,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             /** @var Module $module */
             $module = $this->cacheProvider->fetch($cacheKey);
             if ($module->getDiskAttributes()->get('filemtime') === $filemtime) {
-                return $module;
+                return $this->enrichModuleAttributesFromHook($module);
             }
         }
 
@@ -159,9 +162,10 @@ class ModuleRepository implements ModuleRepositoryInterface
         $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
-        $this->cacheProvider->save($cacheKey, new Module($attributes, $disk, $database));
+        $coreModule = new Module($attributes, $disk, $database);
+        $this->cacheProvider->save($cacheKey, $coreModule);
 
-        return $this->cacheProvider->fetch($cacheKey);
+        return $this->enrichModuleAttributesFromHook($coreModule);
     }
 
     public function getModulePath(string $moduleName): ?string
@@ -271,23 +275,32 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * @return array
+     */
+    private function getModulesFromHook()
+    {
+        if ($this->modulesFromHook === null) {
+            $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
+            $modulesFromHook = array_values($modulesFromHook ?? []);
+            $this->modulesFromHook = empty($modulesFromHook) ? $modulesFromHook : array_merge(...$modulesFromHook);
+        }
+
+        return $this->modulesFromHook;
+    }
+
+    /**
      * @param Module[] $modules
      *
      * @return Module[]
      */
-    private function mergeWithModulesFromHook(array $modules): array
+    protected function addModulesFromHook(array $modules): array
     {
-        $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
-        $externalModules = array_values($actionListModules ?? []);
-        if (empty(reset($externalModules))) {
-            return $modules;
-        }
+        $externalModules = $this->getModulesFromHook();
 
-        foreach (array_merge(...$externalModules) as $externalModule) {
+        foreach ($externalModules as $externalModule) {
             $merged = false;
             foreach ($modules as $module) {
                 if ($module->get('name') === $externalModule['name']) {
-                    $module->getAttributes()->add($externalModule);
                     $merged = true;
                     break;
                 }
@@ -298,5 +311,22 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $modules;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return Module
+     */
+    protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
+    {
+        $modulesFromHook = $this->getModulesFromHook();
+        foreach ($modulesFromHook as $moduleFromHook) {
+            if ($module->get('name') === $moduleFromHook['name']) {
+                $module->getAttributes()->add($moduleFromHook);
+            }
+        }
+
+        return $module;
     }
 }
