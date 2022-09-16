@@ -191,7 +191,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $combination['quantity'],
-                $imagePath
+                $imagePath,
+                (float) $combination['ecotax']
             );
         }
 
