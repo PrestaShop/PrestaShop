@@ -269,7 +269,9 @@ export default class ProductFormModel {
       priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
     );
 
-    const taxPlaceholder = this.$taxRuleGroupHelpLabel.data(stateIsoCode ? 'place-holder-with-state' : 'place-holder-without-state');
+    const taxPlaceholder = this.$taxRuleGroupHelpLabel.data(
+      stateIsoCode ? 'place-holder-with-state' : 'place-holder-without-state',
+    );
 
     this.$taxRuleGroupHelpLabel.html(
       taxPlaceholder
