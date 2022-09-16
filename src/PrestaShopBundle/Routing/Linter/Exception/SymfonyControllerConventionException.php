@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,15 +22,33 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme specificPriceForm '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/FormTheme/specific_price.html.twig' %}
+declare(strict_types=1);
 
-{{ form_start(specificPriceForm, {'attr': {'class': 'form-horizontal specific-price-product-form justify-content-md-center', 'novalidate': 'novalidate'}}) }}
-{% block specific_price_form %}
-  {{ form_row(specificPriceForm) }}
-{% endblock %}
+namespace PrestaShopBundle\Routing\Linter\Exception;
 
-{% block specific_price_rest %}
-  {{ form_end(specificPriceForm) }}
-{% endblock %}
+class SymfonyControllerConventionException extends LinterException
+{
+    /**
+     * @var string
+     */
+    private $invalidController;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct($message, string $invalidController)
+    {
+        parent::__construct($message, 0, null);
+        $this->invalidController = $invalidController;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvalidController()
+    {
+        return $this->invalidController;
+    }
+}

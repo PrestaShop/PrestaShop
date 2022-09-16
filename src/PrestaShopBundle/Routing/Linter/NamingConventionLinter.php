@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use PrestaShop\PrestaShop\Core\Util\Inflector;
+use PrestaShopBundle\Routing\Linter\Exception\ControllerNotFoundException;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
+use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -68,9 +70,21 @@ final class NamingConventionLinter implements RouteLinterInterface
      */
     private function getControllerAndMethodName(Route $route)
     {
-        $controller = $route->getDefault('_controller');
+        $defaultController = $route->getDefault('_controller');
+        if (false === strpos($defaultController, '::')) {
+            throw new SymfonyControllerConventionException(
+                sprintf('Controller "%s" does not follow symfony convention.', $defaultController),
+                $defaultController
+            );
+        }
 
-        list($controller, $method) = explode('::', $controller, 2);
+        list($controller, $method) = explode('::', $defaultController, 2);
+        if (!method_exists($controller, $method)) {
+            throw new ControllerNotFoundException(
+                sprintf('Controller "%s" does not exist.', $defaultController),
+                $defaultController
+            );
+        }
 
         $controllerParts = explode('\\', $controller);
         $controller = preg_replace('/Controller$/', '', end($controllerParts));
