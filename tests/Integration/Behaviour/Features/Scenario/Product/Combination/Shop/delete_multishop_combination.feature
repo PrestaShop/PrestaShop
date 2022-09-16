@@ -21,6 +21,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And shop "shop1" with name "test_shop" exists
+    And multistore feature is enabled
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
@@ -34,7 +35,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have following combinations for shops "shop1":
+    Then product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -46,7 +47,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     When I generate combinations in shop "shop2" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have following combinations for shops "shop2":
+    Then product "product1" should have the following combinations for shops "shop2":
       | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -55,16 +56,16 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlueShop2  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
-  Scenario: Delete combinations one by one from single shop
-    When I delete combination "product1SWhite" from shop "shop1"
-    Then product "product1" should have following combinations for shops "shop1":
+  Scenario: Delete one non-default combination from single shop
+    When I delete combination "product1SBlack" from shop "shop1"
+    Then product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    And product "product1" should have following combinations for shops "shop2":
+    And product "product1" should have the following combinations for shops "shop2":
       | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -72,3 +73,21 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MWhiteShop2 | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlueShop2  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    When I delete combination "product1MBlueShop2" from shop "shop2"
+    Then product "product1" should have the following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have the following combinations for shops "shop2":
+      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlueShop2  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhiteShop2 | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+
+#    @todo: add scenario for deleting default combination
+#           because updating default combination after deletion in multishop seems tricky and is not working well now

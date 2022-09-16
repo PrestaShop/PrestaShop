@@ -75,6 +75,7 @@ final class MultistoreFeature implements FeatureInterface
     public function enable()
     {
         $this->configuration->set(MultistoreConfig::FEATURE_STATUS, 1);
+        Shop::resetStaticCache();
     }
 
     /**
@@ -83,6 +84,7 @@ final class MultistoreFeature implements FeatureInterface
     public function disable()
     {
         $this->configuration->set(MultistoreConfig::FEATURE_STATUS, 0);
+        Shop::resetStaticCache();
     }
 
     /**

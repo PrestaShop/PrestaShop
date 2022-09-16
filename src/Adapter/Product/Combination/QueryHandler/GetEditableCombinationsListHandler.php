@@ -33,13 +33,14 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -50,7 +51,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 final class GetEditableCombinationsListHandler implements GetEditableCombinationsListHandlerInterface
 {
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
@@ -80,7 +81,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     private $combinationNameBuilder;
 
     /**
-     * @param StockAvailableRepository $stockAvailableRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
      * @param ProductImageRepository $productImageRepository
@@ -88,7 +89,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
-        StockAvailableRepository $stockAvailableRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
         ProductImageRepository $productImageRepository,
@@ -108,9 +109,10 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
      */
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
+        $shopId = $query->getShopId();
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
-        $filters['shop_id'] = $query->getShopId()->getValue();
+        $filters['shop_id'] = $shopId->getValue();
 
         $searchCriteria = new ProductCombinationFilters([
             'limit' => $query->getLimit(),
@@ -140,7 +142,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             $attributesInformation,
             $total,
             $imageIdsByCombinationIds,
-            $productImageIds
+            $productImageIds,
+            $shopId
         );
     }
 
@@ -158,7 +161,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
         array $imageIdsByCombinationIds,
-        array $defaultImageIds
+        array $defaultImageIds,
+        ShopId $shopId
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 
@@ -189,7 +193,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 $attributesInformationByCombinationId[$combinationId],
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
+                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId), $shopId)->quantity,
                 $imagePath
             );
         }

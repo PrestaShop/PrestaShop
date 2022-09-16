@@ -123,7 +123,7 @@ class CombinationCore extends ObjectModel
         }
 
         // Removes the product from StockAvailable, for the current shop
-        StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $this->id_shop);
 
         if ($specificPrices = SpecificPrice::getByProductId((int) $this->id_product, (int) $this->id)) {
             foreach ($specificPrices as $specificPrice) {
@@ -189,20 +189,6 @@ class CombinationCore extends ObjectModel
             $this->default_on = true;
         } else {
             $this->default_on = null;
-        }
-        // When combination is being added to another shop, the parent method tries to insert the combination to product_attribute table
-        // and throws "duplicate entry" because combination already exists in the common table (it just needs to be added to _shop table
-        // So this workaround avoids inserting duplicate value in product_attribute when dealing with multishop.
-        // @todo: not sure if its the best solution yet (maybe we shouldn't use the "add" method at allwhen adding to another shop?)
-        $combinationAlreadyExists = Db::getInstance()->getRow(sprintf(
-            'SELECT id_product_attribute FROM ps_product_attribute WHERE id_product = %d AND default_on = 1',
-            $this->id_product
-        ));
-
-        if (isset($combinationAlreadyExists['id_product_attribute'])) {
-            // @todo: this smells
-            $this->id = (int) $combinationAlreadyExists['id_product_attribute'];
-            return true;
         }
 
         if (!parent::add($autoDate, $nullValues)) {
