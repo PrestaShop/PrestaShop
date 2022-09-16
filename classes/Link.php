@@ -411,7 +411,7 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param CategoryCore|array|int $category Category object (can be an ID category, but deprecated)
+     * @param CategoryCore|array|int|string $category Category object (can be an ID category, but deprecated)
      * @param string|null $alias
      * @param int|null $idLang
      * @param string|null $selectedFilters Url parameter to autocheck filters of the module blocklayered
@@ -442,10 +442,7 @@ class LinkCore
             $params['id'] = $category->id;
         } elseif (isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
-        } elseif (
-            is_int($category)
-            || (!is_array($category) && !is_a($category, CategoryCore::class) && ctype_digit($category))
-        ) {
+        } elseif (is_int($category) || (is_string($category) && ctype_digit($category))) {
             $params['id'] = (int) $category;
         } else {
             throw new \InvalidArgumentException('Invalid category parameter');
