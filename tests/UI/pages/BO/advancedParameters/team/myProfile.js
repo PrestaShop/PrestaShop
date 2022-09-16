@@ -24,6 +24,7 @@ class MyProfile extends EmployeeBasePage {
     this.newPasswordInput = '#employee_change_password_new_password_first';
     this.confirmPasswordInput = '#employee_change_password_new_password_second';
     this.avatarFileInput = '#employee_avatarUrl';
+    this.enableGravatarInput = toggle => `#employee_has_enabled_gravatar_${toggle}`;
   }
 
   /*
@@ -43,6 +44,7 @@ class MyProfile extends EmployeeBasePage {
     if (newEmployeeData.avatarFile) {
       await this.uploadOnFileChooser(page, this.avatarFileInput, [newEmployeeData.avatarFile]);
     }
+    await this.setChecked(page, this.enableGravatarInput(newEmployeeData.enableGravatar ? 1 : 0));
     await this.setValue(page, this.emailInput, newEmployeeData.email);
     await page.click(this.passwordButton);
     await this.setValue(page, this.currentPasswordInput, currentPassword);
@@ -54,6 +56,7 @@ class MyProfile extends EmployeeBasePage {
   }
 
   /**
+   * Get the value of an input
    *
    * @param page {Page} Browser tab
    * @param input {string} ID of the input

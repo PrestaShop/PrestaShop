@@ -40,6 +40,9 @@ class EmployeeData {
 
     /** @type {string|null} Path of the avatar of the employee */
     this.avatarFile = employeeToCreate.avatarFile || null;
+
+    /** @type {boolean} Enable Gravatar */
+    this.enableGravatar = false;
   }
 }
 
