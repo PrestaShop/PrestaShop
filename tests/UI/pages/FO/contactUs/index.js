@@ -16,6 +16,8 @@ class ContactUs extends FOBasePage {
 
     this.pageTitle = 'Contact us';
     this.validationMessage = 'Your message has been successfully sent to our team.';
+    this.invalidEmail = 'Invalid email address.';
+    this.invalidContent = 'The message cannot be blank.';
 
     // Left column selectors
     this.emailUsLink = '#left-column a';
@@ -28,6 +30,7 @@ class ContactUs extends FOBasePage {
     this.messageTextarea = '#content textarea[name=\'message\']';
     this.sendButton = '#content input[name=\'submitMessage\']';
     this.alertSuccessDiv = '#content div.alert-success';
+    this.alertDangerTextBlock = '#content div.alert-danger';
   }
 
   /*
@@ -63,8 +66,24 @@ class ContactUs extends FOBasePage {
 
     await this.setValue(page, this.messageTextarea, contactUsData.message);
     await page.click(this.sendButton);
+  }
 
+  /**
+   * Get login error
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAlertSuccess(page) {
     return this.getTextContent(page, this.alertSuccessDiv);
+  }
+
+  /**
+   * Get login error
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAlertError(page) {
+    return this.getTextContent(page, this.alertDangerTextBlock);
   }
 
   /**
