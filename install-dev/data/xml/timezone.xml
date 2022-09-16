@@ -558,7 +558,6 @@
     <timezone id="US_Michigan" name="US/Michigan"/>
     <timezone id="US_Mountain" name="US/Mountain"/>
     <timezone id="US_Pacific" name="US/Pacific"/>
-    <timezone id="US_Pacific-New" name="US/Pacific-New"/>
     <timezone id="US_Samoa" name="US/Samoa"/>
     <timezone id="UTC" name="UTC"/>
     <timezone id="W-SU" name="W-SU"/>
