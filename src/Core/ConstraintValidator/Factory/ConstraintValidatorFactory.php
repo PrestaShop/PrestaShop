@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
@@ -46,6 +49,10 @@ class ConstraintValidatorFactory extends BaseConstraintValidatorFactory implemen
     {
         if ($constraint instanceof CleanHtml) {
             return new CleanHtmlValidator(false);
+        }
+
+        if ($constraint instanceof TypedRegex) {
+            return new TypedRegexValidator(new Configuration());
         }
 
         return parent::getInstance($constraint);
