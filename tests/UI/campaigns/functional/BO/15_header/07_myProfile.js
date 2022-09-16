@@ -109,7 +109,7 @@ describe('BO - My profile', async () => {
       await expect(firstNameResult).to.equal(employeeData.firstName);
     });
 
-    it('should update firstname with valid value and lastname with invalid value and check error message', async function () {
+    it('should update with valid firstname and invalid lastname and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkValidFirstNameAndInvalidLastName', baseContext);
 
       employeeData.firstName = 'Hello man';
@@ -216,7 +216,7 @@ describe('BO - My profile', async () => {
       await loginCommon.logoutBO(this, page);
     });
 
-    it('should check the password and the default page', async function() {
+    it('should check the password and the default page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordAndDefaultPageAndLanguage', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
