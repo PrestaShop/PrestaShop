@@ -74,11 +74,13 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
                 'label' => false,
                 'expanded' => true,
-                'column_breaker' => true,
                 'modify_all_shops' => true,
                 'external_link' => [
                     'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_stock',
+                ],
+                'row_attr' => [
+                    'class' => 'col-12',
                 ],
             ])
             ->add('available_now_label', TranslatableType::class, [
@@ -86,6 +88,9 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'modify_all_shops' => true,
+                'row_attr' => [
+                    'class' => 'col-md-6',
+                ],
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -95,6 +100,9 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'modify_all_shops' => true,
+                'row_attr' => [
+                    'class' => 'col-md-6',
+                ],
             ])
         ;
     }
@@ -106,7 +114,9 @@ class CombinationAvailabilityType extends TranslatorAwareType
                 'label' => $this->trans('When out of stock', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
-                'columns_number' => 3,
+                'attr' => [
+                    'class' => 'row',
+                ],
             ])
         ;
     }
