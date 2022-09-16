@@ -27,6 +27,9 @@ class BOBasePage extends CommonPage {
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
     this.userProfileIcon = '#header_infos #header-employee-container';
+    this.userProfileFirstname = '.employee-wrapper-avatar .employee_profile';
+    this.userProfileYourProfileLinkNonMigratedPages = '.employee-wrapper-profile > a.admin-link';
+    this.userProfileYourProfileLink = '.employee-link.profile-link';
     this.userProfileLogoutLink = 'a#header_logout';
     this.shopVersionBloc = '#shop_version';
     this.headerShopNameLink = '#header_shopname';
@@ -286,6 +289,41 @@ class BOBasePage extends CommonPage {
     await this.scrollTo(page, linkSelector);
     await this.clickAndWaitForNavigation(page, linkSelector);
     await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
+  }
+
+  /**
+   * Returns to the dashboard then logout
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToMyProfile(page) {
+    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+      await page.click(this.userProfileIcon);
+    } else {
+      await page.click(this.userProfileIconNonMigratedPages);
+    }
+    if (await this.elementVisible(page, this.userProfileYourProfileLink, 1000)) {
+      await this.waitForVisibleSelector(page, this.userProfileYourProfileLink);
+    } else {
+      await this.waitForVisibleSelector(page, this.userProfileYourProfileLinkNonMigratedPages);
+    }
+    await this.clickAndWaitForNavigation(page, this.userProfileYourProfileLink);
+  }
+
+  /**
+   * Returns the firstname of the current employee from the dropdown
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getFirstname(page) {
+    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+      await page.click(this.userProfileIcon);
+    } else {
+      await page.click(this.userProfileIconNonMigratedPages);
+    }
+    await this.waitForSelectorAndClick(page, this.userProfileFirstname);
+
+    return page.textContent(this.userProfileFirstname);
   }
 
   /**

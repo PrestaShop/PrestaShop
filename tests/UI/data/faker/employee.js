@@ -37,6 +37,9 @@ class EmployeeData {
 
     /** @type {string} Permission profile to set on the employee */
     this.permissionProfile = employeeToCreate.permissionProfile || faker.helpers.arrayElement(Profiles);
+
+    /** @type {string|null} Path of the avatar of the employee */
+    this.avatarFile = employeeToCreate.avatarFile || null;
   }
 }
 
