@@ -181,6 +181,7 @@ module.exports = {
 
   /**
    * Create csv file
+   * @param path {string} Path of the file
    * @param fileName {string} Name of the file to create
    * @param data {Object} Data to create csv file
    * @returns {Promise<void>}
@@ -192,13 +193,38 @@ module.exports = {
   },
 
   /**
+   * Create a random SVG file
+   * @param path {string} Path of the file
+   * @param fileName {string} Name of the file to create
+   * @returns {Promise<void>}
+   */
+  async createSVGFile(path, fileName) {
+    const centerX = Math.floor(Math.random() * 15);
+    const centerY = Math.floor(Math.random() * 15);
+    const radius = Math.floor(Math.random() * 10);
+    const style = `fill:rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},`
+      + `${Math.floor(Math.random() * 255)});`;
+
+    let svg = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+      + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+      + '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">';
+    for (let x = 0; x < 12; x++) {
+      svg += `<circle cx="${centerX + (x * ((radius * 2) + 5))}" cy="${centerY}" r="${radius}" style="${style}"/>`;
+    }
+    svg += '</svg>';
+
+    await fs.writeFile(`${path}/${fileName}`, svg, (err) => {
+      if (err) throw err;
+    });
+  },
+
+  /**
    * Get the path of the file automatically generated
    * @param folderPath {string} Path of the folder where the file exists
    * @param filename {string} Path of the file automatically created
    * @returns {Promise<string>}
    */
   async getFilePathAutomaticallyGenerated(folderPath, filename) {
-    const generatedFilePath = path.resolve(__dirname, '../../../', folderPath, filename);
-    return generatedFilePath;
+    return path.resolve(__dirname, '../../../', folderPath, filename);
   },
 };
