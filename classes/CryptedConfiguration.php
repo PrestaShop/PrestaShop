@@ -145,14 +145,10 @@ class CryptedConfiguration extends Configuration
     {
         if (is_array($values) === true) {
             foreach ($values as $key => $value) {
-                if (is_string($values) === false) {
-                    $values[$key] = self::getPhpEncryption()->encrypt($value);
-                }
+                $values[$key] = self::getPhpEncryption()->encrypt((string) $value);
             }
         } else {
-            if (is_string($values) === false) {
-                $values = self::getPhpEncryption()->encrypt($values);
-            }
+            $values = self::getPhpEncryption()->encrypt((string) $values);
         }
 
         parent::set($key, $values, $idShopGroup, $idShop);
@@ -192,14 +188,10 @@ class CryptedConfiguration extends Configuration
     {
         if (is_array($values) === true) {
             foreach ($values as $key => $value) {
-                if (is_string($values) === false) {
-                    $values[$key] = self::getPhpEncryption()->encrypt($value);
-                }
+                $values[$key] = self::getPhpEncryption()->encrypt((string) $value);
             }
         } else {
-            if (is_string($values) === false) {
-                $values = self::getPhpEncryption()->encrypt($values);
-            }
+            $values = self::getPhpEncryption()->encrypt((string) $values);
         }
         $result = parent::updateValue($key, $values, $html = false, $idShopGroup = null, $idShop = null);
 
