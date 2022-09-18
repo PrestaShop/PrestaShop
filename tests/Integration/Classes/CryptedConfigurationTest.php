@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Classes;
 
-use CryptedConfiguration;
 use Configuration;
+use CryptedConfiguration;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
@@ -69,7 +69,7 @@ class ConfigurationTest extends TestCase
 
         $this->assertEquals('RESULT_GROUP_SHOP_OVERRIDDEN', CryptedConfiguration::getGlobalValue('PS_CRYPTED_TEST_GROUP_SHOP_OVERRIDDEN'));
         $this->assertNotEquals('RESULT_GROUP_SHOP_OVERRIDDEN', Configuration::getGlobalValue('PS_CRYPTED_TEST_GROUP_SHOP_OVERRIDDEN'));
-        
+
         $this->assertFalse(CryptedConfiguration::getGlobalValue('PS_CRYPTED_TEST_DOES_NOT_EXIST'));
     }
 }

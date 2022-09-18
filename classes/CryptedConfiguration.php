@@ -29,7 +29,6 @@
  */
 class CryptedConfiguration extends Configuration
 {
-
     /**
      * @var PhpEncryption Instance of PhpEncryption
      */

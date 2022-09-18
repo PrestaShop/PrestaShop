@@ -26,9 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use CryptedConfiguration as CryptedCryptedConfigurationLegacy;
 use Configuration as CryptedConfigurationLegacy;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use CryptedConfiguration as CryptedCryptedConfigurationLegacy;
 use Language;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
