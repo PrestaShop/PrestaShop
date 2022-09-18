@@ -46,7 +46,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @var Shop
      */
-    private $shop;
+    protected $shop;
 
     public function __construct(array $parameters = [])
     {
@@ -358,7 +358,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return int|null
      */
-    private function getShopId(ShopConstraint $shopConstraint): ?int
+    protected function getShopId(ShopConstraint $shopConstraint): ?int
     {
         return null !== $shopConstraint->getShopId()
             ? $shopConstraint->getShopId()->getValue()
@@ -371,7 +371,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
      *
      * @return int|null
      */
-    private function getShopGroupId(ShopConstraint $shopConstraint): ?int
+    protected function getShopGroupId(ShopConstraint $shopConstraint): ?int
     {
         if (null !== $shopConstraint->getShopGroupId()) {
             return $shopConstraint->getShopGroupId()->getValue();
@@ -420,7 +420,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @return ShopConstraint
      */
-    private function buildShopConstraintFromContext(): ShopConstraint
+    protected function buildShopConstraintFromContext(): ShopConstraint
     {
         @trigger_error(
             'Not specifying the optional ShopConstraint parameter is deprecated since version 1.7.8.0',
