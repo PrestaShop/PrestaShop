@@ -32,7 +32,7 @@ use Configuration;
 use CryptedConfiguration;
 use PHPUnit\Framework\TestCase;
 
-class ConfigurationTest extends TestCase
+class CryptedConfigurationTest extends TestCase
 {
     protected function setUp(): void
     {
