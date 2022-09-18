@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShop\PrestaShop\Adapter\Util\Entity\EntityNameDuplicator:
+    autowire: true
+    arguments:
+      - "@translator"
+      - '@prestashop.core.util.string.string_modifier'
+      - "@=service('prestashop.adapter.legacy.context').getLanguages(false)"

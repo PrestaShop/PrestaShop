@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CmsPage\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Exception\CmsPageCategoryException;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 
 /**
@@ -96,7 +96,7 @@ class AddCmsPageCommand
      * @param bool $displayed
      * @param array $shopAssociation
      *
-     * @throws CmsPageCategoryException
+     * @throws CmsPageException
      */
     public function __construct(
         $cmsPageCategoryId,

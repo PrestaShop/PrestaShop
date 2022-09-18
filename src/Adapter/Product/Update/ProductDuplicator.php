@@ -33,12 +33,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use GroupReduction;
 use Image;
-use Language;
 use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Util\Entity\EntityNameDuplicator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -110,6 +110,11 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private $specificPriceRepository;
 
+    /**
+     * @var EntityNameDuplicator
+     */
+    private $entityNameDuplicator;
+
     public function __construct(
         ProductRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
@@ -119,7 +124,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         string $dbPrefix,
         CombinationRepository $combinationRepository,
         ProductSupplierRepository $productSupplierRepository,
-        SpecificPriceRepository $specificPriceRepository
+        SpecificPriceRepository $specificPriceRepository,
+        EntityNameDuplicator $entityNameDuplicator
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
@@ -130,6 +136,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->combinationRepository = $combinationRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->specificPriceRepository = $specificPriceRepository;
+        $this->entityNameDuplicator = $entityNameDuplicator;
     }
 
     /**
@@ -215,7 +222,10 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $shopProduct->indexed = false;
             $shopProduct->active = false;
             // Force a copy name to tell the two products apart (for each shop since name can be different on each shop)
-            $shopProduct->name = $this->getNewProductName($shopProduct->name);
+            $shopProduct->name = $this->entityNameDuplicator->getNewLocalizedNames(
+                $shopProduct->name,
+                ProductSettings::MAX_NAME_LENGTH
+            );
             // Force ID to update the new product
             $shopProduct->id = $shopProduct->id_product = $newProductId->getValue();
             // Force the desired default shop so that it doesn't switch back to the source one
@@ -250,26 +260,6 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->addObjectModelToShops($duplicatedObject, [$targetDefaultShopId], CannotDuplicateProductException::class);
 
         return $duplicatedObject;
-    }
-
-    /**
-     * Provides duplicated product name
-     *
-     * @param array<int, string> $oldProductLocalizedNames
-     *
-     * @return array<int, string>
-     */
-    private function getNewProductName(array $oldProductLocalizedNames): array
-    {
-        $newProductLocalizedNames = [];
-        foreach ($oldProductLocalizedNames as $langId => $oldName) {
-            $langId = (int) $langId;
-            $namePattern = $this->translator->trans('copy of %s', [], 'Admin.Catalog.Feature', Language::getLocaleById($langId));
-            $newName = sprintf($namePattern, $oldName);
-            $newProductLocalizedNames[$langId] = $this->stringModifier->cutEnd($newName, ProductSettings::MAX_NAME_LENGTH);
-        }
-
-        return $newProductLocalizedNames;
     }
 
     /**

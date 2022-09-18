@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDeleteCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkDisableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\BulkEnableCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DuplicateCmsPageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\ToggleCmsPageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDeleteCmsPageException;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CannotDisableCmsPageException;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPage\Exception\CmsPageNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsCategoryIdForRedirection;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\Query\GetCmsPageForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CmsPage\QueryResult\EditableCmsPage;
+use PrestaShop\PrestaShop\Core\Domain\CmsPage\ValueObject\CmsPageId;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDeleteCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkDisableCmsPageCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Command\BulkEnableCmsPageCategoryCommand;
@@ -284,14 +286,16 @@ class CmsPageController extends FrameworkBundleAdminController
                     $this->trans('Successful update', 'Admin.Notifications.Success')
                 );
 
+                // We keep the user on edit page all the time, if he clicked "Save and preview",
+                // we also send a parameter that will open the CMS in front office by JS, after the page loads
+                $routeParams = [
+                    'cmsPageId' => $cmsPageId,
+                ];
                 if ($request->request->has('save-and-preview')) {
-                    return $this->redirectToRoute('admin_cms_pages_edit', [
-                        'cmsPageId' => $cmsPageId,
-                        'open_preview' => 1,
-                    ]);
+                    $routeParams['open_preview'] = 1;
                 }
 
-                return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
+                return $this->redirectToRoute('admin_cms_pages_edit', $routeParams);
             }
         } catch (Exception $e) {
             $this->addFlash(
@@ -311,6 +315,54 @@ class CmsPageController extends FrameworkBundleAdminController
                 'previewUrl' => $previewUrl,
             ]
         );
+    }
+
+    /**
+     *  @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_cms_pages_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param int $cmsPageId
+     *
+     * @return Response
+     */
+    public function duplicateAction(int $cmsPageId): Response
+    {
+        try {
+            /** @var CmsPageId $newCmsPageId */
+            $newCmsPageId = $this->getCommandBus()->handle(new DuplicateCmsPageCommand($cmsPageId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $exception) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($exception, $this->getErrorMessages())
+            );
+
+            return $this->redirectToRoute('admin_cms_pages_index');
+        }
+
+        return $this->redirectToRoute('admin_cms_pages_edit', ['cmsPageId' => $newCmsPageId->getValue()]);
+    }
+
+    /**
+     * Preview a CMS page in front office
+     *
+     * @param Request $request
+     * @param int $cmsPageId
+     *
+     * @return RedirectResponse
+     */
+    public function viewAction(Request $request, int $cmsPageId): RedirectResponse
+    {
+        /** @var EditableCmsPage $editableCmsPage */
+        $editableCmsPage = $this->getQueryBus()->handle(new GetCmsPageForEditing($cmsPageId));
+
+        return $this->redirect($editableCmsPage->getPreviewUrl());
     }
 
     /**

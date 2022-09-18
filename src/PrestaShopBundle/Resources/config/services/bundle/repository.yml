@@ -143,3 +143,8 @@ services:
     arguments:
       - PrestaShopBundle\Entity\AuthorizedApplication
     public: true
+
+  prestashop.core.api.cmspage.repository:
+    class: PrestaShopBundle\Entity\Repository\CmsPageRepository
+    arguments:
+      - '@PrestaShop\PrestaShop\Adapter\Util\Entity\EntityNameDuplicator'

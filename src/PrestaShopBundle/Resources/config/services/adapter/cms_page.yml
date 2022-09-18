@@ -32,6 +32,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DeleteCmsPageCommand
 
+  prestashop.adapter.cms_page.command_handler.duplicate_cms_page_handler:
+    class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\DuplicateCmsPageHandler
+    arguments:
+      - "@prestashop.core.api.cmspage.repository"
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CmsPage\Command\DuplicateCmsPageCommand
+
   prestashop.adapter.cms_page.command_handler.bulk_delete_cms_page:
     class: PrestaShop\PrestaShop\Adapter\CMS\Page\CommandHandler\BulkDeleteCmsPageHandler
     tags:

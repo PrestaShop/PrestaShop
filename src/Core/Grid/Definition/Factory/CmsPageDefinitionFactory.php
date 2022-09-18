@@ -31,8 +31,10 @@ use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\Query\GetCmsPageCategoryNa
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -166,6 +168,17 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
             ->setName($this->trans('Actions', [], 'Admin.Global'))
             ->setOptions([
                 'actions' => (new RowActionCollection())
+                    ->add((new LinkRowAction('view'))
+                    ->setName($this->trans('View', [], 'Admin.Actions'))
+                    ->setIcon('visibility')
+                    ->setOptions([
+                        'route' => 'admin_cms_pages_view',
+                        'route_param_name' => 'cmsPageId',
+                        'route_param_field' => 'id_cms',
+                        'use_inline_display' => true,
+                        'target' => '_blank',
+                    ])
+                    )
                     ->add((new LinkRowAction('edit'))
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
@@ -174,6 +187,21 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'cmsPageId',
                         'route_param_field' => 'id_cms',
                         'clickable_row' => true,
+                    ])
+                    )
+                    ->add((new SubmitRowAction('duplicate'))
+                    ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
+                    ->setIcon('content_copy')
+                    ->setOptions([
+                        'method' => 'POST',
+                        'route' => 'admin_cms_pages_duplicate',
+                        'route_param_name' => 'cmsPageId',
+                        'route_param_field' => 'id_cms',
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Duplicate page', [], 'Admin.Actions'),
+                            'confirm_button_label' => $this->trans('Duplicate', [], 'Admin.Actions'),
+                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                        ]),
                     ])
                     )
                     ->add(
