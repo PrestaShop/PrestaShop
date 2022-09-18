@@ -59,7 +59,7 @@ class CryptedConfiguration extends Configuration
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
         $rawValue = parent::get($key, $idLang, $idShopGroup, $idShop, $default);
-        if (empty($rawValue) === true || is_bool($rawValue)) {
+        if (empty($rawValue) === true) {
             return $rawValue;
         }
         $value = self::getPhpEncryption()->decrypt($rawValue);
@@ -145,10 +145,14 @@ class CryptedConfiguration extends Configuration
     {
         if (is_array($values) === true) {
             foreach ($values as $key => $value) {
-                $values[$key] = self::getPhpEncryption()->encrypt($value);
+                if (is_string($values) === false) {
+                    $values[$key] = self::getPhpEncryption()->encrypt($value);
+                }
             }
         } else {
-            $values = self::getPhpEncryption()->encrypt($values);
+            if (is_string($values) === false) {
+                $values = self::getPhpEncryption()->encrypt($values);
+            }
         }
 
         parent::set($key, $values, $idShopGroup, $idShop);
@@ -188,12 +192,12 @@ class CryptedConfiguration extends Configuration
     {
         if (is_array($values) === true) {
             foreach ($values as $key => $value) {
-                if (empty($values) === false) {
+                if (is_string($values) === false) {
                     $values[$key] = self::getPhpEncryption()->encrypt($value);
                 }
             }
         } else {
-            if (empty($values) === false) {
+            if (is_string($values) === false) {
                 $values = self::getPhpEncryption()->encrypt($values);
             }
         }
