@@ -65,6 +65,9 @@ class ModuleManager implements ModuleManagerInterface
     /** @var Filesystem */
     private $filesystem;
 
+    /** @var bool */
+    private $systemClearCache = true;
+
     public function __construct(
         ModuleRepository $moduleRepository,
         ModuleDataProvider $moduleDataProvider,
@@ -374,6 +377,11 @@ class ModuleManager implements ModuleManagerInterface
 
     private function dispatch(string $event, ModuleInterface $module): void
     {
-        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module, $this->systemClearCache), $event);
+    }
+
+    public function disableSystemClearCache(): void
+    {
+        $this->systemClearCache = false;
     }
 }
