@@ -181,6 +181,10 @@
       background-color: $primary-disabled;
     }
 
+    &.automatic-message {
+      border-width: 2px !important; // stylelint-disable-line declaration-no-important
+    }
+
     &.employee-message--private {
       color: $white;
       background-color: $private-message-color;
