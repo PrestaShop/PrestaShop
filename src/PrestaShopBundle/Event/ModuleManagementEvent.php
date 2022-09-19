@@ -43,13 +43,21 @@ class ModuleManagementEvent extends Event
 
     private $module;
 
-    public function __construct(ModuleInterface $module)
+    private $systemClearCache;
+
+    public function __construct(ModuleInterface $module, bool $systemClearCache = true)
     {
         $this->module = $module;
+        $this->systemClearCache = $systemClearCache;
     }
 
     public function getModule()
     {
         return $this->module;
+    }
+
+    public function getSystemClearCache()
+    {
+        return $this->systemClearCache;
     }
 }

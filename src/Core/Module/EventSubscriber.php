@@ -75,7 +75,7 @@ class EventSubscriber implements EventSubscriberInterface
     public function onModuleInstalledOrUninstalled(ModuleManagementEvent $event): void
     {
         $this->onModuleStateChanged($event);
-        if (!$this->cleared) {
+        if (!$this->cleared && $event->getSystemClearCache()) {
             $this->cacheClearer->clear();
             $this->cleared = true;
         }
