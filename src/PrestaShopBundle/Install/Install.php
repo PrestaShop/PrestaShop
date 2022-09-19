@@ -1060,6 +1060,8 @@ class Install extends AbstractInstall
             return false;
         }
 
+        ModuleEntity::updateTranslationsAfterInstall(true);
+
         return true;
     }
 

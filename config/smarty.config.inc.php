@@ -39,6 +39,11 @@ $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 $smarty->use_sub_dirs = true;
 $smarty->caching = Smarty::CACHING_OFF;
 
+/* @phpstan-ignore-next-line */
+if (_PS_SMARTY_CACHING_TYPE_ == 'mysql') {
+    include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
+    $smarty->caching_type = 'mysql';
+}
 $smarty->force_compile = Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? Smarty::COMPILECHECK_ON : Smarty::COMPILECHECK_OFF;
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
