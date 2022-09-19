@@ -631,12 +631,11 @@ class AdminModuleController {
         const importConfirmModal = new ConfirmModal(
           {
             id: 'confirm-module-import-modal',
-            confirmTitle:
-            window.moduleTranslations.singleModuleModalImportTitle,
+            confirmTitle: window.moduleTranslations.singleModuleModalImportTitle,
             closeButtonLabel: window.moduleTranslations.moduleModalCancel,
             confirmButtonLabel: isMaintenanceMode
               ? window.moduleTranslations.moduleModalImport
-              : window.moduleTranslations.importAnywayButtonText,
+              : window.moduleTranslations.uploadAnywayButtonText,
             confirmButtonClass: isMaintenanceMode
               ? 'btn-primary'
               : 'btn-secondary',
@@ -713,7 +712,7 @@ class AdminModuleController {
       event.preventDefault();
       /**
        * Trigger click on hidden file input, and pass extra data
-       * to .dropzone click handler fro it to notice it comes from here
+       * to .dropzone click handler from it to notice it comes from here
        */
       $('.dz-hidden-input').trigger('click', ['manual_select']);
     });
@@ -749,7 +748,7 @@ class AdminModuleController {
       hiddenInputContainer: self.dropZoneImportZoneSelector,
       /**
        * Add unlimited timeout. Otherwise dropzone timeout is 30 seconds
-       *  and if a module is long to install, it is not possible to install the module.
+       * and if a module is long to install, it is not possible to install the module.
        */
       timeout: 0,
       addedfile: () => {
