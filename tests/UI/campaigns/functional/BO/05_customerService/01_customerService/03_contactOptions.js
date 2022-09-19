@@ -137,7 +137,9 @@ describe('BO - Customer Service : Contact options', async () => {
     it('should send message to customer service then close the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-      const validationMessage = await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+      await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.jpg`);
+
+      const validationMessage = await contactUsPage.getAlertSuccess(page);
       await expect(validationMessage).to.equal(contactUsPage.validationMessage);
 
       page = await contactUsPage.closePage(browserContext, page, 0);
