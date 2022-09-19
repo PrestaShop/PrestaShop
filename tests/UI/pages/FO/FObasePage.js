@@ -314,10 +314,21 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Check if there are autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<boolean>}
+   */
+  async hasAutocompleteSearchResult(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+  }
+
+  /**
    * Get autocomplete search result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async getAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
@@ -481,6 +492,17 @@ class FOBasePage extends CommonPage {
    */
   async isCurrencyVisible(page) {
     return this.elementVisible(page, this.currencySelectorDiv, 1000);
+  }
+
+  /**
+   * Get the value of an input
+   *
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async getInputValue(page, input) {
+    return page.inputValue(input);
   }
 }
 
