@@ -28,16 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
+use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Product;
 
 class CombinationDeleter
 {
@@ -127,25 +130,68 @@ class CombinationDeleter
     }
 
     /**
+     * @todo: work in progress.
+     *
      * @param ProductId $productId
      */
     private function updateDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $defaultCombination = $this->combinationMultiShopRepository->findDefaultCombination($productId, $shopConstraint);
-        if (null !== $defaultCombination) {
-            $this->defaultCombinationUpdater->setDefaultCombination(
-                new CombinationId((int) $defaultCombination->id),
-                $shopConstraint
+        // we already assume it is the default combination that was deleted (by the if stmt above)
+
+        $defaultShopId = $this->combinationMultiShopRepository->getProductDefaultShopId($productId);
+        $newDefaultCombinationId = $this->combinationMultiShopRepository->findFirstCombinationId($productId, $shopConstraint);
+        $newDefaultCombination = null;
+
+        if ($newDefaultCombinationId) {
+            $newDefaultCombination = $this->combinationMultiShopRepository->getByShopConstraint($newDefaultCombinationId, $shopConstraint);
+        }
+
+        // check if it is the default shop for product
+        if ($shopConstraint->forAllShops() || ($defaultShopId->getValue() === $shopConstraint->getShopId()->getValue())) {
+
+            // this means we have deleted default combination for default shop, so it must be synced with other tables
+            // 1. find next default combination for default shop
+            // 2. update product_attribute.default_on
+            // @todo: 3. update product.cache_default_attribute
+            if ($newDefaultCombination) {
+                // update combination.default_on for product_attribute
+                // @todo: this causes duplicate entry in product_attribute.default_on
+                $this->updateCombinationDefaultProperty($newDefaultCombination, true, null);
+            }
+            // update product.cache_default_attribute
+            // @todo: this probably causes freeze in terminal
+            Product::updateDefaultAttribute($productId->getValue());
+        }
+
+        if ($newDefaultCombination) {
+            // update combination.default_on for product_attribute_shop
+            $this->updateCombinationDefaultProperty($newDefaultCombination, true, $shopConstraint);
+        }
+    }
+
+
+    /**
+     * @param Combination $combination
+     * @param bool $isDefault
+     * @param ShopConstraint|null $shopConstraint
+     */
+    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault, ?ShopConstraint $shopConstraint): void
+    {
+        $combination->default_on = $isDefault;
+
+        if ($shopConstraint) {
+            $this->combinationMultiShopRepository->partialUpdate(
+                $combination,
+                ['default_on'],
+                $shopConstraint,
+                CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
             );
-
-            return;
+        } else {
+            $this->combinationRepository->partialUpdate(
+                $combination,
+                ['default_on'],
+                CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
+            );
         }
-
-        $firstCombinationId = $this->combinationMultiShopRepository->findFirstCombinationId($productId, $shopConstraint);
-        if (!$firstCombinationId) {
-            return;
-        }
-
-        $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
     }
 }
