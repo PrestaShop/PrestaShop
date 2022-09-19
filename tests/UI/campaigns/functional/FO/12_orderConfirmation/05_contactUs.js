@@ -205,7 +205,9 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should send the message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendTheMessage', baseContext);
 
-      const sendMessageSuccessAlert = await contactUsPage.sendMessage(page, contactUsData, filename);
+      await contactUsPage.sendMessage(page, contactUsData, filename);
+
+      const sendMessageSuccessAlert = await contactUsPage.getAlertSuccess(page);
       await expect(sendMessageSuccessAlert).to.contains(contactUsPage.validationMessage);
     });
   });
