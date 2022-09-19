@@ -16,6 +16,9 @@ a2enmod rewrite actions alias
 cp -f $WORKSPACE/.github/workflows/sanity/apache-vhost /etc/apache2/sites-available/000-default.conf
 sed -e "s?%BUILD_DIR%?$(echo $WORKSPACE)?g" --in-place /etc/apache2/sites-available/000-default.conf
 
+# CI tests
+ls -al /etc/apache2/mods-enabled/mpm_*
+
 # Restart apache after giving permission
 chmod 777 -R $WORKSPACE
 service apache2 restart
