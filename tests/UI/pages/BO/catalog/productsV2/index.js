@@ -38,7 +38,7 @@ class Products extends BOBasePage {
     this.filterResetButton = `${this.productTableFilterLine} button.js-reset-search`;
     this.selectAllProductsCheckbox = `${this.productTableFilterLine} td[data-type=bulk_action] div.md-checkbox`;
 
-    // Filter inputs
+    // Filters input
     this.productFilterIDMinInput = '#product_id_product_min_field';
     this.productFilterIDMaxInput = '#product_id_product_max_field';
     this.productFilterNameInput = '#product_name';
@@ -78,13 +78,11 @@ class Products extends BOBasePage {
     this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
     this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
-    // pagination
-    this.paginationBlock = `${this.productListForm} div.pagination-block`;
     // Modal delete products selectors
     this.modalBulkDeleteProducts = '#product-ajax-bulk_delete_ajax-confirm-modal';
     this.modalBulkdeleteProductsBody = `${this.modalBulkDeleteProducts} div.modal-body`;
     this.modalBulkdeleteProductsFooter = `${this.modalBulkDeleteProducts} div.modal-footer`;
-    this.modalDialogDeleteButton = `${this.modalBulkdeleteProductsFooter} button.btn-confirm-submit`;
+    this.modalDialogBulkDeleteButton = `${this.modalBulkdeleteProductsFooter} button.btn-confirm-submit`;
     this.modalBulkDeleteProductsProgress = '#product-ajax-bulk_delete_ajax-progress-modal';
     this.modalBulkDeleteProductsProgressBody = `${this.modalBulkDeleteProductsProgress} div.modal-body`;
     this.modalBulkDeleteProductsProgressSuccessMessage = `${this.modalBulkDeleteProductsProgressBody}`
@@ -182,7 +180,7 @@ class Products extends BOBasePage {
    * @returns {Promise<string>}
    */
   async bulkDeleteProduct(page) {
-    await this.waitForSelectorAndClick(page, this.modalDialogDeleteButton);
+    await this.waitForSelectorAndClick(page, this.modalDialogBulkDeleteButton);
 
     await this.waitForVisibleSelector(page, this.modalBulkDeleteProductsProgressBarDone);
 
