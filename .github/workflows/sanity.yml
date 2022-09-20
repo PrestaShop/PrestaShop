@@ -79,7 +79,7 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Use .env.ci
-        run : mv .env.ci .env
+        run: mv .env.ci .env
         working-directory: ./tests/UI
 
       - name: Run tests
