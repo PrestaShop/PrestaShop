@@ -355,41 +355,6 @@ class CombinationRepository extends AbstractObjectModelRepository
 //        return $id ? $this->get(new CombinationId($id)) : null;
     }
 
-    public function setDefaultCombination(ProductId $productId, CombinationId $newDefaultCombination, ?ShopConstraint $shopConstraint): void
-    {
-        if (!$shopConstraint) {
-            // resets previous default combination to non-default
-            $this->connection->update(
-                $this->dbPrefix . 'product_attribute',
-                ['default_on' => 0],
-                ['default_on' => 1, 'id_product' => $productId->getValue()]
-            );
-
-            // sets new combination as default
-            $this->connection->update(
-                $this->dbPrefix . 'product_attribute',
-                ['default_on' => 1],
-                ['id_product_attribute' => $newDefaultCombination->getValue()]
-            );
-        }
-
-        if ($shopConstraint && $shopConstraint->getShopId()) {
-            $shopIdValue = $shopConstraint->getShopId()->getValue();
-            $this->connection->update(
-                $this->dbPrefix . 'product_attribute_shop',
-                ['default_on' => 0],
-                ['default_on' => 1, 'id_product' => $productId->getValue(), 'id_shop' => $shopIdValue]
-            );
-
-            // sets new combination as default
-            $this->connection->update(
-                $this->dbPrefix . 'product_attribute_shop',
-                ['default_on' => true],
-                ['id_product_attribute' => $newDefaultCombination->getValue(), 'id_shop' => $shopIdValue]
-            );
-        }
-    }
-
     /**
      * @param ProductId $productId
      * @param int[] $attributeIds

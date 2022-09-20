@@ -393,15 +393,86 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
-     * @param CombinationId $combinationId
-     *
-     * @return Combination
+     * @param CombinationId $newDefaultCombinationId
+     * @param ShopConstraint $shopConstraint
      */
-    private function getCombinationByDefaultShop(CombinationId $combinationId): Combination
-    {
-        $defaultShopId = $this->getDefaultShopIdForCombination($combinationId);
+    public function setDefaultCombination(
+        CombinationId $newDefaultCombinationId,
+        ShopConstraint $shopConstraint
+    ): void {
+        $newDefaultCombination = $this->getByShopConstraint($newDefaultCombinationId, $shopConstraint);
+        $productId = new ProductId((int) $newDefaultCombination->id_product);
+        $defaultShopId = $this->getDefaultShopIdForCombination($newDefaultCombinationId);
+        $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
 
-        return $this->getCombinationByShopId($combinationId, $defaultShopId);
+        // we need to update the common table only for default shop
+        if (in_array($defaultShopId, $constraintShopIds, true)) {
+            $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
+        }
+
+        $this->setDefaultCombinationInShopTable($productId, $newDefaultCombinationId, $shopConstraint);
+    }
+
+    /**
+     * Sets default_on property to a provided combination in product_attribute table
+     *
+     * @param ProductId $productId
+     * @param CombinationId $newDefaultCombinationId
+     */
+    private function setDefaultCombinationInCommonTable(ProductId $productId, CombinationId $newDefaultCombinationId): void
+    {
+        $commonCombinationTable = sprintf('%sproduct_attribute', $this->dbPrefix);
+
+        // find current default combination and make it non-default
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 0 WHERE default_on = 1 AND id_product = %d',
+            $commonCombinationTable,
+            $productId->getValue()
+        ));
+        // set new default combination
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 1 WHERE id_product_attribute = %d',
+            $commonCombinationTable,
+            $newDefaultCombinationId->getValue()
+        ));
+    }
+
+    /**
+     * Sets default_on property to a provided combination in product_attribute_shop table
+     *
+     * @param ProductId $productId
+     * @param CombinationId $newDefaultCombinationId
+     * @param ShopConstraint $shopConstraint
+     */
+    private function setDefaultCombinationInShopTable(
+        ProductId $productId,
+        CombinationId $newDefaultCombinationId,
+        ShopConstraint $shopConstraint
+    ): void {
+        $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
+
+        if (empty($constraintShopIds)) {
+            return;
+        }
+
+        $shopIdsString = implode(',', $constraintShopIds);
+        $shopCombinationTable = sprintf('%sproduct_attribute_shop', $this->dbPrefix);
+
+        // find current default combination and make it non-default
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 0 WHERE default_on = 0 AND id_product = %d AND id_shop IN (%s)',
+            $shopCombinationTable,
+            $productId->getValue(),
+            $shopIdsString
+        ));
+
+        // set new default combination
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %s SET default_on = 1 WHERE id_product_attribute = %d AND id_shop IN (%s)',
+            $shopCombinationTable,
+            $newDefaultCombinationId->getValue(),
+            $shopIdsString
+        ));
     }
 
     /**
