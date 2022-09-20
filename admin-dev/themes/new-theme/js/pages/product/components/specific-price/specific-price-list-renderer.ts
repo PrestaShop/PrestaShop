@@ -120,8 +120,8 @@ export default class SpecificPriceListRenderer implements RendererType {
     this.listContainer?.classList.toggle('d-none', !show);
   }
 
-  private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement | null | undefined {
-    return templateTrClone.querySelector<HTMLElement>(selector);
+  private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
+    return templateTrClone.querySelector(selector) as HTMLElement;
   }
 
   private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {
