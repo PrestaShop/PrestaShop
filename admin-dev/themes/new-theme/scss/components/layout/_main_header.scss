@@ -100,9 +100,8 @@ $header-text-color: #4e6167 !default;
   }
 
   #shop_version {
-    position: absolute;
-    top: 0.9375rem;
-    left: 11.25rem;
+    margin-top: 0.9375rem;
+    margin-left: -2rem;
     font-size: 0.625rem;
 
     // hide if viewport <= tablet portrait size

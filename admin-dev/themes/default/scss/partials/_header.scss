@@ -36,9 +36,8 @@ $search-border-color: #bbcdd2;
   }
 
   #shop_version {
-    position: absolute;
-    top: 0.9375rem;
-    left: 11.25rem;
+    margin-top: 0.9375rem;
+    margin-left: -2rem;
     font-size: 10px;
     color: #4a4a4a;
     // hide if viewport <= tablet portrait size
