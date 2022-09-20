@@ -68,39 +68,14 @@ class DefaultCombinationUpdater
      *
      * @param CombinationId $defaultCombinationId
      * @param ShopConstraint $shopConstraint
-     *
-     * @throws CoreException
-     * @throws CannotAddCombinationException
-     * @throws CombinationNotFoundException
-     * @throws ProductConstraintException
      */
     public function setDefaultCombination(CombinationId $defaultCombinationId, ShopConstraint $shopConstraint): void
     {
-        $newDefaultCombination = $this->combinationRepository->getByShopConstraint($defaultCombinationId, $shopConstraint);
-        $productId = new ProductId((int) $newDefaultCombination->id_product);
-        $currentDefaultCombination = $this->combinationRepository->findDefaultCombination($productId, $shopConstraint);
-
-        if ($currentDefaultCombination) {
-            $this->updateCombinationDefaultProperty($currentDefaultCombination, false, $shopConstraint);
-        }
-
-        $this->updateCombinationDefaultProperty($newDefaultCombination, true, $shopConstraint);
-    }
-
-    /**
-     * @param Combination $combination
-     * @param bool $isDefault
-     * @param ShopConstraint $shopConstraint
-     */
-    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault, ShopConstraint $shopConstraint): void
-    {
-        $combination->default_on = $isDefault;
-        //@todo this probably needs to be done per shop too? (using combinationMultishop repo?)
-        $this->combinationRepository->partialUpdate(
-            $combination,
-            ['default_on'],
-            $shopConstraint,
-            CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
+        //@todo: im don't think this service is needed anymore,
+        //       unless we leave space to handle product.cache_product_attribute later (cuz now it is already handled in object model in most cases)?
+        $this->combinationRepository->setDefaultCombination(
+            $defaultCombinationId,
+            $shopConstraint
         );
     }
 }

@@ -130,41 +130,17 @@ class CombinationDeleter
     }
 
     /**
-     * @todo: work in progress.
-     *
      * @param ProductId $productId
      */
     private function updateDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        // we already assume it is the default combination that was deleted (by the if stmt above)
-
-        $defaultShopId = $this->combinationMultiShopRepository->getProductDefaultShopId($productId);
         $newDefaultCombinationId = $this->combinationMultiShopRepository->findFirstCombinationId($productId, $shopConstraint);
-        $newDefaultCombination = null;
 
-        if ($newDefaultCombinationId) {
-            $newDefaultCombination = $this->combinationMultiShopRepository->getByShopConstraint($newDefaultCombinationId, $shopConstraint);
+        if (!$newDefaultCombinationId) {
+            return;
         }
 
-        // check if it is the default shop for product
-        if ($shopConstraint->forAllShops() || ($defaultShopId->getValue() === $shopConstraint->getShopId()->getValue())) {
-
-            // this means we have deleted default combination for default shop, so it must be synced with other tables
-            // 1. find next default combination for default shop
-            // 2. update product_attribute.default_on
-            // @todo: 3. update product.cache_default_attribute
-            if ($newDefaultCombination) {
-                $this->combinationRepository->setDefaultCombination($productId, $newDefaultCombinationId, null);
-            }
-            // update product.cache_default_attribute
-            //@todo: same done in combination::delete already so not needed
-//            Product::updateDefaultAttribute($productId->getValue());
-        }
-
-        if ($newDefaultCombination) {
-            // update combination.default_on for product_attribute_shop
-            $this->combinationRepository->setDefaultCombination($productId, $newDefaultCombinationId, $shopConstraint);
-        }
+        $this->defaultCombinationUpdater->setDefaultCombination($newDefaultCombinationId, $shopConstraint);
     }
 
 
