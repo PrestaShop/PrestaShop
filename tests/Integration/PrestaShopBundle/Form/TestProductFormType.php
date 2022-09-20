@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is not used in the project but in the tests, it allows to build a simple
@@ -64,6 +65,12 @@ class TestProductFormType extends CommonAbstractType
         $quantities->add('stock_movements', FormType::class);
 
         $optionsForm = $builder->get('options');
+
+        $optionsForm->add('suppliers', FormType::class);
+        $suppliersForm = $optionsForm->get('suppliers');
+        $suppliersForm->add('supplier_ids', ChoiceType::class, [
+            'choices' => $options['suppliers'],
+        ]);
         $optionsForm->add('product_suppliers', ChoiceType::class);
 
         $pricingForm = $builder->get('pricing');
@@ -72,5 +79,19 @@ class TestProductFormType extends CommonAbstractType
         $retailPricingForm = $pricingForm->get('retail_price');
         $retailPricingForm->add('ecotax_tax_excluded', UnavailableType::class);
         $retailPricingForm->add('ecotax_tax_included', UnavailableType::class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'suppliers' => [],
+            ])
+            ->setAllowedTypes('suppliers', 'array')
+        ;
     }
 }

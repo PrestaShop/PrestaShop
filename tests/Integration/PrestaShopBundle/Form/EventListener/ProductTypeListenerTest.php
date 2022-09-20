@@ -253,6 +253,38 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
+     * @dataProvider getExpectedSuppliers
+     *
+     * @param string $formType
+     * @param array $suppliers
+     * @param bool $suppliersExpected
+     * @param bool $productSuppliersExpected
+     */
+    public function testSuppliers(string $formType, array $suppliers, bool $suppliersExpected, bool $productSuppliersExpected): void
+    {
+        $form = $this->createForm(TestProductFormType::class, ['suppliers' => $suppliers]);
+
+        $this->assertFormTypeExistsInForm($form, 'options.suppliers', true);
+        $this->assertFormTypeExistsInForm($form, 'options.product_suppliers', true);
+        $this->adaptProductFormBasedOnProductType($form, $formType);
+        $this->assertFormTypeExistsInForm($form, 'options.suppliers', $suppliersExpected);
+        $this->assertFormTypeExistsInForm($form, 'options.product_suppliers', $productSuppliersExpected);
+    }
+
+    public function getExpectedSuppliers(): iterable
+    {
+        yield 'standard type with suppliers' => [ProductType::TYPE_STANDARD, [42, 69], true, true];
+        yield 'virtual type with suppliers' => [ProductType::TYPE_VIRTUAL, [42, 69], true, true];
+        yield 'pack type with suppliers' => [ProductType::TYPE_PACK, [42, 69], true, true];
+        yield 'combinations type with suppliers' => [ProductType::TYPE_COMBINATIONS, [42, 69], true, false];
+
+        yield 'standard type without suppliers' => [ProductType::TYPE_STANDARD, [], false, false];
+        yield 'virtual type without suppliers' => [ProductType::TYPE_VIRTUAL, [], false, false];
+        yield 'pack type without suppliers' => [ProductType::TYPE_PACK, [], false, false];
+        yield 'combination type without suppliers' => [ProductType::TYPE_COMBINATIONS, [], false, false];
+    }
+
+    /**
      * @dataProvider getProductTypes
      *
      * @param string $productType
