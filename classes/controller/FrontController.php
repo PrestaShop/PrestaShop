@@ -487,6 +487,7 @@ class FrontControllerCore extends Controller
             'cart' => $this->cart_presenter->present($cart),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
+            'country' => $this->getTemplateVarCountry(),
             'language' => $this->objectPresenter->present($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
@@ -1550,6 +1551,16 @@ class FrontControllerCore extends Controller
         }
 
         return $curr;
+    }
+
+    public function getTemplateVarCountry()
+    {
+        $countryInfos = [];
+        foreach (Country::$definition['fields'] as $fieldName) {
+            $countryInfos[$fieldName] = $this->context->country->{$fieldName};
+        }
+
+        return $countryInfos;
     }
 
     public function getTemplateVarCustomer($customer = null)
