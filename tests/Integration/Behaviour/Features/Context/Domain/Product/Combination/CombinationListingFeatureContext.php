@@ -108,6 +108,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertProductHasNoCombinationsInShops(string $productReference, string $shopReferences): void
     {
+
         $shopReferences = explode(',', $shopReferences);
         foreach ($shopReferences as $shopReference) {
             $this->assertCombinations(

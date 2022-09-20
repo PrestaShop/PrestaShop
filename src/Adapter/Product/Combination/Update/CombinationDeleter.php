@@ -142,21 +142,4 @@ class CombinationDeleter
 
         $this->defaultCombinationUpdater->setDefaultCombination($newDefaultCombinationId, $shopConstraint);
     }
-
-
-    /**
-     * @param Combination $combination
-     * @param bool $isDefault
-     * @param ShopConstraint $shopConstraint
-     */
-    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault, ShopConstraint $shopConstraint): void
-    {
-        $combination->default_on = $isDefault;
-        $this->combinationMultiShopRepository->partialUpdate(
-            $combination,
-            ['default_on'],
-            $shopConstraint,
-            CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
-        );
-    }
 }

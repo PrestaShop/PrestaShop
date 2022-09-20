@@ -137,10 +137,12 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         if ($shopConstraint->forAllShops()) {
-            return $this->getCombinationByDefaultShop($combinationId);
+            $shopId = $this->getDefaultShopIdForCombination($combinationId);
+        } else {
+            $shopId = $shopConstraint->getShopId();
         }
 
-        return $this->getCombinationByShopId($combinationId, $shopConstraint->getShopId());
+        return $this->getCombinationByShopId($combinationId, $shopId);
     }
 
     /**
@@ -406,7 +408,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
 
         // we need to update the common table only for default shop
-        if (in_array($defaultShopId, $constraintShopIds, true)) {
+        if (in_array($defaultShopId->getValue(), $constraintShopIds, true)) {
             $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
         }
 
@@ -425,7 +427,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
         // find current default combination and make it non-default
         $this->connection->executeStatement(sprintf(
-            'UPDATE %s SET default_on = 0 WHERE default_on = 1 AND id_product = %d',
+            'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d',
             $commonCombinationTable,
             $productId->getValue()
         ));
@@ -460,7 +462,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
         // find current default combination and make it non-default
         $this->connection->executeStatement(sprintf(
-            'UPDATE %s SET default_on = 0 WHERE default_on = 0 AND id_product = %d AND id_shop IN (%s)',
+            'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d AND id_shop IN (%s)',
             $shopCombinationTable,
             $productId->getValue(),
             $shopIdsString
