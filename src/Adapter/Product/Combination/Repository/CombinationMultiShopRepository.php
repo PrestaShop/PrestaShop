@@ -395,6 +395,33 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * Returns default combination ID identified as such in DB by default_on property
+     *
+     * @param ProductId $productId
+     *
+     * @return CombinationId|null
+     */
+    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->andWhere('pa.default_on = 1')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result['id_product_attribute'])) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
      * @param CombinationId $newDefaultCombinationId
      * @param ShopConstraint $shopConstraint
      */
@@ -426,6 +453,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $commonCombinationTable = sprintf('%sproduct_attribute', $this->dbPrefix);
 
         // find current default combination and make it non-default
+        // important to check NULL, because it is impossible to have "0" as falsy value due to sql constraint
         $this->connection->executeStatement(sprintf(
             'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d',
             $commonCombinationTable,
@@ -461,6 +489,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $shopCombinationTable = sprintf('%sproduct_attribute_shop', $this->dbPrefix);
 
         // find current default combination and make it non-default
+        // important to check NULL, because it is impossible to have "0" as falsy value due to sql constraint
         $this->connection->executeStatement(sprintf(
             'UPDATE %s SET default_on = NULL WHERE default_on = 1 AND id_product = %d AND id_shop IN (%s)',
             $shopCombinationTable,

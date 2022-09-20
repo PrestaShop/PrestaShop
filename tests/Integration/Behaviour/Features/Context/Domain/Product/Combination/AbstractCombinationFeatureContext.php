@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationFo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
@@ -63,10 +64,13 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return CombinationForEditing
      */
-    protected function getCombinationForEditing(string $combinationReference): CombinationForEditing
+    protected function getCombinationForEditing(string $combinationReference, ?string $shopReference = null): CombinationForEditing
     {
+        $shopId = $shopReference ? $this->getSharedStorage()->get($shopReference) : $this->getDefaultShopId();
+
         return $this->getQueryBus()->handle(new GetCombinationForEditing(
-            $this->getSharedStorage()->get($combinationReference)
+            $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($shopId)
         ));
     }
 }

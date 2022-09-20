@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
@@ -50,12 +51,20 @@ class DefaultCombinationUpdater
     private $combinationRepository;
 
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
      * @param CombinationMultiShopRepository $combinationRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
-        CombinationMultiShopRepository $combinationRepository
+        CombinationMultiShopRepository $combinationRepository,
+        ProductMultiShopRepository $productRepository
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -71,11 +80,16 @@ class DefaultCombinationUpdater
      */
     public function setDefaultCombination(CombinationId $defaultCombinationId, ShopConstraint $shopConstraint): void
     {
+        //@todo; duplicated within combination repo. See if can be reused
+        $newDefaultCombination = $this->combinationRepository->getByShopConstraint($defaultCombinationId, $shopConstraint);
+        $productId = new ProductId((int) $newDefaultCombination->id_product);
         //@todo: im don't think this service is needed anymore,
         //       unless we leave space to handle product.cache_product_attribute later (cuz now it is already handled in object model in most cases)?
         $this->combinationRepository->setDefaultCombination(
             $defaultCombinationId,
             $shopConstraint
         );
+
+        $this->productRepository->updateCachedDefaultCombination($productId);
     }
 }
