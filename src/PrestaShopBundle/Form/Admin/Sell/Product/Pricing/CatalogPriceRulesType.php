@@ -72,7 +72,11 @@ class CatalogPriceRulesType extends TranslatorAwareType
          * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds uneeded stuff to % while creating url
          * That's why catalog_price_rule_id is used and then string replaced.
          */
-        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
+        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
+            'AdminSpecificPriceRule',
+            true,
+            ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']
+        );
         $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
         /** Adding % to make link more unique */
         $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);

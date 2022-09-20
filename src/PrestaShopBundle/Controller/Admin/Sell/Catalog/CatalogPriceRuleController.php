@@ -88,11 +88,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function listForProductAction(Request $request): JsonResponse
+    public function listForProductAction(Request $request, int $productId): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(
             new GetCatalogPriceRuleListForProduct(
-                1,
+                $productId,
                 $this->getContextLangId(),
                 $request->query->getInt('limit') ?: null,
                 $request->query->getInt('offset') ?: null
