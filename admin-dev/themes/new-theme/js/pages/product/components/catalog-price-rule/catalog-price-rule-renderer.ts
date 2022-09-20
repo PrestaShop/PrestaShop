@@ -50,7 +50,6 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   }
 
   public render(data: Record<string, any>): void {
-    console.log(data);
     const {listFields} = CatalogPriceRuleMap;
     const tbody = this.listContainer.querySelector<HTMLElement>(`${CatalogPriceRuleMap.listContainer} tbody`);
 
@@ -73,7 +72,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;
 
     if (!editCatalogPriceRuleUrl) {
-      console.log('Error: Catalog price rule url not found');
+      console.error('Error: Catalog price rule url not found');
       return;
     }
 
@@ -117,7 +116,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
         tbody.append(trClone);
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
