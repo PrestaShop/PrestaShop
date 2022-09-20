@@ -681,7 +681,7 @@ class CartControllerCore extends FrontController
             if ($product['minimal_quantity'] > $product['cart_quantity']) {
                 // display minimal quantity warning error message
                 $this->errors[] = $this->translateProductNameWithAttributes(
-                    'The minimum purchase order quantity for the product [1]%product%[/1] is [1]%quantity%[/1].',
+                    'The minimum order quantity for the product [1]%product%[/1] is [1]%quantity%[/1].',
                     $product['name'],
                     $product['attributes'],
                     $product['minimal_quantity']
