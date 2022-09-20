@@ -41,11 +41,11 @@ class OrderReturnRepository extends AbstractObjectModelRepository
     /**
      * @var OrderReturnValidator
      */
-    private $validator;
+    private $orderReturnValidator;
 
-    public function __construct(OrderReturnValidator $validator)
+    public function __construct(OrderReturnValidator $orderReturnValidator)
     {
-        $this->validator = $validator;
+        $this->orderReturnValidator = $orderReturnValidator;
     }
 
     /**
@@ -75,7 +75,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function update(OrderReturn $orderReturn): void
     {
-        $this->validator->validate($orderReturn);
+        $this->orderReturnValidator->validate($orderReturn);
         $this->updateObjectModel(
             $orderReturn,
             OrderReturnException::class
