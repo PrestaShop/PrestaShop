@@ -51,23 +51,23 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     /**
      * @var OrderReturnValidator
      */
-    private $validator;
+    private $orderReturnValidator;
 
     /**
      * UpdateOrderReturnStateHandler constructor.
      *
      * @param OrderReturnRepository $orderReturnRepository
      * @param OrderReturnStateRepository $orderReturnStateRepository
-     * @param OrderReturnValidator $validator
+     * @param OrderReturnValidator $orderReturnValidator
      */
     public function __construct(
         OrderReturnRepository $orderReturnRepository,
         OrderReturnStateRepository $orderReturnStateRepository,
-        OrderReturnValidator $validator
+        OrderReturnValidator $orderReturnValidator
     ) {
         $this->orderReturnRepository = $orderReturnRepository;
         $this->orderReturnStateRepository = $orderReturnStateRepository;
-        $this->validator = $validator;
+        $this->orderReturnValidator = $orderReturnValidator;
     }
 
     /**
@@ -79,7 +79,7 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
         $orderReturn = $this->orderReturnRepository->get($orderReturnId);
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
 
-        $this->validator->validate($orderReturn);
+        $this->orderReturnValidator->validate($orderReturn);
         $this->orderReturnRepository->update($orderReturn);
     }
 
