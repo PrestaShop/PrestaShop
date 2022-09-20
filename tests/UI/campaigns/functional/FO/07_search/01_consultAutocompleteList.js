@@ -49,63 +49,66 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  it('should go to FO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-  it('should go to \'Shop parameters > Search\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPageToDisable', baseContext);
-
-    await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.searchLink);
-
-    const pageTitle = await searchPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(searchPage.pageTitle);
-  });
-
-  it('should disable fuzzy search', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'DisableFuzzySearch', baseContext);
-
-    const result = await searchPage.setFuzzySearch(page, false);
-    await expect(result).to.contains(searchPage.settingsUpdateMessage);
-  });
-
-  it('should go to FO and search product to check the autocomplete list', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
-
-    page = await searchPage.viewMyShop(page);
+    await homePage.goToFo(page);
 
     const isHomePage = await homePage.isHomePage(page);
     await expect(isHomePage).to.be.true;
-
-    const result = await homePage.getAutocompleteSearchResult(page, searchValue);
-
-    for (let i = 0; i < searchResults.length; i++) {
-      await expect(result, `Search result should contain ${searchResults[i]}`).to.contain(searchResults[i]);
-    }
   });
 
-  it('should search product', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
+  it('check the autocomplete list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
-    await homePage.searchProduct(page, searchValue);
+    const searchValue = 'test';
+    const numSearchResults = 7;
 
-    const pageTitle = await searchResultsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+    const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
+    await expect(numResults).equal(numSearchResults);
+
+    const inputValue = await homePage.getInputValue(page, homePage.searchInput);
+    await expect(inputValue).equal(searchValue);
   });
 
-  it('should check search result number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductNumber', baseContext);
+  it('should click outside the autocomplete list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'clickOutsideAutocompleteList', baseContext);
 
-    const resultNumber = await searchResultsPage.getSearchResultsNumber(page);
-    await expect(resultNumber, 'Product searched number is incorrect!').to.be.equal(searchResults.length);
+    await page.keyboard.press('Escape');
 
-    page = await searchResultsPage.closePage(browserContext, page, 0);
+    const hasAutocompleteList = await homePage.elementVisible(page, homePage.autocompleteSearchResult);
+    await expect(hasAutocompleteList).to.be.false;
   });
 
-  it('should enable fuzzy search', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'EnableFuzzySearch', baseContext);
+  [
+    {
+      searchValue: 'Mug',
+      numResults: 5,
+    },
+    {
+      searchValue: 'T-sh',
+      numResults: 1,
+    },
+    {
+      searchValue: 'Notebook',
+      numResults: 3,
+    },
+  ].forEach((search, index) => {
+    it(`should check the autocomplete list with the value ${search.searchValue}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkAutocompleteList_${index}`, baseContext);
 
-    const result = await searchPage.setFuzzySearch(page, true);
-    await expect(result).to.contains(searchPage.settingsUpdateMessage);
+      const numResults = await homePage.countAutocompleteSearchResult(page, search.searchValue);
+      await expect(numResults).equal(search.numResults);
+
+      const inputValue = await homePage.getInputValue(page, homePage.searchInput);
+      await expect(inputValue).equal(search.searchValue);
+    });
+  });
+
+  it('should check the autocomplete list with a string with less than 3 characters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteListSmallString', baseContext);
+
+    const hasSearchResult = await homePage.hasAutocompleteSearchResult(page, 'te');
+    await expect(hasSearchResult, 'There are results in autocomplete search').to.be.false;
   });
 });

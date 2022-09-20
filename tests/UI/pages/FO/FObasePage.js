@@ -39,6 +39,7 @@ class FOBasePage extends CommonPage {
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
+    this.autocompleteSearchResultItem = `${this.autocompleteSearchResult} .ui-menu-item`;
 
     // Footer links
     // Products links selectors
@@ -321,6 +322,7 @@ class FOBasePage extends CommonPage {
    */
   async hasAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
+    await page.waitForTimeout(2000);
     return this.elementVisible(page, this.autocompleteSearchResult, 2000);
   }
 
@@ -334,6 +336,19 @@ class FOBasePage extends CommonPage {
     await this.setValue(page, this.searchInput, productName);
     await page.waitForTimeout(2000);
     return this.getTextContent(page, this.autocompleteSearchResult);
+  }
+
+  /**
+   * Count autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<int>}
+   */
+  async countAutocompleteSearchResult(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.waitForTimeout(2000);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+    return (await page.$$(this.autocompleteSearchResultItem)).length;
   }
 
   /**
