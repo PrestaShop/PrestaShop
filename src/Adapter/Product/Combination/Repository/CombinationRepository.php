@@ -37,9 +37,11 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValida
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
@@ -165,7 +167,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         $this->partiallyUpdateObjectModel(
             $combination,
             $updatableProperties,
-            CannotAddCombinationException::class,
+            CannotUpdateCombinationException::class,
             $errorCode
         );
     }
@@ -351,6 +353,41 @@ class CombinationRepository extends AbstractObjectModelRepository
 //        }
 //
 //        return $id ? $this->get(new CombinationId($id)) : null;
+    }
+
+    public function setDefaultCombination(ProductId $productId, CombinationId $newDefaultCombination, ?ShopConstraint $shopConstraint): void
+    {
+        if (!$shopConstraint) {
+            // resets previous default combination to non-default
+            $this->connection->update(
+                $this->dbPrefix . 'product_attribute',
+                ['default_on' => 0],
+                ['default_on' => 1, 'id_product' => $productId->getValue()]
+            );
+
+            // sets new combination as default
+            $this->connection->update(
+                $this->dbPrefix . 'product_attribute',
+                ['default_on' => 1],
+                ['id_product_attribute' => $newDefaultCombination->getValue()]
+            );
+        }
+
+        if ($shopConstraint && $shopConstraint->getShopId()) {
+            $shopIdValue = $shopConstraint->getShopId()->getValue();
+            $this->connection->update(
+                $this->dbPrefix . 'product_attribute_shop',
+                ['default_on' => 0],
+                ['default_on' => 1, 'id_product' => $productId->getValue(), 'id_shop' => $shopIdValue]
+            );
+
+            // sets new combination as default
+            $this->connection->update(
+                $this->dbPrefix . 'product_attribute_shop',
+                ['default_on' => true],
+                ['id_product_attribute' => $newDefaultCombination->getValue(), 'id_shop' => $shopIdValue]
+            );
+        }
     }
 
     /**
