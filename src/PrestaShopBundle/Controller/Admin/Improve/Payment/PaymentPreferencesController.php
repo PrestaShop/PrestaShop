@@ -79,9 +79,8 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     *  @deprecated Should be removed in next major version in favor of multiple separate actions
-     * Process payment modules preferences form.
-     *
+     * @deprecated should be removed in next major version in favor of multiple separate actions
+     * Process payment modules preferences form
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.",
