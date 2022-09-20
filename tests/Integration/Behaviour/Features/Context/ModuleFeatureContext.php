@@ -37,8 +37,10 @@ class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function theModuleIsInstalled(string $module): void
     {
-        $fs = new Filesystem();
-        $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
+        if (!is_dir(_PS_MODULE_DIR_ . '/' . $module)) {
+            $fs = new Filesystem();
+            $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
+        }
 
         // Enable the module if needed
         if (!Module::isEnabled($module)) {

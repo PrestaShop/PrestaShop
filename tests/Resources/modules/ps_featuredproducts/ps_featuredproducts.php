@@ -51,11 +51,6 @@ class Ps_FeaturedProducts extends Module
 
     public function install()
     {
-        return parent::install()
-            && $this->registerHook('addproduct')
-            && $this->registerHook('updateproduct')
-            && $this->registerHook('deleteproduct')
-            && $this->registerHook('actionCategoryUpdate')
-            && $this->registerHook('displayHome');
+        return parent::install();
     }
 }
