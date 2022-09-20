@@ -126,8 +126,8 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $product = new Product($this->getSharedStorage()->get($productReference));
 
         Assert::assertEquals(
-            (int) $product->cache_default_attribute,
             $combinationId,
+            (int) $product->cache_default_attribute,
             'Unexpected cached product default combination'
         );
     }

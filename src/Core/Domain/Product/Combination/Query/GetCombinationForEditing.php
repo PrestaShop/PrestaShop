@@ -42,6 +42,7 @@ class GetCombinationForEditing
 
     /**
      * @param int $combinationId
+     * @todo: missing shopConstraint
      */
     public function __construct(
         int $combinationId
