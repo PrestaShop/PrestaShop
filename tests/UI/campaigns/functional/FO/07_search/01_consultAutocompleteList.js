@@ -3,19 +3,10 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
-// BO
-const dashboardPage = require('@pages/BO/dashboard');
-const searchPage = require('@pages/BO/shopParameters/search');
-
 // FO
 const homePage = require('@pages/FO/home');
-const searchResultsPage = require('@pages/FO/searchResults');
-
-// Import data
-const {Products} = require('@data/demo/products');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,19 +15,14 @@ const baseContext = 'functional_FO_search_consultAutocompleteList';
 
 let browserContext;
 let page;
-const searchValue = 'Hummingbird printed';
-
-// Search result should contain element who includes the search value
-const searchResults = Object.values(Products)
-  .map(product => product.name)
-  .filter(name => name.includes(searchValue));
 
 /*
-Disable Fuzzy search in BO
-Go to FO
-Search Product and check result
-Check the products number
- */
+  Go to FO
+  Check autocomplete list
+  Click outside the autocomplete list
+  Check the autocomplete list with values
+  Check the autocomplete list with a string with less than 3 characters
+*/
 
 describe('FO - Search Page : Search product and consult autocomplete list', async () => {
   // before and after functions
