@@ -34,8 +34,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @deprecated Should be removed in next major version in favor of multiple types
- * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page.
+ * @deprecated should be removed in next major version in favor of multiple types
+ * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page
  */
 class PaymentModulePreferencesType extends TranslatorAwareType
 {

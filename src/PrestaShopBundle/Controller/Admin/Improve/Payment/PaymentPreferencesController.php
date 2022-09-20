@@ -67,7 +67,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
-        /** In next major version for separate views should be passed one for each restriction group */
+        /* In next major version for separate views should be passed one for each restriction group */
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
