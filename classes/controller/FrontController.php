@@ -1554,16 +1554,6 @@ class FrontControllerCore extends Controller
         return $curr;
     }
 
-    public function getTemplateVarCountry()
-    {
-        $countryInfos = [];
-        foreach (Country::$definition['fields'] as $fieldName) {
-            $countryInfos[$fieldName] = $this->context->country->{$fieldName};
-        }
-
-        return $countryInfos;
-    }
-
     public function getTemplateVarCustomer($customer = null)
     {
         if (Validate::isLoadedObject($customer)) {
