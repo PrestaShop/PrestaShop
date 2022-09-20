@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec991e6f7b7ae6fc3d777ab6b9185c2b",
+    "content-hash": "96e34fdce0ee65dd927da9193e4cd78e",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4591,22 +4591,23 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.0.0-beta",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb"
+                "reference": "d60a6a725ca80674d5855e9152f1e923692294e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
-                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/d60a6a725ca80674d5855e9152f1e923692294e1",
+                "reference": "d60a6a725ca80674d5855e9152f1e923692294e1",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
+            "default-branch": true,
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4624,9 +4625,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.0-beta"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2022-08-01T09:39:49+00:00"
+            "time": "2022-09-12T14:26:41+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -12540,6 +12541,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
+        "prestashop/classic": 20,
         "prestashop/laminas-code-lts": 20
     },
     "prefer-stable": true,
