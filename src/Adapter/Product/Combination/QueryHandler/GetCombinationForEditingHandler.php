@@ -32,7 +32,7 @@ use Combination;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -62,7 +62,7 @@ use Product;
 class GetCombinationForEditingHandler implements GetCombinationForEditingHandlerInterface
 {
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     private $combinationRepository;
 
@@ -117,7 +117,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $productImageUrlFactory;
 
     /**
-     * @param CombinationRepository $combinationRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
@@ -130,7 +130,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
+        CombinationMultiShopRepository $combinationRepository,
         CombinationNameBuilderInterface $combinationNameBuilder,
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
@@ -160,7 +160,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     public function handle(GetCombinationForEditing $query): CombinationForEditing
     {
-        $combination = $this->combinationRepository->get($query->getCombinationId());
+        $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $query->getShopConstraint());
         $productId = new ProductId((int) $combination->id_product);
         $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
         $product = $this->productRepository->get($productId);

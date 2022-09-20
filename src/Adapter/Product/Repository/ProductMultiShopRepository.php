@@ -337,6 +337,63 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @todo: wip and not working well yet (thats why marked with deprecated too for now)
+     * @deprecated
+     * @param ProductId $productId
+     *
+     */
+    public function updateCachedDefaultCombination(ProductId $productId): void
+    {
+        $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
+
+        $defaultCombinations = $this->connection->fetchAllAssociative(sprintf('
+            SELECT id_product_attribute, id_shop
+            FROM ps_product_attribute_shop
+            WHERE id_product = %d
+            AND default_on = 1
+            ORDER BY id_shop ASC
+        ', $productId->getValue()));
+
+        $firstExistingShopCombinationId = null;
+        $combinationIdForDefaultShop = null;
+        if ($defaultCombinations) {
+            foreach ($defaultCombinations as $defaultCombination) {
+                $combinationId = (int) $defaultCombination['id_product_attribute'];
+
+                if (!$firstExistingShopCombinationId) {
+                    $firstExistingShopCombinationId = $combinationId;
+                }
+
+                if ($defaultShopId === (int) $defaultCombination['id_shop']) {
+                    $combinationIdForDefaultShop = $combinationId;
+                    break;
+                }
+            }
+        }
+
+        $this->connection->executeStatement(sprintf(
+            'UPDATE ps_product SET cache_default_attribute = %d WHERE id_product = %d',
+            $combinationIdForDefaultShop ?? $firstExistingShopCombinationId,
+            $productId->getValue()
+        ));
+
+        $this->connection->executeStatement(sprintf(
+            'UPDATE ps_product SET cache_default_attribute = %d WHERE id_product = %d',
+            $combinationIdForDefaultShop ?? $firstExistingShopCombinationId,
+            $productId->getValue()
+        ));
+
+        foreach ($defaultCombinations as $defaultCombination) {
+            $this->connection->executeStatement(sprintf(
+                'UPDATE ps_product_shop SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                (int) $defaultCombination['id_product_attribute'],
+                $productId->getValue(),
+                (int) $defaultCombination['id_shop']
+            ));
+        }
+    }
+
+    /**
      * @param ProductId $productId
      *
      * @return Product
