@@ -107,7 +107,7 @@ export default class SpecificPricesManager {
       return;
     }
     if (catalogPriceRulesContainer === null) {
-      console.log(`Error: ${CatalogPriceRulesMap.blockContainer} element not found`);
+      console.error(`Error: ${CatalogPriceRulesMap.blockContainer} element not found`);
       return;
     }
 
