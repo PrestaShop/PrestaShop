@@ -37,7 +37,7 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   private productId: number;
 
-  private listContainer: HTMLElement;
+  private listContainer: HTMLElement | null;
 
   private $loadingSpinner: JQuery;
 
@@ -47,7 +47,7 @@ export default class SpecificPriceListRenderer implements RendererType {
     productId: number,
   ) {
     this.productId = productId;
-    this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
+    this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer);
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$loadingSpinner = $(ProductMap.specificPrice.loadingSpinner);
     this.$listTable = $(ProductMap.specificPrice.listTable);
@@ -60,10 +60,13 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   public render(data: Record<string, any>): void {
     const {listFields} = SpecificPriceMap;
-    const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
-    const trTemplateContainer = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLScriptElement;
-    const trTemplate = trTemplateContainer.innerHTML as string;
-    tbody.innerHTML = '';
+    const tbody = this.listContainer?.querySelector<HTMLElement>(`${SpecificPriceMap.listContainer} tbody`);
+    const trTemplateContainer = this.listContainer?.querySelector<HTMLScriptElement>(SpecificPriceMap.listRowTemplate);
+    const trTemplate = trTemplateContainer?.innerHTML as string;
+
+    if (tbody !== null && tbody !== undefined) {
+      tbody.innerHTML = '';
+    }
 
     const specificPrices = data.specificPrices as Array<SpecificPriceForListing>;
     this.toggleListVisibility(specificPrices.length > 0);
@@ -102,23 +105,23 @@ export default class SpecificPriceListRenderer implements RendererType {
       editBtn.dataset.specificPriceId = String(specificPrice.id);
 
       if (!specificPrice.period) {
-        periodField.textContent = String(periodField.dataset.unlimitedText);
+        periodField.textContent = String(periodField?.dataset.unlimitedText);
       } else {
         periodFromField.textContent = specificPrice.period.from;
         periodToField.textContent = specificPrice.period.to;
       }
 
-      tbody.append(trClone);
+      tbody?.append(trClone);
       this.addEventListenerForDeleteBtn(deleteBtn);
     });
   }
 
   private toggleListVisibility(show: boolean): void {
-    this.listContainer.classList.toggle('d-none', !show);
+    this.listContainer?.classList.toggle('d-none', !show);
   }
 
-  private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
-    return templateTrClone.querySelector(selector) as HTMLElement;
+  private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement | null | undefined {
+    return templateTrClone.querySelector<HTMLElement>(selector);
   }
 
   private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {

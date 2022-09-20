@@ -36,11 +36,11 @@ export default class CategoriesManager {
 
   categoryTreeSelector: CategoryTreeSelector;
 
-  categoriesContainer: HTMLElement;
+  categoriesContainer: HTMLElement | null;
 
-  defaultCategoryInput: HTMLInputElement;
+  defaultCategoryInput: HTMLInputElement | null | undefined;
 
-  addCategoriesBtn: HTMLElement;
+  addCategoriesBtn: HTMLElement | null | undefined;
 
   tagsRenderer: TagsRenderer;
 
@@ -54,8 +54,8 @@ export default class CategoriesManager {
     }
     this.categoriesContainer = categoriesContainer;
 
-    const addCategoriesBtn = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
-    const defaultCategoryInput = this.categoriesContainer
+    const addCategoriesBtn = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
+    const defaultCategoryInput = this.categoriesContainer?
       .querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
 
     if (!addCategoriesBtn || !defaultCategoryInput) {
@@ -76,7 +76,7 @@ export default class CategoriesManager {
   }
 
   private initCategoryTreeModal(): void {
-    this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
+    this.addCategoriesBtn?.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
       this.getDefaultCategoryId(),
     ));
@@ -88,16 +88,16 @@ export default class CategoriesManager {
 
   private collectCategories(): Array<Category> {
     // these are at first rendered on page load and later updated dynamically
-    const tagsContainer = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
+    const tagsContainer = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
 
     if (!tagsContainer) {
       throw new Error(`Essential element was not found for categories manager: ${ProductCategoryMap.tagsContainer}`);
     }
 
-    const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
+    const tags = tagsContainer?.querySelectorAll(ProductCategoryMap.tagItem);
     const categories: Array<Category> = [];
 
-    tags.forEach((tag: Element) => {
+    tags?.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
         const idInput = tag.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput);
 
@@ -139,7 +139,7 @@ export default class CategoriesManager {
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
 
-    const selectElement = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
+    const selectElement = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
 
     if (!selectElement) {
       console.error(`${ProductCategoryMap.defaultCategorySelectInput} element was not found.`);
@@ -148,7 +148,10 @@ export default class CategoriesManager {
     }
 
     const defaultCategoryId = this.getDefaultCategoryId();
-    selectElement.innerHTML = '';
+
+    if (selectElement !== null && selectElement !== undefined) {
+      selectElement.innerHTML = '';
+    }
 
     categories.forEach((category) => {
       const optionElement = document.createElement('option');
@@ -156,13 +159,13 @@ export default class CategoriesManager {
       optionElement.innerHTML = category.displayName;
       optionElement.selected = category.id === defaultCategoryId;
 
-      selectElement.append(optionElement);
+      selectElement?.append(optionElement);
     });
   }
 
   private listenDefaultCategorySelect(): void {
-    $(`#${this.defaultCategoryInput.id}`).on('change', (e) => {
-      const {currentTarget} = e;
+    this.defaultCategoryInput?.addEventListener('change', (e) => {
+      const currentTarget = e.currentTarget as HTMLInputElement;
 
       if (!(currentTarget instanceof HTMLSelectElement)) {
         console.error('currentTarget expected to be HTMLSelectElement');
@@ -182,6 +185,6 @@ export default class CategoriesManager {
   }
 
   private getDefaultCategoryId(): number {
-    return Number(this.defaultCategoryInput.value);
+    return Number(this.defaultCategoryInput?.value);
   }
 }

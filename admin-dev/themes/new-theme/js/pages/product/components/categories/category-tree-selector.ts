@@ -49,13 +49,13 @@ export default class CategoryTreeSelector {
 
   defaultCategoryId: number;
 
-  modalContentContainer: HTMLElement|null;
+  modalContentContainer: HTMLElement | null;
 
-  modal: ModalType|null;
+  modal: ModalType | null;
 
-  categoryTree: HTMLElement|null;
+  categoryTree: HTMLElement | null | undefined;
 
-  tagsRenderer: TagsRenderer|null;
+  tagsRenderer: TagsRenderer | null;
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -109,7 +109,7 @@ export default class CategoryTreeSelector {
     }
 
     this.modalContentContainer = modalContentContainer;
-    this.categoryTree = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.categoryTree);
+    this.categoryTree = this.modalContentContainer?.querySelector<HTMLElement>(ProductCategoryMap.categoryTree);
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
@@ -213,7 +213,7 @@ export default class CategoryTreeSelector {
    * Used to recursively create items of the category tree
    */
   private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
-    const categoryNode = this.generateTreeElement(treeCategory);
+    const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
     const childrenList = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.childrenList);
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
 
@@ -231,7 +231,11 @@ export default class CategoryTreeSelector {
 
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.treeElementInputs);
-      checkboxInput.value = String(treeCategory.id);
+      const checkboxInput = inputsContainer?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
+
+      if (checkboxInput !== null && checkboxInput !== undefined) {
+        checkboxInput.value = String(treeCategory.id);
+      }
 
       inputsContainer?.addEventListener('click', (event) => {
         // We don't want to mess with the inputs behaviour (no toggle when checkbox or radio is clicked)

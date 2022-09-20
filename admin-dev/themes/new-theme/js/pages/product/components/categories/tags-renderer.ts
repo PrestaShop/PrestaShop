@@ -31,7 +31,7 @@ const ProductCategoryMap = ProductMap.categories;
 export default class TagsRenderer {
   eventEmitter: EventEmitter;
 
-  container: HTMLElement;
+  container: HTMLElement | null;
 
   tagRemovedEventName: string;
 
@@ -41,12 +41,17 @@ export default class TagsRenderer {
     tagRemovedEventName: string,
   ) {
     this.eventEmitter = eventEmitter;
-    this.container = document.querySelector(containerSelector) as HTMLElement;
+    this.container = document.querySelector<HTMLElement>(containerSelector);
     this.tagRemovedEventName = tagRemovedEventName;
     this.listenTagRemoval();
   }
 
   public render(categories: Array<Category>, defaultCategoryId: number): void {
+    if (!this.container) {
+      console.error('The container is undefined or invalid');
+      return;
+    }
+
     this.container.innerHTML = '';
     const tagTemplate = this.container.dataset.prototype;
     const {prototypeName} = this.container.dataset;
@@ -67,13 +72,13 @@ export default class TagsRenderer {
         const idInput = frag.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
         idInput.value = String(category.id);
 
-        const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
+        const tagRemoveBtn = frag.querySelector<HTMLElement>(ProductCategoryMap.tagRemoveBtn);
 
-        // don't show the tag removal element for main category or when it is the last category
-        if (category.id === defaultCategoryId || categories.length === 1) {
-          tagRemoveBtn.classList.add('d-none');
+        if (category.id === defaultCategoryId) {
+          // don't show the tag removal element for main category
+          tagRemoveBtn?.classList.add('d-none');
         } else {
-          tagRemoveBtn.classList.remove('d-none');
+          tagRemoveBtn?.classList.remove('d-none');
         }
 
         const namePreviewElement = frag.querySelector(ProductCategoryMap.categoryNamePreview);
@@ -94,7 +99,7 @@ export default class TagsRenderer {
           namePreviewInput.value = category.displayName;
         }
 
-        this.container.append(frag);
+        this.container?.append(frag);
       }
 
       index += 1;
@@ -104,15 +109,19 @@ export default class TagsRenderer {
   }
 
   private listenTagRemoval(): void {
+    if (!this.container) {
+      console.error('The container is undefined or invalid');
+      return;
+    }
     this.container.querySelectorAll(ProductCategoryMap.tagRemoveBtn).forEach((element) => {
       element.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopImmediatePropagation();
         const clickedBtn = event.currentTarget as HTMLElement;
-        const tagItem = clickedBtn.closest(ProductCategoryMap.tagItem) as HTMLElement;
+        const tagItem = clickedBtn.closest<HTMLElement>(ProductCategoryMap.tagItem);
 
         if (tagItem) {
-          const idInput = tagItem.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+          const idInput = tagItem?.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
           tagItem.remove();
           this.eventEmitter.emit(this.tagRemovedEventName, Number(idInput.value));
         }
