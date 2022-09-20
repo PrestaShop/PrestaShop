@@ -154,18 +154,16 @@ class CombinationDeleter
             // 2. update product_attribute.default_on
             // @todo: 3. update product.cache_default_attribute
             if ($newDefaultCombination) {
-                // update combination.default_on for product_attribute
-                // @todo: this causes duplicate entry in product_attribute.default_on
-                $this->updateCombinationDefaultProperty($newDefaultCombination, true, null);
+                $this->combinationRepository->setDefaultCombination($productId, $newDefaultCombinationId, null);
             }
             // update product.cache_default_attribute
-            // @todo: this probably causes freeze in terminal
-            Product::updateDefaultAttribute($productId->getValue());
+            //@todo: same done in combination::delete already so not needed
+//            Product::updateDefaultAttribute($productId->getValue());
         }
 
         if ($newDefaultCombination) {
             // update combination.default_on for product_attribute_shop
-            $this->updateCombinationDefaultProperty($newDefaultCombination, true, $shopConstraint);
+            $this->combinationRepository->setDefaultCombination($productId, $newDefaultCombinationId, $shopConstraint);
         }
     }
 
@@ -173,25 +171,16 @@ class CombinationDeleter
     /**
      * @param Combination $combination
      * @param bool $isDefault
-     * @param ShopConstraint|null $shopConstraint
+     * @param ShopConstraint $shopConstraint
      */
-    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault, ?ShopConstraint $shopConstraint): void
+    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault, ShopConstraint $shopConstraint): void
     {
         $combination->default_on = $isDefault;
-
-        if ($shopConstraint) {
-            $this->combinationMultiShopRepository->partialUpdate(
-                $combination,
-                ['default_on'],
-                $shopConstraint,
-                CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
-            );
-        } else {
-            $this->combinationRepository->partialUpdate(
-                $combination,
-                ['default_on'],
-                CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
-            );
-        }
+        $this->combinationMultiShopRepository->partialUpdate(
+            $combination,
+            ['default_on'],
+            $shopConstraint,
+            CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
+        );
     }
 }

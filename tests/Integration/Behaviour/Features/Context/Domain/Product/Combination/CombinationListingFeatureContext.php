@@ -298,16 +298,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $editableCombinationForListing->getReference(),
                 'Unexpected combination reference'
             );
-            try {
-                Assert::assertSame(
-                    PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
-                    $editableCombinationForListing->isDefault(),
-                    'Unexpected default combination'
-                );
-            } catch (ExpectationFailedException $e) {
-                var_dump($e);
-            }
-
+            Assert::assertSame(
+                PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
+                $editableCombinationForListing->isDefault(),
+                'Unexpected default combination'
+            );
             Assert::assertEquals(
                 $expectedCombination['impact on price'],
                 (string) $editableCombinationForListing->getImpactOnPrice(),
