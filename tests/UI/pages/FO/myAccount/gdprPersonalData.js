@@ -18,6 +18,7 @@ class GDPRPersonalData extends FOBasePage {
 
     // Selectors
     this.headerTitle = '#content-wrapper h1';
+    this.contactUsLink = '#content section.page_content a[href*=\'contact-us\']';
   }
 
   /*
@@ -34,12 +35,12 @@ class GDPRPersonalData extends FOBasePage {
   }
 
   /**
-   * Export data to PDF
+   * Go to contact us page
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async exportDataToPDF(page) {
-    return this.clickAndWaitForDownload(page, '#exportDataToPdf');
+  async goToContactUsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.contactUsLink);
   }
 }
 
