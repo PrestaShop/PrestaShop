@@ -21,11 +21,14 @@ let browserContext;
 let page;
 
 /*
-Go to FO
-Search Product
- */
+  Go to FO
+  Check autocomplete
+  Choose product on the autocomplete list
+  Click on logo link and go to home page
+  Click on Enter in autocomplete list
+*/
 
-describe('FO - Search Page : Search product', async () => {
+describe('FO - Search Page : Search a product and validate', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -55,7 +58,7 @@ describe('FO - Search Page : Search product', async () => {
     await expect(results).contains('notebook');
   });
 
-  it('should choose product on the list', async function () {
+  it('should choose product on the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'chooseProductOnList', baseContext);
 
     await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
