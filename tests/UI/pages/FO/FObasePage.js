@@ -40,6 +40,8 @@ class FOBasePage extends CommonPage {
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
     this.autocompleteSearchResultItem = `${this.autocompleteSearchResult} .ui-menu-item`;
+    this.autocompleteSearchResultItemLink = nthChild => `${this.autocompleteSearchResult} `
+      + `.ui-menu-item:nth-child(${nthChild}) a`;
 
     // Footer links
     // Products links selectors
@@ -361,6 +363,20 @@ class FOBasePage extends CommonPage {
     await this.setValue(page, this.searchInput, productName);
     await page.keyboard.press('Enter');
     await page.waitForNavigation('networkidle');
+  }
+
+  /**
+   * Click autocomplete search on the nth result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @param nthResult {integer} Nth result to click
+   * @returns {Promise<int>}
+   */
+  async clickAutocompleteSearchResult(page, productName, nthResult) {
+    await this.setValue(page, this.searchInput, productName);
+    await page.waitForTimeout(2000);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+    await page.click(this.autocompleteSearchResultItemLink(nthResult));
   }
 
   // Footer methods
