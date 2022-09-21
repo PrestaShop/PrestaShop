@@ -22,6 +22,7 @@ const cartPage = require('@pages/FO/cart');
 const foLoginPage = require('@pages/FO/login');
 const checkLogin = require('@pages/FO/checkout');
 const {choosePaymentAndOrder} = require('@pages/FO/checkout');
+const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
@@ -197,7 +198,17 @@ describe('BO - Catalog - Cart rules', async () => {
 
       await checkLogin.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
     });
+
+    it('should get the confirmation page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmationStepPage', baseContext);
+
+      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+
+      // Check the confirmation message
+      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    });
   });
+
 
   //post condition : delete cart rule
   deleteCartRuleTest(cartRuleCode.name, baseContext);
