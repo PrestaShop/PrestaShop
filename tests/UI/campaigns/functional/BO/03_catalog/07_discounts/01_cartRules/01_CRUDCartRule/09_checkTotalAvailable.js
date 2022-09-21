@@ -14,6 +14,8 @@ const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRu
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
+const addOrderPage = require('@pages/BO/orders/add');
+
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
@@ -23,6 +25,7 @@ const foLoginPage = require('@pages/FO/login');
 const checkLogin = require('@pages/FO/checkout');
 const {choosePaymentAndOrder} = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
@@ -115,7 +118,7 @@ describe('BO - Catalog - Cart rules', async () => {
     });
   });
 
-  describe('Verify discount on FO', async () => {
+  describe('Use Cart Rule for First Time', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
@@ -167,7 +170,6 @@ describe('BO - Catalog - Cart rules', async () => {
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
-      await page.waitForTimeout(10000)
     });
 
     it('should checkout by signIn', async function () {
@@ -207,8 +209,54 @@ describe('BO - Catalog - Cart rules', async () => {
       // Check the confirmation message
       await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
     });
+
+    it('should click on the logo of the shop', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
+
+      await foHomePage.clickOnHeaderLink(page, 'Logo');
+
+      const pageTitle = await foHomePage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+    });
+
   });
 
+  describe('Can No Longer Use Same Cart Rule', async () => {
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage1', baseContext);
+
+      await foHomePage.goToProductPage(page, 1);
+
+      const pageTitle = await foProductPage.getPageTitle(page);
+      await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+    });
+
+    it('should add product to cart and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
+
+      await foProductPage.addProductToTheCart(page);
+
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should set the promo code', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addPromoCode_2', baseContext);
+
+      await cartPage.addPromoCode(page, cartRuleCode.code);
+      // await page.waitForTimeout(10000)
+
+    });
+
+
+    it('should search for the same created voucher and check the error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchExistingVoucher', baseContext);
+
+      const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
+      await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
+    });
+
+  });
 
   //post condition : delete cart rule
   deleteCartRuleTest(cartRuleCode.name, baseContext);
