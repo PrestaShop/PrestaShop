@@ -32,8 +32,6 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
-#   @todo: if I skip copying product then it doesnt exist in shop2, but further combinations generation for shop2 doesn't fail. I think it should
-  #        (combination generation might be missing assertions of shop associations for related product)
     And I copy product product1 from shop shop1 to shop shop2
     And I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
