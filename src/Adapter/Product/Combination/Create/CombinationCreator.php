@@ -172,12 +172,12 @@ class CombinationCreator
             if ($alreadyHasCombinations) {
                 $attributeIds = array_values($generatedCombination);
                 $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
-                $associatedWithShop = $this->combinationMultiShopRepository->isAssociatedWithShop($matchingCombinationId, $shopId);
-                if ($matchingCombinationId && $associatedWithShop) {
-                    continue;
-                }
 
-                if ($matchingCombinationId && !$associatedWithShop) {
+                if ($matchingCombinationId) {
+                    if ($this->combinationMultiShopRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
+                        continue;
+                    }
+
                     $this->combinationMultiShopRepository->addToShop($matchingCombinationId, $shopId);
                     $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
                     $this->stockAvailableMultiShopRepository->addToShop(
