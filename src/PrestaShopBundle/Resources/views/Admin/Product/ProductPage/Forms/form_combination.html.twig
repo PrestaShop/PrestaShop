@@ -58,9 +58,22 @@
     {% endif %}
 
     <td class="attribute-actions">
-        <div class="btn-group btn-group-sm" role="group">
+        <div class="btn-group btn-group-sm d-none d-md-block" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open tooltip-link btn-sm"><i class="material-icons">mode_edit</i></a>
         </div>
+
+        <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate d-inline-block px-0 d-md-none"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-right">
+          <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open tooltip-link dropdown-item"><i class="material-icons">mode_edit</i> {{ 'Edit'|trans({}, 'Admin.Actions') }}</a>
+          <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn tooltip-link delete dropdown-item" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</a>
+        </div>
+
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
             <div class="col-sm-12 nav">
                 {# "Prev." is short for "Previous" #}
@@ -272,7 +285,7 @@
             </div>
         </div>
     </td>
-    <td width="5%">
+    <td width="5%" class="d-none d-md-table-cell">
       <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn tooltip-link btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
     </td>
     <td>

@@ -964,6 +964,10 @@ $product-page-padding-bottom: 80px !default;
       .attribute-price,
       .attribute-quantity {
         width: 15%;
+
+        input {
+          min-width: 4rem;
+        }
       }
 
       .attribute-finalprice {
