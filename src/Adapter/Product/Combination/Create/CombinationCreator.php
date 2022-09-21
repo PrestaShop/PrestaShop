@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -59,11 +58,6 @@ class CombinationCreator
     private $combinationGenerator;
 
     /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
      * @var ProductMultiShopRepository
      */
     private $productRepository;
@@ -71,7 +65,7 @@ class CombinationCreator
     /**
      * @var CombinationMultiShopRepository
      */
-    private $combinationMultiShopRepository;
+    private $combinationRepository;
 
     /**
      * @var StockAvailableRepository
@@ -85,22 +79,19 @@ class CombinationCreator
 
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
-     * @param CombinationRepository $combinationRepository
-     * @param CombinationMultiShopRepository $combinationMultiShopRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
-        CombinationRepository $combinationRepository,
-        CombinationMultiShopRepository $combinationMultiShopRepository,
+        CombinationMultiShopRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
         StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
     ) {
         $this->combinationGenerator = $combinationGenerator;
         $this->combinationRepository = $combinationRepository;
-        $this->combinationMultiShopRepository = $combinationMultiShopRepository;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
@@ -165,7 +156,7 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombination($productId);
+        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombinationId($productId);
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
             // Product already has combinations, so we need to filter existing ones
@@ -174,11 +165,11 @@ class CombinationCreator
                 $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
 
                 if ($matchingCombinationId) {
-                    if ($this->combinationMultiShopRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
+                    if ($this->combinationRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
                         continue;
                     }
 
-                    $this->combinationMultiShopRepository->addToShop($matchingCombinationId, $shopId);
+                    $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
                     $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
                     $this->stockAvailableMultiShopRepository->addToShop(
                         new StockId((int) $combinationGenericStock->id),
@@ -210,14 +201,14 @@ class CombinationCreator
         bool $isDefault,
         ShopId $shopId
     ): CombinationId {
-        $combination = $this->combinationMultiShopRepository->create($productId, $isDefault, $shopId);
+        $combination = $this->combinationRepository->create($productId, $isDefault, $shopId);
         $combinationId = new CombinationId((int) $combination->id);
 
         //@todo: Use DB transaction instead if they are accepted (PR #21740)
         try {
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
-            $this->combinationMultiShopRepository->delete($combinationId, ShopConstraint::shop($shopId->getValue()));
+            $this->combinationRepository->delete($combinationId, ShopConstraint::shop($shopId->getValue()));
             throw $e;
         }
 
