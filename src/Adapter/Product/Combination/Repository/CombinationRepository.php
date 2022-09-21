@@ -325,31 +325,13 @@ class CombinationRepository extends AbstractObjectModelRepository
      */
     public function findDefaultCombination(ProductId $productId): ?Combination
     {
-        $qb = $this->connection->createQueryBuilder()
-            ->select('pa.id_product_attribute, pa.default_on')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->andWhere('pa.id_product = :productId')
-            ->andWhere('pa.default_on = 1')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAssociative();
-
-        if (!isset($result['id_product_attribute'])) {
-            return null;
+        try {
+            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
         }
 
-        return $this->get(new CombinationId((int) $result['id_product_attribute']));
-        //@todo: is there a point using this complex legacy method? It uses context shops association,
-//               but it seems default attribute should stay same between all shops?
-//              (or else how do we sync product_attribute_shop and product_attribute.default_on?)
-//        try {
-//            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
-//        } catch (PrestaShopException $e) {
-//            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
-//        }
-//
-//        return $id ? $this->get(new CombinationId($id)) : null;
+        return $id ? $this->get(new CombinationId($id)) : null;
     }
 
     /**
