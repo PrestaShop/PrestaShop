@@ -346,50 +346,59 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     {
         $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
 
-        $defaultCombinations = $this->connection->fetchAllAssociative(sprintf('
-            SELECT id_product_attribute, id_shop
-            FROM ps_product_attribute_shop
-            WHERE id_product = %d
-            AND default_on = 1
-            ORDER BY id_shop ASC
-        ', $productId->getValue()));
+        $defaultCombinations = $this->connection->fetchAllAssociative(
+            sprintf('
+                SELECT id_product_attribute, id_shop
+                FROM %sproduct_attribute_shop
+                WHERE id_product = %d
+                AND default_on = 1
+                ORDER BY id_shop ASC
+            ',
+                $this->dbPrefix,
+                $productId->getValue()
+            )
+        );
 
-        $firstExistingShopCombinationId = null;
+        $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
         $combinationIdForDefaultShop = null;
-        if ($defaultCombinations) {
-            foreach ($defaultCombinations as $defaultCombination) {
-                $combinationId = (int) $defaultCombination['id_product_attribute'];
 
-                if (!$firstExistingShopCombinationId) {
-                    $firstExistingShopCombinationId = $combinationId;
-                }
+        foreach ($defaultCombinations as $defaultCombination) {
+            $combinationId = (int) $defaultCombination['id_product_attribute'];
+            $combinationShopId = (int) $defaultCombination['id_shop'];
 
-                if ($defaultShopId === (int) $defaultCombination['id_shop']) {
-                    $combinationIdForDefaultShop = $combinationId;
-                    break;
-                }
+            if ($defaultShopId === $combinationShopId) {
+                $combinationIdForDefaultShop = $combinationId;
             }
+
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                $combinationId,
+                $productId->getValue(),
+                $combinationShopId
+            ));
         }
 
         $this->connection->executeStatement(sprintf(
-            'UPDATE ps_product SET cache_default_attribute = %d WHERE id_product = %d',
-            $combinationIdForDefaultShop ?? $firstExistingShopCombinationId,
+            'UPDATE %sproduct SET cache_default_attribute = %d WHERE id_product = %d',
+            $this->dbPrefix,
+            $combinationIdForDefaultShop,
             $productId->getValue()
         ));
 
-        $this->connection->executeStatement(sprintf(
-            'UPDATE ps_product SET cache_default_attribute = %d WHERE id_product = %d',
-            $combinationIdForDefaultShop ?? $firstExistingShopCombinationId,
-            $productId->getValue()
-        ));
 
-        foreach ($defaultCombinations as $defaultCombination) {
-            $this->connection->executeStatement(sprintf(
-                'UPDATE ps_product_shop SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
-                (int) $defaultCombination['id_product_attribute'],
-                $productId->getValue(),
-                (int) $defaultCombination['id_shop']
-            ));
+        if (empty($defaultCombinations)) {
+            $productShopIds = Product::getShopsByProduct($productId->getValue());
+            foreach ($productShopIds as $productShopId) {
+                $this->connection->executeStatement(sprintf(
+                    'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                    $productShopTable,
+                    0,
+                    $productId->getValue(),
+                    //@todo: instead of default shopId i need to update it all shops that product is associated with
+                    $productShopId['id_shop']
+                ));
+            }
         }
     }
 
