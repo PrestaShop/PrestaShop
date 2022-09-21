@@ -28,8 +28,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
+use Db;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
@@ -45,6 +47,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShopException;
+use Product;
 
 /**
  * @todo: This class has been added while we progressively migrate each domain to multishop It contains the new
@@ -71,18 +75,26 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     private $combinationValidator;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
+     * @param AttributeRepository $attributeRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        CombinationValidator $combinationValidator
+        CombinationValidator $combinationValidator,
+        AttributeRepository $attributeRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->combinationValidator = $combinationValidator;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -101,10 +113,91 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $combination->default_on = $isDefault;
         $combination->id_shop_list = [$shopId->getValue()];
 
-//        $this->addObjectModel($combination, CannotAddCombinationException::class);
         $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
 
         return $combination;
+    }
+
+    /**
+     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
+     *
+     * @param ProductId $productId
+     *
+     * @return CombinationId|null
+     */
+    public function findDefaultCombinationId(ProductId $productId): ?CombinationId
+    {
+        try {
+            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        }
+
+        return $id ? new CombinationId($id) : null;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param int[] $attributeIds
+     *
+     * @return CombinationId
+     */
+    public function findCombinationIdByAttributes(ProductId $productId, array $attributeIds): ?CombinationId
+    {
+        sort($attributeIds);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('pa.id_product_attribute')
+            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->innerJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )
+            ->andWhere('pa.id_product = :productId')
+            ->andHaving('attribute_ids = :attributeIds')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('attributeIds', implode('-', $attributeIds))
+            ->addGroupBy('pa.id_product_attribute')
+        ;
+        $result = $qb->execute()->fetchAssociative();
+
+        if (empty($result)) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param int[] $attributeIds
+     */
+    public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
+    {
+        $this->assertCombinationExists($combinationId);
+        $this->attributeRepository->assertAllAttributesExist($attributeIds);
+
+        // @todo: need to check if these doesn't exist?
+        // especially when dealing with combination which has to be only added to another shop,
+        // then we get duplicate insert error :/
+        $attributesList = [];
+        foreach ($attributeIds as $attributeId) {
+            $attributesList[] = [
+                'id_product_attribute' => $combinationId->getValue(),
+                'id_attribute' => $attributeId,
+            ];
+        }
+
+        try {
+            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
+                throw new CannotAddCombinationException('Failed saving product-combination associations');
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
+        }
     }
 
     /**
@@ -247,47 +340,6 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         ));
     }
 
-    /**
-     * @param ProductId $productId
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return Combination|null
-     *
-     * @throws InvalidShopConstraintException
-     */
-    public function findDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): ?Combination
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Combination has no features related with shop group use single shop and all shops constraints');
-        }
-
-        if ($shopConstraint->getShopId()) {
-            $shopId = $shopConstraint->getShopId();
-        } else {
-            $shopId = $this->getProductDefaultShopId($productId);
-        }
-
-        $qb = $this->connection->createQueryBuilder()
-            ->select('pas.id_product_attribute, pas.default_on')
-            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
-            ->where('pas.id_shop = :shopId')
-            ->andWhere('pas.id_product = :productId')
-            ->andWhere('pas.default_on = 1')
-            ->setParameter('shopId', $shopId->getValue())
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAssociative();
-
-        if (!isset($result['id_product_attribute'])) {
-            return null;
-        }
-
-        $combinationId = (int) $result['id_product_attribute'];
-
-        return $this->getCombinationByShopId(new CombinationId($combinationId), $shopId);
-    }
-
     public function findFirstCombinationId(ProductId $productId, ShopConstraint $shopConstraint): ?CombinationId
     {
         if ($shopConstraint->getShopGroupId()) {
@@ -422,6 +474,51 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * @param CombinationId $combinationId
+     *
+     * @return ShopId
+     *
+     * @throws Exception
+     * @throws ShopException
+     */
+    public function getAssociatedShopIds(CombinationId $combinationId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'product_attribute_shop')
+            ->where('id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        $shops = [];
+        foreach ($result as $shop) {
+            $shops[] = new ShopId((int) $shop['id_shop']);
+        }
+
+        return $shops;
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @throws CoreException
+     */
+    public function assertCombinationExists(CombinationId $combinationId): void
+    {
+        $this->assertObjectModelExists(
+            $combinationId->getValue(),
+            'product_attribute',
+            CombinationNotFoundException::class
+        );
+    }
+
+    /**
      * @param CombinationId $newDefaultCombinationId
      * @param ShopConstraint $shopConstraint
      */
@@ -531,36 +628,5 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         return $shopIds;
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     *
-     * @return ShopId
-     *
-     * @throws Exception
-     * @throws ShopException
-     */
-    public function getAssociatedShopIds(CombinationId $combinationId): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop')
-            ->from($this->dbPrefix . 'product_attribute_shop')
-            ->where('id_product_attribute = :combinationId')
-            ->setParameter('combinationId', $combinationId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
-
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
-
-        return $shops;
     }
 }
