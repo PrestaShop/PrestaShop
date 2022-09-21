@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -145,7 +144,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
             StockAvailableNotFoundException::class
         );
 
-        $stockForShop = clone($generalStock);
+        $stockForShop = clone $generalStock;
         $stockForShop->id = null;
         $stockForShop->id_shop_list = $shopId->getValue();
         $stockForShop->id_shop = $shopId->getValue();

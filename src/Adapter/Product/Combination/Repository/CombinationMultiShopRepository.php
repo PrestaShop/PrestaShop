@@ -535,7 +535,9 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
     /**
      * @param CombinationId $combinationId
+     *
      * @return ShopId
+     *
      * @throws Exception
      * @throws ShopException
      */

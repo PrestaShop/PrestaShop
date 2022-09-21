@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -221,7 +220,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         bool $wholeList = false,
         ?string $shopReference = null
     ): void {
-
         if ($shopReference) {
             $shopId = $this->getSharedStorage()->get($shopReference);
         } else {

@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -41,8 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdate
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
