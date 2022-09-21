@@ -181,17 +181,6 @@ class Invoice extends BOBasePage {
   }
 
   /**
-   * Set invoiceNumber, LegalFreeText, footerText to default data
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async clearInputOptions(page) {
-    await this.setValue(page, this.invoiceNumberInput, '0');
-    await this.clearInput(page, this.legalFreeTextInput);
-    await this.clearInput(page, this.footerTextInput);
-  }
-
-  /**
    * Enable add current year to invoice
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to enable add current year to invoice
