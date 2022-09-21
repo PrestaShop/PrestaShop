@@ -175,7 +175,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should change the Invoice number, legal free text and the footer text to default data', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultData', baseContext);
 
-      await invoicesPage.clearInputOptions(page);
+      await invoicesPage.setInputOptions(page, {invoiceNumber: '0', legalFreeText: null, footerText: null});
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
       await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
