@@ -61,7 +61,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     And combination product1MBlack should be named "Size - M, Color - Black"
     And combination product1MBlue should be named "Size - M, Color - Blue"
 
-  Scenario: Generate product combinations doesnnot create duplicates
+  Scenario: Generate product combinations does not create duplicates
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
