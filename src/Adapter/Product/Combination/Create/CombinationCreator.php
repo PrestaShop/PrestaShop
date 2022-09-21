@@ -181,7 +181,7 @@ class CombinationCreator
                     $this->combinationMultiShopRepository->addToShop($matchingCombinationId, $shopId);
                     $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
                     $this->stockAvailableMultiShopRepository->addToShop(
-                        new StockId((int)$combinationGenericStock->id),
+                        new StockId((int) $combinationGenericStock->id),
                         $shopId
                     );
 

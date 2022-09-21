@@ -338,9 +338,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @todo: wip and not working well yet (thats why marked with deprecated too for now)
-     * @deprecated
-     * @param ProductId $productId
      *
+     * @deprecated
+     *
+     * @param ProductId $productId
      */
     public function updateCachedDefaultCombination(ProductId $productId): void
     {
@@ -385,7 +386,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             $combinationIdForDefaultShop,
             $productId->getValue()
         ));
-
 
         if (empty($defaultCombinations)) {
             $productShopIds = Product::getShopsByProduct($productId->getValue());

@@ -115,7 +115,6 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      * @param string $productReference
      * @param string $combinationReference
      * @param string|null $shopReference
-     *
      */
     private function assertDefaultCombination(
         string $productReference,
