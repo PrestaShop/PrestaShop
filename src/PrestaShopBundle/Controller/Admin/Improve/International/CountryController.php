@@ -130,7 +130,7 @@ class CountryController extends FrameworkBundleAdminController
             $result = $countryFormHandler->handleFor($countryId, $countryForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_countries_index');
             }
