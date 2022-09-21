@@ -99,7 +99,7 @@ describe('BO - Catalog - Cart rules', async () => {
     });
   });
 
-  describe('Catalog - Create a new discount', async () => {
+  describe('Create a new discount', async () => {
 
     it('should go to new cart rule page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
