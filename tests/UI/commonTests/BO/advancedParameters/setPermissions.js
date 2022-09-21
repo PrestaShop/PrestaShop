@@ -71,6 +71,13 @@ function setPermissions(profileName, permissionsData, baseContext = 'commonTests
     permissionsData.forEach((permission) => {
       permission.accesses.forEach((access) => {
         it(`should set the permission ${access} on the ${permission.className}`, async () => {
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `setPermission_${permission.className}_${access}`,
+            baseContext,
+          );
+
           const isPermissionDefined = await permissionsPage.setPermission(page, permission.className, access);
           await expect(isPermissionDefined, 'Permission is not updated').to.be.true;
         });
