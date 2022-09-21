@@ -34,14 +34,12 @@ jobs:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
+      - name: Use .env.ci
+        run: mv .env.ci .env
+        working-directory: ./tests/UI
+
       - name: Run tests
         run: npm install && npm run test:sanity:fast-fail
-        env:
-          URL_FO: http://localhost/
-          DB_NAME: prestashop
-          DB_PASSWD: password
-          HEADLESS: true
-          TAKE_SCREENSHOT_AFTER_FAIL: true
         working-directory: ./tests/UI
 
       - uses: actions/upload-artifact@v2
