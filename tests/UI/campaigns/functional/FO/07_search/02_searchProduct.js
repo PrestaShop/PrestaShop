@@ -6,6 +6,7 @@ const helper = require('@utils/helpers');
 
 // Import pages
 const homePage = require('@pages/FO/home');
+const productPage = require('@pages/FO/product');
 const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import data
@@ -44,12 +45,46 @@ describe('FO - Search Page : Search product', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should search product', async function () {
+  it('should check autocomplete', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkAutocomplete', baseContext);
+
+    const numResults = await homePage.countAutocompleteSearchResult(page, Products.demo_8.name);
+    await expect(numResults).equal(3);
+
+    const results = await homePage.getAutocompleteSearchResult(page, Products.demo_8.name);
+    await expect(results).contains('notebook');
+  });
+
+  it('should choose product on the list', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'chooseProductOnList', baseContext);
+
+    await homePage.clickAutocompleteSearchResult(page, Products.demo_8.name, 1);
+
+    const pageTitle = await productPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(Products.demo_8.name);
+
+    const inputValue = await homePage.getInputValue(page, productPage.searchInput);
+    await expect(inputValue).is.empty;
+  });
+
+  it('should click on logo link and go to home page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'clickLogoLinkAndGoHomePage', baseContext);
+
+    await homePage.clickOnHeaderLink(page, 'Logo');
+
+    const isHomePage = await homePage.isHomePage(page);
+    await expect(isHomePage).to.be.true;
+  });
+
+  it('should click on Enter in autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchProduct', baseContext);
 
     await homePage.searchProduct(page, Products.demo_8.name);
 
     const pageTitle = await searchResultsPage.getPageTitle(page);
     await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
+
+    const inputValue = await searchResultsPage.getInputValue(page, searchResultsPage.searchInput);
+    await expect(inputValue).is.equal(Products.demo_8.name);
   });
 });
