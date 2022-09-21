@@ -76,7 +76,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await expect(pageHeaderTitle).to.equal(loginPage.pageTitle);
   });
 
-  it('Should sign in FO', async function () {
+  it('should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
     await loginPage.customerLogin(page, DefaultCustomer);
