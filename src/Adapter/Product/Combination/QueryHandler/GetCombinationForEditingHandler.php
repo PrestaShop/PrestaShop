@@ -162,7 +162,6 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     {
         $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $query->getShopConstraint());
         $productId = new ProductId((int) $combination->id_product);
-        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
         $product = $this->productRepository->get($productId);
         $images = $this->getImages($combination);
 
@@ -175,7 +174,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getStock($combination),
             $images,
             $this->getCoverUrl($images, $productId),
-            $defaultCombinationId && $defaultCombinationId->getValue() === (int) $combination->id
+            (bool) $combination->default_on
         );
     }
 

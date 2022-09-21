@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -84,10 +85,16 @@ class CombinationCreator
     private $stockAvailableMultiShopRepository;
 
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productMultiShopRepository;
+
+    /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationRepository $combinationRepository
      * @param CombinationMultiShopRepository $combinationMultiShopRepository
      * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productMultiShopRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
      */
@@ -96,6 +103,7 @@ class CombinationCreator
         CombinationRepository $combinationRepository,
         CombinationMultiShopRepository $combinationMultiShopRepository,
         ProductRepository $productRepository,
+        ProductMultiShopRepository $productMultiShopRepository,
         StockAvailableRepository $stockAvailableRepository,
         StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
     ) {
@@ -105,6 +113,7 @@ class CombinationCreator
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
+        $this->productMultiShopRepository = $productMultiShopRepository;
     }
 
     /**
@@ -133,6 +142,7 @@ class CombinationCreator
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
+        $this->productMultiShopRepository->updateCachedDefaultCombination($productId);
 
         return $combinationIds;
     }

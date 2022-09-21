@@ -97,16 +97,16 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @Then product :productReference default combination should be :combinationReference for shop :shopReference
+     * @Then product :productReference default combination for shop :shopReference should be :combinationReference
      *
      * @param string $productReference
-     * @param string $combinationReference
      * @param string $shopReference
+     * @param string $combinationReference
      */
     public function assertDefaultCombinationForShop(
         string $productReference,
-        string $combinationReference,
-        string $shopReference
+        string $shopReference,
+        string $combinationReference
     ): void {
         $this->assertDefaultCombination($productReference, $combinationReference, $shopReference);
     }
@@ -126,7 +126,8 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
 
         $this->assertCachedDefaultCombinationId(
             $productReference,
-            $combinationId
+            $combinationId,
+            $shopReference
         );
 
         Assert::assertTrue(
@@ -147,12 +148,53 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
+     * @Given product :productReference should not have a default combination for shop ":shopReference"
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCachedDefaultCombinationForShop(string $productReference, string $shopReference): void
+    {
+        $this->assertCachedDefaultCombinationId($productReference, 0, $shopReference);
+    }
+
+    /**
      * @param string $productReference
      * @param int $combinationId
      */
-    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId): void
+    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId, ?string $shopReference = null): void
     {
-        $product = new Product($this->getSharedStorage()->get($productReference));
+        $product = new Product(
+            $this->getSharedStorage()->get($productReference),
+            false,
+            null,
+            $shopReference ? $this->getSharedStorage()->get($shopReference) : $this->getDefaultShopId()
+        );
+
+        Assert::assertEquals(
+            $combinationId,
+            (int) $product->cache_default_attribute,
+            'Unexpected cached product default combination'
+        );
+    }
+
+    /**
+     * @Given product :productReference should not have a default combination for shop :shopReference
+     *
+     * @param string $productReference
+     * @param int $combinationId
+     * @param string $shopReference
+     */
+    private function assertCachedDefaultCombinationForShop(
+        string $productReference,
+        int $combinationId,
+        string $shopReference
+    ): void {
+        $product = new Product(
+            $this->getSharedStorage()->get($productReference),
+            false,
+            null,
+            $this->getSharedStorage()->get($shopReference)
+        );
 
         Assert::assertEquals(
             $combinationId,
