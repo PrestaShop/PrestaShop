@@ -28,10 +28,11 @@ class TranslationIntegrationTest extends KernelTestCase
      * @param string $message
      * @param string $domain
      * @param array $parameters
+     * @param ?string $locale
      */
-    public function testTranslator(string $expectedTranslatedMessage, string $message, string $domain, array $parameters): void
+    public function testTranslator(string $expectedTranslatedMessage, string $message, string $domain, array $parameters, ?string $locale = null): void
     {
-        self::assertEquals($expectedTranslatedMessage, $this->translator->trans($message, $parameters, $domain));
+        self::assertEquals($expectedTranslatedMessage, $this->translator->trans($message, $parameters, $domain, $locale));
     }
 
     public function getExpectedTranslations(): iterable
@@ -73,6 +74,24 @@ class TranslationIntegrationTest extends KernelTestCase
             // transChoice has been deprecated trans should be used instead with a %count% parameter
             ['{{ limit }}' => 3, '%count%' => 3],
         ];
+        yield 'translation with singular format' => [
+            'This value is too short. It should have 1 character or more.',
+            'This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.',
+            'validators',
+            ['{{ limit }}' => 1, '%count%' => 1],
+        ];
+        yield 'translation fallback to legacy system' => [
+            'This is a bad idea',
+            'This is a %message%',
+            'Modules.Mymodule.Foobar',
+            ['%message%' => 'bad idea'],
+        ];
+        yield 'translation with htmlspecialchars and sprintf' => [
+            '&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;',
+            '<a href="test">%d Succesful deletion "%s"</a>',
+            'Admin.Notifications.Success',
+            ['legacy' => 'htmlspecialchars', 10, '<b>stringTest</b>'],
+        ];
     }
 
     /**
@@ -96,6 +115,13 @@ class TranslationIntegrationTest extends KernelTestCase
             3,
             'validators',
             ['{{ limit }}' => 3],
+        ];
+        yield 'translation with singular format' => [
+            'This value is too short. It should have 1 character or more.',
+            'This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.',
+            1,
+            'validators',
+            ['{{ limit }}' => 1],
         ];
     }
 }
