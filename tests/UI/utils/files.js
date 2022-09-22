@@ -138,8 +138,8 @@ module.exports = {
    * @param ignoreTimeZone {boolean} True to delete timezone string added to some image url
    * @return {Promise<boolean>}
    */
-  async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false) {
-    let fileText = await fs.readFileSync(filePath, 'utf8');
+  async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false, encoding = 'utf8') {
+    let fileText = await fs.readFileSync(filePath, encoding);
     let text = textToCheckWith;
 
     if (ignoreSpaces) {
@@ -150,6 +150,7 @@ module.exports = {
       fileText = await fileText.replace(/\?time=\d+/g, '', '');
       text = await text.replace(/\?time=\d+/g, '', '');
     }
+
     return fileText.includes(text);
   },
 
