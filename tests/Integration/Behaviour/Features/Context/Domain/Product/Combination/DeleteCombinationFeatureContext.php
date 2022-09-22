@@ -52,18 +52,19 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     public function bulkDeleteCombinationsInDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $productId = $this->getSharedStorage()->get($productReference);
-        $combinationIds = [];
-        foreach ($tableNode->getColumnsHash() as $column) {
-            $combinationIdReference = $column['id reference'];
-            $combinationIds[] = $this->getSharedStorage()->get($combinationIdReference);
-        }
+        $this->bulkDeleteCombinations($productReference, $tableNode);
+    }
 
-        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
-            $productId,
-            $combinationIds,
-            ShopConstraint::shop($this->getDefaultShopId()))
-        );
+    /**
+     * @When I delete following combinations of product :productReference from shop :shopReference:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $tableNode
+     */
+    public function bulkDeleteCombinationsInShop(string $productReference, string $shopReference, TableNode $tableNode): void
+    {
+        $this->bulkDeleteCombinations($productReference, $tableNode, $shopReference);
     }
 
     /**
@@ -87,5 +88,32 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
             (int) $this->getSharedStorage()->get($combinationReference),
             ShopConstraint::shop($shopId)
         ));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param string|null $shopReference
+     */
+    private function bulkDeleteCombinations(string $productReference, TableNode $tableNode, ?string $shopReference = null): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $combinationIds = [];
+        foreach ($tableNode->getColumnsHash() as $column) {
+            $combinationIdReference = $column['id reference'];
+            $combinationIds[] = $this->getSharedStorage()->get($combinationIdReference);
+        }
+
+        if ($shopReference) {
+            $shopId = $this->getSharedStorage()->get($shopReference);
+        } else {
+            $shopId = $this->getDefaultShopId();
+        }
+
+        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+                $productId,
+                $combinationIds,
+                ShopConstraint::shop($shopId))
+        );
     }
 }
