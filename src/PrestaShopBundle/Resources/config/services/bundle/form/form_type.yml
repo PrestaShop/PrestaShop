@@ -1455,6 +1455,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
     tags:
       - { name: form.type }
 
