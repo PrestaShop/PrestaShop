@@ -45,7 +45,7 @@ class CombinationValidator extends AbstractObjectModelValidator
     {
         $this->validateDetails($combination);
         $this->validatePrices($combination);
-//        $this->validateStock($combination);
+        $this->validateStock($combination);
     }
 
     /**

@@ -146,7 +146,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
 
         $stockForShop = clone $generalStock;
         $stockForShop->id = null;
-        $stockForShop->id_shop_list = $shopId->getValue();
+        $stockForShop->id_shop_list = [$shopId->getValue()];
         $stockForShop->id_shop = $shopId->getValue();
 
         $this->addObjectModelToShop($stockForShop, $shopId->getValue(), CannotAddStockAvailableException::class);

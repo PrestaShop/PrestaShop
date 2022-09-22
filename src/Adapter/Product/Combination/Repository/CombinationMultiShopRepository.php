@@ -321,23 +321,21 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function bulkDelete(array $combinationIds, ShopConstraint $shopConstraint): void
     {
-        $failedIds = [];
+        $bulkDeleteException = new CannotBulkDeleteCombinationException();
+
         foreach ($combinationIds as $combinationId) {
             try {
                 $this->delete($combinationId, $shopConstraint);
             } catch (CannotDeleteCombinationException $e) {
-                $failedIds[] = $combinationId->getValue();
+                $bulkDeleteException->addException($combinationId, $e);
             }
         }
 
-        if (empty($failedIds)) {
+        if ($bulkDeleteException->isEmpty()) {
             return;
         }
 
-        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
-            'Failed to delete following combinations: %s',
-            implode(', ', $failedIds)
-        ));
+        throw $bulkDeleteException;
     }
 
     public function findFirstCombinationId(ProductId $productId, ShopConstraint $shopConstraint): ?CombinationId
@@ -476,7 +474,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     /**
      * @param CombinationId $combinationId
      *
-     * @return ShopId
+     * @return ShopId[]
      *
      * @throws Exception
      * @throws ShopException
