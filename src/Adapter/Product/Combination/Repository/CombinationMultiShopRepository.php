@@ -33,6 +33,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
@@ -80,6 +81,11 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     private $attributeRepository;
 
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
@@ -89,12 +95,14 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         Connection $connection,
         string $dbPrefix,
         CombinationValidator $combinationValidator,
-        AttributeRepository $attributeRepository
+        AttributeRepository $attributeRepository,
+        ProductMultiShopRepository $productRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->combinationValidator = $combinationValidator;
         $this->attributeRepository = $attributeRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -338,6 +346,12 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         throw $bulkDeleteException;
     }
 
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return CombinationId|null
+     */
     public function findFirstCombinationId(ProductId $productId, ShopConstraint $shopConstraint): ?CombinationId
     {
         if ($shopConstraint->getShopGroupId()) {
@@ -347,7 +361,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         if ($shopConstraint->getShopId()) {
             $shopId = $shopConstraint->getShopId();
         } else {
-            $shopId = $this->getProductDefaultShopId($productId);
+            $shopId = $this->productRepository->getProductDefaultShopId($productId);
         }
 
         $qb = $this->connection->createQueryBuilder()
@@ -412,36 +426,6 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         );
 
         return $combination;
-    }
-
-    /**
-     * @todo: duplicate from ProductMultiShopRepository. How could we reuse it?
-     *
-     * @param ProductId $productId
-     *
-     * @return ShopId
-     *
-     * @throws ProductNotFoundException
-     */
-    public function getProductDefaultShopId(ProductId $productId): ShopId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop_default')
-            ->from($this->dbPrefix . 'product')
-            ->where('id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetch();
-        if (empty($result['id_shop_default'])) {
-            throw new ProductNotFoundException(sprintf(
-                'Could not find Product with id %d',
-                $productId->getValue()
-            ));
-        }
-
-        return new ShopId((int) $result['id_shop_default']);
     }
 
     /**
@@ -517,15 +501,18 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * @param ProductId $productId
      * @param CombinationId $newDefaultCombinationId
      * @param ShopConstraint $shopConstraint
+     *
+     * @throws InvalidShopConstraintException
+     * @throws ProductNotFoundException
      */
     public function setDefaultCombination(
+        ProductId $productId,
         CombinationId $newDefaultCombinationId,
         ShopConstraint $shopConstraint
     ): void {
-        $newDefaultCombination = $this->getByShopConstraint($newDefaultCombinationId, $shopConstraint);
-        $productId = new ProductId((int) $newDefaultCombination->id_product);
         $defaultShopId = $this->getDefaultShopIdForCombination($newDefaultCombinationId);
         $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
 
