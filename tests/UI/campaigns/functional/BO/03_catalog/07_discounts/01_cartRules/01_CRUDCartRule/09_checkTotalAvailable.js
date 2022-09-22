@@ -2,7 +2,6 @@ require('module-alias/register');
 
 // Import utils
 const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
