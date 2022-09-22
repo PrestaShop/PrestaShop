@@ -15,14 +15,17 @@ class MerchandiseReturns extends FOBasePage {
     super();
 
     this.pageTitle = 'Order follow';
+    this.alertNoMerchandiseReturns = 'You have no merchandise return authorizations.';
 
     // Selectors
+    this.alertInfoDiv = '#content div.alert-info';
     this.gridTable = '.table.table-striped';
 
     // Merchandise return table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
     this.orderReturnName = row => `${this.tableBodyRow(row)} td:nth-child(2) a`;
     this.orderReturnStatus = row => `${this.tableBodyRow(row)} td:nth-child(3)`;
   }
@@ -30,24 +33,48 @@ class MerchandiseReturns extends FOBasePage {
   /*
   Methods
    */
+
   /**
-   * Get order return file name
+   * Get alert text
    * @param page {Page} Browser tab
-   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  getOrderReturnFileName(page, row = 1) {
-    return this.getTextContent(page, this.orderReturnName(row));
+  async getAlertText(page) {
+    return this.getTextContent(page, this.alertInfoDiv);
   }
 
   /**
-   * Get order return status
+   * Get text column from merchandise returns table
    * @param page {Page} Browser tab
-   * @param row {number} Row on table
+   * @param columnName {number} Column name in table
+   * @param row {number} Row number in table
    * @returns {Promise<string>}
    */
-  getOrderReturnStatus(page, row = 1) {
-    return this.getTextContent(page, this.orderReturnStatus(row));
+  getTextColumn(page, columnName, row = 1) {
+    let columnSelector;
+
+    switch (columnName) {
+      case 'orderReference':
+        columnSelector = this.tableColumn(row, 1);
+        break;
+
+      case 'fileName':
+        columnSelector = this.tableColumn(row, 2);
+        break;
+
+      case 'status':
+        columnSelector = this.tableColumn(row, 3);
+        break;
+
+      case 'dateIssued':
+        columnSelector = this.tableColumn(row, 4);
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
   }
 }
 

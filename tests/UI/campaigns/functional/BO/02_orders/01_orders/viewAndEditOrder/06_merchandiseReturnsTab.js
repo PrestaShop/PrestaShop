@@ -455,7 +455,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       it('should verify order return status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderReturnStatus${index}`, baseContext);
 
-        const fileName = await foMerchandiseReturnsPage.getOrderReturnStatus(page);
+        const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
         await expect(fileName).to.be.equal(test.args.status);
       });
 
