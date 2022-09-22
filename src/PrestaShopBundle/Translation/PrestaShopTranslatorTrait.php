@@ -53,24 +53,23 @@ trait PrestaShopTranslatorTrait
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
-        $emptyParams = empty($parameters);
-        $isSprintf = !$emptyParams && $this->isSprintfString($id);
+        $isSprintf = !empty($parameters) && $this->isSprintfString($id);
 
         if (empty($locale)) {
             $locale = null;
         }
 
-        $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
-
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
+        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
-        $translated = isset($legacy) ? $this->replaceHtmlSpecialChars($translated, $legacy) : $translated;
+        $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
 
         if ($isSprintf) {
             $translated = vsprintf($translated, $parameters);
         }
+
+        $translated = isset($legacy) ? $this->replaceSpecialCharsWithLegacyFunctions($translated, $legacy) : $translated;
 
         return $translated;
     }
@@ -170,16 +169,14 @@ trait PrestaShopTranslatorTrait
      * Indicates if we should try and translate the provided wording using the legacy system.
      *
      * @param string $message Message to translate
-     * @param string|null $domain Translation domain
-     * @param string $translated Message after first translation attempt
+     * @param ?string $domain Translation domain
      *
      * @return bool
      */
-    private function shouldFallbackToLegacyModuleTranslation($message, $domain, $translated)
+    private function shouldFallbackToLegacyModuleTranslation(string $message, ?string $domain): bool
     {
         return
-            $message === $translated
-            && 'Modules.' === substr($domain ?? '', 0, 8)
+            'Modules.' === substr($domain ?? '', 0, 8)
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue()->has($message, $this->normalizeDomain($domain))
@@ -205,7 +202,15 @@ trait PrestaShopTranslatorTrait
         return $normalizedDomain;
     }
 
-    private function replaceHtmlSpecialChars(string $message, string $functionName)
+    /**
+     * Replaces special characters on the message
+     *
+     * @param string $message the message
+     * @param callable-string $functionName Name of function to be called
+     *
+     * @return string
+     */
+    private function replaceSpecialCharsWithLegacyFunctions(string $message, string $functionName): string
     {
         if ('htmlspecialchars' === $functionName) {
             $translated = htmlspecialchars($message, ENT_NOQUOTES);
