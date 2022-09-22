@@ -28,7 +28,7 @@ import prestashop from 'prestashop';
 function initRmaItemSelector() {
   $(prestashop.themeSelectors.order.returnFormHeadCheckboxes).on('click', function () {
     const checked = $(this).prop('checked');
-    $(`${prestashop.themeSelectors.order.returnFormContentCheckboxes}`).each((_, checkbox) => {
+    $(prestashop.themeSelectors.order.returnFormContentCheckboxes).each((_, checkbox) => {
       $(checkbox).prop('checked', checked);
     });
   });
