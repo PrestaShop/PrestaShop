@@ -150,7 +150,6 @@ module.exports = {
       fileText = await fileText.replace(/\?time=\d+/g, '', '');
       text = await text.replace(/\?time=\d+/g, '', '');
     }
-
     return fileText.includes(text);
   },
 
