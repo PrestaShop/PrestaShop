@@ -66,6 +66,7 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
     requestParams.productId = this.productId;
 
     // These are the query parameters
+    requestParams.shopId = this.shopId;
     requestParams[filterId] = {};
     requestParams[filterId].offset = offset;
     requestParams[filterId].limit = limit;
@@ -82,8 +83,10 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
 
   getCombinationIds(): JQuery.jqXHR<any> {
     return $.get(
-      this.router.generate('admin_products_combinations_ids', {productId: this.productId}),
-      {
+      this.router.generate('admin_products_combinations_ids', {
+        productId: this.productId,
+        shopId: this.shopId,
+      }), {
         [this.getFilterId()]: {
           filters: this.filters,
           // It is important that we reset offset and limit, because we want to get all results without pagination
