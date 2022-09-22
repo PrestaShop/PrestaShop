@@ -9,7 +9,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 module.exports = class EmployeeBasePage extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on localization page
+   * Setting up texts and selectors to use on Employee page
    */
   constructor() {
     super();

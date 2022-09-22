@@ -20,10 +20,10 @@ let browserContext;
 let page;
 
 /**
- *
- * @param {string} profileName
- * @param {array} permissionsData
- * @param {string} baseContext
+ * Function to set the employee permissions
+ * @param profileName {string}
+ * @param permissionsData {array}
+ * @param baseContext {string}
  */
 function setPermissions(profileName, permissionsData, baseContext = 'commonTests-setPermissions') {
   describe('PRE-TEST: Set permissions to a profile', async () => {
