@@ -57,7 +57,7 @@ class CombinationFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
     private const COVER_URL = 'http://localhost/cover.jpg';
-    private const CONTEXT_SHOP_ID = 1;
+    private const SHOP_ID = 1;
 
     public function testGetDefaultData(): void
     {
@@ -562,7 +562,7 @@ class CombinationFormDataProviderTest extends TestCase
         ;
         $shopContext
             ->method('getShopConstraint')
-            ->willReturn(ShopConstraint::shop(self::CONTEXT_SHOP_ID))
+            ->willReturn(ShopConstraint::shop(self::SHOP_ID))
         ;
 
         return $shopContext;
