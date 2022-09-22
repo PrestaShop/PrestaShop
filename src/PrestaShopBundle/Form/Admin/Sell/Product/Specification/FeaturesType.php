@@ -33,9 +33,29 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FeaturesType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    protected $isFeatureEnabled;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $isFeatureEnabled
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $isFeatureEnabled
+    ) {
+        parent::__construct($translator, $locales);
+        $this->isFeatureEnabled = $isFeatureEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -48,15 +68,18 @@ class FeaturesType extends TranslatorAwareType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__FEATURE_VALUE_INDEX__',
-            ])
-            ->add('add_feature', IconButtonType::class, [
-                'label' => $this->trans('Add a feature', 'Admin.Catalog.Feature'),
-                'icon' => 'add_circle',
-                'attr' => [
-                    'class' => 'btn-outline-primary feature-value-add-button',
-                ],
-            ])
-        ;
+            ]);
+        if ($this->isFeatureEnabled) {
+            $builder
+                ->add('add_feature', IconButtonType::class, [
+                    'label' => $this->trans('Add a feature', 'Admin.Catalog.Feature'),
+                    'icon' => 'add_circle',
+                    'attr' => [
+                        'class' => 'btn-outline-primary feature-value-add-button',
+                    ],
+                ])
+            ;
+        }
     }
 
     /**
