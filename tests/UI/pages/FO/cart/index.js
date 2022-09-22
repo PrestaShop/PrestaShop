@@ -182,18 +182,18 @@ class Cart extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<number>}
    */
-   getCartRuleName(page, line = 1) {
+  getCartRuleName(page, line = 1) {
     return this.getTextContent(page, this.cartRuleName(line), 2000);
   }
 
-    /**
+  /**
    * Get cart rule error text
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-     async getCartRuleErrorMessage(page) {
-      return this.getTextContent(page, this.cartRuleAlertError);
-    }
+  async getCartRuleErrorMessage(page) {
+    return this.getTextContent(page, this.cartRuleAlertError);
+  }
 
   /**
    * Get discount value
