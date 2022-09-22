@@ -165,10 +165,12 @@ class CombinationCreator
                 $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
 
                 if ($matchingCombinationId) {
+                    // skip if combination exists for related shop
                     if ($this->combinationRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
                         continue;
                     }
 
+                    // when combination already exists in product_attribute, then we only add it to related product_attribute_shop
                     $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
                     $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
                     $this->stockAvailableMultiShopRepository->addToShop(
