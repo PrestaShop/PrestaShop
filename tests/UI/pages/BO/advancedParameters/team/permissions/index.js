@@ -9,7 +9,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class Permissions extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on profiles page
+   * Setting up texts and selectors to use on permissions page
    */
   constructor() {
     super();
@@ -22,10 +22,6 @@ class Permissions extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
     this.profileSubTab = profileName => `a[id^="profile-"]:text("${profileName}")`;
     this.profileAccess = (className, access) => `input[data-type="${access}"][data-classname="${className}"]:visible`;
-
-    // List of profiles
-
-    // List of permissions
   }
 
   /*
