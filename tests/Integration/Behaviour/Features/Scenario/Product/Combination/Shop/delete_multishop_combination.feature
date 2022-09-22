@@ -176,7 +176,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And product "product1" should not have a default combination for shop "shop1"
     And product "product1" should not have a default combination for shop "shop2"
 
-  Scenario: Delete combinations from specified shop using bulk action
+  Scenario: Delete bulk delete combinations from specified shop
     When I delete following combinations of product product1 from shop "shop1":
       | id reference   |
       | product1SWhite |
