@@ -65,8 +65,22 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
   });
 
   const tests = [
-    {args: {action: 'Enable', enable: true, imageNumber: global.URLHasPort ? 1 : 2}},
-    {args: {action: 'Disable', enable: false, imageNumber: global.URLHasPort ? 0 : 1}},
+    {
+      args: {
+        action: 'Enable',
+        enable: true,
+        imageNumber: global.URLHasPort ? 1 : 2,
+        isProductImageDisplayed: 'a product image displayed',
+      },
+    },
+    {
+      args: {
+        action: 'Disable',
+        enable: false,
+        imageNumber: global.URLHasPort ? 0 : 1,
+        isProductImageDisplayed: 'no product image displayed',
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
@@ -190,7 +204,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
         });
       });
 
-      describe('Generate the delivery slip and check product image', async () => {
+      describe(`Generate the delivery slip and check that there is ${test.args.isProductImageDisplayed}`, async () => {
         it('should go to \'Orders > Orders\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
 
@@ -228,7 +242,7 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await expect(exist).to.be.true;
         });
 
-        it('should check the product images in the PDF File', async function () {
+        it(`should check that there is ${test.args.isProductImageDisplayed} in the PDF File`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProductImage${index}`, baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
