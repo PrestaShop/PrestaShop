@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
@@ -72,20 +71,17 @@ class CombinationRepository extends AbstractObjectModelRepository
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param AttributeRepository $attributeRepository
      * @param CombinationValidator $combinationValidator
      * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        AttributeRepository $attributeRepository,
         CombinationValidator $combinationValidator,
         ProductCombinationQueryBuilder $combinationQueryBuilder
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->attributeRepository = $attributeRepository;
         $this->combinationValidator = $combinationValidator;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
     }

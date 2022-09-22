@@ -134,7 +134,7 @@ class CombinationDeleter
         $newDefaultCombinationId = $this->combinationMultiShopRepository->findFirstCombinationId($productId, $shopConstraint);
 
         if (!$newDefaultCombinationId) {
-            $this->defaultCombinationUpdater->updateCachedDefaultCombination($productId);
+            $this->defaultCombinationUpdater->refreshCachedDefaultCombination($productId);
 
             return;
         }
