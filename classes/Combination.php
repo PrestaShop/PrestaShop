@@ -199,7 +199,7 @@ class CombinationCore extends ObjectModel
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
             StockAvailable::setProductOutOfStock((int) $this->id_product, 1, null, (int) $this->id);
         } else {
-            // this creates stock_available for combination as a side effect if it doesn't yet exist
+            // this creates stock_available for combination as a side effect if it doesn't exist yet
             StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product, $this->id_shop), $this->id_shop, $this->id);
         }
 

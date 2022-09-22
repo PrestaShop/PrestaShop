@@ -56,4 +56,12 @@ class BulkCombinationException extends CombinationException
     {
         return $this->bulkExceptions;
     }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->bulkExceptions);
+    }
 }

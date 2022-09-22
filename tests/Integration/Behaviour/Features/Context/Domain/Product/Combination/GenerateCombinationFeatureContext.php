@@ -177,32 +177,6 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @Given product :productReference should not have a default combination for shop :shopReference
-     *
-     * @param string $productReference
-     * @param int $combinationId
-     * @param string $shopReference
-     */
-    private function assertCachedDefaultCombinationForShop(
-        string $productReference,
-        int $combinationId,
-        string $shopReference
-    ): void {
-        $product = new Product(
-            $this->getSharedStorage()->get($productReference),
-            false,
-            null,
-            $this->getSharedStorage()->get($shopReference)
-        );
-
-        Assert::assertEquals(
-            $combinationId,
-            (int) $product->cache_default_attribute,
-            'Unexpected cached product default combination'
-        );
-    }
-
-    /**
      * @param array $groupedReferences
      *
      * @return array

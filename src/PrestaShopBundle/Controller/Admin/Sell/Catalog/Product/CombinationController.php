@@ -408,7 +408,11 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
+            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+                $productId,
+                json_decode($combinationIds),
+                ShopConstraint::shop($this->getContextShopId())
+            ));
         } catch (Exception $e) {
             if ($e instanceof BulkCombinationException) {
                 return $this->jsonBulkErrors($e);

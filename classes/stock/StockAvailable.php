@@ -636,7 +636,7 @@ class StockAvailableCore extends ObjectModel
      *
      * @param int $id_product
      * @param int|null $id_product_attribute Optional
-     * @param Shop|null $shop Shop id or shop object Optional
+     * @param int|Shop|null $shop Shop id or shop object Optional
      *
      * @return bool
      */
