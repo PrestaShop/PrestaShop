@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
@@ -48,12 +49,20 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var Context
+     */
+    private $shopContext;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param Context $shopContext
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        Context $shopContext
     ) {
         $this->queryBus = $queryBus;
+        $this->shopContext = $shopContext;
     }
 
     /**
@@ -63,7 +72,10 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     {
         $combinationId = (int) $id;
         /** @var CombinationForEditing $combinationForEditing */
-        $combinationForEditing = $this->queryBus->handle(new GetCombinationForEditing($combinationId));
+        $combinationForEditing = $this->queryBus->handle(new GetCombinationForEditing(
+            $combinationId,
+            $this->shopContext->getShopConstraint()
+        ));
 
         $suppliersData = $this->extractSuppliersData($combinationForEditing);
 

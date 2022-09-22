@@ -163,6 +163,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.shop.context'
 
   prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BulkCombinationFormDataProvider'

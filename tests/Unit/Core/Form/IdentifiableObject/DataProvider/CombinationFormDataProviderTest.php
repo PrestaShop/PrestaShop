@@ -33,6 +33,7 @@ use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
@@ -43,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
@@ -55,11 +57,12 @@ class CombinationFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
     private const COVER_URL = 'http://localhost/cover.jpg';
+    private const CONTEXT_SHOP_ID = 1;
 
     public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new CombinationFormDataProvider($queryBusMock);
+        $provider = new CombinationFormDataProvider($queryBusMock, $this->mockShopContext());
 
         $this->assertEquals([], $provider->getDefaultData());
     }
@@ -73,7 +76,7 @@ class CombinationFormDataProviderTest extends TestCase
     public function testGetData(array $combinationData, array $expectedData): void
     {
         $queryBusMock = $this->createQueryBusMock($combinationData);
-        $provider = new CombinationFormDataProvider($queryBusMock);
+        $provider = new CombinationFormDataProvider($queryBusMock, $this->mockShopContext());
 
         $formData = $provider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
@@ -546,5 +549,22 @@ class CombinationFormDataProviderTest extends TestCase
             'product_suppliers' => [],
             'images' => [],
         ];
+    }
+
+    /**
+     * @return Context
+     */
+    private function mockShopContext(): Context
+    {
+        $shopContext = $this->getMockBuilder(Context::class)
+            ->onlyMethods(['getShopConstraint'])
+            ->getMock()
+        ;
+        $shopContext
+            ->method('getShopConstraint')
+            ->willReturn(ShopConstraint::shop(self::CONTEXT_SHOP_ID))
+        ;
+
+        return $shopContext;
     }
 }
