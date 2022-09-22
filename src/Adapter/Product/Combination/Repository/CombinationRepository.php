@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
-use Db;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
@@ -44,8 +43,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
-use PrestaShopException;
-use Product;
 
 /**
  * Provides access to Combination data source
@@ -61,11 +58,6 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @var string
      */
     private $dbPrefix;
-
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
 
     /**
      * @var CombinationValidator
@@ -261,35 +253,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param CombinationId $combinationId
-     * @param int[] $attributeIds
-     */
-    public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
-    {
-        $this->assertCombinationExists($combinationId);
-        $this->attributeRepository->assertAllAttributesExist($attributeIds);
-
-        // @todo: need to check if these doesn't exist?
-        // especially when dealing with combination which has to be only added to another shop,
-        // then we get duplicate insert error :/
-        $attributesList = [];
-        foreach ($attributeIds as $attributeId) {
-            $attributesList[] = [
-                'id_product_attribute' => $combinationId->getValue(),
-                'id_attribute' => $attributeId,
-            ];
-        }
-
-        try {
-            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
-                throw new CannotAddCombinationException('Failed saving product-combination associations');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
-        }
-    }
-
-    /**
      * Returns default combination ID identified as such in DB by default_on property
      *
      * @param ProductId $productId
@@ -310,59 +273,6 @@ class CombinationRepository extends AbstractObjectModelRepository
 
         $result = $qb->execute()->fetchAssociative();
         if (empty($result['id_product_attribute'])) {
-            return null;
-        }
-
-        return new CombinationId((int) $result['id_product_attribute']);
-    }
-
-    /**
-     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
-     *
-     * @param ProductId $productId
-     *
-     * @return Combination|null
-     */
-    public function findDefaultCombination(ProductId $productId): ?Combination
-    {
-        try {
-            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
-        }
-
-        return $id ? $this->get(new CombinationId($id)) : null;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param int[] $attributeIds
-     *
-     * @return CombinationId
-     */
-    public function findCombinationIdByAttributes(ProductId $productId, array $attributeIds): ?CombinationId
-    {
-        sort($attributeIds);
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->addSelect('pa.id_product_attribute')
-            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->innerJoin(
-                'pa',
-                $this->dbPrefix . 'product_attribute_combination',
-                'pac',
-                'pac.id_product_attribute = pa.id_product_attribute'
-            )
-            ->andWhere('pa.id_product = :productId')
-            ->andHaving('attribute_ids = :attributeIds')
-            ->setParameter('productId', $productId->getValue())
-            ->setParameter('attributeIds', implode('-', $attributeIds))
-            ->addGroupBy('pa.id_product_attribute')
-        ;
-        $result = $qb->execute()->fetchAssociative();
-
-        if (empty($result)) {
             return null;
         }
 

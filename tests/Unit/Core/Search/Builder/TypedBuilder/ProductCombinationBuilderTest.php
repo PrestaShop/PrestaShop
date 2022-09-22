@@ -122,7 +122,9 @@ class ProductCombinationBuilderTest extends TestCase
 
         $parameterBagMock
             ->method('has')
-            ->willReturn(true)
+            ->willReturnMap([
+                ['shopId', true],
+            ])
         ;
 
         $parameterBagMock
