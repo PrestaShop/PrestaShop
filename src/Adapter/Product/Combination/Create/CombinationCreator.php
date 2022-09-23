@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -78,23 +79,32 @@ class CombinationCreator
     private $stockAvailableMultiShopRepository;
 
     /**
+     * @var DefaultCombinationUpdater
+     */
+    private $defaultCombinationUpdater;
+
+    /**
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationMultiShopRepository $combinationRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
+     * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
         CombinationMultiShopRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
-        StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
+        StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
+        DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationGenerator = $combinationGenerator;
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
+        $this->defaultCombinationUpdater = $defaultCombinationUpdater;
     }
 
     /**
@@ -150,49 +160,60 @@ class CombinationCreator
      * @param Traversable $generatedCombinations
      * @param ShopId $shopId
      *
-     * @return CombinationId[]
+     * @return CombinationId[] the ids of newly created combinations
      */
     private function addCombinations(Product $product, Traversable $generatedCombinations, ShopId $shopId): array
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombinationId($productId);
-        $addedCombinationIds = [];
+        $defaultCombinationId = $this->combinationRepository->findDefaultCombinationId($productId);
+        $newCombinationIds = [];
+
         foreach ($generatedCombinations as $generatedCombination) {
-            // Product already has combinations, so we need to filter existing ones
-            if ($alreadyHasCombinations) {
-                $attributeIds = array_values($generatedCombination);
-                $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
-
-                if ($matchingCombinationId) {
-                    // skip if combination exists for related shop
-                    if ($this->combinationRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
-                        continue;
-                    }
-
-                    // when combination already exists in product_attribute, then we only add it to related product_attribute_shop
-                    $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
-                    $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
-                    $this->stockAvailableMultiShopRepository->addToShop(
-                        new StockId((int) $combinationGenericStock->id),
-                        $shopId
-                    );
-
-                    continue;
-                }
+            if (!$defaultCombinationId) {
+                // if there is no default combination, we assume there are none at all, so we create new combination and skip to next iteration
+                $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
+                continue;
             }
 
-            $addedCombinationIds[] = $this->persistCombination($productId, $generatedCombination, !$hasDefault, $shopId);
-            $hasDefault = true;
+            $attributeIds = array_values($generatedCombination);
+            $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
+
+            if (!$matchingCombinationId) {
+                // if there is no combination of provided attributes yet, we create a new one and skip to next iteration
+                $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
+                continue;
+            }
+
+            // if there is a combination of provided attributes, and it is already associated with the shop, then we don't do anything and skip to next iteration
+            if ($this->combinationRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
+                continue;
+            }
+
+            // when combination already exists in product_attribute, then we add it to related product_attribute_shop
+            $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
+
+            $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
+            // create dedicated stock_available for combination in related shop
+            $this->stockAvailableMultiShopRepository->addToShop(
+                new StockId((int) $combinationGenericStock->id),
+                $shopId
+            );
         }
 
-        return $addedCombinationIds;
+        // set default combination if none is set yet
+        if (!$defaultCombinationId || !$this->combinationRepository->findDefaultCombinationIdForShop($productId, $shopId)) {
+            $shopConstraint = ShopConstraint::shop($shopId->getValue());
+            $firstCombinationId = $this->combinationRepository->findFirstCombinationId($productId, $shopConstraint);
+            $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
+        }
+
+        return $newCombinationIds;
     }
 
     /**
      * @param ProductId $productId
      * @param int[] $generatedCombination
-     * @param bool $isDefault
      * @param ShopId $shopId
      *
      * @return CombinationId
@@ -200,10 +221,9 @@ class CombinationCreator
     private function persistCombination(
         ProductId $productId,
         array $generatedCombination,
-        bool $isDefault,
         ShopId $shopId
     ): CombinationId {
-        $combination = $this->combinationRepository->create($productId, $isDefault, $shopId);
+        $combination = $this->combinationRepository->create($productId, $shopId);
         $combinationId = new CombinationId((int) $combination->id);
 
         //@todo: Use DB transaction instead if they are accepted (PR #21740)

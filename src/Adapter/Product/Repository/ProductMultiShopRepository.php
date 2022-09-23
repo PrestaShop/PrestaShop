@@ -342,7 +342,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     public function updateCachedDefaultCombination(ProductId $productId): void
     {
         $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
-
         $defaultCombinations = $this->connection->fetchAllAssociative(
             sprintf('
                 SELECT id_product_attribute, id_shop
@@ -357,11 +356,17 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         );
 
         $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
+        $productShopIds = array_map(function ($result) {
+            return (int) $result['id_shop'];
+        }, Product::getShopsByProduct($productId->getValue()));
+
         $combinationIdForDefaultShop = null;
+        $combinationShopIds = [];
 
         foreach ($defaultCombinations as $defaultCombination) {
             $combinationId = (int) $defaultCombination['id_product_attribute'];
             $combinationShopId = (int) $defaultCombination['id_shop'];
+            $combinationShopIds[] = $combinationShopId;
 
             if ($defaultShopId === $combinationShopId) {
                 $combinationIdForDefaultShop = $combinationId;
@@ -383,17 +388,16 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             $productId->getValue()
         ));
 
-        if (empty($defaultCombinations)) {
-            $productShopIds = Product::getShopsByProduct($productId->getValue());
-            foreach ($productShopIds as $productShopId) {
-                $this->connection->executeStatement(sprintf(
-                    'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
-                    $productShopTable,
-                    0,
-                    $productId->getValue(),
-                    $productShopId['id_shop']
-                ));
-            }
+        $unhandledShopIds = array_diff($productShopIds, $combinationShopIds);
+        foreach ($unhandledShopIds as $shopId) {
+            // reset default combination to 0 to all shop ids which have no combinations
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                0,
+                $productId->getValue(),
+                $shopId
+            ));
         }
     }
 

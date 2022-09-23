@@ -106,15 +106,34 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * @param CombinationId $combinationId
+     *
+     * @return Combination
+     *
+     * @throws CombinationNotFoundException
+     */
+    public function get(CombinationId $combinationId): Combination
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModel(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class
+        );
+
+        return $combination;
+    }
+
+    /**
      * @param ProductId $productId
-     * @param bool $isDefault
      * @param ShopId $shopId
+     * @param bool $isDefault
      *
      * @return Combination
      *
      * @throws CannotAddCombinationException
      */
-    public function create(ProductId $productId, bool $isDefault, ShopId $shopId): Combination
+    public function create(ProductId $productId, ShopId $shopId, bool $isDefault = false): Combination
     {
         $combination = new Combination(null, null, $shopId->getValue());
         $combination->id_product = $productId->getValue();
@@ -214,11 +233,23 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     public function addToShop(CombinationId $combinationId, ShopId $shopId): void
     {
         /** @var Combination $combinationFromOtherShop */
-        $combinationFromOtherShop = $this->getObjectModel(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class
-        );
+        $combinationFromOtherShop = $this->get($combinationId);
+
+        //@todo: The issue - ObjectModel when loading uses shopId from context if shop id is not provided.
+        //       so in scenario when default shop doesn't have the combination it loads the combination with null values
+        //       then combination.id_product becomes null and combination.minimal_quantity is null instead of 1
+        //       and these fields are required, therefore combination fails to update.
+        //       All of this suggests that legacy combinations didn't work same as I expect in test scenarios...
+        //
+        //       Possible workarounds:
+        //       - try copying from default shop, but if there is no such combination in default shop,
+        //       then fallback to other combination found in another shop...
+        //       - manually load combination from product_attribute table (not _shop) and always copy from generic table to shop table
+//        $combinationFromOtherShop->id_product = $productId->getValue();
+//        $combinationFromOtherShop->minimal_quantity = 1;
+//         hardcode default_on as false,
+//         because default combination should be updated using DefaultCombinationUpdater to avoid sql constraint errors
+        $combinationFromOtherShop->default_on = false;
 
         $this->updateObjectModelForShops($combinationFromOtherShop, [$shopId->getValue()], CombinationException::class);
     }
@@ -432,19 +463,22 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      * Returns default combination ID identified as such in DB by default_on property
      *
      * @param ProductId $productId
+     * @param ShopId $shopId
      *
      * @return CombinationId|null
      */
-    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
+    public function findDefaultCombinationIdForShop(ProductId $productId, ShopId $shopId): ?CombinationId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('pa.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->andWhere('pa.default_on = 1')
-            ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_product = :productId')
+            ->andWhere('pas.id_shop = :shopId')
+            ->andWhere('pas.default_on = 1')
+            ->addOrderBy('pas.id_product_attribute', 'ASC')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
         ;
 
         $result = $qb->execute()->fetchAssociative();
