@@ -122,7 +122,7 @@ class StockType extends TranslatorAwareType
             ->add('availability', AvailabilityType::class)
         ;
 
-        if ($options['product_type'] == ProductType::TYPE_VIRTUAL) {
+        if ($options['product_type'] === ProductType::TYPE_VIRTUAL) {
             $builder->remove('options');
         }
     }
