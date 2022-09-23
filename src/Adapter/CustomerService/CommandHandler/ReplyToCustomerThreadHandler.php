@@ -105,11 +105,11 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $customerMessage->message = $replyMessage;
 
         if (false === $customerMessage->validateField('message', $customerMessage->message)) {
-            throw new CustomerServiceException('Invalid reply message');
+            throw new CustomerServiceException('Invalid reply message', CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
         }
 
         if (false === $customerMessage->add()) {
-            throw new CustomerServiceException('Failed to add customer message');
+            throw new CustomerServiceException('Failed to add customer message', CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
         }
 
         return $customerMessage;

@@ -1,3 +1,22 @@
+admin_customer_threads:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::indexAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.customer_thread
+    redirectRoute: admin_customer_threads
+    _legacy_controller: AdminCustomerThreads
+
 admin_customer_threads_view:
   path: /{customerThreadId}/view
   methods: [ GET ]
@@ -37,6 +56,16 @@ admin_customer_threads_forward:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::forwardAction
+    _legacy_controller: AdminCustomerThreads
+    #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_delete:
+  path: /{customerThreadId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::deleteAction
     _legacy_controller: AdminCustomerThreads
     #  _legacy_link: AdminCustomerThreads
   requirements:

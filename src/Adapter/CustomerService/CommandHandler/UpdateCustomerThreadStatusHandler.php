@@ -24,10 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateCustomerThreadStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 
 /**
@@ -71,7 +72,7 @@ final class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadSta
         $statement->bindValue(':id_customer_thread', $command->getCustomerThreadId()->getValue());
 
         if (false === $statement->execute()) {
-            throw new CustomerServiceException('Failed to update customer thread status');
+            throw new CustomerServiceException('Failed to update customer thread status', CustomerServiceException::FAILED_TO_UPDATE_STATUS);
         }
     }
 }

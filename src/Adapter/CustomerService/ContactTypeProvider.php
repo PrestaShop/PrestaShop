@@ -24,15 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService;
 
-/**
- * Thrown when customer thread is not found
- */
-class CustomerThreadNotFoundException extends CustomerServiceException
+use Contact;
+use PrestaShop\PrestaShop\Core\CustomerService\ContactTypeProviderInterface;
+
+class ContactTypeProvider implements ContactTypeProviderInterface
 {
     /**
-     * Failed to delete customer thread
+     * @var int
      */
-    const FAILED_DELETE = 10;
+    private $langId;
+
+    public function __construct(int $langId)
+    {
+        $this->langId = $langId;
+    }
+
+    public function getContactTypes(): array
+    {
+        $contacts = Contact::getContacts($this->langId);
+
+        $contactArray = [];
+
+        foreach ($contacts as $contact) {
+            $contactArray[$contact['name']] = $contact['id_contact'];
+        }
+
+        return $contactArray;
+    }
 }

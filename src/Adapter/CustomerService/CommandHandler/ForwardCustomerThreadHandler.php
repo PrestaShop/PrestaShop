@@ -309,7 +309,10 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
 
         if (false === $customerMessage->validateField('message', $command->getComment())) {
-            throw new CustomerServiceException(sprintf('Comment "%s" is not valid.', $command->getComment()));
+            throw new CustomerServiceException(
+                sprintf('Comment "%s" is not valid.', $command->getComment()),
+                CustomerServiceException::INVALID_COMMENT
+            );
         }
 
         return $customerMessage;

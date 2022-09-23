@@ -33,4 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
  */
 class CustomerServiceException extends DomainException
 {
+    const FAILED_TO_ADD_CUSTOMER_MESSAGE = 10;
+    const FAILED_TO_UPDATE_STATUS = 20;
+    const INVALID_COMMENT = 30;
 }

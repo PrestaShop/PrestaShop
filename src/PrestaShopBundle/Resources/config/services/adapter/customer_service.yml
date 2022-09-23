@@ -34,3 +34,9 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand'
+
+  prestashop.adapter.customer_service.command_handler.delete_customer_thread:
+    class: PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\DeleteCustomerThreadHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand

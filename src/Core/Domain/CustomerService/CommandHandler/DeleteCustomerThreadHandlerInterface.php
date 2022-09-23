@@ -24,15 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 
 /**
- * Thrown when customer thread is not found
+ * Delete customer thread
  */
-class CustomerThreadNotFoundException extends CustomerServiceException
+interface DeleteCustomerThreadHandlerInterface
 {
-    /**
-     * Failed to delete customer thread
-     */
-    const FAILED_DELETE = 10;
+    public function handle(DeleteCustomerThreadCommand $command);
 }
