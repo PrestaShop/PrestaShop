@@ -24,15 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception;
+namespace PrestaShop\PrestaShop\Core\CustomerService;
 
-/**
- * Thrown when customer thread is not found
- */
-class CustomerThreadNotFoundException extends CustomerServiceException
+interface ContactTypeProviderInterface
 {
     /**
-     * Failed to delete customer thread
+     * @return array<int, string>
      */
-    const FAILED_DELETE = 10;
+    public function getContactTypes(): array;
 }

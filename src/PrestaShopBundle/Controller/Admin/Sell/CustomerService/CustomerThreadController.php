@@ -27,14 +27,18 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Search\Filters\CustomerThreadFilter;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\CustomerService\CustomerThread\ForwardCustomerThreadType;
 use PrestaShopBundle\Form\Admin\Sell\CustomerService\ReplyToCustomerThreadType;
@@ -48,6 +52,28 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CustomerThreadController extends FrameworkBundleAdminController
 {
+    /**
+     * Update customer thread status
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $customerThreadId
+     * @param string $newStatus
+     *
+     * @return RedirectResponse
+     */
+    public function indexAction(Request $request, CustomerThreadFilter $filters): Response
+    {
+        $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
+        $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
+            'enableSidebar' => true,
+        ]);
+    }
+
     /**
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller'))",
@@ -139,6 +165,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
                     'Admin.Orderscustomers.Notification'
                 )
             );
+        } catch (CustomerServiceException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
@@ -173,6 +201,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
+        } catch (CustomerServiceException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
@@ -254,6 +284,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 'success',
                 sprintf('%s %s', $this->trans('Message forwarded to', 'Admin.Catalog.Feature'), $forwardEmail)
             );
+        } catch (CustomerServiceException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, []));
         }
@@ -261,5 +293,60 @@ class CustomerThreadController extends FrameworkBundleAdminController
         return $this->redirectToRoute('admin_customer_threads_view', [
             'customerThreadId' => $customerThreadId,
         ]);
+    }
+
+    /**
+     * Delete customer thread
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customer_threads"
+     * )
+     *
+     * @param int $orderMessageId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(int $customerThreadId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($customerThreadId));
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (CustomerThreadNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        return $this->redirectToRoute('admin_customer_threads');
+    }
+
+    /**
+     * Returns customer thread error messages mapping.
+     *
+     * @return array
+     */
+    private function getErrorMessages(): array
+    {
+        return [
+            CustomerThreadNotFoundException::class => $this->trans(
+                'This customer thread does not exists',
+                'Admin.International.Notification'
+            ),
+            CustomerServiceException::class => [
+                CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE => $this->trans(
+                    'Failed to add customer message',
+                    'Admin.International.Notification'
+                ),
+                CustomerServiceException::FAILED_TO_UPDATE_STATUS => $this->trans(
+                    'Failed to update customer thread status',
+                    'Admin.International.Notification'
+                ),
+                CustomerServiceException::INVALID_COMMENT => $this->trans(
+                    'Comment is not valid',
+                    'Admin.International.Notification'
+                ),
+            ],
+        ];
     }
 }
