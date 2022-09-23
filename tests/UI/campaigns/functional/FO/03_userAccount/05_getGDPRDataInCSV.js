@@ -231,14 +231,17 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
+        // TODO
         // To replace isVisible after release of the module psgdpr
         // const age = await basicHelper.age(customerData.birthDate);
 
-        /* const isVisible = await files.isTextInFile(filePath, 'General info,,  , ,  Gender, ,  '
-        + `${customerData.socialTitle},  Name, ,  ${customerData.firstName} ${customerData.lastName},`
-        +`  Birth date, , ,${customerData.birthDate.toISOString().slice(0, 10)},  Age, ,  ${age},  Email, ,  `
-          + `${customerData.email},  Language, ,  English (English),  , ,  Creation account date, ,  `
-          + `${registrationDate},  Last visit, ,  ${lastVisitDate},  Siret,  Ape,  Company,  Website`); */
+        // const isVisible = await files.isTextInFile(
+        //   filePath,
+        //   '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
+        //   + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
+        //   + `${customerData.birthDate.toISOString().slice(0, 10)})${age}${customerData.email}"English(English)""`
+        //   + `${registrationDate}""${lastVisitDate}`,
+        //   true, true, 'utf16le');
 
         let isVisible = await files.isTextInFile(
           filePath,

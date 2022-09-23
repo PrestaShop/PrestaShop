@@ -136,6 +136,7 @@ module.exports = {
    * @param textToCheckWith {string} Text to check on the file
    * @param ignoreSpaces {boolean} True to delete all spaces before the check
    * @param ignoreTimeZone {boolean} True to delete timezone string added to some image url
+   * @param encoding {string} Encoding for the file
    * @return {Promise<boolean>}
    */
   async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false, encoding = 'utf8') {
