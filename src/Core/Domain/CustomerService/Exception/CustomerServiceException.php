@@ -33,7 +33,18 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
  */
 class CustomerServiceException extends DomainException
 {
+    /**
+     * Code is used when there is an issue with creating customer message
+     */
     const FAILED_TO_ADD_CUSTOMER_MESSAGE = 10;
+
+    /**
+     * Code is used when there is an issue when updating customers thread status
+     */
     const FAILED_TO_UPDATE_STATUS = 20;
+
+    /**
+     * Code is used when comment is invalid
+     */
     const INVALID_COMMENT = 30;
 }
