@@ -106,14 +106,19 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
   });
 
   const tests = [
-    {args:{testIdentifier: 'cartRuleAccepted', testTitle : 'for the first time'}},
-    {args:{testIdentifier: 'cartRuleNotAccepted', testTitle : 'for the second time'}},
+    {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time'}},
+    {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time'}},
   ];
 
   tests.forEach((test) => {
     describe(`Use Cart Rule ${test.args.testTitle}`, async () => {
       it('should go to the first product page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}GoToFirstProductPage`, baseContext);
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}GoToFirstProductPage`,
+          baseContext,
+        );
 
         await foHomePage.goToProductPage(page, 1);
 
@@ -122,7 +127,12 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
       });
 
       it('should add product to cart and proceed to checkout', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}AddProductToCart`, baseContext);
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}AddProductToCart`,
+          baseContext,
+        );
 
         await foProductPage.addProductToTheCart(page);
 
@@ -131,14 +141,24 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
       });
 
       it('should set the promo code', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}AddPromoCode`, baseContext);
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          `${test.args.testIdentifier}AddPromoCode`,
+          baseContext,
+        );
 
         await cartPage.addPromoCode(page, cartRuleCode.code);
       });
 
       if (test.args.testIdentifier === 'cartRuleAccepted') {
         it('should verify the total after discount', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}VerifyTotalAfterDiscount`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}VerifyTotalAfterDiscount`,
+            baseContext,
+          );
 
           const discountedPrice = Products.demo_1.finalPrice
             - (Products.demo_1.finalPrice * cartRuleCode.discountPercent / 100);
@@ -148,7 +168,12 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
         });
 
         it('should proceed to checkouts', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}ProceedToCheckoutAndSignIn`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}ProceedToCheckoutAndSignIn`,
+            baseContext,
+          );
 
           // Proceed to checkout the shopping cart
           await cartPage.clickOnProceedToCheckout(page);
@@ -165,21 +190,36 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
         });
 
         it('should confirm adress after signIn', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}ConfirmAdressStep`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}ConfirmAdressStep`,
+            baseContext,
+          );
 
           const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
           await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
         });
 
         it('should choose the shipping method', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}ShippingMethodStep`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}ShippingMethodStep`,
+            baseContext,
+          );
 
           const isPaymentStep = await checkoutPage.goToPaymentStep(page);
           await expect(isPaymentStep, 'Payment Step bloc is not displayed').to.be.true;
         });
 
         it('should choose the payment type and confirm the order', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}PaymentTypeStep`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}PaymentTypeStep`,
+            baseContext,
+          );
 
           await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
           const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -188,7 +228,12 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
         });
 
         it('should click on the logo of the shop', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}CheckLogoLink`, baseContext);
+          await testContext.addContextItem(
+            this,
+            'testIdentifier',
+            `${test.args.testIdentifier}CheckLogoLink`,
+            baseContext,
+          );
 
           await foHomePage.clickOnHeaderLink(page, 'Logo');
           const pageTitle = await foHomePage.getPageTitle(page);
@@ -202,7 +247,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
           const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
           await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
         });
-      };
+      }
     });
   });
 
