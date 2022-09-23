@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;

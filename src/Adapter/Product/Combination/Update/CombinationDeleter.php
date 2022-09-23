@@ -108,7 +108,8 @@ class CombinationDeleter
     }
 
     /**
-     * @todo: missing shop constraint
+     * @todo: missing shop constraint handling
+     *        (or this should delete all combinations in all shops? anyway need double-check)
      *
      * @param ProductId $productId
      *
