@@ -100,7 +100,7 @@ describe('BO - Catalog - Products : Preview product from list', async () => {
   });
 
   it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst2', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
 
     numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
