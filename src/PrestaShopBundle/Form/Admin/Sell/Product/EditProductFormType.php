@@ -92,7 +92,9 @@ class EditProductFormType extends TranslatorAwareType
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('specifications', SpecificationsType::class)
+            ->add('specifications', SpecificationsType::class, [
+                'product_type' => $options['product_type'],
+            ])
             ->add('combinations', CombinationsType::class, [
                 'product_id' => $productId,
             ])

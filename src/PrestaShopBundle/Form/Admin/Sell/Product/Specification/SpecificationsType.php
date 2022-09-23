@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -88,6 +89,11 @@ class SpecificationsType extends TranslatorAwareType
             ])
             ->add('customizations', CustomizationsType::class)
         ;
+
+        if ($options['product_type'] === ProductType::TYPE_VIRTUAL) {
+            $builder->remove('show_condition');
+            $builder->remove('condition');
+        }
     }
 
     /**
@@ -100,7 +106,10 @@ class SpecificationsType extends TranslatorAwareType
             ->setDefaults([
                 'required' => false,
                 'label' => $this->trans('Details', 'Admin.Catalog.Feature'),
+            ])->setRequired([
+                'product_type',
             ])
+            ->setAllowedTypes('product_type', 'string')
         ;
     }
 }
