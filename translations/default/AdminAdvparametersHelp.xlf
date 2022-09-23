@@ -625,8 +625,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
         <source>Click "%add_new_label%".</source>
         <target>Click "%add_new_label%".</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>

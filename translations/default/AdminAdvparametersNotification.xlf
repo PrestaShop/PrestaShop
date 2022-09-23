@@ -150,187 +150,187 @@
       <trans-unit id="c24928943071d3366164238b9413a211">
         <source>Warehouse did not exist, cannot set on product %name%.</source>
         <target>Warehouse did not exist, cannot set on product %name%.</target>
-        <note>Line: 2948</note>
+        <note>Line: 2947</note>
       </trans-unit>
       <trans-unit id="5c8707f79dbdd3abb28a8aa09e34f02f">
         <source>No image was found for combination with id_product = %s and image position = %s.</source>
         <target>No image was found for combination with id_product = %s and image position = %s.</target>
-        <note>Line: 2656</note>
+        <note>Line: 2655</note>
       </trans-unit>
       <trans-unit id="b672cb1c6a798cfb9f54de7dd897abd8">
         <source>EAN13 "%ean13%" has incorrect value for product with id %id%.</source>
         <target>EAN13 "%ean13%" has incorrect value for product with id %id%.</target>
-        <note>Line: 2777</note>
+        <note>Line: 2776</note>
       </trans-unit>
       <trans-unit id="85b637ec0128d136bf3794c79f2e7295">
         <source>Advanced stock management has incorrect value. Not set for product with id %id%.</source>
         <target>Advanced stock management has incorrect value. Not set for product with id %id%.</target>
-        <note>Line: 2901</note>
+        <note>Line: 2900</note>
       </trans-unit>
       <trans-unit id="934b46cf9eb8a8595ca517b87de6bfb4">
         <source>Advanced stock management is not enabled, cannot enable on product with id %id%.</source>
         <target>Advanced stock management is not enabled, cannot enable on product with id %id%.</target>
-        <note>Line: 2909</note>
+        <note>Line: 2908</note>
       </trans-unit>
       <trans-unit id="0081b2a315ed28289036fa6cc02a3819">
         <source>Advanced stock management is not enabled, warehouse is not set on product with id %id%.</source>
         <target>Advanced stock management is not enabled, warehouse is not set on product with id %id%.</target>
-        <note>Line: 2928</note>
+        <note>Line: 2927</note>
       </trans-unit>
       <trans-unit id="fd6d9d3ba7d4aaacc49f53c2e8c082c0">
         <source>Email address %1$s (ID: %2$s) cannot be validated.</source>
         <target>Email address %1$s (ID: %2$s) cannot be validated.</target>
-        <note>Line: 3261</note>
+        <note>Line: 3260</note>
       </trans-unit>
       <trans-unit id="9a19980e3db9fa010269bb72d31ee42a">
         <source>Email address %1$s (ID: %2$s) cannot be saved.</source>
         <target>Email address %1$s (ID: %2$s) cannot be saved.</target>
-        <note>Line: 3270</note>
+        <note>Line: 3269</note>
       </trans-unit>
       <trans-unit id="14118fbc7d8c233f0ac36ffb31716605">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</target>
-        <note>Line: 3459</note>
+        <note>Line: 3458</note>
       </trans-unit>
       <trans-unit id="597cf702e07f3b35431d2a499b00cefd">
         <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</source>
         <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</target>
-        <note>Line: 3469</note>
+        <note>Line: 3468</note>
       </trans-unit>
       <trans-unit id="b06766963f3b27f47f5e6ddf68d8f07e">
         <source>"%email%" is not a valid email address.</source>
         <target>"%email%" is not a valid email address.</target>
-        <note>Line: 3445</note>
+        <note>Line: 3444</note>
       </trans-unit>
       <trans-unit id="4a69d9da990728e003654d32a0b283a4">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be validated.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be validated.</target>
-        <note>Line: 3482</note>
+        <note>Line: 3481</note>
       </trans-unit>
       <trans-unit id="608ec99cc3ef74d962769c1958a1fa62">
         <source>The customer ID #%d does not exist in the database, and therefore cannot be saved.</source>
         <target>The customer ID #%d does not exist in the database, and therefore cannot be saved.</target>
-        <note>Line: 3490</note>
+        <note>Line: 3489</note>
       </trans-unit>
       <trans-unit id="964e5a863ba051181f8f537626f5c953">
         <source>Supplier is invalid</source>
         <target>Supplier is invalid</target>
-        <note>Line: 3820</note>
+        <note>Line: 3819</note>
       </trans-unit>
       <trans-unit id="3cc21b7970c348679cb6a1323a2dc173">
         <source>Alias is invalid</source>
         <target>Alias is invalid</target>
-        <note>Line: 3899</note>
+        <note>Line: 3898</note>
       </trans-unit>
       <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
         <source>Store is invalid</source>
         <target>Store is invalid</target>
-        <note>Line: 4071</note>
+        <note>Line: 4070</note>
       </trans-unit>
       <trans-unit id="2e73276e5106584df31fd1cc5823ba81">
         <source>Supplier ID (%id%) is not valid (at line %line%).</source>
         <target>Supplier ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4141</note>
+        <note>Line: 4140</note>
       </trans-unit>
       <trans-unit id="5dbfdcc4de08ec893f55919dc4e872dc">
         <source>Lang ID (%id%) is not valid (at line %line%).</source>
         <target>Lang ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4144</note>
+        <note>Line: 4143</note>
       </trans-unit>
       <trans-unit id="f0cf11a8f6275d2bac5a189cbb41c689">
         <source>Warehouse ID (%id%) is not valid (at line %line%).</source>
         <target>Warehouse ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4147</note>
+        <note>Line: 4146</note>
       </trans-unit>
       <trans-unit id="b390e8c2a66fd018293fb44a5b8208c8">
         <source>Currency ID (%id%) is not valid (at line %line%).</source>
         <target>Currency ID (%id%) is not valid (at line %line%).</target>
-        <note>Line: 4150</note>
+        <note>Line: 4149</note>
       </trans-unit>
       <trans-unit id="41a2fc826e4bd29b8eaf497a89a9dc5d">
         <source>Reference (%ref%) already exists (at line %line%).</source>
         <target>Reference (%ref%) already exists (at line %line%).</target>
-        <note>Line: 4156</note>
+        <note>Line: 4155</note>
       </trans-unit>
       <trans-unit id="70e7a6fcceb39a1e3ea3925182b85d18">
         <source>YYYY-MM-DD</source>
         <target>YYYY-MM-DD</target>
-        <note>Line: 4161</note>
+        <note>Line: 4160</note>
       </trans-unit>
       <trans-unit id="c1be0fbaeb4e6b509e2f65240b7e5970">
         <source>Date format (%date%) is not valid (at line %line%). It should be: %date_format%.</source>
         <target>Date format (%date%) is not valid (at line %line%). It should be: %date_format%.</target>
-        <note>Line: 4159</note>
+        <note>Line: 4158</note>
       </trans-unit>
       <trans-unit id="8cc169924951a04aea4f6a86334f3ce6">
         <source>Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.</source>
         <target>Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.</target>
-        <note>Line: 4161</note>
+        <note>Line: 4160</note>
       </trans-unit>
       <trans-unit id="ef1a78ea7433cfc92f358d6dbf4fcd48">
         <source>Format: Between 0 and 100</source>
         <target>Format: Between 0 and 100</target>
-        <note>Line: 4327</note>
+        <note>Line: 4326</note>
       </trans-unit>
       <trans-unit id="e0b985fb06e1498649ed1cfd6f3fb3e4">
         <source>Discount rate (%rate%) is not valid (at line %line%). %format%.</source>
         <target>Discount rate (%rate%) is not valid (at line %line%). %format%.</target>
-        <note>Line: 4165</note>
+        <note>Line: 4164</note>
       </trans-unit>
       <trans-unit id="3f2f635ad300e97bc217b69cc06dfc30">
         <source>Supply Order (%id%) is not editable (at line %line%).</source>
         <target>Supply Order (%id%) is not editable (at line %line%).</target>
-        <note>Line: 4171</note>
+        <note>Line: 4170</note>
       </trans-unit>
       <trans-unit id="ad1ce5290a697ed3729cbd520432cf22">
         <source>Supply Order could not be saved (at line %line%).</source>
         <target>Supply Order could not be saved (at line %line%).</target>
-        <note>Line: 4199</note>
+        <note>Line: 4198</note>
       </trans-unit>
       <trans-unit id="bb19d4490bdc48656603c0a7ef30db73">
         <source>Supply Order (%s) could not be loaded (at line %d).</source>
         <target>Supply Order (%s) could not be loaded (at line %d).</target>
-        <note>Line: 4267</note>
+        <note>Line: 4266</note>
       </trans-unit>
       <trans-unit id="5e063c49ce8203f2ca7a496da24b819e">
         <source>Product/Attribute (%d/%d) cannot be added twice (at line %d).</source>
         <target>Product/Attribute (%d/%d) cannot be added twice (at line %d).</target>
-        <note>Line: 4289</note>
+        <note>Line: 4288</note>
       </trans-unit>
       <trans-unit id="0a657a7416c29bdc5b134b61b863e7ee">
         <source>Product (%d/%d) is not available for this order (at line %d).</source>
         <target>Product (%d/%d) is not available for this order (at line %d).</target>
-        <note>Line: 4302</note>
+        <note>Line: 4301</note>
       </trans-unit>
       <trans-unit id="ca676c9ec4e1ae9fe9df3ac28910e6ef">
         <source>Unit Price (tax excl.) (%d) is not valid (at line %d).</source>
         <target>Unit Price (tax excl.) (%d) is not valid (at line %d).</target>
-        <note>Line: 4309</note>
+        <note>Line: 4308</note>
       </trans-unit>
       <trans-unit id="406eba9770c82a84cae2d6ee3e846a56">
         <source>Quantity Expected (%d) is not valid (at line %d).</source>
         <target>Quantity Expected (%d) is not valid (at line %d).</target>
-        <note>Line: 4324</note>
+        <note>Line: 4323</note>
       </trans-unit>
       <trans-unit id="8f7627c77b01dc968a9665c0156da405">
         <source>Discount rate (%d) is not valid (at line %d). %s.</source>
         <target>Discount rate (%d) is not valid (at line %d). %s.</target>
-        <note>Line: 4316</note>
+        <note>Line: 4315</note>
       </trans-unit>
       <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
         <source>Cannot read the .CSV file</source>
         <target>Cannot read the .CSV file</target>
-        <note>Line: 4416</note>
+        <note>Line: 4415</note>
       </trans-unit>
       <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
         <source>Linking Accessories...</source>
         <target>Linking Accessories...</target>
-        <note>Line: 4692</note>
+        <note>Line: 4691</note>
       </trans-unit>
       <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
         <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
-        <note>Line: 4911</note>
+        <note>Line: 4910</note>
       </trans-unit>
     </body>
   </file>
@@ -1166,7 +1166,7 @@
       <trans-unit id="413e71d77a70c6ddfbbee6979b47b90b">
         <source>New features are available. Feel free to try them out!</source>
         <target>New features are available. Feel free to try them out!</target>
-        <note>Line: 45</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="fcfc1d5af32905a9ed28a76af2251ba9">
         <source>Testing a feature before its official release can be exciting. However, you must be aware of the potential risks of such experiments:</source>

@@ -257,11 +257,6 @@
         <target>Installed modules</target>
         <note>Line: 32</note>
       </trans-unit>
-      <trans-unit id="e7a908d79d3758c911692ba791da9c70">
-        <source>Catalog evaluation</source>
-        <target>Catalog evaluation</target>
-        <note>Line: 33</note>
-      </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminQuickAccessesController.php" source-language="en-US" target-language="en" datatype="plaintext">
@@ -295,6 +290,15 @@
         <source>Add new quick access</source>
         <target>Add new quick access</target>
         <note>Line: 135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/autoupgrade/upgrade/php/ps_1730_add_quick_access_evaluation_catalog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e7a908d79d3758c911692ba791da9c70">
+        <source>Catalog evaluation</source>
+        <target>Catalog evaluation</target>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

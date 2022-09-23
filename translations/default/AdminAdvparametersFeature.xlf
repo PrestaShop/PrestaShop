@@ -88,12 +88,12 @@ Comment: Product multi store feature flag in 8.0</note>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
-        <note>Line: 4734</note>
+        <note>Line: 4733</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
-        <note>Line: 4737</note>
+        <note>Line: 4736</note>
       </trans-unit>
       <trans-unit id="fa4ecc0168c2a9e448f469e3835d2a68">
         <source>Product Reference</source>
@@ -1035,7 +1035,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="997320bab8342395326fd0a109068200">
         <source><![CDATA[New & Experimental Features]]></source>
         <target><![CDATA[New & Experimental Features]]></target>
-        <note>Line: 95</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
@@ -1749,7 +1749,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="4078e029d86559a033707b1f7af7f04d">
         <source>New features</source>
         <target>New features</target>
-        <note>Line: 39</note>
+        <note>Line: 37</note>
       </trans-unit>
       <trans-unit id="59c5b60130df8c2d91ce4e20f5a622bf">
         <source>Experimental features</source>
@@ -1886,8 +1886,7 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="26420bd9e260012164a58a0f002e4821">
         <source>Add new SQL query</source>
         <target>Add new SQL query</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
@@ -1972,8 +1971,7 @@ Comment: Stable feature flags form</note>
       <trans-unit id="644ebe55744f361a22bc3c9be9bc4ccf">
         <source>Add new webservice key</source>
         <target>Add new webservice key</target>
-        <note>Line: 34
-Comment: Stable feature flags form</note>
+        <note>Line: 34</note>
       </trans-unit>
       <trans-unit id="5a8228d4c852fd51c735b3563b33d3ed">
         <source>Webservice status</source>

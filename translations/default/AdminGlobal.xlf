@@ -634,15 +634,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopUrlController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
-        <source>Name:</source>
-        <target>Name:</target>
-        <note>Line: 548</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8ff922bbcd8ad41cdfc48d3c5163b2ab">
@@ -683,6 +674,20 @@
         <source>Parent</source>
         <target>Parent</target>
         <note>Line: 199</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/autoupgrade/views/templates/block/channelInfo.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
+        <source>Name:</source>
+        <target>Name:</target>
+        <note>Line: 18</note>
+      </trans-unit>
+      <trans-unit id="453e6aa38d87b28ccae545967c53004f">
+        <source>Unavailable</source>
+        <target>Unavailable</target>
+        <note>Line: 10</note>
       </trans-unit>
     </body>
   </file>
@@ -1883,7 +1888,7 @@
       <trans-unit id="dc69fe17b788b1acf7bd938e5f0ae4d5">
         <source>Are you sure you want to delete the selected item(s)?</source>
         <target>Are you sure you want to delete the selected item(s)?</target>
-        <note>Line: 334</note>
+        <note>Line: 333</note>
       </trans-unit>
     </body>
   </file>
@@ -1982,27 +1987,27 @@
       <trans-unit id="545f6c2f382c04810103b3e5e6f7d841">
         <source>Unlimited</source>
         <target>Unlimited</target>
-        <note>Line: 69</note>
+        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="e02d2ae03de9d493df2b6b2d2813d302">
         <source>Duration</source>
         <target>Duration</target>
-        <note>Line: 42</note>
+        <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="876f0b745f68db560183928665a225ad">
         <source>Specific price deletion</source>
         <target>Specific price deletion</target>
-        <note>Line: 86</note>
+        <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="795c0d79615605a019e7c8f4d2853f8f">
         <source>Are you sure you want to delete this specific price?</source>
         <target>Are you sure you want to delete this specific price?</target>
-        <note>Line: 87</note>
+        <note>Line: 88</note>
       </trans-unit>
       <trans-unit id="7f1db674f32b8f6d6795d6abe0d9e941">
         <source>Edit specific price</source>
         <target>Edit specific price</target>
-        <note>Line: 99</note>
+        <note>Line: 100</note>
       </trans-unit>
     </body>
   </file>

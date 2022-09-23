@@ -1003,32 +1003,32 @@ Best regards,</target>
       <trans-unit id="282c7d15f714ec30b64b7db218f232f0">
         <source>The "shipping" field must be a valid number</source>
         <target>The "shipping" field must be a valid number</target>
-        <note>Line: 82</note>
+        <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="1067f7778added234b6064bc8aa0765d">
         <source>Re-stock products</source>
         <target>Re-stock products</target>
-        <note>Line: 99</note>
+        <note>Line: 100</note>
       </trans-unit>
       <trans-unit id="e413f403aa8d5253b487d09fc84e47a0">
         <source>Generate a credit slip</source>
         <target>Generate a credit slip</target>
-        <note>Line: 108</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="400264c3cd8f2e65b9f19375230b59b8">
         <source>Generate a voucher</source>
         <target>Generate a voucher</target>
-        <note>Line: 118</note>
+        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="532c865e83cd29bf74e7b968c8216767">
         <source>Product(s) price:</source>
         <target>Product(s) price:</target>
-        <note>Line: 130</note>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="6e3a26f187c697d1d8c6668a55cd5561">
         <source>Product(s) price, excluding amount of initial voucher:</source>
         <target>Product(s) price, excluding amount of initial voucher:</target>
-        <note>Line: 131</note>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>
