@@ -60,7 +60,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 Country::getIdByName($this->getDefaultLangId(), $data['country']),
                 $data['postcode'],
                 $data['city'],
-                $this->getShopIdsByReferences($data['shops'])
+                $this->getIdsByReferences($data['shops'])
             );
 
             $dataHours = $data['hours'] ?? [];
@@ -136,13 +136,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function bulkToggleStatus(string $action, string $storeReferences): void
     {
         $expectedStatus = 'enable' === $action;
-        $storeIds = [];
-
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            /** @var int */
-            $storeId = SharedStorage::getStorage()->get($storeReference);
-            $storeIds[$storeReference] = $storeId;
-        }
+        $storeIds = $this->getIdsByReferences($storeReferences);
 
         $bulkUpdateCommand = new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds);
         $this->getCommandBus()->handle($bulkUpdateCommand);
@@ -176,13 +170,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteStores(string $storeReferences): void
     {
-        $storeIds = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            /** @var int */
-            $storeId = SharedStorage::getStorage()->get($storeReference);
-
-            $storeIds[] = $storeId;
-        }
+        $storeIds = $this->getIdsByReferences($storeReferences);
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteStoreCommand($storeIds));
@@ -210,7 +198,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         return new StoreForEditing(
             $storeId,
             true,
-            $this->getShopIdsByReferences($data['shops']),
+            array_values($this->getIdsByReferences($data['shops'])),
             Country::getIdByName($this->getDefaultLangId(), $data['country']),
             $data['postcode'],
             $data['city'],
@@ -229,20 +217,20 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param string $shopReferencesAsString
+     * @param string $referencesAsString
      *
      * @return int[]
      */
-    private function getShopIdsByReferences(string $shopReferencesAsString): array
+    private function getIdsByReferences(string $referencesAsString): array
     {
-        $shopReferences = PrimitiveUtils::castStringArrayIntoArray($shopReferencesAsString);
-        $shopIds = [];
+        $references = PrimitiveUtils::castStringArrayIntoArray($referencesAsString);
+        $ids = [];
 
-        foreach ($shopReferences as $shopReference) {
-            $shopIds[] = $this->getSharedStorage()->get($shopReference);
+        foreach ($references as $reference) {
+            $ids[$reference] = $this->getSharedStorage()->get($reference);
         }
 
-        return $shopIds;
+        return $ids;
     }
 
     /**
