@@ -72,8 +72,16 @@ final class CountryThreadQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria)
             ->select('ct.*, CONCAT(c.`firstname`," ",c.`lastname`) as customer')
             ->addSelect('cm.message, cm.private, cl.name as contact, l.name as langName')
-            ->addSelect('CONCAT(e.`firstname`," ",e.`lastname`) as employee')
             ->addSelect('s.name as shopName')
+            ->addSelect('(
+				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
+				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
+				INNER JOIN ' . _DB_PREFIX_ . 'employee e
+					ON e.`id_employee` = cm2.`id_employee`
+				WHERE cm2.id_employee > 0
+					AND cm2.`id_customer_thread` = ct.`id_customer_thread`
+				ORDER BY cm2.`date_add` DESC LIMIT 1
+			) as employee')
             ->groupBy('ct.id_customer_thread');
 
         $this->searchCriteriaApplicator
@@ -157,7 +165,7 @@ final class CountryThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             'contact',
             'langName',
             'status',
-            'employee', //?
+            'employee',
             'message',
             'private',
             'upd_at',
@@ -201,6 +209,12 @@ final class CountryThreadQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ($filterName === 'customer') {
                 $builder->andWhere('CONCAT(c.`firstname`," ",c.`lastname`)' . ' LIKE :' . $filterName);
+                $builder->setParameter($filterName, '%' . $filterValue . '%');
+                continue;
+            }
+
+            if ($filterName === 'employee') {
+                $builder->andWhere('CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`)' . ' LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }
