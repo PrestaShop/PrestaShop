@@ -126,7 +126,7 @@ class AddStoreCommand
      * @param string $city
      * @param int[] $shopAssociation
      */
-    public function __construct(int $countryId, string $postcode, string $city, $shopAssociation)
+    public function __construct(int $countryId, string $postcode, string $city, array $shopAssociation)
     {
         $this->setCountryId($countryId);
         $this->setPostcode($postcode);
