@@ -252,5 +252,5 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
   });
 
   // post condition : delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, baseContext);
+  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
 });
