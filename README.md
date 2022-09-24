@@ -126,7 +126,9 @@ Community forums
 You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums] or on the [PrestaShop Slack channel][chat].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
-
+**************
+Test modification
+**************
 [available-features]: https://www.prestashop.com/en/online-store-builder
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
