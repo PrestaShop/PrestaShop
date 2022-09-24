@@ -190,7 +190,7 @@ class ImageRetriever
                 );
             }
 
-            /* 
+            /*
             * If High-DPI images are enabled, we will also generate a thumbnail in
             * double the size, so it can be used in src-sets.
             */
