@@ -1755,7 +1755,7 @@ class ToolsCore
 
     public static function isEmpty($field)
     {
-        return $field === '' || $field === null;
+        return $field === '' || $field === null || trim($field) === '';
     }
 
     /**
