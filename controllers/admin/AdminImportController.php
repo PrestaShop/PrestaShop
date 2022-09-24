@@ -480,6 +480,10 @@ class AdminImportControllerCore extends AdminController
                     ],
                 ];
 
+                if ($this->entities[$this->trans('Suppliers', [], 'Admin.Global')]) {
+                    unset($this->available_fields['short_description'], self::$validators['short_description']);
+                }
+
                 self::$default_values = [
                     'shop' => Shop::getGroupFromShop((int) Configuration::get('PS_SHOP_DEFAULT')),
                 ];
