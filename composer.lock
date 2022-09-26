@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96e34fdce0ee65dd927da9193e4cd78e",
+    "content-hash": "07eb940a744e1755a89916e002ea1903",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4591,7 +4591,7 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "dev-develop",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
@@ -4607,7 +4607,6 @@
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
-            "default-branch": true,
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4625,7 +4624,7 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.0"
             },
             "time": "2022-09-12T14:26:41+00:00"
         },
@@ -12541,7 +12540,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
-        "prestashop/classic": 20,
         "prestashop/laminas-code-lts": 20
     },
     "prefer-stable": true,
