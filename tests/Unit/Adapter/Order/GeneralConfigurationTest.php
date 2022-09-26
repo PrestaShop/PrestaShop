@@ -48,6 +48,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
         'allow_delayed_shipping' => true,
         'enable_tos' => true,
         'tos_cms_id' => 3,
+        'enable_backorder_status' => true,
     ];
 
     /**
@@ -80,6 +81,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
                     ['PS_SHIP_WHEN_AVAILABLE', false, $shopConstraint, true],
                     ['PS_CONDITIONS', false, $shopConstraint, true],
                     ['PS_CONDITIONS_CMS_ID', 0, $shopConstraint, 3],
+                    ['PS_ENABLE_BACKORDER_STATUS', false, $shopConstraint, true],
                 ]
             );
 
@@ -121,6 +123,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['allow_delayed_shipping' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_tos' => 'wrong_type'])],
             [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['tos_cms_id' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_backorder_status' => 'wrong_type'])],
         ];
     }
 
