@@ -55,9 +55,11 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
     const inputValue = await homePage.getInputValue(page, homePage.searchInput);
     await expect(inputValue).equal(searchValue);
+
+    await homePage.closeAutocompleteSearch(page);
   });
 
-  it('should click outside the autocomplete list', async function () {
+  it('should click outside the autocomplete list and check that the list is not displayed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOutsideAutocompleteList', baseContext);
 
     await page.keyboard.press('Escape');
@@ -88,6 +90,8 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
       const inputValue = await homePage.getInputValue(page, homePage.searchInput);
       await expect(inputValue).equal(search.searchValue);
+
+      await homePage.closeAutocompleteSearch(page);
     });
   });
 

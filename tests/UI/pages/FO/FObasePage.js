@@ -326,6 +326,15 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Close the  autocomplete search result
+   * @param page {Page} Browser tab
+   * @returns {void}
+   */
+  async closeAutocompleteSearch(page) {
+    await page.keyboard.press('Escape');
+  }
+
+  /**
    * Check if there are autocomplete search result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
@@ -333,7 +342,6 @@ class FOBasePage extends CommonPage {
    */
   async hasAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
-    await page.waitForTimeout(2000);
     return this.elementVisible(page, this.autocompleteSearchResult, 2000);
   }
 
@@ -345,7 +353,7 @@ class FOBasePage extends CommonPage {
    */
   async getAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
-    await page.waitForTimeout(2000);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResult);
     return this.getTextContent(page, this.autocompleteSearchResult);
   }
 
@@ -357,9 +365,8 @@ class FOBasePage extends CommonPage {
    */
   async countAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
-    await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
-    return (await page.$$(this.autocompleteSearchResultItem)).length;
+    return page.$$eval(this.autocompleteSearchResultItem, all => all.length);
   }
 
   /**
@@ -383,7 +390,6 @@ class FOBasePage extends CommonPage {
    */
   async clickAutocompleteSearchResult(page, productName, nthResult) {
     await this.setValue(page, this.searchInput, productName);
-    await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
     await page.click(this.autocompleteSearchResultItemLink(nthResult));
   }

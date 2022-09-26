@@ -38,7 +38,7 @@ class SearchResults extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async hasResults(page) {
-    return (await page.$$(this.productNoMatches)).length === 0;
+    return page.$$eval(this.productNoMatches, all => all.length === 0);
   }
 
   /**

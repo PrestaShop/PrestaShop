@@ -27,7 +27,6 @@ let page;
   Click on logo link and go to home page
   Click on Enter in autocomplete list
 */
-
 describe('FO - Search Page : Search a product and validate', async () => {
   // before and after functions
   before(async function () {
