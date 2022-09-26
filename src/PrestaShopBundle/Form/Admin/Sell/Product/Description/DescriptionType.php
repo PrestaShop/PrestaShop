@@ -55,6 +55,11 @@ class DescriptionType extends TranslatorAwareType
     private $employeeIsoCode;
 
     /**
+     * @var int
+     */
+    private $shortDescriptionMaxLength;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
@@ -64,11 +69,13 @@ class DescriptionType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         RouterInterface $router,
-        string $employeeIsoCode
+        string $employeeIsoCode,
+        int $shortDescriptionMaxLength
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->employeeIsoCode = $employeeIsoCode;
+        $this->shortDescriptionMaxLength = $shortDescriptionMaxLength;
     }
 
     /**
@@ -77,6 +84,11 @@ class DescriptionType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = (int) $options['product_id'];
+        if ($this->shortDescriptionMaxLength > 0) {
+            $shortDescriptionLimit = $this->shortDescriptionMaxLength;
+        } else {
+            $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
+        }
 
         if ($productId) {
             $builder
@@ -93,21 +105,9 @@ class DescriptionType extends TranslatorAwareType
                 'label' => $this->trans('Summary', 'Admin.Global'),
                 'type' => FormattedTextareaType::class,
                 'options' => [
-                    'limit' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
+                    'limit' => $shortDescriptionLimit,
                     'attr' => [
                         'class' => 'serp-default-description',
-                    ],
-                    'constraints' => [
-                        new Length([
-                            'max' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                [
-                                    '%limit%' => ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH,
-                                ]
-                            ),
-                        ]),
                     ],
                 ],
                 'label_tag_name' => 'h3',

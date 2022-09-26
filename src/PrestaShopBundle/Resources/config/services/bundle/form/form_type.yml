@@ -1370,6 +1370,7 @@ services:
     arguments:
       - '@router'
       - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_PRODUCT_SHORT_DESC_LIMIT")'
     tags:
       - { name: form.type }
 
@@ -2107,6 +2108,12 @@ services:
 
   form.type.disabling_switch_type:
     class: 'PrestaShopBundle\Form\Admin\Type\DisablingSwitchType'
+    public: true
+    tags:
+      - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Type\FormattedTextareaType:
+    parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
