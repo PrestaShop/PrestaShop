@@ -26,8 +26,6 @@ class MerchandiseReturns extends FOBasePage {
     this.tableBodyRows = `${this.tableBody} tr`;
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
-    this.orderReturnName = row => `${this.tableBodyRow(row)} td:nth-child(2) a`;
-    this.orderReturnStatus = row => `${this.tableBodyRow(row)} td:nth-child(3)`;
   }
 
   /*
