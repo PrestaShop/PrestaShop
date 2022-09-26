@@ -54,8 +54,6 @@ trans('Our best sales', 'Shop.Navigation');
 
 trans('Use our form to contact us', 'Shop.Navigation');
 
-trans('Shop powered by PrestaShop', 'Shop.Navigation');
-
 trans('Brands list', 'Shop.Navigation');
 
 trans('Our new products', 'Shop.Navigation');
