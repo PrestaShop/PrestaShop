@@ -28,6 +28,7 @@ class WebserviceRequestCore
     public const HTTP_GET = 1;
     public const HTTP_POST = 2;
     public const HTTP_PUT = 4;
+    public const HTTP_PATCH = 8;
 
     protected $_available_languages = null;
     /**

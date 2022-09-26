@@ -204,7 +204,7 @@ class CurrencyCore extends ObjectModel
             'name' => [
                 'getter' => 'getName',
                 'modifier' => [
-                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
+                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT | WebserviceRequest::HTTP_PATCH,
                     'modifier' => 'setNameForWebservice',
                 ],
             ],
@@ -213,7 +213,7 @@ class CurrencyCore extends ObjectModel
             ],
             'iso_code' => [
                 'modifier' => [
-                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT,
+                    'http_method' => WebserviceRequest::HTTP_POST | WebserviceRequest::HTTP_PUT | WebserviceRequest::HTTP_PATCH,
                     'modifier' => 'setIsoCodeForWebService',
                 ],
             ],
