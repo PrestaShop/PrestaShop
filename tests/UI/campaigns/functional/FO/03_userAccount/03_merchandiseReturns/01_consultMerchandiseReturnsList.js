@@ -45,7 +45,13 @@ const orderData = {
 };
 
 /*
-
+Pre-condition:
+- Enable merchandise returns
+Scenario
+- Check that no merchandise returns has been requested
+- Check merchandise returns list
+Post-condition:
+- Disable merchandise returns
  */
 describe('FO - Account : Consult merchandise returns list', async () => {
   // Pre-condition: Create order
@@ -134,7 +140,7 @@ describe('FO - Account : Consult merchandise returns list', async () => {
     });
   });
 
-  describe('Case 2 : Check merchandise returns in list', async () => {
+  describe('Case 2 : Check merchandise returns list', async () => {
     describe(`Change the created orders status to '${Statuses.shipped.status}'`, async () => {
       it('should go to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToBO', baseContext);
@@ -276,6 +282,39 @@ describe('FO - Account : Consult merchandise returns list', async () => {
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'dateIssued');
         await expect(packageStatus).to.equal(orderDate.substr(0, 10));
       });
+    });
+  });
+
+  describe('POST-TEST : Disable merchandise returns', async () => {
+    it('should go to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBO2', baseContext);
+
+      await foMerchandiseReturnsPage.goTo(page, global.BO.URL);
+
+      const pageTitle = await dashboardPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+    });
+
+    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customerServiceParentLink,
+        dashboardPage.merchandiseReturnsLink,
+      );
+
+      await boMerchandiseReturnsPage.closeSfToolBar(page);
+
+      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
+    });
+
+    it('should disable merchandise returns', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableMerchandiseReturns', baseContext);
+
+      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, true);
+      await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
     });
   });
 });
