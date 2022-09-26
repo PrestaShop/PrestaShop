@@ -14,7 +14,23 @@ class CreditSlip extends FOBasePage {
   constructor() {
     super();
 
+    // Title
     this.pageTitle = 'Credit slip';
+
+    // Message
+
+    this.noCreditSlipsInfoMessage = 'You have not received any credit slips.';
+    // Alert block selectors
+    this.alertInfoBlock = '#content .alert.alert-info';
+  }
+
+  /**
+   * Get alert info message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAlertInfoMessage(page) {
+    return this.getTextContent(page, this.alertInfoBlock);
   }
 }
 
