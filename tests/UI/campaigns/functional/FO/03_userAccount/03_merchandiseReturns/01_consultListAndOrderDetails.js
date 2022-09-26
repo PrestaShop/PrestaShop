@@ -33,6 +33,8 @@ const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultListAnd
 
 let browserContext;
 let page;
+let orderReference;
+let orderDate;
 
 // New order by customer data
 const orderData = {
@@ -133,103 +135,147 @@ describe('FO - Account : Consult merchandise returns list & Check order details'
   });
 
   describe('Case 2 : Check merchandise returns in list', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+    describe(`Change the created orders status to '${Statuses.shipped.status}'`, async () => {
+      it('should go to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToBO', baseContext);
+
+        await foMerchandiseReturnsPage.goTo(page, global.BO.URL);
+
+        const pageTitle = await dashboardPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(dashboardPage.pageTitle);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should filter the Orders table by the default customer and check the result', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+
+        await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+
+        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
+        await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      });
+
+      it('should get the created Order information', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+
+        orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+        await expect(orderReference).to.not.be.null;
+      });
+
+      it('should get the created Order date', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+
+        orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
+        await expect(orderDate).to.not.be.null;
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
+
+        // View order
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await viewOrderPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+        const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+        await expect(result).to.equal(Statuses.shipped.status);
+      });
     });
 
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+    describe('Check merchandise returns list', async () => {
+      it('should go to FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
+        // Click on view my shop
+        page = await viewOrderPage.viewMyShop(page);
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
+        // Change FO language
+        await homePage.changeLanguage(page, 'en');
 
-    it('should filter the Orders table by the default customer and check the result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+        const isHomePage = await homePage.isHomePage(page);
+        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      });
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      it('should go to my account page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
 
-      const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
-    });
+        await homePage.goToMyAccountPage(page);
 
-    it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
+        const pageTitle = await myAccountPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(myAccountPage.pageTitle);
+      });
 
-      // View order
-      await ordersPage.goToOrder(page, 1);
+      it('should go to \'Order history and details\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
-    });
+        await myAccountPage.goToHistoryAndDetailsPage(page);
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+        const pageTitle = await orderHistoryPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
+      });
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
-    });
+      it('should go to the first order in the list and check the existence of order return form', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-    it('should go to FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+        await orderHistoryPage.goToDetailsPage(page, 1);
 
-      // Click on view my shop
-      page = await viewOrderPage.viewMyShop(page);
+        const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+        await expect(result).to.be.true;
+      });
 
-      // Change FO language
-      await homePage.changeLanguage(page, 'en');
+      it('should create a merchandise return', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
-    });
+        await orderDetailsPage.requestMerchandiseReturn(page, 'test');
 
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
+        const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
+      });
 
-      await homePage.goToMyAccountPage(page);
+      it('should verify the Order reference', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnReference', baseContext);
 
-      const pageTitle = await myAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(myAccountPage.pageTitle);
-    });
+        const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'orderReference');
+        await expect(packageStatus).to.equal(orderReference);
+      });
 
-    it('should go to \'Order history and details\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+      it('should verify the Order return file name', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnFileName', baseContext);
 
-      await myAccountPage.goToHistoryAndDetailsPage(page);
+        const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'fileName');
+        await expect(packageStatus).to.contains('#RE00');
+      });
 
-      const pageTitle = await orderHistoryPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderHistoryPage.pageTitle);
-    });
+      it('should verify the order return status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
 
-    it('should go to the first order in the list and check the existence of order return form', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
+        const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
+        await expect(packageStatus).to.equal('Waiting for confirmation');
+      });
 
-      await orderHistoryPage.goToDetailsPage(page, 1);
+      it('should verify the order return date issue', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnDateIssue', baseContext);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
-      await expect(result).to.be.true;
-    });
-
-    it('should create a merchandise return', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
-
-      await orderDetailsPage.requestMerchandiseReturn(page, 'test');
-
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
-    });
-
-    it('should verify order return status', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
-
-      const fileName = await foMerchandiseReturnsPage.getOrderReturnStatus(page);
-      await expect(fileName).to.be.equal(test.args.status);
+        const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'dateIssued');
+        await expect(packageStatus).to.equal(orderDate.substr(0, 10));
+      });
     });
   });
 });
