@@ -55,14 +55,12 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
 
     const inputValue = await homePage.getInputValue(page, homePage.searchInput);
     await expect(inputValue).equal(searchValue);
-
-    await homePage.closeAutocompleteSearch(page);
   });
 
   it('should click outside the autocomplete list and check that the list is not displayed', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOutsideAutocompleteList', baseContext);
 
-    await page.keyboard.press('Escape');
+    await homePage.closeAutocompleteSearch(page);
 
     const hasAutocompleteList = await homePage.elementVisible(page, homePage.autocompleteSearchResult);
     await expect(hasAutocompleteList).to.be.false;
