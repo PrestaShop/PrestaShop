@@ -3,7 +3,7 @@ name: UI tests code checks
 on:
   pull_request:
     paths:
-      - './tests/UI'
+      - './tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
 
 defaults:
