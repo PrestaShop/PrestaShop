@@ -58,8 +58,6 @@ class ModuleTabManagementSubscriber implements EventSubscriberInterface
         return [
             ModuleManagementEvent::INSTALL => 'onModuleInstall',
             ModuleManagementEvent::UNINSTALL => 'onModuleUninstall',
-            ModuleManagementEvent::ENABLE => 'onModuleEnable',
-            ModuleManagementEvent::DISABLE => 'onModuleDisable',
         ];
     }
 
