@@ -47,6 +47,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
         'allow_delayed_shipping',
         'enable_tos',
         'tos_cms_id',
+        'enable_backorder_status',
     ];
 
     /**
@@ -66,6 +67,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             'allow_delayed_shipping' => (bool) $this->configuration->get('PS_SHIP_WHEN_AVAILABLE', false, $shopConstraint),
             'enable_tos' => (bool) $this->configuration->get('PS_CONDITIONS', false, $shopConstraint),
             'tos_cms_id' => (int) $this->configuration->get('PS_CONDITIONS_CMS_ID', 0, $shopConstraint),
+            'enable_backorder_status' => (bool) $this->configuration->get('PS_ENABLE_BACKORDER_STATUS', false, $shopConstraint),
         ];
     }
 
@@ -86,6 +88,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             $this->updateConfigurationValue('PS_SHIP_WHEN_AVAILABLE', 'allow_delayed_shipping', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CONDITIONS', 'enable_tos', $configuration, $shopConstraint);
             $this->updateConfigurationValue('PS_CONDITIONS_CMS_ID', 'tos_cms_id', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ENABLE_BACKORDER_STATUS', 'enable_backorder_status', $configuration, $shopConstraint);
         }
 
         return [];
@@ -106,7 +109,8 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('allow_multishipping', 'bool')
             ->setAllowedTypes('allow_delayed_shipping', 'bool')
             ->setAllowedTypes('enable_tos', 'bool')
-            ->setAllowedTypes('tos_cms_id', 'int');
+            ->setAllowedTypes('tos_cms_id', 'int')
+            ->setAllowedTypes('enable_backorder_status', 'bool');
 
         return $resolver;
     }
