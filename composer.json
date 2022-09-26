@@ -57,7 +57,7 @@
         "prestashop/blockreassurance": "^5.1",
         "prestashop/blockwishlist": "^2.0",
         "prestashop/circuit-breaker": "^4.0",
-        "prestashop/classic": "dev-develop",
+        "prestashop/classic": "^2.0",
         "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
