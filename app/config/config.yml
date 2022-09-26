@@ -34,7 +34,7 @@ services:
 
 framework:
   assets:
-    version: !php/const \AppKernel::VERSION
+    version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
 
   # esi: ~
   secret: "%secret%"

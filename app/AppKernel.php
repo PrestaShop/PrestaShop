@@ -26,17 +26,19 @@
 
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Version;
+use PrestaShop\TranslationToolsBundle\TranslationToolsBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '8.0.0';
-    const MAJOR_VERSION_STRING = '8';
-    const MAJOR_VERSION = 8;
-    const MINOR_VERSION = 0;
-    const RELEASE_VERSION = 0;
+    const VERSION = Version::VERSION;
+    const MAJOR_VERSION_STRING = Version::MAJOR_VERSION_STRING;
+    const MAJOR_VERSION = Version::MAJOR_VERSION;
+    const MINOR_VERSION = Version::MINOR_VERSION;
+    const RELEASE_VERSION = Version::RELEASE_VERSION;
 
     /**
      * {@inheritdoc}
@@ -54,7 +56,7 @@ class AppKernel extends Kernel
             // PrestaShop Core bundle
             new PrestaShopBundle\PrestaShopBundle(),
             // PrestaShop Translation parser
-            new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
+            new TranslationToolsBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );

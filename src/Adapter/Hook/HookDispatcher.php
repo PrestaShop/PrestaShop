@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Hook\Hook;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHook;
+use PrestaShop\PrestaShop\Core\Version;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\Event;
@@ -224,7 +225,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     private function getHookEventContextParameters(): array
     {
-        $globalParameters = ['_ps_version' => \AppKernel::VERSION];
+        $globalParameters = ['_ps_version' => Version::VERSION];
 
         if (null === $this->requestStack) {
             return $globalParameters;
