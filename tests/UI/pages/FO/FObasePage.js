@@ -39,6 +39,9 @@ class FOBasePage extends CommonPage {
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
+    this.autocompleteSearchResultItem = `${this.autocompleteSearchResult} .ui-menu-item`;
+    this.autocompleteSearchResultItemLink = nthChild => `${this.autocompleteSearchResult} `
+      + `.ui-menu-item:nth-child(${nthChild}) a`;
 
     // Footer links
     // Products links selectors
@@ -314,15 +317,47 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Close the  autocomplete search result
+   * @param page {Page} Browser tab
+   * @returns {void}
+   */
+  async closeAutocompleteSearch(page) {
+    await page.keyboard.press('Escape');
+  }
+
+  /**
+   * Check if there are autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<boolean>}
+   */
+  async hasAutocompleteSearchResult(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    return this.elementVisible(page, this.autocompleteSearchResult, 2000);
+  }
+
+  /**
    * Get autocomplete search result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async getAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
-    await page.waitForTimeout(2000);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResult);
     return this.getTextContent(page, this.autocompleteSearchResult);
+  }
+
+  /**
+   * Count autocomplete search result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<int>}
+   */
+  async countAutocompleteSearchResult(page, productName) {
+    await this.setValue(page, this.searchInput, productName);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+    return page.$$eval(this.autocompleteSearchResultItem, all => all.length);
   }
 
   /**
@@ -335,6 +370,19 @@ class FOBasePage extends CommonPage {
     await this.setValue(page, this.searchInput, productName);
     await page.keyboard.press('Enter');
     await page.waitForNavigation('networkidle');
+  }
+
+  /**
+   * Click autocomplete search on the nth result
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @param nthResult {integer} Nth result to click
+   * @returns {Promise<int>}
+   */
+  async clickAutocompleteSearchResult(page, productName, nthResult) {
+    await this.setValue(page, this.searchInput, productName);
+    await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
+    await page.click(this.autocompleteSearchResultItemLink(nthResult));
   }
 
   // Footer methods
@@ -481,6 +529,17 @@ class FOBasePage extends CommonPage {
    */
   async isCurrencyVisible(page) {
     return this.elementVisible(page, this.currencySelectorDiv, 1000);
+  }
+
+  /**
+   * Get the value of an input
+   *
+   * @param page {Page} Browser tab
+   * @param input {string} ID of the input
+   * @returns {Promise<string>}
+   */
+  async getInputValue(page, input) {
+    return page.inputValue(input);
   }
 }
 
