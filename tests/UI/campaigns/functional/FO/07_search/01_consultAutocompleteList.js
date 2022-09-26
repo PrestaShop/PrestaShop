@@ -44,7 +44,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await expect(isHomePage).to.be.true;
   });
 
-  it('check the autocomplete list', async function () {
+  it('should check the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
     const searchValue = 'test';
