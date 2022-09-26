@@ -29,7 +29,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultListAndOrderDetails';
+const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultMerchandiseReturnsList';
 
 let browserContext;
 let page;
@@ -47,7 +47,7 @@ const orderData = {
 /*
 
  */
-describe('FO - Account : Consult merchandise returns list & Check order details', async () => {
+describe('FO - Account : Consult merchandise returns list', async () => {
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest`);
 
@@ -270,8 +270,8 @@ describe('FO - Account : Consult merchandise returns list & Check order details'
         await expect(packageStatus).to.equal('Waiting for confirmation');
       });
 
-      it('should verify the order return date issue', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnDateIssue', baseContext);
+      it('should verify the order return date issued', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnDateIssued', baseContext);
 
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'dateIssued');
         await expect(packageStatus).to.equal(orderDate.substr(0, 10));
