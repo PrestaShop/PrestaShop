@@ -296,7 +296,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       it('should verify order return prefix', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnPrefix', baseContext);
 
-        const fileName = await foMerchandiseReturnsPage.getOrderReturnFileName(page);
+        const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'fileName');
         await expect(fileName).to.contains(test.args.prefix);
       });
     }
