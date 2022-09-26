@@ -314,25 +314,16 @@ class TabCore extends ObjectModel
 				ORDER BY t.`position` ASC'
             );
 
-            //not to show the admin tabs of the deactivated modules
-            foreach ($result as $index => $row) {
-                if (empty($row['module'])) {
-                    continue;
-                }
-
-                $module = Module::getInstanceByName($row['module']);
-
-                if (false == Validate::isLoadedObject($module)) {
-                    continue;
-                }
-
-                if (false == $module->isEnabledForShopContext()) {
-                    unset($result[$index]);
-                }
-            }
-
             if (is_array($result)) {
                 foreach ($result as $row) {
+                    if (!empty($row['module'])) {
+                        $module = Module::getInstanceByName($row['module']);
+                        //not to show the admin tabs of the deactivated modules
+                        if (Validate::isLoadedObject($module) && !$module->isEnabledForShopContext()) {
+                            continue;
+                        }
+                    }
+
                     if (!isset(self::$_cache_tabs[$idLang][$row['id_parent']])) {
                         self::$_cache_tabs[$idLang][$row['id_parent']] = [];
                     }
