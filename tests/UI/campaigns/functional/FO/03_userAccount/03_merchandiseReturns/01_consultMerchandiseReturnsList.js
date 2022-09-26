@@ -105,7 +105,7 @@ describe('FO - Account : Consult merchandise returns list', async () => {
     });
 
     it('should login', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
       await homePage.goToLoginPage(page);
       await loginPage.customerLogin(page, DefaultCustomer);
@@ -181,7 +181,7 @@ describe('FO - Account : Consult merchandise returns list', async () => {
       });
 
       it('should get the created Order date', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
         orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
         await expect(orderDate).to.not.be.null;
@@ -202,6 +202,26 @@ describe('FO - Account : Consult merchandise returns list', async () => {
 
         const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
         await expect(result).to.equal(Statuses.shipped.status);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfOrders).to.be.above(0);
       });
     });
 
