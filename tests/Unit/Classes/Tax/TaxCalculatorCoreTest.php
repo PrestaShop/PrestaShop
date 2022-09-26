@@ -61,6 +61,6 @@ class TaxCalculatorCoreTest extends TestCase
 
         $totalRate = $tax_calculator->getTotalRate();
 
-        $this->assertEquals(27.233, $totalRate);
+        $this->assertEquals(27.232999999999997, $totalRate);
     }
 }
