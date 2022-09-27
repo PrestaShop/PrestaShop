@@ -25,6 +25,7 @@ class CreditSlip extends FOBasePage {
     this.creditSlipsTableRows = `${this.creditSlipsTable} tbody tr`;
     this.creditSlipsTableRow = row => `${this.creditSlipsTableRows}:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
+    this.backToYourAccountLink = '.account-link';
     // Alert block selectors
     this.alertInfoBlock = '#content .alert.alert-info';
   }
@@ -73,12 +74,41 @@ class CreditSlip extends FOBasePage {
   }
 
   /**
+   * Click on the order reference link in the order detail
+   * @param page {Page} Browser tab
+   * @param creditSlipRow {number} Row number in credit slips table
+   * @returns {Promise<void>}
+   */
+  async clickOrderReference(page, creditSlipRow = 1) {
+    await this.clickAndWaitForNavigation(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
+  }
+
+  /**
+   * Export data to PDF
+   * @param page {Page} Browser tab
+   * @param creditSlipRow {number} Row number in credit slips table
+   * @returns {Promise<string>}
+   */
+  async downloadCreditSlip(page, creditSlipRow = 1) {
+    return this.clickAndWaitForDownload(page, `${this.creditSlipsTableColumn(creditSlipRow, 4)} a`);
+  }
+
+  /**
    * Get alert info message
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getAlertInfoMessage(page) {
     return this.getTextContent(page, this.alertInfoBlock);
+  }
+
+  /**
+   * Click on the "Back to your account" link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickBackToYourAccountLink(page) {
+    await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
   }
 }
 
