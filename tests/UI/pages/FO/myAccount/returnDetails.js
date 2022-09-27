@@ -16,11 +16,13 @@ class ReturnDetails extends FOBasePage {
 
     this.pageTitle = 'Return Details';
     this.errorMessage = 'You must wait for confirmation before returning any merchandise.';
+    this.orderReturnCardBlock = 'We have logged your return request. Your package must be returned to us within 14 days'
+      + ' of receiving your order. The current status of your merchandise return is:';
 
     // Selectors
     this.pageTitleHeader = '#main header h1.h1';
     this.alertWarning = '#notifications .notifications-container article.alert-warning';
-    this.OrderReturnInfo = '#order-return-infos';
+    this.orderReturnInfo = '#order-return-infos';
   }
 
   /*
@@ -60,7 +62,7 @@ class ReturnDetails extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getOrderReturnInfo(page) {
-    return this.getTextContent(page, this.OrderReturnInfo);
+    return this.getTextContent(page, this.orderReturnInfo);
   }
 }
 

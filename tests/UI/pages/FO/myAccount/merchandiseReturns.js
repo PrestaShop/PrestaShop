@@ -81,7 +81,7 @@ class MerchandiseReturns extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToReturnDetailsPage(page, row = 1) {
-    await this.clickAndWaitForNavigation(page, this.tableColumn(row, 2));
+    await this.clickAndWaitForNavigation(page, `${this.tableColumn(row, 2)} a`);
   }
 }
 
