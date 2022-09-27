@@ -62,9 +62,6 @@
     var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
     var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
     var token = '{$token|addslashes}';
-    var token_admin_orders = tokenAdminOrders = '{getAdminToken tab='AdminOrders'}';
-    var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
-    var token_admin_customer_threads = tokenAdminCustomerThreads = '{getAdminToken tab='AdminCustomerThreads'}';
     var currentIndex = '{$currentIndex|@addcslashes:'\''}';
     var employee_token = '{getAdminToken tab='AdminEmployees'}';
     var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
