@@ -2,8 +2,9 @@ name: UI tests code checks
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize, edited]
     paths:
-      - './tests/UI/**'
+      - 'tests/UI/**'
       - '.github/workflows/ui_tests_code_checks.yml'
 
 defaults:
