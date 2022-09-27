@@ -156,9 +156,9 @@ class AddCustomerCommand
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
         $birthday = null,
-        int $minLength,
-        int $maxLength,
-        int $minScore
+        int $minLength = null,
+        int $maxLength = null,
+        int $minScore = null
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);

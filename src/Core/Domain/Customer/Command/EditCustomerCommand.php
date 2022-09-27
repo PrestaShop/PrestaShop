@@ -228,7 +228,7 @@ class EditCustomerCommand
      *
      * @return self
      */
-    public function setPassword($password, int $minLength, int $maxLength, int $minScore)
+    public function setPassword($password, int $minLength = null, int $maxLength = null, int $minScore = null)
     {
         $this->password = new Password($password, $minLength, $maxLength, $minScore);
 

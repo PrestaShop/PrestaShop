@@ -79,9 +79,9 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         CommandBusInterface $bus,
         $contextShopId,
         $isB2bFeatureEnabled,
-        int $minLength,
-        int $maxLength,
-        int $minScore
+        int $minLength = null,
+        int $maxLength = null,
+        int $minScore = null
     ) {
         $this->bus = $bus;
         $this->contextShopId = $contextShopId;

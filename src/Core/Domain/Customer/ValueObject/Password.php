@@ -39,7 +39,7 @@ class Password
      *
      * @var int Minimum required password length for customer
      */
-    public const MIN_LENGTH = 5;
+    public const MIN_LENGTH = 8;
 
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH
@@ -77,7 +77,7 @@ class Password
      * @param int $maxLength
      * @param int $minScore
      */
-    public function __construct(string $password, int $minLength, int $maxLength, int $minScore)
+    public function __construct(string $password, int $minLength = 8, int $maxLength = 72, int $minScore = 0)
     {
         $this->password = $password;
         $this->minLength = $minLength;
