@@ -38,8 +38,9 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.documentsTableBody = `${this.documentsTablegrid} tbody`;
     this.documentsTableRow = row => `${this.documentsTableBody} tr:nth-child(${row})`;
     this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
-    this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
-    this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
+    this.documentDate = row => `${this.documentsTableColumn(row, 'documents-table-column-date')}`;
+    this.documentNumberLink = row => `${this.documentsTableColumn(row, 'documents-table-column-download-link')} a`;
+    this.documentType = row => `${this.documentsTableColumn(row, 'documents-table-column-type')}`;
     this.addDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
     this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
     this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
@@ -265,6 +266,18 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
 
     return fileName.replace('#', '').trim();
+  }
+
+  /**
+   * Get document date
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
+   */
+  async getDocumentDate(page, rowChild = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.getTextContent(page, this.documentDate(rowChild));
   }
 
   /**

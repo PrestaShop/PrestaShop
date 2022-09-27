@@ -18,10 +18,58 @@ class CreditSlip extends FOBasePage {
     this.pageTitle = 'Credit slip';
 
     // Message
-
     this.noCreditSlipsInfoMessage = 'You have not received any credit slips.';
+
+    // Selectors
+    this.creditSlipsTable = '#content table';
+    this.creditSlipsTableRows = `${this.creditSlipsTable} tbody tr`;
+    this.creditSlipsTableRow = row => `${this.creditSlipsTableRows}:nth-child(${row})`;
+    this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
     // Alert block selectors
     this.alertInfoBlock = '#content .alert.alert-info';
+  }
+
+  /*
+  Methods
+   */
+
+  /**
+   * Get number of credit slips in credit slips page
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfCreditSlips(page) {
+    return (await page.$$(this.creditSlipsTableRows)).length;
+  }
+
+  /**
+   * Get order reference from credit slips page
+   * @param page {Page} Browser tab
+   * @param creditSlipRow {number} Row number in credit slips table
+   * @return {Promise<string>}
+   */
+  getOrderReference(page, creditSlipRow = 1) {
+    return this.getTextContent(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
+  }
+
+  /**
+   * Get credit slip ID from credit slips page
+   * @param page {Page} Browser tab
+   * @param creditSlipRow {number} Row number in credit slips table
+   * @return {Promise<string>}
+   */
+  getCreditSlipID(page, creditSlipRow = 1) {
+    return this.getTextContent(page, this.creditSlipsTableColumn(creditSlipRow, 2));
+  }
+
+  /**
+   * Get date issue from credit slips page
+   * @param page {Page} Browser tab
+   * @param creditSlipRow {number} Row number in credit slips table
+   * @return {Promise<string>}
+   */
+  getDateIssued(page, creditSlipRow = 1) {
+    return this.getTextContent(page, this.creditSlipsTableColumn(creditSlipRow, 3));
   }
 
   /**
