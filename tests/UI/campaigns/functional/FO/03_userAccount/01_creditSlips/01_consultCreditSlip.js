@@ -3,6 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 // Import utils
+const files = require('@utils/files');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
@@ -25,6 +26,7 @@ const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
+const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
 // Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -41,6 +43,7 @@ let page;
 let orderReference;
 let creditSlipID;
 let dateIssued;
+let filePath;
 
 const customerData = new CustomerFaker();
 const addressData = new AddressFaker({
@@ -79,6 +82,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   });
 
   after(async () => {
+    await files.deleteFile(filePath);
     await helper.closeBrowserContext(browserContext);
   });
 
@@ -247,7 +251,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage1', baseContext);
 
         await myAccountPage.goToCreditSlipsPage(page);
 
@@ -273,6 +277,101 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         const creditSlipDateIssued = await creditSlipsPage.getDateIssued(page, 1);
         await expect(creditSlipDateIssued).to.equal(dateIssued);
+      });
+
+      it('should click on the PDF Icon on the "View credit slip" column', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewCreditSlip', baseContext);
+
+        filePath = await creditSlipsPage.downloadCreditSlip(page, 1);
+
+        const found = await files.doesFileExist(filePath);
+        await expect(found, 'PDF file was not downloaded').to.be.true;
+      });
+
+      it('should check credit slip pdf file', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlip', baseContext);
+
+        // Check Name in pdf
+        const isCreditSlip = await files.isTextInPDF(filePath, 'CREDIT SLIP');
+        await expect(isCreditSlip, 'Name of the PDF \'CREDIT SLIP\' does not exist in credit slip')
+          .to.be.true;
+
+        // Check Credit Slip ID in pdf
+        const creditSlipIDExist = await files.isTextInPDF(filePath, creditSlipID);
+        await expect(creditSlipIDExist, `Credit Slip ID ${creditSlipID}' does not exist in credit slip`)
+          .to.be.true;
+
+        // Check DateIssued in pdf
+        const dateIssuedExist = await files.isTextInPDF(filePath, dateIssued);
+        await expect(dateIssuedExist, `Date Issued '${dateIssued}' does not exist in credit slip`)
+          .to.be.true;
+
+        // Check Order Reference in pdf
+        const orderReferenceExist = await files.isTextInPDF(filePath, orderReference);
+        await expect(orderReferenceExist, `Order Reference '${orderReference}' does not exist in credit slip`)
+          .to.be.true;
+
+        // Check payment method in pdf
+        const paymentMethodExist = await files.isTextInPDF(filePath, PaymentMethods.wirePayment.displayName);
+        await expect(
+          paymentMethodExist,
+          `Payment Method '${PaymentMethods.wirePayment.displayName}' does not exist in credit slip`,
+        ).to.be.true;
+      });
+
+      it('should click on the order Reference link', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOrderReferenceLink', baseContext);
+
+        await creditSlipsPage.clickOrderReference(page, 1);
+
+        const pageTitle = await orderDetailsPage.getPageTitle(page);
+        await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      });
+
+      it('should go to credit slips page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
+
+        await homePage.goToMyAccountPage(page);
+
+        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
+        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+
+        await myAccountPage.goToCreditSlipsPage(page);
+
+        const creditSlipsPageTitle = await creditSlipsPage.getPageTitle(page);
+        await expect(creditSlipsPageTitle).to.equal(creditSlipsPage.pageTitle);
+      });
+
+      it('should click on the "Back to your account" link', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickBackToYourAccountLink', baseContext);
+
+        await creditSlipsPage.clickBackToYourAccountLink(page);
+
+        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
+        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+      });
+
+      it('should go to credit slips page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
+
+        await homePage.goToMyAccountPage(page);
+
+        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
+        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+
+        await myAccountPage.goToCreditSlipsPage(page);
+
+        const creditSlipsPageTitle = await creditSlipsPage.getPageTitle(page);
+        await expect(creditSlipsPageTitle).to.equal(creditSlipsPage.pageTitle);
+      });
+
+      it('should click on the "Home" link', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickBackToYourAccountLink', baseContext);
+
+        await creditSlipsPage.clickBackToYourAccountLink(page);
+
+        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
+        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
       });
     });
   });
