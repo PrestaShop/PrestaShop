@@ -207,22 +207,22 @@ class CustomerType extends TranslatorAwareType
                     'Password should be at least %length% characters long.',
                     'Admin.Notifications.Info',
                     [
-                        '%length%' => Password::MIN_LENGTH,
+                        '%length%' => $minLength,
                     ]
                 ),
                 'constraints' => [
                     new Length([
-                        'max' => Password::MAX_LENGTH,
+                        'max' => $maxLength,
                         'maxMessage' => $this->trans(
                             'This field cannot be longer than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => Password::MAX_LENGTH]
+                            ['%limit%' => $maxLength]
                         ),
-                        'min' => Password::MIN_LENGTH,
+                        'min' => $minLength,
                         'minMessage' => $this->trans(
                             'This field cannot be shorter than %limit% characters',
                             'Admin.Notifications.Error',
-                            ['%limit%' => Password::MIN_LENGTH]
+                            ['%limit%' => $minLength]
                         ),
                     ]),
                 ],

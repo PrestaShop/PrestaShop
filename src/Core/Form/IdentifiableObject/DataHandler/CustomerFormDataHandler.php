@@ -53,18 +53,42 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
     private $isB2bFeatureEnabled;
 
     /**
+     * @var int
+     */
+    private $minScore;
+
+    /**
+     * @var int
+     */
+    private $minLength;
+
+    /**
+     * @var int
+     */
+    private $maxLength;
+
+    /**
      * @param CommandBusInterface $bus
      * @param int $contextShopId
      * @param bool $isB2bFeatureEnabled
+     * @param int $minLength
+     * @param int $maxLength
+     * @param int $minScore
      */
     public function __construct(
         CommandBusInterface $bus,
         $contextShopId,
-        $isB2bFeatureEnabled
+        $isB2bFeatureEnabled,
+        int $minLength,
+        int $maxLength,
+        int $minScore
     ) {
         $this->bus = $bus;
         $this->contextShopId = $contextShopId;
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
+        $this->minLength = $minLength;
+        $this->maxLength = $maxLength;
+        $this->minScore = $minScore;
     }
 
     /**
@@ -112,7 +136,10 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
             (int) $data['gender_id'],
             (bool) $data['is_enabled'],
             (bool) $data['is_partner_offers_subscribed'],
-            $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY
+            $data['birthday'] ?: Birthday::EMPTY_BIRTHDAY,
+            $this->minLength,
+            $this->maxLength,
+            $this->minScore
         );
 
         if (!$this->isB2bFeatureEnabled) {
@@ -157,7 +184,7 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
         ;
 
         if (null !== $data['password']) {
-            $command->setPassword($data['password']);
+            $command->setPassword($data['password'], $this->minLength, $this->maxLength, $this->minScore);
         }
 
         if ($this->isB2bFeatureEnabled) {

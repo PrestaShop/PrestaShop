@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFac
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerAddressFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerDiscountFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CustomerFilters;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
 use PrestaShopBundle\Form\Admin\Sell\Customer\DeleteCustomersType;
@@ -73,6 +74,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * Class CustomerController manages "Sell > Customers" page.
@@ -189,9 +191,10 @@ class CustomerController extends AbstractAdminController
         return $this->render('@PrestaShop/Admin/Sell/Customer/create.html.twig', [
             'customerForm' => $customerForm->createView(),
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
-            'minPasswordLength' => Password::MIN_LENGTH,
+            'minPasswordLength' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'guest_group' => (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_GUEST_GROUP'),
         ]);
     }
 
@@ -245,7 +248,7 @@ class CustomerController extends AbstractAdminController
             'customerForm' => $customerForm->createView(),
             'customerInformation' => $customerInformation,
             'isB2bFeatureActive' => $this->get('prestashop.core.b2b.b2b_feature')->isActive(),
-            'minPasswordLength' => Password::MIN_LENGTH,
+            'minPasswordLength' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
         ]);
     }
@@ -931,7 +934,7 @@ class CustomerController extends AbstractAdminController
                 CustomerConstraintException::INVALID_PASSWORD => $this->trans(
                     'Password should be at least %length% characters long.',
                     'Admin.Orderscustomers.Help',
-                    ['%length%' => Password::MIN_LENGTH]
+                    ['%length%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)]
                 ),
                 CustomerConstraintException::INVALID_FIRST_NAME => $this->trans(
                     'The %s field is invalid.',

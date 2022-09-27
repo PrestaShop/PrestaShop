@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
+use ZxcvbnPhp\Zxcvbn;
 
 /**
  * Stores customer's plain password
@@ -34,11 +35,15 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 class Password
 {
     /**
+     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
+     * 
      * @var int Minimum required password length for customer
      */
     public const MIN_LENGTH = 5;
 
     /**
+     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH
+     * 
      * @var int Maximum allowed password length for customer.
      *
      * It's limited to 72 chars because of PASSWORD_BCRYPT algorithm
@@ -52,13 +57,35 @@ class Password
     private $password;
 
     /**
-     * @param string $password
+     * @var int
      */
-    public function __construct($password)
-    {
-        $this->assertPasswordIsWithinAllowedLength($password);
+    private $minScore;
 
+    /**
+     * @var int
+     */
+    private $minLength;
+
+    /**
+     * @var int
+     */
+    private $maxLength;
+
+    /**
+     * @param string $password
+     * @param int $minLength
+     * @param int $maxLength
+     * @param int $minScore
+     */
+    public function __construct(string $password, int $minLength, int $maxLength, int $minScore)
+    {
         $this->password = $password;
+        $this->minLength = $minLength;
+        $this->maxLength = $maxLength;
+        $this->minScore = $minScore;
+
+        $this->assertPasswordIsWithinAllowedLength($password);
+        $this->assertPasswordScoreIsAllowed($password);
     }
 
     /**
@@ -72,12 +99,31 @@ class Password
     /**
      * @param string $password
      */
-    private function assertPasswordIsWithinAllowedLength($password)
+    private function assertPasswordIsWithinAllowedLength(string $password): void
     {
         $length = mb_strlen($password, 'UTF-8');
 
-        if (self::MIN_LENGTH > $length || $length > self::MAX_LENGTH) {
-            throw new CustomerConstraintException(sprintf('Customer password length must be between %s and %s', self::MIN_LENGTH, self::MAX_LENGTH), CustomerConstraintException::INVALID_PASSWORD);
+        if ($this->minLength > $length || $length > $this->maxLength) {
+            throw new CustomerConstraintException(
+                sprintf(
+                    'Customer password length must be between %d and %d',
+                    $this->minLength,
+                    $this->maxLength
+                ),
+                CustomerConstraintException::INVALID_PASSWORD
+            );
+        }
+    }
+
+    /**
+     * @param string $password
+     */
+    private function assertPasswordScoreIsAllowed(string $password): void
+    {
+        $zxcvbn = new Zxcvbn();
+        $result = $zxcvbn->passwordStrength($password);
+        if (isset($result['score']) && $result['score'] < $this->minScore) {
+            throw new CustomerConstraintException('Employee password is too weak', CustomerConstraintException::INVALID_PASSWORD);
         }
     }
 }

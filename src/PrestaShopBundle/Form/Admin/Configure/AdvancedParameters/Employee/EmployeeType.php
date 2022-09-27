@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;

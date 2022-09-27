@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
