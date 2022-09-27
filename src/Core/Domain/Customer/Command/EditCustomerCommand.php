@@ -229,7 +229,7 @@ class EditCustomerCommand
      * @return self
      */
     public function setPassword($password, int $minLength, int $maxLength, int $minScore)
-    {        
+    {
         $this->password = new Password($password, $minLength, $maxLength, $minScore);
 
         return $this;

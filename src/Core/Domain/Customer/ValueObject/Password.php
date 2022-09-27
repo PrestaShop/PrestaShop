@@ -36,14 +36,14 @@ class Password
 {
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
-     * 
+     *
      * @var int Minimum required password length for customer
      */
     public const MIN_LENGTH = 5;
 
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH
-     * 
+     *
      * @var int Maximum allowed password length for customer.
      *
      * It's limited to 72 chars because of PASSWORD_BCRYPT algorithm

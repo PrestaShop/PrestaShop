@@ -40,7 +40,7 @@ class PasswordTest extends TestCase
         $this->expectException(CustomerConstraintException::class);
         $this->expectExceptionCode(CustomerConstraintException::INVALID_PASSWORD);
 
-        new Password($password);
+        new Password($password, 5, 72, 0);
     }
 
     /**
@@ -48,7 +48,7 @@ class PasswordTest extends TestCase
      */
     public function testItCreatesNewPassword($passwordValue)
     {
-        $password = new Password($passwordValue);
+        $password = new Password($passwordValue, 5, 72, 0);
 
         $this->assertEquals($passwordValue, $password->getValue());
     }
