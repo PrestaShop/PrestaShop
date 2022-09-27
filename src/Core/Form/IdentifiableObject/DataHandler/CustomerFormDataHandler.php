@@ -53,17 +53,17 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
     private $isB2bFeatureEnabled;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $minScore;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $minLength;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $maxLength;
 
@@ -71,17 +71,17 @@ final class CustomerFormDataHandler implements FormDataHandlerInterface
      * @param CommandBusInterface $bus
      * @param int $contextShopId
      * @param bool $isB2bFeatureEnabled
-     * @param int $minLength
-     * @param int $maxLength
-     * @param int $minScore
+     * @param int|null $minLength
+     * @param int|null $maxLength
+     * @param int|null $minScore
      */
     public function __construct(
         CommandBusInterface $bus,
         $contextShopId,
         $isB2bFeatureEnabled,
-        int $minLength = null,
-        int $maxLength = null,
-        int $minScore = null
+        $minLength = null,
+        $maxLength = null,
+        $minScore = null
     ) {
         $this->bus = $bus;
         $this->contextShopId = $contextShopId;

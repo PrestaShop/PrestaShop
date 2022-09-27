@@ -140,9 +140,9 @@ class AddCustomerCommand
      * @param bool $isEnabled
      * @param bool $isPartnerOffersSubscribed
      * @param string|null $birthday
-     * @param int $minLength
-     * @param int $maxLength
-     * @param int $minScore
+     * @param int|null $minLength
+     * @param int|null $maxLength
+     * @param int|null $minScore
      */
     public function __construct(
         $firstName,
@@ -156,9 +156,9 @@ class AddCustomerCommand
         $isEnabled = true,
         $isPartnerOffersSubscribed = false,
         $birthday = null,
-        int $minLength = null,
-        int $maxLength = null,
-        int $minScore = null
+        $minLength = null,
+        $maxLength = null,
+        $minScore = null
     ) {
         $this->firstName = new FirstName($firstName);
         $this->lastName = new LastName($lastName);
