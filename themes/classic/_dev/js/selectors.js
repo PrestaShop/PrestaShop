@@ -54,7 +54,10 @@ prestashop.themeSelectors = {
     searchLink: '.js-search-link',
   },
   order: {
-    returnForm: '#order-return-form, .js-order-return-form',
+    returnFormHeadCheckboxes:
+      '#order-return-form table thead input[type=checkbox], .js-order-return-form table thead input[type=checkbox]',
+    returnFormContentCheckboxes:
+      '#order-return-form table tbody input[type=checkbox], .js-order-return-form table tbody input[type=checkbox]',
   },
   arrowDown: '.arrow-down, .js-arrow-down',
   arrowUp: '.arrow-up, .js-arrow-up',
