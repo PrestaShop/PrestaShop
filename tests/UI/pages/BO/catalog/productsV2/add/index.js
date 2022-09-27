@@ -35,6 +35,7 @@ class Products extends BOBasePage {
     // Footer modal
     this.deleteProductFooterModal = '#delete-product-footer-modal';
     this.deleteProductSubmitButton = `${this.deleteProductFooterModal} button.btn-confirm-submit`;
+    this.newProductButton = '#product_footer_new_product';
     this.goToCatalogButton = '#product_footer_catalog';
   }
 
@@ -123,6 +124,37 @@ class Products extends BOBasePage {
    */
   async goToCatalogPage(page) {
     await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+  }
+
+  /**
+   * Click on new product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnNewProductButton(page) {
+    await this.waitForSelectorAndClick(page, this.newProductButton);
+
+    return this.elementVisible(page, productsPage.modalCreateProduct, 1000);
+  }
+
+  /**
+   * Choose product type
+   * @param page {Page} Browser tab
+   * @param productType
+   * @returns {Promise<void>}
+   */
+  async chooseProductType(page, productType) {
+    await productsPage.chooseProductType(page, productType);
+    await page.waitForNavigation({waitUntil: 'networkidle'});
+  }
+
+  /**
+   * Is choose product iframe visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isChooseProductIframeVisible(page) {
+    return !(await this.elementNotVisible(page, `${productsPage.modalCreateProduct} iframe`, 1000));
   }
 }
 
