@@ -35,6 +35,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
+const {Products} = require('@data/demo/products');
 
 const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultReturnDetails';
 
@@ -43,6 +44,7 @@ let page;
 let orderID;
 let orderReference;
 let orderDate;
+let fileName = '#RE0000';
 
 // New order by customer data
 const orderData = {
@@ -100,7 +102,7 @@ describe('FO - Account : Consult return details', async () => {
     });
 
     it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage0', baseContext);
 
       await homePage.goToMyAccountPage(page);
 
@@ -171,6 +173,7 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
         orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
+        orderDate = orderDate.substr(0, 10);
         await expect(orderDate).to.not.be.null;
       });
 
@@ -282,14 +285,14 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
 
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        await expect(packageStatus).to.equal('Waiting for confirmation');
+        await expect(packageStatus).to.equal(ReturnStatuses.waitingForConfirmation.name);
       });
 
       it('should verify the order return date issued', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnDateIssued', baseContext);
 
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'dateIssued');
-        await expect(packageStatus).to.equal(orderDate.substr(0, 10));
+        await expect(packageStatus).to.equal(orderDate);
       });
 
       it('should go to return details page', async function () {
@@ -313,12 +316,10 @@ describe('FO - Account : Consult return details', async () => {
 
         const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
         await expect(orderReturnInfo)
-          .to.contains('We have logged your return request.')
-          .and.to.contains('Your package must be returned to us within 14 days of receiving your order.')
-          .and.to.contains('The current status of your merchandise return is')
+          .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
           .and.to.contains(ReturnStatuses.waitingForConfirmation.name)
-          .and.to.contains('List of items to be returned:')
-          .and.to.contains('Hummingbird printed t-shirt (Size: S - Color: White) Reference: demo_1 1');
+          .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
+            + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
       });
     });
   });
@@ -362,6 +363,22 @@ describe('FO - Account : Consult return details', async () => {
           const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
           await expect(result).to.contains(orderID);
         });
+
+        if (index === 0) {
+          it('should get the return ID', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'getReturnID', baseContext);
+
+            const idReturn = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(
+              page,
+              'id_order_return',
+            );
+            await expect(parseInt(idReturn, 10)).to.be.above(0);
+
+            if (parseInt(idReturn, 10) > 10) {
+              fileName += idReturn;
+            } else fileName = `0${idReturn}`;
+          });
+        }
 
         it('should go to edit merchandise returns page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToEditReturnsPage${index}`, baseContext);
@@ -439,13 +456,12 @@ describe('FO - Account : Consult return details', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `checkReturnDetails${index}`, baseContext);
 
           const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
+
           await expect(orderReturnInfo)
-            .to.contains('We have logged your return request.')
-            .and.to.contains('Your package must be returned to us within 14 days of receiving your order.')
-            .and.to.contains('The current status of your merchandise return is:')
+            .to.contains(`${fileName} on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
             .and.to.contains(test.args.status)
-            .and.to.contains('List of items to be returned:')
-            .and.to.contains('Hummingbird printed t-shirt (Size: S - Color: White) Reference: demo_1 1');
+            .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
+              + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
         });
       });
     });
