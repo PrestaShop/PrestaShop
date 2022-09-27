@@ -118,6 +118,7 @@ class UpdateLicensesCommand extends Command
             ->files()
             ->name('*.' . $ext)
             ->in(_PS_ROOT_DIR_)
+            // Ignore folders
             ->exclude([
                 // versioning folders
                 '.git',
@@ -153,6 +154,9 @@ class UpdateLicensesCommand extends Command
                 'tests/Unit/Resources/assets/',
                 'tests/Unit/Resources/twig/',
                 'tests/UI/',
+            ])
+            // Ignore specific files
+            ->notPath([
                 // install
                 'install-dev/theme/js/sprintf.min.js',
                 'install-dev/theme/js/zxcvbn.js',
