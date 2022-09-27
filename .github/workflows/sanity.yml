@@ -1,8 +1,13 @@
 name: UI tests
 on: [ push, pull_request ]
+permissions:
+  contents: read # to fetch code (actions/checkout)
 jobs:
 
   sanity:
+    permissions:
+      actions: write # to cancel/stop running workflows (styfle/cancel-workflow-action)
+      contents: read # to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
     strategy:
