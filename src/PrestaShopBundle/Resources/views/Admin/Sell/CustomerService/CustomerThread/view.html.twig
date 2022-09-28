@@ -26,10 +26,10 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="card">
+  <div class="card" data-role="messages-thread">
     <h3 class="card-header">
       {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
+      <strong data-role="customer-id">#{{ customerThreadView.customerThreadId.value }}</strong>
     </h3>
     <div class="card-body">
       {% block customer_thread_actions %}
