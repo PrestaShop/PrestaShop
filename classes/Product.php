@@ -432,6 +432,18 @@ class ProductCore extends ObjectModel
     protected static $cacheStock = [];
 
     /**
+     * This flag is used to acknowledge that deletions are going to happen in bulk and expensive operations like
+     * categories position refreshs should be done only once after all deletions are done. Should be used with
+     * Product::beginBulkDeletionMode() and Product::stopBulkDeletionMode().
+     *
+     * @var bool
+     */
+    protected static $bulkDeletionMode = false;
+
+    /** @var array */
+    protected static $categoriesToClean = [];
+
+    /**
      * Product can be temporary saved in database
      */
     public const STATE_TEMP = 0;
@@ -1525,7 +1537,12 @@ class ProductCore extends ObjectModel
         $return = Db::getInstance()->delete('category_product', 'id_product = ' . (int) $this->id);
         if ($clean_positions === true && is_array($result)) {
             foreach ($result as $row) {
-                $return &= static::cleanPositions((int) $row['id_category'], (int) $row['position']);
+                $categoryId = (int) $row['id_category'];
+                if (static::$bulkDeletionMode) {
+                    static::$categoriesToClean[$categoryId] = $categoryId;
+                } else {
+                    $return &= static::cleanPositions($categoryId, (int) $row['position']);
+                }
             }
         }
 
@@ -8264,5 +8281,36 @@ class ProductCore extends ObjectModel
         }
 
         return ProductType::TYPE_STANDARD;
+    }
+
+    /**
+     * @return void
+     */
+    public static function beginBulkDeletionMode(): void
+    {
+        if (static::$bulkDeletionMode) {
+            return;
+        }
+        static::$bulkDeletionMode = true;
+        static::$categoriesToClean = [];
+    }
+
+    /**
+     * @return bool
+     */
+    public static function stopBulkDeletionMode(): bool
+    {
+        if (!static::$bulkDeletionMode) {
+            return true;
+        }
+
+        $return = true;
+        static::$bulkDeletionMode = false;
+        foreach (static::$categoriesToClean as $categoryId) {
+            $return &= static::cleanPositions($categoryId);
+        }
+        static::$categoriesToClean = [];
+
+        return $return;
     }
 }

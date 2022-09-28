@@ -105,9 +105,10 @@ class AdminProductDataUpdater implements ProductInterface
             throw new \Exception('AdminProductDataUpdater->deleteProductIdList() should always receive at least one ID. Zero given.', 5005);
         }
 
-        $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
+        Product::beginBulkDeletionMode();
         // Hooks: will trigger actionProductDelete multiple times
         $result = (new Product())->deleteSelection($productIdList);
+        $result &= Product::stopBulkDeletionMode();
 
         if ($result === 0) {
             throw new UpdateProductException('Cannot delete many requested products.', 5006);
