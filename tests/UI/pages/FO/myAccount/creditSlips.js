@@ -25,7 +25,8 @@ class CreditSlip extends FOBasePage {
     this.creditSlipsTableRows = `${this.creditSlipsTable} tbody tr`;
     this.creditSlipsTableRow = row => `${this.creditSlipsTableRows}:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
-    this.backToYourAccountLink = '.account-link';
+    this.backToYourAccountLink = '#account-link-back-to-your-account';
+    this.homeLink = '#account-link-home';
     // Alert block selectors
     this.alertInfoBlock = '#content .alert.alert-info';
   }
@@ -109,6 +110,15 @@ class CreditSlip extends FOBasePage {
    */
   async clickBackToYourAccountLink(page) {
     await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
+  }
+
+  /**
+   * Click on the "Home" link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickHomeLink(page) {
+    await this.clickAndWaitForNavigation(page, this.homeLink);
   }
 }
 
