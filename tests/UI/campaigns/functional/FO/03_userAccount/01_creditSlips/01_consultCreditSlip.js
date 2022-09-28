@@ -366,12 +366,12 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should click on the "Home" link', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickBackToYourAccountLink', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'clickHomeLink', baseContext);
 
-        await creditSlipsPage.clickBackToYourAccountLink(page);
+        await creditSlipsPage.clickHomeLink(page);
 
-        const myAccountPageTitle = await myAccountPage.getPageTitle(page);
-        await expect(myAccountPageTitle).to.equal(myAccountPage.pageTitle);
+        const homePageTitle = await homePage.getPageTitle(page);
+        await expect(homePageTitle).to.equal(homePage.pageTitle);
       });
     });
   });
