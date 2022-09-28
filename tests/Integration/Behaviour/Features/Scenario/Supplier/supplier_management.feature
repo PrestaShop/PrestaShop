@@ -40,6 +40,27 @@ Feature: Supplier management
       | shops                   | [shop1]            |
 #@todo: finish up create with optional params too, different cases + update and delete scenarios.
 
+  Scenario: Delete manufacturer logo image
+    Given I edit supplier "supplier1" with following properties:
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | description[fr-FR]      | la supplier :D     |
+      | meta title[en-US]       | my supplier nr one |
+      | meta title[fr-FR]       |                    |
+      | meta description[en-US] |                    |
+      | meta description[fr-FR] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | meta keywords[fr-FR]    |                    |
+      | shops                   | [shop1]            |
+      | logo image              | logo.jpg           |
+    And the supplier "supplier1" has logo image
+    When I delete the supplier "supplier1" logo image
+    Then the supplier "supplier1" does not have logo image
+
   Scenario: Viewing supplier
     Given supplier "acc1" with name "Accessories supplier" exists
     Then supplier "acc1" should have 17 products associated

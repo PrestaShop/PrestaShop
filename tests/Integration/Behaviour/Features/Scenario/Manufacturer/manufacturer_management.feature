@@ -37,7 +37,7 @@ Feature: Manufacturer management
     And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "shoeman" should be disabled
 
-  Scenario: Delete manufacturer cover image
+  Scenario: Delete manufacturer logo image
     Given I edit manufacturer "shoeman" with following properties:
       | name             | worst-shoes                  |
       | short_description| Worst slippers in EU         |
