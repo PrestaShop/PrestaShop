@@ -11125,16 +11125,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.3",
+            "version": "1.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "5583623b61caafebd62bc78a99533aa9d769d097"
+                "reference": "c386ab2741e64cc9e21729f891b28b2b10fe6618"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/5583623b61caafebd62bc78a99533aa9d769d097",
-                "reference": "5583623b61caafebd62bc78a99533aa9d769d097",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c386ab2741e64cc9e21729f891b28b2b10fe6618",
+                "reference": "c386ab2741e64cc9e21729f891b28b2b10fe6618",
                 "shasum": ""
             },
             "require": {
@@ -11164,7 +11164,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.3"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.6"
             },
             "funding": [
                 {
@@ -11180,7 +11180,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-01T15:27:34+00:00"
+            "time": "2022-09-23T09:54:39+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -12654,5 +12654,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
