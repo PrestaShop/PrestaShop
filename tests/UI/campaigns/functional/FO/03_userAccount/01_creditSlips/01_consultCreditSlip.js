@@ -115,7 +115,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go to my account page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage1', baseContext);
 
         await homePage.goToMyAccountPage(page);
 
@@ -124,7 +124,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage1', baseContext);
 
         await myAccountPage.goToCreditSlipsPage(page);
 
@@ -242,7 +242,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go to my account page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage2', baseContext);
 
         await homePage.goToMyAccountPage(page);
 
@@ -251,7 +251,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage1', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
 
         await myAccountPage.goToCreditSlipsPage(page);
 
@@ -329,7 +329,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage3', baseContext);
 
         await homePage.goToMyAccountPage(page);
 
@@ -352,7 +352,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
       });
 
       it('should go to credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage4', baseContext);
 
         await homePage.goToMyAccountPage(page);
 
