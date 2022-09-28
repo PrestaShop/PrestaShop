@@ -105,7 +105,7 @@ admin_manufacturers_export:
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:exportmanufacturer
 
-admin_manufacturer_delete_logo_image:
+admin_manufacturers_delete_logo_image:
   path: /{manufacturerId}/delete-logo-image
   methods: [GET, POST]
   defaults:
