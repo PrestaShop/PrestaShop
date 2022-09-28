@@ -4259,5 +4259,10 @@
       <title>Modify document reference</title>
       <description>This hook allows modules to return custom document references</description>
     </hook>
+    <hook id="actionModifyFrontendSitemap">
+      <name>actionModifyFrontendSitemap</name>
+      <title>Add or remove links on sitemap page</title>
+      <description>This hook allows to modify links on sitemap page of your shop. Useful to improve indexation of your modules.</description>
+    </hook>
   </entities>
 </entity_hook>
