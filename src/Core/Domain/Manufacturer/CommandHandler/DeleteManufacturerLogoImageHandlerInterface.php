@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,19 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-<figure class="figure">
-  <img src="{{ logoImage.path }}" class="figure-img img-fluid img-thumbnail">
-  <figcaption class="figure-caption">
-    <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</p>
-    <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
-            data-form-submit-url="{{ path('admin_manufacturer_delete_logo_image', {'manufacturerId': app.request.get('manufacturerId')}) }}"
-            data-form-csrf-token="{{ csrf_token('delete-logo-thumbnail') }}"
-    >
-      <i class="material-icons">
-        delete_forever
-      </i>
-      {{ 'Delete'|trans({}, 'Admin.Actions') }}
-    </button>
-  </figcaption>
-</figure>
+ */
+
+namespace PrestaShop\PrestaShop\Core\Domain\Manufacturer\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand;
+
+/**
+ * Defines contract for DeleteManufacturerLogoImageHandler
+ */
+interface DeleteManufacturerLogoImageHandlerInterface
+{
+    /**
+     * @param DeleteManufacturerLogoImageCommand $command
+     */
+    public function handle(DeleteManufacturerLogoImageCommand $command): void;
+}
