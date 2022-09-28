@@ -4254,8 +4254,8 @@
       <title>Modify title grid template data</title>
       <description>This hook allows to modify data which is about to be used in template for title grid</description>
     </hook>
-    <hook id="actionGenerateDocumentNumber">
-      <name>actionGenerateDocumentNumber</name>
+    <hook id="actionGenerateDocumentReference">
+      <name>actionGenerateDocumentReference</name>
       <title>Modify document reference</title>
       <description>This hook allows modules to return custom document number for orders.</description>
     </hook>
