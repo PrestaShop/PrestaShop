@@ -18,6 +18,7 @@ class ContactUs extends FOBasePage {
     this.validationMessage = 'Your message has been successfully sent to our team.';
     this.invalidEmail = 'Invalid email address.';
     this.invalidContent = 'The message cannot be blank.';
+    this.badFileExtensionErrorMessage = 'Bad file extension';
 
     // Left column selectors
     this.emailUsLink = '#left-column a';
@@ -46,6 +47,17 @@ class ContactUs extends FOBasePage {
   }
 
   /**
+   * Choose file
+   * @param page {Page} Browser tab
+   * @param file {string} The path of the file to upload
+   * @returns {Promise<void>}
+   */
+  async chooseFile(page, file) {
+    await this.uploadFile(page, this.attachmentLabel, file);
+  }
+
+
+  /**
    * Send message
    * @param page {Page} Browser tab
    * @param contactUsData {object} The data for fill the form
@@ -57,7 +69,7 @@ class ContactUs extends FOBasePage {
     await this.setValue(page, this.emailAddressInput, contactUsData.emailAddress);
 
     if (file) {
-      await this.uploadFile(page, this.attachmentLabel, file);
+      await this.chooseFile(page, file);
     }
 
     if (contactUsData.reference) {
