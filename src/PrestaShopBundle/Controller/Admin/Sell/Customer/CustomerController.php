@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\AddressCreationCustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
+use PrestaShop\PrestaShop\Core\Domain\Exception\PasswordConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerGridDefinitionFactory;
@@ -911,6 +912,17 @@ class CustomerController extends AbstractAdminController
     private function getErrorMessages(Exception $e)
     {
         return [
+            PasswordConstraintException::class => [
+                PasswordConstraintException::INVALID_LENGTH => $this->trans(
+                    'Password should be at least %length% characters long.',
+                    'Admin.Orderscustomers.Help',
+                    ['%length%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)]
+                ),
+                PasswordConstraintException::WEAK_PASSWORD => $this->trans(
+                    'The password doesn\'t meet required strength requirement.',
+                    'Admin.Notifications.Error',
+                ),
+            ],
             CustomerNotFoundException::class => $this->trans(
                 'This customer does not exist.',
                 'Admin.Orderscustomers.Notification'
@@ -929,11 +941,6 @@ class CustomerController extends AbstractAdminController
                 'Admin.Orderscustomers.Notification'
             ),
             CustomerConstraintException::class => [
-                CustomerConstraintException::INVALID_PASSWORD => $this->trans(
-                    'Password should be at least %length% characters long.',
-                    'Admin.Orderscustomers.Help',
-                    ['%length%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)]
-                ),
                 CustomerConstraintException::INVALID_FIRST_NAME => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',

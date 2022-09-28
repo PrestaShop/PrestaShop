@@ -42,11 +42,13 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdExcept
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\MissingShopAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Exception\PasswordConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -476,6 +478,17 @@ class EmployeeController extends FrameworkBundleAdminController
     protected function getErrorMessages(Exception $e)
     {
         return [
+            PasswordConstraintException::class => [
+                PasswordConstraintException::INVALID_LENGTH => $this->trans(
+                    'Password should be at least %length% characters long.',
+                    'Admin.Orderscustomers.Help',
+                    ['%length%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)]
+                ),
+                PasswordConstraintException::WEAK_PASSWORD => $this->trans(
+                    'The password doesn\'t meet required strength requirement.',
+                    'Admin.Notifications.Error',
+                ),
+            ],
             InvalidEmployeeIdException::class => $this->trans(
                 'The object cannot be loaded (the identifier is missing or invalid)',
                 'Admin.Notifications.Error'
@@ -538,10 +551,6 @@ class EmployeeController extends FrameworkBundleAdminController
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
-                ),
-                EmployeeConstraintException::INVALID_PASSWORD => $this->trans(
-                    'The password doesn\'t meet the password policy requirements.',
-                    'Admin.Notifications.Error'
                 ),
             ],
         ];

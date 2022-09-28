@@ -27,8 +27,8 @@
 namespace Tests\Unit\Core\Domain\Customer\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\Exception\PasswordConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Password;
 
 class PasswordTest extends TestCase
 {
@@ -37,8 +37,8 @@ class PasswordTest extends TestCase
      */
     public function testItThrowsExceptionWhenCreatingTooShortOrTooLongPassword($password)
     {
-        $this->expectException(CustomerConstraintException::class);
-        $this->expectExceptionCode(CustomerConstraintException::INVALID_PASSWORD);
+        $this->expectException(PasswordConstraintException::class);
+        $this->expectExceptionCode(PasswordConstraintException::INVALID_LENGTH);
 
         new Password($password, 5, 72, 0);
     }

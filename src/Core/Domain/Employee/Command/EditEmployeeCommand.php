@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
 
 /**
