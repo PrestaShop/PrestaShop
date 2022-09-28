@@ -101,7 +101,6 @@ final class ManufacturerFormDataHandler implements FormDataHandlerInterface
     {
         /** @var UploadedFile $uploadedLogo */
         $uploadedLogo = $data['logo'];
-        $logo = null;
 
         if ($uploadedLogo instanceof UploadedFile) {
             $this->imageUploader->upload($manufacturerId, $uploadedLogo);

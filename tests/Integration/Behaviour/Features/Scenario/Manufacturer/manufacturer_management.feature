@@ -37,6 +37,19 @@ Feature: Manufacturer management
     And manufacturer "shoeman" "meta_keywords" in default language should be "Boots, shoes, slippers"
     And manufacturer "shoeman" should be disabled
 
+  Scenario: Delete manufacturer cover image
+    Given I edit manufacturer "shoeman" with following properties:
+      | name             | worst-shoes                  |
+      | short_description| Worst slippers in EU         |
+      | meta_title       | Worst quality shoes          |
+      | description      |                              |
+      | meta_description | You'd better walk bare foot  |
+      | enabled          | false                        |
+      | logo image      | logo.jpg                     |
+    And the manufacturer "shoeman" has logo image
+    When I delete the manufacturer "shoeman" logo image
+    Then the manufacturer "shoeman" does not have logo image
+
   Scenario: Enable and disable manufacturer status
     Given manufacturer "shoeman" is disabled
     When I enable manufacturer "shoeman"
