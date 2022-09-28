@@ -1829,13 +1829,13 @@ class OrderCore extends ObjectModel
      * Generate a unique reference for orders generated with the same cart id
      * This reference is the primary order identifier for public use.
      *
-     * Modules can return their own number.
+     * Modules can return their own reference.
      *
      * @return string
      */
     public static function generateReference()
     {
-        $reference = Hook::exec('actionGenerateDocumentNumber', [
+        $reference = Hook::exec('actionGenerateDocumentReference', [
             'type' => 'order',
         ]);
 
