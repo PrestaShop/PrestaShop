@@ -107,7 +107,7 @@ admin_manufacturers_export:
 
 admin_manufacturers_delete_logo_image:
   path: /{manufacturerId}/delete-logo-image
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
     _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteLogoImage'
     _legacy_controller: AdminManufacturers
