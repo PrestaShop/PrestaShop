@@ -408,6 +408,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @param int $manufacturerId
+     *
      * @return EditableManufacturer
      */
     private function getEditableManufacturer(int $manufacturerId): EditableManufacturer
