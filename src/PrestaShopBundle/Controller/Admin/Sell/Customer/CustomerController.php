@@ -915,7 +915,7 @@ class CustomerController extends AbstractAdminController
             PasswordConstraintException::class => [
                 PasswordConstraintException::INVALID_LENGTH => $this->trans(
                     'Password should be at least %length% characters long.',
-                    'Admin.Orderscustomers.Help',
+                    'Admin.Notifications.Error',
                     ['%length%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)]
                 ),
                 PasswordConstraintException::WEAK_PASSWORD => $this->trans(
