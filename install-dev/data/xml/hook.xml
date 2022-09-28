@@ -4257,7 +4257,7 @@
     <hook id="actionGenerateDocumentReference">
       <name>actionGenerateDocumentReference</name>
       <title>Modify document reference</title>
-      <description>This hook allows modules to return custom document number for orders.</description>
+      <description>This hook allows modules to return custom document references</description>
     </hook>
   </entities>
 </entity_hook>
