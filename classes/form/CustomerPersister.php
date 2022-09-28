@@ -51,19 +51,28 @@ class CustomerPersisterCore
         return $this->errors;
     }
 
-    public function save(Customer $customer, $clearTextPassword, $newPassword = '', $passwordRequired = true)
+    /**
+     * READ ME - This class deals with many different use cases, make sure to check them when modifying anything!
+     * - Creating a customer with no pasword from checkout (guest checkout enabled/disabled)
+     * - Creating a customer with password from checkout
+     * - Creating a customer from register form
+     * - Converting guest to customer either by filling password in checkout or using the register form
+     * - Editing customer details in my-account section
+     */
+    public function save(Customer $customer, $plainTextPassword, $newPlainTextPassword = '', $passwordRequired = true)
     {
+        // If customer already exists in context, we will keep the ID and only update him
         if ($customer->id) {
-            return $this->update($customer, $clearTextPassword, $newPassword, $passwordRequired);
+            return $this->update($customer, $plainTextPassword, $newPlainTextPassword, $passwordRequired);
         }
 
-        return $this->create($customer, $clearTextPassword);
+        return $this->create($customer, $plainTextPassword);
     }
 
-    private function update(Customer $customer, $clearTextPassword, $newPassword, $passwordRequired = true)
+    private function update(Customer $customer, $plainTextPassword, $newPlainTextPassword, $passwordRequired = true)
     {
         if (!$customer->is_guest && $passwordRequired && !$this->crypto->checkHash(
-            $clearTextPassword,
+            $plainTextPassword,
             $customer->passwd,
             _COOKIE_KEY_
         )) {
@@ -80,7 +89,7 @@ class CustomerPersisterCore
 
         if (!$customer->is_guest) {
             $customer->passwd = $this->crypto->hash(
-                $newPassword ? $newPassword : $clearTextPassword,
+                $newPlainTextPassword ? $newPlainTextPassword : $plainTextPassword,
                 _COOKIE_KEY_
             );
         }
@@ -107,18 +116,26 @@ class CustomerPersisterCore
             }
         }
 
-        $guest_to_customer = false;
+        $guestToCustomerConversion = false;
 
-        if ($clearTextPassword && $customer->is_guest) {
-            $guest_to_customer = true;
+        /*
+         * If context customer is a guest and a new password was provided in the form,
+         * we start the customer conversion.
+         *
+         * This consists of setting is_guest property to false, setting proper password
+         * assigning him to proper group and changing his default group.
+         */
+        if ($plainTextPassword && $customer->is_guest) {
+            $guestToCustomerConversion = true;
             $customer->is_guest = false;
             $customer->passwd = $this->crypto->hash(
-                $clearTextPassword,
+                $plainTextPassword,
                 _COOKIE_KEY_
             );
+            $customer->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         }
 
-        if ($customer->is_guest || $guest_to_customer) {
+        if ($customer->is_guest || $guestToCustomerConversion) {
             // guest cannot update their email to that of an existing real customer
             if (Customer::customerExists($customer->email, false, true)) {
                 $this->errors['email'][] = $this->translator->trans(
@@ -143,7 +160,13 @@ class CustomerPersisterCore
             Hook::exec('actionCustomerAccountUpdate', [
                 'customer' => $customer,
             ]);
-            if ($guest_to_customer) {
+
+            // If converting from guest to customer, we need to assign proper group
+            // and inform him if needed. This is intentionally done after saving the customer,
+            // so we don't mess up his groups if the saving failed.
+            if ($guestToCustomerConversion) {
+                $customer->cleanGroups();
+                $customer->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
                 $this->sendConfirmationMail($customer);
             }
         }
@@ -151,9 +174,9 @@ class CustomerPersisterCore
         return $ok;
     }
 
-    private function create(Customer $customer, $clearTextPassword)
+    private function create(Customer $customer, $plainTextPassword)
     {
-        if (!$clearTextPassword) {
+        if (!$plainTextPassword) {
             if (!$this->guest_allowed) {
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
@@ -169,7 +192,7 @@ class CustomerPersisterCore
              * that guests cannot log in even with the generated
              * password. That's the case at least at the time of writing.
              */
-            $clearTextPassword = $this->crypto->hash(
+            $plainTextPassword = $this->crypto->hash(
                 microtime(),
                 _COOKIE_KEY_
             );
@@ -178,7 +201,7 @@ class CustomerPersisterCore
         }
 
         $customer->passwd = $this->crypto->hash(
-            $clearTextPassword,
+            $plainTextPassword,
             _COOKIE_KEY_
         );
 
