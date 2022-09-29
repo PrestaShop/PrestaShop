@@ -216,7 +216,7 @@ class CustomerType extends TranslatorAwareType
                             [
                                 '%min%' => $minLength,
                                 '%max%' => $maxLength,
-                            ],
+                            ]
                         ),
                         'tooWeakMessage' => $this->trans(
                             'The password doesn\'t meet required strength requirement.',

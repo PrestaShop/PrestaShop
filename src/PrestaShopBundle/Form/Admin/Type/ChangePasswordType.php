@@ -92,7 +92,7 @@ class ChangePasswordType extends AbstractType
                                 '%min%' => $minLength,
                                 '%max%' => $maxLength,
                             ],
-                            'Admin.Notifications.Error',
+                            'Admin.Notifications.Error'
                         ),
                         'tooWeakMessage' => $this->trans(
                             'The password doesn\'t meet required strength requirement.',
