@@ -28,9 +28,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Password;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
@@ -203,30 +203,24 @@ class CustomerType extends TranslatorAwareType
                     'data-minlength' => $minLength,
                     'data-maxlength' => $maxLength,
                 ],
-                'help' => $this->trans(
-                    'Password should be at least %length% characters long.',
-                    'Admin.Notifications.Info',
-                    [
-                        '%length%' => $minLength,
-                    ]
-                ),
                 'constraints' => [
-                    new Length([
-                        'max' => $maxLength,
-                        'maxMessage' => $this->trans(
-                            'This field cannot be longer than %limit% characters',
+                    new Password([
+                        'invalidLengthMessage' => $this->trans(
+                            'Password length must be between %min% and %max% characters.',
                             'Admin.Notifications.Error',
-                            ['%limit%' => $maxLength]
+                            [
+                                '%min%' => $minLength,
+                                '%max%' => $maxLength,
+                            ],
                         ),
-                        'min' => $minLength,
-                        'minMessage' => $this->trans(
-                            'This field cannot be shorter than %limit% characters',
+                        'tooWeakMessage' => $this->trans(
+                            'The password doesn\'t meet required strength requirement.',
                             'Admin.Notifications.Error',
-                            ['%limit%' => $minLength]
+                            [],
                         ),
                     ]),
                 ],
-                'required' => $options['is_password_required'],
+                // 'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
                 'label' => $this->trans('Birthday', 'Admin.Orderscustomers.Feature'),
