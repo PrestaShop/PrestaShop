@@ -18,6 +18,7 @@ class ContactUs extends FOBasePage {
     this.validationMessage = 'Your message has been successfully sent to our team.';
     this.invalidEmail = 'Invalid email address.';
     this.invalidContent = 'The message cannot be blank.';
+    this.badFileExtensionErrorMessage = 'Bad file extension';
 
     // Left column selectors
     this.emailUsLink = '#left-column a';

@@ -20,6 +20,7 @@ class ViewCustomer extends BOBasePage {
     this.threadBadge = 'span.badge';
     this.statusButton = id => `button[name='setstatus'][value='${id}']`;
     this.messageDiv = '#content div.message-item-initial';
+    this.attachmentLink = `${this.messageDiv} span.message-product a`;
     this.yourAnswerFormTitle = '#reply-form-title';
     this.yourAnswerFormTextarea = '#reply_message';
     this.ordersAndMessagesBlock = '#orders-and-messages-block';
@@ -46,6 +47,15 @@ class ViewCustomer extends BOBasePage {
    */
   getCustomerMessage(page) {
     return this.getTextContent(page, this.messageDiv);
+  }
+
+  /**
+   * Get attached href
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAttachedFileHref(page) {
+    return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 
   // Your answer form
