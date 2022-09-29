@@ -221,7 +221,7 @@ class CustomerType extends TranslatorAwareType
                         'tooWeakMessage' => $this->trans(
                             'The password doesn\'t meet required strength requirement.',
                             'Admin.Notifications.Error',
-                            [],
+                            []
                         ),
                         'emptyMessage' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
