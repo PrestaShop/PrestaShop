@@ -50,10 +50,9 @@ final class PasswordValidator extends ConstraintValidator
         if (empty($value)) {
           if ($constraint->passwordRequired) {
             $this->context->buildViolation($constraint->emptyMessage)->addViolation();
-            return;
-          } else {
-            return;
           }
+
+          return;
         }
 
         // Check password length
