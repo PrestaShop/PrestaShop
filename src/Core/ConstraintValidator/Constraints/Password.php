@@ -46,7 +46,7 @@ final class Password extends Constraint
 
   public $maxLength;
 
-  public $passwordRequired = false;
+  public $passwordRequired = true;
 
     /**
      * {@inheritdoc}

@@ -162,12 +162,14 @@ final class EmployeeType extends AbstractType
                     'data-minscore' => $minScore,
                     'data-minlength' => $minLength,
                     'data-maxlength' => $maxLength,
+                    'autocomplete' => 'new-password',
                 ],
                 'constraints' => [
                     new Password([
                         'minScore' => $minScore,
                         'minLength' => $minLength,
                         'maxLength' => $maxLength,
+                        'passwordRequired' => !$options['is_for_editing'],
                         'invalidLengthMessage' => $this->trans(
                             'Password length must be between %min% and %max% characters.',
                             [

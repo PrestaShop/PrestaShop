@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\PasswordConstraintException;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use ZxcvbnPhp\Zxcvbn;
 
 /**
@@ -56,16 +57,16 @@ class Password
 
     /**
      * @param string $password
-     * @param int $minLength
-     * @param int $maxLength
-     * @param int $minScore
+     * @param int|null $minLength
+     * @param int|null $maxLength
+     * @param int|null $minScore
      */
-    public function __construct(string $password, int $minLength = 8, int $maxLength = 72, int $minScore = 0)
+    public function __construct(string $password, $minLength = null, $maxLength = null, $minScore = null)
     {
         $this->password = $password;
-        $this->minLength = $minLength;
-        $this->maxLength = $maxLength;
-        $this->minScore = $minScore;
+        $this->minLength = (is_int($minLength) ? $minLength : PasswordPolicyConfiguration::DEFAULT_MINIMUM_LENGTH);
+        $this->maxLength = (is_int($maxLength) ? $maxLength : PasswordPolicyConfiguration::DEFAULT_MAXIMUM_LENGTH);
+        $this->minScore = (is_int($minScore) ? $minScore : 0);
 
         $this->assertPasswordIsWithinAllowedLength($password);
         $this->assertPasswordScoreIsAllowed($password);

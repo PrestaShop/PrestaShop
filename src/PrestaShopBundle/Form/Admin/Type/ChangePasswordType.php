@@ -78,6 +78,7 @@ class ChangePasswordType extends AbstractType
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
+                        'autocomplete' => 'new-password',
                     ],
                 ],
                 'constraints' => [

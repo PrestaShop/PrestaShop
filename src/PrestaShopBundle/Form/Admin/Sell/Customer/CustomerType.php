@@ -202,6 +202,7 @@ class CustomerType extends TranslatorAwareType
                     'data-minscore' => $minScore,
                     'data-minlength' => $minLength,
                     'data-maxlength' => $maxLength,
+                    'autocomplete' => 'new-password',
                 ],
                 'constraints' => [
                     new Password([
