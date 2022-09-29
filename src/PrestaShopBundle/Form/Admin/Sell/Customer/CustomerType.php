@@ -205,6 +205,9 @@ class CustomerType extends TranslatorAwareType
                 ],
                 'constraints' => [
                     new Password([
+                        'minScore' => $minScore,
+                        'minLength' => $minLength,
+                        'maxLength' => $maxLength,
                         'invalidLengthMessage' => $this->trans(
                             'Password length must be between %min% and %max% characters.',
                             'Admin.Notifications.Error',

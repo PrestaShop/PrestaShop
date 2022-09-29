@@ -46,21 +46,16 @@ final class PasswordValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, PasswordConstraint::class);
         }
 
-        // temp
-        $maxLength = 72;
-        $minLength = 8;
-        $minScore = 3;
-
         // Check password length
         $length = mb_strlen($value, 'UTF-8');
-        if ($minLength > $length || $length > $maxLength) {
+        if ($constraint->minLength > $length || $length > $constraint->maxLength) {
           $this->context->buildViolation($constraint->invalidLengthMessage)->addViolation();
         }
 
         // Check password security
         $zxcvbn = new Zxcvbn();
         $result = $zxcvbn->passwordStrength($value);
-        if (isset($result['score']) && $result['score'] < $minScore) {
+        if (isset($result['score']) && $result['score'] < $constraint->minScore) {
           $this->context->buildViolation($constraint->tooWeakMessage)->addViolation();
         }
     }

@@ -38,11 +38,22 @@ final class Password extends Constraint
 
   public $tooWeakMessage = 'The password doesn\'t meet required strength requirement.';
 
+  public $minScore;
+
+  public $minLength;
+
+  public $maxLength;
+
     /**
      * {@inheritdoc}
      */
     public function validatedBy()
     {
         return PasswordValidator::class;
+    }
+
+    public function getRequiredOptions()
+    {
+        return ['minScore', 'minLength', 'maxLength'];
     }
 }
