@@ -37,4 +37,35 @@ $(() => {
   ]);
   new ImageSelector();
   new QuantityModeSwitcher();
+
+  const priceExcludedTaxId = 'bulk_combination_price_price_tax_excluded';
+  const priceIncludedTaxId = 'bulk_combination_price_price_tax_included';
+  const vatRate = 'bulk_combination_price';
+  const priceDiv: HTMLDivElement = document.getElementById(vatRate) as HTMLDivElement;
+  const priceExcludedTaxInput: HTMLInputElement = document.getElementById(priceExcludedTaxId) as HTMLInputElement;
+  const priceIncludedTaxInput: HTMLInputElement = document.getElementById(priceIncludedTaxId) as HTMLInputElement;
+  const rate: number = 1 + parseFloat((priceDiv.dataset.rate as string));
+
+  priceExcludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceExcludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceExcludedTaxInput.value);
+    }
+    priceIncludedTaxInput.value = (value * rate).toString();
+  });
+
+  priceIncludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceIncludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceIncludedTaxInput.value);
+    }
+    priceExcludedTaxInput.value = (value / rate).toString();
+  });
+
 });

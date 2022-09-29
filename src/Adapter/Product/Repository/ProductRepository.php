@@ -546,4 +546,19 @@ class ProductRepository extends AbstractObjectModelRepository
 
         return $product;
     }
+
+    public function getProductTaxRulesGroupId(ProductId $productId): TaxRulesGroupId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $result = $qb
+            ->addSelect('p.id_tax_rules_group')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return new TaxRulesGroupId((int) $result);
+    }
 }
