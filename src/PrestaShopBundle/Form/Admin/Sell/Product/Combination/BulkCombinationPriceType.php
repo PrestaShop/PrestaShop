@@ -28,11 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use Currency;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -42,9 +48,9 @@ use Symfony\Component\Validator\Constraints\Type;
 class BulkCombinationPriceType extends TranslatorAwareType
 {
     /**
-     * @var Currency
+     * @var string
      */
-    private $defaultCurrency;
+    private $currencyIsoCode;
 
     /**
      * @var string
@@ -52,33 +58,41 @@ class BulkCombinationPriceType extends TranslatorAwareType
     private $weightUnit;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param Currency $defaultCurrency
-     * @param string $weightUnit
+     * @var ProductRepository
      */
+    private $productRepository;
+
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency,
-        string $weightUnit
+        string $currencyIsoCode,
+        string $weightUnit,
+        ProductRepository $productRepository,
+        TaxComputer $taxComputer
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrency = $defaultCurrency;
+        $this->currencyIsoCode = $currencyIsoCode;
         $this->weightUnit = $weightUnit;
+        $this->productRepository = $productRepository;
+        $this->taxComputer = $taxComputer;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -92,7 +106,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -104,7 +118,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -117,7 +131,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
+                'currency' => $this->currencyIsoCode,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -146,11 +160,29 @@ class BulkCombinationPriceType extends TranslatorAwareType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
         ]);
+
+        $resolver->setRequired('product_id');
+        $resolver->setRequired('country_id');
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $view->vars['attr'] += [
+            'data-rate' => (float) (string) $this->getRate($options['product_id'], $options['country_id']) / 100,
+        ];
+    }
+
+    private function getRate(int $productId, int $countryId): DecimalNumber
+    {
+        return $this->taxComputer->getTaxRate(
+            $this->productRepository->getProductTaxRulesGroupId(new ProductId($productId)),
+            new CountryId($countryId)
+        );
     }
 }
