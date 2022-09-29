@@ -120,7 +120,7 @@ describe('BO - Customer Service : View messages', async () => {
     const text = await viewPage.getCustomerMessage(page);
     expect(text).to.contains(contactUsData.emailAddress);
     expect(text).to.contains(contactUsData.subject);
-    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} access_time - ${messageDateTime.substr(11, 5)}`);
     expect(text).to.contains('Attachment');
     expect(text).to.contains(contactUsData.message);
   });
@@ -134,7 +134,7 @@ describe('BO - Customer Service : View messages', async () => {
 
     // Check form content
     const formContent = await viewPage.getYourAnswerFormContent(page);
-    expect(formContent).to.contains('Dear Customer, Regards, Customer service');
+    expect(formContent).to.contains('Dear Customer Regards, Customer service');
   });
 
   it('should check orders and messages timeline', async function () {
@@ -142,7 +142,7 @@ describe('BO - Customer Service : View messages', async () => {
 
     const text = await viewPage.getOrdersAndMessagesTimeline(page);
     expect(text).to.contains('Orders and messages timeline');
-    expect(text).to.contains(`${messageDateTime.substr(0, 10)} - ${messageDateTime.substr(11, 5)}`);
+    expect(text).to.contains(`${messageDateTime.substr(0, 10)} access_time ${messageDateTime.substr(11, 5)}`);
     expect(text).to.contains(`Message to: ${contactUsData.subject}`);
     expect(text).to.contains(contactUsData.message);
   });
