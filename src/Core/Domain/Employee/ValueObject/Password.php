@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintExcep
 use ZxcvbnPhp\Zxcvbn;
 
 /**
+ * @deprecated since 8.0 and will be removed in next major version.
+ * @see \PrestaShop\PrestaShop\Core\Domain\ValueObject\Password
+ *
  * Stores employee's plain password.
  */
 class Password

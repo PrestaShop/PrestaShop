@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 
 /**
+ * @deprecated since 8.0 and will be removed in next major version.
+ * @see \PrestaShop\PrestaShop\Core\Domain\ValueObject\Password
+ *
  * Stores customer's plain password
  */
 class Password

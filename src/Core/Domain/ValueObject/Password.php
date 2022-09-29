@@ -30,27 +30,10 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\PasswordConstraintException;
 use ZxcvbnPhp\Zxcvbn;
 
 /**
- * Stores customer's plain password
+ * Stores plain password
  */
 class Password
 {
-    /**
-     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
-     *
-     * @var int Minimum required password length
-     */
-    public const MIN_LENGTH = 8;
-
-    /**
-     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH
-     *
-     * @var int Maximum allowed password length
-     *
-     * It's limited to 72 chars because of PASSWORD_BCRYPT algorithm
-     * used in password_hash() function.
-     */
-    public const MAX_LENGTH = 72;
-
     /**
      * @var string
      */
