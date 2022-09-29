@@ -91,12 +91,10 @@
                     }) }}
 
                   {# New password first input #}
-                  <div class="form-group row">
-                    {{ ps.label_with_help('New password'|trans({}, 'messages'), passwordHelpMessage, '', employeeForm.change_password.new_password.children.first.vars.id, true) }}
-                    <div class="col-sm">
-                      {{ ps.form_widget_with_error(employeeForm.change_password.new_password.children.first, employeeForm.change_password.new_password.children.first.vars) }}
-                    </div>
-                  </div>
+                  {{ ps.form_group_row(employeeForm.change_password.new_password.children.first, newPasswordFirstVars, {
+                    label: 'New password'|trans({}, 'messages'),
+                    required: true,
+                    }) }}
 
                   {# New password second input (confirmation) #}
                   {# Empty help text needed to render the text container for validation feedback messages #}
@@ -119,7 +117,6 @@
           {% else %}
             {{ ps.form_group_row(employeeForm.password, {}, {
               'label': 'Password'|trans({}, 'Admin.Global'),
-              'help': passwordHelpMessage,
               }) }}
           {% endif %}
 

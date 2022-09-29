@@ -220,7 +220,7 @@ class CustomerType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-                // 'required' => $options['is_password_required'],
+                'required' => $options['is_password_required'],
             ])
             ->add('birthday', BirthdayType::class, [
                 'label' => $this->trans('Birthday', 'Admin.Orderscustomers.Feature'),

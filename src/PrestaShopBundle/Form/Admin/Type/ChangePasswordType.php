@@ -35,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Password;
 
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
@@ -81,14 +81,21 @@ class ChangePasswordType extends AbstractType
                     ],
                 ],
                 'constraints' => [
-                    new Length(
-                        [
-                            'max' => $maxLength,
-                            'maxMessage' => $this->getMaxLengthValidationMessage($maxLength),
-                            'min' => $minLength,
-                            'minMessage' => $this->getMinLengthValidationMessage($minLength),
-                        ]
-                    ),
+                    new Password([
+                        'invalidLengthMessage' => $this->trans(
+                            'Password length must be between %min% and %max% characters.',
+                            [
+                                '%min%' => $minLength,
+                                '%max%' => $maxLength,
+                            ],
+                            'Admin.Notifications.Error',
+                        ),
+                        'tooWeakMessage' => $this->trans(
+                            'The password doesn\'t meet required strength requirement.',
+                            [],
+                            'Admin.Notifications.Error',
+                        ),
+                    ]),
                 ],
             ])
             ->add('cancel_button', ButtonType::class)

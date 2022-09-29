@@ -48,6 +48,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Password;
 
 /**
  * Class EmployeeType defines an employee form.
@@ -163,14 +164,21 @@ final class EmployeeType extends AbstractType
                     'data-maxlength' => $maxLength,
                 ],
                 'constraints' => [
-                    new Length(
-                        [
-                            'max' => $maxLength,
-                            'maxMessage' => $this->getMaxLengthValidationMessage($maxLength),
-                            'min' => $minLength,
-                            'minMessage' => $this->getMinLengthValidationMessage($minLength),
-                        ]
-                    ),
+                    new Password([
+                        'invalidLengthMessage' => $this->trans(
+                            'Password length must be between %min% and %max% characters.',
+                            [
+                                '%min%' => $minLength,
+                                '%max%' => $maxLength,
+                            ],
+                            'Admin.Notifications.Error',
+                        ),
+                        'tooWeakMessage' => $this->trans(
+                            'The password doesn\'t meet required strength requirement.',
+                            [],
+                            'Admin.Notifications.Error',
+                        ),
+                    ]),
                 ],
             ]);
         }
