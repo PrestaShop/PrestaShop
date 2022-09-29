@@ -1922,8 +1922,10 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.tax.tax_computer'
     tags:
       - { name: form.type }
 

@@ -25,6 +25,7 @@
 
 import ImageSelector from '@pages/product/combination/form/image-selector';
 import QuantityModeSwitcher from '@pages/product/combination/quantity-mode-switcher';
+import CombinationFormMapping from '@pages/product/combination/form/combination-form-mapping';
 
 // @ts-ignore
 const {$} = window;
@@ -37,4 +38,34 @@ $(() => {
   ]);
   new ImageSelector();
   new QuantityModeSwitcher();
+
+  const priceExcludedTaxId = CombinationFormMapping['price.excludedTaxId'];
+  const priceIncludedTaxId = CombinationFormMapping['price.includedTaxId'];
+  const vatRate = CombinationFormMapping['price.vatRateFormId'];
+  const priceDiv: HTMLDivElement = document.getElementById(vatRate) as HTMLDivElement;
+  const priceExcludedTaxInput: HTMLInputElement = document.getElementById(priceExcludedTaxId) as HTMLInputElement;
+  const priceIncludedTaxInput: HTMLInputElement = document.getElementById(priceIncludedTaxId) as HTMLInputElement;
+  const rate: number = 1 + parseFloat((priceDiv.dataset.rate as string));
+
+  priceExcludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceExcludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceExcludedTaxInput.value);
+    }
+    priceIncludedTaxInput.value = (value * rate).toString();
+  });
+
+  priceIncludedTaxInput.addEventListener('keyup', () => {
+    let value;
+
+    if (priceIncludedTaxInput.value === '') {
+      value = 0;
+    } else {
+      value = parseFloat(priceIncludedTaxInput.value);
+    }
+    priceExcludedTaxInput.value = (value / rate).toString();
+  });
 });

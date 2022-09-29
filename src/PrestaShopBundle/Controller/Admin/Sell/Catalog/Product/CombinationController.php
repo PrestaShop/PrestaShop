@@ -190,6 +190,7 @@ class CombinationController extends FrameworkBundleAdminController
     {
         $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], [
             'product_id' => $productId,
+            'country_id' => $this->get('prestashop.adapter.legacy.context')->getCountryId(),
             'method' => Request::METHOD_PATCH,
         ]);
         $bulkCombinationForm->handleRequest($request);
@@ -224,6 +225,7 @@ class CombinationController extends FrameworkBundleAdminController
                 $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
                     'method' => Request::METHOD_PATCH,
                     'product_id' => $productId,
+                    'country_id' => $this->get('prestashop.adapter.legacy.context')->getCountryId(),
                 ]);
             } catch (CombinationNotFoundException $e) {
                 $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
