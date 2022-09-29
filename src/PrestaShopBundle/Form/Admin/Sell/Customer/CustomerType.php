@@ -208,6 +208,7 @@ class CustomerType extends TranslatorAwareType
                         'minScore' => $minScore,
                         'minLength' => $minLength,
                         'maxLength' => $maxLength,
+                        'passwordRequired' => $options['is_password_required'],
                         'invalidLengthMessage' => $this->trans(
                             'Password length must be between %min% and %max% characters.',
                             'Admin.Notifications.Error',
@@ -221,6 +222,7 @@ class CustomerType extends TranslatorAwareType
                             'Admin.Notifications.Error',
                             [],
                         ),
+                        'emptyMessage' => $this->trans('This field cannot be empty.', 'Admin.Notifications.Error'),
                     ]),
                 ],
                 'required' => $options['is_password_required'],

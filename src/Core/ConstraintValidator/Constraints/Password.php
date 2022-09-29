@@ -38,11 +38,15 @@ final class Password extends Constraint
 
   public $tooWeakMessage = 'The password doesn\'t meet required strength requirement.';
 
+  public $emptyMessage = 'This field cannot be empty.';
+
   public $minScore;
 
   public $minLength;
 
   public $maxLength;
+
+  public $passwordRequired = false;
 
     /**
      * {@inheritdoc}

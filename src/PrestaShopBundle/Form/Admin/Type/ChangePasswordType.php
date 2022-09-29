@@ -98,6 +98,7 @@ class ChangePasswordType extends AbstractType
                             [],
                             'Admin.Notifications.Error',
                         ),
+                        'emptyMessage' => $this->trans('This field cannot be empty.', [], 'Admin.Notifications.Error'),
                     ]),
                 ],
             ])

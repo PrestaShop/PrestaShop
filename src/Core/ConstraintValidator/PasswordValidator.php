@@ -46,6 +46,16 @@ final class PasswordValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, PasswordConstraint::class);
         }
 
+        // Do not allow empty value, if password is required
+        if (empty($value)) {
+          if ($constraint->passwordRequired) {
+            $this->context->buildViolation($constraint->emptyMessage)->addViolation();
+            return;
+          } else {
+            return;
+          }
+        }
+
         // Check password length
         $length = mb_strlen($value, 'UTF-8');
         if ($constraint->minLength > $length || $length > $constraint->maxLength) {
