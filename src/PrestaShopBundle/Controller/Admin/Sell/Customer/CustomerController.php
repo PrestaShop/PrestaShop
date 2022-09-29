@@ -923,7 +923,7 @@ class CustomerController extends AbstractAdminController
                 ),
                 PasswordConstraintException::WEAK_PASSWORD => $this->trans(
                     'The password doesn\'t meet required strength requirement.',
-                    'Admin.Notifications.Error',
+                    'Admin.Notifications.Error'
                 ),
             ],
             CustomerNotFoundException::class => $this->trans(
