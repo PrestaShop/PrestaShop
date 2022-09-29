@@ -485,11 +485,11 @@ class EmployeeController extends FrameworkBundleAdminController
                     [
                         '%min%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
                         '%max%' => (int) $this->get('prestashop.adapter.legacy.configuration')->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
-                    ]                
+                    ]
                 ),
                 PasswordConstraintException::WEAK_PASSWORD => $this->trans(
                     'The password doesn\'t meet required strength requirement.',
-                    'Admin.Notifications.Error',
+                    'Admin.Notifications.Error'
                 ),
             ],
             InvalidEmployeeIdException::class => $this->trans(

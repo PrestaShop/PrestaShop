@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Password;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
@@ -35,7 +36,6 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Password;
 
 /**
  * Class ChangePasswordType is responsible for defining "change password" form type.
@@ -118,6 +118,8 @@ class ChangePasswordType extends AbstractType
     }
 
     /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
      * @param int $minLength
      *
      * @return string
@@ -132,6 +134,8 @@ class ChangePasswordType extends AbstractType
     }
 
     /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
      * @param int $maxLength
      *
      * @return string

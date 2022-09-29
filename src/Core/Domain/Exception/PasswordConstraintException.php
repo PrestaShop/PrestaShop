@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  */
 class PasswordConstraintException extends CoreException
 {
-
     /**
      * @var int Code is used when password doesn't meet length requirements
      */

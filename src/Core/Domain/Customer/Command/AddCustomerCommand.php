@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\ApeCode;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Birthday;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Password;
 
 /**
  * Adds new customer with provided data

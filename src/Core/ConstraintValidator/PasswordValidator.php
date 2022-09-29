@@ -48,24 +48,24 @@ final class PasswordValidator extends ConstraintValidator
 
         // Do not allow empty value, if password is required
         if (empty($value)) {
-          if ($constraint->passwordRequired) {
-            $this->context->buildViolation($constraint->emptyMessage)->addViolation();
-          }
+            if ($constraint->passwordRequired) {
+                $this->context->buildViolation($constraint->emptyMessage)->addViolation();
+            }
 
-          return;
+            return;
         }
 
         // Check password length
         $length = mb_strlen($value, 'UTF-8');
         if ($constraint->minLength > $length || $length > $constraint->maxLength) {
-          $this->context->buildViolation($constraint->invalidLengthMessage)->addViolation();
+            $this->context->buildViolation($constraint->invalidLengthMessage)->addViolation();
         }
 
         // Check password security
         $zxcvbn = new Zxcvbn();
         $result = $zxcvbn->passwordStrength($value);
         if (isset($result['score']) && $result['score'] < $constraint->minScore) {
-          $this->context->buildViolation($constraint->tooWeakMessage)->addViolation();
+            $this->context->buildViolation($constraint->tooWeakMessage)->addViolation();
         }
     }
 }

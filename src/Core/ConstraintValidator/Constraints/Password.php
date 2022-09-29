@@ -34,19 +34,19 @@ use Symfony\Component\Validator\Constraint;
  */
 final class Password extends Constraint
 {
-  public $invalidLengthMessage = 'Password length must be between %min% and %max% characters.';
+    public $invalidLengthMessage = 'Password length must be between %min% and %max% characters.';
 
-  public $tooWeakMessage = 'The password doesn\'t meet required strength requirement.';
+    public $tooWeakMessage = 'The password doesn\'t meet required strength requirement.';
 
-  public $emptyMessage = 'This field cannot be empty.';
+    public $emptyMessage = 'This field cannot be empty.';
 
-  public $minScore;
+    public $minScore;
 
-  public $minLength;
+    public $minLength;
 
-  public $maxLength;
+    public $maxLength;
 
-  public $passwordRequired = true;
+    public $passwordRequired = true;
 
     /**
      * {@inheritdoc}
