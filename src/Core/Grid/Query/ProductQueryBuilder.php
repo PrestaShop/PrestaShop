@@ -276,7 +276,8 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->setParameter('category', '%' . $filter . '%');
             }
 
-            if ('position' === $filterName) {
+            // Filter by position is only relevant when a category has been selected
+            if (array_key_exists('id_category', $filterValues) && 'position' === $filterName) {
                 $qb->andWhere('pc.`position` = :position');
                 $qb->setParameter('position', $filter);
             }

@@ -89,10 +89,16 @@ export default class CategoryTreeFilter {
   }
 
   private resetFilter(): void {
+    // Reset selected category
     this.$categoryTree
       .find(CategoryFilterMap.categoryRadio)
       .prop('checked', false);
     this.$categoryInput.val('');
+
+    // Also reset position filter because it is only useful when a category is selected
+    const $positionInput: JQuery = this.$filterForm.find(CategoryFilterMap.positionInput);
+    $positionInput.val('');
+
     this.$filterForm.submit();
   }
 
