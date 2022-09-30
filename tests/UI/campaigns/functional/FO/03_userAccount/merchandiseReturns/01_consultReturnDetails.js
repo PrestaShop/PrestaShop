@@ -412,7 +412,7 @@ describe('FO - Account : Consult return details', async () => {
         });
 
         it('should go to account page', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index + 3}`, baseContext);
 
           await homePage.goToMyAccountPage(page);
 
