@@ -131,7 +131,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if ('1' === Tools::getValue('quickview')) {
             $this->setQuickViewMode();
         }
-        if ('1' === Tools::getValue('preview')) {
+
+        // We are in a preview mode only if proper admin token was also provided in the URL
+        if ('1' === Tools::getValue('preview') && Tools::getValue('adtoken') == Tools::getAdminToken(
+            'AdminProducts'
+            . (int) Tab::getIdFromClassName('AdminProducts')
+            . (int) Tools::getValue('id_employee')
+        )) {
             $this->setPreviewMode();
         }
 
@@ -151,17 +157,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         // Check if the user is on correct URL and redirect if needed
         $this->canonicalRedirection();
 
-        // Performs multiple checks and redirects user to error page if needed
-        $this->checkPermissionsToViewProduct();
-
-        // Load product category
-        $this->initializeCategory();
-
         // Set proper template to product
         $this->setTemplate('catalog/product', [
             'entity' => 'product',
             'id' => $this->id_product,
         ]);
+
+        // Performs multiple checks and redirects user to error page if needed
+        $this->checkPermissionsToViewProduct();
+
+        // Load product category
+        $this->initializeCategory();
     }
 
     /**
@@ -169,90 +175,71 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function checkPermissionsToViewProduct()
     {
-        /*
-        * If the product is associated to the shop
-        * and is active or not active but preview mode (need token + file_exists)
-        * allow showing the product
-        * In all the others cases => 404 "Product is no longer available"
-        */
-        $isAdminWithToken = (
-            Tools::getValue('adtoken') == Tools::getAdminToken(
-                'AdminProducts'
-                . (int) Tab::getIdFromClassName('AdminProducts')
-                . (int) Tools::getValue('id_employee')
-            )
-            && $this->product->isAssociatedToShop()
-        );
-
-        if ((!$this->product->isAssociatedToShop() || !$this->product->active) && !$this->isPreview()) {
-            if ($isAdminWithToken) {
+        // If the person accessing the product page is admin with proper token, we only do limited checks
+        if ($this->isPreview()) {
+            if (!$this->product->isAssociatedToShop() || !$this->product->active) {
                 $this->adminNotifications['inactive_product'] = [
                     'type' => 'warning',
                     'message' => $this->trans('This product is not visible to your customers.', [], 'Shop.Notifications.Warning'),
                 ];
-            } else {
-                if (!$this->product->id_type_redirected) {
-                    if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
-                        $this->product->id_type_redirected = $this->product->id_category_default;
-                    }
-                } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
-                    $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
-                }
-                switch ($this->product->redirect_type) {
-                    case RedirectType::TYPE_PRODUCT_PERMANENT:
-                        header('HTTP/1.1 301 Moved Permanently');
-                        header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
-                        exit;
-                    case RedirectType::TYPE_PRODUCT_TEMPORARY:
-                        header('HTTP/1.1 302 Moved Temporarily');
-                        header('Cache-Control: no-cache');
-                        header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
-                        exit;
-                    case RedirectType::TYPE_CATEGORY_PERMANENT:
-                        header('HTTP/1.1 301 Moved Permanently');
-                        header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
-                        exit;
-                    case RedirectType::TYPE_CATEGORY_TEMPORARY:
-                        header('HTTP/1.1 302 Moved Temporarily');
-                        header('Cache-Control: no-cache');
-                        header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
-                        exit;
-                    case RedirectType::TYPE_GONE:
-                        header('HTTP/1.1 410 Gone');
-                        header('Status: 410 Gone');
-                        $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
-                        $this->setTemplate('errors/410');
-
-                        break;
-                    case RedirectType::TYPE_NOT_FOUND:
-                    default:
-                        header('HTTP/1.1 404 Not Found');
-                        header('Status: 404 Not Found');
-                        $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
-                        $this->setTemplate('errors/404');
-
-                        break;
-                }
             }
-        } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
+
+            return;
+        }
+
+        // Now the checks for public
+        // If product is disabled or doesn't belong to this shop, we respect the redirection settings
+        if (!$this->product->isAssociatedToShop() || !$this->product->active) {
+            if (!$this->product->id_type_redirected) {
+                if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
+                    $this->product->id_type_redirected = $this->product->id_category_default;
+                }
+            } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
+                $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
+            }
+            switch ($this->product->redirect_type) {
+                case RedirectType::TYPE_PRODUCT_PERMANENT:
+                    header('HTTP/1.1 301 Moved Permanently');
+                    header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_PRODUCT_TEMPORARY:
+                    header('HTTP/1.1 302 Moved Temporarily');
+                    header('Cache-Control: no-cache');
+                    header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                    header('HTTP/1.1 301 Moved Permanently');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                    header('HTTP/1.1 302 Moved Temporarily');
+                    header('Cache-Control: no-cache');
+                    header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
+                    exit;
+                case RedirectType::TYPE_GONE:
+                    header('HTTP/1.1 410 Gone');
+                    header('Status: 410 Gone');
+                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/410');
+
+                    break;
+                case RedirectType::TYPE_NOT_FOUND:
+                default:
+                    header('HTTP/1.1 404 Not Found');
+                    header('Status: 404 Not Found');
+                    $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                    $this->setTemplate('errors/404');
+
+                    break;
+            }
+        }
+
+        // Check if customer is allowed to access this product
+        if (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
             header('HTTP/1.1 403 Forbidden');
             header('Status: 403 Forbidden');
             $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/forbidden');
-        } else {
-            if (!$isAdminWithToken && $this->isPreview() && !$this->ajax) {
-                header('HTTP/1.1 403 Forbidden');
-                header('Status: 403 Forbidden');
-                $this->errors[] = $this->trans('You do not have access to this product.', [], 'Shop.Notifications.Error');
-                $this->setTemplate('errors/forbidden');
-            }
-
-            if ($isAdminWithToken && $this->isPreview()) {
-                $this->adminNotifications['inactive_product'] = [
-                    'type' => 'warning',
-                    'message' => $this->trans('This product is not visible to your customers.', [], 'Shop.Notifications.Warning'),
-                ];
-            }
         }
     }
 
