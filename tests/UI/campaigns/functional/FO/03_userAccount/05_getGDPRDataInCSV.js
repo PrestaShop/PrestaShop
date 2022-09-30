@@ -882,7 +882,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
-          + `${lastVisit.substr(3, 2)} ${lastVisit.substr(11, 8)}`;
+          + `${lastVisit.substr(3, 2)}${lastVisit.substr(11, 8)}`;
         await expect(lastVisitDate).to.contains(date.getFullYear());
       });
 
@@ -895,13 +895,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
       });
 
       it('should get last connections origin', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkLastConnectionsOrigin', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'getLastConnectionsOrigin', baseContext);
 
         connectionOrigin = await viewCustomerPage.getTextColumnFromTableLastConnections(page, 'origin', 1);
         if (connectionOrigin === 'Direct link') {
           connectionOrigin = '';
         } else if (connectionOrigin === 'localhost') {
-          connectionOrigin = 'http://localhost:8001/,en/,';
+          connectionOrigin = 'http://localhost:8001/en/';
         }
         await expect(connectionOrigin).to.not.be.null;
       });
@@ -959,7 +959,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
-          + `0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
+          + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
           true, true, 'utf16le');
         await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
       });
