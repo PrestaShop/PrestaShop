@@ -364,6 +364,17 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     (new Filter('quantity', IntegerMinMaxFilterType::class))
                         ->setTypeOptions([
                             'required' => false,
+                            // Ignore default zero value to use negative values
+                            'min_field_options' => [
+                                'attr' => [
+                                    'min' => false,
+                                ],
+                            ],
+                            'max_field_options' => [
+                                'attr' => [
+                                    'min' => false,
+                                ],
+                            ],
                         ])
                         ->setAssociatedColumn('quantity')
                 )
