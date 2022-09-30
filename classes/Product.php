@@ -6550,6 +6550,7 @@ class ProductCore extends ObjectModel
      */
     public static function checkAccessStatic($id_product, $id_customer)
     {
+        // If group feature is disabled in performance configuration, we don't check anything and allow access
         if (!Group::isFeatureActive()) {
             return true;
         }
