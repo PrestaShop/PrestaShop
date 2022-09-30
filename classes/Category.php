@@ -1695,6 +1695,11 @@ class CategoryCore extends ObjectModel
      */
     public function checkAccess($idCustomer)
     {
+        // If group feature is disabled in performance configuration, we don't check anything and allow access
+        if (!Group::isFeatureActive()) {
+            return true;
+        }
+
         $cacheId = 'Category::checkAccess_' . (int) $this->id . '-' . $idCustomer . (!$idCustomer ? '-' . (int) Group::getCurrent()->id : '');
         if (!Cache::isStored($cacheId)) {
             if (!$idCustomer) {
