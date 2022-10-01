@@ -3503,6 +3503,35 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Get product cover image for combination.
+     *
+     * @param int $id_product Product identifier
+     * @param int $id_product_attribute Product Attribute identifier
+     * @param Context|null $context
+     *
+     * @return array Product cover image
+     */
+    public static function getCoverForCombination($id_product, $id_product_attribute, Context $context = null)
+    {
+        if (!$context) {
+            $context = Context::getContext();
+        }
+        $cache_id = 'Product::getCoverForCombination_' . (int) $id_product . '-' . (int) $context->shop->id;
+        if (true ||!Cache::isStored($cache_id)) {
+            $sql = 'SELECT pai.`id_image`
+                    FROM `' . _DB_PREFIX_ . 'product_attribute_image` pai
+                    ' . Shop::addSqlAssociation('product_attribute_image', 'pai') . '
+                    WHERE pai.`id_product_attribute` = ' . (int) $id_product_attribute;
+            $result = Db::getInstance()->getRow($sql);
+            Cache::store($cache_id, $result);
+
+            return $result;
+        }
+
+        return Cache::retrieve($cache_id);
+    }
+
+    /**
      * Returns product price.
      *
      * @param int $id_product Product identifier
@@ -5494,7 +5523,12 @@ class ProductCore extends ObjectModel
         }
 
         if (!isset($row['cover_image_id'])) {
-            $cover = static::getCover($row['id_product']);
+            if ($row['product_type'] == 'combinations') {
+                $cover = static::getCoverForCombination($row['id_product'], $id_product_attribute);
+            }
+            else {
+                $cover = static::getCover($row['id_product']);
+            }
             if (isset($cover['id_image'])) {
                 $row['cover_image_id'] = $cover['id_image'];
             }
