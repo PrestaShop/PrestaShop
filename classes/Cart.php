@@ -1384,7 +1384,6 @@ class CartCore extends ObjectModel
         }
         $commonWhere = '
             WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-            AND cp.`id_customization` = ' . (int) $idCustomization . '
             AND cp.`id_cart` = ' . (int) $this->id;
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
