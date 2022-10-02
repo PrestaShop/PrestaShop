@@ -312,7 +312,7 @@ class PackCore extends Product
                 }
             }
         } elseif (!empty($cart)) {
-            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
+            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, (int) $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
                 $packQuantity -= $cartProduct['deep_quantity'];

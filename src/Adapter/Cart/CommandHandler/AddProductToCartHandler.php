@@ -84,7 +84,7 @@ final class AddProductToCartHandler extends AbstractCartHandler implements AddPr
         }
 
         $cart = $this->getCart($command->getCartId());
-        $product = $cart->getProductQuantity($productIdValue, $combinationId, $customizationId);
+        $product = $cart->getProductQuantity($productIdValue, $combinationId, (int) $customizationId);
 
         $quantity = $command->getQuantity() + (int) $product['quantity'];
         $this->assertQuantityIsPositiveInt($quantity);

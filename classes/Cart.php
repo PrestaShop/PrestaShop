@@ -1351,7 +1351,7 @@ class CartCore extends ObjectModel
      *
      * @param int $idProduct Product ID
      * @param int $idProductAttribute ProductAttribute ID
-     * @param int $idCustomization Customization ID
+     * @param int|null $idCustomization Customization ID
      * @param int $idAddressDelivery Delivery Address ID
      *
      * @return array quantity index     : number of product in cart without counting those of pack in cart
@@ -1383,8 +1383,8 @@ class CartCore extends ObjectModel
             $secondUnionSql .= $customizationJoin;
         }
         $commonWhere = '
-            WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute . '
-            AND cp.`id_customization` = ' . (int) $idCustomization . '
+            WHERE cp.`id_product_attribute` = ' . (int) $idProductAttribute .
+            ($idCustomization !== null ? ' AND cp.`id_customization` = ' . (int) $idCustomization : '') . '
             AND cp.`id_cart` = ' . (int) $this->id;
 
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
@@ -1405,7 +1405,7 @@ class CartCore extends ObjectModel
         $parentSql = 'SELECT
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity
-          FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
+          FROM (' . $firstUnionSql . ' UNION ALL ' . $secondUnionSql . ') as q';
 
         return Db::getInstance()->getRow($parentSql);
     }
@@ -1573,7 +1573,7 @@ class CartCore extends ObjectModel
                 $cartFirstLevelProductQuantity = $this->getProductQuantity(
                     (int) $id_product,
                     (int) $id_product_attribute,
-                    $id_customization
+                    (int) $id_customization
                 );
                 $updateQuantity = '- ' . $quantity;
 
