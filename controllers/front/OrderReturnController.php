@@ -95,13 +95,8 @@ class OrderReturnControllerCore extends FrontController
     public function getTemplateVarOrderReturn($orderReturn)
     {
         $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order);
-        foreach ($orderReturns as $return) {
-            if ($orderReturn->id_order == $return['id_order']) {
-                break;
-            }
-        }
 
-        if (!isset($return)) {
+        if (empty($orderReturns)) {
             return [];
         }
 
@@ -110,7 +105,7 @@ class OrderReturnControllerCore extends FrontController
             $this->context->link
         );
 
-        return $orderReturnPresenter->present($return);
+        return $orderReturnPresenter->present(array_shift($orderReturns));
     }
 
     public function getTemplateVarProducts($order_return_id, $order)
