@@ -61,7 +61,7 @@ describe('FO - Home Page : Check slider', async () => {
   });
 
   it('should click in the slider and check the URL', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnLeftSlideArrow', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'clickOnSlider', baseContext);
 
     const currentURL = await homePage.clickInSlider(page, 2);
     await expect(currentURL)
