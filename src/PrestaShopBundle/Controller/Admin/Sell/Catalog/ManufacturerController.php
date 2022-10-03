@@ -450,7 +450,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteManufacturerLogoImageCommand($manufacturerId));
             $this->addFlash(
                 'success',
-                $this->trans('The image was successfully deleted', 'Admin.Notifications.Success')
+                $this->trans('The image was successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
