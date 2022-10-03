@@ -72,10 +72,12 @@ const checkUndefined = (jsonFile) => {
   const allTests = getAllTests(jsonFile);
   const undefinedContextsSteps = allTests
     .filter(test => (test.context === undefined || !test.context) && !test.pending)
-    .map(test => test.fullTitle);
+    .map(test => test.fullTitle.trim());
 
   if (undefinedContextsSteps.length !== 0) {
-    throw new Error(`Some steps are missing contexts on these scenarios: \n ${undefinedContextsSteps}`);
+    throw new Error(
+      `Some steps are missing contexts on these scenarios: \n - ${undefinedContextsSteps.join('\n - ')}`,
+    );
   }
 };
 
