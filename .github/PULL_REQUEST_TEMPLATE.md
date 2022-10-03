@@ -15,7 +15,7 @@ https://devdocs.prestashop.com/8/contribute/contribution-guidelines/#pull-reques
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
-| Fixed ticket?     | Fixes #{issue number here}.
+| Fixed ticket?     | Fixes #{issue number here}. If your PR fixes multiple issues, use Resolves #{issue number here}, Resolves #{another issue number here}.
 | Related PRs       | If theme, autoupgrade or other module change is needed, provide a link to related PRs here.
 | How to test?      | Please indicate how to best verify that this PR is correct.
 | Possible impacts? | Please indicate what parts of the software we need to check to make sure everything is alright.
