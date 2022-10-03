@@ -47,6 +47,7 @@ const cartRuleCode = new CartRuleFaker(
     code: '4QABV6L3',
     discountType: 'Amount',
     discountPercent: 20,
+    customerGroup: 'true',
     discountAmount: {
       value: 10,
       currency: 'EUR',
