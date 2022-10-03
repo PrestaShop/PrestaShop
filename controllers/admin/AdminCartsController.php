@@ -972,9 +972,7 @@ class AdminCartsControllerCore extends AdminController
             $helper->list_skip_actions['delete'] = (array) $skip_list;
         }
 
-        $list = $helper->generateList($this->_list, $this->fields_list);
-
-        return $list;
+        return $helper->generateList($this->_list, $this->fields_list);
     }
 
     /**

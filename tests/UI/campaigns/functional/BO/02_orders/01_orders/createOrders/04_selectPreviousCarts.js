@@ -475,10 +475,11 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should check the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
 
-      const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage);
-      await expect(orderInformation)
-        .to.contains('No order was created from this cart.')
-        .and.to.contains('Create an order from this cart.');
+      const orderInformation = await viewShoppingCartPage.getOrderInformation(page);
+      await expect(orderInformation).to.contains('No order was created from this cart.');
+
+      const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(page);
+      await expect(hasButtonCreateOrderFromCart).to.be.true;
     });
 
     it('should check the product stock_available in cart Summary Block', async function () {

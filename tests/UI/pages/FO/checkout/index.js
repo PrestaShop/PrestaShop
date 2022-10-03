@@ -53,6 +53,7 @@ class Checkout extends FOBasePage {
 
     // Checkout address form
     this.addressStepSection = '#checkout-addresses-step';
+    this.addressStepContent = `${this.addressStepSection} div.content`;
     this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
     this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
@@ -114,6 +115,16 @@ class Checkout extends FOBasePage {
   async goToDeliveryStep(page) {
     await this.clickAndWaitForNavigation(page, this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Check if the Delivery Step is displayed
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isDeliveryStep(page) {
+    await this.waitForVisibleSelector(page, this.addressStepContent);
+    return this.elementVisible(page, this.addressStepContent);
   }
 
   /**
