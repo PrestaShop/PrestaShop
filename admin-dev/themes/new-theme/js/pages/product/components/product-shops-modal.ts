@@ -55,7 +55,7 @@ export default class ProductShopsModal {
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
       // are not computed in the size)
       autoSizeContainer: ProductMap.shops.modalSizeContainer,
-      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+      onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes) {
           const successAlertsCount = Number(dataAttributes.alertsSuccess);
 
