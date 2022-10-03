@@ -58,6 +58,9 @@ class AddCartRule extends BOBasePage {
     this.quantityInput = 'input[name=quantity]';
     this.quantityPerUserInput = 'input[name=quantity_per_user]';
 
+    // Customer group selection
+    this.customerGroupRadioButton = '#group_restriction'
+
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
     this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
@@ -158,6 +161,11 @@ class AddCartRule extends BOBasePage {
       await page.press(this.dateToInput, 'Enter');
     }
 
+    // Select check box for Customer Group
+    if (cartRuleData.customerGroup) {
+      await page.click(this.customerGroupRadioButton);
+    }
+    
     // Fill minimum amount values
     await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
