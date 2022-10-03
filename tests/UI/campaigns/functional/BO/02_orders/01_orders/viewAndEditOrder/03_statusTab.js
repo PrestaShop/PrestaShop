@@ -264,7 +264,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
-      await loginPage.login(page, createEmployeeData.email, createEmployeeData.password);
+      await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
 
       const pageTitle = await dashboardPage.getPageTitle(page);
       await expect(pageTitle).to.contains(dashboardPage.pageTitle);

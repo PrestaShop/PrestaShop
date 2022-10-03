@@ -8,7 +8,7 @@ module.exports = {
   async loginBO(mochaContext, page, email = global.BO.EMAIL, password = global.BO.PASSWD) {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginBO');
     await loginPage.goTo(page, global.BO.URL);
-    await loginPage.login(page, email, password);
+    await loginPage.successLogin(page, email, password);
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
   },

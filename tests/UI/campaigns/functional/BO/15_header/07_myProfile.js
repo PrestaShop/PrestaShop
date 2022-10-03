@@ -72,7 +72,7 @@ describe('BO - My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
-      await loginPage.login(page, employeeData.email, employeeData.password);
+      await loginPage.successLogin(page, employeeData.email, employeeData.password);
 
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
@@ -220,7 +220,7 @@ describe('BO - My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordAndDefaultPageAndLanguage', baseContext);
 
       await loginPage.goTo(page, global.BO.URL);
-      await loginPage.login(page, employeeData.email, employeeData.password);
+      await loginPage.successLogin(page, employeeData.email, employeeData.password);
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(creditSlipsPage.pageTitleFR);
