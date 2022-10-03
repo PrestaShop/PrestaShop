@@ -70,7 +70,7 @@ function setPermissions(profileName, permissionsData, baseContext = 'commonTests
 
     permissionsData.forEach((permission) => {
       permission.accesses.forEach((access) => {
-        it(`should set the permission ${access} on the ${permission.className}`, async () => {
+        it(`should set the permission ${access} on the ${permission.className}`, async function () {
           await testContext.addContextItem(
             this,
             'testIdentifier',
