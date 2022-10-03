@@ -147,6 +147,7 @@ module.exports = {
     create_product_default_theme: './scss/pages/product/create_product_default_theme.scss',
   },
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, '../public'),
     filename: '[name].bundle.js',
     libraryTarget: 'window',
@@ -364,17 +365,17 @@ module.exports = {
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[hash].[ext]',
+        type: 'asset/resource',
+        generator: {
+          filename: '[hash].[ext]'
         },
         exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
       },
       {
         test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[hash].preload.[ext]',
+        type: 'asset/resource',
+        generator: {
+          filename: '[hash].preload.[ext]'
         },
       },
     ],
