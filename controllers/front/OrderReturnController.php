@@ -94,7 +94,7 @@ class OrderReturnControllerCore extends FrontController
 
     public function getTemplateVarOrderReturn($orderReturn)
     {
-        $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order);
+        $orderReturns = OrderReturn::getOrdersReturn($orderReturn->id_customer, $orderReturn->id_order, false, null, $orderReturn->id);
 
         if (empty($orderReturns)) {
             return [];
