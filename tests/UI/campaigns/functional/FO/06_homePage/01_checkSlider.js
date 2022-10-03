@@ -32,6 +32,7 @@ describe('FO - Home Page : Check slider', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'openShopFO', baseContext);
 
     await homePage.goTo(page, global.FO.URL);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
@@ -60,10 +61,10 @@ describe('FO - Home Page : Check slider', async () => {
     await expect(isVisible).to.be.true;
   });
 
-  it('should click in the slider and check the URL', async function () {
+  it('should click on the slider and check the URL', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'clickOnSlider', baseContext);
 
-    const currentURL = await homePage.clickInSlider(page, 2);
+    const currentURL = await homePage.clickOnSlider(page, 2);
     await expect(currentURL)
       .to.contains('https://www.prestashop.com/en')
       .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
