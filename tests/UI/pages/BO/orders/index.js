@@ -204,7 +204,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row in table
    * @returns {Promise<string|number>}
    */
-  async getTextColumn(page, columnName, row) {
+  async getTextColumn(page, columnName, row = 1) {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
     }
@@ -352,7 +352,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<number>}
    */
-  async getOrderATIPrice(page, row) {
+  async getOrderATIPrice(page, row = 1) {
     // Delete the first character (currency symbol) before getting price ATI
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }

@@ -19,6 +19,7 @@ class ViewCustomer extends BOBasePage {
     // Selectors
     this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
     this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
+    this.attachmentLink = `${this.messagesThredDiv} span.message-product a`;
     this.statusButton = statusName => `${this.messagesThredDiv} form[action*='/update-status/${statusName}'] button`;
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
     this.yourAnswerFormTextarea = '#main-div div[data-role="employee-answer"]';
@@ -46,6 +47,15 @@ class ViewCustomer extends BOBasePage {
    */
   getCustomerMessage(page) {
     return this.getTextContent(page, this.messagesThredDiv);
+  }
+
+  /**
+   * Get attached href
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAttachedFileHref(page) {
+    return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 
   // Your answer form

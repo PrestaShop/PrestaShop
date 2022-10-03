@@ -1,0 +1,32 @@
+# This tests the build for development
+name: Cron docker build
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  docker-build:
+    name: Docker build
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        version:
+          - 7.2
+          - 7.3
+          - 7.4
+          - 8.0
+          - 8.1
+        base:
+          - apache
+          - fpm
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Running latest prestashop with docker
+        run: docker-compose build --build-arg VERSION=${{ matrix.version }}-${{ matrix.base }}

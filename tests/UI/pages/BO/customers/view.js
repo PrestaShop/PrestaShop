@@ -52,6 +52,9 @@ class ViewCustomer extends BOBasePage {
 
     // Last connections
     this.lastConnectionsDiv = '.customer-last-connections-card';
+    this.lastConnectionTableRow = row => `tr.customer-last-connection:nth-child(${row})`;
+    this.lastConnectionTableColumn = (row, column) => `${this.lastConnectionTableRow(row)} `
+      + `td.customer-last-connection-${column}`;
 
     // Groups
     this.groupsDiv = '.customer-groups-card';
@@ -172,6 +175,17 @@ class ViewCustomer extends BOBasePage {
     }
 
     return this.getTextContent(page, `${selector} .card-body`);
+  }
+
+  /**
+   * Get text column from table last connection
+   * @param page {Page} Browser tab
+   * @param column {string} Column name in table last connections
+   * @param row {number} Row number in table Last connections
+   * @returns {Promise<string>}
+   */
+  getTextColumnFromTableLastConnections(page, column, row = 1) {
+    return this.getTextContent(page, this.lastConnectionTableColumn(row, column));
   }
 
   /**

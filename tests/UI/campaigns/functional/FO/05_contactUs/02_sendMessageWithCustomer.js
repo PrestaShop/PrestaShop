@@ -99,7 +99,8 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   it('should send message to customer service', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
-    const validationMessage = await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    await foContactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+    const validationMessage = await foContactUsPage.getAlertSuccess(page);
     await expect(validationMessage).to.equal(foContactUsPage.validationMessage);
   });
 

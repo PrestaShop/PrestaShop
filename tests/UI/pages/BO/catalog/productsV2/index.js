@@ -20,14 +20,23 @@ class Products extends BOBasePage {
     // Header selectors
     this.newProductButton = '#page-header-desc-configuration-add';
 
-    // Products table selectors
+    // Products page selectors
+    this.addNewProductButton = '#create_product_create';
     this.productGridPanel = '#product_grid_panel';
     this.productGridHeader = `${this.productGridPanel} div.js-grid-header`;
     this.headerTitle = `${this.productGridHeader} .card-header-title`;
+
+    // Bulk actions selectors
+    this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
+    this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
+    this.bulkActionsdeleteSelectionLink = '#product_grid_bulk_action_bulk_delete_ajax';
+
+    // Products table selectors
     this.productGridTable = '#product_grid_table';
     this.productTableFilterLine = `${this.productGridTable} tr.column-filters`;
     this.filterSearchButton = `${this.productTableFilterLine} button.grid-search-button`;
     this.filterResetButton = `${this.productTableFilterLine} button.js-reset-search`;
+    this.selectAllProductsCheckbox = `${this.productTableFilterLine} td[data-type=bulk_action] div.md-checkbox`;
 
     // Filters input
     this.productFilterIDMinInput = '#product_id_product_min_field';
@@ -54,16 +63,36 @@ class Products extends BOBasePage {
       + 'td.column-price_tax_included';
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.column-quantity a`;
     this.productsListTableColumnStatusInput = row => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productListTableDropDownList = row => `${this.productsListTableRow(row)} td.column-actions a.dropdown-toggle`;
+    this.productListTableDeleteButton = row => `${this.productsListTableRow(row)}`
+      + ' td.column-actions a.grid-delete-row-link';
 
     // Modal create product selectors
     this.modalCreateProduct = '#modal-create-product';
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.productTypeChoices = '#create_product div.product-type-choices';
     this.productType = type => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
-    this.addNewProductButton = '#create_product_create';
 
-    // pagination
-    this.paginationBlock = `${this.productListForm} div.pagination-block`;
+    // Modal dialog
+    this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
+    this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
+    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
+
+    // Modal delete products selectors
+    this.modalBulkDeleteProducts = '#product-ajax-bulk_delete_ajax-confirm-modal';
+    this.modalBulkdeleteProductsBody = `${this.modalBulkDeleteProducts} div.modal-body`;
+    this.modalBulkdeleteProductsFooter = `${this.modalBulkDeleteProducts} div.modal-footer`;
+    this.modalDialogBulkDeleteButton = `${this.modalBulkdeleteProductsFooter} button.btn-confirm-submit`;
+    this.modalBulkDeleteProductsProgress = '#product-ajax-bulk_delete_ajax-progress-modal';
+    this.modalBulkDeleteProductsProgressBody = `${this.modalBulkDeleteProductsProgress} div.modal-body`;
+    this.modalBulkDeleteProductsProgressSuccessMessage = `${this.modalBulkDeleteProductsProgressBody}`
+      + ' div.progress-message';
+    this.modalBulkDeleteProductsProgressFooter = `${this.modalBulkDeleteProductsProgress} div.modal-footer`;
+    this.modalBulkDeleteProductsProgressBarDone = '#modal_progressbar_done';
+    this.modalBulkDeleteProductsCloseButton = `${this.modalBulkDeleteProductsProgressFooter} button.close-modal-button`;
+
+    // Pagination
+    this.paginationBlock = `${this.productGridPanel} div.pagination-block`;
     this.productsNumberLabel = `${this.paginationBlock} label.col-form-label`;
     this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
   }
@@ -117,6 +146,59 @@ class Products extends BOBasePage {
     return this.elementVisible(page, this.filterResetButton, 1000);
   }
 
+  // Bulk delete products functions
+  /**
+   * Bulk select products
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async bulkSelectProducts(page) {
+    await this.waitForSelectorAndClick(page, this.selectAllProductsCheckbox);
+
+    return this.elementNotVisible(page, `${this.productBulkMenuButton}[disabled]`, 1000);
+  }
+
+  /**
+   * Click on bulk delete products
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async clickOnBulkDeleteProducts(page) {
+    await Promise.all([
+      await this.waitForSelectorAndClick(page, this.productBulkMenuButton),
+      await this.waitForVisibleSelector(page, this.bulkActionsDropDownMenu),
+    ]);
+    await this.waitForSelectorAndClick(page, this.bulkActionsdeleteSelectionLink);
+    await this.waitForVisibleSelector(page, this.modalBulkDeleteProducts);
+
+    return this.getTextContent(page, this.modalBulkdeleteProductsBody);
+  }
+
+  /**
+   * Bulk delete products
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteProduct(page) {
+    await this.waitForSelectorAndClick(page, this.modalDialogBulkDeleteButton);
+
+    await this.waitForVisibleSelector(page, this.modalBulkDeleteProductsProgressBarDone);
+
+    return this.getTextContent(page, this.modalBulkDeleteProductsProgressSuccessMessage);
+  }
+
+  /**
+   * Close bulk delete progress modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeBulkDeleteProgressModal(page) {
+    await this.clickAndWaitForNavigation(page, this.modalBulkDeleteProductsCloseButton);
+
+    return this.elementNotVisible(page, this.modalBulkDeleteProductsProgress, 1000);
+  }
+
+  // Filter products table methods
   /**
    * Filter products Min - Max
    * @param page {Page} Browser tab
@@ -295,6 +377,30 @@ class Products extends BOBasePage {
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Click on delete product button
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<void>}
+   */
+  async clickOnDeleteProductButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
+    await this.waitForSelectorAndClick(page, this.productListTableDeleteButton(row));
+
+    return this.elementVisible(page, this.modalDialog, 1000);
+  }
+
+  /**
+   * Delete product
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async deleteProduct(page) {
+    await this.waitForSelectorAndClick(page, this.modalDialogDeleteButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

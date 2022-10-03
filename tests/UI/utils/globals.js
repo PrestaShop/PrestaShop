@@ -1,5 +1,5 @@
+require('dotenv').config();
 const {DefaultEmployee} = require('@data/demo/employees');
-
 
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
@@ -32,9 +32,9 @@ global.INSTALL = {
 
 global.BROWSER = {
   name: process.env.BROWSER || 'chromium',
-  lang: 'en-GB',
-  width: 1680,
-  height: 900,
+  lang: process.env.BROWSER_LANG || 'en-GB',
+  width: parseInt(process.env.BROWSER_WIDTH, 10) || 1680,
+  height: parseInt(process.env.BROWSER_HEIGHT, 10) || 900,
   sandboxArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
   acceptDownloads: true,
   config: {
@@ -45,9 +45,12 @@ global.BROWSER = {
   interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
 };
 
-global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS || false;
+global.GENERATE_FAILED_STEPS = JSON.parse(process.env.GENERATE_FAILED_STEPS || false);
 
-global.TAKE_SCREENSHOT_AFTER_FAIL = process.env.TAKE_SCREENSHOT_AFTER_FAIL || false;
+global.SCREENSHOT = {
+  FOLDER: process.env.SCREENSHOT_FOLDER || './screenshots',
+  AFTER_FAIL: JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL || false),
+};
 
 global.maildevConfig = {
   smtpPort: process.env.SMTP_PORT || '1025',
