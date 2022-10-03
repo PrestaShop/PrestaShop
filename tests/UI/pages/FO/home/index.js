@@ -18,8 +18,10 @@ class Home extends FOBasePage {
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
-    this.carouselControlDirection = direction => `${this.carouselSliderId} a.${direction}.carousel-control`;
-    this.carouselSliderInner = `${this.carouselSliderId} ul.carousel-inner li`;
+    this.carouselControlDirectionLink = direction => `${this.carouselSliderId} a.${direction}.carousel-control`;
+    this.carouselSliderInnerList = `${this.carouselSliderId} ul.carousel-inner`;
+    this.carouselSliderInnerListItems = `${this.carouselSliderInnerList} li`;
+    this.carouselSliderInnerListItem = position => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
@@ -95,7 +97,7 @@ class Home extends FOBasePage {
    * @returns {Promise<void>}
    */
   async clickOnLeftOrRightArrow(page, direction) {
-    await page.click(this.carouselControlDirection(direction));
+    await page.click(this.carouselControlDirectionLink(direction));
   }
 
   /**
@@ -107,17 +109,17 @@ class Home extends FOBasePage {
   async isSliderVisible(page, position) {
     await this.waitForVisibleSelector(page, this.carouselSliderId);
 
-    return this.elementVisible(page, `${this.carouselSliderInner}:nth-child(${position})`, 1000);
+    return this.elementVisible(page, this.carouselSliderInnerListItem(position), 1000);
   }
 
   /**
-   * Clich in slider number
+   * Click on slider number
    * @param page {Page} Browser tab
    * @param position {number} The slider position
    * @returns {Promise<string>}
    */
-  async clickInSlider(page, position) {
-    await this.clickAndWaitForNavigation(page, `${this.carouselSliderInner}:nth-child(${position})`);
+  async clickOnSlider(page, position) {
+    await this.clickAndWaitForNavigation(page, this.carouselSliderInnerListItem(position));
 
     return this.getCurrentURL(page);
   }
