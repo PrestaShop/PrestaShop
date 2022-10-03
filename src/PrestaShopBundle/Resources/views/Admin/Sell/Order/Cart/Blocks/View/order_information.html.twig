@@ -41,7 +41,7 @@
     {% else %}
       <h2>{{ 'No order was created from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
       {% if cartView.customerInformation.id %}
-        <a href="{{ createOrderFromCartLink }}" class="btn btn-outline-secondary">
+        <a href="{{ createOrderFromCartLink }}" class="btn btn-outline-secondary" id="create-order-from-cart">
           {{ 'Create an order from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       {% endif %}
