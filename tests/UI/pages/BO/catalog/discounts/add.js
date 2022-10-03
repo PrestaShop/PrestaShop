@@ -75,6 +75,9 @@ class AddCartRule extends BOBasePage {
     this.carrierRestrictionRemoveButton = '#carrier_select_remove';
     this.carrierRestrictionAddButton = '#carrier_select_add';
 
+    // Customer group selection
+    this.customerGroupRadioButton = '#group_restriction'
+
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
     this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
@@ -187,6 +190,11 @@ class AddCartRule extends BOBasePage {
       await page.click(this.countrySelection);
       await page.click(this.firstCountrySelection);
       await page.click(this.countryGroupRemoveButton);
+    }
+
+    // Select check box for Customer Group
+    if (cartRuleData.customerGroup) {
+      await page.click(this.customerGroupRadioButton);
     }
 
     // Fill minimum amount values
