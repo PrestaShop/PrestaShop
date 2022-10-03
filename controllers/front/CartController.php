@@ -399,7 +399,6 @@ class CartControllerCore extends FrontController
             $productAttributes = rtrim($productAttributes, $separator . ' ');
         }
 
-
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->translateProductNameWithAttributes(
                 'The product [1]%product%[/1] is no longer available.',
