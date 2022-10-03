@@ -45,8 +45,13 @@ const cartRuleCode = new CartRuleFaker(
   {
     name: 'addCartRuleName',
     code: '4QABV6L3',
-    discountType: 'Percent',
+    discountType: 'Amount',
     discountPercent: 20,
+    discountAmount: {
+      value: 10,
+      currency: 'EUR',
+      tax: 'Tax included',
+    },
   },
 );
 
@@ -268,4 +273,4 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
   });
 
   // post condition : delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
+  // deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
