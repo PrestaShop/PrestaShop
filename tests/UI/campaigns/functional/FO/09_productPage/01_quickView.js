@@ -225,7 +225,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should check product information from quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result = await homePage.getProductDetailsFromQuickViewModal(page);
+      let result = await homePage.getProductWithDiscountDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name.toUpperCase()).to.equal(firstProductData.name),
         expect(result.regularPrice).to.equal(firstProductData.regular_price),

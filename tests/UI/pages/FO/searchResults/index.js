@@ -89,6 +89,15 @@ class SearchResults extends FOBasePage {
   }
 
   /**
+   * Is quick view product modal visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isQuickViewProductModalVisible(page) {
+    return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
    * Select thumb image
    * @param page {Page} Browser tab
    * @param position {number} Position of the image
