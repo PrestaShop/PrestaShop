@@ -148,7 +148,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.profile'
-      - '@prestashop.core.grid.data_factory.profiles'
+      - '@prestashop.core.grid.data_factory.profiles_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
