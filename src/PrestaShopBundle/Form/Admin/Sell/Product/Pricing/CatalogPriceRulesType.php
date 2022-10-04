@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This form type is needed to display custom list of Catalog Price Rules.
- * Check src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Discounts/FormTheme/discounts.html.twig
+ * Check src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/catalog_price_rules.html.twig
  * for implementation.
  */
 class CatalogPriceRulesType extends TranslatorAwareType
@@ -69,7 +69,7 @@ class CatalogPriceRulesType extends TranslatorAwareType
         parent::configureOptions($resolver);
 
         /**
-         * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds uneeded stuff to % while creating url
+         * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds unneeded stuff to % while creating url
          * That's why catalog_price_rule_id is used and then string replaced.
          */
         $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
