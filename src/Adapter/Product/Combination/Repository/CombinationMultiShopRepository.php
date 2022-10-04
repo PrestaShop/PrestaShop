@@ -230,10 +230,11 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     /**
      * Copies combination information from product_attribute table into product_attribute_shop for a dedicated shop
      */
-    public function addToShop(CombinationId $combinationId, ShopId $shopId): void
+    public function addToShop(ProductId $productId, CombinationId $combinationId, ShopId $shopId): void
     {
-        /** @var Combination $combinationFromOtherShop */
-        $combinationFromOtherShop = $this->get($combinationId);
+        //@todo: retrieve product id instead of providing it in method.
+//        /** @var Combination $combinationFromOtherShop */
+//        $combinationFromOtherShop = $this->get($combinationId);
 
         //@todo: The issue - ObjectModel when loading uses shopId from context if shop id is not provided.
         //       so in scenario when default shop doesn't have the combination it loads the combination with null values
@@ -249,9 +250,14 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 //        $combinationFromOtherShop->minimal_quantity = 1;
 //         hardcode default_on as false,
 //         because default combination should be updated using DefaultCombinationUpdater to avoid sql constraint errors
-        $combinationFromOtherShop->default_on = false;
+//        $combinationFromOtherShop->default_on = false;
+        $combination = new Combination();
+        $combination->id_product = $productId->getValue();
+        $combination->force_id = true;
+        $combination->default_on = false;
+        $combination->id = $combinationId->getValue();
 
-        $this->updateObjectModelForShops($combinationFromOtherShop, [$shopId->getValue()], CombinationException::class);
+        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CombinationException::class);
     }
 
     /**

@@ -191,7 +191,7 @@ class CombinationCreator
             }
 
             // when combination already exists in product_attribute, then we add it to related product_attribute_shop
-            $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
+            $this->combinationRepository->addToShop($productId, $matchingCombinationId, $shopId);
 
             $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
             // create dedicated stock_available for combination in related shop
