@@ -76,7 +76,13 @@ class AddCartRule extends BOBasePage {
     this.carrierRestrictionAddButton = '#carrier_select_add';
 
     // Customer group selection
-    this.customerGroupRadioButton = '#group_restriction'
+    this.customerGroupRestriction = '#group_restriction';
+    this.customerGroupSelection = '#group_select_2';
+    this.customerGroupCustomer = `${this.customerGroupSelection} option:nth-child(1)`;
+    this.customerGroupGuest = `${this.customerGroupSelection} option:nth-child(2)`;
+    this.customerGroupVisitor = `${this.customerGroupSelection} option:nth-child(3)`;
+    this.customerGroupRemoveButton = '#group_select_remove';
+    this.customerGroupAddBTN = '#group_select_add';
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
@@ -192,9 +198,12 @@ class AddCartRule extends BOBasePage {
       await page.click(this.countryGroupRemoveButton);
     }
 
-    // Select check box for Customer Group
-    if (cartRuleData.customerGroup) {
-      await page.click(this.customerGroupRadioButton);
+
+    // Set Customer Group Selection
+    if (cartRuleData.customerGroupSelection) {
+      await this.setChecked(page, this.customerGroupRestriction);
+      await page.click(this.customerGroupCustomer);
+      await page.click(this.customerGroupRemoveButton);
     }
 
     // Fill minimum amount values

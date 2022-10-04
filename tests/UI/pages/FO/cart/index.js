@@ -16,6 +16,7 @@ class Cart extends FOBasePage {
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
+    this.cartRuleAlertMessageText = 'You cannot use this voucher';
     this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address'
     + ' before applying this voucher to your order';
 

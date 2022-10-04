@@ -52,6 +52,13 @@ class Checkout extends FOBasePage {
     this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
 
+    this.checkoutSummary = '#js-checkout-summary';
+    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
+    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
+
+    // this.checkoutRemoveDiscountLink = `#main > div > div.cart-grid-right.col-lg-4 > div.card.cart-summary > div.cart-detailed-totals.js-cart-detailed-totals > div.block-promo > div > div > ul > li > div > a > i`;
+
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
@@ -302,6 +309,25 @@ class Checkout extends FOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
+
+    /**
+   * Get All tax included price
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+     getATIPrice(page) {
+      return this.getPriceFromText(page, this.cartTotalATI, 2000);
+    }
+
+    /**
+     * Delete the discount
+     * @param page {Page} Browser tab
+     * @returns {Promise<boolean>}
+     */
+    async removePromoCode(page) {
+      await page.click(this.checkoutRemoveDiscountLink);
+      return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+    }
 
   /**
    * Get All tax included price
