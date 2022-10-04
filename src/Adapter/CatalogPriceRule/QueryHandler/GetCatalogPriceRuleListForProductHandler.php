@@ -30,16 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository\CatalogPriceRuleRepository;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListForProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleForListing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
- * Handles @see GetCatalogPriceRuleList using legacy object model
+ * Handles @see GetCatalogPriceRuleListForProduct
  */
-class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerInterface
+class GetCatalogPriceRuleListForProductHandler implements GetCatalogPriceRuleListForProductHandlerInterface
 {
     /**
      * @var CatalogPriceRuleRepository
@@ -58,15 +58,22 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCatalogPriceRuleList $query): CatalogPriceRuleList
+    public function handle(GetCatalogPriceRuleListForProduct $query): CatalogPriceRuleList
     {
-        $catalogPriceRules = $this->catalogPriceRuleRepository->getAll(
+        $catalogPriceRules = $this->catalogPriceRuleRepository->getByProductId(
+            $query->getProductId(),
             $query->getLangId(),
             $query->getLimit(),
             $query->getOffset()
         );
 
-        return new CatalogPriceRuleList($this->formatCatalogPriceRuleList($catalogPriceRules), $this->catalogPriceRuleRepository->countCatalogPriceRules($query->getLangId()));
+        return new CatalogPriceRuleList(
+            $this->formatCatalogPriceRuleList($catalogPriceRules),
+            $this->catalogPriceRuleRepository->countByProductId(
+                $query->getProductId(),
+                $query->getLangId()
+            )
+        );
     }
 
     /**

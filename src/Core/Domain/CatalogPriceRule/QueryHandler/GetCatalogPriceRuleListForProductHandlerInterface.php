@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 
 /**
  * Defines contract for GetCatalogPriceRuleForEditingHandler
  */
-interface GetCatalogPriceRuleListHandlerInterface
+interface GetCatalogPriceRuleListForProductHandlerInterface
 {
     /**
-     * @param GetCatalogPriceRuleList $query
+     * @param GetCatalogPriceRuleListForProduct $query
      *
      * @return CatalogPriceRuleList
      */
-    public function handle(GetCatalogPriceRuleList $query): CatalogPriceRuleList;
+    public function handle(GetCatalogPriceRuleListForProduct $query): CatalogPriceRuleList;
 }

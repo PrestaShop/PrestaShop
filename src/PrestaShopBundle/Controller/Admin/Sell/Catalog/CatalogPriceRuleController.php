@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCat
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -80,7 +80,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     }
 
     /**
-     * Retrieves catalog prices rules for product form.
+     * Retrieves catalog prices rules for product.
      *
      * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")
      *
@@ -88,10 +88,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function listAction(Request $request): JsonResponse
+    public function listForProductAction(Request $request): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(
-            new GetCatalogPriceRuleList(
+            new GetCatalogPriceRuleListForProduct(
+                1,
                 $this->getContextLangId(),
                 $request->query->getInt('limit') ?: null,
                 $request->query->getInt('offset') ?: null
