@@ -146,7 +146,7 @@ class OrderReturnCore extends ObjectModel
         return (int) ($data['total']);
     }
 
-    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null, $idOrderReturn = null)
+    public static function getOrdersReturn($customer_id, $order_id = false, $no_denied = false, Context $context = null, int $idOrderReturn = null)
     {
         if (!$context) {
             $context = Context::getContext();
