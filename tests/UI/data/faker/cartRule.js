@@ -77,6 +77,9 @@ class CartRuleData {
     /** @type {boolean} True to enable carrier restriction on the cart rule */
     this.carrierRestriction = cartRuleToCreate.carrierRestriction || false;
 
+    /** @type {boolean} True to enable group selection on the cart rule */
+    this.customerGroupSelection = cartRuleToCreate.customerGroupSelection || false;
+
     // Actions
     /** @type {boolean} True to enable free shipping on the cart rule */
     this.freeShipping = cartRuleToCreate.freeShipping === undefined ? false : cartRuleToCreate.freeShipping;
