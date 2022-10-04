@@ -92,7 +92,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         $actualItem = $this->getQueryBus()->handle(new GetCatalogPriceRuleForEditing($catalogPriceRuleId));
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
-        $scalarPropertyNames = ['name', 'shopId', 'currencyId', 'countryId', 'groupId', 'fromQuantity'];
+        $scalarPropertyNames = ['name', 'shopId', 'currencyId', 'countryId', 'groupId', 'fromQuantity', 'taxIncluded'];
 
         foreach ($scalarPropertyNames as $propertyName) {
             Assert::assertSame(
@@ -101,13 +101,6 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 sprintf('Unexpected catalogPriceRuleForListing "%s"', $propertyName)
             );
         }
-
-        /* isTaxIncluded can't be accessed by property accessor */
-        Assert::assertSame(
-            $expectedItem->isTaxIncluded(),
-            $actualItem->isTaxIncluded(),
-            sprintf('Unexpected catalogPriceRuleForListing "%s"', $propertyName)
-        );
 
         $decimalProperties = ['price'];
         foreach ($decimalProperties as $decimalPropertyName) {
@@ -224,6 +217,39 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 );
             }
         }
+    }
+
+    /**
+     * @Then :productReference should have no catalog price rules with language :langIso
+     *
+     * @param string $productReference
+     * @param string $langIso
+     *
+     * @throws PrestaShopException
+     * @throws ProductConstraintException
+     */
+    public function assertCatalogPriceRuleListIsEmpty(string $productReference, string $langIso): void
+    {
+        $langId = (int) Language::getIdByIso($langIso);
+
+        /**
+         * Limit doesn't matter but offset should be 0
+         * @var CatalogPriceRuleList $actualList
+         */
+        $actualList = $this->getQueryBus()->handle(
+            new GetCatalogPriceRuleListForProduct(
+                $this->getSharedStorage()->get($productReference),
+                $langId,
+                1,
+                0
+            )
+        );
+
+        Assert::assertEquals(
+            0,
+            $actualList->getTotalCount(),
+            'Unexpected count of catalog price rules for listing'
+        );
     }
 
     /**

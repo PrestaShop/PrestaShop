@@ -113,6 +113,10 @@ Feature: List catalog price rules for product in Back Office (BO)
       | name                  | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
       | catalog price rule 1  | usd        | UnitedStates  | visitor  | 1              | amount        | 111.50          | testShop | true        | 50    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 2  | usd        | UnitedStates  | visitor  | 1              | amount        | 50              | testShop | true        | 10    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
+    Then I should be able to see following list of catalog price rules with language "en" with limit 2 offset 0 and total 5 and product "product2":
+      | name                  | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
+      | catalog price rule 1  | usd        | UnitedStates  | visitor  | 1              | amount        | 111.50          | testShop | true        | 50    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
+      | catalog price rule 2  | usd        | UnitedStates  | visitor  | 1              | amount        | 50              | testShop | true        | 10    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
     And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 5 and product "product1":
       | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
       | catalog price rule 1 | usd        | UnitedStates  | visitor  | 1              | amount        | 111.50          | testShop | true        | 50    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
@@ -235,8 +239,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 2 | usd        | UnitedStates  | visitor  | 1              | amount        | 50              | testShop | true        | 10    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 3 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 4 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
-    And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 0 and product "product2":
-      | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
+    And "product2" should have no catalog price rules with language "en"
     And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 1 and product "product3":
       | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
       | catalog price rule 5 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
@@ -265,8 +268,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 3 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 4 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 6 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
-    And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 0 and product "product2":
-      | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
+    And "product2" should have no catalog price rules with language "en"
     And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 1 and product "product3":
       | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
       | catalog price rule 5 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
@@ -299,8 +301,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 4 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 6 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 7 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
-    And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 0 and product "product2":
-      | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
+    And "product2" should have no catalog price rules with language "en"
     And I should be able to see following list of catalog price rules with language "en" with limit 50 offset 0 and total 2 and product "product3":
       | name                 | currency   | country       | group    | from quantity  | reduction type| reduction value | shop     | includes tax| price | from                | to                  |
       | catalog price rule 5 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
