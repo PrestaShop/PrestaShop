@@ -103,7 +103,7 @@ class Category extends FOBasePage {
 
   /**
    * Go to the next page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToNextPage(page) {

@@ -44,6 +44,17 @@ const productOutOfStockNotAllowed = new ProductFaker({
   behaviourOutOfStock: 'Deny orders',
 });
 
+/*
+Pre-condition:
+- Create product out of stock not allowed
+Scenario:
+- Quick view product with combinations
+- Quick view simple product
+- Quick view customized product
+- Quick view product out of stock not allowed
+Post-condition:
+- Delete created product
+ */
 describe('FO - Home Page : Product quick view', async () => {
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
@@ -234,7 +245,7 @@ describe('FO - Home Page : Product quick view', async () => {
     });
 
     it('should check that \'Add to cart\' button is disabled', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton2', baseContext);
 
       const isAddToCartButtonDisabled = await homePage.isAddToCartButtonDisabled(page);
       await expect(isAddToCartButtonDisabled, 'Add to cart button is not disabled').to.be.true;
@@ -248,7 +259,7 @@ describe('FO - Home Page : Product quick view', async () => {
     });
 
     it('should close the quick view modal', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'closeQuickOptionModal2', baseContext);
 
       const isQuickViewModalClosed = await homePage.closeQuickViewModal(page);
       await expect(isQuickViewModalClosed).to.be.true;
