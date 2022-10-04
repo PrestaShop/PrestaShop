@@ -50,7 +50,7 @@ const permissionProfileData = [
 let browserContext;
 let page;
 
-describe('BO - My profile', async () => {
+describe('BO - Header : My profile', async () => {
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);
 
@@ -157,7 +157,7 @@ describe('BO - My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertError(page);
-      await expect(textResult).to.equal(myProfilePage.errorInvalidFormatImageMessage);
+      await expect(textResult).to.contains(myProfilePage.errorInvalidFormatImageMessage);
 
       // Delete created file
       await files.deleteFile('image.svg');
@@ -201,7 +201,7 @@ describe('BO - My profile', async () => {
 
     it('should update all others fields', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAllOthersFields', baseContext);
-      employeeData.email = 'demo@prestashop.com';
+      employeeData.email = 'demo1@prestashop.com';
       employeeData.password = 'prestashop_demo';
       employeeData.language = 'Français (French)';
       employeeData.defaultPage = 'Credit Slips';
