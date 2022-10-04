@@ -119,13 +119,19 @@ export default class SpecificPricesManager {
     showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.toggle('d-none');
       if (!listShown) {
-        if (showCatalogPriceRulesButton.dataset.hideName !== undefined) {
-          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">visibility_off</i> ' + showCatalogPriceRulesButton.dataset.hideName;
+        if (showCatalogPriceRulesButton.dataset.hideName !== undefined
+          && showCatalogPriceRulesButton.dataset.hideIcon !== undefined) {
+          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">'
+            + showCatalogPriceRulesButton.dataset.hideIcon + '</i> '
+            + showCatalogPriceRulesButton.dataset.hideName;
         }
         listShown = true;
       } else {
-        if (showCatalogPriceRulesButton.dataset.hideName !== undefined) {
-          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">visibility</i> ' + showCatalogPriceRulesButton.dataset.showName;
+        if (showCatalogPriceRulesButton.dataset.showName !== undefined
+          && showCatalogPriceRulesButton.dataset.showIcon !== undefined) {
+          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">'
+            + showCatalogPriceRulesButton.dataset.showIcon + '</i> '
+            + showCatalogPriceRulesButton.dataset.showName;
         }
         listShown = false;
       }

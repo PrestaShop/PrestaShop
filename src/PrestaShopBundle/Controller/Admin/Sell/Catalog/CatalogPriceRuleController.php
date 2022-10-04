@@ -84,6 +84,8 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', 'AdminProducts') || is_granted('read', 'AdminSpecificPriceRule')")
      *
+     * @param Request $request
+     *
      * @return JsonResponse
      */
     public function listAction(Request $request): JsonResponse
