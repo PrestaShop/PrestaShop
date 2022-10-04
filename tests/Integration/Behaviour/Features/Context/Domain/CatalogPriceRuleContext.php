@@ -234,6 +234,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
 
         /**
          * Limit doesn't matter but offset should be 0
+         *
          * @var CatalogPriceRuleList $actualList
          */
         $actualList = $this->getQueryBus()->handle(
