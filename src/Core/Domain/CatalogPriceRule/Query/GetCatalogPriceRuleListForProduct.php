@@ -29,9 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class GetCatalogPriceRuleList
+class GetCatalogPriceRuleListForProduct
 {
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
     /**
      * @var LanguageId
      */
@@ -47,11 +53,20 @@ class GetCatalogPriceRuleList
      */
     private $offset;
 
-    public function __construct(int $langId, ?int $limit = null, ?int $offset = null)
+    public function __construct(int $productId, int $langId, ?int $limit = null, ?int $offset = null)
     {
+        $this->productId = new ProductId($productId);
         $this->langId = new LanguageId($langId);
         $this->limit = $limit;
         $this->offset = $offset;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
     }
 
     /**

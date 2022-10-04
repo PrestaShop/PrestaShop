@@ -94,7 +94,7 @@ export default class SpecificPricesManager {
     const priceRuleRenderer = new CatalogPriceRuleRenderer();
     const catalogPriceRulePaginator = new DynamicPaginator(
       CatalogPriceRulesMap.paginationContainer,
-      new PaginatedCatalogPriceRulesService(),
+      new PaginatedCatalogPriceRulesService(this.productId),
       priceRuleRenderer,
       1,
     );

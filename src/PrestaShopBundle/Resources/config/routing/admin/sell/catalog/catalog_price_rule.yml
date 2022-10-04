@@ -55,11 +55,11 @@ admin_catalog_price_rules_bulk_delete:
     _legacy_controller: AdminSpecificPriceRule
 #  _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule
 
-admin_catalog_price_rules_list:
-  path: /product-form-list
+admin_catalog_price_rules_list_for_product:
+  path: /list-for-product/{productId}
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::listAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::listForProductAction'
     _legacy_controller: AdminSpecificPriceRule
     # _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule
   options:
