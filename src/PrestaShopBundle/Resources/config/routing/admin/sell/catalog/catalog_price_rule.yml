@@ -59,7 +59,7 @@ admin_catalog_price_rules_list:
   path: /product-form-list
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::productFormListAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::listAction'
     _legacy_controller: AdminSpecificPriceRule
     # _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule
   options:

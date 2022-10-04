@@ -42,7 +42,7 @@ export default class PaginatedCatalogPriceRulesService implements PaginationServ
   }
 
   fetch(offset: number, limit: number): JQuery.jqXHR<any> {
-    return $.get(this.router.generate('admin_catalog_price_rules_product_form_list', {
+    return $.get(this.router.generate('admin_catalog_price_rules_list', {
       limit,
       offset,
     }));
