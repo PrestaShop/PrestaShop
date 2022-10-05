@@ -18,16 +18,13 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const foHomePage = require('@pages/FO/home');
 const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
 const loginPage = require('@pages/FO/login');
-const myAccountPage = require('@pages/FO/myAccount');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
 const ProductData = require('@data/FO/product');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
-const {Carriers} = require('@data/demo/carriers');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -130,7 +127,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
     });
   });
 
-   describe('Use Cart Rule', async () => {
+  describe('Use Cart Rule', async () => {
     it('should go to login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
@@ -152,19 +149,19 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await expect(result).to.be.true;
     });
 
-     it('should go to the first product page', async function () {
-       await testContext.addContextItem(
-         this,
-         'testIdentifier',
-         'GoToFirstProductPage',
-         baseContext,
-        );
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'GoToFirstProductPage',
+        baseContext,
+      );
 
-       await foHomePage.goToProductPage(page, 1);
+      await foHomePage.goToProductPage(page, 1);
 
-       const pageTitle = await foProductPage.getPageTitle(page);
-       await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
-     });
+      const pageTitle = await foProductPage.getPageTitle(page);
+      await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+    });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(
@@ -182,37 +179,22 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
 
     it('should add the promo code and get "You cannot use this voucher" error message',
       async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'AddPromoCode',
-        baseContext,
-      );
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          'AddPromoCode',
+          baseContext,
+        );
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
+        await cartPage.addPromoCode(page, cartRuleCode.code);
 
-      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
-    });
-
-    // it('should proceed to checkouts', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     'ProceedToCheckoutAndSignIn',
-    //     baseContext,
-    //   );
-
-    //   await cartPage.clickOnProceedToCheckout(page);
-
-    //   const isCheckout = await checkoutPage.isCheckoutPage(page);
-    //   await expect(isCheckout).to.be.true;
-    // });
+        const alertMessage = await cartPage.getCartRuleErrorMessage(page);
+        await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
+      });
 
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
-      // await foHomePage.clickOnHeaderLink(page);
       await foHomePage.logout(page);
 
       const isCustomerConnected = await foHomePage.isCustomerConnected(page);
@@ -238,38 +220,13 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
         'testIdentifier',
         'GoToFirstProductPage',
         baseContext,
-       );
+      );
 
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
     });
-
-    // it('should set the promo code for second time and check total after discount', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     'AddPromoCodeANDVerifyTotalAfterDiscount',
-    //     baseContext,
-    //   );
-
-    //   // await checkoutPage.goToShippingStep(page);
-    //   // await checkoutPage.chooseShippingMethodAndAddComment(page, 2);
-    //   await cartRuleCode.addPromoCode(page, cartRuleCode.code);
-
-    //   let discountedPrice = cartRuleCode.discountAmount.value;
-    //   if (discountedPrice >= Products.demo_1.finalPrice) {
-    //     discountedPrice = Products.demo_1.finalPrice;
-    //   }
-
-    //   const priceATI = await cartPage.getATIPrice(page);
-    //   await expect(priceATI).to.equal(parseFloat(
-    //     (Products.demo_1.finalPrice - discountedPrice + Carriers.myCarrier.priceTTC)
-    //       .toFixed(2),
-    //   ),
-    //   );
-    // });
 
     it('should add product to cart', async function () {
       await testContext.addContextItem(
@@ -285,8 +242,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await expect(notificationsNumber).to.be.equal(1);
     });
 
-    it('should add the promo code',
-      async function () {
+    it('should add the promo code and verify the total after discount', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -295,44 +251,18 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       );
 
       await cartPage.addPromoCode(page, cartRuleCode.code);
-    });
-
-    it('should verify the total after discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `VerifyTotalAfterDiscount`,
-        baseContext,
-      );
 
       let discountedPrice = cartRuleCode.discountAmount.value;
       if (discountedPrice >= Products.demo_1.finalPrice) {
         discountedPrice = Products.demo_1.finalPrice;
       }
 
-      const priceATI = await checkoutPage.getATIPrice(page);
-
-      console.log(discountedPrice)
-      console.log(priceATI)
-      console.log(Products.demo_1.finalPrice - discountedPrice + Carriers.myCarrier.priceTTC)
-
-      // await expect(priceATI).to.equal(parseFloat(
-      //   (Products.demo_1.finalPrice - discountedPrice + Carriers.myCarrier.priceTTC)
-      //     .toFixed(2),
-      // ),
-      // );
-    });
-
-    it('should remove the discount', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'RemoveTheDiscount',
-        baseContext,
+      const priceATI = await cartPage.getATIPrice(page);
+      await expect(priceATI).to.equal(parseFloat(
+        (Products.demo_1.finalPrice - discountedPrice)
+          .toFixed(2),
+      ),
       );
-
-      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
-      await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
     });
 
     it('should click on the logo of the shop', async function () {
@@ -372,45 +302,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationNumber).to.be.equal(0);
     });
-
-
-    // it('should click on the logo of the shop', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     'CheckLogoLink',
-    //     baseContext,
-    //   );
-
-    //   await foHomePage.clickOnHeaderLink(page, 'Logo');
-    //   const pageTitle = await foHomePage.getPageTitle(page);
-    //   await expect(pageTitle).to.equal(foHomePage.pageTitle);
-    // });
-
-    // it('should click on the cart link', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     'CheckLogoLink',
-    //     baseContext,
-    //   );
-
-    //   await foHomePage.goToCartPage(page);
-    // });
-
-    // it('should remove the discount', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     'RemoveTheDiscount',
-    //     baseContext,
-    //   );
-
-    //   const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
-    //   await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
-    // });
-
-   });
+  });
 
   // post condition : delete cart rule
   deleteCartRuleTest(cartRuleCode.name, baseContext);
