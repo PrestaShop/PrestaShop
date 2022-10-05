@@ -211,17 +211,19 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<int, array<string, int|string>>
      */
-    protected function extractPackedProducts(int $productId): array
+    protected function extractPackedProducts(int $productId, ShopConstraint $shopConstraint): array
     {
         /** @var PackedProductDetails[] $packedProductsDetails
          */
         $packedProductsDetails = $this->queryBus->handle(
             new GetPackedProducts(
                 $productId,
-                $this->contextLangId
+                $this->contextLangId,
+                $shopConstraint
             )
         );
         $packedProductsData = [];
@@ -394,7 +396,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
                 'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
             ],
-            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId(), $shopConstraint),
         ];
     }
 
