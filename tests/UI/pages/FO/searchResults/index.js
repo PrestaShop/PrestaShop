@@ -23,6 +23,7 @@ class SearchResults extends FOBasePage {
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
     this.productPrice = '#js-product-list div.product-description span.price';
+    this.productNoMatches = '#product-search-no-matches';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -31,6 +32,15 @@ class SearchResults extends FOBasePage {
   }
 
   // Methods
+  /**
+   * Check if there are results
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasResults(page) {
+    return page.$$eval(this.productNoMatches, all => all.length === 0);
+  }
+
   /**
    * Get search product results number
    * @param page {Page} Browser tab
@@ -93,7 +103,7 @@ class SearchResults extends FOBasePage {
 
   /**
    * Get the product price value
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   getProductPrice(page) {

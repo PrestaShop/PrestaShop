@@ -30,7 +30,7 @@ admin_attribute_groups_view:
   path: /{attributeGroupId}/view
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\Attribute:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::indexAction'
     _legacy_controller: AdminAttributesGroups
     #  _legacy_link: AdminAttributesGroups:viewattribute_group
     _legacy_parameters:

@@ -45,11 +45,12 @@ const orderByCustomerData = {
 Pre-condition:
 - Create order in FO
 Scenario:
-- Edit Invoice number and Footer text
+- Edit Invoice number, Legal free text and Footer text
 - Change the create order status to Shipped
 - Check the invoice file name
+- Back to the default invoice data value
  */
-describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', async () => {
+describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and Footer text\'', async () => {
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
@@ -68,7 +69,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Update the Invoice number and Footer text', async () => {
+  describe('Update the Invoice number, Legal free text and Footer text', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToEditOptions', baseContext);
 
@@ -84,7 +85,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       await expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
 
-    it('should change the invoice number and the invoice footer text', async function () {
+    it('should change the invoice number, the invoice legal free text and the invoice footer text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOptions', baseContext);
 
       await invoicesPage.setInputOptions(page, invoiceData);
@@ -140,12 +141,43 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       expect(fileName).to.contains(invoiceData.invoiceNumber);
     });
 
+    it('should check that the invoice contain the \'Legal free text\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
+
+      // Check the existence of the Legal free text
+      const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
+      await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
+    });
+
     it('should check that the invoice contain the \'Footer text\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedFooterText', baseContext);
 
       // Check the existence of the Footer text
       const exist = await files.isTextInPDF(filePath, invoiceData.footerText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.footerText}`).to.be.true;
+    });
+  });
+
+  describe('Back to the default data value', async () => {
+    it('should go to \'Orders > Invoices\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultData', baseContext);
+
+      await orderPageTabListBlock.goToSubMenu(
+        page,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.invoicesLink,
+      );
+
+      const pageTitle = await invoicesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
+    });
+
+    it('should change the Invoice number, legal free text and the footer text to default data', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultData', baseContext);
+
+      await invoicesPage.setInputOptions(page, {invoiceNumber: '0', legalFreeText: null, footerText: null});
+      const textMessage = await invoicesPage.saveInvoiceOptions(page);
+      await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
     });
   });
 });

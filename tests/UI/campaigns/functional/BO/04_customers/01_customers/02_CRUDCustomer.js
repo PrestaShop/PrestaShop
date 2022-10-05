@@ -92,7 +92,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
     });
   });
 
-  // 2 : Check sign in in FO
+  // 2 : Check sign in FO
   describe('Check sign in in FO by new customer', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
@@ -166,6 +166,12 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
+
+      const numOrders = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Orders');
+      await expect(parseInt(numOrders, 10)).equal(0);
+
+      const numCarts = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Carts');
+      await expect(parseInt(numCarts, 10)).equal(0);
     });
   });
 
@@ -214,7 +220,7 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
     });
   });
 
-  // 5 : Check sign in in FO (customer can't sign in in FO)
+  // 5 : Check sign in FO (customer can't sign in FO)
   describe('Check sign in in FO by disabled customer', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
@@ -232,12 +238,15 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
     it('should check sign in by edited account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFOSignInWithUpdatedCustomer', baseContext);
 
-      // Try to login
+      // Try to log in
       await foHomePage.goToLoginPage(page);
       await foLoginPage.customerLogin(page, editCustomerData);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.false;
+
+      const loginError = await foLoginPage.getLoginError(page);
+      await expect(loginError).to.contains(foLoginPage.disabledAccountErrorText);
     });
 
     it('should go back to BO', async function () {
@@ -279,6 +288,12 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
       await expect(cardHeaderText).to.contains(editCustomerData.firstName);
       await expect(cardHeaderText).to.contains(editCustomerData.lastName);
       await expect(cardHeaderText).to.contains(editCustomerData.email);
+
+      const numOrders = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Orders');
+      await expect(parseInt(numOrders, 10)).equal(0);
+
+      const numCarts = await viewCustomerPage.getNumberOfElementFromTitle(page, 'Carts');
+      await expect(parseInt(numCarts, 10)).equal(0);
     });
   });
 

@@ -16,11 +16,13 @@ class Employees extends BOBasePage {
 
     this.pageTitle = 'Employees';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.errorDeleteOwnAccountMessage = 'You cannot disable or delete your own account.';
 
     // Selectors
     // Header links
     this.addNewEmployeeLink = '#page-header-desc-configuration-add[title=\'Add new employee\']';
     this.profilesTab = '#subtab-AdminProfiles';
+    this.permissionsTab = '#subtab-AdminAccess';
 
     // List of employees
     this.employeeGridPanel = '#employee_grid_panel';
@@ -67,6 +69,15 @@ class Employees extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Go to Permissions tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToPermissionsTab(page) {
+    await page.click(this.permissionsTab);
+    return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
+  }
 
   // Header methods
   /**
@@ -192,9 +203,10 @@ class Employees extends BOBasePage {
    * Delete employee
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
+   * @private
    */
-  async deleteEmployee(page, row) {
+  async deleteEmployeeAction(page, row) {
     // Click on dropDown
     await Promise.all([
       page.click(this.employeesListTableToggleDropDown(row)),
@@ -209,8 +221,30 @@ class Employees extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteEmployees(page);
+  }
+
+  /**
+   * Delete employee and fetch success message
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<string>}
+   */
+  async deleteEmployee(page, row) {
+    await this.deleteEmployeeAction(page, row);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Delete employee and fetch error message
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<string>}
+   */
+  async deleteEmployeeAndFail(page, row) {
+    await this.deleteEmployeeAction(page, row);
+
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**

@@ -23,6 +23,8 @@
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
     "test:sanity:fast-fail": "TEST_PATH='sanity/*' npm run test:specific:fast-fail",
+    "test:sanity:productV2": "TEST_PATH='productV2/sanity/*' npm run test:specific",
+    "test:sanity:productV2:fast-fail": "TEST_PATH='productV2/sanity/*' npm run test:specific:fast-fail",
 
     "// Functional": "Scripts to run functional tests",
     "test:functional": "TEST_PATH='functional/*' npm run test:specific",
@@ -79,6 +81,7 @@
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
     "csv-writer": "^1.6.0",
+    "dotenv": "^16.0.2",
     "eslint-config-prestashop": "0.0.2",
     "js-image-generator": "^1.0.2",
     "maildev": "^1.1.0",

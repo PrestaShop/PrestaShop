@@ -22,8 +22,9 @@ class MessageData {
     this.lastName = messageToCreate.lastName || faker.name.lastName();
 
     /** @type {string} Email of the customer */
-    this.emailAddress = messageToCreate.emailAddress
-      || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
+    this.emailAddress = messageToCreate.emailAddress === undefined
+      ? faker.internet.email(this.firstName, this.lastName, 'prestashop.com')
+      : messageToCreate.emailAddress;
 
     /** @type {string} Reference for on order if used */
     this.reference = messageToCreate.reference;
@@ -32,7 +33,9 @@ class MessageData {
     this.fileName = faker.lorem.word();
 
     /** @type {string} Content of the message */
-    this.message = faker.lorem.sentence().substring(0, 35).trim();
+    this.message = messageToCreate.message === undefined
+      ? faker.lorem.sentence().substring(0, 35).trim()
+      : messageToCreate.message;
   }
 }
 

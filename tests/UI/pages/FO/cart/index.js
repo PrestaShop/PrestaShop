@@ -15,6 +15,7 @@ class Cart extends FOBasePage {
     super();
 
     this.pageTitle = 'Cart';
+    this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
 
     // Selectors for cart page
     // Shopping cart block selectors
@@ -43,7 +44,7 @@ class Cart extends FOBasePage {
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
     this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
-
+    this.cartRuleAlertError = '#promo-code div.alert-danger span.js-error-text';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
 
     this.proceedToCheckoutButton = '#main div.checkout a';
@@ -183,6 +184,15 @@ class Cart extends FOBasePage {
    */
   getCartRuleName(page, line = 1) {
     return this.getTextContent(page, this.cartRuleName(line), 2000);
+  }
+
+  /**
+   * Get cart rule error text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCartRuleErrorMessage(page) {
+    return this.getTextContent(page, this.cartRuleAlertError);
   }
 
   /**

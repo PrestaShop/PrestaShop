@@ -176,6 +176,7 @@ class Invoice extends BOBasePage {
    */
   async setInputOptions(page, data) {
     await this.setValue(page, this.invoiceNumberInput, data.invoiceNumber);
+    await this.setValue(page, this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(page, this.footerTextInput, data.footerText);
   }
 
