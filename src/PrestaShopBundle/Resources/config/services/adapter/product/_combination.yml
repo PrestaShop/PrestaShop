@@ -113,7 +113,6 @@ services:
       - '@prestashop.core.product.combination.generator.combination_generator'
       - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 

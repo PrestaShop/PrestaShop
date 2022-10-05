@@ -68,11 +68,6 @@ class CombinationCreator
     private $combinationRepository;
 
     /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
-
-    /**
      * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableMultiShopRepository;
@@ -86,7 +81,6 @@ class CombinationCreator
      * @param CombinationGeneratorInterface $combinationGenerator
      * @param CombinationMultiShopRepository $combinationRepository
      * @param ProductMultiShopRepository $productRepository
-     * @param StockAvailableRepository $stockAvailableRepository
      * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
@@ -94,14 +88,12 @@ class CombinationCreator
         CombinationGeneratorInterface $combinationGenerator,
         CombinationMultiShopRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
         StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationGenerator = $combinationGenerator;
         $this->combinationRepository = $combinationRepository;
         $this->productRepository = $productRepository;
-        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
     }
