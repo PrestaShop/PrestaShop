@@ -5816,7 +5816,9 @@ class ProductCore extends ObjectModel
 
         if (is_array($query_result)) {
             foreach ($query_result as $row) {
-                if ($row2 = Product::getProductProperties($id_lang, $row)) {
+                $row2 = Product::getProductProperties($id_lang, $row);
+                // The second part of this condition checks that we don't add the same product again
+                if ($row2 && !in_array($row2['id_product'], array_column($results_array, 'id_product'), true)) {
                     $results_array[] = $row2;
                 }
             }
