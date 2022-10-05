@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 
 class UpdatePackFeatureContext extends AbstractProductFeatureContext
@@ -96,7 +97,8 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         $packedProducts = $this->getQueryBus()->handle(
             new GetPackedProducts(
                 $packId,
-                $this->getDefaultLangId()
+                $this->getDefaultLangId(),
+                ShopConstraint::shop($this->getDefaultShopId())
             )
         );
         Assert::assertEmpty($packedProducts);
@@ -116,7 +118,8 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         $packedProducts = $this->getQueryBus()->handle(
             new GetPackedProducts(
                 $packId,
-                $this->getDefaultLangId()
+                $this->getDefaultLangId(),
+                ShopConstraint::shop($this->getDefaultShopId())
             )
         );
         $notExistingProducts = [];

@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackExceptio
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
@@ -65,6 +67,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
     /**
      * @param PackId $productId
      * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<array<string, string>>
      *                                      e.g [
@@ -74,8 +77,12 @@ class ProductPackRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function getPackedProducts(PackId $productId, LanguageId $languageId): array
+    public function getPackedProducts(PackId $productId, LanguageId $languageId, ShopConstraint $shopConstraint): array
     {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException('Product Pack has no features related with shop group or all shops, use single shop constraint');
+        }
+
         $this->assertProductExists($productId);
         $productIdValue = $productId->getValue();
 
@@ -88,14 +95,16 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 ->leftJoin('pack', $this->dbPrefix . 'product_lang', 'language', 'pack.id_product_item = language.id_product')
                 ->where('pack.id_product_pack = :idProduct')
                 ->andWhere('language.id_lang = :idLanguage')
+                ->andWhere('language.id_shop = :idShop')
                 ->orderBy('pack.id_product_item', 'ASC')
                 ->setParameter('idProduct', $productId->getValue())
-                ->setParameter('idLanguage', $languageId->getValue());
+                ->setParameter('idLanguage', $languageId->getValue())
+                ->setParameter('idShop', $shopConstraint->getShopId()->getValue());
             $packedProducts = $qb->execute()->fetchAll();
         } catch (Throwable $exception) {
             throw new CoreException(
                 sprintf(
-                    'Error occurred when fetching related products for product #%d',
+                    'Error occurred when fetching packed products for pack #%d',
                     $productIdValue
                 ),
                 $exception->getCode(),
