@@ -83,6 +83,16 @@ class MerchandiseReturns extends FOBasePage {
   async goToReturnDetailsPage(page, row = 1) {
     await this.clickAndWaitForNavigation(page, `${this.tableColumn(row, 2)} a`);
   }
+
+  /**
+   * Download return form
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in table
+   * @returns {Promise<string>}
+   */
+  async downloadReturnForm(page, row = 1) {
+    return this.clickAndWaitForDownload(page, this.tableColumn(row, 5));
+  }
 }
 
 module.exports = new MerchandiseReturns();
