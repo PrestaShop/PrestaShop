@@ -1698,9 +1698,14 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModulesInstalledAndEnabled()
     {
-        $sql = 'SELECT m.* FROM `' . _DB_PREFIX_ . 'module` m WHERE `active` = 1';
+        $id_shops = Shop::getContextListShopID();
 
-        return Db::getInstance()->executeS($sql);
+        $select = 'SELECT m.`id_module`, m.`name`, m.`version`';
+        $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
+        $from .= ' INNER JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
+        $from .= ' AND ms.`id_shop` IN (' . (implode(',', array_map('intval', $id_shops))) . ')';
+
+        return Db::getInstance()->executeS($select . $from);
     }
 
     /**
