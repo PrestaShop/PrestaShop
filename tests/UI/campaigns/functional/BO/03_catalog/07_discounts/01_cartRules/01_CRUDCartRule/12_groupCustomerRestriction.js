@@ -306,5 +306,4 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
 
   // post condition : delete cart rule
   deleteCartRuleTest(cartRuleCode.name, baseContext);
-
 });
