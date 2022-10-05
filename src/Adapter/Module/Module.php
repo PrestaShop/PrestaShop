@@ -513,6 +513,16 @@ class Module implements ModuleInterface
     }
 
     /**
+     * Return modules that are installed AND enabled
+     *
+     * @return array Modules
+     */
+    public function getModulesInstalledAndEnabled()
+    {
+        return LegacyModule::getModulesInstalledAndEnabled();
+    }
+
+    /**
      * Return an instance of the specified module.
      *
      * @param int $moduleId Module id

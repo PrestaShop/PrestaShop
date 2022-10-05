@@ -471,7 +471,7 @@ class AdminGroupsControllerCore extends AdminController
 
     public function formatModuleListAuth($id_group)
     {
-        $modules = Module::getModulesInstalled();
+        $modules = Module::getModulesInstalledAndEnabled();
         $authorized_modules = '';
 
         $auth_modules = [];
