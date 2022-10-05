@@ -156,11 +156,11 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $defaultCombinationId = $this->combinationRepository->findDefaultCombinationId($productId);
+        $hasCombinations = $this->productRepository->hasCombinations($productId);
         $newCombinationIds = [];
 
         foreach ($generatedCombinations as $generatedCombination) {
-            if (!$defaultCombinationId) {
+            if (!$hasCombinations) {
                 // if there is no default combination, we assume there are none at all, so we create new combination and skip to next iteration
                 $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
                 continue;
@@ -187,7 +187,7 @@ class CombinationCreator
         }
 
         // set default combination if none is set yet
-        if (!$defaultCombinationId || !$this->combinationRepository->findDefaultCombinationIdForShop($productId, $shopId)) {
+        if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $shopId)) {
             $shopConstraint = ShopConstraint::shop($shopId->getValue());
             $firstCombinationId = $this->combinationRepository->findFirstCombinationId($productId, $shopConstraint);
             $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
