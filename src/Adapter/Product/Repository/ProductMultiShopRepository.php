@@ -338,6 +338,25 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @return bool
+     */
+    public function hasCombinations(ProductId $productId): bool
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return !empty($result);
+    }
+
+    /**
+     * @param ProductId $productId
      */
     public function updateCachedDefaultCombination(ProductId $productId): void
     {

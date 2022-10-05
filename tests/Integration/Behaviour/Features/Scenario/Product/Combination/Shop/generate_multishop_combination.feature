@@ -169,3 +169,18 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SBlack"
+
+  Scenario: Combinations having the same attributes must have the same ID between the shops
+    Given I generate combinations in shop "shop1" for product product1 using following attributes:
+      | Size | [S] |
+    And product "product1" should have the following combinations for shops "shop1":
+      | id reference | combination name | reference | attributes | impact on price | quantity | is default |
+      | product1S    | Size - S         |           | [Size:S]   | 0               | 0        | true       |
+    When I generate combinations in shop "shop2" for product product1 using following attributes:
+      | Size | [S] |
+    And product "product1" should have the following combinations for shops "shop2":
+      | id reference   | combination name | reference | attributes | impact on price | quantity | is default |
+      | product1SShop2 | Size - S         |           | [Size:S]   | 0               | 0        | true       |
+    And following combination ids should match:
+      | product1S      |
+      | product1SShop2 |

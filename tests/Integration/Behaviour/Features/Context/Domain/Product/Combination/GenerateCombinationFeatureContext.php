@@ -65,6 +65,30 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
+     * Its quite technical endpoint, but we have to ensure that the combination id matches between the shops if it has the same attributes
+     * (It is the same combination technically, but just assigned to another shop).
+     *
+     * @Then following combination ids should match:
+     *
+     * @param TableNode $tableNode
+     */
+    public function assertCombinationIdsMatches(TableNode $tableNode): void
+    {
+        $combinationId = null;
+
+        foreach (array_keys($tableNode->getRowsHash()) as $combinationReference) {
+            $expectedCombinationId = $this->getSharedStorage()->get($combinationReference);
+            if (null === $combinationId) {
+                $combinationId = $expectedCombinationId;
+
+                continue;
+            }
+
+            Assert::assertSame($expectedCombinationId, $combinationId);
+        }
+    }
+
+    /**
      * @Then combination :combinationReference should be named :combinationName
      *
      * @param string $combinationReference

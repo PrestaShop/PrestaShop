@@ -261,6 +261,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
         $combination = new Combination();
         $combination->id = $combinationId->getValue();
+        $combination->force_id = true;
         $combination->id_product = $productId->getValue();
         $combination->default_on = false;
 
