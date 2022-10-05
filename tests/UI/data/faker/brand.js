@@ -11,7 +11,7 @@ class BrandData {
    */
   constructor(brandToCreate = {}) {
     /** @type {string} Name of the brand */
-    this.name = brandToCreate.name || faker.company.companyName('string');
+    this.name = brandToCreate.name || faker.company.name();
 
     /** @type {string} Logo name of the brand */
     this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
