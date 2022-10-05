@@ -122,8 +122,20 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
-        // Removes the product from StockAvailable, for the current shop
-        StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $this->id_shop);
+        if (count($this->id_shop_list)) {
+            $id_shop_list = $this->id_shop_list;
+        } else {
+            $id_shop_list = Shop::getContextListShopID();
+        }
+
+        // Removes the product from StockAvailable for the related shops
+        if (!empty($id_shop_list)) {
+            foreach ($id_shop_list as $shopId) {
+                StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $shopId);
+            }
+        } else {
+            StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        }
 
         if ($specificPrices = SpecificPrice::getByProductId((int) $this->id_product, (int) $this->id)) {
             foreach ($specificPrices as $specificPrice) {

@@ -251,6 +251,9 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
     /**
      * Creates a new combination in product_attribute_shop assuming it already exists in product_attribute table
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
      */
     public function addToShop(CombinationId $combinationId, ShopId $shopId): void
     {
