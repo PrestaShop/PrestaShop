@@ -7,7 +7,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.image.uploader.product_image_uploader'
       - '@prestashop.adapter.product.image.repository.product_image_multishop_repository'
-      - "@prestashop.adapter.image.image_validator"
+      - "@prestashop.adapter.image.product_image_validator"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand

@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\MemoryLimitException;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedProductImageConstraintException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -207,6 +208,15 @@ class ImageController extends FrameworkBundleAdminController
      */
     private function getErrorMessages(Exception $e): array
     {
+        if ($e instanceof UploadedProductImageConstraintException) {
+            return [
+                UploadedProductImageConstraintException::class => $this->trans(
+                    'Max file size allowed is "%s" bytes.',
+                    'Admin.Notifications.Error',
+                    [$e->getLimit()]
+                ),
+            ];
+        }
         $iniConfig = $this->get('prestashop.core.configuration.ini_configuration');
 
         return [
