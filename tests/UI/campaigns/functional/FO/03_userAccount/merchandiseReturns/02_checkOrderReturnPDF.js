@@ -176,7 +176,7 @@ describe('FO - Account : Check order return PDF', async () => {
 
   describe('Create merchandise returns', async () => {
     it('should go to FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
       // Click on view my shop
       page = await viewOrderPage.viewMyShop(page);
@@ -251,7 +251,7 @@ describe('FO - Account : Check order return PDF', async () => {
     });
 
     it('should verify the order return status', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus1', baseContext);
 
       const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
       await expect(packageStatus).to.equal(ReturnStatuses.waitingForConfirmation.name);
@@ -358,7 +358,7 @@ describe('FO - Account : Check order return PDF', async () => {
 
     describe('Check merchandise return PDF', async () => {
       it('should go to FO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
         // Click on view my shop
         page = await editMerchandiseReturnsPage.viewMyShop(page);
@@ -389,7 +389,7 @@ describe('FO - Account : Check order return PDF', async () => {
       });
 
       it('should verify the order return status', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus2', baseContext);
 
         const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
         await expect(fileName).to.be.equal(ReturnStatuses.waitingForPackage.name);
@@ -412,7 +412,7 @@ describe('FO - Account : Check order return PDF', async () => {
       });
 
       it('should check the Billing & delivery address', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'downloadReturnForm', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
         const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${DefaultCustomer.firstName}`
           + ` ${DefaultCustomer.lastName},${Address.second.company},${Address.second.address},`
