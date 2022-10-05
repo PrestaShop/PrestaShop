@@ -222,8 +222,8 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton', baseContext);
 
-      const isAddToCartButtonDisabled = await homePage.isAddToCartButtonDisabled(page);
-      await expect(isAddToCartButtonDisabled, 'Add to cart button is not disabled').to.be.true;
+      const isEnabled = await homePage.isAddToCartButtonEnabled(page);
+      await expect(isEnabled, 'Add to cart button is not disabled').to.be.false;
     });
 
     it('should close the quick view modal', async function () {
@@ -247,8 +247,8 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check that \'Add to cart\' button is disabled', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddToCartButton2', baseContext);
 
-      const isAddToCartButtonDisabled = await homePage.isAddToCartButtonDisabled(page);
-      await expect(isAddToCartButtonDisabled, 'Add to cart button is not disabled').to.be.true;
+      const isEnabled = await homePage.isAddToCartButtonEnabled(page);
+      await expect(isEnabled, 'Add to cart button is not disabled').to.be.false;
     });
 
     it('should check the product availability', async function () {
