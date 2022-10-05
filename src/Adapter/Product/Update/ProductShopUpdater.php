@@ -105,7 +105,7 @@ class ProductShopUpdater
         try {
             $targetStock = $this->stockAvailableRepository->getForProduct($productId, $targetShopId);
         } catch (StockAvailableNotFoundException $e) {
-            $targetStock = $this->stockAvailableRepository->createProductStock($productId, $targetShopId);
+            $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId);
         }
 
         // Copy source data to target

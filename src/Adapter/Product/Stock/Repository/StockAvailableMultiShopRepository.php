@@ -130,29 +130,6 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     }
 
     /**
-     * Copies the stock info from stock_available to a stock_available_shop for a dedicated shop
-     *
-     * @param StockId $stockId
-     * @param ShopId $shopId
-     */
-    public function addToShop(StockId $stockId, ShopId $shopId): void
-    {
-        /** @var StockAvailable $generalStock */
-        $generalStock = $this->getObjectModel(
-            $stockId->getValue(),
-            StockAvailable::class,
-            StockAvailableNotFoundException::class
-        );
-
-        $stockForShop = clone $generalStock;
-        $stockForShop->id = null;
-        $stockForShop->id_shop_list = [$shopId->getValue()];
-        $stockForShop->id_shop = $shopId->getValue();
-
-        $this->addObjectModelToShop($stockForShop, $shopId->getValue(), CannotAddStockAvailableException::class);
-    }
-
-    /**
      * @param CombinationId $combinationId
      *
      * @return StockAvailable
@@ -186,17 +163,18 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
 
     /**
      * @param ProductId $productId
+     * @param CombinationId|null $combinationId
      *
      * @return StockAvailable
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function createProductStock(ProductId $productId, ShopId $shopId): StockAvailable
+    public function createStockAvailable(ProductId $productId, ShopId $shopId, ?CombinationId $combinationId = null): StockAvailable
     {
         $stockAvailable = new StockAvailable();
         $stockAvailable->id_product = $productId->getValue();
-        $stockAvailable->id_product_attribute = NoCombinationId::NO_COMBINATION_ID;
+        $stockAvailable->id_product_attribute = $combinationId ? $combinationId->getValue() : NoCombinationId::NO_COMBINATION_ID;
 
         // Use legacy method, it checks if the shop belongs to a ShopGroup that shares stock, in which case the StockAvailable
         // must be assigned to the group not the shop

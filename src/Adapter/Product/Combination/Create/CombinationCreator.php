@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableReposit
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -191,14 +190,9 @@ class CombinationCreator
             }
 
             // when combination already exists in product_attribute, then we add it to related product_attribute_shop
-            $this->combinationRepository->addToShop($productId, $matchingCombinationId, $shopId);
-
-            $combinationGenericStock = $this->stockAvailableRepository->getForCombination($matchingCombinationId);
+            $this->combinationRepository->addToShop($matchingCombinationId, $shopId);
             // create dedicated stock_available for combination in related shop
-            $this->stockAvailableMultiShopRepository->addToShop(
-                new StockId((int) $combinationGenericStock->id),
-                $shopId
-            );
+            $this->stockAvailableMultiShopRepository->createStockAvailable($productId, $shopId, $matchingCombinationId);
         }
 
         // set default combination if none is set yet

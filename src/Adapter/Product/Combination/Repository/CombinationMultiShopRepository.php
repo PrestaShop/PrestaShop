@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -228,36 +228,40 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
-     * Copies combination information from product_attribute table into product_attribute_shop for a dedicated shop
+     * @param CombinationId $combinationId
+     *
+     * @return ProductId
      */
-    public function addToShop(ProductId $productId, CombinationId $combinationId, ShopId $shopId): void
+    public function getProductId(CombinationId $combinationId): ProductId
     {
-        //@todo: retrieve product id instead of providing it in method.
-//        /** @var Combination $combinationFromOtherShop */
-//        $combinationFromOtherShop = $this->get($combinationId);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result) || empty($result['id_product'])) {
+            throw new CombinationNotFoundException(sprintf('Combination #%d was not found', $combinationId->getValue()));
+        }
 
-        //@todo: The issue - ObjectModel when loading uses shopId from context if shop id is not provided.
-        //       so in scenario when default shop doesn't have the combination it loads the combination with null values
-        //       then combination.id_product becomes null and combination.minimal_quantity is null instead of 1
-        //       and these fields are required, therefore combination fails to update.
-        //       All of this suggests that legacy combinations didn't work same as I expect in test scenarios...
-        //
-        //       Possible workarounds:
-        //       - try copying from default shop, but if there is no such combination in default shop,
-        //       then fallback to other combination found in another shop...
-        //       - manually load combination from product_attribute table (not _shop) and always copy from generic table to shop table
-//        $combinationFromOtherShop->id_product = $productId->getValue();
-//        $combinationFromOtherShop->minimal_quantity = 1;
-//         hardcode default_on as false,
-//         because default combination should be updated using DefaultCombinationUpdater to avoid sql constraint errors
-//        $combinationFromOtherShop->default_on = false;
+        return new ProductId((int) $result['id_product']);
+    }
+
+    /**
+     * Creates a new combination in product_attribute_shop assuming it already exists in product_attribute table
+     */
+    public function addToShop(CombinationId $combinationId, ShopId $shopId): void
+    {
+        $productId = $this->getProductId($combinationId);
+
         $combination = new Combination();
-        $combination->id_product = $productId->getValue();
-        $combination->force_id = true;
-        $combination->default_on = false;
         $combination->id = $combinationId->getValue();
+        $combination->id_product = $productId->getValue();
+        $combination->default_on = false;
 
-        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CombinationException::class);
+        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CannotUpdateCombinationException::class);
     }
 
     /**
