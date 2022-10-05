@@ -22,6 +22,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *
  */
 declare(strict_types=1);
 
@@ -76,7 +77,7 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
             ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
-                    'Please select available payment modules for each country.',
+                    'Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.',
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
@@ -98,9 +99,10 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
         foreach ($this->paymentModules as $paymentModule) {
             $limitedCountries = $paymentModule->get('limited_countries');
 
-            $countryChoices = $this->countryChoices;
             if (is_array($limitedCountries) && !empty($limitedCountries)) {
                 $countryChoices = $this->getLimitedCountryChoices($limitedCountries);
+            } else {
+                $countryChoices = $this->countryChoices;
             }
 
             $multipleChoices[] = [

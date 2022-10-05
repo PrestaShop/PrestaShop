@@ -221,10 +221,12 @@ services:
 
   form.type.payment.module_preferences_parent:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleRestrictionsParentType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    arguments:
-      - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
+    form.type.payment.module_preferences_parent:
+        class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleRestrictionsParentType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        arguments:
+            - '@=service("prestashop.adapter.module.payment_module_provider").getPaymentModuleList()'
 
   form.type.payment.module_carrier_restriction:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType'

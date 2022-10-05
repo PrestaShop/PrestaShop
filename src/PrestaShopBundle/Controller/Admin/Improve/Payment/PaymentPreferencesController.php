@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Improve\Payment;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,11 +53,30 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
 
+        return $this->renderForm($request, $carrierRestrictionsForm, $countryRestrictionsForm, $currencyRestrictionsForm, $groupRestrictionsForm);
+    }
+
+    /**
+     * @param Request $request
+     * @param FormInterface $paymentCarrierRestrictionsForm
+     * @param FormInterface $paymentCountryRestrictionsForm
+     * @param FormInterface $paymentCurrencyRestrictionsForm
+     * @param FormInterface $paymentGroupRestrictionsForm
+     *
+     * @return Response
+     */
+    private function renderForm(
+        Request $request,
+        FormInterface $paymentCarrierRestrictionsForm,
+        FormInterface $paymentCountryRestrictionsForm,
+        FormInterface $paymentCurrencyRestrictionsForm,
+        FormInterface $paymentGroupRestrictionsForm
+    ): Response {
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
@@ -65,23 +85,24 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
         $isSingleShopContext = $shopContext->isSingleShopContext();
 
         $paymentModulesCount = 0;
-        $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
+        if (!$isSingleShopContext) {
+             $paymentCarrierRestrictionsForm = null;
+             $paymentCountryRestrictionsForm = null;
+             $paymentCurrencyRestrictionsForm = null;
+             $paymentGroupRestrictionsForm = null;
+        }
 
         if ($isSingleShopContext) {
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
-            $carrierRestrictionsView = $carrierRestrictionsForm->createView();
-            $countryRestrictionsView = $countryRestrictionsForm->createView();
-            $currencyRestrictionsView = $currencyRestrictionsForm->createView();
-            $groupRestrictionsView = $groupRestrictionsForm->createView();
         }
 
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
-            'paymentCountryRestrictionsForm' => $countryRestrictionsView,
-            'paymentGroupRestrictionsForm' => $groupRestrictionsView,
-            'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
+            'paymentCurrencyRestrictionsForm' => $paymentCurrencyRestrictionsForm->createView(),
+            'paymentCountryRestrictionsForm' => $paymentCountryRestrictionsForm->createView(),
+            'paymentGroupRestrictionsForm' => $paymentGroupRestrictionsForm->createView(),
+            'paymentCarrierRestrictionsForm' => $paymentCarrierRestrictionsForm->createView(),
             'isSingleShopContext' => $isSingleShopContext,
             'paymentModulesCount' => $paymentModulesCount,
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
@@ -153,39 +174,175 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
+     *
      */
-    public function processPaymentGroupRestrictionsFormAction(Request $request): RedirectResponse
+    public function processPaymentCarrierRestrictionsFormAction(Request $request): Response
     {
-        return $this->processForm($this->getPaymentGroupRestrictionsFormHandler(), $request);
+        $carrierRestrictionsFormHandler = $this->getPaymentCarrierRestrictionsFormHandler();
+
+        $carrierRestrictionsForm = $carrierRestrictionsFormHandler->getForm();
+        $carrierRestrictionsForm->handleRequest($request);
+
+        if ($carrierRestrictionsForm->isSubmitted() && $carrierRestrictionsForm->isValid()) {
+            $paymentCarrierRestrictions = $carrierRestrictionsForm->getData();
+
+            $errors = $carrierRestrictionsFormHandler->save($paymentCarrierRestrictions);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $carrierRestrictionsForm,
+            $countryRestrictionsForm,
+            $currencyRestrictionsForm,
+            $groupRestrictionsForm
+        );
     }
 
     /**
-     * Processes the form in a generic way.
+     * Process payment modules preferences form.
      *
-     * @param FormHandlerInterface $formHandler
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="Access denied.",
+     *     redirectRoute="admin_payment_preferences"
+     * )
+     *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return Response
+     *
      */
-    private function processForm(FormHandlerInterface $formHandler, Request $request): RedirectResponse
+    public function processPaymentCountryRestrictionsFormAction(Request $request): Response
     {
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
+        $countryRestrictionsFormHandler = $this->getPaymentCountryRestrictionsFormHandler();
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
+        $countryRestrictionsForm = $countryRestrictionsFormHandler->getForm();
+        $countryRestrictionsForm->handleRequest($request);
 
-            $errors = $formHandler->save($data);
+        if ($countryRestrictionsForm->isSubmitted() && $countryRestrictionsForm->isValid()) {
+            $countryRestrictions = $countryRestrictionsForm->getData();
+
+            $errors = $countryRestrictionsFormHandler->save($countryRestrictions);
             if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($errors);
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
             }
+
+            $this->flashErrors($errors);
         }
 
-        return $this->redirectToRoute('admin_payment_preferences');
+        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $carrierRestrictionsForm,
+            $countryRestrictionsForm,
+            $currencyRestrictionsForm,
+            $groupRestrictionsForm
+        );
     }
+
+    /**
+     * Process payment modules preferences form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="Access denied.",
+     *     redirectRoute="admin_payment_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     */
+    public function processPaymentCurrencyRestrictionsFormAction(Request $request): Response
+    {
+        $currencyRestrictionsFormHandler = $this->getPaymentCurrencyRestrictionsFormHandler();
+
+        $currencyRestrictionsForm = $currencyRestrictionsFormHandler->getForm();
+        $currencyRestrictionsForm->handleRequest($request);
+
+        if ($currencyRestrictionsForm->isSubmitted() && $currencyRestrictionsForm->isValid()) {
+            $paymentCarrierRestrictions = $currencyRestrictionsForm->getData();
+
+            $errors = $currencyRestrictionsFormHandler->save($paymentCarrierRestrictions);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $groupRestrictionsForm =  $this->getPaymentGroupRestrictionsFormHandler()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $carrierRestrictionsForm,
+            $countryRestrictionsForm,
+            $currencyRestrictionsForm,
+            $groupRestrictionsForm
+        );
+    }
+
+    /**
+     * Process payment modules preferences form.
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     message="Access denied.",
+     *     redirectRoute="admin_payment_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
+     */
+    public function processPaymentGroupRestrictionsFormAction(Request $request): Response
+    {
+        $groupRestrictionsFormHandler = $this->getPaymentGroupRestrictionsFormHandler();
+
+        $groupRestrictionsForm = $groupRestrictionsFormHandler->getForm();
+        $groupRestrictionsForm->handleRequest($request);
+
+        if ($groupRestrictionsForm->isSubmitted() && $groupRestrictionsForm->isValid()) {
+            $paymentCarrierRestrictions = $groupRestrictionsForm->getData();
+
+            $errors = $groupRestrictionsFormHandler->save($paymentCarrierRestrictions);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        $carrierRestrictionsForm =  $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
+        $countryRestrictionsForm =  $this->getPaymentCountryRestrictionsFormHandler()->getForm();
+        $currencyRestrictionsForm =  $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
+
+        return $this->renderForm(
+            $request,
+            $carrierRestrictionsForm,
+            $countryRestrictionsForm,
+            $currencyRestrictionsForm,
+            $groupRestrictionsForm
+        );
+    }
+
 
     /**
      * @return FormHandlerInterface

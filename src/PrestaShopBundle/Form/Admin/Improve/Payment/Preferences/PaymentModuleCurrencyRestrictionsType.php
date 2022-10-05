@@ -67,7 +67,7 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
-                    'Please select available payment modules for each currency.',
+                    'Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.',
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
@@ -89,13 +89,16 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
         foreach ($this->paymentModules as $paymentModule) {
             $moduleInstance = $paymentModule->getInstance();
 
-            $allowMultipleCurrencies = true;
-            $currencyChoices = $this->currencyChoices;
             if ('radio' === $moduleInstance->currencies_mode) {
                 $allowMultipleCurrencies = false;
-                $currencyChoices = $this->getCurrencyChoices();
+                $currencyChoices = array_merge(
+                    $this->currencyChoices,
+                    $this->getAdditionalCurrencyChoices()
+                );
+            } else {
+                $allowMultipleCurrencies = true;
+                $currencyChoices = $this->currencyChoices;
             }
-
             $choices[] = [
                 'name' => $paymentModule->get('name'),
                 'label' => $paymentModule->get('displayName'),

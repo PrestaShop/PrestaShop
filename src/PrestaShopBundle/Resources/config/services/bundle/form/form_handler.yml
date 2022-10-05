@@ -386,6 +386,7 @@ services:
       - '@prestashop.admin.payment_preferences.form_data_provider'
       - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
       - 'PaymentPreferences'
+
   prestashop.admin.payment_preferences.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
