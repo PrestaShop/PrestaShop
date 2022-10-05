@@ -6,3 +6,4 @@ node_modules
 test/reports/*
 **/mochawesome-report
 tools/reports/*
+.env

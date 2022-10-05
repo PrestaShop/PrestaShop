@@ -3,7 +3,7 @@ admin_security:
   path: /
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:indexAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::indexAction'
     _legacy_controller: AdminSecurity
     _legacy_link: AdminSecurity
 
@@ -11,7 +11,7 @@ admin_security_general_save:
   path: /general
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:processGeneralFormAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::processGeneralFormAction'
     _legacy_controller: AdminSecurity
     _legacy_link: AdminSecurity
 
@@ -19,7 +19,7 @@ admin_security_password_policy_save:
   path: /password-policy
   methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:processPasswordPolicyFormAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::processPasswordPolicyFormAction'
     _legacy_controller: AdminSecurity
     _legacy_link: AdminSecurity
 
@@ -27,7 +27,7 @@ admin_security_sessions_customer_clear:
   path: /session/customer/clear
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:clearCustomerSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::clearCustomerSessionAction'
     _legacy_controller: AdminSecuritySessionCustomer
     _legacy_link: AdminSecuritySessionCustomer
 
@@ -35,7 +35,7 @@ admin_security_sessions_customer_list:
   path: /session/customer
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:customerSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::customerSessionAction'
     _legacy_controller: AdminSecuritySessionCustomer
     _legacy_link: AdminSecuritySessionCustomer
 
@@ -43,7 +43,7 @@ admin_security_sessions_customer_delete:
   path: /session/customer/{sessionId}
   methods: [ DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:deleteCustomerSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::deleteCustomerSessionAction'
     _legacy_controller: AdminSecuritySessionCustomer
     _legacy_link: AdminSecuritySessionCustomer
   requirements:
@@ -53,7 +53,7 @@ admin_security_sessions_employee_clear:
   path: /session/employee/clear
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:clearEmployeeSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::clearEmployeeSessionAction'
     _legacy_controller: AdminSecuritySessionEmployee
     _legacy_link: AdminSecuritySessionEmployee
 
@@ -61,7 +61,7 @@ admin_security_sessions_employee_list:
   path: /session/employee
   methods: [ GET ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:employeeSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::employeeSessionAction'
     _legacy_controller: AdminSecuritySessionEmployee
     _legacy_link: AdminSecuritySessionEmployee
 
@@ -69,7 +69,7 @@ admin_security_sessions_employee_delete:
   path: /session/employee/{sessionId}
   methods: [ DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:deleteEmployeeSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::deleteEmployeeSessionAction'
     _legacy_controller: AdminSecuritySessionEmployee
     _legacy_link: AdminSecuritySessionEmployee
   requirements:
@@ -79,7 +79,7 @@ admin_security_sessions_employee_bulk_delete:
   path: /session/employee/delete/bulk
   methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:bulkDeleteEmployeeSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::bulkDeleteEmployeeSessionAction'
     _legacy_controller: AdminSecuritySessionEmployee
     _legacy_link: AdminSecuritySessionEmployee:submitBulkdeleteemployees
 
@@ -87,7 +87,7 @@ admin_security_sessions_customer_bulk_delete:
   path: /session/customer/delete/bulk
   methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController:bulkDeleteCustomerSessionAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SecurityController::bulkDeleteCustomerSessionAction'
     _legacy_controller: AdminSecuritySessionCustomer
     _legacy_link: AdminSecuritySessionCustomer:submitBulkdeleteemployees
 

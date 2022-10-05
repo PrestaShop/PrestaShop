@@ -16,6 +16,7 @@ class Login extends FOBasePage {
 
     this.pageTitle = 'Login';
     this.loginErrorText = 'Authentication failed.';
+    this.disabledAccountErrorText = 'Your account isn\'t available at this time, please contact us';
 
     // Selectors
     this.loginForm = '#login-form';

@@ -3009,6 +3009,21 @@ class AdminImportControllerCore extends AdminController
                     StockAvailable::setQuantity((int) $product->id, $id_product_attribute, (int) $info['quantity'], $this->context->shop->id);
                 }
             }
+
+            // assign combination id to already associated product suppliers
+            $productSuppliers = ProductSupplier::getSupplierCollection($product->id);
+            /** @var ProductSupplier $productSupplier */
+            foreach ($productSuppliers as $productSupplier) {
+                // skip if related combination supplier already exists
+                if ((int) $productSupplier->id_product_attribute === (int) $id_product_attribute) {
+                    continue;
+                }
+
+                $combinationSupplier = clone $productSupplier;
+                $combinationSupplier->id = null;
+                $combinationSupplier->id_product_attribute = $id_product_attribute;
+                $combinationSupplier->add();
+            }
         }
     }
 

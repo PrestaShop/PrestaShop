@@ -21,6 +21,7 @@ services:
       dockerfile: .docker/Dockerfile
       context: .
       args:
+        - VERSION=${VERSION:-8.1-apache}
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
     environment:

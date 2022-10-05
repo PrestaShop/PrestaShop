@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec991e6f7b7ae6fc3d777ab6b9185c2b",
+    "content-hash": "07eb940a744e1755a89916e002ea1903",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -2085,22 +2085,22 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.4.4",
+            "version": "7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "e3ff079b22820c2029d4c2a87796b6a0b8716ad8"
+                "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e3ff079b22820c2029d4c2a87796b6a0b8716ad8",
-                "reference": "e3ff079b22820c2029d4c2a87796b6a0b8716ad8",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b50a2a1251152e43f6a37f0fa053e730a67d25ba",
+                "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^1.5",
-                "guzzlehttp/psr7": "^1.8.3 || ^2.1",
+                "guzzlehttp/psr7": "^1.9 || ^2.4",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0",
                 "symfony/deprecation-contracts": "^2.2 || ^3.0"
@@ -2109,10 +2109,10 @@
                 "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
+                "bamarni/composer-bin-plugin": "^1.8.1",
                 "ext-curl": "*",
                 "php-http/client-integration-tests": "^3.0",
-                "phpunit/phpunit": "^8.5.5 || ^9.3.5",
+                "phpunit/phpunit": "^8.5.29 || ^9.5.23",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
             "suggest": {
@@ -2122,8 +2122,12 @@
             },
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": false
+                },
                 "branch-alias": {
-                    "dev-master": "7.4-dev"
+                    "dev-master": "7.5-dev"
                 }
             },
             "autoload": {
@@ -2189,7 +2193,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.4"
+                "source": "https://github.com/guzzle/guzzle/tree/7.5.0"
             },
             "funding": [
                 {
@@ -2205,7 +2209,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-09T21:39:15+00:00"
+            "time": "2022-08-28T15:39:27+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2293,16 +2297,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.2.1",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "c94a94f120803a18554c1805ef2e539f8285f9a2"
+                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/c94a94f120803a18554c1805ef2e539f8285f9a2",
-                "reference": "c94a94f120803a18554c1805ef2e539f8285f9a2",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
                 "shasum": ""
             },
             "require": {
@@ -2316,17 +2320,21 @@
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
+                "bamarni/composer-bin-plugin": "^1.8.1",
                 "http-interop/http-factory-tests": "^0.9",
-                "phpunit/phpunit": "^8.5.8 || ^9.3.10"
+                "phpunit/phpunit": "^8.5.29 || ^9.5.23"
             },
             "suggest": {
                 "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": false
+                },
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -2388,7 +2396,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.2.1"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
             },
             "funding": [
                 {
@@ -2404,7 +2412,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-03-20T21:55:58+00:00"
+            "time": "2022-08-28T14:45:39+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",
@@ -4591,16 +4599,16 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "2.0.0-beta",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb"
+                "reference": "9a8699dacbc08477c9fbf5ac928e0844bdb43481"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
-                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/9a8699dacbc08477c9fbf5ac928e0844bdb43481",
+                "reference": "9a8699dacbc08477c9fbf5ac928e0844bdb43481",
                 "shasum": ""
             },
             "require-dev": {
@@ -4624,9 +4632,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.0-beta"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.1"
             },
-            "time": "2022-08-01T09:39:49+00:00"
+            "time": "2022-09-27T10:53:47+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5569,16 +5577,16 @@
         },
         {
             "name": "prestashop/ps_customersignin",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_customersignin.git",
-                "reference": "a7c1ebb033bf893a057438121b4c664c5f6cc3cf"
+                "reference": "88016f3c1b4ba61a3f881bb295fefe4eef7edc92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/a7c1ebb033bf893a057438121b4c664c5f6cc3cf",
-                "reference": "a7c1ebb033bf893a057438121b4c664c5f6cc3cf",
+                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/88016f3c1b4ba61a3f881bb295fefe4eef7edc92",
+                "reference": "88016f3c1b4ba61a3f881bb295fefe4eef7edc92",
                 "shasum": ""
             },
             "require": {
@@ -5606,9 +5614,9 @@
             "description": "PrestaShop - Customer 'Sign in' link",
             "homepage": "https://github.com/PrestaShop/ps_customersignin",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_customersignin/tree/v2.0.4"
+                "source": "https://github.com/PrestaShop/ps_customersignin/tree/v2.0.5"
             },
-            "time": "2021-02-08T09:21:08+00:00"
+            "time": "2022-08-16T19:43:00+00:00"
         },
         {
             "name": "prestashop/ps_customtext",
@@ -5694,16 +5702,16 @@
         },
         {
             "name": "prestashop/ps_distributionapiclient",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_distributionapiclient.git",
-                "reference": "65386686434b4b789b7f7935b1dfa96e3a80e9d5"
+                "reference": "32f8f833d73cedfab4b72791de6f8e20c1946195"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/65386686434b4b789b7f7935b1dfa96e3a80e9d5",
-                "reference": "65386686434b4b789b7f7935b1dfa96e3a80e9d5",
+                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/32f8f833d73cedfab4b72791de6f8e20c1946195",
+                "reference": "32f8f833d73cedfab4b72791de6f8e20c1946195",
                 "shasum": ""
             },
             "require": {
@@ -5739,9 +5747,9 @@
             "homepage": "https://github.com/PrestaShop/ps_distributionapiclient",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_distributionapiclient/issues",
-                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.0.1"
+                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.0.2"
             },
-            "time": "2022-08-04T18:09:07+00:00"
+            "time": "2022-09-01T11:18:00+00:00"
         },
         {
             "name": "prestashop/ps_emailalerts",
@@ -7840,16 +7848,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "97aeb14c6fc2fb733938809926e2f9d6c581a70d"
+                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/97aeb14c6fc2fb733938809926e2f9d6c581a70d",
-                "reference": "97aeb14c6fc2fb733938809926e2f9d6c581a70d",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
+                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
                 "shasum": ""
             },
             "require": {
@@ -7900,9 +7908,9 @@
             "support": {
                 "forum": "https://github.com/smarty-php/smarty/discussions",
                 "issues": "https://github.com/smarty-php/smarty/issues",
-                "source": "https://github.com/smarty-php/smarty/tree/v4.2.0"
+                "source": "https://github.com/smarty-php/smarty/tree/v4.2.1"
             },
-            "time": "2022-08-01T21:57:38+00:00"
+            "time": "2022-09-14T10:59:01+00:00"
         },
         {
             "name": "soundasleep/html2text",

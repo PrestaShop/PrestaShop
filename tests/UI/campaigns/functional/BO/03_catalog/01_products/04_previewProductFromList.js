@@ -89,4 +89,20 @@ describe('BO - Catalog - Products : Preview product from list', async () => {
     const productInformation = await foProductPage.getProductInformation(page);
     await expect(productInformation.name).to.equal(Products.demo_5.name);
   });
+
+  it('should close the current page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
+
+    page = await foProductPage.closePage(browserContext, page, 0);
+
+    const pageTitle = await productsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productsPage.pageTitle);
+  });
+
+  it('should reset all filters and get number of products', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
+
+    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfProducts).to.be.above(0);
+  });
 });
