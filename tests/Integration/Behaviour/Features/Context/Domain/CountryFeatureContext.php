@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Country;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
@@ -36,9 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\DataComparator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CountryFeatureContext extends AbstractDomainFeatureContext
@@ -172,7 +171,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When /^I query country "(.+)" I should get a Country with properties:$/
+     * @Then /^the country "(.+)" should have the following properties:$/
      */
     public function assertQueryCustomerProperties($countryReference, TableNode $table)
     {
@@ -184,37 +183,45 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         /** @var EditableCountry $result */
         $result = $queryBus->handle(new GetCountryForEditing($countryId));
 
-        $serializer = CommonFeatureContext::getContainer()->get('serializer');
-        $realData = $serializer->normalize($result);
-
-        DataComparator::assertDataSetsAreIdentical($expectedData, $realData);
+        Assert::assertEquals($expectedData['localisedNames'], $result->getLocalisedNames());
+        Assert::assertEquals($expectedData['isoCode'], $result->getIsoCode());
+        Assert::assertEquals($expectedData['callPrefix'], $result->getCallPrefix());
+        Assert::assertEquals($expectedData['defaultCurrency'], $result->getDefaultCurrency());
+        Assert::assertEquals($expectedData['zone'], $result->getZone());
+        Assert::assertEquals($expectedData['needZipCode'], $result->isNeedZipCode());
+        Assert::assertEquals($expectedData['zipCodeFormat'], $result->getZipCodeFormat()->getValue());
+        Assert::assertEquals($expectedData['enabled'], $result->isEnabled());
+        Assert::assertEquals($expectedData['containsStates'], $result->isContainsStates());
+        Assert::assertEquals($expectedData['needIdNumber'], $result->isNeedIdNumber());
+        Assert::assertEquals($expectedData['displayTaxLabel'], $result->isDisplayTaxLabel());
+        Assert::assertEquals([$expectedData['shopAssociation']], $result->getShopAssociation());
     }
 
     private function formatCountryDataIfNeeded(array $data)
     {
-        if (array_key_exists('call_prefix', $data)) {
-            $data['call_prefix'] = (int) $data['call_prefix'];
+        if (array_key_exists('callPrefix', $data)) {
+            $data['callPrefix'] = (int) $data['callPrefix'];
         }
-        if (array_key_exists('default_currency', $data)) {
-            $data['default_currency'] = (int) $data['default_currency'];
+        if (array_key_exists('defaultCurrency', $data)) {
+            $data['defaultCurrency'] = (int) $data['defaultCurrency'];
         }
         if (array_key_exists('zone', $data)) {
             $data['zone'] = (int) $data['zone'];
         }
-        if (array_key_exists('need_zip_code', $data)) {
-            $data['need_zip_code'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['need_zip_code']);
+        if (array_key_exists('needZipCode', $data)) {
+            $data['needZipCode'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['needZipCode']);
         }
-        if (array_key_exists('is_enabled', $data)) {
-            $data['is_enabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['is_enabled']);
+        if (array_key_exists('enabled', $data)) {
+            $data['enabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
         }
-        if (array_key_exists('contains_states', $data)) {
-            $data['contains_states'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['contains_states']);
+        if (array_key_exists('containsStates', $data)) {
+            $data['containsStates'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['containsStates']);
         }
-        if (array_key_exists('need_identification_number', $data)) {
-            $data['need_identification_number'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['need_identification_number']);
+        if (array_key_exists('needIdNumber', $data)) {
+            $data['needIdNumber'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['needIdNumber']);
         }
-        if (array_key_exists('display_tax_label', $data)) {
-            $data['display_tax_label'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['display_tax_label']);
+        if (array_key_exists('displayTaxLabel', $data)) {
+            $data['displayTaxLabel'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['displayTaxLabel']);
         }
 
         return $data;

@@ -26,32 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
-
-use Country;
-use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
-use PrestaShopException;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Handles creation of country and address format for it
+ * Is thrown when adding new country fails
  */
-class EditCountryHandler extends AbstractCountryHandler implements EditCountryHandlerInterface
+class CannotEditCountryException extends CountryException
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CannotEditCountryException
-     * @throws CountryConstraintException
-     * @throws CountryNotFoundException
-     * @throws PrestaShopException
-     */
-    public function handle(EditCountryCommand $command): void
-    {
-        $this->updateCountry($command);
-    }
+    public const FAILED_TO_UPDATE_COUNTRY = 10;
+
+    public const UNKNOWN_EXCEPTION = 20;
 }

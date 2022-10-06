@@ -26,17 +26,23 @@ services:
   prestashop.adapter.country.command_handler.add_country_handler:
     public: true
     class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler'
+    arguments:
+      - '@prestashop.adapter.country.repository.country_repository'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }
 
   prestashop.adapter.country.command_handler.edit_country_handler:
     public: true
     class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\EditCountryHandler'
+    arguments:
+      - '@prestashop.adapter.country.repository.country_repository'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand' }
 
   prestashop.adapter.country.query_handler.get_editable_country:
     public: true
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler'
+    arguments:
+      - '@prestashop.adapter.country.repository.country_repository'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }

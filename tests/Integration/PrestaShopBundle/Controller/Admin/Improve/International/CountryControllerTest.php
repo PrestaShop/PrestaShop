@@ -74,7 +74,7 @@ class CountryControllerTest extends FormGridControllerTestCase
             'country[zone]' => 1,
             'country[need_zip_code]' => '1',
             'country[zip_code_format]' => $zipCodeFormat,
-            'country[address_format]' => '',
+            'country[address_format]' => '', //todo: add when address format logic is added
             'country[is_enabled]' => 1,
             'country[contains_states]' => 0,
             'country[need_identification_number]' => 0,
@@ -87,13 +87,10 @@ class CountryControllerTest extends FormGridControllerTestCase
         $this->assertCount($initialEntityCount + 1, $newCountry);
         $this->assertCollectionContainsEntity($newCountry, $countryId);
 
-        $country = new Country($countryId);
-        $this->assertEquals($isoCode, $country->iso_code);
-        $this->assertEquals($zipCodeFormat, $country->zip_code_format);
-
-        //todo: uncomment when address format PR will be merged
-//        $addressFormatObj = new AddressFormat($countryId);
-//        $this->assertEquals($addressFormat, $addressFormatObj->format);
+        $this->assertFormValuesFromPage(
+            ['countryId' => $countryId],
+            $formData
+        );
 
         return $countryId;
     }
@@ -125,7 +122,7 @@ phone';
             'country[zone]' => 1,
             'country[need_zip_code]' => '1',
             'country[zip_code_format]' => $zipCodeFormat,
-            'country[address_format]' => $addressFormat,
+            'country[address_format]' => '', //todo: add address format when logic is added
             'country[is_enabled]' => 1,
             'country[contains_states]' => 0,
             'country[need_identification_number]' => 0,
@@ -133,22 +130,15 @@ phone';
         ];
         $this->editEntityFromPage(['countryId' => $countryId], $formData);
 
+        //todo: check this part with cache more deeply when address format logic is done.
         // need to clear cache because prestashop caches address format and without clear it sees the one before update
-        Cache::clear();
+//        Cache::clear();
 
         // Then check that it was correctly updated
         $this->assertFormValuesFromPage(
             ['countryId' => $countryId],
             $formData
         );
-
-        $country = new Country($countryId);
-        $this->assertEquals($isoCode, $country->iso_code);
-        $this->assertEquals($zipCodeFormat, $country->zip_code_format);
-
-        //todo: uncomment when address format PR will be merged
-//        $addressFormatObj = new AddressFormat($countryId);
-//        $this->assertEquals($addressFormat, $addressFormatObj->format);
 
         return $countryId;
     }

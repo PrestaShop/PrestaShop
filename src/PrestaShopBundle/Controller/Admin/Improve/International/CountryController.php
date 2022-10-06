@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
@@ -172,6 +175,25 @@ class CountryController extends FrameworkBundleAdminController
     protected function getErrorMessages(Exception $e): array
     {
         //todo add error messages
-        return [];
+        return [
+            CountryNotFoundException::class => $this->trans(
+                'This country does not exists',
+                'Admin.International.Feature'
+            ),
+            CannotEditCountryException::class => [
+                CannotEditCountryException::FAILED_TO_UPDATE_COUNTRY => $this->trans(
+                    'Failed to update country',
+                    'Admin.International.Feature'
+                ),
+                CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
+                    'Failed to update country. Got unexpected error',
+                    'Admin.International.Feature'
+                ),
+            ],
+            CountryConstraintException::class => $this->trans(
+                'Country contains invalid field values',
+                'Admin.International.Feature'
+            ),
+        ];
     }
 }

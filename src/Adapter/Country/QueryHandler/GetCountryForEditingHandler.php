@@ -48,7 +48,13 @@ class GetCountryForEditingHandler extends AbstractCountryHandler implements GetC
         $countryId = $command->getCountryId();
         $country = $this->getCountry($countryId);
 
-        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
+        /*
+         * todo: need to refacttor format when its part is merged,
+         * to add: a dedicated service to fetch the country address format, it should implement a dedicated interface
+         * for now the string format is enough, but maybe we should introduce some kind of DTO or maybe even a smarter Domain object that stores this address format
+         * https://github.com/PrestaShop/PrestaShop/pull/29591#discussion_r976471671
+         */
+//        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
 
         return new EditableCountry(
             $command->getCountryId(),
@@ -59,7 +65,7 @@ class GetCountryForEditingHandler extends AbstractCountryHandler implements GetC
             (int) $country->id_zone,
             (bool) $country->need_zip_code,
             (string) $country->zip_code_format,
-            (string) $format,
+            '', //todo: add when address format will be added
             (bool) $country->active,
             (bool) $country->contains_states,
             (bool) $country->need_identification_number,

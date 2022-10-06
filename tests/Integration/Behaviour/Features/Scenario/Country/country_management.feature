@@ -21,7 +21,7 @@ Feature: country management
       | need_identification_number | false           |
       | display_tax_label          | true            |
       | shop_association           | 1               |
-    When I query country "test" I should get a Country with properties:
+    Then the country "test" should have the following properties:
       | localisedNames[en-US] | testName |
       | localisedNames[fr-FR] | testName |
       | isoCode               | TE       |
@@ -54,7 +54,7 @@ Feature: country management
       | need_identification_number | true            |
       | display_tax_label          | false           |
       | shop_association           | 1               |
-    When I query country "test" I should get a Country with properties:
+    Then the country "test" should have the following properties:
       | localisedNames[en-US] | editName1 |
       | localisedNames[fr-FR] | editName2 |
       | isoCode               | TA        |
