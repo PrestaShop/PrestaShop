@@ -23,7 +23,6 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const ProductData = require('@data/FO/product');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -123,7 +122,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {

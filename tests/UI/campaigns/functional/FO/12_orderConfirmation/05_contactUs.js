@@ -23,9 +23,8 @@ const contactUsPage = require('@pages/FO/contactUs');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-const CartData = require('@data/FO/cart');
+const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -125,9 +124,9 @@ describe('FO - Order confirmation : Contact us', async () => {
 
       const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
-        expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
-        expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
+        expect(result.name).to.equal(Products.demo_1.name),
+        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.quantity).to.equal(1),
       ]);
     });
 
