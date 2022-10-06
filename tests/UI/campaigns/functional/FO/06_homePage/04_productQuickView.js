@@ -79,7 +79,7 @@ describe('FO - Home Page : Product quick view', async () => {
     });
 
     it(`should quick view the product '${Products.demo_6.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct1', baseContext);
 
       await homePage.quickViewProduct(page, 3);
 
@@ -143,7 +143,7 @@ describe('FO - Home Page : Product quick view', async () => {
 
   describe('Quick view simple product', async () => {
     it(`should quick view the product '${Products.demo_11.name}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct2', baseContext);
 
       await homePage.quickViewProduct(page, 6);
 
