@@ -58,25 +58,26 @@
           <i class="material-icons">settings</i> {{ 'Password policy'|trans({}, 'Admin.Advparameters.Feature') }}
         </h3>
         <div class="card-body">
-          <div class="form-group row">
-            {{ form_label(passwordPolicyForm.minimum_score) }}
-            <div class="col-sm">
-              {{ form_widget(passwordPolicyForm.minimum_score) }}
-              <small class="form-text">
-                {{ 'Scores are integers from 0 to 4.'|trans({}, 'Admin.Advparameters.Help') }}
-                <ol id="help-password-score">
-                  <li>{{ '0 means the password is extremely easy to guess (within 10^3 guesses). Dictionary words like "password" or "mother" score 0.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '1 is still very easy to guess (guesses lesser than 10^6). An extra character on a dictionary word can score 1.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '2 is pretty easy to guess (guesses lesser than 10^8). It provides some protection from unthrottled online attacks.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '3 is safely unguessable (guesses lesser than 10^10). It offers moderate protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '4 is very unguessable (guesses greater than or equal to 10^10) and provides strong protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                </ol>
-              </small>
+          <div class="form-wrapper">
+            <div class="form-group row">
+              {{ form_label(passwordPolicyForm.minimum_score) }}
+              <div class="col-sm">
+                {{ form_widget(passwordPolicyForm.minimum_score) }}
+                <small class="form-text">
+                  {{ 'Scores are integers from 0 to 4.'|trans({}, 'Admin.Advparameters.Help') }}
+                  <ol id="help-password-score">
+                    <li>{{ '0 means the password is extremely easy to guess (within 10^3 guesses). Dictionary words like "password" or "mother" score 0.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                    <li>{{ '1 is still very easy to guess (guesses lesser than 10^6). An extra character on a dictionary word can score 1.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                    <li>{{ '2 is pretty easy to guess (guesses lesser than 10^8). It provides some protection from unthrottled online attacks.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                    <li>{{ '3 is safely unguessable (guesses lesser than 10^10). It offers moderate protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                    <li>{{ '4 is very unguessable (guesses greater than or equal to 10^10) and provides strong protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  </ol>
+                </small>
+              </div>
             </div>
-          </div>
-
           {{ form_widget(passwordPolicyForm) }}
           {{ form_rest(passwordPolicyForm) }}
+          </div>
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
