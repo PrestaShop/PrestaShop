@@ -336,7 +336,7 @@ class ShoppingCarts extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async gotoViewPage(page, row) {
+  async goToViewPage(page, row) {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 }

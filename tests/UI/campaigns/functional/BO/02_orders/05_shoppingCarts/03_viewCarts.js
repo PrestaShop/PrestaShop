@@ -104,7 +104,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
 
       numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfShoppingCarts).to.be.above(0);
@@ -125,7 +125,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it('should go the Shopping Cart details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage1', baseContext);
 
-      await shoppingCartsPage.gotoViewPage(page, 1);
+      await shoppingCartsPage.goToViewPage(page, 1);
 
       const pageTitle = await shoppingCartViewPage.getPageTitle(page);
       await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle);
@@ -207,7 +207,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       // Set order status
       await addOrderPage.setOrderStatus(page, Statuses.paymentAccepted);
       // Create the order
-      await addOrderPage.clickAndWaitForNavigation(page, addOrderPage.createOrderButton);
+      await addOrderPage.clickOnCreateOrderButton(page);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
@@ -245,7 +245,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     it.skip('should go the Shopping Cart details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
 
-      await shoppingCartsPage.gotoViewPage(page, 1);
+      await shoppingCartsPage.goToViewPage(page, 1);
 
       const pageTitle = await shoppingCartViewPage.getPageTitle(page);
       await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle);
@@ -327,11 +327,11 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
     });
 
-    it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst2', baseContext);
+    it('should reset all filters and check number of shopping carts', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCarts).to.be.above(0);
+      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShoppingCartsAfterReset).to.be.above(0);
     });
   });
 
