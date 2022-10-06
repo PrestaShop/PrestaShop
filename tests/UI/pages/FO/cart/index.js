@@ -44,7 +44,9 @@ class Cart extends FOBasePage {
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
     this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
-    this.cartRuleAlertError = '#promo-code div.alert-danger span.js-error-text';
+    this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
+    this.cartRuleAlertMessagetext = 'You must choose a carrier before applying this voucher to your order';
+
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
 
     this.proceedToCheckoutButton = '#main div.checkout a';
@@ -192,7 +194,7 @@ class Cart extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getCartRuleErrorMessage(page) {
-    return this.getTextContent(page, this.cartRuleAlertError);
+    return this.getTextContent(page, this.cartRuleAlertMessage);
   }
 
   /**
