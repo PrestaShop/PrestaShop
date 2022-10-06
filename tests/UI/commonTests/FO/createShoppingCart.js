@@ -98,7 +98,7 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
     });
 
     it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await checkoutPage.clickOnHeaderLink(page, 'Logo');
 
@@ -107,7 +107,7 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
     });
 
     it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'firstSighOutFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFo', baseContext);
 
       await homePage.logout(page);
 
