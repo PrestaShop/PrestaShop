@@ -313,7 +313,7 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-   getATIPrice(page) {
+  getATIPrice(page) {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
