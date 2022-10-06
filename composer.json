@@ -136,6 +136,7 @@
         "symfony/symfony": "^4.4",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "twig/inky-extra": "^3.4",
         "twig/twig": "^3.0"
     },
     "require-dev": {
