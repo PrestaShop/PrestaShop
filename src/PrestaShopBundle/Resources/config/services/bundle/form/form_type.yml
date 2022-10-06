@@ -776,6 +776,8 @@ services:
   PrestaShopBundle\Form\Admin\Type\ShippingInclusionChoiceType:
   PrestaShopBundle\Form\Admin\Type\ProductSearchType:
 
+  PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\TitleType:
+
   # Deprecated
   form.type.sell.product.event_listener.categories_listener:
     alias: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CategoriesListener'

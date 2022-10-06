@@ -26,27 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Title\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\DeleteTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\Query\GetTitleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Title\QueryHandler\GetTitleForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Title\QueryResult\EditableTitle;
 
 /**
- * Handles command that delete title
+ * Handles command that gets title for editing
+ *
+ * @internal
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class GetTitleForEditingHandler extends AbstractTitleHandler implements GetTitleForEditingHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function handle(DeleteTitleCommand $command): void
+    public function handle(GetTitleForEditing $query): EditableTitle
     {
-        $title = $this->titleRepository->get($command->getTitleId());
+        $title = $this->titleRepository->get($query->getTitleId());
 
-        if (!$title->delete()) {
-            throw DeleteTitleException::createDeleteFailure($command->getTitleId());
-        }
+        return new EditableTitle(
+            $query->getTitleId(),
+            $title->name,
+            (int) $title->type
+        );
     }
 }

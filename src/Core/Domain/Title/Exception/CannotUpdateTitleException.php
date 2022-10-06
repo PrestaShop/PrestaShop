@@ -26,27 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\DeleteTitleException;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\Exception;
 
 /**
- * Handles command that delete title
+ * Thrown on failure to update title
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class CannotUpdateTitleException extends TitleException
 {
     /**
-     * {@inheritdoc}
+     * When title update fails
      */
-    public function handle(DeleteTitleCommand $command): void
-    {
-        $title = $this->titleRepository->get($command->getTitleId());
-
-        if (!$title->delete()) {
-            throw DeleteTitleException::createDeleteFailure($command->getTitleId());
-        }
-    }
+    public const FAILED_UPDATE_TITLE = 10;
 }

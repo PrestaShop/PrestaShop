@@ -35,9 +35,12 @@ class GenderCore extends ObjectModel
     public const TYPE_FEMALE = '1';
     public const TYPE_OTHER = '2';
 
+    /** @var int|null Object ID */
     public $id;
     public $id_gender;
+    /** @var string|array<string> */
     public $name;
+    /** @var int */
     public $type;
 
     /**
@@ -82,9 +85,7 @@ class GenderCore extends ObjectModel
             $idLang = Context::getContext()->language->id;
         }
 
-        $genders = new PrestaShopCollection('Gender', $idLang);
-
-        return $genders;
+        return new PrestaShopCollection('Gender', $idLang);
     }
 
     /**

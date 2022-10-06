@@ -11,21 +11,15 @@ Feature: Title management
     When I add a new title "3rdTitle" with the following properties:
       | name    | Third Title    |
       | type    | Other          |
-#    Then title "thirdTitle" name should be "Normandy"
-#    Then title "thirdTitle" country should be "United titles"
-#    Then title "thirdTitle" zone should be "Europe"
-#    And title "thirdTitle" should be enabled
-#
-#  Scenario: Editing title
-#    When I edit title "thirdTitle" with following properties:
-#      | name    | Britain       |
-#      | enabled | false         |
-#      | country | Italy         |
-#      | zone    | South America |
-#    Then title "thirdTitle" name should be "Britain"
-#    Then title "thirdTitle" country should be "Italy"
-#    Then title "thirdTitle" zone should be "South America"
-#    And title "thirdTitle" should be disabled
+    Then the title "3rdTitle" name should be "Third Title"
+    And the title "3rdTitle" gender type should be "Other"
+
+  Scenario: Editing title
+    When I edit title "3rdTitle" with following properties:
+      | name    | Fourth Title   |
+      | type    | Female         |
+    Then the title "3rdTitle" name should be "Fourth Title"
+    And the title "3rdTitle" gender type should be "Female"
 
   Scenario: Deleting title
     When I delete the title "3rdTitle"

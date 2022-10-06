@@ -23,30 +23,68 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Title\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Title\QueryResult;
 
-use PrestaShop\PrestaShop\Adapter\Title\AbstractTitleHandler;
-use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
-use PrestaShop\PrestaShop\Core\Domain\Title\CommandHandler\DeleteTitleHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Title\Exception\DeleteTitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\ValueObject\TitleId;
 
 /**
- * Handles command that delete title
+ * Transfers state data for editing
  */
-class DeleteTitleHandler extends AbstractTitleHandler implements DeleteTitleHandlerInterface
+class EditableTitle
 {
     /**
-     * {@inheritdoc}
+     * @var TitleId
      */
-    public function handle(DeleteTitleCommand $command): void
-    {
-        $title = $this->titleRepository->get($command->getTitleId());
+    protected $titleId;
 
-        if (!$title->delete()) {
-            throw DeleteTitleException::createDeleteFailure($command->getTitleId());
-        }
+    /**
+     * @var array<string>
+     */
+    protected $localizedNames;
+
+    /**
+     * @var int
+     */
+    protected $genderType;
+
+    /**
+     * @param TitleId $titleId
+     * @param array<string> $localizedNames
+     * @param int $genderType
+     */
+    public function __construct(
+        TitleId $titleId,
+        array $localizedNames,
+        int $genderType
+    ) {
+        $this->titleId = $titleId;
+        $this->localizedNames = $localizedNames;
+        $this->genderType = $genderType;
+    }
+
+    /**
+     * @return TitleId
+     */
+    public function getTitleId(): TitleId
+    {
+        return $this->titleId;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getLocalizedNames(): array
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGenderType(): int
+    {
+        return $this->genderType;
     }
 }
