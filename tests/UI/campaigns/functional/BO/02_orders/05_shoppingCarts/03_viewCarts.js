@@ -91,7 +91,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -104,7 +104,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
 
       numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfShoppingCarts).to.be.above(0);
@@ -123,7 +123,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should go the Shopping Cart details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage1', baseContext);
 
       await shoppingCartsPage.gotoViewPage(page, 1);
 
@@ -140,7 +140,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should check the customer Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock1', baseContext);
 
       const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
       await expect(customerInformation)
@@ -150,7 +150,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock1', baseContext);
 
       const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
       await expect(orderInformation).to.contains('No order was created from this cart.');
@@ -170,7 +170,12 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     ].forEach((test) => {
       it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext
-          .addContextItem(this, 'testIdentifier', `checkProduct${test.args.columnName}InCartSummaryBlock`, baseContext);
+          .addContextItem(
+            this,
+            'testIdentifier',
+            `checkProduct${test.args.columnName}InCartSummaryBlock1`,
+            baseContext,
+          );
 
         const cartSummary = await shoppingCartViewPage.getTextColumn(
           page,
@@ -212,7 +217,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -238,7 +243,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
 
     // @todo : https://github.com/PrestaShop/PrestaShop/issues/29894
     it.skip('should go the Shopping Cart details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
 
       await shoppingCartsPage.gotoViewPage(page, 1);
 
@@ -247,7 +252,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it.skip('should check the customer Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock2', baseContext);
 
       const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
       await expect(customerInformation)
@@ -257,7 +262,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it.skip('should check the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock2', baseContext);
 
       const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
       await expect(orderInformation).to.contains(`Order #${orderId}`);
@@ -277,7 +282,12 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     ].forEach((test) => {
       it.skip(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext
-          .addContextItem(this, 'testIdentifier', `checkProduct${test.args.columnName}InCartSummaryBlock`, baseContext);
+          .addContextItem(
+            this,
+            'testIdentifier',
+            `checkProduct${test.args.columnName}InCartSummaryBlock2`,
+            baseContext,
+          );
 
         const cartSummary = await shoppingCartViewPage.getTextColumn(
           page,
@@ -293,7 +303,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it.skip('should click on the order Link in the order Information Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOrderLink', baseContext);
 
       await shoppingCartViewPage.goToOrderPage(page);
 
@@ -305,7 +315,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage3', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -318,7 +328,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst2', baseContext);
 
       numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfShoppingCarts).to.be.above(0);
