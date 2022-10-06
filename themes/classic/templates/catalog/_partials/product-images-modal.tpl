@@ -30,7 +30,7 @@
         <figure>
           {if $product.default_image}
             <img
-              class="js-modal-product-cover product-cover-modal"
+              class="js-modal-product-cover product-cover-modal img-fluid"
               width="{$product.default_image.bySize.large_default.width}"
               src="{$product.default_image.bySize.large_default.url}"
               {if !empty($product.default_image.legend)}

@@ -335,7 +335,7 @@
       }
 
       .image-caption {
-        width: 800px;
+        width: 100%;
         padding: 0.625rem 1.25rem;
         background: $white;
         border-top: $gray-light 1px solid;
@@ -877,10 +877,6 @@
   #product-modal .modal-content .modal-body {
     flex-direction: column;
     margin-left: 0;
-
-    img.product-cover-modal {
-      width: 100%;
-    }
 
     .arrows {
       display: none;
