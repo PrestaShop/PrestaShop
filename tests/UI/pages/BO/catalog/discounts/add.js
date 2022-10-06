@@ -58,6 +58,14 @@ class AddCartRule extends BOBasePage {
     this.quantityInput = 'input[name=quantity]';
     this.quantityPerUserInput = 'input[name=quantity_per_user]';
 
+    // Restrictions
+    // ---Carrier Restriction
+    this.carrierRestriction = '#carrier_restriction';
+    this.carrierRestrictionPickUpInStore = '#carrier_select_2 > option:nth-child(1)';
+    this.carrierRestrictionDeliveryNextDay = '#carrier_select_2 > option:nth-child(2)';
+    this.carrierRestrictionRemoveButton = '#carrier_select_remove';
+    this.carrierRestrictionAddBTN = '#carrier_select_add';
+
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
     this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
@@ -158,6 +166,13 @@ class AddCartRule extends BOBasePage {
       await page.press(this.dateToInput, 'Enter');
     }
 
+    // Set carrier discount
+    if (cartRuleData.carrierRestriction) {
+      await this.setChecked(page, this.carrierRestriction);
+      await page.click(this.carrierRestrictionPickUpInStore);
+      await page.click(this.carrierRestrictionRemoveButton);
+    }
+
     // Fill minimum amount values
     await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
@@ -244,6 +259,7 @@ class AddCartRule extends BOBasePage {
    * Create/edit cart rule
    * @param page {Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
+   * @param checkCarrierRestriction {boolean} True if we need to select the carrier restriction
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
