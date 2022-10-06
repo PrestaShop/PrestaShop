@@ -11,7 +11,7 @@ const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
 // Import data
-const ProductData = require('@data/FO/product');
+const {Products} = require('@data/demo/products');
 
 const baseContext = 'sanity_catalogFO_checkProduct';
 
@@ -47,7 +47,7 @@ describe('FO - Catalog : Check the Product page', async () => {
 
     await homePage.goToProductPage(page, 1);
     const pageTitle = await productPage.getPageTitle(page);
-    await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+    await expect(pageTitle).to.contains(Products.demo_1.name);
   });
 
   it('should check the product page', async function () {
@@ -55,9 +55,9 @@ describe('FO - Catalog : Check the Product page', async () => {
 
     const result = await productPage.getProductInformation(page);
     await Promise.all([
-      expect(result.name.toLowerCase()).to.equal(ProductData.firstProductData.name.toLocaleLowerCase()),
-      expect(result.price).to.equal(ProductData.firstProductData.price),
-      expect(result.description).to.contains(ProductData.firstProductData.description),
+      expect(result.name).to.equal(Products.demo_1.name),
+      expect(result.price).to.equal(Products.demo_1.finalPrice),
+      expect(result.description).to.contains(Products.demo_1.description),
     ]);
   });
 });

@@ -18,7 +18,7 @@ const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
 // Import data
-const ProductData = require('@data/FO/product');
+const {Products} = require('@data/demo/products');
 
 const baseContext = 'functional_BO_shopParameters_productSetting_productsGeneral_catalogMode';
 
@@ -124,7 +124,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           await homePage.goToProductPage(page, 1);
           const pageTitle = await productPage.getPageTitle(page);
-          await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+          await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
         });
 
         it('should check the existence of product price and add to cart button', async function () {
@@ -168,7 +168,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         await homePage.goToProductPage(page, 1);
         const pageTitle = await productPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should check the existence of product price and add to cart button', async function () {
