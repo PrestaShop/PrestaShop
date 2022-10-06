@@ -603,7 +603,7 @@ class ImageManagerCore
      * @param string $type
      * @param string $filename
      *
-     * @return false|resource|GdImage
+     * @return false|resource|\GdImage
      */
     public static function create($type, $filename)
     {
