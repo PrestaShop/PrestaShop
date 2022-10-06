@@ -53,7 +53,6 @@ jobs:
   Steps-identifiers:
     runs-on: ubuntu-latest
     name: Checking doubles in steps identifiers
-    if: contains(github.event.pull_request.labels.*.name, 'TE')
 
     steps:
       - name: Cancel Previous Runs
