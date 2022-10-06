@@ -276,7 +276,7 @@ class StockRepository extends StockManagementRepository
           {attribute_name}
         FROM {table_prefix}product p
           LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
-          LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
+          LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id AND pl.id_shop = :shop_id)
           INNER JOIN {table_prefix}product_shop ps ON (p.id_product = ps.id_product AND ps.id_shop = :shop_id)
           LEFT JOIN {table_prefix}stock_available sa
             ON (p.id_product = sa.id_product AND sa.id_shop = :stock_shop_id AND sa.id_shop_group = :stock_group_id AND
