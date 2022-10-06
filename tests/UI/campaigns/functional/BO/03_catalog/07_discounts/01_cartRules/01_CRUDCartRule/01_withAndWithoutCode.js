@@ -19,7 +19,6 @@ const cartPage = require('@pages/FO/cart');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const ProductData = require('@data/FO/product');
 const {Products} = require('@data/demo/products');
 
 // import test context
@@ -117,7 +116,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -203,7 +202,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {

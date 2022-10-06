@@ -15,7 +15,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-const CartData = require('@data/FO/cart');
+const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 const baseContext = 'sanity_checkoutFO_orderProduct';
@@ -89,9 +89,9 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
 
     const result = await cartPage.getProductDetail(page, 1);
     await Promise.all([
-      expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
-      expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
-      expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
+      expect(result.name).to.equal(Products.demo_1.name),
+      expect(result.price).to.equal(Products.demo_1.finalPrice),
+      expect(result.quantity).to.equal(1),
     ]);
   });
 

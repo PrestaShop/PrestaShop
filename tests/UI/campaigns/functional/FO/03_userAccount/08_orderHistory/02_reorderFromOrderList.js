@@ -18,7 +18,7 @@ const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-const CartData = require('@data/FO/cart');
+const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import test context
@@ -100,9 +100,9 @@ describe('FO - Account : Reorder from order list', async () => {
 
       const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name).to.equal(CartData.customCartData.firstProduct.name),
-        expect(result.price).to.equal(CartData.customCartData.firstProduct.price),
-        expect(result.quantity).to.equal(CartData.customCartData.firstProduct.quantity),
+        expect(result.name).to.equal(Products.demo_1.name),
+        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.quantity).to.equal(1),
       ]);
     });
 
@@ -229,7 +229,7 @@ describe('FO - Account : Reorder from order list', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheOrderedProduct', baseContext);
 
       const orderedProduct = await orderDetailsPage.getProductName(page);
-      await expect(orderedProduct).to.contain(CartData.customCartData.firstProduct.name);
+      await expect(orderedProduct).to.contain(Products.demo_1.name);
     });
 
     it('should sign out from FO', async function () {

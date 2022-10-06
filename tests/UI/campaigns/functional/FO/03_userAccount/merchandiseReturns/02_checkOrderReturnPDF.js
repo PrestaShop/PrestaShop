@@ -336,7 +336,7 @@ describe('FO - Account : Check order return PDF', async () => {
 
         if (parseInt(idReturn, 10) >= 10) {
           fileName += idReturn;
-        } else fileName = `0${idReturn}`;
+        } else fileName += `0${idReturn}`;
       });
 
       it('should go to edit merchandise returns page', async function () {
@@ -406,8 +406,9 @@ describe('FO - Account : Check order return PDF', async () => {
 
       it('should check the PDF Header ', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnFileName', baseContext);
-
+        console.log(fileName);
         const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${today},,${fileName},,`);
+
         await expect(isVisible, 'The order return file name is not correct!').to.be.true;
       });
 
