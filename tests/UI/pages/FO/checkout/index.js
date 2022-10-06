@@ -313,15 +313,15 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page) {
+   getATIPrice(page) {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
   /**
-     * Delete the discount
-     * @param page {Page} Browser tab
-     * @returns {Promise<boolean>}
-     */
+   * Delete the discount
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
   async removePromoCode(page) {
     await page.click(this.checkoutRemoveDiscountLink);
     return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);

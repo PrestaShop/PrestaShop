@@ -71,7 +71,7 @@ class CartRuleData {
     /** @type {number} Amount of times a user can use the cart rule */
     this.quantityPerUser = cartRuleToCreate.quantityPerUser || 1;
 
-    /** @type {boolean} True to enable country selection on the cart rule */
+    /** @type {boolean} True to enable customer group on the cart rule */
     this.countrySelection = cartRuleToCreate.countrySelection || false;
 
     /** @type {boolean} True to enable carrier restriction on the cart rule */
