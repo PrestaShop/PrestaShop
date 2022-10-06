@@ -180,18 +180,18 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
 
     it('should add the promo code and get "You cannot use this voucher" error message',
       async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'AddPromoCode',
-        baseContext,
-      );
+        await testContext.addContextItem(
+          this,
+          'testIdentifier',
+          'AddPromoCode',
+          baseContext,
+        );
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
+        await cartPage.addPromoCode(page, cartRuleCode.code);
 
-      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-      await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
-    });
+        const alertMessage = await cartPage.getCartRuleErrorMessage(page);
+        await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
+      });
 
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
