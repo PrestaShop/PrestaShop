@@ -29,7 +29,7 @@ const {Products} = require('@data/demo/products');
 // import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_customerGroupRestriction';
+const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_groupCustomerRestriction';
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -122,6 +122,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       page = await addCartRulePage.viewMyShop(page);
 
       await foHomePage.changeLanguage(page, 'en');
+
       const isHomePage = await foHomePage.isHomePage(page);
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
@@ -145,8 +146,8 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
 
-      const result = await foHomePage.isHomePage(page);
-      await expect(result).to.be.true;
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
     });
 
     it('should go to the first product page', async function () {
@@ -179,18 +180,18 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
 
     it('should add the promo code and get "You cannot use this voucher" error message',
       async function () {
-        await testContext.addContextItem(
-          this,
-          'testIdentifier',
-          'AddPromoCode',
-          baseContext,
-        );
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'AddPromoCode',
+        baseContext,
+      );
 
-        await cartPage.addPromoCode(page, cartRuleCode.code);
+      await cartPage.addPromoCode(page, cartRuleCode.code);
 
-        const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-        await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
-      });
+      const alertMessage = await cartPage.getCartRuleErrorMessage(page);
+      await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessageText);
+    });
 
     it('should logout by the link in the header', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
@@ -210,6 +211,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       );
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
+
       const pageTitle = await foHomePage.getPageTitle(page);
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
@@ -274,6 +276,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       );
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
+
       const pageTitle = await foHomePage.getPageTitle(page);
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
