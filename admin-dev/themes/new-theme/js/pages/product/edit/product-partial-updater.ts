@@ -26,6 +26,8 @@
 import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
+import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
+import ProductMap from "@pages/product/product-map";
 
 const {$} = window;
 
@@ -55,6 +57,10 @@ export default class ProductPartialUpdater {
   private $productFormGoToCatalogButton: JQuery;
 
   private $productFormCancelButton: JQuery;
+
+  private $productTypeSwitcher: ProductTypeSwitcher;
+
+  private $productTypePreview: JQuery;
 
   private initialData: Record<string, any>;
 
@@ -88,6 +94,8 @@ export default class ProductPartialUpdater {
     this.$productFormNewProductButton = $productFormNewProductButton;
     this.$productFormGoToCatalogButton = $productFormGoToCatalogButton;
     this.$productFormCancelButton = $productFormCancelButton;
+    this.$productTypeSwitcher = new ProductTypeSwitcher($(ProductMap.productForm));
+    this.$productTypePreview = $(ProductMap.productType.headerPreviewButton);
     this.initialData = {};
 
     this.watch();
@@ -233,6 +241,8 @@ export default class ProductPartialUpdater {
       this.$productFormPreviewButton.addClass('disabled');
       this.$productFormDuplicateButton.addClass('disabled');
       this.$productFormNewProductButton.addClass('disabled');
+      this.$productTypePreview.off('click');
+      this.$productTypePreview.addClass('disabled');
     } else if (updatedData === null) {
       this.$productFormSubmitButton.prop('disabled', true);
       this.$productFormCancelButton.addClass('disabled');
@@ -240,6 +250,8 @@ export default class ProductPartialUpdater {
       this.$productFormPreviewButton.removeClass('disabled');
       this.$productFormDuplicateButton.removeClass('disabled');
       this.$productFormNewProductButton.removeClass('disabled');
+      this.$productTypeSwitcher.registerProductTypePreviewOnClickEvent();
+      this.$productTypePreview.removeClass('disabled');
     } else {
       this.$productFormSubmitButton.prop('disabled', false);
       this.$productFormCancelButton.removeClass('disabled');
@@ -247,6 +259,8 @@ export default class ProductPartialUpdater {
       this.$productFormPreviewButton.addClass('disabled');
       this.$productFormDuplicateButton.addClass('disabled');
       this.$productFormNewProductButton.addClass('disabled');
+      this.$productTypePreview.off('click');
+      this.$productTypePreview.addClass('disabled');
     }
   }
 
@@ -267,11 +281,7 @@ export default class ProductPartialUpdater {
     Object.keys(this.initialData).forEach((fieldName) => {
       const fieldValue = this.initialData[fieldName];
 
-      // Field is absent in the new data (it was not in the initial) we force it to empty string (not null
-      // or it will be ignored)
-      if (!Object.prototype.hasOwnProperty.call(currentData, fieldName)) {
-        currentData[fieldName] = '';
-      } else if (_.isEqual(currentData[fieldName], fieldValue)) {
+      if (_.isEqual(currentData[fieldName], fieldValue)) {
         delete currentData[fieldName];
       }
     });
