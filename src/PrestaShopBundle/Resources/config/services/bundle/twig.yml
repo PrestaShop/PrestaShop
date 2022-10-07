@@ -139,3 +139,8 @@ services:
     class: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
     tags:
       - { name: twig.extension }
+
+  prestashop.bundle.twig.extension.inky_extension:
+    class: 'Twig\Extra\Inky\InkyExtension'
+    tags:
+      - { name: twig.extension }

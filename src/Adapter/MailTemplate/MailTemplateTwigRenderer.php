@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollect
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
-use Twig\Extra\Inky\InkyExtension;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -80,7 +79,6 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
         $this->hasGiftWrapping = $hasGiftWrapping;
-        $this->twig->addExtension(new InkyExtension());
     }
 
     /**
