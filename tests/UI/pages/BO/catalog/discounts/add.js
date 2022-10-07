@@ -259,7 +259,6 @@ class AddCartRule extends BOBasePage {
    * Create/edit cart rule
    * @param page {Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
-   * @param checkCarrierRestriction {boolean} True if we need to select the carrier restriction
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
    * @returns {Promise<string|null>}
    */
