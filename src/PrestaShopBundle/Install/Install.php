@@ -185,6 +185,12 @@ class Install extends AbstractInstall
         }
 
         $key = PhpEncryption::createNewRandomKey();
+        $privateKey = openssl_pkey_new([
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+        openssl_pkey_export($privateKey, $apiPrivateKey);
+        $apiPublicKey = openssl_pkey_get_details($privateKey)['key'];
 
         $parameters = [
             'parameters' => [
@@ -198,6 +204,8 @@ class Install extends AbstractInstall
                 'cookie_key' => $cookie_key,
                 'cookie_iv' => $cookie_iv,
                 'new_cookie_key' => $key,
+                'api_public_key' => $apiPublicKey,
+                'api_private_key' => $apiPrivateKey,
                 'ps_creation_date' => date('Y-m-d'),
                 'secret' => $secret,
                 'locale' => $this->language->getLanguage()->getLocale(),
