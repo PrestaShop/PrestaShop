@@ -406,9 +406,8 @@ describe('FO - Account : Check order return PDF', async () => {
 
       it('should check the PDF Header ', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkReturnFileName', baseContext);
-        console.log(fileName);
-        const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${today},,${fileName},,`);
 
+        const isVisible = await files.isTextInPDF(filePath, `ORDER RETURN,,${today},,${fileName},,`);
         await expect(isVisible, 'The order return file name is not correct!').to.be.true;
       });
 
