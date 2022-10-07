@@ -92,7 +92,7 @@ class ImageRetriever
                 $productInstance,
                 $image['id_image']
             ), $image);
-
+            dump($image);
             if (isset($imageToCombinations[$image['id_image']])) {
                 $image['associatedVariants'] = $imageToCombinations[$image['id_image']];
             } else {
@@ -171,8 +171,9 @@ class ImageRetriever
             $id_image . '.' . $ext,
         ]);
         $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
-
+        $rewriteLink = isset($object->link_rewrite) ? $object->link_rewrite : $object->name;
         foreach ($image_types as $image_type) {
+            $additionalSources = [];
             $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
                 $imageFolderPath,
                 $id_image . '-' . $image_type['name'] . '.' . $ext,
@@ -185,6 +186,49 @@ class ImageRetriever
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
+            }
+
+            $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
+            $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF');
+
+            if ($generateAdditionalWebP) {
+                $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '.webp',
+                ]);
+
+                if (!file_exists($resizedImagePathWebP)) {
+                    ImageManager::resize(
+                        $mainImagePath,
+                        $resizedImagePath,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        'webp',
+                        true
+                    );
+                }
+
+                $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
+            }
+
+            if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '.avif',
+                ]);
+
+                if (!file_exists($resizedImagePathAvif)) {
+                    ImageManager::resize(
+                        $mainImagePath,
+                        $resizedImagePath,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        'avif',
+                        true
+                    );
+                }
+
+                $additionalSources['avif'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.avif');
             }
 
             if ($generateHighDpiImages) {
@@ -200,18 +244,50 @@ class ImageRetriever
                         (int) $image_type['height'] * 2
                     );
                 }
+
+                if ($generateAdditionalWebP) {
+                    $resizedImagePathHighDpiWebP = implode(DIRECTORY_SEPARATOR, [
+                        $imageFolderPath,
+                        $id_image . '-' . $image_type['name'] . '2x.webp',
+                    ]);
+                    if (!file_exists($resizedImagePathHighDpiWebP)) {
+                        ImageManager::resize(
+                            $mainImagePath,
+                            $resizedImagePathHighDpiWebP,
+                            (int) $image_type['width'] * 2,
+                            (int) $image_type['height'] * 2,
+                            'webp',
+                            true
+                        );
+                    }
+                }
+
+                if ($generateAdditionalAvif) {
+                    $resizedImagePathHighDpiAvif = implode(DIRECTORY_SEPARATOR, [
+                        $imageFolderPath,
+                        $id_image . '-' . $image_type['name'] . '2x.webp',
+                    ]);
+                    if (!file_exists($resizedImagePathHighDpiAvif)) {
+                        ImageManager::resize(
+                            $mainImagePath,
+                            $resizedImagePathHighDpiAvif,
+                            (int) $image_type['width'] * 2,
+                            (int) $image_type['height'] * 2,
+                            'avif',
+                            true
+                        );
+                    }
+                }
             }
 
-            $url = $this->link->$getImageURL(
-                isset($object->link_rewrite) ? $object->link_rewrite : $object->name,
-                $id_image,
-                $image_type['name']
-            );
+            $urlJpg = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name']);
+            $additionalSources['jpg'] = $urlJpg;
 
             $urls[$image_type['name']] = [
-                'url' => $url,
+                'url' => $urlJpg,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
+                'sources' => $additionalSources,
             ];
         }
 
