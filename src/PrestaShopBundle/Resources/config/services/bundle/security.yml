@@ -19,3 +19,17 @@ services:
     tags:
       - { name: security.voter }
     public: false
+
+  prestashop.security.authenticator.token:
+    class: PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
+      - '@prestashop.api.factory.psrHttpFactory'
+
+  prestashop.security.oauth.client:
+    class: PrestaShopBundle\Security\OAuth2\OAuth2Client
+    arguments:
+      - '@prestashop.api.resource_server'
+      - '@security.user.provider.concrete.oauth2'
+
+  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface: '@prestashop.security.oauth.client'
