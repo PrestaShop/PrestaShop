@@ -27,7 +27,7 @@ import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
-import ProductMap from "@pages/product/product-map";
+import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
