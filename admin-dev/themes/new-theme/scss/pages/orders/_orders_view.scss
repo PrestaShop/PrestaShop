@@ -431,6 +431,8 @@
         .btn-primary {
           // stylelint-disable-next-line declaration-no-important
           width: 100% !important;
+          // stylelint-disable-next-line declaration-no-important
+          min-width: inherit !important;
           max-width: 100%;
         }
       }
