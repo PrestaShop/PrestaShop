@@ -330,7 +330,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                             'label' => $this->trans('No Tax', [], 'Admin.International.Help'),
                         ],
                     ],
-                    'hint' => $this->trans('(Total tax: 9%)', [], 'Admin.International.Help'),
                 ],
                 [
                     'type' => 'text',
