@@ -59,17 +59,19 @@ trait PrestaShopTranslatorTrait
             $locale = null;
         }
 
+        $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
+
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
-        $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
+        $translated = isset($legacy) ? $this->replaceSpecialCharsWithLegacyFunctions($translated, $legacy) : $translated;
 
         if ($isSprintf) {
             $translated = vsprintf($translated, $parameters);
+        } elseif (!empty($parameters)) {
+            $translated = strtr($translated, $parameters);
         }
-
-        $translated = isset($legacy) ? $this->replaceSpecialCharsWithLegacyFunctions($translated, $legacy) : $translated;
 
         return $translated;
     }
