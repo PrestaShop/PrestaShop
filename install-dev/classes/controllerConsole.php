@@ -91,7 +91,12 @@ abstract class InstallControllerConsole
             echo 'Arguments available:' . PHP_EOL;
             foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
-                echo '--' . $name . "\t" . (isset($arg['help']) ? $arg['help'] : '') . (isset($arg['default']) ? "\t" . '(Default: ' . $arg['default'] . ')' : '') . PHP_EOL;
+                echo '--'
+                    . $name
+                    . "\t"
+                    . (isset($arg['help']) ? $arg['help'] : '')
+                    . (isset($arg['default']) ? "\t" . '(Default: ' . (is_array($arg['default']) ? '[' . implode(',', $arg['default']) . ']' : $arg['default']) . ')' : '')
+                    . PHP_EOL;
             }
             exit;
         }
