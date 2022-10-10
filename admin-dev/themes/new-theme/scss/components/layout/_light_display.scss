@@ -4,6 +4,10 @@ body {
 }
 
 .light_display_layout {
+  .-notoolbar > .alert {
+    margin: 1rem;
+  }
+
   form {
     /*
      * When the form is displayed in a card there is a default margin bottom which messes with the estimated height
