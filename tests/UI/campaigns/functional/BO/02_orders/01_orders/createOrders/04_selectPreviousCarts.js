@@ -30,6 +30,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Carriers} = require('@data/demo/carriers');
 const {Products} = require('@data/demo/products');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -54,8 +55,7 @@ const todayCartFormat = getDateFormat('mm/dd/yyyy');
 const myCarrierCost = 8.40;
 // Variable used to get the available stock of the ordered product from BO > stocks page
 let availableStockOfOrderedProduct = 0;
-// Const used for the payment status
-const paymentMethod = 'Payments by check';
+
 
 /*
 Pre-condition:
@@ -475,10 +475,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should check the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
 
-      const orderInformation = await viewShoppingCartPage.getOrderInformation(page);
+      const orderInformation = await viewShoppingCartPage.getOrderInformation(shoppingCartPage);
       await expect(orderInformation).to.contains('No order was created from this cart.');
 
-      const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(page);
+      const hasButtonCreateOrderFromCart = await viewShoppingCartPage.hasButtonCreateOrderFromCart(shoppingCartPage);
       await expect(hasButtonCreateOrderFromCart).to.be.true;
     });
 
@@ -554,7 +554,11 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, Statuses.paymentAccepted);
+      await addOrderPage.setSummaryAndCreateOrder(
+        page,
+        PaymentMethods.checkPayment.moduleName,
+        Statuses.paymentAccepted,
+      );
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
