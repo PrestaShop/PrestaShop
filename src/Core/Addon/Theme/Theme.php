@@ -51,11 +51,11 @@ class Theme implements AddonInterface
     ) {
         if (isset($attributes['parent'])) {
             if (null === $configurationCacheDirectory) {
-                $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
+                $configurationCacheDirectory = _PS_CACHE_DIR_;
             }
 
             $yamlParser = new YamlParser($configurationCacheDirectory);
-            $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
+            $parentAttributes = $yamlParser->parse($themesDirectory . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
