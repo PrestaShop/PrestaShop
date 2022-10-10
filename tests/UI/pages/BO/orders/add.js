@@ -136,7 +136,10 @@ class AddOrder extends BOBasePage {
     this.totalTaxExcProduct = `${this.summaryBlock} .js-total-without-tax`;
     this.totalTaxIncProduct = `${this.summaryBlock} div:nth-child(6)`;
     this.orderMessageTextArea = '#cart_summary_order_message';
-    this.paymentMethodSelect = '#cart_summary_payment_module';
+    this.paymentMethodSelect = `${this.summaryBlock} #select2-cart_summary_payment_module-container`;
+    this.paymentMethodSelectResult = 'body span.select2-results';
+    this.paymentMethodOption = paymentMethod => '#select2-cart_summary_payment_module-results '
+      + `li[data-select2-id*='${paymentMethod}']`;
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
     this.moreActionsDropDownButton = '#dropdown-menu-actions';
@@ -956,11 +959,13 @@ class AddOrder extends BOBasePage {
   /**
    * Set payment method
    * @param page {Page} Browser tab
-   * @param paymentMethodName {string} Payment method to choose
+   * @param paymentMethodModuleName {string} Payment method to choose
    * @returns {Promise<void>}
    */
-  async setPaymentMethod(page, paymentMethodName) {
-    await this.selectByVisibleText(page, this.paymentMethodSelect, paymentMethodName);
+  async setPaymentMethod(page, paymentMethodModuleName) {
+    await this.waitForSelectorAndClick(page, this.paymentMethodSelect);
+    await this.waitForVisibleSelector(page, this.paymentMethodSelectResult);
+    await page.click(this.paymentMethodOption(paymentMethodModuleName));
   }
 
   /**

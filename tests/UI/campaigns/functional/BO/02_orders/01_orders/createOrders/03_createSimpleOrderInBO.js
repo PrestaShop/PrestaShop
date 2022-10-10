@@ -46,7 +46,7 @@ const orderToMake = {
     name: `${Carriers.default.name} - ${Carriers.default.delay}`,
     freeShipping: true,
   },
-  paymentMethod: PaymentMethods.checkPayment.name,
+  paymentMethod: PaymentMethods.checkPayment.moduleName,
   orderStatus: Statuses.paymentAccepted,
   totalPrice: (Products.demo_5.price * 4) * 1.2, // Price tax included
 };

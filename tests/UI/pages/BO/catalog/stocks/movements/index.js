@@ -29,9 +29,9 @@ class Movements extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
-    this.tableProductNameColumn = row => `${this.tableRow(row)} td:nth-child(1) div.media-body p`;
-    this.tableProductReferenceColumn = row => `${this.tableRow(row)} td:nth-child(2)`;
-    this.tableQuantityColumn = row => `${this.tableRow(row)} td:nth-child(4) span.qty-number`;
+    this.tableProductNameColumn = row => `${this.tableRow(row)} td:nth-child(2) div.media-body p`;
+    this.tableProductReferenceColumn = row => `${this.tableRow(row)} td:nth-child(3)`;
+    this.tableQuantityColumn = row => `${this.tableRow(row)} td:nth-child(5) span.qty-number`;
 
     // Loader
     this.productListLoading = `${this.tableRow(1)} td:nth-child(1) div.ps-loader`;

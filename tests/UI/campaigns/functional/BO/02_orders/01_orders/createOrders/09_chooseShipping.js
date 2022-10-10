@@ -20,6 +20,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -46,7 +47,7 @@ const defaultGiftOptions = {
   isRecyclablePackage: false,
 };
 
-const paymentMethod = 'Payments by check';
+const paymentMethod = PaymentMethods.checkPayment.moduleName;
 const orderStatus = Statuses.paymentAccepted;
 const giftMessage = 'Gift message to test';
 
