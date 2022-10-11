@@ -23,11 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-//@todo: Im not sure this is the best place for types, but I don't like them being in generic js/types dir.
-//    whole js structure needs cleaning (for product) it should be more oriented to feature driven structure rather than type driven
-//    e.g. everything related to specificPrices should go to product/specific-price (including components, services(data providers), managers etc.),
-//    code related to categories goes to product/category etc.
-
 type CatalogPriceRuleForListing = {
   id: number,
   shop: string,
