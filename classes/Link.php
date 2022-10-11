@@ -925,22 +925,7 @@ class LinkCore
             } else {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
-            $domainSSL = $shop->domain_ssl;
-            $domain = $shop->domain;
-            if ((Shop::getContext() === Shop::CONTEXT_ALL || Shop::getContext() === Shop::CONTEXT_GROUP) && empty($idShop)) {
-                if (Shop::getContext() === Shop::CONTEXT_GROUP) {
-                    $allShops = Shop::getShops(true, $shop->id_shop_group);
-                } else {
-                    $allShops = Shop::getShops();
-                }
-                foreach ($allShops as $shopDomain) {
-                    if ($shopDomain['domain_ssl'] === Tools::getHttpHost() || $shopDomain['domain'] === Tools::getHttpHost()) {
-                        $domainSSL = $shopDomain['domain_ssl'];
-                        $domain = $shopDomain['domain'];
-                        break;
-                    }
-                }
-            }
+            list($domainSSL, $domain) = $this->getShopDomainActive($shop, $idShop);
         } else {
             $shop = Context::getContext()->shop;
             $domainSSL = $shop->domain_ssl;
@@ -1411,22 +1396,7 @@ class LinkCore
             $shop = Context::getContext()->shop;
         }
 
-        $domainSSL = $shop->domain_ssl;
-        $domain = $shop->domain;
-        if ((Shop::getContext() === Shop::CONTEXT_ALL || Shop::getContext() === Shop::CONTEXT_GROUP) && empty($idShop)) {
-            if (Shop::getContext() === Shop::CONTEXT_GROUP) {
-                $allShops = Shop::getShops(true, $shop->id_shop_group);
-            } else {
-                $allShops = Shop::getShops();
-            }
-            foreach ($allShops as $shopDomain) {
-                if ($shopDomain['domain_ssl'] === Tools::getHttpHost() || $shopDomain['domain'] === Tools::getHttpHost()) {
-                    $domainSSL = $shopDomain['domain_ssl'];
-                    $domain = $shopDomain['domain'];
-                    break;
-                }
-            }
-        }
+        list($domainSSL, $domain) = $this->getShopDomainActive($shop, $idShop);
 
         if ($relativeProtocol) {
             $base = '//' . ($ssl && $this->ssl_enable ? $domainSSL : $domain);
@@ -1655,5 +1625,33 @@ class LinkCore
         }
 
         return $link;
+    }
+
+    /**
+     * @param Shop $shop
+     * @param int|null $idShop
+     * @return array
+     */
+    private function getShopDomainActive(Shop $shop, ?int $idShop): array
+    {
+        $domainSSL = $shop->domain_ssl;
+        $domain = $shop->domain;
+        if ((Shop::getContext() === Shop::CONTEXT_ALL || Shop::getContext(
+                ) === Shop::CONTEXT_GROUP) && empty($idShop)) {
+            if (Shop::getContext() === Shop::CONTEXT_GROUP) {
+                $allShops = Shop::getShops(true, $shop->id_shop_group);
+            } else {
+                $allShops = Shop::getShops();
+            }
+            foreach ($allShops as $shopDomain) {
+                if ($shopDomain['domain_ssl'] === Tools::getHttpHost() || $shopDomain['domain'] === Tools::getHttpHost(
+                    )) {
+                    $domainSSL = $shopDomain['domain_ssl'];
+                    $domain = $shopDomain['domain'];
+                    break;
+                }
+            }
+        }
+        return [$domainSSL, $domain];
     }
 }
