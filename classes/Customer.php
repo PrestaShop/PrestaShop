@@ -1346,11 +1346,13 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Validate controller.
+     * Validate controller and check password
      *
      * @param bool $htmlentities
      *
      * @return array
+     * 
+     * @deprecated The password check has been moved in controllers and this method is not called anywhere.
      */
     public function validateController($htmlentities = true)
     {
