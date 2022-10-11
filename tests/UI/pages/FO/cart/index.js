@@ -46,9 +46,11 @@ class Cart extends FOBasePage {
     this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
     this.cartRuleAlertError = '#promo-code div.alert-danger span.js-error-text';
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
-
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+
+    this.alertChooseDeliveryAddressWarning = '#promo-code > div > div > span';
+    this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address before applying this voucher to your order';
   }
 
   /**
@@ -159,6 +161,15 @@ class Cart extends FOBasePage {
    */
   getAlertWarning(page) {
     return this.getTextContent(page, this.alertWarning);
+  }
+
+  /**
+   * Get alert warning
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+   getAlertWarningForDeliveryAdress(page) {
+    return this.getTextContent(page, this.alertChooseDeliveryAddressWarning);
   }
 
   /**

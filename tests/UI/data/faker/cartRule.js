@@ -71,6 +71,9 @@ class CartRuleData {
     /** @type {number} Amount of times a user can use the cart rule */
     this.quantityPerUser = cartRuleToCreate.quantityPerUser || 1;
 
+    /** @type {boolean} True to enable free shipping on the cart rule */
+    this.countrySelection = cartRuleToCreate.countrySelection  || false;
+
     // Actions
     /** @type {boolean} True to enable free shipping on the cart rule */
     this.freeShipping = cartRuleToCreate.freeShipping === undefined ? false : cartRuleToCreate.freeShipping;
