@@ -1164,7 +1164,7 @@ class CustomerCore extends ObjectModel
      */
     public function isGuest()
     {
-        return (int) $this->id_default_group == (int) Configuration::get('PS_GUEST_GROUP');;
+        return (int) $this->id_default_group == (int) Configuration::get('PS_GUEST_GROUP');
     }
 
     /**
