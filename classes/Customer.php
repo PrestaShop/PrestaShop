@@ -312,6 +312,7 @@ class CustomerCore extends ObjectModel
     public function update($nullValues = false)
     {
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
+        $this->is_guest = (bool) $this->isGuest();
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
             $this->newsletter_date_add = date('Y-m-d H:i:s');
@@ -1163,7 +1164,7 @@ class CustomerCore extends ObjectModel
      */
     public function isGuest()
     {
-        return (bool) $this->is_guest;
+        return (int) $this->id_default_group == (int) Configuration::get('PS_GUEST_GROUP');;
     }
 
     /**
