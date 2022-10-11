@@ -44,7 +44,7 @@ $(function() {
 {if $query && isset($nb_results) && $nb_results}
 
     {if isset($features)}
-    <div class="panel">
+    <div class="panel" data-role="features">
         <h3>
             {if $features|@count == 1}
                 {l s='1 feature' d='Admin.Navigation.Search'}
@@ -67,7 +67,7 @@ $(function() {
     {/if}
 
     {if isset($modules) && $modules}
-    <div class="panel">
+    <div class="panel" data-role="modules">
         <h3>
             {if $modules|@count == 1}
                 {l s='1 module' d='Admin.Navigation.Search'}
@@ -89,7 +89,7 @@ $(function() {
     {/if}
 
     {if isset($categories) && $categories}
-    <div class="panel">
+    <div class="panel" data-role="categories">
         <h3>
             {if $categories|@count == 1}
                 {l s='1 category' d='Admin.Navigation.Search'}
@@ -109,7 +109,7 @@ $(function() {
 
     {if isset($products) && $products &&
         isset($productsCount) && $productsCount}
-    <div class="panel">
+    <div class="panel" data-role="products">
         <h3>
             {if $productsCount == 1}
                 {l s='1 product' d='Admin.Navigation.Search'}
@@ -123,7 +123,7 @@ $(function() {
 
     {if isset($customers) && $customers &&
         isset($customerCount) && $customerCount}
-    <div class="panel">
+    <div class="panel" data-role="customers">
         <h3>
             {if $customerCount == 1}
                 {l s='1 customer' d='Admin.Navigation.Search'}
@@ -137,7 +137,7 @@ $(function() {
 
     {if isset($orders) && $orders &&
     isset($orderCount) && $orderCount}
-    <div class="panel">
+    <div class="panel" data-role="orders">
         <h3>
             {if $orderCount == 1}
                 {l s='1 order' d='Admin.Navigation.Search'}
@@ -150,7 +150,7 @@ $(function() {
     {/if}
 
 {/if}
-<div class="row">
+<div class="row" data-role="search-panels">
     {foreach $searchPanels key=key item=searchPanel}
         <div class="col-lg-{if $searchPanels|@count <= 2}6{else}4{/if}">
             <div class="panel">

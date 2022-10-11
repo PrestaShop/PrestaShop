@@ -39,6 +39,7 @@ class BOBasePage extends CommonPage {
     this.quickAddCurrentLink = '#quick-add-link';
     this.quickAccessRemoveLink = '#quick-remove-link';
     this.manageYourQuickAccessLink = '#quick-manage-link';
+    this.navbarSarchInput = '#bo_query';
 
     // Header links
     this.helpButton = '#product_form_open_help';
@@ -512,6 +513,18 @@ class BOBasePage extends CommonPage {
         continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
       );
     }
+  }
+
+  /**
+   * Search in BackOffice
+   * @param page {Page} Browser tab
+   * @param query {string} String
+   * @returns {Promise<void>}
+   */
+  async search(page, query) {
+    await this.setValue(page, this.navbarSarchInput, query);
+    await page.keyboard.press('Enter');
+    await page.waitForNavigation('networkidle');
   }
 }
 
