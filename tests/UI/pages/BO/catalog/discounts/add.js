@@ -59,6 +59,14 @@ class AddCartRule extends BOBasePage {
     this.quantityPerUserInput = 'input[name=quantity_per_user]';
 
     // Restrictions
+    // Country Group Selection
+    this.countrySelection = '#country_restriction';
+    this.countryGroupSelection = '#country_select_2';
+    this.firstCountrySelection = `${this.countryGroupSelection} option:nth-child(1)`;
+    this.secondCountrySelection = `${this.countryGroupSelection} option:nth-child(2)`;
+    this.countryGroupRemoveButton = '#country_select_remove';
+    this.countryGroupAddButton = '#country_select_add';
+
     // ---Carrier Restriction
     this.carrierRestriction = '#carrier_restriction';
     this.carrierRestrictionPickUpInStore = '#carrier_select_2 > option:nth-child(1)';
@@ -171,6 +179,13 @@ class AddCartRule extends BOBasePage {
       await this.setChecked(page, this.carrierRestriction);
       await page.click(this.carrierRestrictionPickUpInStore);
       await page.click(this.carrierRestrictionRemoveButton);
+    }
+
+    // Choose the country selection
+    if (cartRuleData.countrySelection) {
+      await page.click(this.countrySelection);
+      await page.click(this.firstCountrySelection);
+      await page.click(this.countryGroupRemoveButton);
     }
 
     // Fill minimum amount values
