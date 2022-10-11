@@ -154,6 +154,13 @@ class HookCore extends ObjectModel
         return $hookNamesByAlias[$loweredName] ?? $hookName;
     }
 
+    /**
+     * Return true If the hook name starts with "display"
+     *
+     * @param string hook_name The name of the hook to check
+     *
+     * @return void
+     */
     public static function isDisplayHookName($hook_name)
     {
         $hook_name = strtolower(static::normalizeHookName($hook_name));
@@ -220,6 +227,8 @@ class HookCore extends ObjectModel
 
     /**
      * Return hook ID from name.
+     *
+     * @return string|false Hook name, or false if it doesn't exist
      *
      * @throws PrestaShopObjectNotFoundException
      */
