@@ -86,3 +86,4 @@ jobs:
 
       - name: Checking doubles in steps identifiers
         run: npm run check:step-identifiers
+        if: contains(github.event.pull_request.labels.*.name, 'TE')
