@@ -1352,7 +1352,7 @@ class CustomerCore extends ObjectModel
      *
      * @return array
      * 
-     * @deprecated The password check has been moved in controllers and this method is not called anywhere.
+     * @deprecated 8.1.0 The password check has been moved in controllers and this method is not called anywhere since 1.7.0
      */
     public function validateController($htmlentities = true)
     {
