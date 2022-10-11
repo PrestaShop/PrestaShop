@@ -228,7 +228,7 @@ class HookCore extends ObjectModel
     /**
      * Return hook ID from name.
      *
-     * @return string|false Hook name, or false if it doesn't exist
+     * @return string Hook name
      *
      * @throws PrestaShopObjectNotFoundException
      */
