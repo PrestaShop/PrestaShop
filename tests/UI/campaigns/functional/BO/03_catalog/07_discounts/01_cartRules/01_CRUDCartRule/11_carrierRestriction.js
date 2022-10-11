@@ -133,7 +133,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'GoToFirstProductPage',
+        'goToFirstProductPage',
         baseContext,
       );
 
@@ -147,7 +147,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddProductToCart',
+        'addProductToCart',
         baseContext,
       );
 
@@ -162,21 +162,21 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'AddPromoCode',
+          'addPromoCodeAndGetErrorMessage',
           baseContext,
         );
 
         await cartPage.addPromoCode(page, cartRuleCode.code);
 
         const alertMessage = await cartPage.getCartRuleErrorMessage(page);
-        await expect(alertMessage).to.equal(cartPage.cartRuleAlertMessagetext);
+        await expect(alertMessage).to.equal(cartPage.cartRuleChooseCarrierAlertMessageText);
       });
 
     it('should proceed to checkouts', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'ProceedToCheckoutAndSignIn',
+        'proceedToCheckoutAndSignIn',
         baseContext,
       );
 
@@ -190,7 +190,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'SignInFO',
+        'signInFO',
         baseContext,
       );
 
@@ -204,7 +204,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'ConfirmAdressStep',
+        'confirmAdressStep',
         baseContext,
       );
 
@@ -216,7 +216,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'addPromoCode',
+        'addPromoCodeAndChooseWrongShippingMethod',
         baseContext,
       );
 
@@ -224,14 +224,14 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await checkoutPage.addPromoCode(page, cartRuleCode.code);
 
       const errorShippingMessage = await checkoutPage.getCartRuleErrorMessage(page);
-      await expect(errorShippingMessage).to.equal(checkoutPage.cartRuleAlertMessagetext);
+      await expect(errorShippingMessage).to.equal(cartPage.cartRuleCannotUseVoucherAlertMessageText);
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddPromoCodeANDVerifyTotalAfterDiscount',
+        'addPromoCodeANDVerifyTotalAfterDiscount',
         baseContext,
       );
 
@@ -256,7 +256,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'RemoveTheDiscount',
+        'removeTheDiscount',
         baseContext,
       );
 
@@ -268,7 +268,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'CheckLogoLink',
+        'checkLogoLink',
         baseContext,
       );
 
@@ -281,7 +281,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'ClickOnCartLink',
+        'clickOnCartLink',
         baseContext,
       );
 
