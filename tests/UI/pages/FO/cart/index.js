@@ -45,7 +45,8 @@ class Cart extends FOBasePage {
     this.addPromoCodeButton = '#promo-code button.btn-primary';
     this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
-    this.cartRuleAlertMessagetext = 'You must choose a carrier before applying this voucher to your order';
+    this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
+    this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
 
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
 
