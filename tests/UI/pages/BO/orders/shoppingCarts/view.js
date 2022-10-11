@@ -142,7 +142,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async hasButtonCreateOrderFromCart(page) {
-    return this.elementVisible(page, this.orderInformationButtonCreateOrder);
+    return this.elementVisible(page, this.orderInformationButtonCreateOrder, 1000);
   }
 
   /**

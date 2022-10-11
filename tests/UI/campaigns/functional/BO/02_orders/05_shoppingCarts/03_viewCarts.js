@@ -203,7 +203,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'fillAndCreateOrder', baseContext);
 
       // Choose payment method
-      await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.displayName);
+      await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
       // Set order status
       await addOrderPage.setOrderStatus(page, Statuses.paymentAccepted);
       // Create the order
