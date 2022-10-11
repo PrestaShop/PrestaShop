@@ -56,7 +56,6 @@ const myCarrierCost = 8.40;
 // Variable used to get the available stock of the ordered product from BO > stocks page
 let availableStockOfOrderedProduct = 0;
 
-
 /*
 Pre-condition:
 - Delete Non ordered carts from shopping cart page
