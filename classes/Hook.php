@@ -155,11 +155,11 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * Return true If the hook name starts with "display"
+     * Return true if the hook name starts with "display"
      *
-     * @param string hook_name The name of the hook to check
+     * @param string $hook_name The name of the hook to check
      *
-     * @return void
+     * @return bool
      */
     public static function isDisplayHookName($hook_name)
     {
