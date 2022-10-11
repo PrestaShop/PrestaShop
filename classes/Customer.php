@@ -1083,7 +1083,7 @@ class CustomerCore extends ObjectModel
 
         return self::$_customer_groups[$idCustomer];
     }
-    
+
     /**
      * Get Groups of this Customer
      *
