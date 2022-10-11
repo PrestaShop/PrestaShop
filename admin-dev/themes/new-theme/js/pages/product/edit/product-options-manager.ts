@@ -48,6 +48,7 @@ export default class ProductOptionsManager {
   private init(): void {
     this.initShowPriceToggler();
     this.initSuppliers();
+    this.initProductVisibilityList();
   }
 
   private initShowPriceToggler(): void {
@@ -76,6 +77,28 @@ export default class ProductOptionsManager {
     showPriceInputs.forEach((input) => {
       // eslint-disable-next-line no-param-reassign
       input.checked = input.value === '1' ? switchOn : !switchOn;
+    });
+  }
+
+  private initProductVisibilityList(): void {
+    const defaultSelectedInput = document.querySelector<HTMLInputElement>(`${ProductMap.options.visibilityRadio}:checked`);
+    const descriptionField = document.querySelector<HTMLDivElement>(ProductMap.options.visibilityDescriptionField);
+
+    if (descriptionField === null || defaultSelectedInput === null) {
+      return;
+    }
+
+    descriptionField.innerHTML = `${defaultSelectedInput.dataset.description}`;
+
+    const inputs = document.querySelectorAll<HTMLInputElement>(ProductMap.options.visibilityRadio) ?? [];
+    inputs.forEach((input: HTMLInputElement) => {
+      input.addEventListener('change', () => {
+        const selectedChoiceDescription = input.dataset.description as string;
+
+        if (input.checked) {
+          descriptionField.innerHTML = selectedChoiceDescription;
+        }
+      });
     });
   }
 
