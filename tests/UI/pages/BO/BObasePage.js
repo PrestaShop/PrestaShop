@@ -271,6 +271,30 @@ class BOBasePage extends CommonPage {
   }
 
   /**
+   * Check if parent Menu is open
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @param timeout Time to wait for menu to be not visible
+   * @return {Promise<boolean>}
+   */
+  isParentMenuOpen(page, parentSelector, timeout = 1000) {
+    return this.elementNotVisible(page, `${parentSelector}.open`, timeout);
+  }
+
+  /**
+   * Open Parent Menu
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @return {Promise<void>}
+   */
+  async openParentMenu(page, parentSelector) {
+    if (await this.isParentMenuOpen(page, parentSelector)) {
+      await this.waitForSelectorAndClick(page, parentSelector);
+      await this.waitForVisibleSelector(page, `${parentSelector}.open`);
+    }
+  }
+
+  /**
    * Open a subMenu if closed and click on a sublink
    * @param page {Page} Browser tab
    * @param parentSelector {string} Selector of the parent menu
@@ -278,16 +302,10 @@ class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(page, parentSelector, linkSelector) {
-    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
-      // open the block
-      await this.scrollTo(page, parentSelector);
+    // Open Parent Menu
+    await this.openParentMenu(page, parentSelector);
 
-      await Promise.all([
-        page.click(parentSelector),
-        this.waitForVisibleSelector(page, `${parentSelector}.open`),
-      ]);
-    }
-    await this.scrollTo(page, linkSelector);
+    // Click on child Menu
     await this.clickAndWaitForNavigation(page, linkSelector);
     await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
   }
@@ -380,7 +398,7 @@ class BOBasePage extends CommonPage {
   }
 
   /**
-   * Open help side bar
+   * Open help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
@@ -390,7 +408,7 @@ class BOBasePage extends CommonPage {
   }
 
   /**
-   * Close help side bar
+   * Close help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
