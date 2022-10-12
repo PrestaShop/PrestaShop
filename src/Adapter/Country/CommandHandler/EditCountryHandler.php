@@ -125,7 +125,7 @@ class EditCountryHandler implements EditCountryHandlerInterface
         }
 
         try {
-            $this->countryRepository->add($country);
+            $this->countryRepository->update($country);
         } catch (CoreException $e) {
             throw new CannotEditCountryException(
                 'An unexpected error occurred when updating country',
