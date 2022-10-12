@@ -14,7 +14,8 @@ web_profiler:
 monolog:
   handlers:
     main:
-      type: stream
+      type:   rotating_file
+      max_files: 5
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
       channels: [ "!event" ]
