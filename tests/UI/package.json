@@ -97,7 +97,7 @@
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-html": "^6.0.2",
     "eslint-plugin-import": "^2.20.2",
-    "jsdoc-to-markdown": "^7.0.1",
+    "jsdoc-to-markdown": "^7.1.1",
     "mochawesome-merge": "^4.2.0"
   }
 }
