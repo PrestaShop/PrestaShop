@@ -72,7 +72,7 @@ class CartRuleData {
     this.quantityPerUser = cartRuleToCreate.quantityPerUser || 1;
 
     /** @type {boolean} True to enable free shipping on the cart rule */
-    this.countrySelection = cartRuleToCreate.countrySelection  || false;
+    this.countrySelection = cartRuleToCreate.countrySelection || false;
 
     // Actions
     /** @type {boolean} True to enable free shipping on the cart rule */

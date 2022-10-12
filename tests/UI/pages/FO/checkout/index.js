@@ -238,20 +238,20 @@ class Checkout extends FOBasePage {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
-    /**
+  /**
    * Set promo code
    * @param page {Page} Browser tab
    * @param code {string} The promo code
    * @param clickOnCheckoutPromoCodeLink {boolean} True if we need to click on promo code link
    * @returns {Promise<void>}
    */
-     async addPromoCode(page, code, clickOnCheckoutPromoCodeLink = true) {
-      if (clickOnCheckoutPromoCodeLink) {
-        await page.click(this.checkoutHavePromoCodeButton);
-      }
-      await this.setValue(page, this.checkoutHavePromoInputArea, code);
-      await page.click(this.checkoutPromoCodeAddButton);
+  async addPromoCode(page, code, clickOnCheckoutPromoCodeLink = true) {
+    if (clickOnCheckoutPromoCodeLink) {
+      await page.click(this.checkoutHavePromoCodeButton);
     }
+    await this.setValue(page, this.checkoutHavePromoInputArea, code);
+    await page.click(this.checkoutPromoCodeAddButton);
+  }
 
   /**
    * Go to Payment Step and check that delivery step is complete
@@ -283,7 +283,7 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-   getATIPrice(page) {
+  getATIPrice(page) {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
@@ -292,10 +292,10 @@ class Checkout extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-     async removePromoCode(page) {
-      await page.click(this.checkoutRemoveDiscountLink);
-      return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
-    }
+  async removePromoCode(page) {
+    await page.click(this.checkoutRemoveDiscountLink);
+    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+  }
 
   /**
    * Order when no payment is needed

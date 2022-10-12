@@ -50,7 +50,8 @@ class Cart extends FOBasePage {
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
 
     this.alertChooseDeliveryAddressWarning = '#promo-code > div > div > span';
-    this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address before applying this voucher to your order';
+    this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address'
+    + ' before applying this voucher to your order';
   }
 
   /**
@@ -168,7 +169,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-   getAlertWarningForDeliveryAdress(page) {
+  getAlertWarningForDeliveryAdress(page) {
     return this.getTextContent(page, this.alertChooseDeliveryAddressWarning);
   }
 
