@@ -8,10 +8,8 @@ updates:
       time: "04:00"
     open-pull-requests-limit: 10
     target-branch: develop
-    assignees:
-      - "qa-automation"
     reviewers:
-      - "qa-automation"
+      - "PrestaShop/qa-automation"
     labels:
       - "dependencies"
       - "develop"
