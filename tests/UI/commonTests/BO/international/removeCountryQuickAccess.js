@@ -8,12 +8,11 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import BO pages
 // const countriesPage = require('@pages/BO/catalog/discounts');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
-const addNewQuickAccessPage = require('@pages/BO/catalog/discounts/index.js');
+const addNewQuickAccessPage = require('@pages/BO/quickAccess/index.js');
+const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
-
-
-// Import common tests
+const quickAccessLink = require('@pages/BO/BObasePage');
 
 // Import data
 const {countries} = require('@data/demo/countries');
@@ -23,6 +22,7 @@ const testContext = require('@utils/testContext');
 
 // Import expect from chai
 const {expect} = require('chai');
+const BOBasePage = require('../../../pages/BO/BObasePage');
 
 let browserContext;
 let page;
@@ -47,6 +47,19 @@ function removeCountryQuickAccessTest(baseContext = 'commonTests-removeCountryQu
       await loginCommon.loginBO(this, page);
     });
 
+    it('should go to \'International > Locations\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.internationalParentLink,
+        dashboardPage.locationsLink,
+      );
+
+      const pageTitle = await zonesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(zonesPage.pageTitle);
+    });
+
     it('should go to \'Countries\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
@@ -56,38 +69,41 @@ function removeCountryQuickAccessTest(baseContext = 'commonTests-removeCountryQu
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
 
-    // it('should reset all filters and get number of countries in BO', async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+    it('should reset all filters and get number of countries in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-    //   numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
-    //   await expect(numberOfCountries).to.be.above(0);
-    // });
+      numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCountries).to.be.above(0);
+    });
 
-    // it(`should search for the country '${countries.unitedStates.name}'`, async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
+    it(`should search for the country '${countries.unitedStates.name}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-    //   await countriesPage.filterTable(page, 'input', 'b!name', countries.unitedStates.name);
+      await countriesPage.filterTable(page, 'input', 'b!name', countries.unitedStates.name);
 
-    //   const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
-    //   await expect(numberOfCountriesAfterFilter).to.be.equal(1);
+      const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    //   const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.afghanistan.name);
-    //   await expect(textColumn).to.equal(countries.unitedStates.name);
-    // });
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.unitedStates.name);
+      await expect(textColumn).to.equal(countries.unitedStates.name);
+    });
 
-    // it(`should check that this country is activated'`, async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
+    it('should check that this country is activated', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
-    //   const countryStatus = await countriesPage.getCountryStatus(page);
-    //   await expect(countryStatus).to.be.true;
-    // });
+      const countryStatus = await countriesPage.getCountryStatus(page);
+      await expect(countryStatus).to.be.false;
+    });
 
-    // it('should remove current page to Quick access', async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageToQuickAccess', baseContext);
+    it('should remove current page from Quick access', async function () {
+    //   await testContext.addContextItem(this, 'testIdentifier', 'removeCurrentPageFromQuickAccess', baseContext);
+    await quickAccessLink.removeLinkFromQuickAccess(page);
+    await page.waitForTimeout(20000)
+    //   // await addNewQuickAccessPage.removeQuickAccessPage(page);
+    //   // removeLinkFromQuickAccess
+    //   await goToQuickAccessLink.removeLinkFromQuickAccess(page);
 
-    //   await addNewQuickAccessPage.removeQuickAccessPage(page);
-
-    // });
+    });
   });
 }
 
