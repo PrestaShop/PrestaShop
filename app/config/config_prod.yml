@@ -20,7 +20,8 @@ monolog:
       action_level: error
       handler: nested
     nested:
-      type: stream
+      type:  rotating_file
+      max_files: 30
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
     console:
