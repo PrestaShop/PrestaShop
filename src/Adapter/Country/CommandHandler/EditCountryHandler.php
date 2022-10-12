@@ -28,20 +28,30 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
-use Country;
-use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 /**
  * Handles creation of country and address format for it
  */
-class EditCountryHandler extends AbstractCountryHandler implements EditCountryHandlerInterface
+class EditCountryHandler implements EditCountryHandlerInterface
 {
+    /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    public function __construct(CountryRepository $countryRepository)
+    {
+        $this->countryRepository = $countryRepository;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -53,5 +63,75 @@ class EditCountryHandler extends AbstractCountryHandler implements EditCountryHa
     public function handle(EditCountryCommand $command): void
     {
         $this->updateCountry($command);
+    }
+
+    /**
+     * @param EditCountryCommand $command
+     *
+     * @throws CannotEditCountryException
+     * @throws CountryConstraintException
+     * @throws CountryNotFoundException
+     * @throws PrestaShopException
+     */
+    private function updateCountry(EditCountryCommand $command): void
+    {
+        $country = $this->countryRepository->get($command->getCountryId());
+
+        if (null !== $command->getLocalizedNames()) {
+            $country->name = $command->getLocalizedNames();
+        }
+        if (null !== $command->getIsoCode()) {
+            $country->iso_code = $command->getIsoCode();
+        }
+
+        if (null !== $command->getCallPrefix()) {
+            $country->call_prefix = $command->getCallPrefix();
+        }
+
+        if (null !== $command->needZipCode()) {
+            $country->need_zip_code = $command->needZipCode();
+        }
+
+        if (null !== $command->isEnabled()) {
+            $country->active = $command->isEnabled();
+        }
+
+        if (null !== $command->needIdNumber()) {
+            $country->need_identification_number = $command->needIdNumber();
+        }
+
+        if (null !== $command->displayTaxLabel()) {
+            $country->display_tax_label = $command->displayTaxLabel();
+        }
+
+        if (null !== $command->getShopAssociation()) {
+            $country->id_shop_list = $command->getShopAssociation();
+        }
+
+        if (null !== $command->containsStates()) {
+            $country->contains_states = $command->containsStates();
+        }
+
+        if (null !== $command->getZipCodeFormat()) {
+            $country->zip_code_format = $command->getZipCodeFormat()->getValue();
+        }
+
+        if (null !== $command->getDefaultCurrency()) {
+            $country->id_currency = $command->getDefaultCurrency();
+        }
+
+        if (null !== $command->getZoneId()) {
+            $country->id_zone = $command->getZoneId();
+        }
+
+        try {
+            $this->countryRepository->add($country);
+        } catch (CoreException $e) {
+            throw new CannotEditCountryException(
+                'An unexpected error occurred when updating country',
+                CannotEditCountryException::UNKNOWN_EXCEPTION,
+                $e
+            );
+        }
     }
 }

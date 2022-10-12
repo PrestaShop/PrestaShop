@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -109,10 +109,24 @@ class CountryController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Displays country edit form and handles its submit.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index",
+     *     message="You need permission to edit this."
+     * )
+     *
+     * @param int $countryId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function editAction(int $countryId, Request $request): Response
     {
         try {
-            /** @var EditableCountry $editableCountry */
+            /** @var CountryForEditing $editableCountry */
             $editableCountry = $this->getQueryBus()->handle(new GetCountryForEditing($countryId));
         } catch (CountryException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -147,7 +161,7 @@ class CountryController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'countryName' => $editableCountry->getLocalisedNames()[$this->getContextLangId()],
+            'countryName' => $editableCountry->getLocalizedNames()[$this->getContextLangId()],
         ]);
     }
 

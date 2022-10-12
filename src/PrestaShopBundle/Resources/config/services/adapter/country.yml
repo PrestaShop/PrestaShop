@@ -21,7 +21,10 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.country'
 
-  PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository: ~
+  prestashop.adapter.country.repository.country_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'
+    arguments:
+      - '@prestashop.adapter.country.validate.country_validator'
 
   prestashop.adapter.country.command_handler.add_country_handler:
     public: true
@@ -39,10 +42,13 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand' }
 
-  prestashop.adapter.country.query_handler.get_editable_country:
+  prestashop.adapter.country.query_handler.get_country_for_editing_handler:
     public: true
     class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryForEditingHandler'
     arguments:
       - '@prestashop.adapter.country.repository.country_repository'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }
+
+  prestashop.adapter.country.validate.country_validator:
+    class: PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator

@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
  * Provides data for zone add/edit form.
@@ -72,11 +72,11 @@ class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id): array
     {
-        /** @var EditableCountry $editableCountry */
+        /** @var CountryForEditing $editableCountry */
         $editableCountry = $this->queryBus->handle(new GetCountryForEditing($id));
 
         $data = [
-            'name' => $editableCountry->getLocalisedNames(),
+            'name' => $editableCountry->getLocalizedNames(),
             'iso_code' => $editableCountry->getIsoCode(),
             'call_prefix' => $editableCountry->getCallPrefix(),
             'default_currency' => $editableCountry->getDefaultCurrency(),

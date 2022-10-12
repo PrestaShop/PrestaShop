@@ -27,12 +27,12 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
  * Defines contract for get country for editing handler
  */
 interface GetCountryForEditingHandlerInterface
 {
-    public function handle(GetCountryForEditing $command): EditableCountry;
+    public function handle(GetCountryForEditing $command): CountryForEditing;
 }

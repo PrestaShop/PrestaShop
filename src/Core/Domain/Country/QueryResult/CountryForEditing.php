@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 /**
  * Stores editable country data
  */
-class EditableCountry
+class CountryForEditing
 {
     /**
      * @var CountryId
@@ -42,7 +42,7 @@ class EditableCountry
     /**
      * @var string[]
      */
-    private $localisedNames;
+    private $localizedNames;
 
     /**
      * @var string
@@ -137,7 +137,7 @@ class EditableCountry
         array $shopAssociation
     ) {
         $this->countryId = $countryId;
-        $this->localisedNames = $localisedNames;
+        $this->localizedNames = $localisedNames;
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
         $this->defaultCurrency = $defaultCurrency;
@@ -163,9 +163,9 @@ class EditableCountry
     /**
      * @return string[]
      */
-    public function getLocalisedNames(): array
+    public function getLocalizedNames(): array
     {
-        return $this->localisedNames;
+        return $this->localizedNames;
     }
 
     /**

@@ -29,20 +29,30 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
-use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
  * Handles creation of country and address format for it
  */
-class AddCountryHandler extends AbstractCountryHandler implements AddCountryHandlerInterface
+class AddCountryHandler implements AddCountryHandlerInterface
 {
+    /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    public function __construct(CountryRepository $countryRepository)
+    {
+        $this->countryRepository = $countryRepository;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -77,12 +87,8 @@ class AddCountryHandler extends AbstractCountryHandler implements AddCountryHand
                 $country->id_zone = $command->getZoneId()->getValue();
             }
 
-            $this->validateCountryFields($country);
-
-            if (false === $country->add()) {
-                throw new CannotAddCountryException('Failed to add country');
-            }
-        } catch (PrestaShopException $e) {
+            $this->countryRepository->add($country);
+        } catch (CoreException $e) {
             throw new CountryException('An unexpected error occurred when adding country', 0, $e);
         }
 

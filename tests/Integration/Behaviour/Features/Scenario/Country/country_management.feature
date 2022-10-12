@@ -22,8 +22,8 @@ Feature: country management
       | display_tax_label          | true            |
       | shop_association           | 1               |
     Then the country "test" should have the following properties:
-      | localisedNames[en-US] | testName |
-      | localisedNames[fr-FR] | testName |
+      | localizedNames[en-US] | testName |
+      | localizedNames[fr-FR] | testName |
       | isoCode               | TE       |
       | callPrefix            | 123      |
       | defaultCurrency       | 1        |
@@ -55,8 +55,8 @@ Feature: country management
       | display_tax_label          | false           |
       | shop_association           | 1               |
     Then the country "test" should have the following properties:
-      | localisedNames[en-US] | editName1 |
-      | localisedNames[fr-FR] | editName2 |
+      | localizedNames[en-US] | editName1 |
+      | localizedNames[fr-FR] | editName2 |
       | isoCode               | TA        |
       | callPrefix            | 1234      |
       | defaultCurrency       | 2         |

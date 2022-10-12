@@ -28,8 +28,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Country\Repository;
 
 use Country;
+use PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
@@ -37,6 +41,16 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
  */
 class CountryRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var CountryValidator
+     */
+    private $countryValidator;
+
+    public function __construct(CountryValidator $countryValidator)
+    {
+        $this->countryValidator = $countryValidator;
+    }
+
     /**
      * @param CountryId $countryId
      *
@@ -66,6 +80,23 @@ class CountryRepository extends AbstractObjectModelRepository
             Country::class,
             CountryNotFoundException::class
         );
+
+        return $country;
+    }
+
+    /**
+     * @param Country $country
+     *
+     * @return Country
+     *
+     * @throws CountryConstraintException
+     * @throws CoreException
+     */
+    public function add(Country $country): Country
+    {
+        $this->countryValidator->validate($country);
+
+        $this->addObjectModel($country, CannotAddCountryException::class);
 
         return $country;
     }

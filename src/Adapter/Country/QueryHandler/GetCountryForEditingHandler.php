@@ -28,25 +28,33 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\QueryHandler;
 
-use AddressFormat;
-use Country;
-use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryHandler\GetCountryForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 
 /**
  * Handles editable country query
  */
-class GetCountryForEditingHandler extends AbstractCountryHandler implements GetCountryForEditingHandlerInterface
+class GetCountryForEditingHandler implements GetCountryForEditingHandlerInterface
 {
+    /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    public function __construct(CountryRepository $countryRepository)
+    {
+        $this->countryRepository = $countryRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function handle(GetCountryForEditing $command): EditableCountry
+    public function handle(GetCountryForEditing $command): CountryForEditing
     {
         $countryId = $command->getCountryId();
-        $country = $this->getCountry($countryId);
+        $country = $this->countryRepository->get($countryId);
 
         /*
          * todo: need to refacttor format when its part is merged,
@@ -56,7 +64,7 @@ class GetCountryForEditingHandler extends AbstractCountryHandler implements GetC
          */
 //        $format = AddressFormat::getAddressCountryFormat($countryId->getValue());
 
-        return new EditableCountry(
+        return new CountryForEditing(
             $command->getCountryId(),
             $country->name,
             (string) $country->iso_code,

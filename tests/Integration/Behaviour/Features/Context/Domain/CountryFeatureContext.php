@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -180,10 +180,10 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         $expectedData = $this->formatCountryDataIfNeeded($expectedData);
 
         $queryBus = $this->getQueryBus();
-        /** @var EditableCountry $result */
+        /** @var CountryForEditing $result */
         $result = $queryBus->handle(new GetCountryForEditing($countryId));
 
-        Assert::assertEquals($expectedData['localisedNames'], $result->getLocalisedNames());
+        Assert::assertEquals($expectedData['localisedNames'], $result->getLocalizedNames());
         Assert::assertEquals($expectedData['isoCode'], $result->getIsoCode());
         Assert::assertEquals($expectedData['callPrefix'], $result->getCallPrefix());
         Assert::assertEquals($expectedData['defaultCurrency'], $result->getDefaultCurrency());
