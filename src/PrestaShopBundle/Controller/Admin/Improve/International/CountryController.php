@@ -177,7 +177,7 @@ class CountryController extends FrameworkBundleAdminController
         //todo add error messages
         return [
             CountryNotFoundException::class => $this->trans(
-                'This country does not exists',
+                'This country does not exist',
                 'Admin.International.Feature'
             ),
             CannotEditCountryException::class => [
@@ -186,7 +186,7 @@ class CountryController extends FrameworkBundleAdminController
                     'Admin.International.Feature'
                 ),
                 CannotEditCountryException::UNKNOWN_EXCEPTION => $this->trans(
-                    'Failed to update country. Got unexpected error',
+                    'Failed to update country. An unexpected error occurred.',
                     'Admin.International.Feature'
                 ),
             ],
