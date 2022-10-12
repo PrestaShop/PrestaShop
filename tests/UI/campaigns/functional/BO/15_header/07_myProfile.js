@@ -236,7 +236,7 @@ describe('BO - Header : My profile', async () => {
       await myProfilePage.updateEditEmployee(page, employeeData.password, employeeData);
 
       const textResult = await myProfilePage.getAlertSuccess(page);
-      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessage);
+      await expect(textResult).to.equal(myProfilePage.successfulUpdateMessageFR);
     });
   });
 

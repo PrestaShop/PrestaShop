@@ -14,6 +14,7 @@ class MyProfile extends EmployeeBasePage {
   constructor() {
     super();
 
+    this.successfulUpdateMessageFR = 'Mise à jour réussie';
     this.errorInvalidFirstNameMessage = 'The "First name" field is invalid.';
     this.errorInvalidLastNameMessage = 'The "Last name" field is invalid.';
     this.errorInvalidFormatImageMessage = 'An unexpected error occurred. [PrestaShop\\PrestaShop\\Core\\Image\\'
