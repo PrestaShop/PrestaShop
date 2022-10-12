@@ -9,11 +9,11 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import common tests
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule.js');
 const {removeCountryQuickAccessTest} = require('@commonTests/BO/international/removeCountryQuickAccess.js');
+
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-// const addNewQuickAccessPage = require('@pages/BO/catalog/discounts/add');
 const addNewQuickAccessPage = require('@pages/BO/quickAccess/add');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
@@ -23,15 +23,12 @@ const foHomePage = require('@pages/FO/home');
 const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
 const {countries} = require('@data/demo/countries');
 const ProductData = require('@data/FO/product');
 const {DefaultCustomer} = require('@data/demo/customer');
-const {Products} = require('@data/demo/products');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -40,7 +37,6 @@ const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_coun
 
 // Import expect from chai
 const {expect} = require('chai');
-const checkout = require('../../../../../../../pages/FO/checkout');
 
 let browserContext;
 let page;
@@ -90,6 +86,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
       await zonesPage.goToSubTabCountries(page);
+
       const pageTitle = await countriesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
@@ -97,7 +94,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     it('should reset all filters and get number of countries in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCountries).to.be.above(0);
     });
 
@@ -113,7 +110,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(textColumn).to.equal(countries.unitedStates.name);
     });
 
-    it(`should check that this country is not activated'`, async function () {
+    it('should check that this country is not activated\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
       const countryStatus = await countriesPage.getCountryStatus(page);
@@ -169,10 +166,10 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
-      // View my shop and init pages
       page = await addCartRulePage.viewMyShop(page);
 
       await foHomePage.changeLanguage(page, 'en');
+
       const isHomePage = await foHomePage.isHomePage(page);
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
@@ -181,7 +178,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `GoToFirstProductPage`,
+        'GoToFirstProductPage',
         baseContext,
       );
 
@@ -195,7 +192,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `AddProductToCart`,
+        'AddProductToCart',
         baseContext,
       );
 
@@ -209,7 +206,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `AddPromoCode`,
+        'AddPromoCode',
         baseContext,
       );
 
@@ -223,7 +220,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `ProceedToCheckoutAndSignIn`,
+        'ProceedToCheckoutAndSignIn',
         baseContext,
       );
 
@@ -235,7 +232,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
 
     it('should checkout by signIn', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `SignInFO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'SignInFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
 
@@ -247,7 +244,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `ChooseAndConfirmAdressStep`,
+        'ChooseAndConfirmAdressStep',
         baseContext,
       );
 
@@ -255,8 +252,6 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
       await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
-
-      // await page.waitForTimeout(7000)
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
@@ -294,6 +289,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       );
 
       await foHomePage.clickOnHeaderLink(page, 'Logo');
+
       const pageTitle = await foHomePage.getPageTitle(page);
       await expect(pageTitle).to.equal(foHomePage.pageTitle);
     });
@@ -322,12 +318,10 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       const notificationNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationNumber).to.be.equal(0);
     });
-
   });
 
   // post condition : delete cart rule
   deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
   // post condition : delete country from quick access
   removeCountryQuickAccessTest(`${baseContext}_postTest_2`);
-
 });

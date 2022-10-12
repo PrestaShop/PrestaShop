@@ -7,12 +7,9 @@ const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 // const countriesPage = require('@pages/BO/catalog/discounts');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
-const addNewQuickAccessPage = require('@pages/BO/quickAccess/index.js');
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
-const quickAccessLink = require('@pages/BO/BObasePage');
 
 // Import data
 const {countries} = require('@data/demo/countries');
@@ -22,7 +19,6 @@ const testContext = require('@utils/testContext');
 
 // Import expect from chai
 const {expect} = require('chai');
-const BOBasePage = require('../../../pages/BO/BObasePage');
 
 let browserContext;
 let page;
@@ -72,7 +68,7 @@ function removeCountryQuickAccessTest(baseContext = 'commonTests-removeCountryQu
     it('should reset all filters and get number of countries in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
-      numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
+      const numberOfCountries = await countriesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCountries).to.be.above(0);
     });
 
