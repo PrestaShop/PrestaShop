@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Service\Routing\Router;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,8 +44,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -78,9 +77,14 @@ final class EmployeeType extends AbstractType
     private $isMultistoreFeatureActive;
 
     /**
-     * @var string
+     * @var int
      */
-    private $defaultAvatarUrl;
+    private $superAdminProfileId;
+
+    /**
+     * @var Router
+     */
+    private $router;
 
     /**
      * @var ConfigurationInterface
@@ -92,23 +96,26 @@ final class EmployeeType extends AbstractType
      * @param array $tabChoices
      * @param array $profilesChoices
      * @param bool $isMultistoreFeatureActive
-     * @param string $defaultAvatarUrl
      * @param ConfigurationInterface $configuration
+     * @param int $superAdminProfileId
+     * @param Router $router
      */
     public function __construct(
         array $languagesChoices,
         array $tabChoices,
         array $profilesChoices,
-        $isMultistoreFeatureActive,
-        $defaultAvatarUrl,
-        ConfigurationInterface $configuration
+        bool $isMultistoreFeatureActive,
+        ConfigurationInterface $configuration,
+        int $superAdminProfileId,
+        Router $router
     ) {
         $this->languagesChoices = $languagesChoices;
         $this->tabChoices = $tabChoices;
         $this->profilesChoices = $profilesChoices;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
-        $this->defaultAvatarUrl = $defaultAvatarUrl;
         $this->configuration = $configuration;
+        $this->superAdminProfileId = $superAdminProfileId;
+        $this->router = $router;
     }
 
     /**
@@ -122,18 +129,33 @@ final class EmployeeType extends AbstractType
 
         $builder
             ->add('firstname', TextType::class, [
+                'label' => $this->trans('First name', [], 'Admin.Global'),
                 'constraints' => [
                     $this->getNotBlankConstraint(),
                     $this->getLengthConstraint(FirstName::MAX_LENGTH),
                 ],
             ])
             ->add('lastname', TextType::class, [
+                'label' => $this->trans('Last name', [], 'Admin.Global'),
                 'constraints' => [
                     $this->getNotBlankConstraint(),
                     $this->getLengthConstraint(LastName::MAX_LENGTH),
                 ],
             ])
+            ->add('avatarUrl', FileType::class, [
+                'block_prefix' => 'avatar_url',
+                'label' => $this->trans('Avatar', [], 'Admin.Global'),
+                'required' => false,
+                'attr' => [
+                    'accept' => 'gif,jpg,jpeg,jpe,png',
+                ],
+            ])
+            ->add('has_enabled_gravatar', SwitchType::class, [
+                'label' => $this->trans('Enable gravatar', [], 'Admin.Global'),
+                'required' => false,
+            ])
             ->add('email', EmailType::class, [
+                'label' => $this->trans('Email address', [], 'Admin.Global'),
                 'constraints' => [
                     $this->getNotBlankConstraint(),
                     $this->getLengthConstraint(EmployeeEmail::MAX_LENGTH),
@@ -142,21 +164,18 @@ final class EmployeeType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('avatarUrl', FileType::class, [
-                'required' => false,
-                'attr' => [
-                    'accept' => 'gif,jpg,jpeg,jpe,png',
-                ],
+            ->add('change_password', ChangePasswordType::class, [
+                'block_prefix' => 'change_password',
             ])
-            ->add('has_enabled_gravatar', SwitchType::class, [
-                'required' => false,
-            ])
-        ;
-
-        if ($options['is_restricted_access']) {
-            $builder->add('change_password', ChangePasswordType::class);
-        } else {
-            $builder->add('password', PasswordType::class, [
+            ->add('password', PasswordType::class, [
+                'label' => $this->trans('Password', [], 'Admin.Global'),
+                'help' => $this->trans(
+                    'Password should be at least %num% characters long.',
+                    [
+                        '%num%' => 8,
+                    ],
+                    'Admin.Advparameters.Help'
+                ),
                 'required' => !$options['is_for_editing'],
                 'attr' => [
                     'data-minscore' => $minScore,
@@ -173,50 +192,69 @@ final class EmployeeType extends AbstractType
                         ]
                     ),
                 ],
-            ]);
-        }
-
-        $builder
-            ->add('default_page', ChoiceType::class, [
-                'choices' => $this->tabChoices,
             ])
             ->add('language', ChoiceType::class, [
+                'label' => $this->trans('Language', [], 'Admin.Global'),
                 'choices' => $this->languagesChoices,
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => $this->trans('Active', [], 'Admin.Global'),
+                'help' => $this->trans(
+                    'Allow or disallow this employee to log in to the Admin panel.',
+                    [],
+                    'Admin.Advparameters.Help'
+                ),
+                'required' => false,
+            ])
+            ->add('profile', ChoiceType::class, [
+                'label' => $this->trans('Permission profile', [], 'Admin.Advparameters.Feature'),
+                'attr' => [
+                    'data-admin-profile' => $this->superAdminProfileId,
+                    'data-get-tabs-url' => $this->router->generate('admin_employees_get_tabs'),
+                ],
+                'choices' => $this->profilesChoices,
+            ])
+            ->add('shop_association', ShopChoiceTreeType::class, [
+                'label' => $this->trans('Shop association', [], 'Admin.Global'),
+                'help' => $this->trans(
+                    'Select the shops the employee is allowed to access.',
+                    [],
+                    'Admin.Advparameters.Help'
+                ),
+                'required' => false,
+            ])
+            ->add('default_page', ChoiceType::class, [
+                'label' => $this->trans('Default page', [], 'Admin.Advparameters.Feature'),
+                'help' => $this->trans(
+                    'This page will be displayed just after login.',
+                    [],
+                    'Admin.Advparameters.Help'
+                ),
+                'attr' => [
+                    'data-minimumResultsForSearch' => '7',
+                    'data-toggle' => 'select2',
+                ],
+                'choices' => $this->tabChoices,
             ])
         ;
 
-        if (!$options['is_restricted_access']) {
+        if ($options['is_restricted_access']) {
             $builder
-                ->add(
-                    'active',
-                    SwitchType::class,
-                    [
-                        'required' => false,
-                    ]
-                )
-                ->add(
-                    'profile',
-                    ChoiceType::class,
-                    [
-                        'choices' => $this->profilesChoices,
-                    ]
-                )
+                ->remove('password')
+                ->remove('active')
+                ->remove('profile')
+                ->remove('shop_association')
             ;
-
-            if ($this->isMultistoreFeatureActive) {
-                $builder->add('shop_association', ShopChoiceTreeType::class, [
-                    'required' => false,
-                ]);
+        } else {
+            $builder
+                ->remove('change_password')
+            ;
+            if (!$this->isMultistoreFeatureActive) {
+                $builder
+                    ->remove('shop_association')
+                ;
             }
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        $view->vars['defaultAvatarUrl'] = $this->defaultAvatarUrl;
     }
 
     /**

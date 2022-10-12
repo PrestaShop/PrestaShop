@@ -297,13 +297,14 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         $templateVars = [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'enableSidebar' => true,
         ];
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/create.html.twig',
-            $templateVars + $this->getFormTemplateVariables($request)
+            $templateVars
         );
     }
 
@@ -382,6 +383,7 @@ class EmployeeController extends FrameworkBundleAdminController
         }
 
         $templateVars = [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'employeeForm' => $employeeForm->createView(),
             'isRestrictedAccess' => $isRestrictedAccess,
             'editableEmployee' => $editableEmployee,
@@ -389,7 +391,7 @@ class EmployeeController extends FrameworkBundleAdminController
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/edit.html.twig',
-            $templateVars + $this->getFormTemplateVariables($request)
+            $templateVars
         );
     }
 
@@ -544,26 +546,6 @@ class EmployeeController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
-        ];
-    }
-
-    /**
-     * Get template variables that are same between create and edit forms.
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getFormTemplateVariables(Request $request)
-    {
-        $configuration = $this->get('prestashop.adapter.legacy.configuration');
-
-        return [
-            'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'superAdminProfileId' => $configuration->get('_PS_ADMIN_PROFILE_'),
-            'getTabsUrl' => $this->generateUrl('admin_employees_get_tabs'),
-            'errorMessage' => $this->trans('You need permission to add this.', 'Admin.Notifications.Error'),
         ];
     }
 }
