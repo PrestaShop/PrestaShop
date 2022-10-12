@@ -435,7 +435,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $email e-mail
      * @param string $plaintextPassword Password is also checked if specified
-     * @param bool $ignoreGuest To exclude guest customer
+     * @param bool $ignoreGuest to ignore guest customers
      *
      * @return bool|Customer|CustomerCore Customer instance
      *
@@ -565,8 +565,8 @@ class CustomerCore extends ObjectModel
      * Check if e-mail is already registered in database.
      *
      * @param string $email e-mail
-     * @param bool $returnId Return Customer ID if true, or boolean
-     * @param bool $ignoreGuest To exclude guest customer
+     * @param bool $returnId If true the method returns the Customer ID, or boolean
+     * @param bool $ignoreGuest to ignore guest customers
      *
      * @return bool|int Customer ID if found
      *                  `false` otherwise
@@ -610,9 +610,6 @@ class CustomerCore extends ObjectModel
         return self::$_customerHasAddress[$key];
     }
 
-    /**
-     * Reset static cache
-     */
     public static function resetStaticCache()
     {
         self::$_customerHasAddress = [];
@@ -1138,7 +1135,7 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Get current Country or default country
+     * Get current country or default country
      *
      * @param int $idCustomer
      * @param Cart|null $cart
