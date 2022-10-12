@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import common tests
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule.js');
-
+const {removeCountryQuickAccessTest} = require('@commonTests/BO/international/removeCountryQuickAccess.js');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
@@ -259,114 +259,75 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       // await page.waitForTimeout(7000)
     });
 
-    // it('should choose the shipping method', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     `ShippingMethodStep`,
-    //     baseContext,
-    //   );
-
-    //   const isPaymentStep = await checkoutPage.goToPaymentStep(page);
-    //   await expect(isPaymentStep, 'Payment Step bloc is not displayed').to.be.true;
-    // });
-
-    it('should set the promo code after SignIn', async function () {
+    it('should set the promo code for second time and check total after discount', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `AddPromoCodeAfterSignIn`,
+        'addPromoCodeANDVerifyTotalAfterDiscount',
         baseContext,
       );
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
-      await page.waitForTimeout(3000)
+      await checkoutPage.addPromoCode(page, cartRuleCode.code);
 
-      // const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForDeliveryAdress(page);
-      // await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningtext);
+      const cartRuleName = await cartPage.getCartRuleName(page, 1);
+      await expect(cartRuleName).to.equal(cartRuleCode.name);
     });
 
-    // it('should verify the total after discount', async function () {
-    //   await testContext.addContextItem(
-    //     this,
-    //     'testIdentifier',
-    //     `VerifyTotalAfterDiscount`,
-    //     baseContext,
-    //   );
+    it('should remove the discount', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'removeTheDiscount',
+        baseContext,
+      );
 
-    //   const discountedPrice = Products.demo_1.finalPrice
-    //     - (Products.demo_1.finalPrice * cartRuleCode.discountPercent / 100);
+      const isDeleteIconNotVisible = await checkoutPage.removePromoCode(page);
+      await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
+    });
 
-    //   const priceATI = await cartPage.getATIPrice(page);
-    //   await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));
-    // });
+    it('should click on the logo of the shop', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'checkLogoLink',
+        baseContext,
+      );
+
+      await foHomePage.clickOnHeaderLink(page, 'Logo');
+      const pageTitle = await foHomePage.getPageTitle(page);
+      await expect(pageTitle).to.equal(foHomePage.pageTitle);
+    });
+
+    it('should click on the cart link', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'clickOnCartLink',
+        baseContext,
+      );
+
+      await foHomePage.goToCartPage(page);
+    });
+
+    it('should remove product from shopping cart', async function () {
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        'removeProduct1',
+        baseContext,
+      );
+
+      await cartPage.deleteProduct(page, 1);
+
+      const notificationNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationNumber).to.be.equal(0);
+    });
 
   });
 
-  // const tests = [
-  //   {args: {testIdentifier: 'cartRuleAccepted', testTitle: 'for the first time'}},
-  //   {args: {testIdentifier: 'cartRuleNotAccepted', testTitle: 'for the second time'}},
-  // ];
-
- /* tests.forEach((test) => {
-    describe(`Use Cart Rule ${test.args.testTitle}`, async () => {
-
-
-
-
-      
-
-      if (test.args.testIdentifier === 'cartRuleAccepted') {
-        
-
-
-
-
-
-
-
-
-
-        it('should choose the payment type and confirm the order', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}PaymentTypeStep`,
-            baseContext,
-          );
-
-          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-          // Check the confirmation message
-          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-        });
-
-        it('should click on the logo of the shop', async function () {
-          await testContext.addContextItem(
-            this,
-            'testIdentifier',
-            `${test.args.testIdentifier}CheckLogoLink`,
-            baseContext,
-          );
-
-          await foHomePage.clickOnHeaderLink(page, 'Logo');
-          const pageTitle = await foHomePage.getPageTitle(page);
-          await expect(pageTitle).to.equal(foHomePage.pageTitle);
-        });
-      }
-      if (test.args.testIdentifier === 'cartRuleNotAccepted') {
-        it('should search for the same created voucher and check the error message', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'searchExistingVoucher', baseContext);
-
-          const voucherErrorText = await cartPage.getCartRuleErrorMessage(page);
-          await expect(voucherErrorText).to.equal(cartPage.cartRuleAlreadyUsedErrorText);
-        });
-      }
-    });
-  });*/
-
   // post condition : delete cart rule
-  // deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
-  // await countriesPage.setCountryStatus(page, 7, false);
+  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
+  // post condition : delete country from quick access
+  removeCountryQuickAccessTest(`${baseContext}_postTest_2`);
 
 });

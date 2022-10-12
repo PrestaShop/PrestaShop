@@ -27,6 +27,13 @@ class Checkout extends FOBasePage {
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
     this.noPaymentNeededText = 'No payment needed for this order';
+    this.checkoutSummary = '#js-checkout-summary';
+    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
+    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
+    this.promoCodeArea = '#promo-code';
+    this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
+    this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -231,6 +238,21 @@ class Checkout extends FOBasePage {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
   }
 
+    /**
+   * Set promo code
+   * @param page {Page} Browser tab
+   * @param code {string} The promo code
+   * @param clickOnCheckoutPromoCodeLink {boolean} True if we need to click on promo code link
+   * @returns {Promise<void>}
+   */
+     async addPromoCode(page, code, clickOnCheckoutPromoCodeLink = true) {
+      if (clickOnCheckoutPromoCodeLink) {
+        await page.click(this.checkoutHavePromoCodeButton);
+      }
+      await this.setValue(page, this.checkoutHavePromoInputArea, code);
+      await page.click(this.checkoutPromoCodeAddButton);
+    }
+
   /**
    * Go to Payment Step and check that delivery step is complete
    * @param page {Page} Browser tab
@@ -255,6 +277,25 @@ class Checkout extends FOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
+
+  /**
+   * Get All tax included price
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+   getATIPrice(page) {
+    return this.getPriceFromText(page, this.cartTotalATI, 2000);
+  }
+
+  /**
+   * Delete the discount
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+     async removePromoCode(page) {
+      await page.click(this.checkoutRemoveDiscountLink);
+      return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+    }
 
   /**
    * Order when no payment is needed
