@@ -47,7 +47,7 @@ class CombinationListFormDataFormatter extends AbstractFormDataFormatter
             '[impact_on_price_te]' => '[price_impact][price_tax_excluded]',
             '[impact_on_price_ti]' => '[price_impact][price_tax_included]',
             '[delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
-            '[is_default]' => '[is_default]',
+            '[is_default]' => '[header][is_default]',
         ];
 
         return $this->formatByPath($formData, $pathAssociations);
