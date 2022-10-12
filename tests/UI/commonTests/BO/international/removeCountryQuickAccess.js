@@ -98,10 +98,7 @@ function removeCountryQuickAccessTest(baseContext = 'commonTests-removeCountryQu
     it('should remove current page from Quick access', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeCurrentPageFromQuickAccess', baseContext);
 
-    await quickAccessLink.removeLinkFromQuickAccess(page);
-    //   await addNewQuickAccessPage.removeQuickAccessPage(page);
-    //   await goToQuickAccessLink.removeLinkFromQuickAccess(page);
-
+      await countriesPage.removeLinkFromQuickAccess(page);
     });
   });
 }
