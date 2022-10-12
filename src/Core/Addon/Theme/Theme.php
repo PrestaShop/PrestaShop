@@ -55,7 +55,7 @@ class Theme implements AddonInterface
             }
 
             $yamlParser = new YamlParser($configurationCacheDirectory);
-            $parentAttributes = $yamlParser->parse($themesDirectory . $attributes['parent'] . '/config/theme.yml');
+            $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
