@@ -11,15 +11,13 @@ on:
       - src/Adapter/Product/**
       - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
 jobs:
-
   sanity:
     runs-on: ubuntu-latest
-    name: Sanity product V2
+    name: Sanity Product V2
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
       fail-fast: false
-
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
