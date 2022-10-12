@@ -214,10 +214,10 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param LanguageId $languageId
      *
      * @return array<array<string, string>>
-     *                             e.g [
-     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
-     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
-     *                             ]
+     *                                      e.g [
+     *                                      ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                                      ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                                      ]
      *
      * @throws CoreException
      */
