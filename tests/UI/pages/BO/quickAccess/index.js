@@ -64,7 +64,7 @@ class QuickAccess extends BOBasePage {
   }
 
   /**
-   * Go to quick access page
+   * Remove the quick access for current page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */

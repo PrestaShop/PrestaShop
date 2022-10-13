@@ -110,7 +110,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(textColumn).to.equal(countries.unitedStates.name);
     });
 
-    it('should check that this country is not activated\'', async function () {
+    it('should check that this country is not activated', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
       const countryStatus = await countriesPage.getCountryStatus(page);
@@ -178,7 +178,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'GoToFirstProductPage',
+        'goToFirstProductPage',
         baseContext,
       );
 
@@ -192,7 +192,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddProductToCart',
+        'addProductToCart',
         baseContext,
       );
 
@@ -206,7 +206,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddPromoCode',
+        'addPromoCode',
         baseContext,
       );
 
@@ -216,11 +216,11 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningtext);
     });
 
-    it('should proceed to checkouts', async function () {
+    it('should proceed to checkout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'ProceedToCheckoutAndSignIn',
+        'proceedToCheckoutAndSignIn',
         baseContext,
       );
 
@@ -232,7 +232,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
 
     it('should checkout by signIn', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'SignInFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
 
@@ -244,21 +244,21 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'ChooseAndConfirmAdressStep',
+        'chooseAndConfirmAdressStep',
         baseContext,
       );
 
       await checkoutPage.chooseDeliveryAddress(page, 2);
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
+      await expect(isDeliveryStep, 'Delivery Step bock is not displayed').to.be.true;
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'addPromoCodeANDVerifyTotalAfterDiscount',
+        'addPromoCodeAndVerifyTotalAfterDiscount',
         baseContext,
       );
 
