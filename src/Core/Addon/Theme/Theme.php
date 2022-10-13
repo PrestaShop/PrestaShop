@@ -297,4 +297,14 @@ class Theme implements AddonInterface
 
         return $js;
     }
+
+    /**
+     * Defines if the theme requires core.js scripts or it provides it's own implementation.
+     *
+     * @return bool
+     */
+    public function requiresCoreScripts(): bool
+    {
+        return $this->attributes->get('theme_settings.core_scripts', true);
+    }
 }
