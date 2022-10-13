@@ -22,7 +22,6 @@ const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const ProductData = require('@data/FO/product');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
@@ -140,7 +139,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await foHomePage.goToProductPage(page, 1);
 
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart and proceed to checkout', async function () {
@@ -204,12 +203,12 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'confirmAdressStep',
+        'confirmAddressStep',
         baseContext,
       );
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step boc is not displayed').to.be.true;
+      await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
     });
 
     it('should set the promo code and choose the wrong shipping method', async function () {
@@ -231,7 +230,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'addPromoCodeANDVerifyTotalAfterDiscount',
+        'addPromoCodeAndVerifyTotalAfterDiscount',
         baseContext,
       );
 
