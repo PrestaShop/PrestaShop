@@ -53,7 +53,6 @@ use Tools;
  */
 class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
-    protected HookDispatcherInterface $hookDispatcher;
     /**
      * @var EntityManager
      */
