@@ -55,6 +55,9 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
+        //@todo; does nothing for POC testing. UpdateProductCommandBuilder instead
+        return [];
+
         if (empty($formData['options']) &&
             !isset($formData['description']['manufacturer']) &&
             !isset($formData['specifications'])) {

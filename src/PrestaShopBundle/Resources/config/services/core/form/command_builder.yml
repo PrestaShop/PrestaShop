@@ -129,3 +129,9 @@ services:
   prestashop.core.form.command_builder.product.combination.default_combination_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder
     tags: [ 'core.combination_command_builder' ]
+
+#@todo: POC services from here
+  prestashop.core.form.command_builder.product.update_product_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder
+    tags:
+      - { name: 'core.product_command_builder' }

@@ -29,8 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductBasicInformationFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionsFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPropertiesFillerProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 
@@ -42,23 +41,16 @@ class UpdateProductHandler
     private $productRepository;
 
     /**
-     * @var ProductBasicInformationFiller
+     * @var ProductPropertiesFillerProvider
      */
-    private $basicInformationFiller;
-
-    /**
-     * @var ProductOptionsFiller
-     */
-    private $productOptionsFiller;
+    private $productPropertiesFillerProvider;
 
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        ProductBasicInformationFiller $basicInformationFiller,
-        ProductOptionsFiller $productOptionsFiller
+        ProductPropertiesFillerProvider $productPropertiesFillerProvider
     ) {
         $this->productRepository = $productRepository;
-        $this->basicInformationFiller = $basicInformationFiller;
-        $this->productOptionsFiller = $productOptionsFiller;
+        $this->productPropertiesFillerProvider = $productPropertiesFillerProvider;
     }
 
     public function handle(UpdateProductCommand $command): void
@@ -66,12 +58,17 @@ class UpdateProductHandler
         $shopConstraint = $command->getShopConstraint();
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
 
-        //@todo:  if we manage to tag/map the filler services with the dto's somehow it should be automatable
-        $updatableProperties = $this->basicInformationFiller->fillUpdatableProperties($product, $command->getBasicInformation());
-        $updatableProperties = array_merge(
-            $updatableProperties,
-            $this->productOptionsFiller->fillUpdatableProperties($product, $command->getOptions())
-        );
+        $dtoList = [
+            $command->getOptions(),
+            $command->getBasicInformation(),
+        ];
+
+        $updatableProperties = [];
+
+        foreach ($dtoList as $dto) {
+            $filler = $this->productPropertiesFillerProvider->getFiller($dto);
+            $updatableProperties = array_merge($updatableProperties, $filler->fillUpdatableProperties($product, $dto));
+        }
 
         // @todo: other commands in dedicated PR's
 

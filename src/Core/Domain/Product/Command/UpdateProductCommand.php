@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -43,15 +45,12 @@ class UpdateProductCommand
     private $shopConstraint;
 
     /**
-     * @todo: the command is still a DTO, but we will have to rename it later (for POC its ok, as it has all the properties we need)
-     *        same for other commands used here
-     *
-     * @var UpdateProductBasicInformationCommand|null
+     * @var BasicInformationInput|null
      */
     private $basicInformation;
 
     /**
-     * @var UpdateProductOptionsCommand|null
+     * @var ProductOptionsInput|null
      */
     private $options;
 
@@ -84,19 +83,19 @@ class UpdateProductCommand
     }
 
     /**
-     * @return UpdateProductBasicInformationCommand|null
+     * @return BasicInformationInput|null
      */
-    public function getBasicInformation(): ?UpdateProductBasicInformationCommand
+    public function getBasicInformation(): ?BasicInformationInput
     {
         return $this->basicInformation;
     }
 
     /**
-     * @param UpdateProductBasicInformationCommand|null $basicInformation
+     * @param BasicInformationInput|null $basicInformation
      *
      * @return UpdateProductCommand
      */
-    public function setBasicInformation(?UpdateProductBasicInformationCommand $basicInformation): self
+    public function setBasicInformation(?BasicInformationInput $basicInformation): UpdateProductCommand
     {
         $this->basicInformation = $basicInformation;
 
@@ -104,19 +103,19 @@ class UpdateProductCommand
     }
 
     /**
-     * @return UpdateProductOptionsCommand|null
+     * @return ProductOptionsInput|null
      */
-    public function getOptions(): ?UpdateProductOptionsCommand
+    public function getOptions(): ?ProductOptionsInput
     {
         return $this->options;
     }
 
     /**
-     * @param UpdateProductOptionsCommand|null $options
+     * @param ProductOptionsInput|null $options
      *
      * @return UpdateProductCommand
      */
-    public function setOptions(?UpdateProductOptionsCommand $options): UpdateProductCommand
+    public function setOptions(?ProductOptionsInput $options): UpdateProductCommand
     {
         $this->options = $options;
 

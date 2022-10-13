@@ -27,25 +27,51 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
 use Product;
 
-//@todo: see maybe we can homogenize this and tag it as some filler interface (probably not doable because the dto's are different?)
-class ProductBasicInformationFiller
+class ProductBasicInformationFiller implements ProductPropertiesFillerInterface
 {
     /**
+     * @var int
+     */
+    private $defaultLanguageId;
+
+    /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @param int $defaultLanguageId
+     * @param Tools $tools
+     */
+    public function __construct(
+        int $defaultLanguageId,
+        Tools $tools
+    ) {
+        $this->defaultLanguageId = $defaultLanguageId;
+        $this->tools = $tools;
+    }
+
+    /**
      * @param Product $product
-     * @param UpdateProductBasicInformationCommand $command
+     * @param BasicInformationInput $input
      *
      * @return array<string, mixed>
      */
-    public function fillUpdatableProperties(
-        Product $product,
-        UpdateProductBasicInformationCommand $command
-    ): array {
+    public function fillUpdatableProperties(Product $product, $input): array
+    {
+        if (!($input instanceof BasicInformationInput)) {
+            //@todo; dedicated exception and better message
+            throw new \InvalidArgumentException(sprintf('Unsupported argument in %s', get_class($this)));
+        }
+
         $updatableProperties = [];
 
-        $localizedNames = $command->getLocalizedNames();
+        $localizedNames = $input->getLocalizedNames();
         if (null !== $localizedNames) {
             $defaultName = $localizedNames[$this->defaultLanguageId];
             // Go through all the product languages and make sure name is filled for each of them
@@ -68,13 +94,13 @@ class ProductBasicInformationFiller
             $updatableProperties['link_rewrite'][] = $langId;
         }
 
-        $localizedDescriptions = $command->getLocalizedDescriptions();
+        $localizedDescriptions = $input->getLocalizedDescriptions();
         if (null !== $localizedDescriptions) {
             $product->description = $localizedDescriptions;
             $updatableProperties['description'] = array_keys($localizedDescriptions);
         }
 
-        $localizedShortDescriptions = $command->getLocalizedShortDescriptions();
+        $localizedShortDescriptions = $input->getLocalizedShortDescriptions();
         if (null !== $localizedShortDescriptions) {
             $product->description_short = $localizedShortDescriptions;
             $updatableProperties['description_short'] = array_keys($localizedShortDescriptions);

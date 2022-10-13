@@ -27,56 +27,61 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
 use Product;
 
-class ProductOptionsFiller
+class ProductOptionsFiller implements ProductPropertiesFillerInterface
 {
     /**
      * @param Product $product
-     * @param UpdateProductOptionsCommand $command
+     * @param ProductOptionsInput $input
      *
      * @return string[]|array<string, int[]> updatable properties
      */
-    public function fillUpdatableProperties(Product $product, UpdateProductOptionsCommand $command): array
+    public function fillUpdatableProperties(Product $product, $input): array
     {
+        if (!($input instanceof ProductOptionsInput)) {
+            //@todo; dedicated exception and better message
+            throw new \InvalidArgumentException(sprintf('Unsupported argument in %s', get_class($this)));
+        }
+
         $updatableProperties = [];
 
-        if (null !== $command->getVisibility()) {
-            $product->visibility = $command->getVisibility()->getValue();
+        if (null !== $input->getVisibility()) {
+            $product->visibility = $input->getVisibility()->getValue();
             $updatableProperties[] = 'visibility';
         }
 
-        if (null !== $command->isAvailableForOrder()) {
-            $product->available_for_order = $command->isAvailableForOrder();
+        if (null !== $input->isAvailableForOrder()) {
+            $product->available_for_order = $input->isAvailableForOrder();
             $updatableProperties[] = 'available_for_order';
         }
         $availableForOrder = $product->available_for_order;
 
-        if (null !== $command->showPrice() && !$availableForOrder) {
-            $product->show_price = $command->showPrice();
+        if (null !== $input->showPrice() && !$availableForOrder) {
+            $product->show_price = $input->showPrice();
             $updatableProperties[] = 'show_price';
         } elseif ($availableForOrder && !$product->show_price) {
             $product->show_price = true;
             $updatableProperties[] = 'show_price';
         }
 
-        if (null !== $command->isOnlineOnly()) {
-            $product->online_only = $command->isOnlineOnly();
+        if (null !== $input->isOnlineOnly()) {
+            $product->online_only = $input->isOnlineOnly();
             $updatableProperties[] = 'online_only';
         }
 
-        if (null !== $command->getCondition()) {
-            $product->condition = $command->getCondition()->getValue();
+        if (null !== $input->getCondition()) {
+            $product->condition = $input->getCondition()->getValue();
             $updatableProperties[] = 'condition';
         }
 
-        if (null !== $command->showCondition()) {
-            $product->show_condition = $command->showCondition();
+        if (null !== $input->showCondition()) {
+            $product->show_condition = $input->showCondition();
             $updatableProperties[] = 'show_condition';
         }
 
-        $manufacturerId = $command->getManufacturerId();
+        $manufacturerId = $input->getManufacturerId();
         if (null !== $manufacturerId) {
             $product->id_manufacturer = $manufacturerId->getValue();
             $updatableProperties[] = 'id_manufacturer';

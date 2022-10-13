@@ -58,6 +58,8 @@ class BasicInformationCommandsBuilder implements MultiShopProductCommandsBuilder
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
+        //@todo; does nothing for POC testing. UpdateProductCommandBuilder instead
+        return [];
         if (empty($formData['description']) && empty($formData['header']['name'])) {
             return [];
         }
