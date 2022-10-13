@@ -339,10 +339,10 @@ class ProductDuplicator
      * @param int $newProductId
      *
      * @return array<string, array<int, array<int, int>>> combination images
-     *                       [
-     *                       'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
-     *                       'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
-     *                       ]
+     *                                                    [
+     *                                                    'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
+     *                                                    'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
+     *                                                    ]
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
