@@ -336,7 +336,7 @@ describe('FO - Account : Check order return PDF', async () => {
 
         if (parseInt(idReturn, 10) >= 10) {
           fileName += idReturn;
-        } else fileName = `0${idReturn}`;
+        } else fileName += `0${idReturn}`;
       });
 
       it('should go to edit merchandise returns page', async function () {

@@ -20,6 +20,7 @@ class QuickAccess extends BOBasePage {
     // Header selectors
     this.addNewQuickAccessButton = 'a[data-role=page-header-desc-quick_access-link]';
     this.removeQuickAccessLink = '#quick-remove-link';
+    this.removeQuickAccessLink = '#quick-remove-link';
 
     // Table selectors
     this.gridTable = '#table-quick_access';

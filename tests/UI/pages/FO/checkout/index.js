@@ -83,6 +83,10 @@ class Checkout extends FOBasePage {
     this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
     this.deliveryAddressPosition = position => `#delivery-addresses article:nth-child(${position})`;
 
+    this.cartTotalATI = '.cart-summary-totals span.value';
+    this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
+    this.cartRuleAlertMessagetext = 'You cannot use this voucher with this carrier';
+
     // Gift selectors
     this.giftCheckbox = '#input_gift';
     this.giftMessageTextarea = '#gift_message';
@@ -158,6 +162,18 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Choose shipping method and add a comment
+   * @param page {Page} Browser tab
+   * @param shippingMethod {number} Position of the shipping method
+   * @param comment {string} Comment to add after selecting a shipping method
+   * @returns {Promise<boolean>}
+   */
+  async chooseShippingMethodWithoutValidation(page, shippingMethod, comment = '') {
+    await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
+    await this.setValue(page, this.deliveryMessage, comment);
+  }
+
+  /**
    * Is shipping method exist
    * @param page {Page} Browser tab
    * @param shippingMethod {number} Position of the shipping method
@@ -230,6 +246,21 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Set promo code
+   * @param page {Page} Browser tab
+   * @param code {string} The promo code
+   * @param clickOnCheckoutPromoCodeLink {boolean} True if we need to click on promo code link
+   * @returns {Promise<void>}
+   */
+  async addPromoCode(page, code, clickOnCheckoutPromoCodeLink = true) {
+    if (clickOnCheckoutPromoCodeLink) {
+      await page.click(this.checkoutHavePromoCodeButton);
+    }
+    await this.setValue(page, this.checkoutHavePromoInputArea, code);
+    await page.click(this.checkoutPromoCodeAddButton);
+  }
+
+  /**
    * Get all carriers names
    * @param page {Page} Browser tab
    * @returns {Promise<Array<string>>}
@@ -251,6 +282,15 @@ class Checkout extends FOBasePage {
     }
     await this.setValue(page, this.checkoutHavePromoInputArea, code);
     await page.click(this.checkoutPromoCodeAddButton);
+  }
+
+  /**
+   * Go to Payment Step and check that delivery step is complete
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async goToShippingStep(page) {
+    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
   }
 
   /**

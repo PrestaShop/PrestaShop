@@ -376,7 +376,7 @@ describe('FO - Account : Consult return details', async () => {
 
             if (parseInt(idReturn, 10) > 10) {
               fileName += idReturn;
-            } else fileName = `0${idReturn}`;
+            } else fileName += `0${idReturn}`;
           });
         }
 

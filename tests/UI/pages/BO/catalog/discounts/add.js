@@ -58,22 +58,6 @@ class AddCartRule extends BOBasePage {
     this.quantityInput = 'input[name=quantity]';
     this.quantityPerUserInput = 'input[name=quantity_per_user]';
 
-    // Country Group Selection
-    this.countrySelection = '#country_restriction';
-    this.countryGroupSelection = '#country_select_2';
-    this.itemCountrySelection = item => `${this.countryGroupSelection} option:nth-child($[item})`;
-    this.firstCountrySelection = this.itemCountrySelection(1);
-    this.secondCountrySelection = this.itemCountrySelection(2);
-    this.countryGroupRemoveButton = '#country_select_remove';
-    this.countryGroupAddButton = '#country_select_add';
-
-    // ---Carrier Restriction
-    this.carrierRestriction = '#carrier_restriction';
-    this.carrierRestrictionPickUpInStore = '#carrier_select_2 > option:nth-child(1)';
-    this.carrierRestrictionDeliveryNextDay = '#carrier_select_2 > option:nth-child(2)';
-    this.carrierRestrictionRemoveButton = '#carrier_select_remove';
-    this.carrierRestrictionAddBTN = '#carrier_select_add';
-
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
     this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
@@ -172,6 +156,13 @@ class AddCartRule extends BOBasePage {
     if (cartRuleData.dateTo) {
       await this.setValue(page, this.dateToInput, cartRuleData.dateTo);
       await page.press(this.dateToInput, 'Enter');
+    }
+
+    // Set carrier discount
+    if (cartRuleData.carrierRestriction) {
+      await this.setChecked(page, this.carrierRestriction);
+      await page.click(this.carrierRestrictionPickUpInStore);
+      await page.click(this.carrierRestrictionRemoveButton);
     }
 
     // Choose the country selection

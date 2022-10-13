@@ -157,4 +157,13 @@ module.exports = {
 
     return tabs[tabs.length - 1];
   },
+
+  /**
+   * Returns the number of tabs
+   * @param browser {Browser} Browser given
+   * @returns {int}
+   */
+  getNumberTabs(browser) {
+    return browser.pages().length;
+  },
 };
