@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceE
 /**
  * @internal
  */
-final class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHandlerInterface
+class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHandlerInterface
 {
     /**
      * @var Connection

@@ -52,7 +52,6 @@ $(() => {
   grid.addExtension(new SubmitBulkExtension());
   grid.addExtension(new BulkActionCheckboxExtension());
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
-  grid.addExtension(new ChoiceExtension());
   grid.addExtension(new ColumnTogglingExtension());
   grid.addExtension(new SubmitRowActionExtension());
 });

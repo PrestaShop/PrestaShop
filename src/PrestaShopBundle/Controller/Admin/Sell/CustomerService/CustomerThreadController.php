@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
@@ -57,10 +58,10 @@ class CustomerThreadController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param int $customerThreadId
-     * @param string $newStatus
+     * @param Request $request
+     * @param CustomerThreadFilter $filters
      *
-     * @return RedirectResponse
+     * @return Response
      */
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
@@ -86,11 +87,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function viewAction(Request $request, $customerThreadId)
+    public function viewAction(Request $request, int $customerThreadId)
     {
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(
-            new GetCustomerThreadForViewing((int) $customerThreadId)
+            new GetCustomerThreadForViewing($customerThreadId)
         );
 
         /** @var string $customerServiceSignature */
@@ -303,7 +304,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      *     redirectRoute="admin_customer_threads"
      * )
      *
-     * @param int $orderMessageId
+     * @param int $customerThreadId
      *
      * @return RedirectResponse
      */
@@ -316,6 +317,36 @@ class CustomerThreadController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_customer_threads');
+        }
+
+        return $this->redirectToRoute('admin_customer_threads');
+    }
+
+    /**
+     * Bulk delete customer thread
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_customer_threads"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        $customerThreadId = $this->getBulkCustomerThreadsFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCustomerThreadCommand($customerThreadId));
+
+            $this->addFlash(
+                'success',
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerThreadNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_customer_threads');
@@ -348,5 +379,23 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 ),
             ],
         ];
+    }
+
+    /**
+     * Collects customer thread IDs from request.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkCustomerThreadsFromRequest(Request $request): array
+    {
+        $customerThreadIds = $request->request->get('customer_thread_bulk');
+
+        if (!is_array($customerThreadIds)) {
+            return [];
+        }
+
+        return array_map('intval', $customerThreadIds);
     }
 }
