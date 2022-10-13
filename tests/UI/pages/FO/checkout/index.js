@@ -328,26 +328,6 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Get All tax included price
-   * @param page {Page} Browser tab
-   * @returns {Promise<number>}
-   */
-  getATIPrice(page) {
-    return this.getPriceFromText(page, this.cartTotalATI, 2000);
-  }
-
-  /**
-   * Delete the discount
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async removePromoCode(page) {
-    await page.click(this.checkoutRemoveDiscountLink);
-    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
-  }
-
-
-  /**
    * Get cart rule error text
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
@@ -355,7 +335,6 @@ class Checkout extends FOBasePage {
   async getCartRuleErrorMessage(page) {
     return this.getTextContent(page, this.cartRuleAlertMessage);
   }
-
 
   /**
    * Order when no payment is needed
