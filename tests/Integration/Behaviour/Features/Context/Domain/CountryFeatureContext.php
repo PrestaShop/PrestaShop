@@ -183,7 +183,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         /** @var CountryForEditing $result */
         $result = $queryBus->handle(new GetCountryForEditing($countryId));
 
-        Assert::assertEquals($expectedData['localisedNames'], $result->getLocalizedNames());
+        Assert::assertEquals($expectedData['localizedNames'], $result->getLocalizedNames());
         Assert::assertEquals($expectedData['isoCode'], $result->getIsoCode());
         Assert::assertEquals($expectedData['callPrefix'], $result->getCallPrefix());
         Assert::assertEquals($expectedData['defaultCurrency'], $result->getDefaultCurrency());
