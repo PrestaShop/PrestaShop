@@ -55,7 +55,7 @@ class AddCountryCommand
     /**
      * @var int
      */
-    private $defaultCurrency = 0;
+    private $defaultCurrency;
 
     /**
      * @var ZoneId
@@ -65,7 +65,7 @@ class AddCountryCommand
     /**
      * @var bool
      */
-    private $needZipCode = false;
+    private $needZipCode;
 
     /**
      * @var ?CountryZipCodeFormat
@@ -75,32 +75,32 @@ class AddCountryCommand
     /**
      * @var string
      */
-    private $addressFormat = '';
+    private $addressFormat;
 
     /**
      * @var bool
      */
-    private $enabled = false;
+    private $enabled;
 
     /**
      * @var bool
      */
-    private $containsStates = false;
+    private $containsStates;
 
     /**
      * @var bool
      */
-    private $needIdNumber = false;
+    private $needIdNumber;
 
     /**
      * @var bool
      */
-    private $displayTaxLabel = false;
+    private $displayTaxLabel;
 
     /**
      * @var int[]
      */
-    private $shopAssociation = [];
+    private $shopAssociation;
 
     public function __construct(
         array $localizedNames,
