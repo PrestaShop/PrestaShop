@@ -82,7 +82,7 @@ class AddCartRule extends BOBasePage {
     this.customerGroupGuest = `${this.customerGroupSelection} option:nth-child(2)`;
     this.customerGroupVisitor = `${this.customerGroupSelection} option:nth-child(3)`;
     this.customerGroupRemoveButton = '#group_select_remove';
-    this.customerGroupAddBTN = '#group_select_add';
+    this.customerGroupAddButton = '#group_select_add';
 
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
