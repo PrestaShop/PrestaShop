@@ -46,9 +46,9 @@ Feature: Manufacturer management
       | meta_description | You'd better walk bare foot  |
       | enabled          | false                        |
       | logo image      | logo.jpg                     |
-    And the manufacturer "shoeman" has logo image
+    And the manufacturer "shoeman" has a logo image
     When I delete the manufacturer "shoeman" logo image
-    Then the manufacturer "shoeman" does not have logo image
+    Then the manufacturer "shoeman" does not have a logo image
 
   Scenario: Enable and disable manufacturer status
     Given manufacturer "shoeman" is disabled

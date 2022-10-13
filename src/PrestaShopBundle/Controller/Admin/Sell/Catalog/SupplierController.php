@@ -445,7 +445,7 @@ class SupplierController extends FrameworkBundleAdminController
      * Deletes supplier logo image.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_suppliers_edit",
      *     redirectQueryParamsToKeep={"supplierId"}
