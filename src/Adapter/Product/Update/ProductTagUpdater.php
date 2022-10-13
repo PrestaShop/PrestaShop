@@ -124,7 +124,7 @@ class ProductTagUpdater
         }
 
         foreach ($localizedTagsList as $localizedTags) {
-            if (empty($localizedProductTags[$localizedTags->getLanguageId()->getValue()])) {
+            if (empty($localizedProductTags[$localizedTags->getLanguageId()->getValue()]) && !empty($localizedTags->getTags())) {
                 return true;
             }
 
