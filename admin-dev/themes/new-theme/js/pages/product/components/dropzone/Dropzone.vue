@@ -706,11 +706,13 @@
 }
 
 .product-page #product-images-container {
+  border-radius: 4px;
   @include media-breakpoint-down(xs) {
     flex-wrap: wrap;
   }
 
   #product-images-dropzone.dropzone {
+    border-radius: 4px;
     @include media-breakpoint-down(xs) {
       flex-wrap: wrap;
       justify-content: space-around;
