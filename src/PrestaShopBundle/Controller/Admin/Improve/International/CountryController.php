@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
@@ -128,13 +127,7 @@ class CountryController extends FrameworkBundleAdminController
         try {
             /** @var CountryForEditing $editableCountry */
             $editableCountry = $this->getQueryBus()->handle(new GetCountryForEditing($countryId));
-        } catch (CountryException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
-            return $this->redirectToRoute('admin_countries_index');
-        }
-
-        try {
             $countryFormBuilder = $this->get(
                 'prestashop.core.form.identifiable_object.builder.country_form_builder'
             );

@@ -44,67 +44,67 @@ class EditCountryCommand
     /**
      * @var string[]
      */
-    protected $localizedNames;
+    private $localizedNames;
 
     /**
      * @var string
      */
-    protected $isoCode;
+    private $isoCode;
 
     /**
      * @var int
      */
-    protected $callPrefix;
+    private $callPrefix;
 
     /**
      * @var int
      */
-    protected $defaultCurrency;
+    private $defaultCurrency;
 
     /**
      * @var int|null
      */
-    protected $zoneId;
+    private $zoneId;
 
     /**
      * @var bool
      */
-    protected $needZipCode;
+    private $needZipCode;
 
     /**
      * @var ?CountryZipCodeFormat
      */
-    protected $zipCodeFormat;
+    private $zipCodeFormat;
 
     /**
      * @var string
      */
-    protected $addressFormat;
+    private $addressFormat;
 
     /**
      * @var bool
      */
-    protected $enabled;
+    private $enabled;
 
     /**
      * @var bool
      */
-    protected $containsStates;
+    private $containsStates;
 
     /**
      * @var bool
      */
-    protected $needIdNumber;
+    private $needIdNumber;
 
     /**
      * @var bool
      */
-    protected $displayTaxLabel;
+    private $displayTaxLabel;
 
     /**
      * @var int[]
      */
-    protected $shopAssociation;
+    private $shopAssociation;
 
     public function __construct(
         int $countryId
@@ -115,13 +115,6 @@ class EditCountryCommand
     public function getCountryId(): CountryId
     {
         return $this->countryId;
-    }
-
-    public function setCountryId(int $countryId): EditCountryCommand
-    {
-        $this->countryId = new CountryId($countryId);
-
-        return $this;
     }
 
     /**

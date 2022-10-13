@@ -111,11 +111,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $this->localizeByRows($table);
 
-        /** @var Country $country */
-        $country = new Country(SharedStorage::getStorage()->get($countryReference));
-
-        $countryId = (int) $country->id;
-        $command = new EditCountryCommand($countryId);
+        $command = new EditCountryCommand(SharedStorage::getStorage()->get($countryReference));
 
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
@@ -166,8 +162,6 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($countryReference, $countryId);
     }
 
     /**
