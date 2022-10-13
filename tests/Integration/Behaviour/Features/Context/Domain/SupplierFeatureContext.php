@@ -88,7 +88,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new supplier :supplierReference with following properties:
+     * @When I add new supplier :supplierReference with the following properties:
      *
      * @param string $supplierReference
      * @param TableNode $table
@@ -124,7 +124,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit supplier :supplierReference with following properties:
+     * @When I edit supplier :supplierReference with the following properties:
      *
      * @param string $supplierReference
      * @param TableNode $table
@@ -196,7 +196,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given the supplier :supplierReference has logo image
+     * @Given the supplier :supplierReference has a logo image
      *
      * @param string $supplierReference
      */
@@ -207,7 +207,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the supplier :supplierReference does not have logo image
+     * @Then the supplier :supplierReference does not have a logo image
      *
      * @param string $supplierReference
      */

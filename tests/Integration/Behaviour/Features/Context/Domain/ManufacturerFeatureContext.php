@@ -330,7 +330,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given the manufacturer :manufacturerReference has logo image
+     * @Given the manufacturer :manufacturerReference has a logo image
      *
      * @param string $manufacturerReference
      */
@@ -344,7 +344,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then the manufacturer :manufacturerReference does not have logo image
+     * @Then the manufacturer :manufacturerReference does not have a logo image
      *
      * @param string $manufacturerReference
      */
