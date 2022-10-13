@@ -35,8 +35,24 @@ services:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand'
 
-  prestashop.adapter.customer_service.command_handler.delete_customer_thread:
-    class: PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\DeleteCustomerThreadHandler
+  prestashop.adapter.customer_service.command_handler.delete_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\DeleteCustomerThreadHandler'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand
+
+  prestashop.adapter.customer_service.command_handler.bulk_delete_customer_thread_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\BulkDeleteCustomerThreadHandler'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand
+
+  prestashop.adapter.customer_service.command_handler.update_customer_thread_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\UpdateCustomerThreadStatusHandler'
+    arguments:
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand
+

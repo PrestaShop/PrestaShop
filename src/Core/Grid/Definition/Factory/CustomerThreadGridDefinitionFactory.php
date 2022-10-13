@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
@@ -174,10 +175,12 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('private'))
+                (new BooleanColumn('private'))
                     ->setName($this->trans('Private', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'private',
+                        'true_name' => $this->trans('Yes', [], 'Admin.Global'),
+                        'false_name' => $this->trans('No', [], 'Admin.Global')
                     ])
             )
             ->add(
@@ -379,7 +382,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
-        //todo: need to implement bulk actions
-        return new BulkActionCollection();
+        return (new BulkActionCollection())
+            ->add($this->buildBulkDeleteAction('admin_customer_threads_bulk_delete'));
     }
 }
