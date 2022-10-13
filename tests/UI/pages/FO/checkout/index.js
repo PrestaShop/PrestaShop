@@ -349,6 +349,15 @@ class Checkout extends FOBasePage {
 
 
   /**
+   * Get cart rule error text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+   async getCartRuleErrorMessage(page) {
+    return this.getTextContent(page, this.cartRuleAlertMessage);
+  }
+
+  /**
    * Order when no payment is needed
    * @param page
    * @returns {Promise<void>}
