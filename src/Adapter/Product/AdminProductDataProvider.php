@@ -37,6 +37,7 @@ use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Product;
@@ -52,6 +53,7 @@ use Tools;
  */
 class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
+    protected HookDispatcherInterface $hookDispatcher;
     /**
      * @var EntityManager
      */
@@ -67,14 +69,21 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     private $cache;
 
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
     public function __construct(
         EntityManager $entityManager,
         ImageManager $imageManager,
-        CacheItemPoolInterface $cache
+        CacheItemPoolInterface $cache,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->imageManager = $imageManager;
         $this->cache = $cache;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -85,7 +94,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $employee = Context::getContext()->employee;
         $employeeId = $employee->id ?: 0;
 
-        $cachedFilters = $this->cache->getItem("app.product_filters_{$employeeId}");
+        $cachedFilters = $this->cache->getItem("app.product_filters_${employeeId}");
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
@@ -256,7 +265,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
                 'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0' .
-                StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
+                    StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ],
             'sa' => [
                 'table' => 'product_shop',
@@ -466,3 +475,4 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         return (bool) Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
     }
 }
+
