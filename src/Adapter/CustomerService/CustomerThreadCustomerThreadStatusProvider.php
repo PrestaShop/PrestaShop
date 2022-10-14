@@ -47,10 +47,10 @@ class CustomerThreadCustomerThreadStatusProvider implements CustomerThreadStatus
     public function getStatuses(): array
     {
         return [
-            CustomerThreadStatus::OPEN => $this->translator->trans('Open', [], 'Admin.Catalog.Feature'),
-            CustomerThreadStatus::CLOSED => $this->translator->trans('Closed', [], 'Admin.Catalog.Feature'),
-            CustomerThreadStatus::PENDING_1 => $this->translator->trans('Pending 1', [], 'Admin.Catalog.Feature'),
-            CustomerThreadStatus::PENDING_2 => $this->translator->trans('Pending 2', [], 'Admin.Catalog.Feature'),
+            $this->translator->trans('Opened', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::OPEN,
+            $this->translator->trans('Closed', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::CLOSED,
+            $this->translator->trans('Pending 1', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_1,
+            $this->translator->trans('Pending 2', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_2,
         ];
     }
 }

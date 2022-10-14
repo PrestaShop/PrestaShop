@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Builds search and count query builders for customer thread grid.
  */
-final class CountryThreadQueryBuilder extends AbstractDoctrineQueryBuilder
+class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface

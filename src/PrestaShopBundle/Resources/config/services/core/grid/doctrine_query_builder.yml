@@ -439,7 +439,7 @@ services:
     public: true
 
   prestashop.core.grid.query.builder.customer_thread:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CountryThreadQueryBuilder'
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\CustomerThreadQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'

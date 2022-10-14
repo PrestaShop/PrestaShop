@@ -1,0 +1,6 @@
+#customer_thread_grid {
+  // Do not break thread status change button
+  .column-status .btn {
+    white-space: nowrap;
+  }
+}

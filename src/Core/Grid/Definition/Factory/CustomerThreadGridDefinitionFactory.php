@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ShopNameByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\CustomerService\ContactTypeProviderInterface;
 use PrestaShop\PrestaShop\Core\CustomerService\CustomerThreadStatusProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
@@ -41,11 +42,12 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\BooleanColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ChoiceColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\PrivateColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
@@ -78,16 +80,23 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $shopNameByIdChoiceProvider;
 
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $customerThreadStatusesChoiceProvider;
+
     public function __construct(
         HookDispatcherInterface $hookDispatcher = null,
         ContactTypeProviderInterface $contactTypeProvider,
         CustomerThreadStatusProviderInterface $statusProvider,
-        FormChoiceProviderInterface $shopNameByIdChoiceProvider
+        FormChoiceProviderInterface $shopNameByIdChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $customerThreadStatusesChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->contactTypeProvider = $contactTypeProvider;
         $this->statusProvider = $statusProvider;
         $this->shopNameByIdChoiceProvider = $shopNameByIdChoiceProvider;
+        $this->customerThreadStatusesChoiceProvider = $customerThreadStatusesChoiceProvider;
     }
 
     /**
@@ -154,10 +163,16 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('status'))
+                (new ChoiceColumn('status'))
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'status',
+                        'route' => 'admin_customer_threads_list_update_status',
+                        'color_field' => 'status_color',
+                        'choice_provider' => $this->customerThreadStatusesChoiceProvider,
+                        'record_route_params' => [
+                            'id_customer_thread' => 'customerThreadId',
+                        ],
                     ])
             )
             ->add(
@@ -175,12 +190,10 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new BooleanColumn('private'))
+                (new PrivateColumn('private'))
                     ->setName($this->trans('Private', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'private',
-                        'true_name' => $this->trans('Yes', [], 'Admin.Global'),
-                        'false_name' => $this->trans('No', [], 'Admin.Global')
                     ])
             )
             ->add(

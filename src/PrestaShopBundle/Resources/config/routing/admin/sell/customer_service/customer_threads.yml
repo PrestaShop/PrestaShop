@@ -42,10 +42,20 @@ admin_customer_threads_reply:
     customerThreadId: \d+
 
 admin_customer_threads_update_status:
-  path: /{customerThreadId}/update-status/{newStatus}
+  path: /{customerThreadId}/update-status
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_list_update_status:
+  path: /list/{customerThreadId}/update-status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromListAction
     _legacy_controller: AdminCustomerThreads
   #  _legacy_link: AdminCustomerThreads
   requirements:

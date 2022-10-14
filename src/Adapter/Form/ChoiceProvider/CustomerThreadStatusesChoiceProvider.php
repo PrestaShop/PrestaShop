@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,22 +22,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+declare(strict_types=1);
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/customer_threads' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
-{% endblock %}
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerThreadGrid} %}
-{% endblock %}
+use PrestaShop\PrestaShop\Core\CustomerService\CustomerThreadStatusProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
-{% block javascripts %}
-  {{ parent() }}
+class CustomerThreadStatusesChoiceProvider implements ConfigurableFormChoiceProviderInterface
+{
+    /**
+     * @var CustomerThreadStatusProviderInterface
+     */
+    private $customerThreadStatusProvider;
 
-  <script src="{{ asset('themes/new-theme/public/customer_thread.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+    public function __construct(CustomerThreadStatusProviderInterface $customerThreadStatusProvider)
+    {
+        $this->customerThreadStatusProvider = $customerThreadStatusProvider;
+    }
 
+    public function getChoices(array $options = [])
+    {
+        return $this->customerThreadStatusProvider->getStatuses();
+    }
+}
