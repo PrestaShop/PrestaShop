@@ -25,7 +25,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And attribute "Red" named "Red" in en language exists
 
   Scenario: I update combination suppliers:
-    Given I add new supplier supplier1 with following properties:
+    Given I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -36,7 +36,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier2 with following properties:
+    And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
       | address                 | Donelaicio st. 2   |
       | city                    | Kaunas             |
@@ -47,7 +47,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier3 with following properties:
+    And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
       | address                 | Donelaicio st. 3 |
       | city                    | Kaunas           |
@@ -632,7 +632,7 @@ Feature: Update product combination suppliers in Back Office (BO)
 
   Scenario: I should be able to associate suppliers (and default supplier) even when no combinations has been created
     # We create new empty suppliers which have no other products
-    Given I add new supplier supplier4 with following properties:
+    Given I add new supplier supplier4 with the following properties:
       | name                    | my supplier 4       |
       | address                 | Donelaicio st. 4    |
       | city                    | Kaunas              |
@@ -643,7 +643,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | meta description[en-US] |                     |
       | meta keywords[en-US]    | sup,4               |
       | shops                   | [shop1]             |
-    And I add new supplier supplier5 with following properties:
+    And I add new supplier supplier5 with the following properties:
       | name                    | my supplier 5       |
       | address                 | Donelaicio st. 5    |
       | city                    | Kaunas              |

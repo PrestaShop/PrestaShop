@@ -15,7 +15,7 @@ Feature: Update product suppliers from Back Office (BO)
     And there is a currency named "currency3" with iso code "EUR" and exchange rate of 0.63
 
   Scenario: Update standard product suppliers
-    And I add new supplier supplier1 with following properties:
+    And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -26,7 +26,7 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier2 with following properties:
+    And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
       | address                 | Donelaicio st. 2   |
       | city                    | Kaunas             |
@@ -37,7 +37,7 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier3 with following properties:
+    And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
       | address                 | Donelaicio st. 3 |
       | city                    | Kaunas           |
@@ -405,7 +405,7 @@ Feature: Update product suppliers from Back Office (BO)
       | product6supplier2 | supplier2 | my second supplier for product6 | EUR      | 11                 |
 
     Scenario: I delete a supplier the default suppliers are updated for affected products
-      Given I add new supplier supplier3 with following properties:
+      Given I add new supplier supplier3 with the following properties:
         | name                    | my supplier 3        |
         | address                 | Donelaicio st. 3     |
         | city                    | Kaunas               |
@@ -416,7 +416,7 @@ Feature: Update product suppliers from Back Office (BO)
         | meta description[en-US] |                      |
         | meta keywords[en-US]    | sup,3                |
         | shops                   | [shop1]              |
-      And I add new supplier supplier4 with following properties:
+      And I add new supplier supplier4 with the following properties:
         | name                    | my supplier 4       |
         | address                 | Donelaicio st. 4    |
         | city                    | Kaunas              |
@@ -484,7 +484,7 @@ Feature: Update product suppliers from Back Office (BO)
         | default supplier reference | |
 
     Scenario: I disable a supplier associated to a product
-      Given I add new supplier supplier5 with following properties:
+      Given I add new supplier supplier5 with the following properties:
         | name                    | my supplier 5       |
         | address                 | Donelaicio st. 5    |
         | city                    | Kaunas              |

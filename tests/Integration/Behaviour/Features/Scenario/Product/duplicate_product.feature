@@ -85,7 +85,7 @@ Feature: Duplicate product from Back Office (BO).
     And I assign product product1 with following carriers:
       | carrier1 |
       | carrier2 |
-    And I add new supplier supplier1 with following properties:
+    And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
