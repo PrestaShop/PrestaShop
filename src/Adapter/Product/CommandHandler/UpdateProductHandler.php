@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPropertiesFillerProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -45,18 +46,31 @@ class UpdateProductHandler
      */
     private $productPropertiesFillerProvider;
 
+    /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
+     * @param ProductMultiShopRepository $productRepository
+     * @param ProductPropertiesFillerProvider $productPropertiesFillerProvider
+     * @param ProductIndexationUpdater $productIndexationUpdater
+     */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        ProductPropertiesFillerProvider $productPropertiesFillerProvider
+        ProductPropertiesFillerProvider $productPropertiesFillerProvider,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->productPropertiesFillerProvider = $productPropertiesFillerProvider;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     public function handle(UpdateProductCommand $command): void
     {
         $shopConstraint = $command->getShopConstraint();
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
         $dtoList = [
             $command->getOptions(),
@@ -66,6 +80,9 @@ class UpdateProductHandler
         $updatableProperties = [];
 
         foreach ($dtoList as $dto) {
+            if (null === $dto) {
+                continue;
+            }
             $filler = $this->productPropertiesFillerProvider->getFiller($dto);
             $updatableProperties = array_merge($updatableProperties, $filler->fillUpdatableProperties($product, $dto));
         }
@@ -78,5 +95,10 @@ class UpdateProductHandler
             $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_OPTIONS
         );
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
+        }
     }
 }

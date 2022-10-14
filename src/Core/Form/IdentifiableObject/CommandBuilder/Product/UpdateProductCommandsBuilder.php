@@ -38,7 +38,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
 {
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $shopConstraint): array
     {
-        $updateProductCommand = new UpdateProductCommand($productId, $shopConstraint);
+        $updateProductCommand = new UpdateProductCommand($productId->getValue(), $shopConstraint);
 
         $updateProductCommand
             ->setBasicInformation($this->buildBasicInfo($formData))

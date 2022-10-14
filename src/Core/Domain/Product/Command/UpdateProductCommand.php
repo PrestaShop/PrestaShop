@@ -55,15 +55,15 @@ class UpdateProductCommand
     private $options;
 
     /**
-     * @param ProductId $productId
+     * @param int $productId
      * @param ShopConstraint $shopConstraint
      */
     public function __construct(
-        ProductId $productId,
+        int $productId,
         ShopConstraint $shopConstraint
     ) {
+        $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
-        $this->productId = $productId;
     }
 
     /**
