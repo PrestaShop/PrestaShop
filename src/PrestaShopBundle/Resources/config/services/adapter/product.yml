@@ -523,6 +523,7 @@ services:
       - '@prestashop.adapter.product.update.product_indexation_updater'
       - '@prestashop.adapter.product.update.product_basic_information_filler'
       - '@prestashop.adapter.product.update.product_options_filler'
+      - '@prestashop.adapter.product.update.product_price_properties_filler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand }
 
