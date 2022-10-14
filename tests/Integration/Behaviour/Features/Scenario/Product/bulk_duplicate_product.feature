@@ -21,7 +21,7 @@ Feature: Duplicate product from Back Office (BO).
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
-    And I add new supplier supplier1 with following properties:
+    And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
