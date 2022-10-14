@@ -68,7 +68,7 @@ module.exports = {
     customer_preferences: './js/pages/customer-preferences',
     customer_thread: './js/pages/customer-thread/index',
     customer_thread_view: './js/pages/customer-thread/view',
-    customer_threads: './scss/pages/customerThread/customer_thread.scss',
+    customer_threads: './scss/pages/customer_thread/customer_thread.scss',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
