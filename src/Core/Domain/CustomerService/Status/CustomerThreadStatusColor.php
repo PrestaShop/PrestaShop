@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,22 +22,47 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Status;
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/customer_threads' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
-{% endblock %}
+/**
+ * Defines colors for order statuses
+ */
+class CustomerThreadStatusColor
+{
+    /**
+     * Used for status when customer thread is open.
+     */
+    public const OPENED = '#01B887';
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerThreadGrid} %}
-{% endblock %}
+    /**
+     * Used for statuses when customer thread is closed.
+     * Example statuses: Processing in progress, On backorder (paid), Payment accepted.
+     */
+    public const CLOSED = '#2C3E50';
 
-{% block javascripts %}
-  {{ parent() }}
+    /**
+     * Used for status when customer thread is pending_1.
+     */
+    public const PENDING_1 = '#3498D8';
 
-  <script src="{{ asset('themes/new-theme/public/customer_thread.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+    /**
+     * Used for status when customer thread is pending_2.
+     */
+    public const PENDING_2 = '#34209E';
 
+    public const CUSTOMER_THREAD_STATUSES = [
+        'open' => self::OPENED,
+        'closed' => self::CLOSED,
+        'pending1' => self::PENDING_1,
+        'pending2' => self::PENDING_2,
+    ];
+
+    /**
+     * Class is not meant to be initialized.
+     */
+    private function __construct()
+    {
+    }
+}

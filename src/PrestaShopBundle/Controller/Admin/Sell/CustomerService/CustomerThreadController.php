@@ -187,30 +187,34 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * )
      *
      * @param int $customerThreadId
-     * @param string $newStatus
+     * @param Request $request
      *
      * @return RedirectResponse
      */
-    public function updateStatusAction($customerThreadId, $newStatus)
+    public function updateStatusAction(int $customerThreadId, Request $request)
     {
-        try {
-            $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
-            );
-
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
-        } catch (CustomerServiceException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
-        } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, []));
-        }
+        $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('newStatus'));
 
         return $this->redirectToRoute('admin_customer_threads_view', [
             'customerThreadId' => $customerThreadId,
         ]);
+    }
+
+    /**
+     * Updates customer thread status directly from list page.
+     *
+     * @param int $customerThreadId
+     * @param Request $request
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_customer_threads")
+     *
+     * @return RedirectResponse
+     */
+    public function updateStatusFromListAction(int $customerThreadId, Request $request): RedirectResponse
+    {
+        $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('value'));
+
+        return $this->redirectToRoute('admin_customer_threads');
     }
 
     /**
@@ -397,5 +401,23 @@ class CustomerThreadController extends FrameworkBundleAdminController
         }
 
         return array_map('intval', $customerThreadIds);
+    }
+
+    private function handleCustomerThreadStatusUpdate(int $customerThreadId, string $newStatus)
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateCustomerThreadStatusCommand((int) $customerThreadId, $newStatus)
+            );
+
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (CustomerServiceException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, []));
+        }
     }
 }
