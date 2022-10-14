@@ -85,7 +85,7 @@
     "eslint-config-prestashop": "0.0.2",
     "js-image-generator": "^1.0.2",
     "maildev": "^1.1.0",
-    "mocha": "^6.1.4",
+    "mocha": "^10.0.0",
     "mochawesome": "^6.2.2",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^2.16.105",
