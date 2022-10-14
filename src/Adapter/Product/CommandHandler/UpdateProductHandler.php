@@ -29,10 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductBasicInformationFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPropertiesFillerProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionsFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use Product;
 
 class UpdateProductHandler
 {
@@ -40,30 +42,37 @@ class UpdateProductHandler
      * @var ProductRepository
      */
     private $productRepository;
-
-    /**
-     * @var ProductPropertiesFillerProvider
-     */
-    private $productPropertiesFillerProvider;
-
     /**
      * @var ProductIndexationUpdater
      */
     private $productIndexationUpdater;
 
     /**
+     * @var ProductBasicInformationFiller
+     */
+    private $productBasicInformationFiller;
+
+    /**
+     * @var ProductOptionsFiller
+     */
+    private $productOptionsFiller;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
-     * @param ProductPropertiesFillerProvider $productPropertiesFillerProvider
      * @param ProductIndexationUpdater $productIndexationUpdater
+     * @param ProductBasicInformationFiller $productBasicInformationFiller
+     * @param ProductOptionsFiller $productOptionsFiller
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        ProductPropertiesFillerProvider $productPropertiesFillerProvider,
-        ProductIndexationUpdater $productIndexationUpdater
+        ProductIndexationUpdater $productIndexationUpdater,
+        ProductBasicInformationFiller $productBasicInformationFiller,
+        ProductOptionsFiller $productOptionsFiller
     ) {
         $this->productRepository = $productRepository;
-        $this->productPropertiesFillerProvider = $productPropertiesFillerProvider;
         $this->productIndexationUpdater = $productIndexationUpdater;
+        $this->productBasicInformationFiller = $productBasicInformationFiller;
+        $this->productOptionsFiller = $productOptionsFiller;
     }
 
     public function handle(UpdateProductCommand $command): void
@@ -72,20 +81,7 @@ class UpdateProductHandler
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
         $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
-        $dtoList = [
-            $command->getOptions(),
-            $command->getBasicInformation(),
-        ];
-
-        $updatableProperties = [];
-
-        foreach ($dtoList as $dto) {
-            if (null === $dto) {
-                continue;
-            }
-            $filler = $this->productPropertiesFillerProvider->getFiller($dto);
-            $updatableProperties = array_merge($updatableProperties, $filler->fillUpdatableProperties($product, $dto));
-        }
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         // @todo: other commands in dedicated PR's
 
@@ -100,5 +96,32 @@ class UpdateProductHandler
         if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
             $this->productIndexationUpdater->updateIndexation($product);
         }
+    }
+
+    /**
+     * @param Product $product
+     * @param UpdateProductCommand $command
+     *
+     * @return array
+     */
+    private function fillUpdatableProperties(Product $product, UpdateProductCommand $command): array
+    {
+        $updatableProperties = [];
+        if ($command->getBasicInformation()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productBasicInformationFiller->fillUpdatableProperties($product, $command->getBasicInformation())
+            );
+        }
+
+        if ($command->getOptions()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productOptionsFiller->fillUpdatableProperties($product, $command->getOptions())
+            );
+            $this->productOptionsFiller->fillUpdatableProperties($product, $command->getOptions());
+        }
+
+        return $updatableProperties;
     }
 }

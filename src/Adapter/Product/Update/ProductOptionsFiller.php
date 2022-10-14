@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
 use Product;
 
-class ProductOptionsFiller implements ProductPropertiesFillerInterface
+class ProductOptionsFiller
 {
     /**
      * @param Product $product
@@ -38,13 +38,8 @@ class ProductOptionsFiller implements ProductPropertiesFillerInterface
      *
      * @return string[]|array<string, int[]> updatable properties
      */
-    public function fillUpdatableProperties(Product $product, $input): array
+    public function fillUpdatableProperties(Product $product, ProductOptionsInput $input): array
     {
-        if (!($input instanceof ProductOptionsInput)) {
-            //@todo; dedicated exception and better message
-            throw new \InvalidArgumentException(sprintf('Unsupported argument in %s', get_class($this)));
-        }
-
         $updatableProperties = [];
 
         if (null !== $input->getVisibility()) {

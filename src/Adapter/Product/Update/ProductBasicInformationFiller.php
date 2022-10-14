@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
 use Product;
 
-class ProductBasicInformationFiller implements ProductPropertiesFillerInterface
+class ProductBasicInformationFiller
 {
     /**
      * @var int
@@ -61,13 +61,8 @@ class ProductBasicInformationFiller implements ProductPropertiesFillerInterface
      *
      * @return array<string, mixed>
      */
-    public function fillUpdatableProperties(Product $product, $input): array
+    public function fillUpdatableProperties(Product $product, BasicInformationInput $input): array
     {
-        if (!($input instanceof BasicInformationInput)) {
-            //@todo; dedicated exception and better message
-            throw new \InvalidArgumentException(sprintf('Unsupported argument in %s', get_class($this)));
-        }
-
         $updatableProperties = [];
 
         $localizedNames = $input->getLocalizedNames();
