@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductBasicInformationFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionsFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use Product;
@@ -58,21 +59,30 @@ class UpdateProductHandler
     private $productOptionsFiller;
 
     /**
+     * @var ProductPricePropertiesFiller
+     */
+    private $productPricePropertiesFiller;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      * @param ProductBasicInformationFiller $productBasicInformationFiller
      * @param ProductOptionsFiller $productOptionsFiller
+     *
+     * @todo; homogenize filler names. Make all {Foo}PropertiesFiller as already existing ones like prices
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater,
         ProductBasicInformationFiller $productBasicInformationFiller,
-        ProductOptionsFiller $productOptionsFiller
+        ProductOptionsFiller $productOptionsFiller,
+        ProductPricePropertiesFiller $productPricePropertiesFiller
     ) {
         $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
         $this->productBasicInformationFiller = $productBasicInformationFiller;
         $this->productOptionsFiller = $productOptionsFiller;
+        $this->productPricePropertiesFiller = $productPricePropertiesFiller;
     }
 
     public function handle(UpdateProductCommand $command): void
@@ -119,7 +129,13 @@ class UpdateProductHandler
                 $updatableProperties,
                 $this->productOptionsFiller->fillUpdatableProperties($product, $command->getOptions())
             );
-            $this->productOptionsFiller->fillUpdatableProperties($product, $command->getOptions());
+        }
+
+        if ($command->getPrices()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productPricePropertiesFiller->fillUpdatableProperties($product, $command->getPrices(), $command->getShopConstraint())
+            );
         }
 
         return $updatableProperties;

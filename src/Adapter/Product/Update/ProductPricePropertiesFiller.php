@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
@@ -62,6 +65,44 @@ class ProductPricePropertiesFiller
     }
 
     /**
+     * @param Product $product
+     * @param ProductPricesInput $input
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return string[] updatable properties
+     */
+    public function fillUpdatableProperties(Product $product, ProductPricesInput $input, ShopConstraint $shopConstraint): array
+    {
+        $updatableProperties = $this->fillWithPrices(
+            $product,
+            $input->getPrice(),
+            $input->getUnitPrice(),
+            $input->getWholesalePrice(),
+            $input->getEcotax(),
+            $shopConstraint
+        );
+
+        if (null !== $input->getUnity()) {
+            $product->unity = $input->getUnity();
+            $updatableProperties[] = 'unity';
+        }
+
+        $taxRulesGroupId = $input->getTaxRulesGroupId();
+
+        if (null !== $taxRulesGroupId) {
+            $product->id_tax_rules_group = $taxRulesGroupId;
+            $updatableProperties[] = 'id_tax_rules_group';
+        }
+
+        if (null !== $input->isOnSale()) {
+            $product->on_sale = $input->isOnSale();
+            $updatableProperties[] = 'on_sale';
+        }
+
+        return $updatableProperties;
+    }
+
+    /**
      * Wraps following properties filling: price, unit_price, unit_price_ratio, wholesale_price
      * as most of them (price, unit_price, unit_price_ratio) are highly coupled & depends on each other
      *
@@ -72,6 +113,8 @@ class ProductPricePropertiesFiller
      * @param ShopConstraint $shopConstraint
      *
      * @return string[] updatable properties
+     *
+     * @todo: its public just because its used in UpdatePricesHandler for now. Should make it private if this new approach is accepted
      */
     public function fillWithPrices(
         Product $product,

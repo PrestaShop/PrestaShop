@@ -30,12 +30,16 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 //@todo: abit confusing when it should always build only one command but is called plural and returns array. smth needs adjustments
 class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @inheritDoc
+     */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $shopConstraint): array
     {
         $updateProductCommand = new UpdateProductCommand($productId->getValue(), $shopConstraint);
@@ -43,11 +47,17 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         $updateProductCommand
             ->setBasicInformation($this->buildBasicInfo($formData))
             ->setOptions($this->buildOptions($formData))
+            ->setPrices($this->buildPrices($formData))
         ;
 
         return [$updateProductCommand];
     }
 
+    /**
+     * @param array<string, mixed> $formData
+     *
+     * @return BasicInformationInput|null
+     */
     private function buildBasicInfo(array $formData): ?BasicInformationInput
     {
         if (empty($formData['description']) && empty($formData['header']['name'])) {
@@ -65,6 +75,11 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         return $basicInformationInput;
     }
 
+    /**
+     * @param array<string, mixed> $formData
+     *
+     * @return ProductOptionsInput|null
+     */
     private function buildOptions(array $formData): ?ProductOptionsInput
     {
         if (empty($formData['options']) &&
@@ -89,5 +104,26 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         }
 
         return $productOptionsInput;
+    }
+
+    /**
+     * @param array<string, mixed> $formData
+     *
+     * @return ProductPricesInput|null
+     */
+    private function buildPrices(array $formData): ?ProductPricesInput
+    {
+        $productPricesInput = new ProductPricesInput();
+        $productPricesInput
+            ->setPrice($formData['retail_price']['price_tax_excluded'])
+            ->setEcotax($formData['retail_price']['ecotax_tax_excluded'])
+            ->setTaxRulesGroupId((int) $formData['retail_price']['tax_rules_group_id'])
+            ->setOnSale((bool) $formData['on_sale'])
+            ->setWholesalePrice($formData['wholesale_price'])
+            ->setUnitPrice($formData['unit_price']['price_tax_excluded'])
+            ->setUnity($formData['unit_price']['unity'])
+        ;
+
+        return $productPricesInput;
     }
 }

@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -53,6 +54,11 @@ class UpdateProductCommand
      * @var ProductOptionsInput|null
      */
     private $options;
+
+    /**
+     * @var ProductPricesInput|null
+     */
+    private $prices;
 
     /**
      * @param int $productId
@@ -118,6 +124,26 @@ class UpdateProductCommand
     public function setOptions(?ProductOptionsInput $options): UpdateProductCommand
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductPricesInput|null
+     */
+    public function getPrices(): ?ProductPricesInput
+    {
+        return $this->prices;
+    }
+
+    /**
+     * @param ProductPricesInput|null $prices
+     *
+     * @return UpdateProductCommand
+     */
+    public function setPrices(?ProductPricesInput $prices): UpdateProductCommand
+    {
+        $this->prices = $prices;
 
         return $this;
     }
