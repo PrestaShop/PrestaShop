@@ -32,9 +32,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSubCommandInt
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 
-//@todo: tag these
 class ProductOptionPropertiesFiller implements ProductUpdatablePropertiesFillerInterface
 {
+    public function supports(UpdateProductSubCommandInterface $subCommand): bool
+    {
+        return get_class($subCommand) === UpdateProductOptionsCommand::class;
+    }
+
     /**
      * @param Product $product
      * @param UpdateProductSubCommandInterface $subCommand
@@ -45,7 +49,7 @@ class ProductOptionPropertiesFiller implements ProductUpdatablePropertiesFillerI
     public function fillUpdatableProperties(
         Product $product,
         UpdateProductSubCommandInterface $subCommand,
-        ?ShopConstraint $shopConstraint
+        ?ShopConstraint $shopConstraint = null
     ): array {
         if (!($subCommand instanceof UpdateProductOptionsCommand)) {
             //@todo: dedicated exception

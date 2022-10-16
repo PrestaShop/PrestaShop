@@ -23,41 +23,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductUpdatablePropertiesFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class UpdateProductHandler
+class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
-     * @var ProductUpdatablePropertiesFillerInterface[]
+     * @var MultiShopProductCommandsBuilderInterface[]
      */
-    private $updatablePropertiesFillers;
+    private $subCommandBuilders;
 
     /**
-     * @param ProductUpdatablePropertiesFillerInterface[] $updatablePropertiesFillers
+     * @param MultiShopProductCommandsBuilderInterface[] $subCommandBuilders
      */
     public function __construct(
-        iterable $updatablePropertiesFillers
+        iterable $subCommandBuilders
     ) {
-        $this->updatablePropertiesFillers = $updatablePropertiesFillers;
+        $this->subCommandBuilders = $subCommandBuilders;
     }
 
-    public function handle(UpdateProductCommand $command): void
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        //@todo: use repo.
-        $product = new \Product($command->getProductId()->getValue());
-        foreach ($this->updatablePropertiesFillers as $filler) {
-            foreach ($command->getSubCommands() as $subCommand) {
-                if (!$filler->supports($subCommand)) {
-                    continue;
-                }
+        $subCommands = [];
+        foreach ($this->subCommandBuilders as $subCommandBuilder) {
+            $commands = $subCommandBuilder->buildCommands($productId, $formData, $singleShopConstraint);
 
-                $filler->fillUpdatableProperties($product, $subCommand);
+//          @todo: need a clean up here
+            if (!isset($commands[0])) {
+                continue;
             }
+
+            $subCommands[] = $commands[0];
         }
+
+        if (empty($subCommands)) {
+            return [];
+        }
+
+        return [new UpdateProductCommand($productId->getValue(), $singleShopConstraint, $subCommands)];
     }
 }

@@ -514,3 +514,15 @@ services:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'
+
+  prestashop.adapter.product.command_handler.update_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler
+    arguments:
+      - !tagged core.product_updatable_properties_filler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
+
+  prestashop.adapter.product.update.product_option_properties_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionPropertiesFiller
+    tags: ['core.product_updatable_properties_filler']

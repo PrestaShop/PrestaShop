@@ -15,7 +15,8 @@ services:
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags:
-      - { name: 'core.product_command_builder', priority: -15 }
+#      - @todo: renamed tag to sub_command_builder for POC
+      - { name: 'core.product_sub_command_builder', priority: -15 }
 
   # Status update should be after the visibility as it is the final dependency on the product indexation
   prestashop.core.form.command_builder.product.product_status_commands_builder:
@@ -129,3 +130,9 @@ services:
   prestashop.core.form.command_builder.product.combination.default_combination_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder
     tags: [ 'core.combination_command_builder' ]
+
+  prestashop.core.form.command_builder.product.update_product_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder
+    arguments:
+      - !tagged core.product_sub_command_builder
+    tags: [ 'core.product_command_builder' ]

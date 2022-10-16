@@ -38,7 +38,7 @@ class UpdateProductCommand
     private $productId;
 
     /**
-     * @var ShopConstraint
+     * @var ShopConstraint|null
      */
     private $shopConstraint;
 
@@ -48,16 +48,16 @@ class UpdateProductCommand
     private $subCommands;
 
     /**
-     * @param ProductId $productId
+     * @param int $productId
      * @param ShopConstraint $shopConstraint
      * @param UpdateProductSubCommandInterface[] $subCommands
      */
     public function __construct(
-        ProductId $productId,
+        int $productId,
         ShopConstraint $shopConstraint,
         iterable $subCommands
     ) {
-        $this->productId = $productId;
+        $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
         $this->subCommands = $subCommands;
     }
