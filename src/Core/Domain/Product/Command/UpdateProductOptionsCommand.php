@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class UpdateProductOptionsCommand
+class UpdateProductOptionsCommand implements UpdateProductSubCommandInterface
 {
     /**
      * @var ProductId
