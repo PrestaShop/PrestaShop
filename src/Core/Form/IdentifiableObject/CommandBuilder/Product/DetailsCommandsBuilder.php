@@ -41,6 +41,8 @@ class DetailsCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
+        // @todo: temp for testing the new approach. if accepted, this will be remvoed completely
+        return [];
         if (empty($formData['specifications']['references'])) {
             return [];
         }

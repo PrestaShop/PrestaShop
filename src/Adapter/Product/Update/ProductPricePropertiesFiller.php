@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;

@@ -30,11 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductBasicInformationFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductDetailsPropertiesFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionsFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use Product;
 
 class UpdateProductHandler
@@ -64,11 +64,17 @@ class UpdateProductHandler
     private $productPricePropertiesFiller;
 
     /**
+     * @var ProductDetailsPropertiesFiller
+     */
+    private $productDetailsPropertiesFiller;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      * @param ProductBasicInformationFiller $productBasicInformationFiller
      * @param ProductOptionsFiller $productOptionsFiller
-     *
+     * @param ProductPricePropertiesFiller $productPricePropertiesFiller
+     * @param ProductDetailsPropertiesFiller $productDetailsPropertiesFiller
      * @todo; homogenize filler names. Make all {Foo}PropertiesFiller as already existing ones like prices
      */
     public function __construct(
@@ -76,13 +82,15 @@ class UpdateProductHandler
         ProductIndexationUpdater $productIndexationUpdater,
         ProductBasicInformationFiller $productBasicInformationFiller,
         ProductOptionsFiller $productOptionsFiller,
-        ProductPricePropertiesFiller $productPricePropertiesFiller
+        ProductPricePropertiesFiller $productPricePropertiesFiller,
+        ProductDetailsPropertiesFiller $productDetailsPropertiesFiller
     ) {
         $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
         $this->productBasicInformationFiller = $productBasicInformationFiller;
         $this->productOptionsFiller = $productOptionsFiller;
         $this->productPricePropertiesFiller = $productPricePropertiesFiller;
+        $this->productDetailsPropertiesFiller = $productDetailsPropertiesFiller;
     }
 
     public function handle(UpdateProductCommand $command): void
@@ -93,13 +101,12 @@ class UpdateProductHandler
 
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        // @todo: other commands in dedicated PR's
-
         $this->productRepository->partialUpdate(
             $product,
             $updatableProperties,
             $shopConstraint,
-            CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+//          @todo: dedicated FAILED_UPDATE_PRODUCT code and remove all the unused codes from UpdateProductException
+            0
         );
 
         $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
@@ -135,6 +142,13 @@ class UpdateProductHandler
             $updatableProperties = array_merge(
                 $updatableProperties,
                 $this->productPricePropertiesFiller->fillUpdatableProperties($product, $command->getPrices(), $command->getShopConstraint())
+            );
+        }
+
+        if ($command->getDetails()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->productDetailsPropertiesFiller->fillUpdatableProperties($product, $command->getDetails())
             );
         }
 

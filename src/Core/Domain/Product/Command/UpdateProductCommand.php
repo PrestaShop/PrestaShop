@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductDetailsInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -59,6 +60,11 @@ class UpdateProductCommand
      * @var ProductPricesInput|null
      */
     private $prices;
+
+    /**
+     * @var ProductDetailsInput|null
+     */
+    private $details;
 
     /**
      * @param int $productId
@@ -144,6 +150,26 @@ class UpdateProductCommand
     public function setPrices(?ProductPricesInput $prices): UpdateProductCommand
     {
         $this->prices = $prices;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductDetailsInput|null
+     */
+    public function getDetails(): ?ProductDetailsInput
+    {
+        return $this->details;
+    }
+
+    /**
+     * @param ProductDetailsInput|null $details
+     *
+     * @return UpdateProductCommand
+     */
+    public function setDetails(?ProductDetailsInput $details): UpdateProductCommand
+    {
+        $this->details = $details;
 
         return $this;
     }

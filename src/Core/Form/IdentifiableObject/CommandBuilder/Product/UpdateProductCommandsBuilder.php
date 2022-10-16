@@ -29,16 +29,20 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\BasicInformationInput;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductDetailsInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductOptionsInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductInput\ProductPricesInput;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 //@todo: abit confusing when it should always build only one command but is called plural and returns array. smth needs adjustments
 class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $shopConstraint): array
     {
@@ -48,6 +52,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->setBasicInformation($this->buildBasicInfo($formData))
             ->setOptions($this->buildOptions($formData))
             ->setPrices($this->buildPrices($formData))
+            ->setDetails($this->buildDetails($formData))
         ;
 
         return [$updateProductCommand];
@@ -64,15 +69,18 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             return null;
         }
 
-        //@todo: command builders is almost what we could use to build these dto's but not quite. Maybe its ok this simple way?
-        $basicInformationInput = new BasicInformationInput();
-        $basicInformationInput
-            ->setLocalizedNames($formData['header']['name'])
-            ->setLocalizedDescriptions($formData['description']['description'])
-            ->setLocalizedShortDescriptions($formData['description']['description_short'])
+        $config = new CommandBuilderConfig();
+        $config
+            ->addMultiShopField('[header][name]', 'setLocalizedNames', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description_short]', 'setLocalizedShortDescriptions', DataField::TYPE_ARRAY)
         ;
 
-        return $basicInformationInput;
+        $commandBuilder = new CommandBuilder($config);
+        $input = new BasicInformationInput();
+        $inputs = $commandBuilder->buildCommands($formData, $input);
+
+        return $inputs[0] ?? null;
     }
 
     /**
@@ -88,22 +96,26 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             return null;
         }
 
-        $productOptionsInput = new ProductOptionsInput();
-        $productOptionsInput
-            ->setManufacturerId((int) $formData['description']['manufacturer'])
-            ->setOnlineOnly((bool) $formData['options']['visibility']['online_only'])
-            ->setVisibility($formData['options']['visibility']['visibility'])
-            ->setAvailableForOrder((bool) $formData['options']['visibility']['available_for_order'])
-            ->setShowPrice((bool) $formData['options']['visibility']['show_price'])
-            ->setShowCondition((bool) $formData['specifications']['show_condition'])
+        $config = new CommandBuilderConfig();
+        $config
+            ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
+            ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
+            ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
         ;
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
         if (!empty($formData['specifications']['condition'])) {
-            $productOptionsInput->setCondition((string) $formData['specifications']['condition']);
+            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
         }
 
-        return $productOptionsInput;
+        $commandBuilder = new CommandBuilder($config);
+        $input = new ProductOptionsInput();
+        $inputs = $commandBuilder->buildCommands($formData, $input);
+
+        return $inputs[0] ?? null;
     }
 
     /**
@@ -113,17 +125,53 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
      */
     private function buildPrices(array $formData): ?ProductPricesInput
     {
-        $productPricesInput = new ProductPricesInput();
-        $productPricesInput
-            ->setPrice($formData['retail_price']['price_tax_excluded'])
-            ->setEcotax($formData['retail_price']['ecotax_tax_excluded'])
-            ->setTaxRulesGroupId((int) $formData['retail_price']['tax_rules_group_id'])
-            ->setOnSale((bool) $formData['on_sale'])
-            ->setWholesalePrice($formData['wholesale_price'])
-            ->setUnitPrice($formData['unit_price']['price_tax_excluded'])
-            ->setUnity($formData['unit_price']['unity'])
+        // using commandBuilder handles the "isset" checks and some other repetitive checks.
+        $priceData = $formData['pricing'];
+        $config = new CommandBuilderConfig();
+        $config
+            ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][ecotax_tax_excluded]', 'setEcotax', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
+            ->addMultiShopField('[on_sale]', 'setOnSale', DataField::TYPE_BOOL)
+            ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][unity]', 'setUnity', DataField::TYPE_STRING)
         ;
 
-        return $productPricesInput;
+        $commandBuilder = new CommandBuilder($config);
+        $productPricesInput = new ProductPricesInput();
+
+        $inputs = $commandBuilder->buildCommands($priceData, $productPricesInput);
+
+        return $inputs[0] ?? null;
+    }
+
+    /**
+     * @param array<string, mixed> $formData
+     *
+     * @return ProductDetailsInput|null
+     */
+    private function buildDetails(array $formData): ?ProductDetailsInput
+    {
+        if (empty($formData['specifications']['references'])) {
+            return null;
+        }
+
+        $referencesData = $formData['specifications']['references'];
+        $config = new CommandBuilderConfig();
+        $config
+            ->addField('[reference]', 'setReference', DataField::TYPE_STRING)
+            ->addField('[mpn]', 'setMpn', DataField::TYPE_STRING)
+            ->addField('[upc]', 'setUpc', DataField::TYPE_STRING)
+            ->addField('[ean_13]', 'setEan13', DataField::TYPE_STRING)
+            ->addField('[isbn]', 'setIsbn', DataField::TYPE_STRING)
+        ;
+
+        $commandBuilder = new CommandBuilder($config);
+        $productDetailsInput = new ProductDetailsInput();
+
+        $inputs = $commandBuilder->buildCommands($referencesData, $productDetailsInput);
+
+        return $inputs[0] ?? null;
     }
 }

@@ -524,6 +524,7 @@ services:
       - '@prestashop.adapter.product.update.product_basic_information_filler'
       - '@prestashop.adapter.product.update.product_options_filler'
       - '@prestashop.adapter.product.update.product_price_properties_filler'
+      - '@prestashop.adapter.product.update.product_details_properties_filler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand }
 
@@ -535,3 +536,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       - '@prestashop.adapter.tools'
+
+  prestashop.adapter.product.update.product_details_properties_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductDetailsPropertiesFiller
