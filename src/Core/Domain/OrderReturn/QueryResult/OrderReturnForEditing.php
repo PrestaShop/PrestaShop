@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult;
 
-use DateTime;
+use DateTimeImmutable;
 
 class OrderReturnForEditing
 {
@@ -58,7 +58,7 @@ class OrderReturnForEditing
     private $orderId;
 
     /**
-     * @var DateTime
+     * @var DateTimeImmutable
      */
     private $orderDate;
 
@@ -80,7 +80,7 @@ class OrderReturnForEditing
      * @param string $customerFirstName
      * @param string $customerLastName
      * @param int $orderId
-     * @param DateTime $orderDate
+     * @param DateTimeImmutable $orderDate
      * @param int $orderReturnStateId
      * @param string $question
      */
@@ -90,7 +90,7 @@ class OrderReturnForEditing
         string $customerFirstName,
         string $customerLastName,
         int $orderId,
-        DateTime $orderDate,
+        DateTimeImmutable $orderDate,
         int $orderReturnStateId,
         string $question
     ) {
@@ -169,9 +169,9 @@ class OrderReturnForEditing
     }
 
     /**
-     * @return DateTime
+     * @return DateTimeImmutable
      */
-    public function getOrderDate(): DateTime
+    public function getOrderDate(): DateTimeImmutable
     {
         return $this->orderDate;
     }
