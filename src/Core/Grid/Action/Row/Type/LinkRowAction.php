@@ -73,7 +73,6 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('clickable_row', 'boolean')
             ->setAllowedTypes('target', 'string')
             ->setAllowedTypes('disabled', 'boolean')
-
         ;
     }
 
