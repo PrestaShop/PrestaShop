@@ -31,7 +31,7 @@ class AddressData {
     this.lastName = addressToCreate.lastName || faker.name.lastName();
 
     /** @type {string} Company name if it's a company address */
-    this.company = (addressToCreate.company || faker.company.companyName()).substring(0, 63);
+    this.company = (addressToCreate.company || faker.company.name()).substring(0, 63);
 
     /** @type {string} Tax identification number if it's a company */
     this.vatNumber = addressToCreate.vatNumber || '';

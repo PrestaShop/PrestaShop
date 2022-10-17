@@ -7,7 +7,7 @@ function createRecord() {
     records.push({
       id: i + 2,
       active: faker.datatype.number({min: 0, max: 1}),
-      name: `todelete ${faker.company.companyName()}`,
+      name: `todelete ${faker.company.name()}`,
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),
       metaTitle: this.name,
