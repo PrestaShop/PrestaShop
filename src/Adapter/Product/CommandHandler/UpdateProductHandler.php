@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductUpdatablePropertyFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 
@@ -44,15 +45,23 @@ class UpdateProductHandler
     private $productRepository;
 
     /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
      * @param ProductUpdatablePropertyFillerInterface $productUpdatablePropertyFiller
      * @param ProductMultiShopRepository $productRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
         ProductUpdatablePropertyFillerInterface $productUpdatablePropertyFiller,
-        ProductMultiShopRepository $productRepository
+        ProductMultiShopRepository $productRepository,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productUpdatablePropertyFiller = $productUpdatablePropertyFiller;
         $this->productRepository = $productRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -62,6 +71,8 @@ class UpdateProductHandler
     {
         $shopConstraint = $command->getShopConstraint();
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+
         $updatableProperties = $this->productUpdatablePropertyFiller->fillUpdatableProperties(
             $product,
             $command
@@ -78,5 +89,10 @@ class UpdateProductHandler
             $shopConstraint,
             0
         );
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
+        }
     }
 }

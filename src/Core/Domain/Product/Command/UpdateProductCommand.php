@@ -27,7 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateProductCommand
@@ -36,6 +42,11 @@ class UpdateProductCommand
      * @var ProductId
      */
     private $productId;
+
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
 
     /**
      * @var string[]|null
@@ -53,9 +64,39 @@ class UpdateProductCommand
     private $localizedShortDescriptions;
 
     /**
-     * @var ShopConstraint
+     * @var ProductVisibility|null
      */
-    private $shopConstraint;
+    private $visibility;
+
+    /**
+     * @var bool|null
+     */
+    private $availableForOrder;
+
+    /**
+     * @var bool|null
+     */
+    private $onlineOnly;
+
+    /**
+     * @var bool|null
+     */
+    private $showPrice;
+
+    /**
+     * @var ProductCondition|null
+     */
+    private $condition;
+
+    /**
+     * @var bool|null
+     */
+    private $showCondition;
+
+    /**
+     * @var ManufacturerIdInterface|null
+     */
+    private $manufacturerId;
 
     /**
      * @param int $productId
@@ -75,6 +116,14 @@ class UpdateProductCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**
@@ -138,10 +187,147 @@ class UpdateProductCommand
     }
 
     /**
-     * @return ShopConstraint
+     * @return ProductVisibility|null
      */
-    public function getShopConstraint(): ShopConstraint
+    public function getVisibility(): ?ProductVisibility
     {
-        return $this->shopConstraint;
+        return $this->visibility;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isAvailableForOrder(): ?bool
+    {
+        return $this->availableForOrder;
+    }
+
+    /**
+     * @param string $visibility
+     *
+     * @return $this
+     */
+    public function setVisibility(string $visibility): self
+    {
+        $this->visibility = new ProductVisibility($visibility);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $availableForOrder
+     *
+     * @return self
+     */
+    public function setAvailableForOrder(bool $availableForOrder): self
+    {
+        $this->availableForOrder = $availableForOrder;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isOnlineOnly(): ?bool
+    {
+        return $this->onlineOnly;
+    }
+
+    /**
+     * @param bool $onlineOnly
+     *
+     * @return self
+     */
+    public function setOnlineOnly(bool $onlineOnly): self
+    {
+        $this->onlineOnly = $onlineOnly;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function showPrice(): ?bool
+    {
+        return $this->showPrice;
+    }
+
+    /**
+     * @param bool $showPrice
+     *
+     * @return self
+     */
+    public function setShowPrice(bool $showPrice): self
+    {
+        $this->showPrice = $showPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return ProductCondition|null
+     */
+    public function getCondition(): ?ProductCondition
+    {
+        return $this->condition;
+    }
+
+    /**
+     * @param string $condition
+     *
+     * @return self
+     */
+    public function setCondition(string $condition): self
+    {
+        $this->condition = new ProductCondition($condition);
+
+        return $this;
+    }
+
+    /**
+     * @param bool $showCondition
+     *
+     * @return self
+     */
+    public function setShowCondition(bool $showCondition): self
+    {
+        $this->showCondition = $showCondition;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function showCondition(): ?bool
+    {
+        return $this->showCondition;
+    }
+
+    /**
+     * @return ManufacturerIdInterface|null
+     */
+    public function getManufacturerId(): ?ManufacturerIdInterface
+    {
+        return $this->manufacturerId;
+    }
+
+    /**
+     * @param int $manufacturerId
+     *
+     * @throws ManufacturerConstraintException
+     *
+     * @return self
+     */
+    public function setManufacturerId(int $manufacturerId): self
+    {
+        $this->manufacturerId = NoManufacturerId::NO_MANUFACTURER_ID === $manufacturerId ?
+            new NoManufacturerId() :
+            new ManufacturerId($manufacturerId)
+        ;
+
+        return $this;
     }
 }
