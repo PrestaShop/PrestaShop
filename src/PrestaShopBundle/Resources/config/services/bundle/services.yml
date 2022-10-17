@@ -93,3 +93,9 @@ services:
   PrestaShopBundle\DependencyInjection\RuntimeConstEnvVarProcessor:
     public: false
     tags: [ 'container.env_var_processor' ]
+
+  prestashop.api.state_provider.hook_status_provider:
+    tags: ["api_platform.state_provider"]
+    class: PrestaShopBundle\Api\StateProvider\HookStatusProvider
+    arguments:
+      - "@prestashop.core.query_bus"
