@@ -15,7 +15,7 @@ monolog:
   handlers:
     main:
       type: rotating_file
-      max_files: 5
+      max_files: '%env(PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
       channels: [ "!event" ]
