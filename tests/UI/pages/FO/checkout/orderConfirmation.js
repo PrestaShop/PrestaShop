@@ -55,6 +55,7 @@ class OrderConfirmation extends FOBasePage {
    */
   async getOrderReferenceValue(page) {
     const orderRefText = await this.getTextContent(page, this.orderReferenceValue);
+
     return (orderRefText.split(':'))[1].trim();
   }
 

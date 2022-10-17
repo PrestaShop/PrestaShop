@@ -16,6 +16,7 @@ function createRecord() {
       imageURL: '',
     });
   }
+
   return records;
 }
 

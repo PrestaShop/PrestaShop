@@ -110,6 +110,7 @@ class ModuleManager extends BOBasePage {
       const moduleStatus = await this.isModuleEnabled(page, allModulesNames[i]);
       modulesStatus.push({name: allModulesNames[i], status: moduleStatus});
     }
+
     return modulesStatus;
   }
 

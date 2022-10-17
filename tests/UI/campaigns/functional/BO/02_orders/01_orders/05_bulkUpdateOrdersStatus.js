@@ -43,6 +43,7 @@ Scenario:
 describe('BO - Orders : Bulk update orders status', async () => {
   // Pre-condition: Create 2 orders in FO
   const orderNumber = 2;
+
   for (let i = 1; i <= orderNumber; i++) {
     createOrderByCustomerTest(orderByCustomerData, `${baseContext}_${i}`);
   }

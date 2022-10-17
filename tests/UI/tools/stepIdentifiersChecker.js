@@ -61,6 +61,7 @@ const getTestsFromSuite = (suite) => {
   for (const nestedSuite of nestedSuites) {
     tests = tests.concat(getTestsFromSuite(nestedSuite));
   }
+
   return tests;
 };
 

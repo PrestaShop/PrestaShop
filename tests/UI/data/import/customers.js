@@ -23,6 +23,7 @@ function createRecord() {
       defaultGroup: faker.helpers.arrayElement(groups),
     });
   }
+
   return records;
 }
 

@@ -301,6 +301,7 @@ class Product extends FOBasePage {
    */
   async getSocialSharingLink(page, socialSharing) {
     let selector;
+
     switch (socialSharing) {
       case 'Facebook':
         selector = this.facebookSocialSharing;

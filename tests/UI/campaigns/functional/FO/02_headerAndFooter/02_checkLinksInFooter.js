@@ -147,6 +147,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         let pageTitle;
+
         if (args.linkSelector === 'Create account') {
           pageTitle = await createAccountPage.getHeaderTitle(page);
         } else {
@@ -183,6 +184,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         let pageTitle = '';
+
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await myWishlistPage.getPageTitle(page);
         } else {
@@ -222,6 +224,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         await homePage.goToFooterLink(page, args.linkSelector);
 
         let pageTitle = '';
+
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await myWishlistPage.getPageTitle(page);
         } else {

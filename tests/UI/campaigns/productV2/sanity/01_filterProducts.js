@@ -134,6 +134,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
 
         const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+
         if (test.args.filterBy === 'active') {
           await expect(numberOfProductsAfterFilter).to.be.above(0);
         } else {

@@ -119,6 +119,7 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
         let textResult;
+
         if (index === 14) {
           textResult = await addValuePage.addEditValue(page, createValueData, false);
           await expect(textResult).to.contains(viewFeaturePage.successfulCreationMessage);

@@ -158,6 +158,7 @@ describe('BO - Catalog - Attributes & Features : CRUD attribute and values', asy
         await testContext.addContextItem(this, 'testIdentifier', `createValue${index}`, baseContext);
 
         let textResult;
+
         if (index === 0) {
           textResult = await addValuePage.addEditValue(page, valueToCreate, true);
         } else {

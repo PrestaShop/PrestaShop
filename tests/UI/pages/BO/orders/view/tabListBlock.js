@@ -86,9 +86,11 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    */
   async getSuccessBadge(page, numberOfBadges) {
     let badge = '';
+
     for (let i = 1; i <= numberOfBadges; i++) {
       badge += await this.getTextContent(page, this.successBadge(i));
     }
+
     return badge;
   }
 

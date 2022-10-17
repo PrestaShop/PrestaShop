@@ -387,6 +387,7 @@ class Home extends FOBasePage {
   async selectProductColor(page, id, color) {
     await page.hover(this.productImg(id));
     let displayed = false;
+
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'
@@ -490,6 +491,7 @@ class Home extends FOBasePage {
    */
   async getSocialSharingLink(page, socialSharing) {
     let selector;
+
     switch (socialSharing) {
       case 'Facebook':
         selector = this.quickViewFacebookSocialSharing;

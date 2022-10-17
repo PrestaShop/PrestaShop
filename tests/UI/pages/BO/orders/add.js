@@ -614,6 +614,7 @@ class AddOrder extends BOBasePage {
   async searchVoucher(page, voucherName) {
     await this.setValue(page, this.searchVoucherInput, voucherName);
     const cartRuleResult = await this.getTextContent(page, this.searchCartRuleResultBox);
+
     if (await this.elementVisible(page, this.searchCartRuleResultFound, 500)) {
       await this.waitForSelectorAndClick(page, this.searchCartRuleResultBox);
     }

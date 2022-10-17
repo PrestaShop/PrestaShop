@@ -85,6 +85,7 @@ class ViewCustomer extends BOBasePage {
    */
   async setStatus(page, status) {
     let statusName;
+
     switch (status) {
       case 'Re-open':
         statusName = 'open';

@@ -266,6 +266,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
           await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
           let createProductMessage = '';
+
           if (product === virtualProduct || product === productWithSpecificPrice) {
             createProductMessage = await addProductPage.createEditBasicProduct(page, product);
           } else {
