@@ -51,7 +51,6 @@ class PricingType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
-     *
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param Currency $defaultCurrency
