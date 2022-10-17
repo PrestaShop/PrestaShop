@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler;
 
-use DateTime;
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
 use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
@@ -91,7 +91,7 @@ class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandler
             $customer->firstname,
             $customer->lastname,
             (int) $orderReturn->id_order,
-            new DateTime($order->date_add),
+            new DateTimeImmutable($order->date_add),
             (int) $orderReturn->state,
             $orderReturn->question
         );
