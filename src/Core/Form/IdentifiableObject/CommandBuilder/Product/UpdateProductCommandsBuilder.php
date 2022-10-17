@@ -29,16 +29,17 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\UpdateProductSubCommandBuilderInterface;
 
 class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
-     * @var MultiShopProductCommandsBuilderInterface[]
+     * @var UpdateProductSubCommandBuilderInterface[]
      */
     private $subCommandBuilders;
 
     /**
-     * @param MultiShopProductCommandsBuilderInterface[] $subCommandBuilders
+     * @param UpdateProductSubCommandBuilderInterface[] $subCommandBuilders
      */
     public function __construct(
         iterable $subCommandBuilders
@@ -50,14 +51,13 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     {
         $subCommands = [];
         foreach ($this->subCommandBuilders as $subCommandBuilder) {
-            $commands = $subCommandBuilder->buildCommands($productId, $formData, $singleShopConstraint);
+            $subCommand = $subCommandBuilder->build($formData);
 
-//          @todo: need a clean up here
-            if (!isset($commands[0])) {
+            if (!$subCommand) {
                 continue;
             }
 
-            $subCommands[] = $commands[0];
+            $subCommands[] = $subCommand;
         }
 
         if (empty($subCommands)) {

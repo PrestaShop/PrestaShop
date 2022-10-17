@@ -29,13 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSubCommandInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\UpdateProductSubCommandBuilderInterface;
 
-final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+final class OptionsCommandsBuilder implements UpdateProductSubCommandBuilderInterface
 {
     /**
      * @var string
@@ -53,12 +53,12 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
+    public function build(array $formData): ?UpdateProductSubCommandInterface
     {
         if (empty($formData['options']) &&
             !isset($formData['description']['manufacturer']) &&
             !isset($formData['specifications'])) {
-            return [];
+            return null;
         }
 
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
@@ -77,9 +77,10 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
         }
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateProductOptionsCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateProductOptionsCommand($productId->getValue(), ShopConstraint::allShops());
+        $command = new UpdateProductOptionsCommand();
 
-        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
+        $commands = $commandBuilder->buildCommands($formData, $command);
+
+        return $commands[0] ?? null;
     }
 }

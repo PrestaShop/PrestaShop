@@ -63,6 +63,14 @@ class UpdateProductCommand
     }
 
     /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
      * @return UpdateProductSubCommandInterface[]
      */
     public function getSubCommands(): iterable
@@ -71,10 +79,10 @@ class UpdateProductCommand
     }
 
     /**
-     * @return ProductId
+     * @return ShopConstraint|null
      */
-    public function getProductId(): ProductId
+    public function getShopConstraint(): ?ShopConstraint
     {
-        return $this->productId;
+        return $this->shopConstraint;
     }
 }

@@ -33,17 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateProductOptionsCommand implements UpdateProductSubCommandInterface
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
     /**
      * @var ProductVisibility|null
      */
@@ -78,29 +71,6 @@ class UpdateProductOptionsCommand implements UpdateProductSubCommandInterface
      * @var ManufacturerIdInterface|null
      */
     private $manufacturerId;
-
-    /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
-     * @param int $productId
-     * @param ShopConstraint $shopConstraint
-     */
-    public function __construct(int $productId, ShopConstraint $shopConstraint)
-    {
-        $this->productId = new ProductId($productId);
-        $this->shopConstraint = $shopConstraint;
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
 
     /**
      * @return ProductVisibility|null
@@ -245,13 +215,5 @@ class UpdateProductOptionsCommand implements UpdateProductSubCommandInterface
         ;
 
         return $this;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 }
