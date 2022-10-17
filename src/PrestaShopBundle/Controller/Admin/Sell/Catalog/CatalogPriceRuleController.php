@@ -325,7 +325,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * @param CatalogPriceRuleList $catalogPriceRuleList
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     private function formatCatalogPriceRule(CatalogPriceRuleList $catalogPriceRuleList): array
     {
