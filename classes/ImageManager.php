@@ -45,6 +45,14 @@ class ImageManagerCore
         'image/x-png',
     ];
 
+    const EXTENSIONS_SUPPORTED = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'jpe',
+        'png',
+    ];
+
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
      *
