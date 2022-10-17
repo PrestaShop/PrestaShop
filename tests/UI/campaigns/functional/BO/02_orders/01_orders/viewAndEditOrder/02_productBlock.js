@@ -444,7 +444,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         const result = await orderPageProductsBlock.getProductDetails(page, 1);
         await Promise.all([
           expect(result.name).to.equal(`${combinationProduct.name} (Size: `
-            + `${combinationProduct.combinations.size[0]} - Color: ${combinationProduct.combinations.color[0]})`),
+            + `${combinationProduct.attributes.size[0]} - Color: ${combinationProduct.attributes.color[0]})`),
           expect(result.reference).to.equal(`Reference number: ${combinationProduct.reference}`),
           expect(result.basePrice).to.equal(combinationProduct.price),
           expect(result.quantity).to.equal(1),

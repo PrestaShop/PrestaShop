@@ -170,8 +170,8 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(newProductData.combinations.size.join(' ')),
-        await expect(result.color).to.equal(newProductData.combinations.color.join(' ')),
+        await expect(result.size).to.equal(newProductData.attributes.size.join(' ')),
+        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
       ]);
     });
 
@@ -199,7 +199,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       const generateCombinationsButton = await combinationsTab.setProductAttributes(
         page,
-        editProductData.combinations,
+        editProductData.attributes,
       );
       await expect(generateCombinationsButton).to.equal('Generate 6 combinations');
     });
@@ -251,8 +251,8 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
         await expect(result.size).to.equal(
-          `${newProductData.combinations.size.join(' ')} ${editProductData.combinations.size.join(' ')}`),
-        await expect(result.color).to.equal(newProductData.combinations.color.join(' ')),
+          `${newProductData.attributes.size.join(' ')} ${editProductData.attributes.size.join(' ')}`),
+        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
       ]);
     });
 

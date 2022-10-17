@@ -236,7 +236,7 @@ class Home extends FOBasePage {
    * @param attributes {object} The attributes data (size, color, dimension)
    * @returns {Promise<void>}
    */
-  async changeCombination(page, attributes) {
+  async changeAttributes(page, attributes) {
     if (attributes.size) {
       await this.selectByVisibleText(page, this.quickViewProductSize, attributes.size);
     }
@@ -275,14 +275,14 @@ class Home extends FOBasePage {
   }
 
   /**
-   * Change combination and add to cart
+   * Change attributes and add to cart
    * @param page {Page} Browser tab
-   * @param combination {object} The combination data (size, color, quantity)
+   * @param attributes {object} The attributes data (size, color, quantity)
    * @returns {Promise<void>}
    */
-  async changeCombinationAndAddToCart(page, combination) {
-    await this.changeCombination(page, combination);
-    await this.changeQuantity(page, combination.quantity);
+  async changeAttributesAndAddToCart(page, attributes) {
+    await this.changeAttributes(page, attributes);
+    await this.changeQuantity(page, attributes.quantity);
     await this.addToCartByQuickView(page);
   }
 
