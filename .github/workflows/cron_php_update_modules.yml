@@ -37,7 +37,9 @@ jobs:
           ref: ${{ env.GH_BRANCH }}
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist
+        run: |
+          composer self-update --2.2
+          composer install --prefer-dist
 
       - name: Execute script for updating modules
         run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
