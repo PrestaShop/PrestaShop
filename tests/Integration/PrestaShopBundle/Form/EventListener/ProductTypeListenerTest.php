@@ -67,9 +67,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): iterable
     {
-        yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
-        yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', true];
-        yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
+        // Since data is empty all product types remove this field see testSuppliers for more details
+        yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', false];
+        yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', false];
+        yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', false];
         yield 'product_supplier in combination context' => [ProductType::TYPE_COMBINATIONS, 'options.product_suppliers', false];
 
         yield 'stock in standard context' => [ProductType::TYPE_STANDARD, 'stock', true];
