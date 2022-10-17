@@ -477,7 +477,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateBasicInformationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext

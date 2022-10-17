@@ -35,6 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
+/**
+ * Context for updating product options properties using single UpdateProductCommand
+ *
+ * @see UpdateProductCommand
+ */
 class UpdateOptionsFeatureContext extends AbstractUpdateOptionsFeatureContext
 {
     /**
