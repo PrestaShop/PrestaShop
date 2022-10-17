@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
@@ -87,11 +88,15 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $nonExistingId = 50000;
 
         try {
-            $command = new UpdateProductOptionsCommand(
+            $subCommand = new UpdateProductOptionsCommand();
+            $subCommand->setManufacturerId($nonExistingId);
+
+            $command = new UpdateProductCommand(
                 $this->getSharedStorage()->get($productReference),
-                ShopConstraint::shop($this->getDefaultShopId())
+                ShopConstraint::shop($this->getDefaultShopId()),
+                [$subCommand]
             );
-            $command->setManufacturerId($nonExistingId);
+
             $this->getCommandBus()->handle($command);
         } catch (ManufacturerException $e) {
             $this->setLastException($e);
@@ -158,8 +163,9 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductOptionsCommand($productId, $shopConstraint);
-            $this->fillCommand($data, $command);
+            $optionsSubCommand = new UpdateProductOptionsCommand();
+            $this->fillCommand($data, $optionsSubCommand);
+            $command = new UpdateProductCommand($productId, $shopConstraint, [$optionsSubCommand]);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
