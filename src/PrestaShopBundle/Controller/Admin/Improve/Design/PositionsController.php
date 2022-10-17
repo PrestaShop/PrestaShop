@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
+use ApiPlatform\Metadata\ApiResource;
 use Hook;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
@@ -274,6 +275,37 @@ class PositionsController extends FrameworkBundleAdminController
         }
 
         $response['hook_status'] = !$hookStatus;
+
+        return $this->json($response);
+    }
+
+
+    /**
+     * Get hook status
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getStatusAction(Request $request)
+    {
+        $hookId = (int) $request->request->get('hookId');
+        $hookStatus = false;
+
+        try {
+            $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (HookException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ];
+        }
+
+        $response['hook_status'] = $hookStatus;
 
         return $this->json($response);
     }

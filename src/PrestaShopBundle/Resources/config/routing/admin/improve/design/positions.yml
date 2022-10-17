@@ -21,3 +21,11 @@ admin_modules_positions_toggle_status:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::toggleStatusAction'
     _legacy_controller: AdminModulesPositions
     _legacy_link: AdminModulesPositions
+
+admin_modules_positions_get_status:
+  path: /get-status
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::getStatusAction'
+    _legacy_controller: AdminModulesPositions
+    _legacy_link: AdminModulesPositions
