@@ -61,6 +61,11 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     public function indexAction(Request $request): Response
     {
+        if (!$this->isFeatureEnabled()) {
+            $this->getControllerConfiguration()->warnings[] = $this->generateDisabledFeatureWarning();
+
+            return $this->renderSmarty('');
+        }
         $this->setHeaderToolbarActions();
 
         $helperListConfiguration = $this->buildListConfiguration(
@@ -92,6 +97,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
                 'showDisabledFeatureWarning' => true,
+                'disabledFeatureWarning' => $this->generateDisabledFeatureWarning(),
             ]);
         }
 
@@ -142,6 +148,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
             return $this->renderEditForm([
                 'showDisabledFeatureWarning' => true,
                 'editableFeature' => $editableFeature,
+                'disabledFeatureWarning' => $this->generateDisabledFeatureWarning(),
             ]);
         }
 
@@ -329,5 +336,23 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     private function isFeatureEnabled()
     {
         return $this->get('prestashop.adapter.feature.feature')->isActive();
+    }
+
+    /**
+     * @return string
+     */
+    private function generateDisabledFeatureWarning(): string
+    {
+        $adminPerformanceUrl = $this->generateUrl('admin_performance');
+
+        return $this->trans(
+            'This feature has been disabled. You can activate it here: %link%.',
+            'Admin.Catalog.Notification',
+            ['%link%' => sprintf(
+                '<a href="%s#optional_features">%s</a>',
+                $adminPerformanceUrl,
+                $this->trans('Performance', 'Admin.Global')
+            )]
+        );
     }
 }

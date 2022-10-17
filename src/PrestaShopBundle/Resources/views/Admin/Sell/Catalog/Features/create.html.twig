@@ -29,7 +29,7 @@
 
 {% block content %}
   {% if showDisabledFeatureWarning is defined and showDisabledFeatureWarning %}
-    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' %}
+    {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/disabled_feature_warning.html.twig' with {disabledFeatureWarning} %}
   {% else %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Features/Blocks/form.html.twig' with {
       featureId: null,
