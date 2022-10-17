@@ -131,7 +131,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $currency = $this->getActualCurrency();
 
         $this->tpl_view_vars = [
-            'currency_sign' => $currency->symbol,
+            'currency_sign' => $currency->getSymbol(),
             'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
             'enableAllSteps' => Validate::isLoadedObject($carrier),
             'wizard_steps' => $this->wizard_steps,
@@ -385,7 +385,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $currency = $this->getActualCurrency();
 
-        $tpl_vars['currency_sign'] = $currency->symbol;
+        $tpl_vars['currency_sign'] = $currency->getSymbol();
 
         $fields_value = $this->getStepThreeFieldsValues($carrier);
 
@@ -653,7 +653,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
         $currency = $this->getActualCurrency();
 
-        $template->assign('currency_sign', $currency->symbol);
+        $template->assign('currency_sign', $currency->getSymbol());
         $template->assign('PS_WEIGHT_UNIT', Configuration::get('PS_WEIGHT_UNIT'));
 
         die($template->fetch());
