@@ -247,7 +247,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [
             'iso_code' => $this->getContext()->currency->iso_code,
-            'sign' => $this->getContext()->currency->symbol,
+            'sign' => $this->getContext()->currency->getSymbol(),
             'name' => $this->getContext()->currency->name,
             'format' => $this->getContext()->currency->format,
         ]]);
