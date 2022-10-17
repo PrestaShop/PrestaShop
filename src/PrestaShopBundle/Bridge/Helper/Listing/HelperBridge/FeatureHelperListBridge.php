@@ -47,7 +47,7 @@ class FeatureHelperListBridge extends HelperListBridge
         $listSql = parent::generateListQuery($helperListConfiguration, $idLang);
 
         // adds feature_value count to evey row of feature
-        foreach ($helperListConfiguration->list as $featureRowRecord) {
+        foreach ($helperListConfiguration->list as &$featureRowRecord) {
             $featureRowRecord['value'] = $this->countFeatureValues((int) $featureRowRecord['id_feature']);
         }
 
