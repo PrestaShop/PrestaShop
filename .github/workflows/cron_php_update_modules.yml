@@ -50,7 +50,7 @@ jobs:
         if: env.PULL_REQUEST_BODY != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: cron-php-update-modules
+          branch: cron-php-update-modules-${{ env.GH_BRANCH }}
           commit-message: Updated PrestaShop Packages
           committer: PrestonBot <noreply@github.com>
           author: prestonBot <prestonBot@users.noreply.github.com>
