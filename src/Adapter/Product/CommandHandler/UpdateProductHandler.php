@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductUpdatablePropertyFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 
 class UpdateProductHandler
 {
@@ -82,12 +83,11 @@ class UpdateProductHandler
             return;
         }
 
-        //@todo: check error code
         $this->productRepository->partialUpdate(
             $product,
             $updatableProperties,
             $shopConstraint,
-            0
+            CannotUpdateProductException::FAILED_UPDATE_PRODUCT
         );
 
         $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);

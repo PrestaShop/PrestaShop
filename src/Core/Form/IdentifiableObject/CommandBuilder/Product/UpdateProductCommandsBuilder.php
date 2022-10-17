@@ -55,7 +55,10 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
-        $this->configureBasicInformation($config, $formData);
+        $this
+            ->fillBasicInformation($config, $formData)
+            ->fillOptions($config, $formData)
+        ;
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
@@ -70,7 +73,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
      *
      * @return $this
      */
-    private function configureBasicInformation(CommandBuilderConfig $config, array $formData): self
+    private function fillBasicInformation(CommandBuilderConfig $config, array $formData): self
     {
         if (empty($formData['description']) && empty($formData['header']['name'])) {
             return $this;
@@ -81,6 +84,37 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', DataField::TYPE_ARRAY)
             ->addMultiShopField('[description][description_short]', 'setLocalizedShortDescriptions', DataField::TYPE_ARRAY)
         ;
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     * @param array $formData
+     *
+     * @return $this
+     */
+    private function fillOptions(CommandBuilderConfig $config, array $formData): self
+    {
+        if (empty($formData['options']) &&
+            !isset($formData['description']['manufacturer']) &&
+            !isset($formData['specifications'])) {
+            return $this;
+        }
+
+        $config
+            ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
+            ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
+            ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+        ;
+
+        // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
+        if (!empty($formData['specifications']['condition'])) {
+            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
+        }
 
         return $this;
     }
