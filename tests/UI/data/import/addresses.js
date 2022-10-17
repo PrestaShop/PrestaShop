@@ -32,6 +32,7 @@ function createRecord() {
       dni: '',
     });
   }
+
   return records;
 }
 

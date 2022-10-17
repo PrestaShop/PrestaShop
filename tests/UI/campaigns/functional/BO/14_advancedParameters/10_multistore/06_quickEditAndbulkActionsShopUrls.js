@@ -164,6 +164,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
 
         if (isActionPerformed) {
           const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
+
           if (test.args.columnName === 'Enabled') {
             await expect(resultMessage).to.contains(shopUrlPage.successUpdateMessage);
           } else {

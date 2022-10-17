@@ -141,6 +141,7 @@ class Logs extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextColumn(page, i, column);
+
       if (column === 'employee' && rowContent === 'N/A') {
         rowContent = '';
       }

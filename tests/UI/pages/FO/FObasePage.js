@@ -519,6 +519,7 @@ class FOBasePage extends CommonPage {
       default:
         throw new Error(`The page ${textSelector} was not found`);
     }
+
     return this.clickAndWaitForNavigation(page, selector);
   }
 

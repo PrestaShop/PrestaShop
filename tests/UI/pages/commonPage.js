@@ -485,6 +485,7 @@ class CommonPage {
    */
   async waitForPageTitleToLoad(page) {
     let isTitleEmpty = true;
+
     for (let i = 0; i < 20 && isTitleEmpty; i++) {
       isTitleEmpty = (await this.getPageTitle(page) === '');
       await page.waitForTimeout(100);

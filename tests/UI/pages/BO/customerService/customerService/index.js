@@ -115,6 +115,7 @@ class CustomerService extends BOBasePage {
    */
   async getTextColumn(page, row, columnName) {
     let i = 0;
+
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
       i += 1;
     }
@@ -177,11 +178,13 @@ class CustomerService extends BOBasePage {
    */
   async isStatusChanged(page, row = 1, status) {
     let statusColumn = 6;
+
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 500)) {
       statusColumn += 1;
     }
 
     let selector;
+
     switch (status) {
       case 'Handled':
         selector = this.tableTextDangerStatusIcon;

@@ -265,6 +265,7 @@ class Order extends BOBasePage {
     let rowContent;
     const rowsNumber = await this.getNumberOfOrdersInPage(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'total_paid_tax_incl') {
         rowContent = await this.getOrderATIPrice(page, i);

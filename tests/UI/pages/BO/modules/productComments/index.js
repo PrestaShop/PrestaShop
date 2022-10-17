@@ -47,6 +47,7 @@ class ProductComments extends ModuleConfiguration.constructor {
       return 0;
     }
     const selector = this.reviewsTableRows(table);
+
     return page.$$eval(selector, rows => rows.length);
   }
 

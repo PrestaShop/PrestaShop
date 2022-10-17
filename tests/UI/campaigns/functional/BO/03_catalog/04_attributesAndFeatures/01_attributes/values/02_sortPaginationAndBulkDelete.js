@@ -107,6 +107,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
         let textResult;
+
         if (index !== 6) {
           textResult = await addValuePage.addEditValue(page, createValueData, true);
         } else {

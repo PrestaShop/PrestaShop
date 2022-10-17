@@ -247,6 +247,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         let createProductMessage = '';
+
         if (product === productWithSpecificPrice) {
           await addProductPage.createEditBasicProduct(page, product);
           createProductMessage = await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);

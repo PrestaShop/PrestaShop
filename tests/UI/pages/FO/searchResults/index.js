@@ -69,6 +69,7 @@ class SearchResults extends FOBasePage {
   async quickViewProduct(page, id) {
     await page.hover(this.productImg(id));
     let displayed = false;
+
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'

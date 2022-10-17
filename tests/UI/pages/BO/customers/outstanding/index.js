@@ -197,6 +197,7 @@ class Outstanding extends BOBasePage {
     let rowContent;
     const rowsNumber = await this.getNumberOfOutstandingInPage(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'outstanding_allow_amount') {
         rowContent = await this.getOutstandingAllowancePrice(page, i);

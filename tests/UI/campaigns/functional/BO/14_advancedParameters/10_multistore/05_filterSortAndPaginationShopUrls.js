@@ -139,6 +139,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           const textColumn = await shopUrlPage.getTextColumn(page, i, test.args.filterBy);
+
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);
           } else {
@@ -234,12 +235,14 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         await shopUrlPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         let sortedTable = await shopUrlPage.getAllRowsColumnContent(page, test.args.sortBy);
+
         if (test.args.isFloat) {
           nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
