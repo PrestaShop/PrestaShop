@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
-
     /**
      * Gets legacy Order
      *

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Domain\OrderReturn\QueryResult;
 
-use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
 
@@ -42,7 +42,7 @@ class OrderReturnForEditingReturnTest extends TestCase
             'John',
             'Doe',
             1,
-            new DateTime(),
+            new DateTimeImmutable(),
             1,
             ''
         );
