@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductUpdatablePropertiesFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 
@@ -38,26 +40,57 @@ class UpdateProductHandler
     private $updatablePropertiesFillers;
 
     /**
-     * @param ProductUpdatablePropertiesFillerInterface[] $updatablePropertiesFillers
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
+     * @param ProductUpdatablePropertiesFillerInterface $updatablePropertiesFillers
+     * @param ProductMultiShopRepository $productRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        iterable $updatablePropertiesFillers
+        iterable $updatablePropertiesFillers,
+        ProductMultiShopRepository $productRepository,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->updatablePropertiesFillers = $updatablePropertiesFillers;
+        $this->productRepository = $productRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     public function handle(UpdateProductCommand $command): void
     {
-        //@todo: use repo.
-        $product = new \Product($command->getProductId()->getValue());
+        $shopConstraint = $command->getShopConstraint();
+        $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        $updatableProperties = [];
+
         foreach ($this->updatablePropertiesFillers as $filler) {
             foreach ($command->getSubCommands() as $subCommand) {
                 if (!$filler->supports($subCommand)) {
                     continue;
                 }
 
-                $filler->fillUpdatableProperties($product, $subCommand);
+                $updatableProperties = array_merge($updatableProperties, $filler->fillUpdatableProperties($product, $subCommand));
             }
+        }
+
+        if (empty($updatableProperties)) {
+            return;
+        }
+
+        //@todo: check error code
+        $this->productRepository->partialUpdate($product, $updatableProperties, $shopConstraint, 0);
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
         }
     }
 }
