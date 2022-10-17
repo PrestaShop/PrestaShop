@@ -30,13 +30,13 @@ const productWithCombinations = new ProductFaker(
   {
     type: 'Standard product',
     price: 20,
-    combinations: {
+    attributes: {
       color: ['White', 'Black'],
       size: ['S'],
     },
     quantity: 10,
     specificPrice: {
-      combinations: 'Size - S, Color - White',
+      attributes: 'Size - S, Color - White',
       discount: 50,
       startingAt: 2,
       reductionType: '%',
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     await productsPage.goToAddProductPage(page);
     await addProductPage.createEditBasicProduct(page, productWithCombinations);
 
-    const createProductMessage = await addProductPage.setCombinationsInProduct(
+    const createProductMessage = await addProductPage.setAttributesInProduct(
       page,
       productWithCombinations,
     );

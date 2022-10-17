@@ -64,7 +64,7 @@ class AddProduct extends BOBasePage {
     this.applyButton = '#form_step2_specific_price_save';
 
     // Selector of Step 3 : Combinations
-    this.addCombinationsInput = '#form_step3_attributes-tokenfield';
+    this.selectAttributeInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
     this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
@@ -217,21 +217,21 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Set Combinations for product
+   * Set attributes for product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set on combination form
    * @returns {Promise<string>}
    */
-  async setCombinationsInProduct(page, productData) {
+  async setAttributesInProduct(page, productData) {
     await page.click(this.productWithCombinationsInput);
     // GOTO Combination tab : id = 3
     await this.goToFormStep(page, 3);
     // Delete All combinations if exists
-    await this.deleteAllCombinations(page);
+    await this.deleteAllAttributes(page);
     // Add combinations
-    await this.addCombinations(page, productData.combinations);
+    await this.selectAttributes(page, productData.attributes);
     // Set quantity
-    await this.setCombinationsQuantity(page, productData.quantity);
+    await this.setAttributesQuantity(page, productData.quantity);
     // GOTO Basic settings Tab : id = 1
     await this.goToFormStep(page, 1);
 
@@ -241,15 +241,15 @@ class AddProduct extends BOBasePage {
   /**
    * Generate combinations in input
    * @param page {Page} Browser tab
-   * @param combinations {Object|{color: Array<string>, size: Array<string>}} Data to set on combination form
+   * @param attributes {Object|{color: Array<string>, size: Array<string>}} Data to set on combination form
    * @return {Promise<void>}
    */
-  async addCombinations(page, combinations) {
-    const keys = Object.keys(combinations);
+  async selectAttributes(page, attributes) {
+    const keys = Object.keys(attributes);
     /*eslint-disable*/
     for (const key of keys) {
-      for (const value of combinations[key]) {
-        await this.addCombination(page, `${key} : ${value}`);
+      for (const value of attributes[key]) {
+        await this.addAttribute(page, `${key} : ${value}`);
       }
     }
     /* eslint-enable */
@@ -258,24 +258,24 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Add one combination
+   * Add one attribute
    * @param page {Page} Browser tab
-   * @param combination {string} Data to set on combination form
+   * @param attribute {string} Data to set on combination form
    * @return {Promise<void>}
    */
-  async addCombination(page, combination) {
-    await page.type(this.addCombinationsInput, combination);
+  async addAttribute(page, attribute) {
+    await page.type(this.selectAttributeInput, attribute);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
 
   /**
-   * Set quantity for all combinations
+   * Set quantity for all attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Value of quantity to set on quantity input
    * @return {Promise<void>}
    */
-  async setCombinationsQuantity(page, quantity) {
+  async setAttributesQuantity(page, quantity) {
     // Select all combinations
     await this.waitForVisibleSelector(page, this.productCombinationSelectAllCheckbox);
     await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
@@ -349,11 +349,11 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Delete all combinations
+   * Delete all attributes
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async deleteAllCombinations(page) {
+  async deleteAllAttributes(page) {
     if (await this.hasCombinations(page)) {
       // Select all combinations
       await this.setChecked(page, this.productCombinationSelectAllCheckbox);
@@ -439,7 +439,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add specific prices
    * @param page {Page} Browser tab
-   * @param specificPriceData {Object|{combinations: ?string, discount: ?number, startingAt: ?number,
+   * @param specificPriceData {Object|{attributes: ?string, discount: ?number, startingAt: ?number,
    * reductionType: ?string}} Data to set on specific price form
    * @return {Promise<string>}
    */
@@ -454,10 +454,10 @@ class AddProduct extends BOBasePage {
     ]);
 
     // Choose combinations if exist
-    if (specificPriceData.combinations) {
+    if (specificPriceData.attributes) {
       await this.waitForVisibleSelector(page, this.combinationSelect);
       await this.scrollTo(page, this.combinationSelect);
-      await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.combinations);
+      await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.attributes);
     }
     await this.setValue(page, this.startingAtInput, specificPriceData.startingAt);
     await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount);
@@ -604,7 +604,7 @@ class AddProduct extends BOBasePage {
       await this.addPackOfProducts(page, productData.pack);
     }
     if (productData.productHasCombinations) {
-      await this.setCombinationsInProduct(page, productData);
+      await this.setAttributesInProduct(page, productData);
     }
     await this.setProductStatus(page, productData.status);
     if (!productData.productHasCombinations) {

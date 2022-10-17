@@ -101,8 +101,8 @@ describe('FO - product page : Add product to cart', async () => {
 
       result = await productPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(Products.demo_1.combination.size.join(' ')),
-        await expect(result.color).to.equal(`${Products.demo_1.combination.color.join(' ')}`),
+        await expect(result.size).to.equal(Products.demo_1.attributes.size.join(' ')),
+        await expect(result.color).to.equal(`${Products.demo_1.attributes.color.join(' ')}`),
       ]);
 
       result = await productPage.getProductImageUrls(page);
@@ -115,7 +115,7 @@ describe('FO - product page : Add product to cart', async () => {
     it('should choose combination and check product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseCombination', baseContext);
 
-      await productPage.selectCombination(page, 1, firstCombination);
+      await productPage.selectAttributes(page, 1, firstCombination);
 
       let result = await productPage.getProductInformation(page);
       await Promise.all([

@@ -29,7 +29,7 @@ const ProductFaker = require('@data/faker/product');
 
 let browserContext;
 let page;
-const combination = {
+const attributes = {
   size: 'M',
   color: 'Black',
   quantity: 4,
@@ -268,7 +268,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should change combination on popup and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
 
-      await homePage.changeCombinationAndAddToCart(page, combination);
+      await homePage.changeAttributesAndAddToCart(page, attributes);
 
       await homePage.proceedToCheckout(page);
 
@@ -280,7 +280,7 @@ describe('FO - product page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
 
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(combination.quantity);
+      await expect(notificationsNumber).to.be.equal(attributes.quantity);
     });
 
     it('should check product details', async function () {
@@ -293,14 +293,14 @@ describe('FO - product page : Product quick view', async () => {
         expect(result.price).to.equal(Products.demo_1.finalPrice),
         expect(result.discountPercentage).to.equal(`-${Products.demo_1.discount}`),
         expect(result.image).to.contains(Products.demo_1.coverImage),
-        expect(result.quantity).to.equal(combination.quantity),
-        expect(result.totalPrice).to.equal(combination.totalPrice),
+        expect(result.quantity).to.equal(attributes.quantity),
+        expect(result.totalPrice).to.equal(attributes.totalPrice),
       ]);
 
       result = await cartPage.getProductAttributes(page, 1);
       await Promise.all([
-        expect(result.size).to.equal(combination.size),
-        expect(result.color).to.equal(combination.color),
+        expect(result.size).to.equal(attributes.size),
+        expect(result.color).to.equal(attributes.color),
       ]);
     });
   });

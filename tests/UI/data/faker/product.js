@@ -57,7 +57,7 @@ class ProductData {
     this.productHasCombinations = productToCreate.productHasCombinations || false;
 
     /** @type {Object|{color: Array<string>, size: Array<string>}} Combinations of the product */
-    this.combinations = productToCreate.combinations || {
+    this.attributes = productToCreate.attributes || {
       color: ['White', 'Black'],
       size: ['S', 'M'],
     };
