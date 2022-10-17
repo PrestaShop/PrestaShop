@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -81,6 +83,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data)
     {
+        if (count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
+            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
+        }
         $command = $this->createAddCategoryCommand($data);
 
         /** @var CategoryId $categoryId */
@@ -108,6 +113,11 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      */
     public function update($categoryId, array $data)
     {
+        $availableKeys = $this->getAvailableKeys((int) $categoryId);
+
+        if (count($data['menu_thumbnail_images']) > count($availableKeys)) {
+            throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%s"', $categoryId));
+        }
         $command = $this->createEditCategoryCommand($categoryId, $data);
 
         $this->commandBus->handle($command);
@@ -214,4 +224,25 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
             }
         }
     }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return array
+     */
+    private function getAvailableKeys(int $categoryId): array
+    {
+        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
+        $usedKeys = [];
+
+        foreach ($files as $file) {
+            $matches = [];
+
+            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
+                $usedKeys[] = (int) $matches[1];
+            }
+        }
+        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
+    }
+
 }
