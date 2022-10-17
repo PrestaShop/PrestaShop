@@ -514,3 +514,24 @@ services:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'
+
+  prestashop.adapter.product.command_handler.update_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler
+    arguments:
+      - '@prestashop.adapter.product.update.product_updatable_property_filler'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
+
+  prestashop.adapter.product.update.product_updatable_property_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductUpdatablePropertyFiller
+    arguments:
+      - !tagged core.product_updatable_property_filler
+
+  prestashop.adapter.product.update.product_basic_information_property_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductBasicInformationPropertyFiller
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+      - '@prestashop.adapter.tools'
+    tags: ['core.product_updatable_property_filler']
