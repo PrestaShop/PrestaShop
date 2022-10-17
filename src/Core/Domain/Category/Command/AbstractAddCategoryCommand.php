@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddRootCategoryCommand adds new root category.
  */
-abstract class AbstractAddCategoryCommand
+class AbstractAddCategoryCommand
 {
     /**
      * @var string[]
@@ -49,6 +49,11 @@ abstract class AbstractAddCategoryCommand
      * @var string[]|null
      */
     private $localizedDescriptions;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedAdditionalDescriptions;
 
     /**
      * @var bool
@@ -168,6 +173,22 @@ abstract class AbstractAddCategoryCommand
     }
 
     /**
+     * @param string[]|null $localizedAdditionalDescriptions
+     */
+    public function getLocalizedAdditionalDescriptions(): ?array
+    {
+        return $this->localizedAdditionalDescriptions;
+    }
+
+    /**
+     * @param string[]|null $localizedAdditionalDescriptions
+     */
+    public function setLocalizedAdditionalDescriptions(?array $localizedAdditionalDescriptions): void
+    {
+        $this->localizedAdditionalDescriptions = $localizedAdditionalDescriptions;
+    }
+
+    /**
      * @return bool
      */
     public function isActive(): bool
@@ -179,9 +200,15 @@ abstract class AbstractAddCategoryCommand
      * @param bool $isActive
      *
      * @return $this
+     *
+     * @throws CategoryConstraintException
      */
     public function setIsActive(bool $isActive): self
     {
+        if (!is_bool($isActive)) {
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
+        }
+
         $this->isActive = $isActive;
 
         return $this;

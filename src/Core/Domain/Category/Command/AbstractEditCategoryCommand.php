@@ -57,6 +57,11 @@ abstract class AbstractEditCategoryCommand
     private $localizedDescriptions;
 
     /**
+     * @var string[]|null
+     */
+    private $localizedAdditionalDescriptions;
+
+    /**
      * @var bool|null
      */
     private $isActive;
@@ -160,6 +165,22 @@ abstract class AbstractEditCategoryCommand
     public function getLocalizedDescriptions(): ?array
     {
         return $this->localizedDescriptions;
+    }
+
+    /**
+     * @param string[]|null $localizedAdditionalDescriptions
+     */
+    public function getLocalizedAdditionalDescriptions(): ?array
+    {
+        return $this->localizedAdditionalDescriptions;
+    }
+
+    /**
+     * @param string[]|null $localizedAdditionalDescriptions
+     */
+    public function setLocalizedAdditionalDescriptions(?array $localizedAdditionalDescriptions): void
+    {
+        $this->localizedAdditionalDescriptions = $localizedAdditionalDescriptions;
     }
 
     /**
