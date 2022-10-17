@@ -26,14 +26,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractUpdateOptionsFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateOptionsFeatureContext extends AbstractUpdateOptionsFeatureContext
@@ -84,7 +83,7 @@ class UpdateOptionsFeatureContext extends AbstractUpdateOptionsFeatureContext
         $nonExistingId = 50000;
 
         try {
-            $command = new UpdateProductOptionsCommand(
+            $command = new UpdateProductCommand(
                 $this->getSharedStorage()->get($productReference),
                 ShopConstraint::shop($this->getDefaultShopId())
             );
@@ -100,13 +99,13 @@ class UpdateOptionsFeatureContext extends AbstractUpdateOptionsFeatureContext
      * @param TableNode $table
      * @param ShopConstraint $shopConstraint
      */
-    private function updateProductOptions(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    protected function updateProductOptions(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $table->getRowsHash();
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductOptionsCommand($productId, $shopConstraint);
+            $command = new UpdateProductCommand($productId, $shopConstraint);
             $this->fillCommand($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
@@ -116,9 +115,9 @@ class UpdateOptionsFeatureContext extends AbstractUpdateOptionsFeatureContext
 
     /**
      * @param array $data
-     * @param UpdateProductOptionsCommand $command
+     * @param UpdateProductCommand $command
      */
-    private function fillCommand(array $data, UpdateProductOptionsCommand $command): void
+    private function fillCommand(array $data, UpdateProductCommand $command): void
     {
         if (isset($data['visibility'])) {
             $command->setVisibility($data['visibility']);

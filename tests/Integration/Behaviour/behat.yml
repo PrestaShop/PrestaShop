@@ -338,6 +338,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
@@ -429,3 +430,73 @@ default:
             contexts:
                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext
+        update_product:
+            paths:
+                - "%paths.base%/Features/Scenario/Product"
+            filters:
+                tags: "~@legacy-product-type"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CurrencyFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\DeleteCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SearchCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationImagesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationPricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SetDefaultCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductImageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ProductTypeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\RelatedProductsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SearchProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateOptionsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
