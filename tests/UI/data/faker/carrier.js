@@ -19,10 +19,10 @@ class CarrierData {
    */
   constructor(carrierToCreate = {}) {
     /** @type {string} Name of the carrier */
-    this.name = carrierToCreate.name || faker.company.companyName();
+    this.name = carrierToCreate.name || faker.company.name();
 
     /** @type {string} Transit name of the carrier */
-    this.transitName = carrierToCreate.transitName || faker.company.companyName();
+    this.transitName = carrierToCreate.transitName || faker.company.name();
 
     /** @type {number} Shipping delay, 0 for longest and 9 for shortest */
     this.speedGrade = carrierToCreate.speedGrade || faker.datatype.number({min: 1, max: 9});

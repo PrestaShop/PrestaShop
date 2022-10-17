@@ -14,7 +14,7 @@ class SupplierData {
    */
   constructor(supplierToCreate = {}) {
     /** @type {string} Name of the supplier */
-    this.name = (supplierToCreate.name || faker.company.companyName()).substring(0, 63);
+    this.name = (supplierToCreate.name || faker.company.name()).substring(0, 63);
 
     /** @type {string} Description of the supplier */
     this.description = supplierToCreate.description || faker.lorem.sentence();
