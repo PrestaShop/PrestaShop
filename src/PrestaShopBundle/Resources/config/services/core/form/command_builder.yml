@@ -134,4 +134,5 @@ services:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-    tags: [ 'core.product_command_builder' ]
+      # @todo: tags commented bellow, to avoid affecting product page until all the related commands are refactored.
+    # tags: [ 'core.product_command_builder' ]
