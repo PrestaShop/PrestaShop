@@ -23,7 +23,7 @@ module.exports = class EmployeeBasePage extends BOBasePage {
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
     this.searchDefaultPageInput = '.select2-search__field';
     this.languageSelect = '#employee_language';
-    this.statusToggleInput = toggle => `#employee_active_${toggle}`;
+    this.statusToggleInput = (toggle) => `#employee_active_${toggle}`;
     this.permissionProfileSelect = '#employee_profile';
     this.saveButton = '#save-button';
     this.cancelButton = '#cancel-link';

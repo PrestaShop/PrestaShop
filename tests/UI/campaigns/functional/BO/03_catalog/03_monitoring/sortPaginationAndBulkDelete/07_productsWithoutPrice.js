@@ -32,7 +32,6 @@ const tableName = 'product_without_price';
 // Variable used to create products csv file
 const productsFile = 'products.csv';
 
-
 /*
 Pre-condition:
 - Import list of products
@@ -129,8 +128,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
           );
 
           if (testSort.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-            sortedTable = await sortedTable.map(text => parseFloat(text));
+            nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+            sortedTable = await sortedTable.map((text) => parseFloat(text));
           }
 
           const expectedResult = await basicHelper.sortArray(nonSortedTable, testSort.args.isFloat);

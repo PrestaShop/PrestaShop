@@ -35,7 +35,6 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import test context
 
-
 const baseContext = 'functional_BO_customerService_orderMessages_merchandiseReturnOptions';
 
 let browserContext;

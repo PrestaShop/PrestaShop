@@ -19,35 +19,35 @@ class ProductSettings extends BOBasePage {
 
     // Selectors
     // Products general form
-    this.catalogModeToggleInput = toggle => `#general_catalog_mode_${toggle}`;
-    this.showPricesToggleInput = toggle => `#general_catalog_mode_with_prices_${toggle}`;
+    this.catalogModeToggleInput = (toggle) => `#general_catalog_mode_${toggle}`;
+    this.showPricesToggleInput = (toggle) => `#general_catalog_mode_with_prices_${toggle}`;
     this.maxSizeShortDescriptionInput = '#general_short_description_limit';
     this.newDaysNumberInput = '#general_new_days_number';
-    this.forceUpdateFriendlyUrlToggleInput = toggle => `#general_force_friendly_url_${toggle}`;
+    this.forceUpdateFriendlyUrlToggleInput = (toggle) => `#general_force_friendly_url_${toggle}`;
     this.quantityDiscountBasedOnSelect = '#general_quantity_discount';
-    this.defaultActivationStatusToggleInput = toggle => `#general_default_status_${toggle}`;
+    this.defaultActivationStatusToggleInput = (toggle) => `#general_default_status_${toggle}`;
     this.saveProductGeneralFormButton = '#form-general-save-button';
 
     // Product page form
-    this.displayAvailableQuantitiesToggleInput = toggle => `#page_display_quantities_${toggle}`;
+    this.displayAvailableQuantitiesToggleInput = (toggle) => `#page_display_quantities_${toggle}`;
     this.separatorAttributeOnProductPageSelect = '#page_attribute_anchor_separator';
-    this.displayDiscountedPriceToggleInput = toggle => `#page_display_discount_price_${toggle}`;
+    this.displayDiscountedPriceToggleInput = (toggle) => `#page_display_discount_price_${toggle}`;
     this.saveProductPageFormButton = '#form-page-save-button';
 
     // Products stock form
     this.productsStockForm = '#configuration_fieldset_stock';
-    this.allowOrderingOosToggleInput = toggle => `#stock_allow_ordering_oos_${toggle}`;
-    this.enableStockManagementToggleInput = toggle => `#stock_stock_management_${toggle}`;
+    this.allowOrderingOosToggleInput = (toggle) => `#stock_allow_ordering_oos_${toggle}`;
+    this.enableStockManagementToggleInput = (toggle) => `#stock_stock_management_${toggle}`;
     this.nameLangButton = '#stock_in_stock_label_dropdown';
-    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label_dropdown\']'
+    this.nameLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label_dropdown\']'
       + ` span[data-locale='${lang}']`;
-    this.labelInStock = idLang => `#stock_in_stock_label_${idLang}`;
+    this.labelInStock = (idLang) => `#stock_in_stock_label_${idLang}`;
     this.deliveryTimeInStockInput = '#stock_delivery_time_1';
     this.deliveryTimeOutOfStockInput = '#stock_oos_delivery_time_1';
-    this.oosAllowedBackordersLabel = idLang => `#stock_oos_allowed_backorders_${idLang}`;
-    this.oosDeniedBackordersLabel = idLang => `#stock_oos_denied_backorders_${idLang}`;
+    this.oosAllowedBackordersLabel = (idLang) => `#stock_oos_allowed_backorders_${idLang}`;
+    this.oosDeniedBackordersLabel = (idLang) => `#stock_oos_denied_backorders_${idLang}`;
     this.remainingQuantityInput = '#stock_display_last_quantities';
-    this.displayUnavailableAttributesToggleInput = toggle => `#stock_display_unavailable_attributes_${toggle}`;
+    this.displayUnavailableAttributesToggleInput = (toggle) => `#stock_display_unavailable_attributes_${toggle}`;
     this.defaultPackStockManagementSelect = '#stock_pack_stock_management';
     this.saveProductsStockFormButton = '#form-stock-save-button';
 

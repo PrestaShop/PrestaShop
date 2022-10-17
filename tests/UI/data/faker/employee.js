@@ -30,7 +30,7 @@ class EmployeeData {
 
     /** @type {string} Default BO language for the employee */
     this.language = employeeToCreate.language
-      || faker.helpers.arrayElement((Object.values(Languages).map(lang => lang.name)).slice(0, 2));
+      || faker.helpers.arrayElement((Object.values(Languages).map((lang) => lang.name)).slice(0, 2));
 
     /** @type {string} Status of the employee */
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;

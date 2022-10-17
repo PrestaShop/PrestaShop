@@ -26,25 +26,25 @@ class Currencies extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Filters
-    this.filterColumn = filterBy => `${this.gridTable} #currency_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.gridTable} #currency_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // enable column
-    this.statusColumn = row => `${this.tableColumn(row, 'active')} .ps-switch`;
-    this.statusColumnToggleInput = row => `${this.statusColumn(row)} input`;
+    this.statusColumn = (row) => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = (row) => `${this.statusColumn(row)} input`;
 
     // Actions buttons in row
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a[href*='/edit']`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.editRowLink = (row) => `${this.actionsColumn(row)} a[href*='/edit']`;
 
     // Delete modal
     this.confirmDeleteModal = '#currency-grid-confirm-modal';
@@ -61,8 +61,8 @@ class Currencies extends LocalizationBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header Methods */

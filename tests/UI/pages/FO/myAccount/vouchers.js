@@ -20,14 +20,14 @@ class Vouchers extends FOBasePage {
     this.vouchersTable = '#content table.table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
-    this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
-    this.tableColumnCode = row => `${this.vouchersTableRow(row)} th:nth-child(1)`;
-    this.tableColumnDescription = row => `${this.vouchersTableRow(row)} td:nth-child(2)`;
-    this.tableColumnQuantity = row => `${this.vouchersTableRow(row)} td:nth-child(3)`;
-    this.tableColumnValue = row => `${this.vouchersTableRow(row)} td:nth-child(4)`;
-    this.tableColumnMinimum = row => `${this.vouchersTableRow(row)} td:nth-child(5)`;
-    this.tableColumnCumulative = row => `${this.vouchersTableRow(row)} td:nth-child(6)`;
-    this.tableColumnExpirationDate = row => `${this.vouchersTableRow(row)} td:nth-child(7)`;
+    this.vouchersTableRow = (row) => `${this.vouchersTableRows}:nth-child(${row})`;
+    this.tableColumnCode = (row) => `${this.vouchersTableRow(row)} th:nth-child(1)`;
+    this.tableColumnDescription = (row) => `${this.vouchersTableRow(row)} td:nth-child(2)`;
+    this.tableColumnQuantity = (row) => `${this.vouchersTableRow(row)} td:nth-child(3)`;
+    this.tableColumnValue = (row) => `${this.vouchersTableRow(row)} td:nth-child(4)`;
+    this.tableColumnMinimum = (row) => `${this.vouchersTableRow(row)} td:nth-child(5)`;
+    this.tableColumnCumulative = (row) => `${this.vouchersTableRow(row)} td:nth-child(6)`;
+    this.tableColumnExpirationDate = (row) => `${this.vouchersTableRow(row)} td:nth-child(7)`;
   }
 
   /*

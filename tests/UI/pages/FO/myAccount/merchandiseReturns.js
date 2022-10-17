@@ -24,7 +24,7 @@ class MerchandiseReturns extends FOBasePage {
     // Merchandise return table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
   }
 

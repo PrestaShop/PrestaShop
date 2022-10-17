@@ -18,18 +18,18 @@ class Outstanding extends BOBasePage {
     this.gridTable = '#outstanding_grid_table';
 
     // Filters
-    this.outstandingFilterColumnInput = filterBy => `#outstanding_${filterBy}`;
+    this.outstandingFilterColumnInput = (filterBy) => `#outstanding_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnActionType = (row, column) => `${this.tableColumn(row, column)} a`;
 
@@ -66,7 +66,6 @@ class Outstanding extends BOBasePage {
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
   }
-
 
   /**
    * Click on view order

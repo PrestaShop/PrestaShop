@@ -14,7 +14,6 @@ const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 
-
 // FO pages
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');

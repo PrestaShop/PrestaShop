@@ -18,17 +18,17 @@ class SearchResults extends FOBasePage {
     // Selectors for search Results page
     this.productListTopDiv = '#js-product-list-top';
     this.totalProduct = `${this.productListTopDiv} .total-products`;
-    this.productArticle = number => `#js-product-list .products div:nth-child(${number}) article`;
-    this.productImg = number => `${this.productArticle(number)} img`;
-    this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
-    this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productArticle = (number) => `#js-product-list .products div:nth-child(${number}) article`;
+    this.productImg = (number) => `${this.productArticle(number)} img`;
+    this.productDescriptionDiv = (number) => `${this.productArticle(number)} div.product-description`;
+    this.productQuickViewLink = (number) => `${this.productArticle(number)} a.quick-view`;
     this.productPrice = '#js-product-list div.product-description span.price';
     this.productNoMatches = '#product-search-no-matches';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
-    this.quickViewThumbImage = position => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
+    this.quickViewThumbImage = (position) => `${this.quickViewModalDiv} li:nth-child(${position}) img.js-thumb`;
   }
 
   // Methods
@@ -38,7 +38,7 @@ class SearchResults extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async hasResults(page) {
-    return page.$$eval(this.productNoMatches, all => all.length === 0);
+    return page.$$eval(this.productNoMatches, (all) => all.length === 0);
   }
 
   /**
@@ -76,7 +76,7 @@ class SearchResults extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -85,7 +85,7 @@ class SearchResults extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), el => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
     ]);
   }
 

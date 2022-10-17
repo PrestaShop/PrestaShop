@@ -41,11 +41,11 @@ class AddOrder extends BOBasePage {
     // Full results
     this.customerSearchFullResultsBlock = 'div.js-customer-search-results';
     this.customerResultsBlock = `${this.customerSearchFullResultsBlock} div.js-customer-search-result-col`;
-    this.customerCardBlock = pos => `${this.customerSearchFullResultsBlock} `
+    this.customerCardBlock = (pos) => `${this.customerSearchFullResultsBlock} `
       + `.js-customer-search-result-col:nth-child(${pos})`;
-    this.customerCardNameTitle = pos => `${this.customerCardBlock(pos)} .js-customer-name`;
-    this.customerCardBody = pos => `${this.customerCardBlock(pos)} .card-body`;
-    this.customerCardChooseButton = pos => `${this.customerCardBlock(pos)} .js-choose-customer-btn`;
+    this.customerCardNameTitle = (pos) => `${this.customerCardBlock(pos)} .js-customer-name`;
+    this.customerCardBody = (pos) => `${this.customerCardBlock(pos)} .card-body`;
+    this.customerCardChooseButton = (pos) => `${this.customerCardBlock(pos)} .js-choose-customer-btn`;
     this.customerCardDetailButton = `${this.customerSearchFullResultsBlock} a.js-details-customer-btn`;
 
     // Checkout history selectors
@@ -54,11 +54,11 @@ class AddOrder extends BOBasePage {
     // Carts table selectors
     this.customerCartsTable = '#customer-carts-table';
     this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
-    this.customerCartsTableRow = row => `${this.customerCartsTableBody} tr:nth-child(${row})`;
+    this.customerCartsTableRow = (row) => `${this.customerCartsTableBody} tr:nth-child(${row})`;
     this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
     this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
-    this.customerCartsTableDetailsButton = row => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
-    this.customerCartsTableUseButton = row => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
+    this.customerCartsTableDetailsButton = (row) => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
+    this.customerCartsTableUseButton = (row) => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -69,10 +69,10 @@ class AddOrder extends BOBasePage {
     this.customerOrdersTable = '#customer-orders-table';
     this.customerOrdersTableBody = `${this.customerOrdersTable} tbody`;
     this.customerOrdersTableRows = `${this.customerOrdersTableBody} tr`;
-    this.customerOrdersTableRow = row => `${this.customerOrdersTableRows}:nth-child(${row})`;
+    this.customerOrdersTableRow = (row) => `${this.customerOrdersTableRows}:nth-child(${row})`;
     this.customerOrdersTableColumn = (column, row) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
-    this.orderDetailsButton = row => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
-    this.orderUseButton = row => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
+    this.orderDetailsButton = (row) => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
+    this.orderUseButton = (row) => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
 
     // Cart selectors
     this.productSearchInput = '#product-search';
@@ -88,12 +88,12 @@ class AddOrder extends BOBasePage {
     this.productsTable = '#products-table';
     this.productsTableBody = `${this.productsTable} tbody`;
     this.productsTableRows = `${this.productsTableBody} tr`;
-    this.productsTableRow = row => `${this.productsTableRows}:nth-child(${row})`;
+    this.productsTableRow = (row) => `${this.productsTableRows}:nth-child(${row})`;
     this.productsTableColumn = (column, row) => `${this.productsTableRow(row)} td.js-product-${column}`;
-    this.productTableQuantityColumn = row => `${this.productsTableRow(row)} td input.js-product-qty-input`;
-    this.productTableImageColumn = row => `${this.productsTableRow(row)} td img.js-product-image`;
-    this.productTableQuantityStockColumn = row => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
-    this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
+    this.productTableQuantityColumn = (row) => `${this.productsTableRow(row)} td input.js-product-qty-input`;
+    this.productTableImageColumn = (row) => `${this.productsTableRow(row)} td img.js-product-image`;
+    this.productTableQuantityStockColumn = (row) => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
+    this.productTableColumnRemoveButton = (row) => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
 
     // Vouchers block selectors
     this.searchVoucherInput = '#search-cart-rules-input';
@@ -104,9 +104,9 @@ class AddOrder extends BOBasePage {
     this.vouchersTable = '#cart-rules-table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
-    this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
+    this.vouchersTableRow = (row) => `${this.vouchersTableRows}:nth-child(${row})`;
     this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
-    this.vouchersTableRowRemoveButton = row => `${this.vouchersTableRows}:nth-child(${row})`
+    this.vouchersTableRowRemoveButton = (row) => `${this.vouchersTableRows}:nth-child(${row})`
       + ' td button.js-cart-rule-delete-btn';
 
     // Addresses form selectors
@@ -121,9 +121,9 @@ class AddOrder extends BOBasePage {
     this.shippingBlock = '#shipping-block';
     this.deliveryOptionSelect = '#delivery-option-select';
     this.totalShippingTaxIncl = '.js-total-shipping-tax-inc';
-    this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
-    this.giftToggleInput = toggle => `#is-gift_${toggle}`;
-    this.recycledPackagingToggleInput = toggle => `#recycled-packaging_${toggle}`;
+    this.freeShippingToggleInput = (toggle) => `#free-shipping_${toggle}`;
+    this.giftToggleInput = (toggle) => `#is-gift_${toggle}`;
+    this.recycledPackagingToggleInput = (toggle) => `#recycled-packaging_${toggle}`;
     this.shippingCost = `${this.shippingBlock} span.js-total-shipping-tax-inc`;
     this.giftMessageTextarea = '#cart_gift_message';
 
@@ -180,7 +180,7 @@ class AddOrder extends BOBasePage {
   async getCustomersSearchNumber(page) {
     await this.waitForVisibleSelector(page, this.customerCardNameTitle(1));
 
-    return page.$$eval(this.customerResultsBlock, divs => divs.length);
+    return page.$$eval(this.customerResultsBlock, (divs) => divs.length);
   }
 
   /**
@@ -213,7 +213,7 @@ class AddOrder extends BOBasePage {
     await page.click(this.addCustomerLink);
     await this.waitForVisibleSelector(page, this.iframe);
 
-    const customerFrame = await page.frame({url: new RegExp('sell/customers/new', 'gmi')});
+    const customerFrame = await page.frame({url: /sell\/customers\/new/gmi});
 
     await addCustomerPage.fillCustomerForm(customerFrame, customerData);
 
@@ -352,7 +352,7 @@ class AddOrder extends BOBasePage {
   async getOrdersNumber(page) {
     await this.waitForVisibleSelector(page, this.customerOrdersTable);
 
-    return page.$$eval(this.customerOrdersTableRows, trs => trs.length);
+    return page.$$eval(this.customerOrdersTableRows, (trs) => trs.length);
   }
 
   /**
@@ -520,7 +520,6 @@ class AddOrder extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.productTableImageColumn(row)}[src*='${image}']`);
   }
 
-
   /**
    * Get product gift details from table
    * @param page {Page} Browser tab
@@ -548,7 +547,6 @@ class AddOrder extends BOBasePage {
   isProductTableRowNotVisible(page, row) {
     return this.elementNotVisible(page, this.productsTableRow(row), 1000);
   }
-
 
   /**
    * Remove product
@@ -650,8 +648,7 @@ class AddOrder extends BOBasePage {
    */
   async getCreateVoucherIframe(page) {
     return page.frame({
-      url: new RegExp(
-        'controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1', 'gmi'),
+      url: /controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1/gmi,
     });
   }
 
@@ -778,7 +775,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<*>}
    */
   async getEditAddressIframe(page) {
-    return page.frame({url: new RegExp('sell/addresses/cart/', 'gmi')});
+    return page.frame({url: /sell\/addresses\/cart\//gmi});
   }
 
   /**
@@ -798,7 +795,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<*>}
    */
   async getAddAddressIframe(page) {
-    return page.frame({url: new RegExp('sell/addresses/new?', 'gmi')});
+    return page.frame({url: /sell\/addresses\/new\?/gmi});
   }
 
   /* Shipping methods */
@@ -821,7 +818,7 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), el => el.click());
+    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el) => el.click());
     if (isFreeShipping) {
       await this.waitForVisibleSelector(page, this.vouchersTable);
     }

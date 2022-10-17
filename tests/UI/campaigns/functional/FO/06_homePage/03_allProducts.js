@@ -62,7 +62,6 @@ describe('FO - Home Page : Display all products', async () => {
       await expect(numberOfProducts).to.be.above(0);
     });
 
-
     it('should filter by Active Status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatus', baseContext);
 

@@ -2,8 +2,8 @@ const {faker} = require('@faker-js/faker');
 const {Products} = require('@data/demo/products');
 const {Languages} = require('@data/demo/languages');
 
-const productsNames = Object.values(Products).map(product => product.name);
-const languagesNames = Object.values(Languages).map(language => language.name);
+const productsNames = Object.values(Products).map((product) => product.name);
+const languagesNames = Object.values(Languages).map((language) => language.name);
 
 /**
  * Create new tag to use on tag form on BO

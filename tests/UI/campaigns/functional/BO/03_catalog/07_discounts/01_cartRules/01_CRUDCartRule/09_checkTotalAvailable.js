@@ -160,7 +160,7 @@ describe('BO - Catalog - Cart rules : Case 9 - Check Total available', async () 
           );
 
           const discountedPrice = Products.demo_1.finalPrice
-            - (Products.demo_1.finalPrice * cartRuleCode.discountPercent / 100);
+            - ((Products.demo_1.finalPrice * cartRuleCode.discountPercent) / 100);
 
           const priceATI = await cartPage.getATIPrice(page);
           await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));

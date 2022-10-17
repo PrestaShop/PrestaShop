@@ -18,17 +18,17 @@ class AddSeoUrl extends BOBasePage {
 
     // Selectors
     this.pageTitleLangButton = '#meta_page_title_dropdown';
-    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'meta_page_title_dropdown\']'
+    this.pageTitleLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'meta_page_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.pageNameSelect = '#meta_page_name';
-    this.pageTitleInput = id => `#meta_page_title_${id}`;
-    this.metaDescriptionInput = id => `#meta_meta_description_${id}`;
-    this.metaKeywordsInput = id => `#meta_meta_keywords_${id}-tokenfield`;
-    this.friendlyUrlInput = id => `#meta_url_rewrite_${id}`;
+    this.pageTitleInput = (id) => `#meta_page_title_${id}`;
+    this.metaDescriptionInput = (id) => `#meta_meta_description_${id}`;
+    this.metaKeywordsInput = (id) => `#meta_meta_keywords_${id}-tokenfield`;
+    this.friendlyUrlInput = (id) => `#meta_url_rewrite_${id}`;
 
     // Selectors for Meta keywords
-    this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
+    this.taggableFieldDiv = (lang) => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = (lang) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '#save-button';
   }
 

@@ -39,18 +39,18 @@ class Stocks extends BOBasePage {
     this.applyNewQuantityButton = 'button.update-qty';
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
-    this.productRow = row => `${this.productRows}:nth-child(${row})`;
-    this.productRowNameColumn = row => `${this.productRow(row)} td[data-role=product-name]`;
-    this.productRowReferenceColumn = row => `${this.productRow(row)} td[data-role=product-reference]`;
-    this.productRowSupplierColumn = row => `${this.productRow(row)} td[data-role=product-supplier-name]`;
-    this.productRowPhysicalColumn = row => `${this.productRow(row)} td[data-role=physical-quantity]`;
-    this.productRowReservedColumn = row => `${this.productRow(row)} td[data-role=reserved-quantity]`;
-    this.productRowAvailableColumn = row => `${this.productRow(row)} td[data-role=available-quantity]`;
+    this.productRow = (row) => `${this.productRows}:nth-child(${row})`;
+    this.productRowNameColumn = (row) => `${this.productRow(row)} td[data-role=product-name]`;
+    this.productRowReferenceColumn = (row) => `${this.productRow(row)} td[data-role=product-reference]`;
+    this.productRowSupplierColumn = (row) => `${this.productRow(row)} td[data-role=product-supplier-name]`;
+    this.productRowPhysicalColumn = (row) => `${this.productRow(row)} td[data-role=physical-quantity]`;
+    this.productRowReservedColumn = (row) => `${this.productRow(row)} td[data-role=reserved-quantity]`;
+    this.productRowAvailableColumn = (row) => `${this.productRow(row)} td[data-role=available-quantity]`;
 
     // Quantity column
-    this.productRowQuantityColumn = row => `${this.productRow(row)} td[data-role=update-quantity]`;
-    this.productRowQuantityColumnInput = row => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
-    this.productRowQuantityUpdateButton = row => `${this.productRowQuantityColumn(row)} button.check-button`;
+    this.productRowQuantityColumn = (row) => `${this.productRow(row)} td[data-role=update-quantity]`;
+    this.productRowQuantityColumnInput = (row) => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
+    this.productRowQuantityUpdateButton = (row) => `${this.productRowQuantityColumn(row)} button.check-button`;
 
     // loader
     this.productListLoading = `${this.productRows} td:nth-child(1) div.ps-loader`;
@@ -66,13 +66,13 @@ class Stocks extends BOBasePage {
     this.filterCategoryDiv = `${this.filtersContainerDiv} div.filter-categories`;
     this.filterCategoryExpandButton = `${this.filterCategoryDiv} button:nth-child(1)`;
     this.filterCategoryCollapseButton = `${this.filterCategoryDiv} button:nth-child(2)`;
-    this.filterCategoryTreeItems = category => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
-    this.filterCategoryCheckBoxDiv = category => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
+    this.filterCategoryTreeItems = (category) => `${this.filterCategoryDiv} div.ps-tree-items[label='${category}']`;
+    this.filterCategoryCheckBoxDiv = (category) => `${this.filterCategoryTreeItems(category)} .md-checkbox`;
 
     // Pagination
     this.paginationList = 'nav ul.pagination';
     this.paginationListItem = `${this.paginationList} li.page-item`;
-    this.paginationListItemLink = id => `${this.paginationListItem}:nth-child(${id}) a`;
+    this.paginationListItemLink = (id) => `${this.paginationListItem}:nth-child(${id}) a`;
   }
 
   /*
@@ -251,7 +251,7 @@ class Stocks extends BOBasePage {
    */
   async bulkEditQuantityWithInput(page, quantity) {
     // Select All products
-    await page.$eval(this.selectAllCheckbox, el => el.click());
+    await page.$eval(this.selectAllCheckbox, (el) => el.click());
 
     // Set value in input
     await this.setValue(page, this.bulkEditQuantityInput, quantity);
@@ -325,7 +325,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page) {
-    await page.$eval(this.helpButton, el => el.click());
+    await page.$eval(this.helpButton, (el) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
   }
 
@@ -336,7 +336,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page) {
-    await page.$eval(this.helpButton, el => el.click());
+    await page.$eval(this.helpButton, (el) => el.click());
     return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
 }

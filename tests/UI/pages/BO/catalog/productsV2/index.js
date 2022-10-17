@@ -52,26 +52,27 @@ class Products extends BOBasePage {
 
     // Products list
     this.productRow = `${this.productGridTable} tbody tr`;
-    this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
-    this.productsListTableColumnID = row => `${this.productsListTableRow(row)} td.column-id_product`;
-    this.productsListTableColumnName = row => `${this.productsListTableRow(row)} td.column-name a`;
-    this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td.column-reference`;
-    this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td.column-category`;
-    this.productsListTableColumnPriceTExc = row => `${this.productsListTableRow(row)} `
+    this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)} td.column-id_product`;
+    this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td.column-name a`;
+    this.productsListTableColumnReference = (row) => `${this.productsListTableRow(row)} td.column-reference`;
+    this.productsListTableColumnCategory = (row) => `${this.productsListTableRow(row)} td.column-category`;
+    this.productsListTableColumnPriceTExc = (row) => `${this.productsListTableRow(row)} `
       + 'td.column-final_price_tax_excluded a';
-    this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} `
+    this.productsListTableColumnPriceATI = (row) => `${this.productsListTableRow(row)} `
       + 'td.column-price_tax_included';
-    this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.column-quantity a`;
-    this.productsListTableColumnStatusInput = row => `${this.productsListTableRow(row)} td.column-active input`;
-    this.productListTableDropDownList = row => `${this.productsListTableRow(row)} td.column-actions a.dropdown-toggle`;
-    this.productListTableDeleteButton = row => `${this.productsListTableRow(row)}`
+    this.productsListTableColumnQuantity = (row) => `${this.productsListTableRow(row)} td.column-quantity a`;
+    this.productsListTableColumnStatusInput = (row) => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productListTableDropDownList = (row) => `${this.productsListTableRow(row)} td.column-actions `
+      + 'a.dropdown-toggle';
+    this.productListTableDeleteButton = (row) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-delete-row-link';
 
     // Modal create product selectors
     this.modalCreateProduct = '#modal-create-product';
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.productTypeChoices = '#create_product div.product-type-choices';
-    this.productType = type => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
+    this.productType = (type) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
 
     // Modal dialog
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
@@ -122,7 +123,7 @@ class Products extends BOBasePage {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame = await page.frame({url: new RegExp('sell/catalog/products-v2/create', 'gmi')});
+    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
 
     await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);

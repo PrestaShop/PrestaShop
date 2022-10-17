@@ -228,7 +228,7 @@ class CommonPage {
   async clearInput(page, selector) {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-return-assign,no-param-reassign
-    await page.$eval(selector, el => el.value = '');
+    await page.$eval(selector, (el) => el.value = '');
   }
 
   /**
@@ -274,7 +274,7 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async scrollTo(page, selector) {
-    await page.$eval(selector, el => el.scrollIntoView());
+    await page.$eval(selector, (el) => el.scrollIntoView());
   }
 
   /**
@@ -386,7 +386,7 @@ class CommonPage {
   async setCheckedWithIcon(page, checkboxSelector, valueWanted = true) {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
-      await page.$eval(`${checkboxSelector} + i`, el => el.click());
+      await page.$eval(`${checkboxSelector} + i`, (el) => el.click());
     }
   }
 
@@ -452,7 +452,7 @@ class CommonPage {
    */
   getParentElement(page, selector) {
     /* eslint-env browser */
-    return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
+    return page.evaluateHandle((sl) => document.querySelector(sl).parentElement, selector);
   }
 
   /**
@@ -466,7 +466,7 @@ class CommonPage {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {
-      await page.$eval(selector, el => el.target = '');
+      await page.$eval(selector, (el) => el.target = '');
     }
     /* eslint-enable no-return-assign, no-param-reassign */
 

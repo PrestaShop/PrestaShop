@@ -25,8 +25,8 @@ class AddLanguage extends LocalizationBasePage {
     this.fullDataFormatInput = '#language_full_date_format';
     this.flagInput = '#language_flag_image';
     this.noPictureInput = '#language_no_picture_image';
-    this.isRtlToggleInput = toggle => `#language_is_rtl_${toggle}`;
-    this.statusToggleInput = toggle => `#language_is_active_${toggle}`;
+    this.isRtlToggleInput = (toggle) => `#language_is_rtl_${toggle}`;
+    this.statusToggleInput = (toggle) => `#language_is_active_${toggle}`;
     this.saveButton = '#save-button';
   }
 

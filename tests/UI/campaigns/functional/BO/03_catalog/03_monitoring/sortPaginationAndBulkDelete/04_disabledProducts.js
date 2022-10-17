@@ -128,8 +128,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
           );
 
           if (testSort.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-            sortedTable = await sortedTable.map(text => parseFloat(text));
+            nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+            sortedTable = await sortedTable.map((text) => parseFloat(text));
           }
 
           const expectedResult = await basicHelper.sortArray(nonSortedTable, testSort.args.isFloat);

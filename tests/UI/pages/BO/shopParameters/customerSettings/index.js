@@ -23,11 +23,11 @@ class CustomerSettings extends BOBasePage {
     this.groupsSubtab = '#subtab-AdminGroups';
 
     // Form selectors
-    this.redisplayCartAtLoginToggleInput = toggle => `#form_redisplay_cart_at_login_${toggle}`;
-    this.enablePartnerOfferToggleInput = toggle => `#form_enable_offers_${toggle}`;
-    this.sendEmailAfterRegistrationToggleInput = toggle => `#form_send_email_after_registration_${toggle}`;
-    this.askForBirthDateToggleInput = toggle => `#form_ask_for_birthday_${toggle}`;
-    this.enableB2BModeToggle = toggle => `#form_enable_b2b_mode_${toggle}`;
+    this.redisplayCartAtLoginToggleInput = (toggle) => `#form_redisplay_cart_at_login_${toggle}`;
+    this.enablePartnerOfferToggleInput = (toggle) => `#form_enable_offers_${toggle}`;
+    this.sendEmailAfterRegistrationToggleInput = (toggle) => `#form_send_email_after_registration_${toggle}`;
+    this.askForBirthDateToggleInput = (toggle) => `#form_ask_for_birthday_${toggle}`;
+    this.enableB2BModeToggle = (toggle) => `#form_enable_b2b_mode_${toggle}`;
     this.saveGeneralFormButton = '#form-general-save-button';
   }
 

@@ -37,7 +37,7 @@ describe('Install Prestashop', async () => {
     const stepTitle = await installPage.getStepTitle(page, 'Choose your language');
     const installationTitles = [installPage.firstStepFrTitle, installPage.firstStepEnTitle];
 
-    await expect(installationTitles.some(x => stepTitle.includes(x))).to.be.true;
+    await expect(installationTitles.some((x) => stepTitle.includes(x))).to.be.true;
   });
 
   it('should change language to English and check title', async function () {

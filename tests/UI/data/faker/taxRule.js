@@ -4,7 +4,7 @@ const {behaviour} = require('@data/demo/taxRule');
 const {tax} = require('@data/demo/tax');
 const {countries} = require('@data/demo/countries');
 
-const countriesNames = Object.values(countries).map(country => country.name);
+const countriesNames = Object.values(countries).map((country) => country.name);
 
 /**
  * Create new tax rule to use on tax rule form on BO

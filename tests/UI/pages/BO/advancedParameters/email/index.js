@@ -26,7 +26,7 @@ class Email extends BOBasePage {
     this.emailsListForm = '#email_logs_grid_table';
 
     // Filters
-    this.emailFilterColumnInput = filterBy => `#email_logs_${filterBy}`;
+    this.emailFilterColumnInput = (filterBy) => `#email_logs_${filterBy}`;
     this.filterSearchButton = `${this.emailsListForm} .grid-search-button`;
     this.filterResetButton = `${this.emailsListForm} .grid-reset-button`;
     this.gridActionButton = '#email_logs-grid-actions-button';
@@ -35,9 +35,9 @@ class Email extends BOBasePage {
     // Table rows and columns
     this.tableBody = `${this.emailsListForm} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.deleteRowLink = row => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
+    this.deleteRowLink = (row) => `${this.tableRow(row)} td.column-actions a.grid-delete-row-link`;
     this.confirmDeleteModal = '#email_logs-grid-confirm-modal';
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
@@ -47,7 +47,7 @@ class Email extends BOBasePage {
     this.bulkActionsDeleteButton = '#email_logs_grid_bulk_action_delete_selection';
 
     // Email form
-    this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
+    this.logEmailsToggleInput = (toggle) => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
 
     // Email form Radio buttons
@@ -75,8 +75,8 @@ class Email extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.emailsListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -197,7 +197,7 @@ class Email extends BOBasePage {
   async deleteEmailLogsBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -278,7 +278,7 @@ class Email extends BOBasePage {
    */
   async setLogEmails(page, toEnable) {
     await this.setChecked(page, this.logEmailsToggleInput(toEnable ? 1 : 0));
-    await page.$eval(this.saveEmailFormButton, el => el.click());
+    await page.$eval(this.saveEmailFormButton, (el) => el.click());
     await page.waitForNavigation();
 
     return this.getAlertSuccessBlockParagraphContent(page);

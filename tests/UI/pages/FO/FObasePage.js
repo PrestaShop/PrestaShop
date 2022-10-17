@@ -19,28 +19,29 @@ class FOBasePage extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
-    this.breadCrumbLink = link => `#wrapper nav.breadcrumb a[href*=${link}]`;
+    this.breadCrumbLink = (link) => `#wrapper nav.breadcrumb a[href*=${link}]`;
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.accountLink = `${this.userInfoLink} .user-info a.account`;
     this.logoutLink = `${this.userInfoLink} .user-info a.logout`;
     this.contactLink = '#contact-link';
-    this.categoryMenu = id => `#category-${id} a`;
+    this.categoryMenu = (id) => `#category-${id} a`;
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
     this.languageSelectorList = `${this.languageSelectorDiv} .js-dropdown.open`;
-    this.languageSelectorMenuItemLink = language => `${this.languageSelectorDiv} ul li a[data-iso-code='${language}']`;
+    this.languageSelectorMenuItemLink = (language) => `${this.languageSelectorDiv} ul li `
+      + `a[data-iso-code='${language}']`;
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
     this.currencySelectorExpandIcon = `${this.currencySelectorDiv} i.expand-more`;
-    this.currencySelectorMenuItemLink = currency => `${this.currencySelectorExpandIcon} ul li a[title='${currency}']`;
+    this.currencySelectorMenuItemLink = (currency) => `${this.currencySelectorExpandIcon} ul li a[title='${currency}']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
     this.autocompleteSearchResultItem = `${this.autocompleteSearchResult} .ui-menu-item`;
-    this.autocompleteSearchResultItemLink = nthChild => `${this.autocompleteSearchResult} `
+    this.autocompleteSearchResultItemLink = (nthChild) => `${this.autocompleteSearchResult} `
       + `.ui-menu-item:nth-child(${nthChild}) a`;
 
     // Footer links
@@ -75,10 +76,10 @@ class FOBasePage extends CommonPage {
     this.wrapperContactBlockDiv = '#footer div.block-contact';
 
     this.footerLinksDiv = '#footer .links';
-    this.wrapperDiv = position => `${this.footerLinksDiv} .wrapper:nth-child(${position})`;
-    this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
-    this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
-    this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
+    this.wrapperDiv = (position) => `${this.footerLinksDiv} .wrapper:nth-child(${position})`;
+    this.wrapperTitle = (position) => `${this.wrapperDiv(position)} p`;
+    this.wrapperSubmenu = (position) => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
+    this.wrapperSubmenuItemLink = (position) => `${this.wrapperSubmenu(position)} li a`;
 
     // Copyright
     this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop-project.org"]';
@@ -366,7 +367,7 @@ class FOBasePage extends CommonPage {
   async countAutocompleteSearchResult(page, productName) {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
-    return page.$$eval(this.autocompleteSearchResultItem, all => all.length);
+    return page.$$eval(this.autocompleteSearchResultItem, (all) => all.length);
   }
 
   /**
@@ -414,7 +415,7 @@ class FOBasePage extends CommonPage {
   async getFooterLinksTextContent(page, position) {
     return page.$$eval(
       this.wrapperSubmenuItemLink(position),
-      all => all.map(el => el.textContent.trim()),
+      (all) => all.map((el) => el.textContent.trim()),
     );
   }
 

@@ -27,22 +27,22 @@ class CustomerService extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='customer_threadFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='customer_threadFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncustomer_thread';
     this.filterResetButton = 'button[name=\'submitResetcustomer_thread\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Actions buttons in Row
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a[title='View']`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -59,7 +59,7 @@ class CustomerService extends BOBasePage {
 
     // Contact options selectors
     this.contactOptionForm = '#customer_thread_fieldset_contact';
-    this.allowFileUploadingToggleInput = toggle => `#PS_CUSTOMER_SERVICE_FILE_UPLOAD_${toggle}`;
+    this.allowFileUploadingToggleInput = (toggle) => `#PS_CUSTOMER_SERVICE_FILE_UPLOAD_${toggle}`;
     this.defaultMessageTextarea = '#PS_CUSTOMER_SERVICE_SIGNATURE_1 textarea';
     this.contactOptionSaveButton = `${this.contactOptionForm} button[name='submitOptionscustomer_thread']`;
   }
@@ -176,7 +176,7 @@ class CustomerService extends BOBasePage {
    * @param status {string} Status to check
    * @returns {Promise<boolean>}
    */
-  async isStatusChanged(page, row = 1, status) {
+  async isStatusChanged(page, row, status) {
     let statusColumn = 6;
 
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 500)) {

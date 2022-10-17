@@ -32,39 +32,39 @@ class Stores extends BOBasePage {
 
     // Sort selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='storeFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='storeFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonstore';
     this.filterResetButton = 'button[name=\'submitResetstore\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnAddress = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCity = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnPostalCode = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnState = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnCountry = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
-    this.tableColumnPhone = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnFax = row => `${this.tableBodyColumn(row)}:nth-child(10)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(11) a`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnAddress = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnCity = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnPostalCode = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnState = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnCountry = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumnPhone = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnFax = (row) => `${this.tableBodyColumn(row)}:nth-child(10)`;
+    this.tableColumnStatus = (row) => `${this.tableBodyColumn(row)}:nth-child(11) a`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -82,7 +82,7 @@ class Stores extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 

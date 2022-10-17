@@ -26,7 +26,7 @@ class MyProfile extends EmployeeBasePage {
     this.newPasswordInput = '#employee_change_password_new_password_first';
     this.confirmPasswordInput = '#employee_change_password_new_password_second';
     this.avatarFileInput = '#employee_avatarUrl';
-    this.enableGravatarInput = toggle => `#employee_has_enabled_gravatar_${toggle}`;
+    this.enableGravatarInput = (toggle) => `#employee_has_enabled_gravatar_${toggle}`;
   }
 
   /*

@@ -30,25 +30,25 @@ class CatalogPriceRules extends BOBasePage {
 
     // Filters
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
-    this.filterDateFromColumn = filterBy => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_0`;
-    this.filterDateToColumn = filterBy => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_1`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='specific_price_ruleFilter_${filterBy}']`;
+    this.filterDateFromColumn = (filterBy) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_0`;
+    this.filterDateToColumn = (filterBy) => `${this.filterRow} #local_specific_price_ruleFilter_a__${filterBy}_1`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonspecific_price_rule`;
     this.filterResetButton = 'button[name=\'submitResetspecific_price_rule\']';
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
 
     // Actions buttons in Row
-    this.actionsColumn = row => `${this.tableRow(row)} td .btn-group-action`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} button.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} ul.dropdown-menu`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td .btn-group-action`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} button.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} ul.dropdown-menu`;
     this.confirmDeleteButton = '#popup_ok';
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.delete`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a.edit`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.delete`;
+    this.editRowLink = (row) => `${this.actionsColumn(row)} a.edit`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -59,14 +59,14 @@ class CatalogPriceRules extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }

@@ -26,10 +26,10 @@ class CreditSlips extends BOBasePage {
     this.creditSlipGridTable = '#credit_slip_grid_table';
     this.filterResetButton = `${this.creditSlipGridTable} .grid-reset-button`;
     this.filterSearchButton = `${this.creditSlipGridTable} .grid-search-button`;
-    this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
-    this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
+    this.creditSlipsFilterColumnInput = (filterBy) => `#credit_slip_${filterBy}`;
+    this.creditSlipsTableRow = (row) => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
-    this.creditSlipDownloadButton = id => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
+    this.creditSlipDownloadButton = (id) => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
 
     // By date form
     this.generateByDateForm = '#form-generate-credit-slips-by-date';

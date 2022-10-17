@@ -108,7 +108,7 @@ class CustomerBlock extends ViewOrderBasePage.constructor {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+    const addressFrame = await page.frame({url: /sell\/addresses\/order/gmi});
 
     await addAddressPage.createEditAddress(addressFrame, addressData, false);
 
@@ -148,7 +148,7 @@ class CustomerBlock extends ViewOrderBasePage.constructor {
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame = await page.frame({url: new RegExp('sell/addresses/order', 'gmi')});
+    const addressFrame = await page.frame({url: /sell\/addresses\/order/gmi});
 
     await addAddressPage.createEditAddress(addressFrame, addressData, false);
 

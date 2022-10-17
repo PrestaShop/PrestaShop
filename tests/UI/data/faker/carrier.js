@@ -3,8 +3,8 @@ const {faker} = require('@faker-js/faker');
 const {taxRules} = require('@data/demo/taxRule');
 const {Zones} = require('@data/demo/zones');
 
-const taxes = Object.values(taxRules).map(tax => tax.name);
-const zonesID = Object.values(Zones).map(zone => zone.id);
+const taxes = Object.values(taxRules).map((tax) => tax.name);
+const zonesID = Object.values(Zones).map((zone) => zone.id);
 const outOfRangeBehavior = ['Apply the cost of the highest defined range', 'Disable carrier'];
 const billing = ['According to total price', 'According to total weight'];
 

@@ -18,7 +18,7 @@ class AddPageCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#cms_page_category_name_1';
-    this.displayedToggleInput = toggle => `#cms_page_category_is_displayed_${toggle}`;
+    this.displayedToggleInput = (toggle) => `#cms_page_category_is_displayed_${toggle}`;
     this.descriptionIframe = '#cms_page_category_description_1';
     this.metaTitleInput = '#cms_page_category_meta_title_1';
     this.metaDescriptionInput = '#cms_page_category_meta_description_1';

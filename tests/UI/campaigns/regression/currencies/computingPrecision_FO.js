@@ -29,7 +29,6 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
-
 // Import expect from chai
 const {expect} = require('chai');
 
@@ -39,7 +38,6 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Currencies} = require('@data/demo/currencies');
 
 const {Products} = require('@data/demo/products');
-
 
 // Import faker data
 const CartRuleFaker = require('@data/faker/cartRule');
@@ -67,7 +65,7 @@ const giftCartRule = new CartRuleFaker(
 const dbPrefix = global.INSTALL.DB_PREFIX;
 const sqlQueryData = {
   name: 'Discount and ATI from last order',
-  sqlQuery: orderRef => 'SELECT total_discounts, total_paid_tax_incl '
+  sqlQuery: (orderRef) => 'SELECT total_discounts, total_paid_tax_incl '
     + `from  ${dbPrefix}orders `
     + `WHERE reference = '${orderRef}'`,
 };
@@ -184,7 +182,6 @@ describe(
         const pageTitle = await localizationPage.getPageTitle(page);
         await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
-
 
       it('should go to currencies page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToChangePrecision', baseContext);
@@ -448,7 +445,6 @@ describe(
           const pageTitle = await localizationPage.getPageTitle(page);
           await expect(pageTitle).to.contains(localizationPage.pageTitle);
         });
-
 
         it('should go to currencies page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToReset', baseContext);

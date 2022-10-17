@@ -39,13 +39,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
     page = await helper.newTab(browserContext);
 
     // Create images
-    titlesToCreate.forEach(titleToCreate => files.generateImage(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate) => files.generateImage(titleToCreate.imageName));
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
 
-    titlesToCreate.forEach(titleToCreate => files.deleteFile(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate) => files.deleteFile(titleToCreate.imageName));
   });
 
   it('should login in BO', async function () {

@@ -247,7 +247,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         await expect(result.description).to.equal(editProductData.description),
       ]);
 
-
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
         await expect(result.size).to.equal(

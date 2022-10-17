@@ -43,7 +43,6 @@ const contactUsData = {
   emailAddress: DefaultCustomer.email,
 };
 
-
 /*
 1 GO to shop FO
 2 login

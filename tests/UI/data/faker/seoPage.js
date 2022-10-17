@@ -32,7 +32,7 @@ class SeoPageData {
     this.frMetaKeywords = seoPageToCreate.frMetaKeywords || this.metaKeywords;
 
     /** @type {string} Friendly url to display when accessing the page */
-    this.friendlyUrl = seoPageToCreate.friendlyUrl || this.page.replace(new RegExp(' ', 'g'), '-');
+    this.friendlyUrl = seoPageToCreate.friendlyUrl || this.page.replace(/ /g, '-');
 
     /** @type {string} French friendly url */
     this.frFriendlyUrl = seoPageToCreate.frFriendlyUrl || this.friendlyUrl;

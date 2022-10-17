@@ -293,8 +293,8 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
 
         let sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
-        nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-        sortedTable = await sortedTable.map(text => parseFloat(text));
+        nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+        sortedTable = await sortedTable.map((text) => parseFloat(text));
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
@@ -351,8 +351,8 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         let sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

@@ -26,41 +26,41 @@ class Order extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filters
-    this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.tableColumnStatus = row => `${this.tableRow(row)} td.column-osname`;
-    this.updateStatusInTableButton = row => `${this.tableColumnStatus(row)} button`;
-    this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
+    this.tableColumnStatus = (row) => `${this.tableRow(row)} td.column-osname`;
+    this.updateStatusInTableButton = (row) => `${this.tableColumnStatus(row)} button`;
+    this.updateStatusInTableDropdown = (row) => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
     // Preview row
-    this.expandIcon = row => `${this.tableRow(row)} span.preview-toggle`;
+    this.expandIcon = (row) => `${this.tableRow(row)} span.preview-toggle`;
     this.previewRow = `${this.tableBody} tr.preview-row td div[data-role=preview-row]`;
     this.shippingDetails = `${this.previewRow} div[data-role=shipping-details]`;
     this.customerEmail = `${this.previewRow} div[data-role=email]`;
     this.invoiceDetails = `${this.previewRow} div[data-role=invoice-details]`;
     this.productTable = `${this.previewRow} table[data-role=product-table]`;
     this.productsNumber = `${this.productTable} thead tr:nth-child(1)`;
-    this.productRowFromTable = row => `${this.productTable} tbody tr:nth-child(${row})`;
-    this.previewMoreProductsLink = row => `${this.productRowFromTable(row)} td a.js-preview-more-products-btn`;
+    this.productRowFromTable = (row) => `${this.productTable} tbody tr:nth-child(${row})`;
+    this.previewMoreProductsLink = (row) => `${this.productRowFromTable(row)} td a.js-preview-more-products-btn`;
     this.previewOrderButton = `${this.gridTable} tr.preview-row a.btn-primary`;
 
     // Column actions selectors
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
-    this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
-    this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.viewRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-row-link`;
+    this.viewInvoiceRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
+    this.viewDeliverySlipsRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
 
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
@@ -72,8 +72,8 @@ class Order extends BOBasePage {
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.bulkOpenInNewTabsButton = '#order_grid_bulk_action_open_tabs';
-    this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
-    this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
+    this.tableColumnOrderBulk = (row) => `${this.tableRow(row)} td.column-orders_bulk`;
+    this.tableColumnOrderBulkCheckboxLabel = (row) => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
 
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
@@ -448,7 +448,6 @@ class Order extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
-
 
   /* Sort functions */
   /**

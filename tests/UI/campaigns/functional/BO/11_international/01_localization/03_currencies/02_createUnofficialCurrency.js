@@ -175,7 +175,6 @@ describe('BO - International - Currencies : Create unofficial currency and check
     it('should disable currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableCurrency', baseContext);
 
-
       const isActionPerformed = await currenciesPage.setStatus(page, 1, false);
 
       if (isActionPerformed) {

@@ -20,7 +20,7 @@ class ViewOrderBasePage extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
-    this.errorAddSameProductInInvoice = invoice => `This product is already in the invoice #${invoice}, `
+    this.errorAddSameProductInInvoice = (invoice) => `This product is already in the invoice #${invoice}, `
       + 'please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
@@ -75,7 +75,7 @@ class ViewOrderBasePage extends BOBasePage {
   async doesStatusExist(page, statusName) {
     const options = await page.$$eval(
       `${this.orderStatusesSelect} option`,
-      all => all.map(option => option.textContent),
+      (all) => all.map((option) => option.textContent),
     );
 
     return options.indexOf(statusName) !== -1;

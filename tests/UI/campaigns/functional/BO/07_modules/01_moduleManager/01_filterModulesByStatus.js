@@ -59,7 +59,7 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
         const modules = await moduleManagerPage.getAllModulesStatus(page);
 
         modules.map(
-          module => expect(
+          (module) => expect(
             module.status,
             `${module.name} is not ${status ? 'enabled' : 'disabled'}`,
           ).to.equal(status),

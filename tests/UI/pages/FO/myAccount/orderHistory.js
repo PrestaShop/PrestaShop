@@ -22,16 +22,16 @@ class OrderHistory extends FOBasePage {
     // Selectors
     this.ordersTable = '#content table';
     this.ordersTableRows = `${this.ordersTable} tbody tr`;
-    this.ordersTableRow = row => `${this.ordersTableRows}:nth-child(${row})`;
+    this.ordersTableRow = (row) => `${this.ordersTableRows}:nth-child(${row})`;
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
-    this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
-    this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
-    this.orderTableColumnInvoice = row => `${this.orderTableColumn(row, 6)} a`;
-    this.orderDetailsLink = orderID => `${this.ordersTableRows}`
+    this.reorderLink = (row) => `${this.ordersTableRow(row)} a.reorder-link`;
+    this.detailsLink = (row) => `${this.ordersTableRow(row)} a.view-order-details-link`;
+    this.orderTableColumnInvoice = (row) => `${this.orderTableColumn(row, 6)} a`;
+    this.orderDetailsLink = (orderID) => `${this.ordersTableRows}`
       + ` td a.view-order-details-link[href$='order-detail&id_order=${orderID}']`;
     // Messages block
     this.boxMessagesSection = '.box.messages';
-    this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
+    this.messageRow = (row) => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
     // Add message block
     this.orderMessageForm = '.order-message-form';
     this.productSelect = `${this.orderMessageForm} select[data-role='product']`;

@@ -23,7 +23,7 @@ class AccountIdentity extends FOBasePage {
 
     // Selectors
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = id => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
+    this.genderRadioButton = (id) => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
     this.firstNameInput = `${this.createAccountForm} #field-firstname`;
     this.lastNameInput = `${this.createAccountForm} #field-lastname`;
     this.newEmailInput = `${this.createAccountForm} #field-email`;
@@ -50,7 +50,7 @@ class AccountIdentity extends FOBasePage {
    * @returns {Promise<string>}
    */
   async editAccount(page, oldPassword, customer) {
-    await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), el => el.click());
+    await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), (el) => el.click());
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);

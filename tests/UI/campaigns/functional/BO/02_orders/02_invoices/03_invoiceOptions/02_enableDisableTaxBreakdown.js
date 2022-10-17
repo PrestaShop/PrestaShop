@@ -94,7 +94,6 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });

@@ -20,19 +20,19 @@ class AddBrand extends BOBasePage {
     // Selectors
     this.nameInput = '#manufacturer_name';
     this.shortDescriptionDiv = '#manufacturer_short_description';
-    this.shortDescriptionLangLink = lang => `${this.shortDescriptionDiv} li.nav-item a[data-locale='${lang}']`;
-    this.shortDescriptionIFrame = id => `${this.shortDescriptionDiv} #manufacturer_short_description_${id}_ifr`;
+    this.shortDescriptionLangLink = (lang) => `${this.shortDescriptionDiv} li.nav-item a[data-locale='${lang}']`;
+    this.shortDescriptionIFrame = (id) => `${this.shortDescriptionDiv} #manufacturer_short_description_${id}_ifr`;
     this.descriptionDiv = '#manufacturer_description';
-    this.descriptionIFrame = id => `${this.descriptionDiv} #manufacturer_description_${id}_ifr`;
+    this.descriptionIFrame = (id) => `${this.descriptionDiv} #manufacturer_description_${id}_ifr`;
     this.logoFileInput = '#manufacturer_logo';
-    this.metaTitleInput = id => `#manufacturer_meta_title_${id}`;
-    this.metaDescriptionInput = id => `#manufacturer_meta_description_${id}`;
-    this.metaKeywordsInput = id => `#manufacturer_meta_keyword_${id}-tokenfield`;
-    this.statusToggleInput = toggle => `#manufacturer_is_enabled_${toggle}`;
+    this.metaTitleInput = (id) => `#manufacturer_meta_title_${id}`;
+    this.metaDescriptionInput = (id) => `#manufacturer_meta_description_${id}`;
+    this.metaKeywordsInput = (id) => `#manufacturer_meta_keyword_${id}-tokenfield`;
+    this.statusToggleInput = (toggle) => `#manufacturer_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
-    this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
+    this.taggableFieldDiv = (lang) => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = (lang) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 
@@ -118,7 +118,7 @@ class AddBrand extends BOBasePage {
    */
   async changeLanguage(page, lang) {
     await Promise.all([
-      page.$eval(this.shortDescriptionLangLink(lang), el => el.click()),
+      page.$eval(this.shortDescriptionLangLink(lang), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.shortDescriptionLangLink(lang)}.active`),
     ]);
   }

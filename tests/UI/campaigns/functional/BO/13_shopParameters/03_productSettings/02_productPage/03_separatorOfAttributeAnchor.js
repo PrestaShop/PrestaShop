@@ -74,7 +74,6 @@ describe('BO - Shop Parameters - Product Settings : Update separator of attribut
       await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 

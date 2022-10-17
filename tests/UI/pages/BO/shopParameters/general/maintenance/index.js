@@ -19,7 +19,7 @@ class ShopParamsMaintenance extends BOBasePage {
 
     // Selectors
     this.generalForm = '#form-maintenance';
-    this.shopStatusToggleInput = toggle => `#form_enable_shop_${toggle}`;
+    this.shopStatusToggleInput = (toggle) => `#form_enable_shop_${toggle}`;
     this.maintenanceTextInputEN = '#form_maintenance_text_1_ifr';
     this.customMaintenanceFrTab = `${this.generalForm} a[data-locale='fr']`;
     this.maintenanceTextInputFR = '#form_maintenance_text_2_ifr';

@@ -22,23 +22,23 @@ class Statuses extends BOBasePage {
     this.newOrderReturnStatusLink = '#page-header-desc-order_return_state-new_order_return_state';
 
     // Form selectors
-    this.gridForm = tableName => `#form-${tableName}_state`;
-    this.gridTableHeaderTitle = tableName => `${this.gridForm(tableName)} .panel-heading`;
-    this.gridTableNumberOfTitlesSpan = tableName => `${this.gridTableHeaderTitle(tableName)} span.badge`;
+    this.gridForm = (tableName) => `#form-${tableName}_state`;
+    this.gridTableHeaderTitle = (tableName) => `${this.gridForm(tableName)} .panel-heading`;
+    this.gridTableNumberOfTitlesSpan = (tableName) => `${this.gridTableHeaderTitle(tableName)} span.badge`;
 
     // Table selectors
-    this.gridTable = tableName => `#table-${tableName}_state`;
+    this.gridTable = (tableName) => `#table-${tableName}_state`;
 
     // Filter selectors
-    this.filterRow = tableName => `${this.gridTable(tableName)} tr.filter`;
+    this.filterRow = (tableName) => `${this.gridTable(tableName)} tr.filter`;
     this.filterColumn = (tableName, filterBy) => `${this.filterRow(tableName)}
     [name='${tableName}_stateFilter_${filterBy}']`;
-    this.filterSearchButton = tableName => `#submitFilterButton${tableName}_state`;
-    this.filterResetButton = tableName => `button[name='submitReset${tableName}_state']`;
+    this.filterSearchButton = (tableName) => `#submitFilterButton${tableName}_state`;
+    this.filterResetButton = (tableName) => `button[name='submitReset${tableName}_state']`;
 
     // Table body selectors
-    this.tableBody = tableName => `${this.gridTable(tableName)} tbody`;
-    this.tableBodyRows = tableName => `${this.tableBody(tableName)} tr`;
+    this.tableBody = (tableName) => `${this.gridTable(tableName)} tbody`;
+    this.tableBodyRows = (tableName) => `${this.tableBody(tableName)} tr`;
     this.tableBodyRow = (tableName, row) => `${this.tableBodyRows(tableName)}:nth-child(${row})`;
     this.tableBodyColumns = (tableName, row) => `${this.tableBodyRow(tableName, row)} td`;
 
@@ -67,22 +67,22 @@ class Statuses extends BOBasePage {
     this.growlMessageBlock = '.growl-message';
 
     // Pagination selectors
-    this.paginationActiveLabel = tableName => `${this.gridForm(tableName)} ul.pagination.pull-right li.active a`;
-    this.paginationDiv = tableName => `${this.gridForm(tableName)} .pagination`;
-    this.paginationDropdownButton = tableName => `${this.paginationDiv(tableName)} .dropdown-toggle`;
+    this.paginationActiveLabel = (tableName) => `${this.gridForm(tableName)} ul.pagination.pull-right li.active a`;
+    this.paginationDiv = (tableName) => `${this.gridForm(tableName)} .pagination`;
+    this.paginationDropdownButton = (tableName) => `${this.paginationDiv(tableName)} .dropdown-toggle`;
     this.paginationItems = (tableName, number) => `${this.gridForm(tableName)}
     .dropdown-menu a[data-items='${number}']`;
-    this.paginationPreviousLink = tableName => `${this.gridForm(tableName)} .icon-angle-left`;
-    this.paginationNextLink = tableName => `${this.gridForm(tableName)} .icon-angle-right`;
+    this.paginationPreviousLink = (tableName) => `${this.gridForm(tableName)} .icon-angle-left`;
+    this.paginationNextLink = (tableName) => `${this.gridForm(tableName)} .icon-angle-right`;
 
     // Sort Selectors
-    this.tableHead = tableName => `${this.gridTable(tableName)} thead`;
+    this.tableHead = (tableName) => `${this.gridTable(tableName)} thead`;
     this.sortColumnDiv = (tableName, column) => `${this.tableHead(tableName)} th:nth-child(${column})`;
     this.sortColumnSpanButton = (tableName, column) => `${this.sortColumnDiv(tableName, column)} span.ps-sort`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
-    this.bulkActionMenuButton = tableName => `#bulk_action_menu_${tableName}_state`;
+    this.bulkActionMenuButton = (tableName) => `#bulk_action_menu_${tableName}_state`;
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;

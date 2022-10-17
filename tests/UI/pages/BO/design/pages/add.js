@@ -22,8 +22,8 @@ class AddPage extends BOBasePage {
     this.metaDescriptionInput = '#cms_page_meta_description_1';
     this.metaKeywordsInput = '#cms_page_meta_keyword_1-tokenfield';
     this.pageContentIframe = '#cms_page_content_1_ifr';
-    this.indexationToggleInput = toggle => `#cms_page_is_indexed_for_search_${toggle}`;
-    this.displayedToggleInput = toggle => `#cms_page_is_displayed_${toggle}`;
+    this.indexationToggleInput = (toggle) => `#cms_page_is_indexed_for_search_${toggle}`;
+    this.displayedToggleInput = (toggle) => `#cms_page_is_displayed_${toggle}`;
     this.savePageButton = '#save-button';
     this.saveAndPreviewPageButton = '#save-and-preview-button';
     this.cancelButton = '#cancel-link';

@@ -25,19 +25,19 @@ class Customers extends BOBasePage {
     this.customerGridPanel = '#customer_grid_panel';
     this.customerGridTitle = `${this.customerGridPanel} h3.card-header-title`;
     this.customersListForm = '#customer_grid';
-    this.customersListTableRow = row => `${this.customersListForm} tbody tr:nth-child(${row})`;
+    this.customersListTableRow = (row) => `${this.customersListForm} tbody tr:nth-child(${row})`;
     this.customersListTableColumn = (row, column) => `${this.customersListTableRow(row)} td.column-${column}`;
     this.customersListToggleColumn = (row, column) => `${this.customersListTableColumn(row, column)} .ps-switch`;
     this.customersListToggleColumnInput = (row, column) => `${this.customersListToggleColumn(row, column)} input`;
-    this.customersListTableActionsColumn = row => this.customersListTableColumn(row, 'actions');
-    this.customersListTableEditLink = row => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
-    this.customersListTableToggleDropDown = row => `${this.customersListTableActionsColumn(row)}`
+    this.customersListTableActionsColumn = (row) => this.customersListTableColumn(row, 'actions');
+    this.customersListTableEditLink = (row) => `${this.customersListTableActionsColumn(row)} a.grid-edit-row-link`;
+    this.customersListTableToggleDropDown = (row) => `${this.customersListTableActionsColumn(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.customersListTableViewLink = row => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
-    this.customersListTableDeleteLink = row => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
+    this.customersListTableViewLink = (row) => `${this.customersListTableActionsColumn(row)} a.grid-view-row-link`;
+    this.customersListTableDeleteLink = (row) => `${this.customersListTableActionsColumn(row)} a.grid-delete-row-link`;
 
     // Filters
-    this.customerFilterColumnInput = filterBy => `${this.customersListForm} #customer_${filterBy}`;
+    this.customerFilterColumnInput = (filterBy) => `${this.customersListForm} #customer_${filterBy}`;
     this.filterSearchButton = `${this.customersListForm} .grid-search-button`;
     this.filterResetButton = `${this.customersListForm} .grid-reset-button`;
 
@@ -50,8 +50,8 @@ class Customers extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.customersListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -61,14 +61,14 @@ class Customers extends BOBasePage {
 
     // Required field section
     this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';
-    this.requiredFieldCheckBox = id => `#required_fields_required_fields_${id}`;
+    this.requiredFieldCheckBox = (id) => `#required_fields_required_fields_${id}`;
     this.requiredFieldsForm = '#customerRequiredFieldsContainer';
     this.saveButton = `${this.requiredFieldsForm} button`;
 
     // Modal Dialog
     this.deleteCustomerModal = '#customer_grid_delete_customers_modal.show';
     this.deleteCustomerModalDeleteButton = `${this.deleteCustomerModal} button.js-submit-delete-customers`;
-    this.deleteCustomerModalMethodInput = id => `${this.deleteCustomerModal} #delete_customers_delete_method_${id}`;
+    this.deleteCustomerModalMethodInput = (id) => `${this.deleteCustomerModal} #delete_customers_delete_method_${id}`;
 
     // Grid Actions
     this.customerGridActionsButton = '#customer-grid-actions-button';
@@ -214,7 +214,6 @@ class Customers extends BOBasePage {
   getPartnerOffersStatus(page, row) {
     return this.getToggleColumnValue(page, row, 'optin');
   }
-
 
   /**
    * Quick edit toggle column value
@@ -386,7 +385,7 @@ class Customers extends BOBasePage {
   async deleteCustomersBulkActions(page, allowRegistrationAfterDelete = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -427,7 +426,7 @@ class Customers extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

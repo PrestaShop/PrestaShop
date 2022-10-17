@@ -19,7 +19,7 @@ class ViewBrand extends BOBasePage {
     this.addressesGrid = 'div[data-role=addresses-card]';
     this.addressesGridHeader = `${this.addressesGrid} h3.card-header`;
     this.addressesTableBody = `${this.addressesGrid} .card-body table tbody`;
-    this.addressesTableRow = row => `${this.addressesTableBody} tr:nth-of-type(${row})`;
+    this.addressesTableRow = (row) => `${this.addressesTableBody} tr:nth-of-type(${row})`;
     this.addressesTableColumn = (row, column) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
   }
 

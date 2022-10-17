@@ -27,10 +27,10 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
     this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
     this.paymentsGridTable = 'table[data-role=\'payments-grid-table\']';
     this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
-    this.paymentsTableRow = row => `${this.paymentsTableBody} tr:nth-child(${row})`;
+    this.paymentsTableRow = (row) => `${this.paymentsTableBody} tr:nth-child(${row})`;
     this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td[data-role='${column}-column']`;
-    this.paymentsTableDetailsButton = row => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
-    this.paymentTableRowDetails = row => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
+    this.paymentsTableDetailsButton = (row) => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
+    this.paymentTableRowDetails = (row) => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
   }
 
   /*
@@ -51,7 +51,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @returns {*}
    */
   getPaymentAmountInputValue(page) {
-    return page.$eval(this.paymentAmountInput, el => el.value);
+    return page.$eval(this.paymentAmountInput, (el) => el.value);
   }
 
   /**

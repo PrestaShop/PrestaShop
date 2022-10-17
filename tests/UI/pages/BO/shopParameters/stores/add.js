@@ -31,8 +31,8 @@ class AddStore extends BOBasePage {
     this.faxInput = '#fax';
     this.emailInput = '#email';
     this.noteTextarea = '#note_1';
-    this.statusToggle = toggle => `${this.storeForm} #active_${toggle}`;
-    this.hoursInput = pos => `input[name='hours[${pos}][1]']`;
+    this.statusToggle = (toggle) => `${this.storeForm} #active_${toggle}`;
+    this.hoursInput = (pos) => `input[name='hours[${pos}][1]']`;
     this.saveButton = '#store_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
   }

@@ -25,18 +25,18 @@ class SqlManager extends BOBasePage {
     this.sqlQueryGridPanel = '#sql_request_grid_panel';
     this.sqlQueryGridTitle = `${this.sqlQueryGridPanel} h3.card-header-title`;
     this.sqlQueryListForm = '#sql_request_grid';
-    this.sqlQueryListTableRow = row => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
+    this.sqlQueryListTableRow = (row) => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
     this.sqlQueryListTableColumn = (row, column) => `${this.sqlQueryListTableRow(row)} td.column-${column}`;
-    this.sqlQueryListTableColumnActions = row => `${this.sqlQueryListTableRow(row)} td.column-actions`;
-    this.sqlQueryListTableToggleDropDown = row => `${this.sqlQueryListTableColumnActions(row)
+    this.sqlQueryListTableColumnActions = (row) => `${this.sqlQueryListTableRow(row)} td.column-actions`;
+    this.sqlQueryListTableToggleDropDown = (row) => `${this.sqlQueryListTableColumnActions(row)
     } a[data-toggle='dropdown']`;
-    this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
-    this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
-    this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
-    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
+    this.sqlQueryListTableViewLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
+    this.sqlQueryListTableEditLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
+    this.sqlQueryListTableDeleteLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
+    this.sqlQueryListTableExportLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
 
     // Filters
-    this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
+    this.filterInput = (filterBy) => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
     this.filterResetButton = `${this.sqlQueryListForm} .grid-reset-button`;
 
@@ -46,8 +46,8 @@ class SqlManager extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.sqlQueryListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -310,7 +310,7 @@ class SqlManager extends BOBasePage {
   async deleteWithBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 

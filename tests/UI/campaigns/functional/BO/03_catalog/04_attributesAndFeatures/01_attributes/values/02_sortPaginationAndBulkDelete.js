@@ -14,7 +14,7 @@ const viewAttributePage = require('@pages/BO/catalog/attributes/view');
 const addValuePage = require('@pages/BO/catalog/attributes/addValue');
 
 // Import data
-const {ValueData} = require('@data/faker/attributeAndValue');
+const AttributeValueData = require('@data/faker/attributeValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -102,7 +102,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     });
 
     creationTests.forEach((test, index) => {
-      const createValueData = new ValueData({attributeName: 'Color', value: `todelete${index}`});
+      const createValueData = new AttributeValueData({attributeName: 'Color', value: `todelete${index}`});
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
@@ -217,8 +217,8 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
         let sortedTable = await viewAttributePage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
