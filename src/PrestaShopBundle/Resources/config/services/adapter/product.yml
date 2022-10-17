@@ -520,6 +520,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.update.product_updatable_property_filler'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
@@ -534,4 +535,8 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       - '@prestashop.adapter.tools'
+    tags: ['core.product_updatable_property_filler']
+
+  prestashop.adapter.product.update.product_options_property_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductOptionsPropertyFiller
     tags: ['core.product_updatable_property_filler']
