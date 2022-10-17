@@ -28,13 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSubCommandInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductSubCommandInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\UpdateProductSubCommandBuilderInterface;
 
+//@todo: should I rename this and related command with a "subCommand" instead of "command"?
 final class OptionsCommandsBuilder implements UpdateProductSubCommandBuilderInterface
 {
     /**

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use Generator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;

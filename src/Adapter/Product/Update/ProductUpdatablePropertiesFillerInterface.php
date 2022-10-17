@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSubCommandInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductSubCommandInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 

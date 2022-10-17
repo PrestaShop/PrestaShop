@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSubCommandInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductSubCommandInterface;
 
 interface UpdateProductSubCommandBuilderInterface
 {

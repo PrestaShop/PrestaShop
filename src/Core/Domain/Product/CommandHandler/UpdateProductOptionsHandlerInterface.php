@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SubCommand\UpdateProductOptionsCommand;
 
 /**
  * Defines contract for UpdateProductOptionsHandler
