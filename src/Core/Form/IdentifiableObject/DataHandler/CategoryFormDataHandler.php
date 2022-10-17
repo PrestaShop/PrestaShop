@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 
@@ -41,7 +43,7 @@ class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @return AddCategoryCommand
      */
-    protected function createAddCategoryCommand(array $data)
+    protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand
     {
         $command = new AddCategoryCommand(
             $data['name'],
@@ -72,7 +74,7 @@ class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @return EditCategoryCommand
      */
-    protected function createEditCategoryCommand($categoryId, array $data)
+    protected function createEditCategoryCommand($categoryId, array $data): AbstractEditCategoryCommand
     {
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($data['active']);
