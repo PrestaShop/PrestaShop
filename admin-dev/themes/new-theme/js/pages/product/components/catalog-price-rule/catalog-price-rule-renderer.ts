@@ -54,19 +54,19 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     const tbody = this.listContainer.querySelector<HTMLElement>(`${CatalogPriceRuleMap.listContainer} tbody`);
 
     if (!tbody) {
-      console.log(`Error: ${CatalogPriceRuleMap.listContainer} element not found`);
+      console.error(`Error: ${CatalogPriceRuleMap.listContainer} element not found`);
       return;
     }
     const trTemplateContainer = this.listContainer.querySelector<HTMLScriptElement>(CatalogPriceRuleMap.listRowTemplate);
 
     if (!trTemplateContainer) {
-      console.log(`Error: ${CatalogPriceRuleMap.listRowTemplate} element not found`);
+      console.error(`Error: ${CatalogPriceRuleMap.listRowTemplate} element not found`);
       return;
     }
     const rowContainer = document.querySelector<HTMLElement>(CatalogPriceRuleMap.blockContainer);
 
     if (!rowContainer) {
-      console.log(`Error: ${CatalogPriceRuleMap.blockContainer} element not found`);
+      console.error(`Error: ${CatalogPriceRuleMap.blockContainer} element not found`);
       return;
     }
     const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;

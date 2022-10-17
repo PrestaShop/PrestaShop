@@ -103,7 +103,7 @@ export default class SpecificPricesManager {
     let listRendered = false;
 
     if (showCatalogPriceRulesButton === null) {
-      console.log(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`);
+      console.error(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`);
       return;
     }
     if (catalogPriceRulesContainer === null) {
@@ -118,7 +118,7 @@ export default class SpecificPricesManager {
     const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
 
     if (formContainer === null) {
-      console.log(`Error: ${CatalogPriceRulesMap.blockContainer} parent element not found`);
+      console.error(`Error: ${CatalogPriceRulesMap.blockContainer} parent element not found`);
       return;
     }
 
