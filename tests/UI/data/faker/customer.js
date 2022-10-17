@@ -3,8 +3,8 @@ const {faker} = require('@faker-js/faker');
 const {Titles} = require('@data/demo/titles');
 const {groupAccess} = require('@data/demo/groupAccess');
 
-const genders = Object.values(Titles).map(title => title.name);
-const groups = Object.values(groupAccess).map(group => group.name);
+const genders = Object.values(Titles).map((title) => title.name);
+const groups = Object.values(groupAccess).map((group) => group.name);
 const risksRating = ['None', 'Low', 'Medium', 'High'];
 
 /**

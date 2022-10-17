@@ -3,8 +3,8 @@ const {faker} = require('@faker-js/faker');
 const {groupAccess} = require('@data/demo/groupAccess');
 const {countries} = require('@data/demo/countries');
 
-const countriesNames = Object.values(countries).map(country => country.name);
-const groupAccessNames = Object.values(groupAccess).map(group => group.name);
+const countriesNames = Object.values(countries).map((country) => country.name);
+const groupAccessNames = Object.values(groupAccess).map((group) => group.name);
 
 const currencies = ['All currencies', 'Euro'];
 const reductionType = ['Amount', 'Percentage'];

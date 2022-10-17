@@ -44,7 +44,6 @@ describe('BO - Catalog - Products : Duplicate product from list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });

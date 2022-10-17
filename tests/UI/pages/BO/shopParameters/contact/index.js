@@ -25,19 +25,19 @@ class Contacts extends BOBasePage {
     this.contactsGridPanel = '#contact_grid_panel';
     this.contactsGridTitle = `${this.contactsGridPanel} h3.card-header-title`;
     this.contactsListForm = '#contact_grid';
-    this.contactsListTableRow = row => `${this.contactsListForm} tbody tr:nth-child(${row})`;
+    this.contactsListTableRow = (row) => `${this.contactsListForm} tbody tr:nth-child(${row})`;
     this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
 
     // Filters
-    this.contactFilterInput = filterBy => `${this.contactsListForm} #contact_${filterBy}`;
+    this.contactFilterInput = (filterBy) => `${this.contactsListForm} #contact_${filterBy}`;
     this.filterSearchButton = `${this.contactsListForm} .grid-search-button`;
     this.filterResetButton = `${this.contactsListForm} .grid-reset-button`;
 
     // Actions buttons in Row
-    this.contactsListTableActionsColumn = row => this.contactsListTableColumn(row, 'actions');
-    this.listTableToggleDropDown = row => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.listTableEditLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
-    this.deleteRowLink = row => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
+    this.contactsListTableActionsColumn = (row) => this.contactsListTableColumn(row, 'actions');
+    this.listTableToggleDropDown = (row) => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.listTableEditLink = (row) => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
+    this.deleteRowLink = (row) => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .grid_bulk_action_select_all`;
@@ -46,8 +46,8 @@ class Contacts extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.contactsGridPanel} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Delete modal
     this.confirmDeleteModal = '#contact-grid-confirm-modal';
@@ -200,7 +200,7 @@ class Contacts extends BOBasePage {
   async deleteContactsBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

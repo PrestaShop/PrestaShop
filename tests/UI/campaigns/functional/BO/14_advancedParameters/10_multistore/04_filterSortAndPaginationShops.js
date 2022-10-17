@@ -266,8 +266,8 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         let sortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

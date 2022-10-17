@@ -23,12 +23,12 @@ class AddCountry extends BOBasePage {
     this.callPrefixInput = '#call_prefix';
     this.defaultCurrencySelect = '#id_currency';
     this.zoneSelect = '#id_zone';
-    this.needZipCodeLabel = toggle => `#need_zip_code_${toggle}`;
+    this.needZipCodeLabel = (toggle) => `#need_zip_code_${toggle}`;
     this.zipCodeFormatInput = '#zip_code_format';
-    this.activeLabel = toggle => `#active_${toggle}`;
-    this.containsStatesLabel = toggle => `#contains_states_${toggle}`;
-    this.needIdentificationNumberLabel = toggle => `#need_identification_number_${toggle}`;
-    this.displayTaxLabel = toggle => `#display_tax_label_${toggle}`;
+    this.activeLabel = (toggle) => `#active_${toggle}`;
+    this.containsStatesLabel = (toggle) => `#contains_states_${toggle}`;
+    this.needIdentificationNumberLabel = (toggle) => `#need_identification_number_${toggle}`;
+    this.displayTaxLabel = (toggle) => `#display_tax_label_${toggle}`;
     this.saveCountryButton = '#country_form_submit_btn';
   }
 

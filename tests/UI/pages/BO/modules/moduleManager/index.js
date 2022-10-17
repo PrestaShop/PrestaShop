@@ -22,20 +22,20 @@ class ModuleManager extends BOBasePage {
     this.modulesListBlock = '.module-short-list:not([style=\'display: none;\'])';
     this.modulesListBlockTitle = `${this.modulesListBlock} span.module-search-result-title`;
     this.allModulesBlock = `${this.modulesListBlock} .module-item-list`;
-    this.moduleBlock = moduleName => `${this.allModulesBlock}[data-name='${moduleName}']`;
-    this.disableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
-    this.enableModuleButton = moduleName => `${this.moduleBlock(moduleName)} button.module_action_menu_enable`;
-    this.configureModuleButton = moduleName => `${this.moduleBlock(moduleName)}`
+    this.moduleBlock = (moduleName) => `${this.allModulesBlock}[data-name='${moduleName}']`;
+    this.disableModuleButton = (moduleName) => `${this.moduleBlock(moduleName)} button.module_action_menu_disable`;
+    this.enableModuleButton = (moduleName) => `${this.moduleBlock(moduleName)} button.module_action_menu_enable`;
+    this.configureModuleButton = (moduleName) => `${this.moduleBlock(moduleName)}`
       + ' div.module-actions a[href*=\'/action/configure\']';
-    this.actionsDropdownButton = moduleName => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
+    this.actionsDropdownButton = (moduleName) => `${this.moduleBlock(moduleName)} button.dropdown-toggle`;
     // Status dropdown selectors
     this.statusDropdownDiv = '#module-status-dropdown';
     this.statusDropdownMenu = 'div.ps-dropdown-menu[aria-labelledby=\'module-status-dropdown\']';
-    this.statusDropdownItemLink = ref => `${this.statusDropdownMenu} a[data-status-ref='${ref}']`;
+    this.statusDropdownItemLink = (ref) => `${this.statusDropdownMenu} a[data-status-ref='${ref}']`;
     // Categories
     this.categoriesSelectDiv = '#categories';
     this.categoriesDropdownDiv = 'div.ps-dropdown-menu.dropdown-menu.module-category-selector';
-    this.categoryDropdownItem = cat => `${this.categoriesDropdownDiv} a[data-category-display-name='${cat}']`;
+    this.categoryDropdownItem = (cat) => `${this.categoriesDropdownDiv} a[data-category-display-name='${cat}']`;
   }
 
   /*
@@ -122,7 +122,7 @@ class ModuleManager extends BOBasePage {
   async getAllModulesNames(page) {
     return page.$$eval(
       this.allModulesBlock,
-      all => all.map(el => el.getAttribute('data-name')),
+      (all) => all.map((el) => el.getAttribute('data-name')),
     );
   }
 
@@ -150,7 +150,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async getBlockModuleTitle(page, position) {
-    const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, all => all.map(el => el.textContent));
+    const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
 
     return modulesBlocks[position - 1];
   }

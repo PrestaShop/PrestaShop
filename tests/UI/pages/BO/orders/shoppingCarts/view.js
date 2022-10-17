@@ -35,7 +35,7 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryBlockBody = `${this.cartSummaryBlock} .card-body`;
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
-    this.cartSummaryTableRow = row => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
+    this.cartSummaryTableRow = (row) => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
     this.cartSummaryTableColumn = (row, column) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
   }
 

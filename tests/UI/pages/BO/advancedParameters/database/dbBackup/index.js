@@ -32,15 +32,15 @@ class DbBackup extends BOBasePage {
     this.gridTable = '#backup_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} div.card-header h3`;
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
 
     // Actions buttons in Row
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
@@ -138,7 +138,7 @@ class DbBackup extends BOBasePage {
   async deleteWithBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

@@ -18,9 +18,9 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
     this.newsletterTable = '#table-merged';
     this.newsletterTableBody = `${this.newsletterTable} tbody`;
     this.newsletterTableRows = `${this.newsletterTableBody} tr`;
-    this.newsletterTableRow = row => `${this.newsletterTableRows}:nth-child(${row})`;
+    this.newsletterTableRow = (row) => `${this.newsletterTableRows}:nth-child(${row})`;
     this.newsletterTableEmptyColumn = `${this.newsletterTableRows} td.list-empty`;
-    this.newsletterTableEmailColumn = row => `${this.newsletterTableRow(row)} td:nth-child(5)`;
+    this.newsletterTableEmailColumn = (row) => `${this.newsletterTableRow(row)} td:nth-child(5)`;
   }
 
   /* Methods */

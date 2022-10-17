@@ -30,7 +30,9 @@ module.exports = {
     let found = false;
 
     for (let i = 0; i <= attempt && !found; i += 100) {
-      await (new Promise(resolve => setTimeout(resolve, 100)));
+      await (new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      }));
       found = await fs.existsSync(filePath);
     }
 
@@ -47,7 +49,7 @@ module.exports = {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
 
-    return tokenizedText.items.map(token => token.str);
+    return tokenizedText.items.map((token) => token.str);
   },
 
   /**

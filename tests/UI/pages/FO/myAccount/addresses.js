@@ -53,7 +53,7 @@ class Addresses extends FOBasePage {
   async getAddressPosition(page, alias) {
     const titles = await page.$$eval(
       this.addressBodyTitle,
-      all => all.map(address => address.textContent),
+      (all) => all.map((address) => address.textContent),
     );
 
     return titles.indexOf(alias) + 1;

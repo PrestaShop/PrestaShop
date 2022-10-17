@@ -176,8 +176,8 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
           let sortedTable = await suppliersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
           if (test.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-            sortedTable = await sortedTable.map(text => parseFloat(text));
+            nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+            sortedTable = await sortedTable.map((text) => parseFloat(text));
           }
 
           const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

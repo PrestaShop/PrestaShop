@@ -25,18 +25,18 @@ class WebService extends BOBasePage {
     this.webserviceGridPanel = '#webservice_key_grid_panel';
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
     this.webserviceListForm = '#webservice_key_grid';
-    this.webserviceListTableRow = row => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
+    this.webserviceListTableRow = (row) => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
     this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
-    this.webserviceListTableStatusColumn = row => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
-    this.webserviceListTableStatusColumnToggleInput = row => `${this.webserviceListTableStatusColumn(row)} input`;
-    this.webserviceListTableColumnAction = row => this.webserviceListTableColumn(row, 'actions');
-    this.webserviceListTableToggleDropDown = row => `${this.webserviceListTableColumnAction(row)
+    this.webserviceListTableStatusColumn = (row) => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
+    this.webserviceListTableStatusColumnToggleInput = (row) => `${this.webserviceListTableStatusColumn(row)} input`;
+    this.webserviceListTableColumnAction = (row) => this.webserviceListTableColumn(row, 'actions');
+    this.webserviceListTableToggleDropDown = (row) => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.webserviceListTableDeleteLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.webserviceListTableEditLink = row => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.webserviceListTableDeleteLink = (row) => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.webserviceListTableEditLink = (row) => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.webserviceFilterInput = filterBy => `${this.webserviceListForm} #webservice_key_${filterBy}`;
+    this.webserviceFilterInput = (filterBy) => `${this.webserviceListForm} #webservice_key_${filterBy}`;
     this.filterSearchButton = `${this.webserviceListForm} .grid-search-button`;
     this.filterResetButton = `${this.webserviceListForm} .grid-reset-button`;
 
@@ -46,8 +46,8 @@ class WebService extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.webserviceListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk Actions
     this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
@@ -232,7 +232,7 @@ class WebService extends BOBasePage {
   async deleteWithBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -261,7 +261,7 @@ class WebService extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 

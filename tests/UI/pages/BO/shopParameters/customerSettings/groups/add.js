@@ -19,17 +19,17 @@ class AddGroup extends BOBasePage {
 
     // Form selectors
     this.groupForm = '#group_form';
-    this.nameInput = idLang => `#name_${idLang}`;
+    this.nameInput = (idLang) => `#name_${idLang}`;
     this.discountInput = '#reduction';
     this.priceDisplayMethodSelect = '#price_display_method';
-    this.showPricesToggle = toggle => `${this.groupForm} #show_prices_${toggle}`;
+    this.showPricesToggle = (toggle) => `${this.groupForm} #show_prices_${toggle}`;
     this.saveButton = '#group_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Language selectors
     this.dropdownButton = `${this.groupForm} button.dropdown-toggle`;
     this.dropdownMenu = `${this.groupForm} ul.dropdown-menu`;
-    this.dropdownMenuItemLink = idLang => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
+    this.dropdownMenuItemLink = (idLang) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
   }
 
   /*

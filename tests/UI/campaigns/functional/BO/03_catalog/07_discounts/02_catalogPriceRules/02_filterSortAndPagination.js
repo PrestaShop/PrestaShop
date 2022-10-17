@@ -364,8 +364,8 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
         let sortedTable = await catalogPriceRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);

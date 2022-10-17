@@ -46,8 +46,11 @@ class Preferences extends BOBasePage {
    * @return {Promise<string>}
    */
   async setDefaultCarrier(page, carrier) {
-    await this.selectByVisibleText(page, this.defaultCarrierSelect,
-      `${carrier.id} - ${carrier.name} (${carrier.delay})`);
+    await this.selectByVisibleText(
+      page,
+      this.defaultCarrierSelect,
+      `${carrier.id} - ${carrier.name} (${carrier.delay})`,
+    );
 
     // Save configuration and return successful message
     await this.clickAndWaitForNavigation(page, this.saveCarrierOptionsButton);

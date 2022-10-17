@@ -30,7 +30,6 @@ const guestData = new CustomerFaker({password: ''});
 const deliveryAddress = new AddressFaker({country: 'France'});
 const invoiceAddress = new AddressFaker({country: 'France'});
 
-
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -39,7 +38,6 @@ const baseContext = 'functional_FO_checkout_addresses_useDifferentAddressForInvo
 
 let browserContext;
 let page;
-
 
 /*
 Go to FO

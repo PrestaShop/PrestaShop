@@ -24,7 +24,7 @@ class AddTaxRules extends BOBasePage {
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
     this.nameInput = `${this.taxRuleGroupForm} #name`;
-    this.statusInput = id => `${this.taxRuleGroupForm} input#active_${id}`;
+    this.statusInput = (id) => `${this.taxRuleGroupForm} input#active_${id}`;
     this.saveTaxButton = `${this.taxRuleGroupForm} #tax_rules_group_form_submit_btn`;
 
     // New tax rule form

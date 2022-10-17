@@ -117,7 +117,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.contentPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.productsPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.staticPages),
-        expect(linksTextContent).to.include.members(LinkWidgets.demo_1.customPages.map(el => el.name)),
+        expect(linksTextContent).to.include.members(LinkWidgets.demo_1.customPages.map((el) => el.name)),
       ]);
     });
 

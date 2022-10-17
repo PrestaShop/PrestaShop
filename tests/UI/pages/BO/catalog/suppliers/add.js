@@ -20,8 +20,8 @@ class AddSupplier extends BOBasePage {
     // Selectors
     this.nameInput = '#supplier_name';
     this.descriptionDiv = '#supplier_description';
-    this.descriptionLangNavItemLink = lang => `${this.descriptionDiv} ul li a[data-locale='${lang}']`;
-    this.descriptionIFrame = id => `#supplier_description_${id}_ifr`;
+    this.descriptionLangNavItemLink = (lang) => `${this.descriptionDiv} ul li a[data-locale='${lang}']`;
+    this.descriptionIFrame = (id) => `#supplier_description_${id}_ifr`;
     this.homePhoneInput = '#supplier_phone';
     this.mobilePhoneInput = '#supplier_mobile_phone';
     this.addressInput = '#supplier_address';
@@ -35,16 +35,16 @@ class AddSupplier extends BOBasePage {
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
     this.metaTitleLangButton = '#supplier_meta_title_dropdown';
-    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
+    this.metaTitleLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
-    this.metaTitleInput = id => `#supplier_meta_title_${id}`;
-    this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
-    this.metaKeywordsInput = id => `#supplier_meta_keyword_${id}-tokenfield`;
-    this.statusToggleInput = toggle => `#supplier_is_enabled_${toggle}`;
+    this.metaTitleInput = (id) => `#supplier_meta_title_${id}`;
+    this.metaDescriptionTextarea = (id) => `#supplier_meta_description_${id}`;
+    this.metaKeywordsInput = (id) => `#supplier_meta_keyword_${id}-tokenfield`;
+    this.statusToggleInput = (toggle) => `#supplier_is_enabled_${toggle}`;
 
     // Selectors for Meta keywords
-    this.taggableFieldDiv = lang => `div.input-group div.js-locale-${lang}`;
-    this.deleteKeywordLink = lang => `${this.taggableFieldDiv(lang)} a.close`;
+    this.taggableFieldDiv = (lang) => `div.input-group div.js-locale-${lang}`;
+    this.deleteKeywordLink = (lang) => `${this.taggableFieldDiv(lang)} a.close`;
     this.saveButton = '.card-footer button';
   }
 

@@ -20,20 +20,20 @@ class Logs extends BOBasePage {
     this.gridPanel = '#logs_grid_panel';
     this.gridTitle = `${this.gridPanel} h3.card-header-title`;
     this.listForm = '#logs_grid';
-    this.listTableRow = row => `${this.listForm} tbody tr:nth-child(${row})`;
+    this.listTableRow = (row) => `${this.listForm} tbody tr:nth-child(${row})`;
     this.listTableColumn = (row, column) => `${this.listTableRow(row)} td.column-${column}`;
     this.gridActionButton = '#logs-grid-actions-button';
     this.eraseAllButton = '#logs_grid_action_delete_all_email_logs';
 
     // Filters
-    this.filterColumnInput = filterBy => `${this.listForm} #logs_${filterBy}`;
+    this.filterColumnInput = (filterBy) => `${this.listForm} #logs_${filterBy}`;
     this.filterSearchButton = `${this.listForm} .grid-search-button`;
     this.filterResetButton = `${this.listForm} .grid-reset-button`;
 
     // Sort Selectors
     this.tableHead = `${this.listForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';

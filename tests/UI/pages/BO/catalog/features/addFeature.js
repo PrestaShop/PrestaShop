@@ -22,7 +22,7 @@ class AddFeature extends BOBasePage {
     this.nameInput = '#name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = toggle => `#indexable_${toggle}`;
+    this.indexableToggle = (toggle) => `#indexable_${toggle}`;
     this.saveButton = '#feature_form_submit_btn';
   }
 

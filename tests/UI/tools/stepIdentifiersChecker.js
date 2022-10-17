@@ -9,7 +9,7 @@ const jsonFile = fs.readFileSync(reportPath);
  * @param contexts
  * @return {*}, key = context, value =
  */
-const count = contexts => contexts.reduce(
+const count = (contexts) => contexts.reduce(
   (a, b) => ({
     ...a,
     [b]: (a[b] || 0) + 1,
@@ -22,9 +22,9 @@ const count = contexts => contexts.reduce(
  * @param dict
  * @return {string[]}
  */
-const duplicates = dict => Object.keys(dict)
+const duplicates = (dict) => Object.keys(dict)
   .filter(
-    key => dict[key] > 1 && ['loginBO', 'logoutBO', 'loginFO', 'logoutFO'].indexOf(key) === -1,
+    (key) => dict[key] > 1 && ['loginBO', 'logoutBO', 'loginFO', 'logoutFO'].indexOf(key) === -1,
   );
 
 /**
@@ -72,8 +72,8 @@ const getTestsFromSuite = (suite) => {
 const checkUndefined = (jsonFile) => {
   const allTests = getAllTests(jsonFile);
   const undefinedContextsSteps = allTests
-    .filter(test => (test.context === undefined || !test.context) && !test.pending)
-    .map(test => test.fullTitle.trim());
+    .filter((test) => (test.context === undefined || !test.context) && !test.pending)
+    .map((test) => test.fullTitle.trim());
 
   if (undefinedContextsSteps.length !== 0) {
     throw new Error(
@@ -90,8 +90,8 @@ const checkDoubles = (jsonFile) => {
   const allTests = getAllTests(jsonFile);
 
   const reportContexts = Object.values(allTests)
-    .filter(test => test.context)
-    .map(test => JSON.parse(test.context).value);
+    .filter((test) => test.context)
+    .map((test) => JSON.parse(test.context).value);
 
   const contextDoubles = duplicates(count(reportContexts));
 

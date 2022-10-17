@@ -27,9 +27,9 @@ class Categories extends BOBasePage {
     this.categoryGridPanel = '#category_grid_panel';
     this.categoryGridTitle = `${this.categoryGridPanel} h3.card-header-title`;
     this.categoriesListForm = '#category_grid';
-    this.categoriesListTableRow = row => `${this.categoriesListForm} tbody tr:nth-child(${row})`;
+    this.categoriesListTableRow = (row) => `${this.categoriesListForm} tbody tr:nth-child(${row})`;
     this.categoriesListTableColumn = (row, column) => `${this.categoriesListTableRow(row)} td.column-${column}`;
-    this.categoriesListTableDraggableColumn = row => `${this.categoriesListTableRow(row)
+    this.categoriesListTableDraggableColumn = (row) => `${this.categoriesListTableRow(row)
     } td.column-position_drag span i`;
     this.categoriesListTableToggleDropDown = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a[data-toggle='dropdown']`;
@@ -40,11 +40,11 @@ class Categories extends BOBasePage {
     this.categoriesListTableEditLink = (row, column) => `${this.categoriesListTableColumn(row, column)
     } a.grid-edit-row-link`;
 
-    this.categoriesListColumnStatus = row => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
-    this.categoriesListColumnStatusToggleInput = row => `${this.categoriesListColumnStatus(row)} input`;
+    this.categoriesListColumnStatus = (row) => `${this.categoriesListTableColumn(row, 'active')} .ps-switch`;
+    this.categoriesListColumnStatusToggleInput = (row) => `${this.categoriesListColumnStatus(row)} input`;
 
     // Filters
-    this.categoryFilterInput = filterBy => `${this.categoriesListForm} #category_${filterBy}`;
+    this.categoryFilterInput = (filterBy) => `${this.categoriesListForm} #category_${filterBy}`;
     this.filterSearchButton = `${this.categoriesListForm} .grid-search-button`;
     this.filterResetButton = `${this.categoriesListForm} .grid-reset-button`;
 
@@ -57,13 +57,13 @@ class Categories extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.categoriesListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Modal Dialog
     this.deleteCategoryModal = '#category_grid_delete_categories_modal.show';
     this.deleteCategoryModalDeleteButton = `${this.deleteCategoryModal} button.js-submit-delete-categories`;
-    this.deleteCategoryModalModeInput = id => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
+    this.deleteCategoryModalModeInput = (id) => `${this.deleteCategoryModal} #delete_categories_delete_mode_${id}`;
 
     // Grid Actions
     this.categoryGridActionsButton = '#category-grid-actions-button';
@@ -306,7 +306,7 @@ class Categories extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -330,7 +330,7 @@ class Categories extends BOBasePage {
   async deleteCategoriesBulkActions(page, modeID = 0) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, el => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 

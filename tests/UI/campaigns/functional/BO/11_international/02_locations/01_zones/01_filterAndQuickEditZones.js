@@ -155,7 +155,6 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
           status.args.enable,
         );
 
-
         const currentStatus = await zonesPage.getZoneStatus(page, 1);
         await expect(currentStatus).to.be.equal(status.args.enable);
       });

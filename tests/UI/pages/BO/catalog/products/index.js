@@ -30,15 +30,15 @@ class Products extends BOBasePage {
     this.productRow = `${this.productTable} tbody tr`;
     this.productListfooterRow = `${this.productListForm} div.pagination-block`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
-    this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
-    this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
-    this.dropdownMenuDeleteLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
-    this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
-    this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
-    this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
+    this.dropdownToggleButton = (row) => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
+    this.dropdownMenu = (row) => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
+    this.dropdownMenuDeleteLink = (row) => `${this.dropdownMenu(row)} a.product-edit[onclick*='delete']`;
+    this.dropdownMenuPreviewLink = (row) => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
+    this.dropdownMenuDuplicateLink = (row) => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
+    this.productRowEditLink = (row) => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
     this.selectAllBulkCheckboxLabel = `${this.productListForm} .column-filters .md-checkbox label`;
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
-    this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
+    this.productBulkMenuButtonState = (state) => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
@@ -47,8 +47,8 @@ class Products extends BOBasePage {
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
     this.productFilterIDMaxInput = `${this.productListForm} #filter_column_id_product_max`;
-    this.productFilterInput = filterBy => `${this.productListForm} input[name='filter_column_${filterBy}']`;
-    this.productFilterSelect = filterBy => `${this.productListForm} select[name='filter_column_${filterBy}']`;
+    this.productFilterInput = (filterBy) => `${this.productListForm} input[name='filter_column_${filterBy}']`;
+    this.productFilterSelect = (filterBy) => `${this.productListForm} select[name='filter_column_${filterBy}']`;
     this.productFilterPriceMinInput = `${this.productListForm} #filter_column_price_min`;
     this.productFilterPriceMaxInput = `${this.productListForm} #filter_column_price_max`;
     this.productFilterQuantityMinInput = `${this.productListForm} #filter_column_sav_quantity_min`;
@@ -57,16 +57,16 @@ class Products extends BOBasePage {
     this.filterResetButton = `${this.productListForm} button[name='products_filter_reset']`;
 
     // Products list
-    this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
-    this.productsListTableColumnID = row => `${this.productsListTableRow(row)}[data-product-id]`;
-    this.productsListTableColumnName = row => `${this.productsListTableRow(row)} td:nth-child(4) a`;
-    this.productsListTableColumnReference = row => `${this.productsListTableRow(row)} td:nth-child(5)`;
-    this.productsListTableColumnCategory = row => `${this.productsListTableRow(row)} td:nth-child(6)`;
-    this.productsListTableColumnPrice = row => `${this.productsListTableRow(row)} td:nth-child(7)`;
-    this.productsListTableColumnPriceATI = row => `${this.productsListTableRow(row)} td:nth-child(8)`;
-    this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.product-sav-quantity`;
-    this.productsListTableColumnStatus = row => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
-    this.productsListTableColumnStatusInput = row => `${this.productsListTableColumnStatus(row)} input`;
+    this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)}[data-product-id]`;
+    this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td:nth-child(4) a`;
+    this.productsListTableColumnReference = (row) => `${this.productsListTableRow(row)} td:nth-child(5)`;
+    this.productsListTableColumnCategory = (row) => `${this.productsListTableRow(row)} td:nth-child(6)`;
+    this.productsListTableColumnPrice = (row) => `${this.productsListTableRow(row)} td:nth-child(7)`;
+    this.productsListTableColumnPriceATI = (row) => `${this.productsListTableRow(row)} td:nth-child(8)`;
+    this.productsListTableColumnQuantity = (row) => `${this.productsListTableRow(row)} td.product-sav-quantity`;
+    this.productsListTableColumnStatus = (row) => `${this.productsListTableRow(row)} td:nth-child(10) .ps-switch`;
+    this.productsListTableColumnStatusInput = (row) => `${this.productsListTableColumnStatus(row)} input`;
 
     // Filter Category
     this.treeCategoriesBloc = '#tree-categories';
@@ -84,8 +84,8 @@ class Products extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.productTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -373,7 +373,7 @@ class Products extends BOBasePage {
     const found = await page.evaluate(async (args) => {
       /* eslint-env browser */
       const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
-      const category = await allCategories.find(el => el.textContent.includes(args.val));
+      const category = await allCategories.find((el) => el.textContent.includes(args.val));
 
       if (category === undefined) {
         return false;
@@ -498,7 +498,7 @@ class Products extends BOBasePage {
   async selectAllProducts(page) {
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.$eval(this.selectAllBulkCheckboxLabel, el => el.click()),
+      page.$eval(this.selectAllBulkCheckboxLabel, (el) => el.click()),
     ]);
   }
 

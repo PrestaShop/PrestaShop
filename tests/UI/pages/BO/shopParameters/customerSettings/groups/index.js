@@ -31,22 +31,22 @@ class Groups extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='groupFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='groupFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtongroup';
     this.filterResetButton = 'button[name=\'submitResetgroup\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumns = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumns = (row) => `${this.tableBodyRow(row)} td`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumns(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -142,7 +142,7 @@ class Groups extends BOBasePage {
     // Get all text columns
     const textColumns = await page.$$eval(
       `${this.tableBodyColumns(row)}:not(.row-selector)`,
-      els => els.map(el => el.textContent.trim()),
+      (els) => els.map((el) => el.textContent.trim()),
     );
 
     switch (columnName) {

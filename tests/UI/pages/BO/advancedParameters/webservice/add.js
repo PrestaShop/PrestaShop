@@ -21,7 +21,7 @@ class AddWebserviceKey extends BOBasePage {
     this.webserviceKeyInput = '#webservice_key_key';
     this.generateButton = 'button.js-generator-btn';
     this.keyDescriptionTextarea = '#webservice_key_description';
-    this.statusToggleInput = toggle => `#webservice_key_status_${toggle}`;
+    this.statusToggleInput = (toggle) => `#webservice_key_status_${toggle}`;
     this.saveButton = '#save-button';
   }
 

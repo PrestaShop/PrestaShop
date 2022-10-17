@@ -13,7 +13,7 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 
 // Import data
-const {AttributeData} = require('@data/faker/attributeAndValue');
+const AttributeData = require('@data/faker/attribute');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -176,8 +176,8 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
         let sortedTable = await attributesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

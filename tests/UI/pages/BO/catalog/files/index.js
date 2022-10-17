@@ -25,23 +25,23 @@ class Files extends BOBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Filters
-    this.filterColumn = filterBy => `${this.gridTable} #attachment_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.gridTable} #attachment_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
 
     // Actions buttons in Row
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.viewRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-view-row-link`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = (row) => `${this.actionsColumn(row)} a.grid-edit-row-link`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.viewRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-view-row-link`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
@@ -52,8 +52,8 @@ class Files extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -186,7 +186,7 @@ class Files extends BOBasePage {
   async deleteFilesBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 

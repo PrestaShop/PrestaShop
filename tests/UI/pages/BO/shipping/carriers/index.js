@@ -33,42 +33,42 @@ class Carriers extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='carrierFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='carrierFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncarrier';
     this.filterResetButton = 'button[name=\'submitResetcarrier\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnDelay = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(6) a`;
-    this.enableColumnValidIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
-    this.tableColumnIsFree = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
-    this.tableColumnPosition = row => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnDelay = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnActive = (row) => `${this.tableBodyColumn(row)}:nth-child(6) a`;
+    this.enableColumnValidIcon = (row) => `${this.tableColumnActive(row)} i.icon-check`;
+    this.tableColumnIsFree = (row) => `${this.tableBodyColumn(row)}:nth-child(7) a`;
+    this.tableColumnPosition = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 

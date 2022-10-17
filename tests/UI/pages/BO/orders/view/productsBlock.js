@@ -20,18 +20,18 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
 
     // Products table
     this.orderProductsTable = '#orderProductsTable';
-    this.orderProductsRowTable = row => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
-    this.orderProductsTableNameColumn = row => `${this.orderProductsRowTable(row)} td.cellProductName`;
-    this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
-    this.orderProductsTableProductReference = row => `${this.orderProductsTableNameColumn(row)} p.productReference`;
-    this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
-    this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
-    this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
+    this.orderProductsRowTable = (row) => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
+    this.orderProductsTableNameColumn = (row) => `${this.orderProductsRowTable(row)} td.cellProductName`;
+    this.orderProductsTableProductName = (row) => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductReference = (row) => `${this.orderProductsTableNameColumn(row)} p.productReference`;
+    this.orderProductsTableProductBasePrice = (row) => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
+    this.orderProductsTableProductQuantity = (row) => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
+    this.orderProductsTableProductAvailable = (row) => `${this.orderProductsRowTable(row)}
      td.cellProductAvailableQuantity`;
-    this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
-    this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
-    this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
-    this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
+    this.orderProductsTableProductPrice = (row) => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
+    this.deleteProductButton = (row) => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
+    this.editProductButton = (row) => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
+    this.productQuantitySpan = (row) => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
 
     // Edit row table
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
@@ -77,15 +77,15 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
 
     // Discount table
     this.discountListTable = 'table.table.discountList';
-    this.discountListRowTable = row => `${this.discountListTable} tbody tr:nth-child(${row})`;
-    this.discountListNameColumn = row => `${this.discountListRowTable(row)} td.discountList-name`;
-    this.discountListDiscountColumn = row => `${this.discountListRowTable(row)} td[data-role='discountList-value']`;
-    this.discountDeleteIcon = row => `${this.discountListRowTable(row)} a.delete-cart-rule`;
+    this.discountListRowTable = (row) => `${this.discountListTable} tbody tr:nth-child(${row})`;
+    this.discountListNameColumn = (row) => `${this.discountListRowTable(row)} td.discountList-name`;
+    this.discountListDiscountColumn = (row) => `${this.discountListRowTable(row)} td[data-role='discountList-value']`;
+    this.discountDeleteIcon = (row) => `${this.discountListRowTable(row)} a.delete-cart-rule`;
 
     // Refund form
-    this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
-    this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
-    this.refundShippingCost = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
+    this.refundProductQuantity = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
+    this.refundProductAmount = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
+    this.refundShippingCost = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
     this.partialRefundSubmitButton = 'button#cancel_product_save';
 
     // Pagination selectors
@@ -232,7 +232,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     }
 
     await Promise.all([
-      page.waitForResponse(response => response.url().includes('/products?_token')),
+      page.waitForResponse((response) => response.url().includes('/products?_token')),
       this.waitForSelectorAndClick(page, this.deleteProductButton(row)),
     ]);
 

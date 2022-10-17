@@ -105,8 +105,8 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
         let sortedTable = await taxesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         // Sort Array with javascript

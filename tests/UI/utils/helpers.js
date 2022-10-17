@@ -29,7 +29,9 @@ module.exports = {
       return (await playwright[global.BROWSER.name].launch(browserConfig));
     } catch (e) {
       if (attempt <= 3) {
-        await (new Promise(resolve => setTimeout(resolve, 5000)));
+        await (new Promise((resolve) => {
+          setTimeout(resolve, 5000);
+        }));
         return this.createBrowser(attempt + 1);
       }
       throw new Error(e);

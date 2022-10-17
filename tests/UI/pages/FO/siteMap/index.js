@@ -17,8 +17,8 @@ class SiteMap extends FOBasePage {
     this.pageTitle = 'Sitemap';
 
     // Selectors
-    this.categoryNameSelect = id => `#category-page-${id}`;
-    this.categoryPageNameSelect = id => `#cms-category-${id}`;
+    this.categoryNameSelect = (id) => `#category-page-${id}`;
+    this.categoryPageNameSelect = (id) => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
     this.brandsPageLink = '#manufacturer-page';
     this.categoryPageLink = categoryID => `#category-page-${categoryID}`;

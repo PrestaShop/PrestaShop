@@ -37,32 +37,32 @@ class Search extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='aliasFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='aliasFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonalias';
     this.filterResetButton = 'button[name=\'submitResetalias\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Columns selectors
-    this.tableColumnAliases = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnSearch = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnStatus = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnStatusEnabledIcon = row => `${this.tableColumnStatus(row)}.action-enabled`;
-    this.tableColumnStatusDisabledIcon = row => `${this.tableColumnStatus(row)}.action-disabled`;
+    this.tableColumnAliases = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnSearch = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnStatus = (row) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnStatusEnabledIcon = (row) => `${this.tableColumnStatus(row)}.action-enabled`;
+    this.tableColumnStatusDisabledIcon = (row) => `${this.tableColumnStatus(row)}.action-disabled`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -75,7 +75,7 @@ class Search extends BOBasePage {
 
     // Search form
     this.aliasForm = '#alias_fieldset_search';
-    this.fuzzySearchLabel = status => `#PS_SEARCH_FUZZY_${status}`;
+    this.fuzzySearchLabel = (status) => `#PS_SEARCH_FUZZY_${status}`;
     this.saveFormButton = `${this.aliasForm} button[name='submitOptionsalias']`;
   }
 

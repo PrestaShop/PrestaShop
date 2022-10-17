@@ -18,7 +18,7 @@ class FeatureFlag extends BOBasePage {
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors
-    this.newProductPageSwitchButton = toggle => `#feature_flag_beta_feature_flags_product_page_v2_enabled_${toggle}`;
+    this.newProductPageSwitchButton = (toggle) => `#feature_flag_beta_feature_flags_product_page_v2_enabled_${toggle}`;
     this.submitButton = '#feature_flag_beta_submit';
     this.alertSuccess = 'div.alert.alert-success[role="alert"]';
     this.modalSubmitFeatureFlag = '#modal-confirm-submit-feature-flag';

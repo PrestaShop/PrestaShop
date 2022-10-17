@@ -10,7 +10,7 @@ class AddCategory extends BOBasePage {
 
     // Selectors
     this.nameInput = '#category_name_1';
-    this.displayedToggleInput = toggle => `#category_active_${toggle}`;
+    this.displayedToggleInput = (toggle) => `#category_active_${toggle}`;
     this.descriptionIframe = '#category_description_1_ifr';
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
@@ -20,7 +20,7 @@ class AddCategory extends BOBasePage {
 
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
-    this.rootCategoryDisplayedToggleInput = toggle => `#root_category_active_${toggle}`;
+    this.rootCategoryDisplayedToggleInput = (toggle) => `#root_category_active_${toggle}`;
     this.rootCategoryDescriptionIframe = '#root_category_description_1_ifr';
     this.rootCategoryCoverImage = '#root_category_cover_image';
     this.rootCategoryMetaTitleInput = '#root_category_meta_title_1';

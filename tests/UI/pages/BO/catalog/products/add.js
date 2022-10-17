@@ -20,7 +20,7 @@ class AddProduct extends BOBasePage {
     this.settingUpdatedMessage = 'Settings updated.';
     this.duplicateSuccessfulMessage = 'Product successfully duplicated.';
     this.errorMessage = 'Unable to update settings.';
-    this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
+    this.errorMessageWhenSummaryTooLong = (number) => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
 
     // Selectors
@@ -51,7 +51,7 @@ class AddProduct extends BOBasePage {
 
     // Form nav
     this.formNavList = '#form-nav';
-    this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
+    this.forNavListItemLink = (id) => `${this.formNavList} #tab_step${id} a`;
 
     // Selectors of Step 2 : Pricing
     this.ecoTaxInput = '#form_step2_ecotax';
@@ -69,7 +69,7 @@ class AddProduct extends BOBasePage {
     this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
     this.applyOnCombinationsButton = '#apply-on-combinations';
-    this.productCombinationTableRow = id => `#accordion_combinations tr:nth-of-type(${id})`;
+    this.productCombinationTableRow = (id) => `#accordion_combinations tr:nth-of-type(${id})`;
     this.deleteCombinationsButton = '#delete-combinations';
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
@@ -80,7 +80,7 @@ class AddProduct extends BOBasePage {
     this.minimumQuantityInput = '#form_step3_minimal_quantity';
     this.stockLocationInput = '#form_step3_location';
     this.lowStockLevelInput = '#form_step3_low_stock_threshold';
-    this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
+    this.behaviourOutOfStockInput = (id) => `#form_step3_out_of_stock_${id}`;
     this.labelWhenInStockInput = '#form_step3_available_now_1';
     this.labelWhenOutOfStock = '#form_step3_available_later_1';
 
@@ -91,9 +91,10 @@ class AddProduct extends BOBasePage {
     // Selectors of step 6 : Options
     this.customFieldsBlock = '#custom_fields';
     this.addCustomizationFieldButton = `${this.customFieldsBlock} a[data-role='add-customization-field']`;
-    this.customFieldInput = row => `#form_step6_custom_fields_${row}_label_1`;
-    this.customFieldTypeSelect = row => `select#form_step6_custom_fields_${row}_type`;
-    this.customRequiredLabel = row => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field label`;
+    this.customFieldInput = (row) => `#form_step6_custom_fields_${row}_label_1`;
+    this.customFieldTypeSelect = (row) => `select#form_step6_custom_fields_${row}_type`;
+    this.customRequiredLabel = (row) => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field `
+      + 'label';
   }
 
   /*
@@ -134,7 +135,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<void>}
    */
   async addProductImages(page, imagesPaths = []) {
-    const filteredImagePaths = imagesPaths.filter(el => el !== null);
+    const filteredImagePaths = imagesPaths.filter((el) => el !== null);
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
       const numberOfImages = await this.getNumberOfImages(page);
@@ -253,7 +254,7 @@ class AddProduct extends BOBasePage {
       }
     }
     /* eslint-enable */
-    await page.$eval(this.generateCombinationsButton, el => el.click());
+    await page.$eval(this.generateCombinationsButton, (el) => el.click());
     await this.closeGrowlMessage(page);
   }
 
@@ -278,7 +279,7 @@ class AddProduct extends BOBasePage {
   async setAttributesQuantity(page, quantity) {
     // Select all combinations
     await this.waitForVisibleSelector(page, this.productCombinationSelectAllCheckbox);
-    await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
+    await page.$eval(this.productCombinationSelectAllCheckbox, (el) => el.click());
 
     // Open combinations bulk form
     if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
@@ -584,7 +585,7 @@ class AddProduct extends BOBasePage {
         throw new Error(`Column ${productData.behaviourOutOfStock} was not found`);
     }
 
-    await page.$eval(columnSelector, el => el.click());
+    await page.$eval(columnSelector, (el) => el.click());
 
     // Set value on label In and out of stock inputs
     await this.scrollTo(page, this.labelWhenInStockInput);

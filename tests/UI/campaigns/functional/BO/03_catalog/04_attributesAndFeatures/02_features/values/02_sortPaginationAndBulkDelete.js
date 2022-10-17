@@ -15,7 +15,7 @@ const viewFeaturePage = require('@pages/BO/catalog/features/view');
 const addValuePage = require('@pages/BO/catalog/features/addValue');
 
 // Import data
-const {ValueData} = require('@data/faker/featureAndValue');
+const {FeatureValueData} = require('@data/faker/featureValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -114,17 +114,17 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     });
 
     creationTests.forEach((test, index) => {
-      const createValueData = new ValueData({featureName: 'Composition', value: `todelete${index}`});
+      const createFeatureValueData = new FeatureValueData({featureName: 'Composition', value: `todelete${index}`});
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 
         let textResult;
 
         if (index === 14) {
-          textResult = await addValuePage.addEditValue(page, createValueData, false);
+          textResult = await addValuePage.addEditValue(page, createFeatureValueData, false);
           await expect(textResult).to.contains(viewFeaturePage.successfulCreationMessage);
         } else {
-          await addValuePage.addEditValue(page, createValueData, true);
+          await addValuePage.addEditValue(page, createFeatureValueData, true);
         }
       });
     });
@@ -209,8 +209,8 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
         let sortedTable = await viewFeaturePage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
