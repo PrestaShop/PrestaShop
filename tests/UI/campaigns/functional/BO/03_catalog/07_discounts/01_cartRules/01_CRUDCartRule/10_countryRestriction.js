@@ -212,7 +212,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
 
       await cartPage.addPromoCode(page, cartRuleCode.code);
 
-      const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForDeliveryAdress(page);
+      const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForPromoCode(page);
       await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningtext);
     });
 

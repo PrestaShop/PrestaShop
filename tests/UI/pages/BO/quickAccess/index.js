@@ -62,15 +62,6 @@ class QuickAccess extends BOBasePage {
   async goToAddNewQuickAccessPage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewQuickAccessButton);
   }
-
-  /**
-   * Remove the quick access for current page
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async removeQuickAccessPage(page) {
-    await this.clickAndWaitForNavigation(page, this.removeQuickAccessLink);
-  }
   
   /**
    * Get text from column in table

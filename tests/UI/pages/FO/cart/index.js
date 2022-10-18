@@ -51,7 +51,7 @@ class Cart extends FOBasePage {
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
 
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
-    
+
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
 
@@ -173,7 +173,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertWarningForDeliveryAdress(page) {
+  getAlertWarningForPromoCode(page) {
     return this.getTextContent(page, this.alertPromoCode);
   }
 
