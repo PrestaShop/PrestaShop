@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
@@ -36,6 +37,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
+/**
+ * Contains all the data needed to handle the product update.
+ *
+ * @see UpdateProductHandler
+ *
+ * This command is only designed for the general data of product which can be persisted in one call.
+ * It was not designed to handle the product relations.
+ */
 class UpdateProductCommand
 {
     /**
