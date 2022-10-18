@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBui
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
+/**
+ * Builds @see UpdateProductCommand for both single and All shops
+ */
 class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
@@ -56,8 +59,8 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     {
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $this
-            ->fillBasicInformation($config, $formData)
-            ->fillOptions($config, $formData)
+            ->configureBasicInformation($config)
+            ->configureOptions($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -69,16 +72,11 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
 
     /**
      * @param CommandBuilderConfig $config
-     * @param array $formData
      *
      * @return $this
      */
-    private function fillBasicInformation(CommandBuilderConfig $config, array $formData): self
+    private function configureBasicInformation(CommandBuilderConfig $config): self
     {
-        if (empty($formData['description']) && empty($formData['header']['name'])) {
-            return $this;
-        }
-
         $config
             ->addMultiShopField('[header][name]', 'setLocalizedNames', DataField::TYPE_ARRAY)
             ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', DataField::TYPE_ARRAY)
@@ -90,18 +88,11 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
 
     /**
      * @param CommandBuilderConfig $config
-     * @param array $formData
      *
      * @return $this
      */
-    private function fillOptions(CommandBuilderConfig $config, array $formData): self
+    private function configureOptions(CommandBuilderConfig $config): self
     {
-        if (empty($formData['options']) &&
-            !isset($formData['description']['manufacturer']) &&
-            !isset($formData['specifications'])) {
-            return $this;
-        }
-
         $config
             ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
             ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
@@ -109,12 +100,8 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
             ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING)
         ;
-
-        // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
-        if (!empty($formData['specifications']['condition'])) {
-            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
-        }
 
         return $this;
     }
