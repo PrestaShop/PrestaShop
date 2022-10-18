@@ -690,7 +690,7 @@ class ImageManagerCore
 
             case 'avif':
                 // @phpstan-ignore-next-line
-                $success = imageavif($resource, $filename);
+                $success = imageavif($resource, $filename, Configuration::get('PS_ADDITIONAL_IMAGE_AVIF_QUALITY'));
 
                 break;
 

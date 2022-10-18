@@ -203,7 +203,7 @@ class ImageRetriever
             } catch {
 
             }*/
-            $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF') && function_exists('imageavif') && is_callable('imageavif');
+            $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
             if ($generateAdditionalWebP) {
                 $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [

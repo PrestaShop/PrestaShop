@@ -40,7 +40,7 @@ class AdminImagesControllerCore extends AdminController
         $this->className = 'ImageType';
         $this->lang = false;
 
-        $this->generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF') && function_exists('imageavif') && is_callable('imageavif');
+        $this->generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -106,14 +106,23 @@ class AdminImagesControllerCore extends AdminController
 
         if (true === $this->generateAdditionalAvif) {
             $fields = array_merge($fields, [
-                'PS_ADDITIONAL_IMAGE_QUALITY_AVIF' => [
+                'PS_ADDITIONAL_IMAGE_AVIF' => [
                     'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
                     'show' => true,
                     'required' => false,
                     'type' => 'bool',
                     'is_bool' => true,
-                ]
-            ]);
+                ],
+                'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
+                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
+                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                    'validation' => 'isUnsignedId',
+                    'required' => true,
+                    'cast' => 'intval',
+                    'type' => 'text',
+                ],
+            ]
+            );
         }
 
         $fields = array_merge($fields,
@@ -586,7 +595,7 @@ class AdminImagesControllerCore extends AdminController
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
         $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
-        $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF') && function_exists('imageavif') && is_callable('imageavif');
+        $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
