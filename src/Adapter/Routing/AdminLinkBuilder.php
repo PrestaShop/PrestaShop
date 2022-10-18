@@ -67,7 +67,7 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
         $controller = $this->entityControllers[$entity];
         $parameters = $this->buildActionParameters('view', $entity, $parameters);
 
-        return $this->link->getAdminLink($controller, true, $parameters);
+        return $this->link->getAdminLink($controller, true, $parameters, $parameters);
     }
 
     /**
@@ -78,7 +78,7 @@ class AdminLinkBuilder implements EntityLinkBuilderInterface
         $controller = $this->entityControllers[$entity];
         $parameters = $this->buildActionParameters('update', $entity, $parameters);
 
-        return $this->link->getAdminLink($controller, true, $parameters);
+        return $this->link->getAdminLink($controller, true, $parameters, $parameters);
     }
 
     /**
