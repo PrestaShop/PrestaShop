@@ -435,7 +435,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $email e-mail
      * @param string $plaintextPassword Password is also checked if specified
-     * @param bool $ignoreGuest
+     * @param bool $ignoreGuest to ignore guest customers
      *
      * @return bool|Customer|CustomerCore Customer instance
      *
@@ -521,7 +521,7 @@ class CustomerCore extends ObjectModel
      *
      * @param string $email
      *
-     * @return array
+     * @return array Customers
      */
     public static function getCustomersByEmail($email)
     {
@@ -565,8 +565,8 @@ class CustomerCore extends ObjectModel
      * Check if e-mail is already registered in database.
      *
      * @param string $email e-mail
-     * @param bool $returnId
-     * @param bool $ignoreGuest To exclude guest customer
+     * @param bool $returnId If true the method returns the Customer ID, or boolean
+     * @param bool $ignoreGuest to ignore guest customers
      *
      * @return bool|int Customer ID if found
      *                  `false` otherwise
@@ -1081,6 +1081,11 @@ class CustomerCore extends ObjectModel
         return self::$_customer_groups[$idCustomer];
     }
 
+    /**
+     * Get Groups of this Customer
+     *
+     * @return array|mixed
+     */
     public function getGroups()
     {
         return Customer::getGroupsStatic((int) $this->id);
@@ -1130,7 +1135,7 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Get current Country.
+     * Get current country or default country
      *
      * @param int $idCustomer
      * @param Cart|null $cart
@@ -1172,7 +1177,7 @@ class CustomerCore extends ObjectModel
      * @param int $idLang Language ID
      * @param string|null $password Password
      *
-     * @return bool
+     * @return bool Indicates if a process has been successful
      */
     public function transformToCustomer($idLang, $password = null)
     {
@@ -1329,7 +1334,7 @@ class CustomerCore extends ObjectModel
     /**
      * Get last empty Cart for this Customer, when last cart is not empty return false.
      *
-     * @param bool|true $withOrder
+     * @param bool|true $withOrder Only return a Cart that have been converted into an Order
      *
      * @return bool|int
      */
