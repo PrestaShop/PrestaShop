@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
-use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\TestCase;
