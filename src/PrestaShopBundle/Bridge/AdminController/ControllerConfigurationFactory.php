@@ -107,7 +107,8 @@ class ControllerConfigurationFactory
      */
     private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        $legacyCurrentIndex = $this->link->getAdminLink($controllerConfiguration->legacyControllerName);
+        // Cannot use $this->link->getAdminLink(), because it produces wrong currentIndex by relying on _legacy_link route param
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
 
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);
