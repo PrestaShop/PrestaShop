@@ -15,7 +15,7 @@ parameters:
   prestashop_views: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
-  env(PS_LOG_MAX_FILES): 10
+  env(PS_LOG_MAX_FILES): 30
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
