@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
+use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
@@ -115,7 +116,7 @@ class OrderReturnFormDataProviderTest extends TestCase
                 'John',
                 'Doe',
                 3,
-                new DateTime('2020-02-22'),
+                new DateTimeImmutable('2020-02-22'),
                 4,
                 'question'
             ),
