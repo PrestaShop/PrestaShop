@@ -132,12 +132,9 @@ class PrestaShopAutoload
 
         // If $classname has not core suffix (E.g. Shop, Product)
         if (substr($className, -4) != 'Core' && !class_exists($className, false)) {
-            $classDir = (isset($this->index[$className]['override'])
-                && $this->index[$className]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
-
             // If requested class does not exist, load associated core class
             if (isset($this->index[$className]) && !$this->index[$className]['path']) {
-                require_once $classDir . $this->index[$className . 'Core']['path'];
+                require_once $this->root_dir . $this->index[$className . 'Core']['path'];
 
                 if ($this->index[$className . 'Core']['type'] != 'interface') {
                     eval($this->index[$className . 'Core']['type'] . ' ' . $className . ' extends ' . $className . 'Core {}');
@@ -149,7 +146,7 @@ class PrestaShopAutoload
                 }
 
                 if (isset($this->index[$className])) {
-                    require_once $classDir . $this->index[$className]['path'];
+                    require_once $this->root_dir . $this->index[$className]['path'];
                 }
             }
         } elseif (isset($this->index[$className]['path']) && $this->index[$className]['path']) {
@@ -307,14 +304,12 @@ class PrestaShopAutoload
                         $classes[$m['classname']] = [
                             'path' => $path . $file,
                             'type' => trim($m[1]),
-                            'override' => false,
                         ];
 
                         if (substr($m['classname'], -4) == 'Core') {
                             $classes[substr($m['classname'], 0, -4)] = [
                                 'path' => '',
                                 'type' => $classes[$m['classname']]['type'],
-                                'override' => false,
                             ];
                         }
                     }
