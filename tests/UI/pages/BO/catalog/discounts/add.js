@@ -189,13 +189,6 @@ class AddCartRule extends BOBasePage {
       await page.click(this.countryGroupRemoveButton);
     }
 
-    // Set carrier discount
-    if (cartRuleData.carrierRestriction) {
-      await this.setChecked(page, this.carrierRestriction);
-      await page.click(this.carrierRestrictionPickUpInStore);
-      await page.click(this.carrierRestrictionRemoveButton);
-    }
-
     // Fill minimum amount values
     await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
