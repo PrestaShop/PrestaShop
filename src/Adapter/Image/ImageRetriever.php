@@ -286,6 +286,7 @@ class ImageRetriever
                 'url' => $urlJpg,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
+                'sources' => $additionalSources,
             ];
         }
 
