@@ -28,10 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use Link;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Tools;
 
 /**
@@ -45,20 +45,20 @@ class ControllerConfigurationFactory
     private $userProvider;
 
     /**
-     * @var Link
+     * @var FlashBagInterface
      */
-    private $link;
+    private $flashBag;
 
     /**
      * @param UserProvider $userProvider
-     * @param Link $link
+     * @param FlashBagInterface $flashBag
      */
     public function __construct(
         UserProvider $userProvider,
-        Link $link
+        FlashBagInterface $flashBag
     ) {
         $this->userProvider = $userProvider;
-        $this->link = $link;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -95,7 +95,8 @@ class ControllerConfigurationFactory
         );
 
         $this->setLegacyCurrentIndex($controllerConfiguration);
-        $this->initToken($controllerConfiguration);
+        $this->setToken($controllerConfiguration);
+        $this->setFlashes($controllerConfiguration);
 
         return $controllerConfiguration;
     }
@@ -120,12 +121,23 @@ class ControllerConfigurationFactory
     /**
      * @return void
      */
-    private function initToken(ControllerConfiguration $controllerConfiguration): void
+    private function setToken(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->token = Tools::getAdminToken(
             $controllerConfiguration->legacyControllerName .
             (int) $controllerConfiguration->tabId .
             (int) $controllerConfiguration->getUser()->getData()->id
         );
+    }
+
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     */
+    private function setFlashes(ControllerConfiguration $controllerConfiguration): void
+    {
+        $controllerConfiguration->confirmations = $this->flashBag->get('success');
+        $controllerConfiguration->warnings = $this->flashBag->get('warning');
+        $controllerConfiguration->errors = $this->flashBag->get('error');
+        $controllerConfiguration->informations = $this->flashBag->get('info');
     }
 }
