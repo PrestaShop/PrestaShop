@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use Link;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
@@ -45,20 +46,28 @@ class ControllerConfigurationFactory
     private $userProvider;
 
     /**
+     * @var Link
+     */
+    private $link;
+
+    /**
      * @var FlashBagInterface
      */
     private $flashBag;
 
     /**
      * @param UserProvider $userProvider
+     * @param Link $link
      * @param FlashBagInterface $flashBag
      */
     public function __construct(
         UserProvider $userProvider,
+        Link $link,
         FlashBagInterface $flashBag
     ) {
         $this->userProvider = $userProvider;
         $this->flashBag = $flashBag;
+        $this->link = $link;
     }
 
     /**
@@ -108,8 +117,7 @@ class ControllerConfigurationFactory
      */
     private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        // Cannot use $this->link->getAdminLink(), because it produces wrong currentIndex by relying on _legacy_link route param
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
+        $legacyCurrentIndex = $this->link->getAdminLink($controllerConfiguration->legacyControllerName);
 
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);

@@ -179,6 +179,7 @@ class HelperListCore extends Helper
             'product' => 'AdminProducts',
             'order' => 'AdminOrders',
             'cart' => 'AdminCarts',
+            'feature' => 'AdminFeatures',
         ], $controllerMapping);
         $adminLinkBuilder = new AdminLinkBuilder(Context::getContext()->link, $controllerMapping);
         $this->linkBuilderFactory = new EntityLinkBuilderFactory([
