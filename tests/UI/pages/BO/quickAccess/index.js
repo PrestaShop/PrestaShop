@@ -61,7 +61,7 @@ class QuickAccess extends BOBasePage {
   async goToAddNewQuickAccessPage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewQuickAccessButton);
   }
-  
+
   /**
    * Get text from column in table
    * @param page {Page} Browser tab
