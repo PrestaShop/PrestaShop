@@ -181,6 +181,8 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * @param Request $request
      *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
      * @return JsonResponse
      */
     public function updatePositionAction(Request $request): JsonResponse
