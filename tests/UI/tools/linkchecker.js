@@ -10,7 +10,7 @@ const urlsList = require('@tools/urls.js');
 const LOG_PASSED = process.env.LOG_PASSED || false;
 
 // Report dir and file
-const reportPath = 'campaigns/tools/reports';
+const reportPath = 'tools/reports';
 let filename;
 
 const output = {
@@ -111,17 +111,17 @@ describe('Crawl every page for defects and issues', async () => {
 
           if (responseError) {
             somethingFailed = true;
-            await errors.push(responseTextError);
+            errors.push(responseTextError);
           }
 
           if (javascriptError) {
             somethingFailed = true;
-            await errors.push(javascriptTextError);
+            errors.push(javascriptTextError);
           }
 
           if (consoleError) {
             somethingFailed = true;
-            await errors.push(consoleTextError);
+            errors.push(consoleTextError);
           }
 
           // Print all errors
@@ -134,11 +134,11 @@ describe('Crawl every page for defects and issues', async () => {
 
 /**
  * Crawl Page and write result
- * @param puppeteerPage
+ * @param browserTab
  * @param thisPageToCrawl
  * @return {Promise<void>}
  */
-async function crawlPage(puppeteerPage, thisPageToCrawl) {
+async function crawlPage(browserTab, thisPageToCrawl) {
   responseError = false;
   javascriptError = false;
   consoleError = false;
@@ -151,10 +151,10 @@ async function crawlPage(puppeteerPage, thisPageToCrawl) {
     errored: [],
   };
 
-  await puppeteerPage.goto(`${thisPageToCrawl.url}`, {waitUntil: 'networkidle0'});
+  await browserTab.goto(`${thisPageToCrawl.url}`, {waitUntil: 'networkidle'});
 
   if (typeof (thisPageToCrawl.customAction) !== 'undefined') {
-    await thisPageToCrawl.customAction(puppeteerPage);
+    await thisPageToCrawl.customAction(browserTab);
   }
 
   output.pages.push(outputEntry);
