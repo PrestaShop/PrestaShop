@@ -24,31 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
-use Product;
 
 /**
- * Responsible for filling up the Product with the properties which have to be updated
+ * Defines contract to handle @see UpdateProductCommand
  */
-interface ProductUpdatablePropertyFillerInterface
+interface UpdateProductHandlerInterface
 {
     /**
-     * Fill product properties from the command and return an array of the properties to update.
-     *
-     * Returns a list of properties that were filled.
-     * Simple (not multilingual) fields will be provided in a simple array as a values, while for
-     * multilingual ones the array key will be the field name and the value will be an array of language ids.
-     *
-     * @return array<int, string|array<string, int>>
-     *
-     * e.g.:
-     * [
-     *     'reference',
-     *     'visibility',
-     *     'name' => [1, 2],
-     * ]
+     * @param UpdateProductCommand $command
      */
-    public function fillUpdatableProperties(Product $product, UpdateProductCommand $command): array;
+    public function handle(UpdateProductCommand $command): void;
 }

@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use Product;
 
+/**
+ * Fills product properties which can be considered as product options
+ */
 class ProductOptionsPropertyFiller implements ProductUpdatablePropertyFillerInterface
 {
     /**

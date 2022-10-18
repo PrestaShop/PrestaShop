@@ -31,9 +31,13 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 
-class UpdateProductHandler
+/**
+ * Handles the @see UpdateProductCommand using legacy object model
+ */
+class UpdateProductHandler implements UpdateProductHandlerInterface
 {
     /**
      * @var ProductUpdatablePropertyFillerInterface
