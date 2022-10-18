@@ -79,7 +79,7 @@ class Products extends BOBasePage {
     this.addProductButton = '#page-header-desc-configuration-add';
 
     // pagination
-    this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
+    this.paginationNextLink = '.page-item.next:not(.disabled) [data-role=next-page-link]';
 
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
@@ -93,8 +93,8 @@ class Products extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.productListForm} .col-form-label`;
-    this.paginationNextLink = `${this.productListForm} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.productListForm} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.productListForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.productListForm} [data-role='previous-page-link']`;
   }
 
   /*

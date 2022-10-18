@@ -67,8 +67,8 @@ class Taxes extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.taxesGridPanelDiv} .col-form-label`;
-    this.paginationNextLink = `${this.taxesGridPanelDiv} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.taxesGridPanelDiv} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.taxesGridPanelDiv} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.taxesGridPanelDiv} [data-role='previous-page-link']`;
   }
 
   /*
