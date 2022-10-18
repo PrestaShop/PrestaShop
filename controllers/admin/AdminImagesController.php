@@ -351,6 +351,31 @@ class AdminImagesControllerCore extends AdminController
         ];
     }
 
+    /**
+     * @return void
+     * @throws SmartyException
+     */
+    public function initModal(): void
+    {
+        parent::initModal();
+
+        $this->modals[] = [
+            'modal_id' => 'modalRegenerateThumbnails',
+            'modal_class' => 'modal-md',
+            'modal_title' => $this->trans('Regenerate thumbnails', [], 'Admin.Actions'),
+            'modal_content' => $this->context->smarty->fetch('controllers/images/modal_regenerate_thumbnails.tpl'),
+            'modal_cancel_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+            'modal_actions' => [
+                [
+                    'type' => 'button',
+                    'label' => $this->trans('Regenerate', [], 'Admin.Actions'),
+                    'class' => 'btn-default btn-regenerate-thumbnails',
+                    'value' => '',
+                ],
+            ],
+        ];
+    }
+
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
