@@ -173,7 +173,9 @@ class ImageRetriever
             $id_image . '.' . $ext,
         ]);
 
+        $rewriteLink = isset($object->link_rewrite) ? $object->link_rewrite : $object->name;
         foreach ($image_types as $image_type) {
+            $additionalSources = [];
             // Final path thumbnail in our size
             $thumbnailPath = implode(DIRECTORY_SEPARATOR, [
                 $imageFolderPath,
@@ -188,6 +190,59 @@ class ImageRetriever
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
+            }
+
+            $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
+            // We try to use the imageavif() function.
+            // It can fail even if `function_exists('imageavif')` returns true.
+            // @see https://stackoverflow.com/questions/71739530/php-8-1-imageavif-avif-image-support-has-been-disabled
+            // @todo When this issue will be fixed on main OS (Debian, CentOS), we need to remove this patch
+            /* try {
+                $image = imagecreatetruecolor(250, 250);
+                imageavif($image, 'test.avif');
+            } catch {
+
+            }*/
+            $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF') && function_exists('imageavif') && is_callable('imageavif');
+
+            if ($generateAdditionalWebP) {
+                $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '.webp',
+                ]);
+
+                if (!file_exists($resizedImagePathWebP)) {
+                    ImageManager::resize(
+                        $originalImagePath,
+                        $thumbnailPath,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        'webp',
+                        true
+                    );
+                }
+
+                $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
+            }
+
+            if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
+                    $imageFolderPath,
+                    $id_image . '-' . $image_type['name'] . '.avif',
+                ]);
+
+                if (!file_exists($resizedImagePathAvif)) {
+                    ImageManager::resize(
+                        $originalImagePath,
+                        $thumbnailPath,
+                        (int) $image_type['width'],
+                        (int) $image_type['height'],
+                        'avif',
+                        true
+                    );
+                }
+
+                $additionalSources['avif'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.avif');
             }
 
             /*
@@ -224,8 +279,11 @@ class ImageRetriever
                 $image_type['name']
             );
 
+            $urlJpg = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name']);
+            $additionalSources['jpg'] = $urlJpg;
+
             $urls[$image_type['name']] = [
-                'url' => $url,
+                'url' => $urlJpg,
                 'width' => (int) $image_type['width'],
                 'height' => (int) $image_type['height'],
             ];

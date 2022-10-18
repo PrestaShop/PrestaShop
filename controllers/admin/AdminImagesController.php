@@ -101,6 +101,20 @@ class AdminImagesControllerCore extends AdminController
                             'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
                         ],
                     ],
+                    'PS_ADDITIONAL_IMAGE_QUALITY_WEBP' => [
+                        'title' => $this->trans('WebP', [], 'Admin.Design.Feature'),
+                        'show' => true,
+                        'required' => false,
+                        'type' => 'bool',
+                        'is_bool' => true,
+                    ],
+                    'PS_ADDITIONAL_IMAGE_QUALITY_AVIF' => [
+                        'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                        'show' => true,
+                        'required' => false,
+                        'type' => 'bool',
+                        'is_bool' => true,
+                    ],
                     'PS_JPEG_QUALITY' => [
                         'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
                         'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
@@ -558,6 +572,8 @@ class AdminImagesControllerCore extends AdminController
         }
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
+        $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
@@ -581,9 +597,23 @@ class AdminImagesControllerCore extends AdminController
                                 $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                             }
 
+                            if ($generateAdditionalWebP) {
+                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
+                            }
+
+                            if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['height'], 'avif', true);
+                            }
+
                             if ($generate_hight_dpi_images) {
                                 if (!ImageManager::resize($dir . $image, $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
+                                }
+                                if ($generateAdditionalWebP) {
+                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.webp', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'webp', true);
+                                }
+                                if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int)$imageType['height'] * 2, 'avif', true);
                                 }
                             }
                         }
@@ -612,6 +642,17 @@ class AdminImagesControllerCore extends AdminController
                                 );
                             }
                         }
+
+                        if ($generateAdditionalWebP) {
+                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['hei
+ght'], 'webp', true);
+                        }
+
+                        if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['heigh
+t'], 'avif', true);
+                        }
+
                         if ($generate_hight_dpi_images) {
                             if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')) {
                                 if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {

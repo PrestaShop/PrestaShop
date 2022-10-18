@@ -688,6 +688,12 @@ class ImageManagerCore
 
                 break;
 
+            case 'avif':
+                // @phpstan-ignore-next-line
+                $success = imageavif($resource, $filename);
+
+                break;
+
             case 'jpg':
             case 'jpeg':
             default:
@@ -721,6 +727,7 @@ class ImageManagerCore
             'image/png' => ['png'],
             'image/webp' => ['webp'],
             'image/svg+xml' => ['svg'],
+            'image/avif' => ['avif'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
