@@ -251,7 +251,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await checkoutPage.chooseDeliveryAddress(page, 2);
 
       const isDeliveryStep = await checkoutPage.goToDeliveryStep(page);
-      await expect(isDeliveryStep, 'Delivery Step bock is not displayed').to.be.true;
+      await expect(isDeliveryStep, 'Delivery Step block is not displayed').to.be.true;
     });
 
     it('should set the promo code for second time and check total after discount', async function () {
