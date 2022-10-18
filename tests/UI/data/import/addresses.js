@@ -16,7 +16,7 @@ function createRecord() {
       customerID: DefaultCustomer.id,
       manufacturer: '',
       supplier: '',
-      company: faker.company.companyName(),
+      company: faker.company.name(),
       lastname: 'test',
       firstname: faker.name.firstName(),
       address1: faker.address.streetAddress(),

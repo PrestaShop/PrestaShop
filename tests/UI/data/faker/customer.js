@@ -57,7 +57,7 @@ class CustomerData {
     this.newsletter = customerToCreate.newsletter === undefined ? false : customerToCreate.newsletter;
 
     /** @type {string} Company for the customer */
-    this.company = customerToCreate.company || faker.company.companyName();
+    this.company = customerToCreate.company || faker.company.name();
 
     /** @type {Number} Allowed outstanding amount for the customer */
     this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.datatype.number({

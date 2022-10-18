@@ -11,7 +11,7 @@ class StoreData {
    */
   constructor(storeToCreate = {}) {
     /** @type {string} Name of the store */
-    this.name = storeToCreate.name || faker.company.companyName();
+    this.name = storeToCreate.name || faker.company.name();
 
     /** @type {string} First line address of the store */
     this.address1 = storeToCreate.address || faker.address.streetAddress();
