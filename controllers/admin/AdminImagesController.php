@@ -353,6 +353,7 @@ class AdminImagesControllerCore extends AdminController
 
     /**
      * @return void
+     *
      * @throws SmartyException
      */
     public function initModal(): void
