@@ -399,7 +399,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     protected $list_partners_modules = [];
 
-    /** @var array */
+    /** @var array<string, string|array> */
     public $modals = [];
 
     /** @var bool if logged employee has access to AdminImport */
