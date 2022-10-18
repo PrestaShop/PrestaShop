@@ -892,12 +892,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $this->clearCache();
         $result = true;
+
         // Remove association to multishop table
-        $id_shop_list = Shop::getContextListShopID();
         if (count($this->id_shop_list)) {
             $id_shop_list = $this->id_shop_list;
+        } else {
+            $id_shop_list = Shop::getContextListShopID();
         }
-
         $id_shop_list = array_map('intval', $id_shop_list);
 
         if (Shop::isTableAssociated($this->def['table'])) {
