@@ -111,6 +111,7 @@ class ControllerConfigurationFactory
         // We do not use \Link->getAdminLink() because it produces wrong legacy currentIndex.
         // Even though we could solve issues with "view" and "edit" links by using AdminLinkBuilder, the same issues appears
         // with the "deletion", "duplicate", "enable" links and as it gets more complicated, it seems to be safer/easier to build the index url manually.
+        // This allows legacy components to build the URLs as usual by appending parameters after currentIndex
         $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
 
         if ($back = Tools::getValue('back')) {
