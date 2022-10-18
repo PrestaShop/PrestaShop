@@ -329,18 +329,6 @@ class PrestaShopAutoload
     {
         return (isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
     }
-
-    /**
-     * Normalize directory.
-     *
-     * @param string $directory
-     *
-     * @return string
-     */
-    private function normalizeDirectory($directory)
-    {
-        return rtrim($directory, '/\\') . DIRECTORY_SEPARATOR;
-    }
 }
 
 spl_autoload_register([PrestaShopAutoload::getInstance(), 'load']);
