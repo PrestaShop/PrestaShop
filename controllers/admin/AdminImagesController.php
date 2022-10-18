@@ -95,7 +95,7 @@ class AdminImagesControllerCore extends AdminController
                     'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
                 ],
             ],
-            'PS_ADDITIONAL_IMAGE_QUALITY_WEBP' => [
+            'PS_ADDITIONAL_IMAGE_WEBP' => [
                 'title' => $this->trans('WebP', [], 'Admin.Design.Feature'),
                 'show' => true,
                 'required' => false,
@@ -594,7 +594,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-        $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
+        $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
         $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
         if (!$productsImages) {

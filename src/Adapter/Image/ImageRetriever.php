@@ -192,7 +192,7 @@ class ImageRetriever
                 );
             }
 
-            $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_QUALITY_WEBP');
+            $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
             // We try to use the imageavif() function.
             // It can fail even if `function_exists('imageavif')` returns true.
             // @see https://stackoverflow.com/questions/71739530/php-8-1-imageavif-avif-image-support-has-been-disabled

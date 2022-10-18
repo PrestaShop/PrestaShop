@@ -892,5 +892,14 @@ Country</value>
     <configuration id="PS_PRODUCT_REDIRECTION_DEFAULT" name="PS_PRODUCT_REDIRECTION_DEFAULT">
       <value>404</value>
     </configuration>
+    <configuration id="PS_ADDITIONAL_IMAGE_WEBP" name="PS_ADDITIONAL_IMAGE_WEBP">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_ADDITIONAL_IMAGE_AVIF" name="PS_ADDITIONAL_IMAGE_AVIF">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_ADDITIONAL_IMAGE_AVIF_QUALITY" name="PS_ADDITIONAL_IMAGE_AVIF_QUALITY">
+      <value>90</value>
+    </configuration>
   </entities>
 </entity_configuration>
