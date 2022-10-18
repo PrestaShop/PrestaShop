@@ -34,7 +34,7 @@ class CannotUpdateProductException extends ProductException
     /**
      * When generic product update fails
      */
-    public const FAILED_UPDATE_PRODUCT = 0;
+    public const FAILED_UPDATE_PRODUCT = 1;
 
     /**
      * When basic information update fails
