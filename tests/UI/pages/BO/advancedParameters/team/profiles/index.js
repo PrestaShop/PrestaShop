@@ -49,8 +49,8 @@ class Profiles extends BOBasePage {
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
-    this.pagesPaginationNextLink = `${this.profilesListForm} #pagination_next_url`;
-    this.pagesPaginationPreviousLink = `${this.profilesListForm} [aria-label='Previous']`;
+    this.pagesPaginationNextLink = `${this.profilesListForm} [data-role=next-page-link]`;
+    this.pagesPaginationPreviousLink = `${this.profilesListForm} [data-role='previous-page-link']`;
 
     // Sort Selectors
     this.tableHead = `${this.profileGridPanel} thead`;

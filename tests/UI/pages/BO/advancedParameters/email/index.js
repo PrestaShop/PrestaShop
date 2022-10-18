@@ -70,8 +70,8 @@ class Email extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.emailGridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.emailGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.emailGridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.emailGridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.emailGridPanel} [data-role='previous-page-link']`;
 
     // Sort Selectors
     this.tableHead = `${this.emailsListForm} thead`;

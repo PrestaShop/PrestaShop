@@ -63,8 +63,8 @@ class Zones extends BOBasePage {
     // Pagination
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.zonesGridPanelDiv} .col-form-label`;
-    this.paginationNextLink = `${this.zonesGridPanelDiv} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.zonesGridPanelDiv} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.zonesGridPanelDiv} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.zonesGridPanelDiv} [data-role='previous-page-link']`;
   }
 
   /* Header methods */

@@ -65,8 +65,8 @@ class WebService extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.webserviceGridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.webserviceGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.webserviceGridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.webserviceGridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.webserviceGridPanel} [data-role='previous-page-link']`;
   }
 
   /*

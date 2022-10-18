@@ -69,14 +69,14 @@ class Pages extends BOBasePage {
 
     this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
     this.categoriesPaginationLabel = `${this.listForm('cms_page_category')} .col-form-label`;
-    this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} #pagination_next_url`;
-    this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [aria-label='Previous']`;
+    this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} [data-role=next-page-link]`;
+    this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [data-role='previous-page-link']`;
 
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.listForm('cms_page')} .col-form-label`;
-    this.pagesPaginationNextLink = `${this.listForm('cms_page')} #pagination_next_url`;
-    this.pagesPaginationPreviousLink = `${this.listForm('cms_page')} [aria-label='Previous']`;
+    this.pagesPaginationNextLink = `${this.listForm('cms_page')} [data-role=next-page-link]`;
+    this.pagesPaginationPreviousLink = `${this.listForm('cms_page')} [data-role='previous-page-link']`;
   }
 
   /*

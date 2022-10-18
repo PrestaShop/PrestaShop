@@ -62,8 +62,8 @@ class Employees extends BOBasePage {
     // Pages selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.employeesListForm} .col-form-label`;
-    this.paginationNextLink = `${this.employeesListForm} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.employeesListForm} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.employeesListForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.employeesListForm} [data-role='previous-page-link']`;
   }
 
   /*

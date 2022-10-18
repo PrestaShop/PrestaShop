@@ -56,8 +56,8 @@ class Customers extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.customerGridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.customerGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.customerGridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.customerGridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.customerGridPanel} [data-role='previous-page-link']`;
 
     // Required field section
     this.setRequiredFieldsButton = 'button[data-target=\'#customerRequiredFieldsContainer\']';

@@ -84,8 +84,8 @@ class Brands extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
-    this.paginationNextLink = table => `${this.gridPanel(table)} #pagination_next_url`;
-    this.paginationPreviousLink = table => `${this.gridPanel(table)} [aria-label='Previous']`;
+    this.paginationNextLink = table => `${this.gridPanel(table)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = table => `${this.gridPanel(table)} [data-role='previous-page-link']`;
   }
 
   /*
