@@ -78,9 +78,6 @@ class Products extends BOBasePage {
     // HEADER buttons
     this.addProductButton = '#page-header-desc-configuration-add';
 
-    // pagination
-    this.paginationNextLink = '.page-item.next:not(.disabled) [data-role=next-page-link]';
-
     // Modal Dialog
     this.catalogDeletionModalDialog = '#catalog_deletion_modal div.modal-dialog';
     this.modalDialogDeleteNowButton = `${this.catalogDeletionModalDialog} button[value='confirm']`;

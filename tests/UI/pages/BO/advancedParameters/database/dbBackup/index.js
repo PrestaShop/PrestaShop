@@ -53,7 +53,7 @@ class DbBackup extends BOBasePage {
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
-    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
+    this.paginationPreviousLink = `${this.gridPanel} [data-role=previous-page-link]`;
   }
 
   /* Header methods */
