@@ -1306,8 +1306,12 @@ class ProductCore extends ObjectModel
         if (count($this->id_shop_list)) {
             $id_shop_list = $this->id_shop_list;
         }
-        foreach ($id_shop_list as $shopId) {
-            StockAvailable::removeProductFromStockAvailable($this->id, null, new Shop($shopId));
+        if (!empty($id_shop_list)) {
+            foreach ($id_shop_list as $shopId) {
+                StockAvailable::removeProductFromStockAvailable($this->id, null, $shopId);
+            }
+        } else {
+            StockAvailable::removeProductFromStockAvailable($this->id);
         }
 
         // If there are still entries in product_shop, don't remove completely the product
@@ -8308,7 +8312,7 @@ class ProductCore extends ObjectModel
     /**
      * Checks if product si still associated to its default shop, if not update with the first association found.
      */
-    public function updateDefaultShop(): void
+    protected function updateDefaultShop(): void
     {
         // Update default shop if needed
         $hasDefaultShopAssociation = Db::getInstance()->getValue(
