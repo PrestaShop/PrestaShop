@@ -27,6 +27,13 @@ class Checkout extends FOBasePage {
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
     this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
     this.noPaymentNeededText = 'No payment needed for this order';
+    this.checkoutSummary = '#js-checkout-summary';
+    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
+    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
+    this.promoCodeArea = '#promo-code';
+    this.checkoutHavePromoInputArea = `${this.promoCodeArea} input.promo-input`;
+    this.checkoutPromoCodeAddButton = `${this.promoCodeArea} button.btn-primary`;
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -53,6 +60,7 @@ class Checkout extends FOBasePage {
 
     // Checkout address form
     this.addressStepSection = '#checkout-addresses-step';
+    this.addressStepContent = `${this.addressStepSection} div.content`;
     this.addressStepCompanyInput = `${this.addressStepSection} input[name='company']`;
     this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
@@ -74,6 +82,10 @@ class Checkout extends FOBasePage {
     this.deliveryAddressBlock = '#delivery-addresses';
     this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
     this.deliveryAddressPosition = position => `#delivery-addresses article:nth-child(${position})`;
+
+    this.cartTotalATI = '.cart-summary-totals span.value';
+    this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
+    this.cartRuleAlertMessagetext = 'You cannot use this voucher with this carrier';
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
@@ -117,6 +129,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Check if the Delivery Step is displayed
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isDeliveryStep(page) {
+    await this.waitForVisibleSelector(page, this.addressStepContent);
+    return this.elementVisible(page, this.addressStepContent);
+  }
+
+  /**
    * Choose delivery address
    * @param page {Page} Browser tab
    * @param position {number} Position of address to choose
@@ -137,6 +159,18 @@ class Checkout extends FOBasePage {
     await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
     await this.setValue(page, this.deliveryMessage, comment);
     return this.goToPaymentStep(page);
+  }
+
+  /**
+   * Choose shipping method and add a comment
+   * @param page {Page} Browser tab
+   * @param shippingMethod {number} Position of the shipping method
+   * @param comment {string} Comment to add after selecting a shipping method
+   * @returns {Promise<boolean>}
+   */
+  async chooseShippingMethodWithoutValidation(page, shippingMethod, comment = '') {
+    await this.waitForSelectorAndClick(page, this.deliveryOptionLabel(shippingMethod));
+    await this.setValue(page, this.deliveryMessage, comment);
   }
 
   /**
@@ -212,12 +246,36 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Set promo code
+   * @param page {Page} Browser tab
+   * @param code {string} The promo code
+   * @param clickOnCheckoutPromoCodeLink {boolean} True if we need to click on promo code link
+   * @returns {Promise<void>}
+   */
+  async addPromoCode(page, code, clickOnCheckoutPromoCodeLink = true) {
+    if (clickOnCheckoutPromoCodeLink) {
+      await page.click(this.checkoutHavePromoCodeButton);
+    }
+    await this.setValue(page, this.checkoutHavePromoInputArea, code);
+    await page.click(this.checkoutPromoCodeAddButton);
+  }
+
+  /**
    * Get all carriers names
    * @param page {Page} Browser tab
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersNames(page) {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
+  }
+
+  /**
+   * Go to Payment Step and check that delivery step is complete
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async goToShippingStep(page) {
+    await this.waitForSelectorAndClick(page, this.deliveryStepSection);
   }
 
   /**
@@ -244,6 +302,36 @@ class Checkout extends FOBasePage {
     ]);
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
+
+  /**
+   * Get All tax included price
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getATIPrice(page) {
+    return this.getPriceFromText(page, this.cartTotalATI, 2000);
+  }
+
+  /**
+   * Delete the discount
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async removePromoCode(page) {
+    await page.click(this.checkoutRemoveDiscountLink);
+    return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
+  }
+
+
+  /**
+   * Get cart rule error text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCartRuleErrorMessage(page) {
+    return this.getTextContent(page, this.cartRuleAlertMessage);
+  }
+
 
   /**
    * Order when no payment is needed

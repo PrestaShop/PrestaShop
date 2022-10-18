@@ -24,8 +24,7 @@ const testContext = require('@utils/testContext');
 const baseContext = 'functional_FO_productPage_quickView';
 
 // Import data
-const {customCartData} = require('@data/FO/cart');
-const {firstProductData} = require('@data/FO/product');
+const {Products} = require('@data/demo/products');
 const ProductFaker = require('@data/faker/product');
 
 let browserContext;
@@ -44,16 +43,16 @@ const productToCreate = {
 };
 const productData = new ProductFaker(productToCreate);
 const firstCheckProductDetails = {
-  name: customCartData.firstProduct.name,
-  price: customCartData.firstProduct.price,
+  name: Products.demo_1.name,
+  price: Products.demo_1.finalPrice,
   size: 'S',
   color: 'White',
   quantity: 1,
   shipping: 'Free',
 };
 const secondCheckProductDetails = {
-  name: customCartData.firstProduct.name,
-  price: customCartData.firstProduct.price,
+  name: Products.demo_1.name,
+  price: Products.demo_1.finalPrice,
   size: 'S',
   color: 'White',
   quantity: 2,
@@ -225,22 +224,22 @@ describe('FO - product page : Product quick view', async () => {
     it('should check product information from quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result = await homePage.getProductDetailsFromQuickViewModal(page);
+      let result = await homePage.getProductWithDiscountDetailsFromQuickViewModal(page);
       await Promise.all([
-        expect(result.name.toUpperCase()).to.equal(firstProductData.name),
-        expect(result.regularPrice).to.equal(firstProductData.regular_price),
-        expect(result.price).to.equal(firstProductData.price),
-        expect(result.discountPercentage).to.equal(firstProductData.discount_percentage),
-        expect(result.taxShippingDeliveryLabel).to.equal(firstProductData.tax_shipping_delivery),
-        expect(result.shortDescription).to.equal(firstProductData.short_description),
-        expect(result.coverImage).to.contains(firstProductData.cover_image),
-        expect(result.thumbImage).to.contains(firstProductData.thumb_image),
+        expect(result.name).to.equal(Products.demo_1.name),
+        expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
+        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.discountPercentage).to.equal(`Save ${Products.demo_1.discount}`),
+        expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
+        expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
+        expect(result.coverImage).to.contains(Products.demo_1.coverImage),
+        expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
 
       result = await homePage.getProductAttributesFromQuickViewModal(page);
       await Promise.all([
-        expect(result.size).to.equal(firstProductData.size),
-        expect(result.color).to.equal(firstProductData.color),
+        expect(result.size).to.equal('S M L XL'),
+        expect(result.color).to.equal('White Black'),
       ]);
     });
   });
@@ -289,11 +288,11 @@ describe('FO - product page : Product quick view', async () => {
 
       let result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
-        expect(result.name.toUpperCase()).to.equal(firstProductData.name),
-        expect(result.regularPrice).to.equal(firstProductData.regular_price),
-        expect(result.price).to.equal(firstProductData.price),
-        expect(result.discountPercentage).to.equal(firstProductData.discount),
-        expect(result.image).to.contains(firstProductData.cover_image),
+        expect(result.name).to.equal(Products.demo_1.name),
+        expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
+        expect(result.price).to.equal(Products.demo_1.finalPrice),
+        expect(result.discountPercentage).to.equal(`-${Products.demo_1.discount}`),
+        expect(result.image).to.contains(Products.demo_1.coverImage),
         expect(result.quantity).to.equal(combination.quantity),
         expect(result.totalPrice).to.equal(combination.totalPrice),
       ]);
@@ -326,7 +325,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.selectProductColor(page, 1, 'White');
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+      await expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should get product image Url and go back to home page', async function () {
@@ -345,7 +344,7 @@ describe('FO - product page : Product quick view', async () => {
       await homePage.selectProductColor(page, 1, 'Black');
 
       const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+      await expect(pageTitle).to.contains(Products.demo_1.name);
     });
 
     it('should product image be different from the ', async function () {

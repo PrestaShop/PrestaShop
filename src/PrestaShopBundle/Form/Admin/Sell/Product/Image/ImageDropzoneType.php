@@ -86,7 +86,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.dropImages' => $this->trans('Drop images here', 'Admin.Catalog.Feature'),
                 'window.selectFiles' => $this->trans('or select files', 'Admin.Catalog.Feature'),
                 'window.recommendedSize' => $this->trans('Recommended size 800 x 800px for default theme.', 'Admin.Catalog.Feature'),
-                'window.recommendedFormats' => $this->trans('JPG, GIF or PNG format.', 'Admin.Catalog.Feature'),
+                'window.recommendedFormats' => $this->trans('JPG, GIF, PNG or WebP format.', 'Admin.Catalog.Feature'),
                 'window.cover' => $this->trans('Cover', 'Admin.Catalog.Feature'),
                 'window.caption' => $this->trans('Caption', 'Admin.Catalog.Feature'),
             ],

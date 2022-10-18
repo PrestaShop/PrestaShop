@@ -1780,7 +1780,7 @@ services:
 
   form.type.sell.product.data_transformer.typeahead_redirection_target_transformer:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\TypeaheadRedirectionTargetTransformer'
-    deprecated: 'The "%service_id%" service is deprecated since 1.7.9 and will be removed in next major.'
+    deprecated: 'The "%service_id%" service is deprecated since 8.0.0 and will be removed in next major.'
     public: true
 
   form.type.sell.product.data_transformer.redirection_target_transformer:

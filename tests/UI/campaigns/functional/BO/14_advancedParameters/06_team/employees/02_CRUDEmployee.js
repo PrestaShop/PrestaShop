@@ -110,7 +110,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
     it('should sign in with new account and verify the default page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInWithCreatedEmployee', baseContext);
 
-      await loginPage.login(page, createEmployeeData.email, createEmployeeData.password);
+      await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
@@ -180,7 +180,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
       it('should sign in with edited account and verify the default page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithUpdatedEmployee', baseContext);
 
-        await loginPage.login(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
+        await loginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
         const pageTitle = await ordersPage.getPageTitle(page);
         await expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
@@ -238,7 +238,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
       it('should test sign in with the disabled employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithDisabledEmployee', baseContext);
 
-        await loginPage.login(page, secondEditEmployeeData.email, secondEditEmployeeData.password, false);
+        await loginPage.failedLogin(page, secondEditEmployeeData.email, secondEditEmployeeData.password);
         const loginError = await loginPage.getLoginError(page);
         await expect(loginError).to.contains(loginPage.loginErrorText);
       });
