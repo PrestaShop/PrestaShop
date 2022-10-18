@@ -84,8 +84,8 @@ class Order extends BOBasePage {
     this.paginationBlock = '.pagination-block';
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
+    this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridPanel} [data-role=previous-page-link]`;
   }
 
   /*

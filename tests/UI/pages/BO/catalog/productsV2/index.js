@@ -94,7 +94,7 @@ class Products extends BOBasePage {
     // Pagination
     this.paginationBlock = `${this.productGridPanel} div.pagination-block`;
     this.productsNumberLabel = `${this.paginationBlock} label.col-form-label`;
-    this.paginationNextLink = '.page-item.next:not(.disabled) #pagination_next_url';
+    this.paginationNextLink = '.page-item.next:not(.disabled) [data-role=next-page-link]';
   }
 
   /*
