@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use Link;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
@@ -46,28 +45,20 @@ class ControllerConfigurationFactory
     private $userProvider;
 
     /**
-     * @var Link
-     */
-    private $link;
-
-    /**
      * @var FlashBagInterface
      */
     private $flashBag;
 
     /**
      * @param UserProvider $userProvider
-     * @param Link $link
      * @param FlashBagInterface $flashBag
      */
     public function __construct(
         UserProvider $userProvider,
-        Link $link,
         FlashBagInterface $flashBag
     ) {
         $this->userProvider = $userProvider;
         $this->flashBag = $flashBag;
-        $this->link = $link;
     }
 
     /**
@@ -117,7 +108,10 @@ class ControllerConfigurationFactory
      */
     private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        $legacyCurrentIndex = $this->link->getAdminLink($controllerConfiguration->legacyControllerName);
+        // We do not use \Link->getAdminLink() because it produces wrong legacy currentIndex.
+        // Even though we could solve issues with "view" and "edit" links by using AdminLinkBuilder, the same issues appears
+        // with the "deletion", "duplicate", "enable" links and as it gets more complicated, it seems to be safer/easier to build the index url manually.
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
 
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);
