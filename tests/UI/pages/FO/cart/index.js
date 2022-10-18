@@ -16,6 +16,8 @@ class Cart extends FOBasePage {
 
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
+    this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address'
+    + ' before applying this voucher to your order';
 
     // Selectors for cart page
     // Shopping cart block selectors
@@ -49,9 +51,11 @@ class Cart extends FOBasePage {
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
 
     this.alertWarning = '.checkout.cart-detailed-actions.card-block div.alert.alert-warning';
-
+    
     this.proceedToCheckoutButton = '#main div.checkout a';
     this.disabledProceedToCheckoutButton = '#main div.checkout button.disabled';
+
+    this.alertPromoCode = '#promo-code > div > div > span';
   }
 
   /**
@@ -162,6 +166,15 @@ class Cart extends FOBasePage {
    */
   getAlertWarning(page) {
     return this.getTextContent(page, this.alertWarning);
+  }
+
+  /**
+   * Get alert warning
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAlertWarningForDeliveryAdress(page) {
+    return this.getTextContent(page, this.alertPromoCode);
   }
 
   /**
