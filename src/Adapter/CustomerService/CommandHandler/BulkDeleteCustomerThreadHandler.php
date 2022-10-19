@@ -41,11 +41,11 @@ class BulkDeleteCustomerThreadHandler implements BulkDeleteCustomerThreadHandler
             $customerThread = new CustomerThread($customerThreadId->getValue());
 
             if (0 >= $customerThread->id) {
-                throw new CustomerThreadNotFoundException(sprintf('Unable to find customer thread with id "%d" for deletion', $command->getCustomerThreadId()->getValue()));
+                throw new CustomerThreadNotFoundException(sprintf('Unable to find customer thread with id "%d" for deletion', $customerThreadId->getValue()));
             }
 
             if (!$customerThread->delete()) {
-                throw new CustomerThreadNotFoundException(sprintf('Cannot delete customer thread with id "%d"', $command->getCustomerThreadId()->getValue()), CustomerThreadNotFoundException::FAILED_DELETE);
+                throw new CustomerThreadNotFoundException(sprintf('Cannot delete customer thread with id "%d"', $customerThreadId->getValue()), CustomerThreadNotFoundException::FAILED_DELETE);
             }
         }
     }

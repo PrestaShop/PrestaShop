@@ -76,7 +76,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $statusProvider;
 
     /**
-     * @var ShopNameByIdChoiceProvider
+     * @var FormChoiceProviderInterface
      */
     private $shopNameByIdChoiceProvider;
 

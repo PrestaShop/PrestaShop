@@ -350,7 +350,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (CustomerThreadNotFoundException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_customer_threads');
