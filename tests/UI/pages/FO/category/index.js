@@ -35,6 +35,7 @@ class Category extends FOBasePage {
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
+    this.categoryDescription = '#category-description';
   }
 
   /* Methods */
@@ -147,6 +148,15 @@ class Category extends FOBasePage {
    */
   isQuickViewProductModalVisible(page) {
     return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
+   * Get category description
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getCategoryDescription(page) {
+    return this.getTextContent(page, this.categoryDescription, 1000);
   }
 }
 
