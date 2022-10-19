@@ -143,6 +143,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('description', TranslatableType::class, [
                 'label' => $this->trans('Description', 'Admin.Global'),
+                'help' => $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
                 'required' => false,
                 'options' => [
@@ -154,8 +155,9 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
             ])
             ->add('additional_description', TranslatableType::class, [
+                'label' => $this->trans('Additional description', 'Admin.Catalog.Feature'),
+                'help' => $genericCharactersHint,
                 'type' => FormattedTextareaType::class,
-                'hideTabs' => false,
                 'required' => false,
                 'options' => [
                     'constraints' => [
