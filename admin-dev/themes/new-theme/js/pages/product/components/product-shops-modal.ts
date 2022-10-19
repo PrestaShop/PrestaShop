@@ -28,6 +28,15 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {FormIframeModal} from '@components/modal';
 import IframeEvent from '@components/modal/iframe-event';
 
+/**
+ * This component is bound to any Create product button (via a class selector). On button click
+ * it opens an iframe modal, in the iframe the shop selection page is displayed and allows you to
+ * add/remove some shops to the product and then submit the modification.
+ *
+ * When the shop selection form page is submitted this component catches the refresh event, and
+ * checks if the modification has succeeded based on the form data attributes. On success the page
+ * is refreshed to show the updated product form.
+ */
 export default class ProductShopsModal {
   private router: Router;
 
@@ -42,26 +51,23 @@ export default class ProductShopsModal {
       const $link = $(event.target);
       const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
 
-      this.openCreationModal(linkUrl);
+      this.openCreationModal(linkUrl, $link.text());
     });
   }
 
-  private openCreationModal(linkUrl: string): void {
+  private openCreationModal(linkUrl: string, modalTitle: string): void {
     const iframeModal = new FormIframeModal({
       id: ProductMap.shops.modalId,
       formSelector: ProductMap.shops.form,
       formUrl: linkUrl,
       closable: true,
+      modalTitle,
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
       // are not computed in the size)
       autoSizeContainer: ProductMap.shops.modalSizeContainer,
       onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes) {
           const successAlertsCount = Number(dataAttributes.alertsSuccess);
-
-          if (dataAttributes.modalTitle) {
-            iframeModal.setTitle(dataAttributes.modalTitle);
-          }
 
           if (successAlertsCount) {
             const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});

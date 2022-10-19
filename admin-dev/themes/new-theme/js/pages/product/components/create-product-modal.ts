@@ -26,6 +26,16 @@ import Router from '@components/router';
 import ProductMap from '@pages/product/product-map';
 import {FormIframeModal} from '@components/modal';
 
+/**
+ * This component is bound to any Create product button (via a class selector). On button click
+ * it opens an iframe modal, in the iframe the create product page is displayed, allowing you to
+ * select the product type (and maybe initial shop) and then you can submit the form.
+ *
+ * When the creations success the edition form is displayed, at this moment this component catches
+ * the refresh even from the iframe and gets the product ID thanks to the edit form data attributes.
+ *
+ * Finally, it opens the edition page of the created product in the current tab.
+ */
 export default class CreateProductModal {
   private router: Router;
 

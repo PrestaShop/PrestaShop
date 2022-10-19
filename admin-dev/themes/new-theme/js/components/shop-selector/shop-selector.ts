@@ -26,6 +26,16 @@ import ComponentsMap from '@components/components-map';
 
 import ClickEvent = JQuery.ClickEvent;
 
+/**
+ * Component that handle shop selector, basically a select input customized for better UI.
+ * The layout is found in the shop_selector_widget from src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/multishop.html.twig
+ *
+ * The component is configurable, it can be multiple or not:
+ * - in single mode the only selected shop is highlighted
+ * - in multiple mode you can select several shops, their initial state is also known which allows to update a label to indicate their state Add/Removed
+ *
+ * In both cases on interaction the related input triggers a change event so that other components can watch it.
+ */
 export default class ShopSelector {
   constructor() {
     $(ComponentsMap.shopSelector.container).each((index, container) => {
