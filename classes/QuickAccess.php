@@ -24,6 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+
 /**
  * Class QuickAccessCore.
  */
@@ -105,6 +108,13 @@ class QuickAccessCore extends ObjectModel
                     $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
                 $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
+                if ($quick['link'] === 'index.php/sell/catalog/products/new' || $quick['link'] === 'index.php/sell/catalog/products-v2/create') {
+                    //if new product page feature is enabled we create new product v2 modal popup
+                    if (self::productPageV2Enabled()) {
+                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
+                        $quickAccess[$index]['class'] = 'new-product-button';
+                    }
+                }
             }
 
             if (false === strpos($quickAccess[$index]['link'], 'token')) {
@@ -134,5 +144,19 @@ class QuickAccessCore extends ObjectModel
         $this->new_window = !(int) $this->new_window;
 
         return $this->update(false);
+    }
+
+    /**
+     * @return bool
+     */
+    private static function productPageV2Enabled(): bool
+    {
+        $multistoreFeature = SymfonyContainer::getInstance()->get('prestashop.adapter.multistore_feature');
+
+        if (!$multistoreFeature->isActive()) {
+            return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        }
+
+        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
     }
 }

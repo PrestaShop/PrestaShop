@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +21,10 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
-{% endblock %}
+import CreateProductModal from '@pages/product/components/create-product-modal';
 
-{% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form justify-content-md-center product-form', 'novalidate': 'novalidate'}}) }}
-    {% block product_creation_form %}
-      {{ form_row(productForm) }}
-    {% endblock %}
-
-  {% block product_rest %}
-    {{ form_end(productForm) }}
-  {% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/product_create.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new CreateProductModal();
+});

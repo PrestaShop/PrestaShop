@@ -42,7 +42,7 @@ export default class CreateProductModal {
 
       const iframeModal = new FormIframeModal({
         id: 'modal-create-product',
-        formSelector: 'form[name="product"]',
+        formSelector: ProductMap.create.form,
         formUrl: linkUrl,
         closable: true,
         // We override the body selector so that the modal keeps the size of the initial create form even after submit
