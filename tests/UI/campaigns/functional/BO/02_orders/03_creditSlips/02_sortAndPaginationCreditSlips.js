@@ -41,7 +41,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-let numberOfCreditSlips = 1;
+let numberOfCreditSlips = 3;
 const todayDate = getDateFormat('yyyy-mm-dd');
 const todayDateToCheck = getDateFormat('mm/dd/yyyy');
 const orderByCustomerData = {
@@ -62,69 +62,161 @@ Scenario:
 - Download the 2 credit slip files and check them
  */
 describe('BO - Orders - Credit Slips - Sort & Pagination Credit Slips', async () => {
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
   // Pre-condition: Create 7 order in FO
   for (let i = 0; i < numberOfCreditSlips; i++) {
     createOrderByCustomerTest(orderByCustomerData, baseContext);
-  }
-
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
-  describe('Create 2 credit slips for the same order', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
+  
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
     });
 
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
     });
+  };
 
-    it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+  for (let i = 0; i < numberOfCreditSlips; i++) {
+    describe('Create credit slips for each order', async () => {
+      // before and after functions
+      before(async function () {
+        browserContext = await helper.createBrowserContext(this.browser);
+        page = await helper.newTab(browserContext);
+      });
 
-      await ordersPage.goToOrder(page, 1);
+      after(async () => {
+        await helper.closeBrowserContext(browserContext);
+      });
+      //************* awaitingCheckPayment */
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+
+        await ordersPage.goToOrder(page, i+1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.awaitingCheckPayment.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
+        
+        // const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.awaitingCheckPayment.status);
+        await expect(result).to.equal(Statuses.awaitingCheckPayment.status);
+      });
+
+      //************* paymentAccepted */
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+
+        await ordersPage.goToOrder(page, i+2);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
+        
+        // const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+        await expect(result).to.equal(Statuses.paymentAccepted.status);
+      });
+
+      //************* shipped */
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+
+        await ordersPage.goToOrder(page, i+3);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
+        
+        // const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
+        await expect(result).to.equal(Statuses.shipped.status);
+      });
+
+      //************* delivered */
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should go to the first order page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
+
+        await ordersPage.goToOrder(page, i+3);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it(`should change the order status to '${Statuses.delivered.status}' and check it`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
+        
+        // const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.delivered.status);
+        await expect(result).to.equal(Statuses.delivered.status);
+      });
+
     });
-
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
-      
-      // const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.status);
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
-    });
-
-    // it(`should create the partial refund n°`, async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund`, baseContext);
-
-    //   await orderPageTabListBlock.clickOnPartialRefund(page);
-
-    //   const textMessage = await orderPageProductsBlock.addPartialRefundProduct(
-    //     page,
-    //     test.args.productID,
-    //     test.args.quantity,
-    //   );
-    //   await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
-    // });
-
-  });
-
+  };
 });
