@@ -57,7 +57,8 @@ export default class CreateProductModal {
   private openCreationModal(linkUrl: string): void {
     const iframeModal = new FormIframeModal({
       id: ProductMap.create.modalId,
-      formSelector: ProductMap.create.form,
+      // We use the edit form selector because it's the one we need to get data attributes from
+      formSelector: ProductMap.productForm,
       formUrl: linkUrl,
       closable: true,
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
