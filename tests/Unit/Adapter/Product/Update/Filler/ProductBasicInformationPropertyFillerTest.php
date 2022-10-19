@@ -27,47 +27,27 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductBasicInformationPropertyFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Product;
 
-class ProductBasicInformationPropertyFillerTest extends TestCase
+class ProductBasicInformationPropertyFillerTest extends PropertyFillerTestCase
 {
-    private const DEFAULT_LANG_ID = 1;
-    private const DEFAULT_SHOP_ID = 2;
-    private const PRODUCT_ID = 3;
-
     /**
-     * @var ProductBasicInformationPropertyFiller
+     * @return ProductUpdatablePropertyFillerInterface
      */
-    private $basicInformationFiller;
-
-    public function setUp(): void
+    public function getFiller(): ProductUpdatablePropertyFillerInterface
     {
-        parent::setUp();
-        $this->basicInformationFiller = new ProductBasicInformationPropertyFiller(
+        return new ProductBasicInformationPropertyFiller(
             self::DEFAULT_LANG_ID,
             $this->mockTools()
         );
     }
 
     /**
-     * @dataProvider getExpectedData
-     */
-    public function testFillsUpdatableProperties(UpdateProductCommand $command, array $expectedUpdatableProperties): void
-    {
-        $product = $this->mockProduct();
-
-        $this->assertSame($expectedUpdatableProperties, $this->basicInformationFiller->fillUpdatableProperties($product, $command));
-    }
-
-    /**
      * @return iterable
      */
-    public function getExpectedData(): iterable
+    public function getDataForTestFillsUpdatableProperties(): iterable
     {
         $command = $this->getEmptyCommand();
 
@@ -108,28 +88,6 @@ class ProductBasicInformationPropertyFillerTest extends TestCase
                 'description_short' => [self::DEFAULT_LANG_ID, 2],
             ],
         ];
-    }
-
-    /**
-     * @return UpdateProductCommand
-     */
-    private function getEmptyCommand(): UpdateProductCommand
-    {
-        return new UpdateProductCommand(self::PRODUCT_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID));
-    }
-
-    /**
-     * @return Product
-     */
-    private function mockProduct(): Product
-    {
-        $product = $this->createMock(Product::class);
-        $product->name = [];
-        $product->description = [];
-        $product->description_short = [];
-        $product->link_rewrite = [];
-
-        return $product;
     }
 
     /**
