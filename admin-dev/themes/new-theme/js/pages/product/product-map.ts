@@ -56,6 +56,7 @@ export default {
     createModalSelector: '#create_product_type',
     modalId: 'modal-create-product',
     form: 'form.product-form',
+    createFieldId: '#create_product',
     modalSizeContainer: '.create-product-form',
   },
   shops: {

@@ -36,10 +36,10 @@ $(() => {
   const $shopSelectorInput = $(ComponentsMap.shopSelector.selectInput);
   const $shopSelectorGroup = $shopSelectorInput.parents('.form-group').first();
 
-  // If multishop is enabled the shop selector will be present
+  // If multi shop is enabled the shop selector will be present
   if ($shopSelectorGroup.length > 0) {
     // Hide all other form groups and only show the shop selector first
-    const $formGroups = $('#product > .form-group');
+    const $formGroups = $(`${ProductMap.create.createFieldId} > .form-group`);
     $formGroups.hide();
     $shopSelectorGroup.show();
 
