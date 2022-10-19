@@ -34,5 +34,5 @@ class CustomerThreadNotFoundException extends CustomerServiceException
     /**
      * Failed to delete customer thread
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 }
