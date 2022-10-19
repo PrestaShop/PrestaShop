@@ -210,7 +210,6 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'shopName',
                     ])
             )
-            //todo: change it to ToggleColumn when toggle status route is created
             ->add(
                 (new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))

@@ -54,7 +54,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CustomerThreadController extends FrameworkBundleAdminController
 {
     /**
-     * Update customer thread status
+     * Show list of customer threads
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
@@ -76,6 +76,8 @@ class CustomerThreadController extends FrameworkBundleAdminController
     }
 
     /**
+     * View customer thread
+     *
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller'))",
      *     message="You do not have permission to view this.",
