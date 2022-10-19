@@ -123,14 +123,14 @@ class CombinationCore extends ObjectModel
         }
 
         if (count($this->id_shop_list)) {
-            $id_shop_list = $this->id_shop_list;
+            $shopIdsList = $this->id_shop_list;
         } else {
-            $id_shop_list = Shop::getContextListShopID();
+            $shopIdsList = Shop::getContextListShopID();
         }
 
         // Removes the product from StockAvailable for the related shops
-        if (!empty($id_shop_list)) {
-            foreach ($id_shop_list as $shopId) {
+        if (!empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
                 StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $shopId);
             }
         } else {
@@ -208,11 +208,19 @@ class CombinationCore extends ObjectModel
         }
 
         $product = new Product((int) $this->id_product);
-        if ($product->getType() == Product::PTYPE_VIRTUAL) {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, 1, null, (int) $this->id);
+
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
         } else {
-            // this creates stock_available for combination as a side effect if it doesn't exist yet
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product, $this->id_shop), $this->id_shop, $this->id);
+            $shopIdsList = Shop::getContextListShopID();
+        }
+
+        if ($product->getType() == Product::PTYPE_VIRTUAL && !empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
+                StockAvailable::setProductOutOfStock((int) $this->id_product, 1, $shopId, (int) $this->id);
+            }
+        } else {
+            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), null, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
