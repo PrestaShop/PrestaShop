@@ -28,6 +28,10 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 ob_start();
 
+if (!defined('_PS_API_IN_USE_')) {
+    define('_PS_API_IN_USE_', true);
+}
+
 require_once dirname(__FILE__) . '/../config/config.inc.php';
 
 // Cart is needed for some requests
