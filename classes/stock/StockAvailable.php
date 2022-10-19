@@ -646,6 +646,12 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
+        if (null !== $shop) {
+            if (!($shop instanceof Shop)) {
+                $shop = new Shop($shop);
+            }
+        }
+
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
             if (Shop::getContextShopGroup()->share_stock == 1) {
                 $pa_sql = '';
