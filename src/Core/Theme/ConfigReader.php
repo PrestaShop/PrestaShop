@@ -33,6 +33,12 @@ use Symfony\Component\Yaml\Parser;
 
 class ConfigReader implements ConfigReaderInterface
 {
+    public const DEFAULT_CONFIGURATION_THEME = [
+        'display_name' => 'N/A',
+        'version' => 'N/A',
+        'preview' => 'themes/preview-fallback.png',
+    ];
+
     /**
      * @var string
      */
@@ -58,6 +64,7 @@ class ConfigReader implements ConfigReaderInterface
         if (file_exists($this->themesDirectoryPath . $name . '/preview.png')) {
             $themeData['preview'] = 'themes/' . $name . '/preview.png';
         }
+        $themeData = array_merge(self::DEFAULT_CONFIGURATION_THEME, $themeData);
 
         return new ArrayFinder($themeData);
     }
