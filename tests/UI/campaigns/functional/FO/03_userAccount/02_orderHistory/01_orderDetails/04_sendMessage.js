@@ -146,6 +146,13 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
+    it('should reset all filters ', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
+
     it(`should update order status to '${Statuses.paymentAccepted.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
