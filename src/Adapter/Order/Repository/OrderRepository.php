@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
@@ -49,10 +50,23 @@ class OrderRepository extends AbstractObjectModelRepository
      */
     public function get(OrderId $orderId): Order
     {
-        /* @var Order $orderReturn */
-        $order = $this->getObjectModel($orderId->getValue(), Order::class, OrderNotFoundException::class);
-        if (!($order instanceof Order)) {
-            throw new OrderException(sprintf('Must be instance of %s', Order::class));
+        try {
+            $order = new Order($orderId->getValue());
+
+            if ($order->id !== $orderId->getValue()) {
+                throw new OrderNotFoundException($orderId, sprintf('%s #%d was not found', Order::class, $orderId->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    Order::class,
+                    $orderId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
 
         return $order;
