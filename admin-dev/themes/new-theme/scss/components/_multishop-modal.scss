@@ -132,13 +132,19 @@ $component-name: multishop-modal;
       margin-bottom: 1.425rem;
     }
 
-    &:not(:nth-child(2)) {
+    &:not(.first-group-item) {
       margin-top: 3.4rem;
     }
   }
 
-  &-shop-item:not(:last-of-type) {
-    margin-bottom: 1.275rem;
+  &-shop-item {
+    /* stylelint-disable declaration-no-important */
+    padding-left: 1rem !important;
+    /* stylelint-enable declaration-no-important */
+
+    &:not(:last-of-type) {
+      margin-bottom: 1.275rem;
+    }
   }
 
   &-color {

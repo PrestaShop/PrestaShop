@@ -61,14 +61,13 @@ class MultistoreController extends FrameworkBundleAdminController
     public $entityManager;
 
     /**
-     * This methods returns a Response object containing the multistore header displayed at the top of migrated pages
+     * This method returns a Response object containing the multistore header displayed at the top of migrated pages
      *
      * @param bool $lockedToAllShopContext
-     * @param int|null $productId
      *
      * @return Response
      */
-    public function header(bool $lockedToAllShopContext, int $productId = null): Response
+    public function header(bool $lockedToAllShopContext): Response
     {
         if (!$this->multistoreFeature->isUsed()) {
             return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
@@ -76,64 +75,50 @@ class MultistoreController extends FrameworkBundleAdminController
             ]);
         }
 
-        $isAllShopContext = $this->multistoreContext->isAllShopContext();
-        $isShopContext = $this->multistoreContext->isShopContext();
-        $colorConfigLink = false;
-
-        if ($isShopContext) {
-            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multistoreContext->getContextShopID()]);
-            $colorConfigLink = $this->getAdminLink('AdminShop', ['shop_id' => $currentContext->getId(), 'updateshop' => true]);
-        } elseif (!$isAllShopContext) {
-            $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
-            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
-            $colorConfigLink = $this->getAdminLink('AdminShopGroup', ['id_shop_group' => $currentContext->getId(), 'updateshop_group' => true]);
-        } else {
-            // use ShopGroup object as a the container for "all shops" context so that it can be used transparently in twig
-            $currentContext = new ShopGroup();
-            $currentContext->setName($this->trans('All shops', 'Admin.Global'));
-            $currentContext->setColor('');
-        }
-
         $groupList = [];
         if (!$lockedToAllShopContext) {
             $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+        }
 
-            // Filter shops that are not associated to product
-            if (!empty($productId)) {
-                $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
-                $productShops = $productRepository->getAssociatedShopIds(new ProductId($productId));
+        return $this->renderHeader('@PrestaShop/Admin/Multistore/header.html.twig', [
+            'groupList' => $groupList,
+            'lockedToAllShopContext' => $lockedToAllShopContext,
+        ]);
+    }
 
-                if (!empty($productShops)) {
-                    $productShopIds = array_map(function (ShopId $shopId) {
-                        return $shopId->getValue();
-                    }, $productShops);
+    /**
+     * This method returns a Response object containing the multistore header displayed at the top of product page
+     *
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function productHeader(int $productId): Response
+    {
+        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
-                    /** @var ShopGroup $shopGroup */
-                    foreach ($groupList as $shopGroup) {
-                        /** @var Shop $shop */
-                        foreach ($shopGroup->getShops() as $shop) {
-                            if (!in_array($shop->getId(), $productShopIds)) {
-                                $shopGroup->getShops()->removeElement($shop);
-                            }
-                        }
+        // Filter shops that are not associated to product
+        $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+        $productShops = $productRepository->getAssociatedShopIds(new ProductId($productId));
+
+        if (!empty($productShops)) {
+            $productShopIds = array_map(function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $productShops);
+
+            /** @var ShopGroup $shopGroup */
+            foreach ($groupList as $shopGroup) {
+                /** @var Shop $shop */
+                foreach ($shopGroup->getShops() as $shop) {
+                    if (!in_array($shop->getId(), $productShopIds)) {
+                        $shopGroup->getShops()->removeElement($shop);
                     }
                 }
             }
         }
 
-        $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
-
-        return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
-            'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
-            'currentContext' => $currentContext,
+        return $this->renderHeader('@PrestaShop/Admin/Multistore/product_header.html.twig', [
             'groupList' => $groupList,
-            'isShopContext' => $isShopContext,
-            'link' => $this->getContext()->link,
-            'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
-            'isAllShopContext' => $isAllShopContext,
-            'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
-            'lockedToAllShopContext' => $lockedToAllShopContext,
-            'colorConfigLink' => !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false,
             'productId' => $productId,
         ]);
     }
@@ -265,5 +250,46 @@ class MultistoreController extends FrameworkBundleAdminController
         }
 
         return false;
+    }
+
+    /**
+     * @param string $headerTemplate Header template to use
+     * @param array $templateVars Additional template variables that can add new vars or overwrite default ones
+     *
+     * @return Response
+     */
+    private function renderHeader(string $headerTemplate, array $templateVars): Response
+    {
+        $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
+        $isAllShopContext = $this->multistoreContext->isAllShopContext();
+        $isShopContext = $this->multistoreContext->isShopContext();
+        $colorConfigLink = false;
+
+        if ($isShopContext) {
+            $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multistoreContext->getContextShopID()]);
+            $colorConfigLink = $this->getAdminLink('AdminShop', ['shop_id' => $currentContext->getId(), 'updateshop' => true]);
+        } elseif (!$isAllShopContext) {
+            $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
+            $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
+            $colorConfigLink = $this->getAdminLink('AdminShopGroup', ['id_shop_group' => $currentContext->getId(), 'updateshop_group' => true]);
+        } else {
+            // use ShopGroup object as the container for "all shops" context so that it can be used transparently in twig
+            $currentContext = new ShopGroup();
+            $currentContext->setName($this->trans('All shops', 'Admin.Global'));
+            $currentContext->setColor('');
+        }
+
+        return $this->render($headerTemplate, array_merge([
+            'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
+            'currentContext' => $currentContext,
+            'groupList' => [],
+            'isShopContext' => $isShopContext,
+            'link' => $this->getContext()->link,
+            'isTitleDark' => empty($currentContext->getColor()) ? true : $colorBrightnessCalculator->isBright($currentContext->getColor()),
+            'isAllShopContext' => $isAllShopContext,
+            'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
+            'lockedToAllShopContext' => false,
+            'colorConfigLink' => !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false,
+        ], $templateVars));
     }
 }

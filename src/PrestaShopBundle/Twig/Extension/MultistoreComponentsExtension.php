@@ -80,6 +80,6 @@ class MultistoreComponentsExtension extends AbstractExtension
      */
     public function getMultistoreProductHeader(int $productId): string
     {
-        return $this->multistoreController->header(false, $productId)->getContent();
+        return $this->multistoreController->productHeader($productId)->getContent();
     }
 }
