@@ -41,7 +41,6 @@ import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 import PackedProductsManager from '@pages/product/edit/packed-products-manager';
-import CreateProductModal from '@pages/product/components/create-product-modal';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
@@ -96,7 +95,6 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.PACK) {
     new PackedProductsManager(eventEmitter);
   }
-  new CreateProductModal();
   new PriceSummary(productFormModel);
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);

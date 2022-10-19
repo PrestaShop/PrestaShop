@@ -2660,14 +2660,29 @@ class AdminControllerCore extends Controller
 
             // Specific Admin Theme
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
+            $username = $this->get('prestashop.user_provider')->getUsername();
+            $token = $this->get('security.csrf.token_manager')
+                ->getToken($username)
+                ->getValue();
+
+            $this->context->smarty->assign([
+                'js_router_metadata' => [
+                    'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
+                    'token' => $token,
+                ],
+            ]);
         }
 
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product_default_theme.css', 'all', 0);
         $this->addJS([
             _PS_JS_DIR_ . 'admin.js?v=' . _PS_VERSION_, // TODO: SEE IF REMOVABLE
             __PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/cldr.bundle.js',
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ]);
+
+        // This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file
+        $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
         Media::addJsDef([
             'changeFormLanguageUrl' => $this->context->link->getAdminLink(

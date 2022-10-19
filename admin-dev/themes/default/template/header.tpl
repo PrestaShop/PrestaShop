@@ -112,7 +112,9 @@
 </head>
 
 {if $display_header}
-  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$controller_name|escape|strtolower}">
+<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$controller_name|escape|strtolower}"
+      {if isset($js_router_metadata.base_url)}data-base-url="{$js_router_metadata.base_url}"{/if}
+      {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
   {* begin  HEADER *}
   <header id="header" class="bootstrap">
     <nav id="header_infos" role="navigation">
@@ -134,8 +136,8 @@
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
                 <li class="quick-row-link{if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access} active{/if}">
-                  <a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
-                    {$quick.name}
+                  <a {if isset($quick.class)}class="{$quick.class}"{/if} href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window}target="_blank"{/if}>
+                      {$quick.name}
                   </a>
                 </li>
               {/foreach}
