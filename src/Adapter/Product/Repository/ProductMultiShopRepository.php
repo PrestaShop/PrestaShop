@@ -352,11 +352,8 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
         // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
         $product = $this->getProductByDefaultShop($productId);
-        $intShopIds = array_map(function (ShopId $shopId) {
-            return $shopId->getValue();
-        }, $shopIds);
 
-        $this->deleteObjectModelFromShops($product, $intShopIds, CannotDeleteProductException::class);
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
     }
 
     /**
