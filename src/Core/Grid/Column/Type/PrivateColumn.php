@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Displays order price
+ * Displays locks on private column
  */
 final class PrivateColumn extends AbstractColumn
 {

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class CustomerGridDataFactoryDecorator decorates data from customer doctrine data factory.
+ * Class decorates data from customer thread doctrine data factory by adding colors for status inputs.
  */
 final class CustomerThreadGridDataFactoryDecorator implements GridDataFactoryInterface
 {
