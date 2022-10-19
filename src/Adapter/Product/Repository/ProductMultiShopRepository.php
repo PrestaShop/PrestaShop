@@ -375,9 +375,9 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         );
 
         $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
-        $productShopIds = array_map(function ($result) {
-            return (int) $result['id_shop'];
-        }, Product::getShopsByProduct($productId->getValue()));
+        $productShopIds = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $this->getAssociatedShopIds($productId));
 
         $combinationIdForDefaultShop = null;
         $combinationShopIds = [];
