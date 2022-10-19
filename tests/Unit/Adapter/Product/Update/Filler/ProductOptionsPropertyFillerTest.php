@@ -41,17 +41,21 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
      *
      * @param Product $product
      * @param UpdateProductCommand $command
-     * @param array $expectedUpdatableProperties
+     * @param array<int|string, string|int[]> $expectedUpdatableProperties
+     * @param Product $expectedProduct
      */
     public function testFillsShowPriceAndAvailableForOrderProperties(
         Product $product,
         UpdateProductCommand $command,
-        array $expectedUpdatableProperties
+        array $expectedUpdatableProperties,
+        Product $expectedProduct
     ): void {
         $this->assertSame(
             $expectedUpdatableProperties,
             $this->getFiller()->fillUpdatableProperties($product, $command)
         );
+
+        $this->assertEquals($product, $expectedProduct);
     }
 
     /**
@@ -59,13 +63,16 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
      */
     public function getDataForTestShowPriceAndAvailableForOrderProperties(): iterable
     {
-        $product = $this->mockProduct();
+        $product = $this->mockDefaultProduct();
         $product->show_price = false;
 
+        // when available_for_order is set to true, then show_price must be forced to true
         $command = $this
             ->getEmptyCommand()
             ->setAvailableForOrder(true)
         ;
+
+        $expectedProduct = $this->mockDefaultProduct();
 
         yield [
             $product,
@@ -74,23 +81,11 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
                 'available_for_order',
                 'show_price',
             ],
+            $expectedProduct,
         ];
 
-        $product = $this->mockProduct();
-        $command = $this
-            ->getEmptyCommand()
-            ->setAvailableForOrder(true)
-        ;
-
-        //@todo: now the command input doesn't change the value of previous product state, should we still update it?
-        //       Or should we care to add checks if product value changed and only then update it?
-        yield [
-            $product,
-            $command,
-            [
-                'available_for_order',
-            ],
-        ];
+        $product = $this->mockDefaultProduct();
+        $product->show_price = false;
 
         $command = $this
             ->getEmptyCommand()
@@ -98,6 +93,10 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
             ->setShowPrice(true)
         ;
 
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->available_for_order = false;
+        $expectedProduct->show_price = true;
+
         yield [
             $product,
             $command,
@@ -105,19 +104,45 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
                 'available_for_order',
                 'show_price',
             ],
+            $expectedProduct,
+        ];
+
+        $product = $this->mockDefaultProduct();
+        $product->available_for_order = false;
+        $product->show_price = false;
+
+        $command = $this
+            ->getEmptyCommand()
+            ->setShowPrice(true)
+        ;
+
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->available_for_order = false;
+        $expectedProduct->show_price = true;
+
+        yield [
+            $product,
+            $command,
+            [
+                'show_price',
+            ],
+            $expectedProduct,
         ];
     }
 
     public function getDataForTestFillsUpdatableProperties(): iterable
     {
         $command = $this->getEmptyCommand();
-        yield [$command, []];
+        yield [$command, [], $this->mockDefaultProduct()];
 
         $command = $this
             ->getEmptyCommand()
             ->setVisibility(ProductVisibility::VISIBLE_IN_CATALOG)
             ->setCondition(ProductCondition::USED)
         ;
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->visibility = ProductVisibility::VISIBLE_IN_CATALOG;
+        $expectedProduct->condition = ProductCondition::USED;
 
         yield [
             $command,
@@ -125,6 +150,7 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
                 'visibility',
                 'condition',
             ],
+            $expectedProduct,
         ];
 
         $command = $this
@@ -136,6 +162,12 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
             ->setAvailableForOrder(false)
             ->setShowPrice(false)
         ;
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->visibility = ProductVisibility::INVISIBLE;
+        $expectedProduct->show_condition = true;
+        $expectedProduct->id_manufacturer = 10;
+        $expectedProduct->available_for_order = false;
+        $expectedProduct->show_price = false;
 
         yield [
             $command,
@@ -147,6 +179,7 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
                 'show_condition',
                 'id_manufacturer',
             ],
+            $expectedProduct,
         ];
     }
 

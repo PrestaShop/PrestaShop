@@ -51,7 +51,7 @@ class ProductBasicInformationPropertyFillerTest extends PropertyFillerTestCase
     {
         $command = $this->getEmptyCommand();
 
-        yield [$command, []];
+        yield [$command, [], $this->mockDefaultProduct()];
 
         $command = $this
             ->getEmptyCommand()
@@ -60,25 +60,34 @@ class ProductBasicInformationPropertyFillerTest extends PropertyFillerTestCase
                 2 => 'Your name',
             ])
         ;
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->name = [
+            self::DEFAULT_LANG_ID => 'My name',
+            2 => 'Your name',
+        ];
 
         yield [
             $command,
             ['name' => [self::DEFAULT_LANG_ID, 2]],
+            $expectedProduct,
         ];
 
         $command = $this
             ->getEmptyCommand()
-            ->setLocalizedNames([
-                self::DEFAULT_LANG_ID => 'My name',
-            ])
+            ->setLocalizedNames([self::DEFAULT_LANG_ID => 'My name'])
             ->setLocalizedShortDescriptions([
                 self::DEFAULT_LANG_ID => 'short desc 1',
                 2 => 'short desc 2',
             ])
-            ->setLocalizedDescriptions([
-                self::DEFAULT_LANG_ID => 'desc 1',
-            ])
+            ->setLocalizedDescriptions([self::DEFAULT_LANG_ID => 'desc 1'])
         ;
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->name = [self::DEFAULT_LANG_ID => 'My name'];
+        $expectedProduct->description_short = [
+            self::DEFAULT_LANG_ID => 'short desc 1',
+            2 => 'short desc 2',
+        ];
+        $expectedProduct->description = [self::DEFAULT_LANG_ID => 'desc 1'];
 
         yield [
             $command,
@@ -87,6 +96,7 @@ class ProductBasicInformationPropertyFillerTest extends PropertyFillerTestCase
                 'description' => [self::DEFAULT_LANG_ID],
                 'description_short' => [self::DEFAULT_LANG_ID, 2],
             ],
+            $expectedProduct,
         ];
     }
 
