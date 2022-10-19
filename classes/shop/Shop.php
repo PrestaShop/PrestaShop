@@ -397,7 +397,7 @@ class ShopCore extends ObjectModel
         );
 
         $isAllShop = 'all' === $id_shop;
-        $isApiInUse = defined('_PS_API_IN_USE_') && _PS_API_IN_USE_;
+        $isApiInUse = defined('_PS_API_IN_USE_') && _PS_API_IN_USE_ === true;
         if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || ($isAllShop && $isApiInUse) || Tools::isPHPCLI() || in_array($http_host, $all_media)) {
             // If in admin, we can access to the shop without right URL
             if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_')) {
