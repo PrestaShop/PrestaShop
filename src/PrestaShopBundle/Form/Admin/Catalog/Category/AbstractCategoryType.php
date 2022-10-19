@@ -78,18 +78,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     private $router;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $customerGroupChoices
      * @param FeatureInterface $multiStoreFeature
      * @param ConfigurationInterface $configuration
      * @param Router $router
-     * @param CommandBusInterface $queryBus
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -97,8 +91,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         array $customerGroupChoices,
         FeatureInterface $multiStoreFeature,
         ConfigurationInterface $configuration,
-        Router $router,
-        CommandBusInterface $queryBus
+        Router $router
     ) {
         parent::__construct($translator, $locales);
 
@@ -106,7 +99,6 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         $this->multiStoreFeature = $multiStoreFeature;
         $this->configuration = $configuration;
         $this->router = $router;
-        $this->queryBus = $queryBus;
     }
 
     /**
@@ -162,9 +154,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('additional_description', TranslateType::class, [
+            ->add('additional_description', TranslatableType::class, [
                 'type' => FormattedTextareaType::class,
-                'locales' => $this->locales,
                 'hideTabs' => false,
                 'required' => false,
                 'options' => [

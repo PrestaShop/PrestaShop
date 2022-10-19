@@ -173,7 +173,7 @@ class AbstractAddCategoryCommand
     }
 
     /**
-     * @param string[]|null $localizedAdditionalDescriptions
+     * @return string[]|null
      */
     public function getLocalizedAdditionalDescriptions(): ?array
     {

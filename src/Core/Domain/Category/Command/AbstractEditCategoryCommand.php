@@ -168,7 +168,7 @@ abstract class AbstractEditCategoryCommand
     }
 
     /**
-     * @param string[]|null $localizedAdditionalDescriptions
+     * @return string[]|null
      */
     public function getLocalizedAdditionalDescriptions(): ?array
     {
