@@ -110,6 +110,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         /** @var FeatureInterface $multistoreFeature */
         $multistoreFeature = $this->getContainer()->get('prestashop.adapter.multistore_feature');
         $multistoreFeature->enable();
+        Shop::resetStaticCache();
     }
 
     /**
