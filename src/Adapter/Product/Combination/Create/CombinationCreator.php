@@ -161,7 +161,7 @@ class CombinationCreator
 
         foreach ($generatedCombinations as $generatedCombination) {
             if (!$hasCombinations) {
-                // if there is no default combination, we assume there are none at all, so we create new combination and skip to next iteration
+                // Product has no combinations yet, so we create new combinations and skip the rest of the loop
                 $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
                 continue;
             }
