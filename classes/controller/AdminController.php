@@ -2614,7 +2614,6 @@ class AdminControllerCore extends Controller
 
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 0);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
-            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
             if ($this->isMultistoreEnabled()) {
@@ -2638,7 +2637,6 @@ class AdminControllerCore extends Controller
             // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.2.min.js');
-            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
@@ -2684,6 +2682,9 @@ class AdminControllerCore extends Controller
             _PS_JS_DIR_ . 'tools.js?v=' . _PS_VERSION_,
             __PS_BASE_URI__ . $this->admin_webpath . '/public/bundle.js',
         ]);
+
+        // This is handled as an external common dependency for both themes, but once new-theme is the only one it should be integrated directly into the main.bundle.js file
+        $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
         Media::addJsDef([
             'changeFormLanguageUrl' => $this->context->link->getAdminLink(
