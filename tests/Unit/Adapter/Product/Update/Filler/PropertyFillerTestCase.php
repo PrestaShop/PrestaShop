@@ -44,15 +44,24 @@ abstract class PropertyFillerTestCase extends TestCase
 
     /**
      * @dataProvider getDataForTestFillsUpdatableProperties
+     *
+     * @param UpdateProductCommand $command
+     * @param array<int|string, string|int[]> $expectedUpdatableProperties
+     * @param Product $expectedProduct
      */
-    public function testFillsUpdatableProperties(UpdateProductCommand $command, array $expectedUpdatableProperties): void
-    {
-        $product = $this->mockProduct();
+    public function testFillsUpdatableProperties(
+        UpdateProductCommand $command,
+        array $expectedUpdatableProperties,
+        Product $expectedProduct
+    ): void {
+        $product = $this->mockDefaultProduct();
 
         $this->assertSame(
             $expectedUpdatableProperties,
             $this->getFiller()->fillUpdatableProperties($product, $command)
         );
+
+        $this->assertEquals($expectedProduct, $product);
     }
 
     abstract public function getDataForTestFillsUpdatableProperties(): iterable;
@@ -65,7 +74,7 @@ abstract class PropertyFillerTestCase extends TestCase
      *
      * @return Product
      */
-    protected function mockProduct(): Product
+    protected function mockDefaultProduct(): Product
     {
         $product = $this->createMock(Product::class);
         $product->id = self::PRODUCT_ID;
