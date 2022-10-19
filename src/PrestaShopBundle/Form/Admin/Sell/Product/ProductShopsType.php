@@ -38,6 +38,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * This form type is used to copy data from one shop to some others, you can also unselect/remove some
+ * shops. The content of the shop is based on the product initial shops and the whole list of selectable
+ * shops.
+ */
 class ProductShopsType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

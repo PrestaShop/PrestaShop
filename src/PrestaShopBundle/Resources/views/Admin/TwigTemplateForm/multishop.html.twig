@@ -26,12 +26,6 @@
 
 {% block shop_selector_widget %}
   <div class="shop-selector-content shop-selector" data-multiple="{{ multiple }}">
-    <label>{{ 'Choose a shop'|trans({}, 'Admin.Global') }}</label>
-    <div class="shop-selector-search-container">
-      <i class="material-icons">search</i>
-      <input type="text" class="form-control shop-selector-search js-shop-selector-search" placeholder="{{ 'Search shop name'|trans({}, 'Admin.Navigation.Header') }}" data-no-results="{{ "No results found for"|trans({}, 'Admin.Global') }}" data-searching="{{ "Searching for"|trans({}, 'Admin.Global') }}">
-    </div>
-
     <ul class="shop-selector-group-list">
       {% for groupName, groupShops in form.vars.choices %}
         <li class="shop-selector-group-item shop-selector-item">
