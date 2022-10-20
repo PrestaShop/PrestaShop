@@ -307,4 +307,4 @@ services:
   prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
     arguments:
-      - '@prestashop.adapter.data_provider.customer_thread_status'
+      - '@translator'

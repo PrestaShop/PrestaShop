@@ -58,4 +58,11 @@ class CustomerThreadStatusColor
         'pending1' => self::PENDING_1,
         'pending2' => self::PENDING_2,
     ];
+
+    /**
+     * Class is not meant to be initialized.
+     */
+    private function __construct()
+    {
+    }
 }

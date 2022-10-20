@@ -26,14 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
-use CustomerThread;
 use PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\DeleteCustomerThreadHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 
 /**
  * Handles command for customer thread deletion
