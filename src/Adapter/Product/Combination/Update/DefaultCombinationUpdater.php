@@ -83,14 +83,6 @@ class DefaultCombinationUpdater
             $shopConstraint
         );
 
-        $this->refreshCachedDefaultCombination($productId);
-    }
-
-    /**
-     * @param ProductId $productId
-     */
-    public function refreshCachedDefaultCombination(ProductId $productId): void
-    {
         $this->productRepository->updateCachedDefaultCombination($productId);
     }
 }

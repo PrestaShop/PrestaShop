@@ -228,12 +228,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->validateProduct($product, $propertiesToUpdate);
-        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
-
         $this->partiallyUpdateObjectModelForShops(
             $product,
             $propertiesToUpdate,
-            $shopIds,
+            $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint),
             CannotUpdateProductException::class,
             $errorCode
         );
@@ -247,6 +245,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
     {
         $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
+
         $productIdValue = $productId->getValue();
 
         $deleteQb = $this->connection->createQueryBuilder();
@@ -298,11 +300,9 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->validateProduct($product);
-        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
-
         $this->updateObjectModelForShops(
             $product,
-            $shopIds,
+            $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint),
             CannotUpdateProductException::class,
             $errorCode
         );
@@ -356,6 +356,8 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * Updates the Product's cache default attribute by selecting appropriate value from combination tables
+     *
      * @param ProductId $productId
      */
     public function updateCachedDefaultCombination(ProductId $productId): void
@@ -422,6 +424,27 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     *
+     * @throws InvalidShopConstraintException
+     */
+    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getAssociatedShopIds($productId);
+        }
+
+        return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param ProductId $productId
      *
      * @return Product
      *
@@ -453,34 +476,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $this->loadProduct($product);
-    }
-
-    /**
-     * Returns a single shop ID when the constraint is a single shop, and the list of shops associated to the product
-     * when the constraint is for all shops (shop group constraint is forbidden)
-     *
-     * @param ProductId $productId
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return int[]
-     */
-    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
-        $shopIds = [];
-        if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds($productId);
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
-        }
-
-        return $shopIds;
     }
 
     /**
