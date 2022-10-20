@@ -268,7 +268,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('status')
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $this->customerThreadStatusesChoiceProvider->getChoices(),
+                        'choices' => $this->customerThreadStatusesChoiceProvider->getChoices([]),
                     ])
             )
             ->add(
