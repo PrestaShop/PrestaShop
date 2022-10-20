@@ -139,6 +139,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
      */
     public function getForCombination(CombinationId $combinationId, ShopId $shopId): StockAvailable
     {
+        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
         $qb = $this->connection->createQueryBuilder();
         $qb->select('id_stock_available')
             ->from($this->dbPrefix . 'stock_available')
