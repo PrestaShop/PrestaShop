@@ -26,37 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\CustomerService\Repository;
 
 use CustomerThread;
-use PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\DeleteCustomerThreadHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
- * Handles command for customer thread deletion
+ * Methods to access data storage for customerThread
  */
-class DeleteCustomerThreadHandler implements DeleteCustomerThreadHandlerInterface
+class CustomerThreadRepository extends AbstractObjectModelRepository
 {
-    /**
-     * @var CustomerThreadRepository
-     */
-    private $customerThreadRepository;
-
-    public function __construct(CustomerThreadRepository $customerThreadRepository)
+    public function get(CustomerThreadId $customerThreadId): CustomerThread
     {
-        $this->customerThreadRepository = $customerThreadRepository;
+        /** @var CustomerThread $customerThread */
+        $customerThread = $this->getObjectModel(
+            $customerThreadId->getValue(),
+            CustomerThread::class,
+            CustomerThreadNotFoundException::class
+        );
+
+        return $customerThread;
     }
 
     /**
-     * @param DeleteCustomerThreadCommand $command
+     * @param CustomerThread $customerThread
      *
      * @return void
+     *
+     * @throws CannotDeleteCustomerThreadException
      */
-    public function handle(DeleteCustomerThreadCommand $command): void
+    public function delete(CustomerThreadId $customerThreadId): void
     {
-        $this->customerThreadRepository->delete($command->getCustomerThreadId());
+        $this->deleteObjectModel($this->get($customerThreadId), CannotDeleteCustomerThreadException::class);
     }
 }

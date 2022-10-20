@@ -28,25 +28,29 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
 
-use CustomerThread;
+use PrestaShop\PrestaShop\Adapter\CustomerService\Repository\CustomerThreadRepository;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\BulkDeleteCustomerThreadHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 
+/**
+ * Handles command for customer thread bulk deletion
+ */
 class BulkDeleteCustomerThreadHandler implements BulkDeleteCustomerThreadHandlerInterface
 {
+    /**
+     * @var CustomerThreadRepository
+     */
+    private $customerThreadRepository;
+
+    public function __construct(CustomerThreadRepository $customerThreadRepository)
+    {
+        $this->customerThreadRepository = $customerThreadRepository;
+    }
+
     public function handle(BulkDeleteCustomerThreadCommand $command)
     {
         foreach ($command->getCustomerThreadIds() as $customerThreadId) {
-            $customerThread = new CustomerThread($customerThreadId->getValue());
-
-            if (0 >= $customerThread->id) {
-                throw new CustomerThreadNotFoundException(sprintf('Unable to find customer thread with id "%d" for deletion', $customerThreadId->getValue()));
-            }
-
-            if (!$customerThread->delete()) {
-                throw new CustomerThreadNotFoundException(sprintf('Cannot delete customer thread with id "%d"', $customerThreadId->getValue()), CustomerThreadNotFoundException::FAILED_DELETE);
-            }
+            $this->customerThreadRepository->delete($customerThreadId);
         }
     }
 }

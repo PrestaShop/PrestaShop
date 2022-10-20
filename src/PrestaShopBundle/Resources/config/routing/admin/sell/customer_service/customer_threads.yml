@@ -41,11 +41,11 @@ admin_customer_threads_reply:
   requirements:
     customerThreadId: \d+
 
-admin_customer_threads_update_status:
+admin_customer_threads_view_update_status:
   path: /{customerThreadId}/update-status
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusFromViewAction
     _legacy_controller: AdminCustomerThreads
   #  _legacy_link: AdminCustomerThreads
   requirements:
