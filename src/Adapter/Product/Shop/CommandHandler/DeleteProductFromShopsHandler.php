@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
 
@@ -38,16 +38,16 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductF
 class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInterface
 {
     /**
-     * @var ProductShopUpdater
+     * @var ProductMultiShopRepository
      */
-    private $productShopUpdater;
+    private $productRepository;
 
     /**
-     * @param ProductShopUpdater $productShopUpdater
+     * @param ProductMultiShopRepository $productRepository
      */
-    public function __construct(ProductShopUpdater $productShopUpdater)
+    public function __construct(ProductMultiShopRepository $productRepository)
     {
-        $this->productShopUpdater = $productShopUpdater;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -55,6 +55,6 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
      */
     public function handle(DeleteProductFromShopsCommand $command): void
     {
-        $this->productShopUpdater->deleteFromShops($command->getProductId(), $command->getShopIds());
+        $this->productRepository->deleteFromShops($command->getProductId(), $command->getShopIds());
     }
 }

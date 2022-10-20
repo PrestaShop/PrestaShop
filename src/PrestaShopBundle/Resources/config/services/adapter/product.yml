@@ -485,7 +485,7 @@ services:
   prestashop.adapter.product.shop.command_handler.delete_product_from_shops_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler
     arguments:
-      - '@prestashop.adapter.product.update.product_shop_updater'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand

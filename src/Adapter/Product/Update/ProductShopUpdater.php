@@ -85,15 +85,6 @@ class ProductShopUpdater
 
     /**
      * @param ProductId $productId
-     * @param ShopId[] $shopIds
-     */
-    public function deleteFromShops(ProductId $productId, array $shopIds): void
-    {
-        $this->productRepository->deleteFromShops($productId, $shopIds);
-    }
-
-    /**
-     * @param ProductId $productId
      * @param ShopId $sourceShopId
      * @param ShopId $targetShopId
      */
