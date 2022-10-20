@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
@@ -193,7 +194,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function updateStatusAction(int $customerThreadId, Request $request)
+    public function updateStatusFromViewAction(int $customerThreadId, Request $request)
     {
         $this->handleCustomerThreadStatusUpdate($customerThreadId, $request->request->get('newStatus'));
 
@@ -319,7 +320,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteCustomerThreadCommand($customerThreadId));
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
-        } catch (CustomerThreadNotFoundException $e) {
+        } catch (CustomerServiceException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
             return $this->redirectToRoute('admin_customer_threads');
@@ -368,6 +369,10 @@ class CustomerThreadController extends FrameworkBundleAdminController
         return [
             CustomerThreadNotFoundException::class => $this->trans(
                 'This customer thread does not exists',
+                'Admin.International.Notification'
+            ),
+            CannotDeleteCustomerThreadException::class => $this->trans(
+                'Cannot delete this customer thread',
                 'Admin.International.Notification'
             ),
             CustomerServiceException::class => [

@@ -177,12 +177,6 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if (in_array($filterName, ['ct.id_customer_thread', 'ct.private'])) {
-                $builder->andWhere('z.' . $filterName . ' = :' . $filterName);
-                $builder->setParameter($filterName, $filterValue);
-                continue;
-            }
-
             if (in_array($filterName, ['message', 'private'])) {
                 $builder->andWhere('cm.' . $filterName . ' LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');

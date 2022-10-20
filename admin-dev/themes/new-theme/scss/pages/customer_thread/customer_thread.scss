@@ -1,2 +1,6 @@
-// Page specific
-@import "customer_thread_main";
+#customer_thread_grid {
+  // Do not break thread status change button
+  .column-status .btn {
+    white-space: nowrap;
+  }
+}
