@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShopException;
-use Product;
 
 /**
  * @todo: This class has been added while we progressively migrate each domain to multishop It contains the new
@@ -103,6 +102,27 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $this->combinationValidator = $combinationValidator;
         $this->attributeRepository = $attributeRepository;
         $this->productRepository = $productRepository;
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return Combination
+     *
+     * @throws CoreException
+     */
+    public function get(CombinationId $combinationId, ShopId $shopId): Combination
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModelForShop(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class,
+            $shopId
+        );
+
+        return $combination;
     }
 
     /**
@@ -251,7 +271,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             $shopId = $shopConstraint->getShopId();
         }
 
-        return $this->getCombinationByShopId($combinationId, $shopId);
+        return $this->get($combinationId, $shopId);
     }
 
     /**
@@ -413,27 +433,6 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $result = $qb->execute()->fetchAssociative();
 
         return isset($result['id_product_attribute']);
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     * @param ShopId $shopId
-     *
-     * @return Combination
-     *
-     * @throws CoreException
-     */
-    public function getCombinationByShopId(CombinationId $combinationId, ShopId $shopId): Combination
-    {
-        /** @var Combination $combination */
-        $combination = $this->getObjectModelForShop(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class,
-            $shopId
-        );
-
-        return $combination;
     }
 
     /**
