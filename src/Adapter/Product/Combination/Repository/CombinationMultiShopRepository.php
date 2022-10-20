@@ -106,25 +106,6 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
-     * @param CombinationId $combinationId
-     *
-     * @return Combination
-     *
-     * @throws CombinationNotFoundException
-     */
-    public function get(CombinationId $combinationId): Combination
-    {
-        /** @var Combination $combination */
-        $combination = $this->getObjectModel(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class
-        );
-
-        return $combination;
-    }
-
-    /**
      * @param ProductId $productId
      * @param ShopId $shopId
      * @param bool $isDefault
@@ -143,24 +124,6 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
 
         return $combination;
-    }
-
-    /**
-     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
-     *
-     * @param ProductId $productId
-     *
-     * @return CombinationId|null
-     */
-    public function findDefaultCombinationId(ProductId $productId): ?CombinationId
-    {
-        try {
-            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
-        }
-
-        return $id ? new CombinationId($id) : null;
     }
 
     /**
