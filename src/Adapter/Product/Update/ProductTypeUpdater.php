@@ -121,7 +121,7 @@ class ProductTypeUpdater
             // anymore to create the appropriate stock movement
             $this->resetProductStock($productId);
 
-            $this->combinationDeleter->deleteAllProductCombinations($productId);
+            $this->combinationDeleter->deleteAllProductCombinations($productId, ShopConstraint::allShops());
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);

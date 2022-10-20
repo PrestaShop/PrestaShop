@@ -248,7 +248,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $combination->id_product = $productId->getValue();
         $combination->default_on = false;
 
-        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CannotUpdateCombinationException::class);
+        $this->updateObjectModelForShops($combination, [$shopId], CannotUpdateCombinationException::class);
     }
 
     /**
@@ -372,6 +372,49 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         throw $bulkDeleteException;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function deleteByProductId(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $combinationIds = $this->getCombinationIds($productId, $shopConstraint);
+
+        $this->bulkDelete($combinationIds, $shopConstraint);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return CombinationId[]
+     */
+    public function getCombinationIds(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->andWhere('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('pas.id_product_attribute', 'ASC')
+        ;
+
+        $combinationIds = $qb->execute()->fetchAllAssociative();
+
+        return array_map(
+            function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
+            $combinationIds
+        );
     }
 
     /**

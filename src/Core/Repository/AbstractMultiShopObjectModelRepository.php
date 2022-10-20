@@ -86,7 +86,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
     /**
      * @param ObjectModel $objectModel
-     * @param int[] $shopIds
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
@@ -100,7 +100,9 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     ): void {
         // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
         // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = $shopIds;
+        $objectModel->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
         $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
     }
@@ -108,7 +110,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     /**
      * @param ObjectModel $objectModel
      * @param array<int|string, string|int[]> $propertiesToUpdate
-     * @param array $shopIds
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
