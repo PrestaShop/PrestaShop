@@ -27,9 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\CustomerService;
 
 use Contact;
-use PrestaShop\PrestaShop\Core\CustomerService\ContactTypeProviderInterface;
 
-class ContactTypeProvider implements ContactTypeProviderInterface
+class ContactTypeProvider
 {
     /**
      * @var int

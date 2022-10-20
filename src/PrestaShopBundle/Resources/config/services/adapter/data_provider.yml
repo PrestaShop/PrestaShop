@@ -110,8 +110,3 @@ services:
     class: PrestaShop\PrestaShop\Adapter\CustomerService\ContactTypeProvider
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-
-  prestashop.adapter.data_provider.customer_thread_status:
-    class: PrestaShop\PrestaShop\Adapter\CustomerService\CustomerThreadCustomerThreadStatusProvider
-    arguments:
-      - "@translator"

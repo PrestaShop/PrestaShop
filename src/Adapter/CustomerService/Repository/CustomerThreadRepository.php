@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
  */
 class CustomerThreadRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @throws CustomerThreadNotFoundException
+     */
     public function get(CustomerThreadId $customerThreadId): CustomerThread
     {
         /** @var CustomerThread $customerThread */
@@ -52,10 +55,6 @@ class CustomerThreadRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param CustomerThread $customerThread
-     *
-     * @return void
-     *
      * @throws CannotDeleteCustomerThreadException
      */
     public function delete(CustomerThreadId $customerThreadId): void

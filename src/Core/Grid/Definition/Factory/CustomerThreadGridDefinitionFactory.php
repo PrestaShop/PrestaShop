@@ -28,8 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\CustomerService\ContactTypeProviderInterface;
-use PrestaShop\PrestaShop\Core\CustomerService\CustomerThreadStatusProviderInterface;
+use PrestaShop\PrestaShop\Adapter\CustomerService\ContactTypeProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
@@ -64,14 +63,9 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'customer_thread';
 
     /**
-     * @var ContactTypeProviderInterface
+     * @var ContactTypeProvider
      */
     private $contactTypeProvider;
-
-    /**
-     * @var CustomerThreadStatusProviderInterface
-     */
-    private $statusProvider;
 
     /**
      * @var FormChoiceProviderInterface
@@ -85,14 +79,12 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher = null,
-        ContactTypeProviderInterface $contactTypeProvider,
-        CustomerThreadStatusProviderInterface $statusProvider,
+        ContactTypeProvider $contactTypeProvider,
         FormChoiceProviderInterface $shopNameByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $customerThreadStatusesChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
         $this->contactTypeProvider = $contactTypeProvider;
-        $this->statusProvider = $statusProvider;
         $this->shopNameByIdChoiceProvider = $shopNameByIdChoiceProvider;
         $this->customerThreadStatusesChoiceProvider = $customerThreadStatusesChoiceProvider;
     }
@@ -276,7 +268,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('status')
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $this->statusProvider->getStatuses(),
+                        'choices' => $this->customerThreadStatusesChoiceProvider->getChoices(),
                     ])
             )
             ->add(

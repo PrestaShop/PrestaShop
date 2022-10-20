@@ -343,7 +343,6 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
       - '@prestashop.adapter.data_provider.contact_type'
-      - '@prestashop.adapter.data_provider.customer_thread_status'
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
       - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
     public: true

@@ -73,6 +73,8 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('ct.*, CONCAT(c.`firstname`," ",c.`lastname`) as customer')
             ->addSelect('cm.message, cm.private, cl.name as contact, l.name as langName')
             ->addSelect('s.name as shopName')
+
+            // we need to get only the latest message and its employee
             ->addSelect('(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
