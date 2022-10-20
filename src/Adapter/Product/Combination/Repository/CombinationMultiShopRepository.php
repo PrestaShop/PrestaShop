@@ -527,7 +527,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $defaultShopId = $this->getDefaultShopIdForCombination($newDefaultCombinationId);
         $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
 
-        // we need to update the common table only for default shop
+        // we need to update the common table only for default shop, but only when default shop is impacted by the constraint
         if (in_array($defaultShopId->getValue(), $constraintShopIds, true)) {
             $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
         }
