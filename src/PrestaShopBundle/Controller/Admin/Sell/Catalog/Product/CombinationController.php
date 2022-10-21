@@ -589,7 +589,7 @@ class CombinationController extends FrameworkBundleAdminController
                 'quantity' => $combination->getQuantity(),
                 'is_default' => $combination->isDefault(),
                 'image_url' => $combination->getImageUrl() ?: $fallbackImageUrl,
-                'eco_tax' => $combination->getEcoTax(),
+                'eco_tax' => (string) $combination->getEcoTax(),
             ];
         }
 

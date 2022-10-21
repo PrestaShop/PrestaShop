@@ -77,7 +77,7 @@ class EditableCombinationForListing
     private $imageUrl;
 
     /**
-     * @var float
+     * @var DecimalNumber
      */
     private $ecoTax;
 
@@ -90,7 +90,7 @@ class EditableCombinationForListing
      * @param DecimalNumber $impactOnPrice
      * @param int $quantity
      * @param string $imageUrl
-     * @param float $ecoTax
+     * @param DecimalNumber $ecoTax
      */
     public function __construct(
         int $combinationId,
@@ -101,7 +101,7 @@ class EditableCombinationForListing
         DecimalNumber $impactOnPrice,
         int $quantity,
         string $imageUrl,
-        float $ecoTax
+        DecimalNumber $ecoTax
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
@@ -179,9 +179,9 @@ class EditableCombinationForListing
     }
 
     /**
-     * @return float
+     * @return DecimalNumber
      */
-    public function getEcoTax(): float
+    public function getEcoTax(): DecimalNumber
     {
         return $this->ecoTax;
     }
