@@ -42,6 +42,16 @@ class QuickAccessCore extends ObjectModel
     public $new_window;
 
     /**
+     * link to new product creation form
+     */
+    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
+
+    /**
+     * link to new product creation form for product v2
+     */
+    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products-v2/create';
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -67,7 +77,7 @@ class QuickAccessCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'quick_access` qa
-		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int) $idLang . ')
+		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int)$idLang . ')
 		ORDER BY `name` ASC');
     }
 
@@ -105,13 +115,13 @@ class QuickAccessCore extends ObjectModel
                     }
                     $quick_access[$index]['target'] = $admin_tab[1];
 
-                    $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
+                    $tokenString = $admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
                 $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
-                if ($quick['link'] === 'index.php/sell/catalog/products/new' || $quick['link'] === 'index.php/sell/catalog/products-v2/create') {
+                if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
                     //if new product page feature is enabled we create new product v2 modal popup
                     if (self::productPageV2Enabled()) {
-                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
+                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
                         $quickAccess[$index]['class'] = 'new-product-button';
                     }
                 }
@@ -141,7 +151,7 @@ class QuickAccessCore extends ObjectModel
 
         $this->setFieldsToUpdate(['new_window' => true]);
 
-        $this->new_window = !(int) $this->new_window;
+        $this->new_window = !(int)$this->new_window;
 
         return $this->update(false);
     }
@@ -153,10 +163,10 @@ class QuickAccessCore extends ObjectModel
     {
         $multistoreFeature = SymfonyContainer::getInstance()->get('prestashop.adapter.multistore_feature');
 
-        if (!$multistoreFeature->isActive()) {
-            return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-        }
-
-        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(
+            $multistoreFeature->isActive()
+                ? FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP
+                : FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2
+        );
     }
 }
