@@ -77,7 +77,7 @@ class QuickAccessCore extends ObjectModel
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `' . _DB_PREFIX_ . 'quick_access` qa
-		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int)$idLang . ')
+		LEFT JOIN `' . _DB_PREFIX_ . 'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = ' . (int) $idLang . ')
 		ORDER BY `name` ASC');
     }
 
@@ -115,7 +115,7 @@ class QuickAccessCore extends ObjectModel
                     }
                     $quick_access[$index]['target'] = $admin_tab[1];
 
-                    $tokenString = $admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
+                    $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
                 $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
                 if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
@@ -151,7 +151,7 @@ class QuickAccessCore extends ObjectModel
 
         $this->setFieldsToUpdate(['new_window' => true]);
 
-        $this->new_window = !(int)$this->new_window;
+        $this->new_window = !(int) $this->new_window;
 
         return $this->update(false);
     }
