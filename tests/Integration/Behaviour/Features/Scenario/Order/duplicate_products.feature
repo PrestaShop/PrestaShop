@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags duplicate-products-in-order
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-products-in-order
 @restore-all-tables-before-feature
 @duplicate-products-in-order
 Feature: Order from Back Office (BO)

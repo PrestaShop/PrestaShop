@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 
 final class ProductImagesChoiceProvider implements ConfigurableFormChoiceProviderInterface
@@ -41,12 +42,26 @@ final class ProductImagesChoiceProvider implements ConfigurableFormChoiceProvide
     private $queryBus;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $queryBus
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
+        $this->defaultShopId = $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -59,7 +74,10 @@ final class ProductImagesChoiceProvider implements ConfigurableFormChoiceProvide
         }
 
         /** @var ProductImage[] $productImages */
-        $productImages = $this->queryBus->handle(new GetProductImages((int) $options['product_id']));
+        $productImages = $this->queryBus->handle(new GetProductImages(
+            (int) $options['product_id'],
+            ShopConstraint::shop($this->contextShopId ?? $this->defaultShopId))
+        );
 
         $choices = [];
         foreach ($productImages as $productImage) {

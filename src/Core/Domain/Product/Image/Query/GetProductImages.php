@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Get list of Images associated to a Product
+ * Get list of Images associated to a Product in terms of ShopConstraint
  */
 class GetProductImages
 {
@@ -39,14 +40,21 @@ class GetProductImages
      * @var ProductId
      */
     private $productId;
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
-        int $productId
+        int $productId,
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -55,5 +63,13 @@ class GetProductImages
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

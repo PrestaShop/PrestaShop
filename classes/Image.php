@@ -120,6 +120,34 @@ class ImageCore extends ObjectModel
         return parent::add($autoDate, $nullValues);
     }
 
+    public function associateTo($id_shops)
+    {
+        if (!$this->id) {
+            return;
+        }
+
+        if (!is_array($id_shops)) {
+            $id_shops = [$id_shops];
+        }
+
+        $data = [];
+        foreach ($id_shops as $id_shop) {
+            if (!$this->isAssociatedToShop($id_shop)) {
+                $data[] = [
+                    $this->def['primary'] => (int) $this->id,
+                    'id_shop' => (int) $id_shop,
+                    'id_product' => (int) $this->id_product,
+                ];
+            }
+        }
+
+        if ($data) {
+            return Db::getInstance()->insert($this->def['table'] . '_shop', $data);
+        }
+
+        return true;
+    }
+
     /**
      * Updates the current Image in the database.
      *

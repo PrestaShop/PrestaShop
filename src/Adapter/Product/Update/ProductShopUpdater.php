@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -58,20 +59,27 @@ class ProductShopUpdater
      * @var ShopRepository
      */
     private $shopRepository;
+    /**
+     * @var ProductImageMultiShopRepository
+     */
+    private $productImageMultiShopRepository;
 
     /**
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param ShopRepository $shopRepository
+     * @param ProductImageMultiShopRepository $productImageMultiShopRepository
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
-        ShopRepository $shopRepository
+        ShopRepository $shopRepository,
+        ProductImageMultiShopRepository $productImageMultiShopRepository
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
+        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
     }
 
     /**
@@ -94,6 +102,7 @@ class ProductShopUpdater
 
         $this->copyStockToShop($productId, $sourceShopId, $targetShopId);
         $this->copyCarriersToShop($sourceProduct, $targetShopId);
+        $this->copyImageAssociations($productId, $sourceShopId, $targetShopId);
     }
 
     private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
@@ -138,5 +147,25 @@ class ProductShopUpdater
             $sourceCarrierReferences,
             ShopConstraint::shop($targetShopId->getValue())
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $sourceShopId
+     * @param ShopId $targetShopId
+     *
+     * @return void
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     */
+    public function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
+    {
+        //todo: update test
+        $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        foreach ($imagesFromSourceShop as $image) {
+            $image->id_product = $productId->getValue();
+            $image->associateTo($targetShopId->getValue());
+        }
     }
 }
