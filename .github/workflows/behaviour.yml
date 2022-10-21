@@ -9,7 +9,6 @@ jobs:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Behaviour tests
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.pull_request.title, 'Bump') && !endsWith(github.event.pull_request.title, 'in /tests/UI')}}
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
