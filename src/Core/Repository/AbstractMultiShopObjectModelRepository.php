@@ -190,6 +190,9 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      */
     protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
     {
+        if (empty($shopIds)) {
+            return;
+        }
         try {
             // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
             // this way we can control exactly which shop is deleted

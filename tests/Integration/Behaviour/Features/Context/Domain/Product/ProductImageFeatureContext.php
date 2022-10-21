@@ -34,7 +34,10 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveAnImageWhichIsACoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -281,7 +284,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoImages(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductImages($productReference),
+            $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId())),
             sprintf('No images expected for product "%s"', $productReference)
         );
     }
@@ -316,7 +319,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductImagesForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $this->assertProductImagesForShops($productReference, $tableNode, [$this->getDefaultShopId()]);
+        $this->assertProductImagesByShopConstraint($productReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -336,7 +339,10 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         foreach ($shopReferences as $shopReference) {
             $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
         }
-        $this->assertProductImagesForShops($productReference, $table, $shopIds);
+
+        foreach ($shopIds as $shopId) {
+            $this->assertProductImagesByShopConstraint($productReference, $table, ShopConstraint::shop($shopId));
+        }
     }
 
     /**
@@ -356,10 +362,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return ProductImage[]
      */
-    private function getProductImages(string $productReference): array
+    private function getProductImages(string $productReference, ShopConstraint $shopConstraint): array
     {
         return $this->getQueryBus()->handle(new GetProductImages(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            $shopConstraint
         ));
     }
 
@@ -398,13 +405,13 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     /**
      * @param string $productReference
      * @param TableNode $tableNode
-     * @param array $expectedShopIds
+     * @param ShopConstraint $shopConstraint
      *
      * @return void
      */
-    private function assertProductImagesForShops(string $productReference, TableNode $tableNode, array $expectedShopIds)
+    private function assertProductImagesByShopConstraint(string $productReference, TableNode $tableNode, ShopConstraint $shopConstraint)
     {
-        $images = $this->getProductImages($productReference);
+        $images = $this->getProductImages($productReference, $shopConstraint);
         $dataRows = $this->localizeByColumns($tableNode);
 
         Assert::assertEquals(
@@ -425,16 +432,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             }
             $actualImage = $imagesById[$rowImageId];
 
-            Assert::assertEquals(
-                PrimitiveUtils::castStringBooleanIntoBoolean($dataRow['is cover']),
-                $actualImage->isCover(),
-                'Unexpected cover image'
-            );
-            Assert::assertEquals(
-                $dataRow['legend'],
-                $actualImage->getLocalizedLegends(),
-                'Unexpected image legend'
-            );
+            if (isset($dataRow['is cover'])) {
+                Assert::assertEquals(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($dataRow['is cover']),
+                    $actualImage->isCover(),
+                    'Unexpected cover image'
+                );
+            }
+
+            if (isset($dataRow['legend'])) {
+                Assert::assertEquals(
+                    $dataRow['legend'],
+                    $actualImage->getLocalizedLegends(),
+                    'Unexpected image legend'
+                );
+            }
+
             Assert::assertEquals(
                 PrimitiveUtils::castStringIntegerIntoInteger($dataRow['position']),
                 $actualImage->getPosition(),
@@ -446,9 +459,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 throw new RuntimeException(sprintf('File "%s" does not exist', $imagePath));
             }
 
-            if (empty($dataRow['image url'])) {
-                Assert::assertNull($actualImage->getImageUrl(), 'Unexpected product image');
-            } else {
+            if (isset($dataRow['image url'])) {
                 $realImageUrl = $this->getRealImageUrl($dataRow['image url']);
                 Assert::assertEquals(
                     $realImageUrl,
@@ -457,9 +468,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 );
             }
 
-            if (empty($dataRow['thumbnail url'])) {
-                Assert::assertNull($actualImage->getThumbnailUrl(), 'Unexpected product thumbnail image');
-            } else {
+            if (isset($dataRow['thumbnail url'])) {
                 $realImageUrl = $this->getRealImageUrl($dataRow['thumbnail url']);
                 Assert::assertEquals(
                     $realImageUrl,
@@ -468,10 +477,49 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 );
             }
 
-            Assert::assertEquals(
-                $expectedShopIds,
-                $actualImage->getShopIds()
+            if (isset($dataRow['shops'])) {
+                $expectedShopIds = [];
+                $shops = explode(',', $dataRow['shops']);
+                foreach ($shops as $shopReference) {
+                    $expectedShopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+                }
+                Assert::assertEquals(
+                    $expectedShopIds,
+                    $actualImage->getShopIds()
+                );
+            }
+        }
+    }
+
+    /**
+     * @When /^I apply the following matrix of images for product "([^"]*)":$/
+     */
+    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table)
+    {
+        $command = new SetProductImagesForAllShopCommand(
+            $this->getSharedStorage()->get(trim($productReference))
+        );
+        foreach ($table as $data) {
+            $command->addProductSetting(
+                new ProductImageSetting(
+                    $this->getSharedStorage()->get(trim($data['imageReference'])),
+                    array_map(
+                        function (string $shopReference): int {
+                            return $this->getSharedStorage()->get(trim($shopReference));
+                        },
+                        explode(',', $data['shopReferences'])
+                    )
+                )
             );
         }
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then /^I should get an error that you cannot remove an image which is a cover$/
+     */
+    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover()
+    {
+        $this->assertLastErrorIs(CannotRemoveAnImageWhichIsACoverException::class);
     }
 }
