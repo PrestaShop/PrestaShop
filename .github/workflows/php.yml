@@ -9,7 +9,6 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHP CS Fixer
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.pull_request.title, 'Bump') && !endsWith(github.event.pull_request.title, 'in /tests/UI')}}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
@@ -51,7 +50,6 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.pull_request.title, 'Bump') && !endsWith(github.event.pull_request.title, 'in /tests/UI')}}
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
@@ -95,7 +93,6 @@ jobs:
       contents: read  # for actions/checkout to fetch code
     name: PHPUnit
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.event.pull_request.title, 'Bump') && !endsWith(github.event.pull_request.title, 'in /tests/UI')}}
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
