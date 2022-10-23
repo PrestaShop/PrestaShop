@@ -490,6 +490,7 @@ class FrontControllerCore extends Controller
             'language' => $this->objectPresenter->present($this->context->language),
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
+            'core_js_public_path' => $this->getCoreJsPublicPath(),
             'urls' => $this->getTemplateVarUrls(),
             'configuration' => $this->getTemplateVarConfiguration(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
@@ -1611,6 +1612,11 @@ class FrontControllerCore extends Controller
             'width' => $logoWidth,
             'height' => $logoHeight,
         ];
+    }
+
+    public function getCoreJsPublicPath()
+    {
+        return $this->context->shop->physical_uri . 'themes/';
     }
 
     public function getTemplateVarShop()
