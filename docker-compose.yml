@@ -1,45 +1,36 @@
-version: '2.1'
-
-volumes:
-  db-data:
-  vendor:
-  var:
+version: '3.9'
 
 services:
   mysql:
-    image: mysql:5
-    ports:
-      - "3306"
-    volumes:
-      - db-data:/var/lib/mysql
+    image: mysql:8
+    container_name: prestashop-db
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: prestashop
       MYSQL_DATABASE: prestashop
-    restart: always
-  prestashop-git:
-    build:
-      dockerfile: .docker/Dockerfile
-      context: .
-      args:
-        - VERSION=${VERSION:-8.1-apache}
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
-    environment:
-      DISABLE_MAKE: ${DISABLE_MAKE:-0}
-      PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
-      DB_PASSWD: ${DB_PASSWD:-prestashop}
-      DB_NAME: ${DB_NAME:-prestashop}
-      DB_SERVER: ${DB_SERVER:-mysql}
-      DB_PREFIX: ${DB_PREFIX:-ps_}
-      PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
-      PS_FOLDER_INSTALL: ${PS_FOLDER_INSTALL:-install-dev}
-      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
-      PS_COUNTRY: ${PS_COUNTRY:-fr}
-      PS_LANGUAGE: ${PS_LANGUAGE:-fr}
-      PS_DEV_MODE: ${PS_DEV_MODE:-0}
-      ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
-    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
+      MYSQL_ROOT_PASSWORD: prestashop
     ports:
-      - "8001:80"
-    volumes:
-      - ./:/var/www/html:delegated
+      - 3306:3306
+    networks:
+      - prestashop
+
+  prestashop:
+    image: prestashop/prestashop:1.7
+    container_name: prestashop
+    environment:
+      DB_SERVER: mysql
+    ports:
+      - 8080:80
+    networks:
+      - prestashop
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 1235:80
+    environment:
+      - PMA_ARBITRARY=1
+
+
+networks:
+  prestashop:
