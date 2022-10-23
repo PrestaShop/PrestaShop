@@ -124,6 +124,8 @@ tests-legacy/.phpunit.result.cache
 themes/*/cache/*
 themes/core.js.map
 themes/core.js
+themes/*-chunk.js
+themes/*-chunk.js.map
 
 # Install folder
 /install-dev/theme/custom/*
