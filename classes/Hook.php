@@ -591,12 +591,13 @@ class HookCore extends ObjectModel
             $shop_list_employee = Shop::getShops(true, null, true);
 
             foreach ($shop_list as $shop_id) {
-                // Check if already registered
-                $sql = 'SELECT hm.`id_module`
-                    FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
-                    WHERE hm.`id_module` = ' . (int) $module_instance->id . ' AND h.`id_hook` = ' . $id_hook . '
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = ' . (int) $shop_id;
-                if (Db::getInstance()->getRow($sql)) {
+                $isModuleAlreadyRegisteredOnHook = static::isModuleRegisteredOnHook(
+                    $module_instance,
+                    $hook_name,
+                    (int) $shop_id
+                );
+
+                if ($isModuleAlreadyRegisteredOnHook) {
                     continue;
                 }
 
