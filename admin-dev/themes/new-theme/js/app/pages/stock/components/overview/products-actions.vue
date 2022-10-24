@@ -133,7 +133,11 @@
       },
       onKeyUp(event: Event): void {
         this.isFocused = true;
-        this.$store.dispatch('updateBulkEditQty', (<HTMLInputElement>event.target).value);
+        const inputValue = (<HTMLInputElement>event.target).value;
+        this.$store.dispatch(
+          'updateBulkEditQty',
+          inputValue.length ? parseInt(inputValue, 10) : inputValue,
+        );
       },
     },
     data() {
