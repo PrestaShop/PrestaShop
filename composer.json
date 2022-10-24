@@ -37,6 +37,7 @@
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
         "ezyang/htmlpurifier": "dev-master as v4.14.0",
+        "fpt/autoload": "dev-main",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
         "geoip2/geoip2": "~2.4.2",
         "greenlion/php-sql-parser": "^4.3",
