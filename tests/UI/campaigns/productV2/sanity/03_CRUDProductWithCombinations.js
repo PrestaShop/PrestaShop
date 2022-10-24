@@ -42,7 +42,7 @@ const editProductData = new ProductFaker({
   quantity: 100,
   minimumQuantity: 1,
   status: true,
-  combinations: {
+  attributes: {
     color: ['Grey', 'Taupe', 'Red'],
     size: ['L', 'XL'],
   },
@@ -119,7 +119,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       const generateCombinationsButton = await combinationsTab.setProductAttributes(
         page,
-        newProductData.combinations,
+        newProductData.attributes,
       );
       await expect(generateCombinationsButton).to.equal('Generate 4 combinations');
     });
