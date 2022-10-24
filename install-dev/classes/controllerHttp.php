@@ -193,7 +193,7 @@ class InstallControllerHttp
 
         $session = InstallSession::getInstance();
         if (!$session->last_step || $session->last_step === 'welcome') {
-            Tools::generateIndex();
+            \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
         }
 
         if (empty($session->last_step)) {

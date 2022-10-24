@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
+use PrestaShop\Autoload\PrestashopAutoload;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShopAutoload;
 
 /**
  * Class ClassIndexCacheClearer clears current class index and generates new one.
@@ -41,6 +41,6 @@ final class ClassIndexCacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
-        PrestaShopAutoload::getInstance()->generateIndex();
+        PrestashopAutoload::getInstance()->generateIndex();
     }
 }

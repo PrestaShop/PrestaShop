@@ -2813,7 +2813,15 @@ FileETag none
 
     public static function generateIndex()
     {
-        PrestaShopAutoload::getInstance()->generateIndex();
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
     }
 
     /**
