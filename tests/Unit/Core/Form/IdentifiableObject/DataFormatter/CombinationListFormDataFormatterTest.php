@@ -105,5 +105,16 @@ class CombinationListFormDataFormatterTest extends TestCase
                 ],
             ],
         ];
+
+        yield 'is_default data' => [
+            [
+                'is_default' => true,
+            ],
+            [
+                'header' => [
+                    'is_default' => true,
+                ],
+            ],
+        ];
     }
 }
