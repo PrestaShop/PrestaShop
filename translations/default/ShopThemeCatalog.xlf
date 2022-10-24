@@ -14,12 +14,12 @@
       <trans-unit id="9dea4016dbcc290b773ab2fae678aaa8">
         <source>Items</source>
         <target>Items</target>
-        <note>Line: 1134</note>
+        <note>Line: 1155</note>
       </trans-unit>
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
-        <note>Line: 1134</note>
+        <note>Line: 1155</note>
       </trans-unit>
     </body>
   </file>
@@ -684,6 +684,15 @@
         <source>Stay tuned! More products will be shown here as they are added.</source>
         <target>Stay tuned! More products will be shown here as they are added.</target>
         <note>Line: 35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/errors/410.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9189b9d0be364a501aa527e5d8265d3">
+        <source>No products available</source>
+        <target>No products available</target>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
