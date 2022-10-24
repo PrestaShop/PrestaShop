@@ -24,12 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\Autoload\PrestashopAutoload;
 use PrestaShop\PrestaShop\Core\Version;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 define('_PS_VERSION_', Version::VERSION);
 
-require_once _PS_CONFIG_DIR_.'alias.php';
-require_once _PS_CLASS_DIR_.'PrestaShopAutoload.php';
-spl_autoload_register(array(PrestaShopAutoload::getInstance(), 'load'));
+require_once _PS_CONFIG_DIR_ . 'alias.php';
+
+PrestashopAutoload::create(_PS_ROOT_DIR_, _PS_CACHE_DIR_)
+    ->register();

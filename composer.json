@@ -58,6 +58,7 @@
         "pear/archive_tar": "^1.4.12",
         "pelago/emogrifier": "^v5.0.1",
         "phpoffice/phpspreadsheet": "^1.19",
+        "prestashop/autoload": "^1.0",
         "prestashop/blockreassurance": "^5.1",
         "prestashop/blockwishlist": "^2.0",
         "prestashop/circuit-breaker": "^4.0",
@@ -206,6 +207,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/atomiix/jwt"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/PrestaShop/autoload"
         }
     ],
     "minimum-stability": "dev",

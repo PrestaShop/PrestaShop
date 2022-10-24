@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\Autoload\LegacyClassLoader;
+
+@trigger_error('Using PrestaShopAutoload is deprecated, use Prestashop\Autoload\PrestaShopAutoload instead', E_USER_DEPRECATED);
+
 /**
  * Class PrestaShopAutoload.
  *
@@ -48,6 +52,11 @@ class PrestaShopAutoload
 
     public $_include_override_path = true;
 
+    /**
+     * @var LegacyClassLoader
+     */
+    protected $classLoader;
+
     protected static $class_aliases = [
         'Collection' => 'PrestaShopCollection',
         'Autoload' => 'PrestaShopAutoload',
@@ -58,7 +67,8 @@ class PrestaShopAutoload
     protected function __construct()
     {
         $this->root_dir = _PS_CORE_DIR_ . '/';
-        $file = static::getCacheFileIndex();
+        $this->classLoader = new LegacyClassLoader(_PS_ROOT_DIR_, _PS_CACHE_DIR_);
+        $file = $this->classLoader->getClassIndexFilepath();
         $stubFile = static::getStubFileIndex();
         if (@filemtime($file) && is_readable($file) && @filemtime($stubFile) && is_readable($stubFile)) {
             $this->index = include $file;
@@ -154,7 +164,9 @@ class PrestaShopAutoload
             require_once $this->root_dir . $this->index[$className]['path'];
         }
         if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
-            require_once static::getNamespacedStubFileIndex();
+            $legacyClass = substr($className, 37);
+            $this->load($legacyClass);
+            class_alias($legacyClass, '\\' . $className);
         }
     }
 
@@ -172,70 +184,7 @@ class PrestaShopAutoload
             }
         }
 
-        $coreClasses = $this->getClassesFromDir('classes/');
-
-        $classes = array_merge(
-            $coreClasses,
-            $this->getClassesFromDir('controllers/')
-        );
-
-        $contentNamespacedStub = '<?php ' . "\n" . 'namespace PrestaShop\\PrestaShop\\Adapter\\Entity;' . "\n\n";
-
-        foreach ($coreClasses as $coreClassName => $coreClass) {
-            if (substr($coreClassName, -4) == 'Core') {
-                $coreClassName = substr($coreClassName, 0, -4);
-                if ($coreClass['type'] != 'interface') {
-                    $contentNamespacedStub .= $coreClass['type'] . ' ' . $coreClassName . ' extends \\' . $coreClassName . ' {};' . "\n";
-                }
-            }
-        }
-
-        if ($this->_include_override_path) {
-            $coreOverrideClasses = $this->getClassesFromDir('override/classes/');
-            $coreClassesWOOverrides = array_diff_key($coreClasses, $coreOverrideClasses);
-
-            $classes = array_merge(
-                $classes,
-                $coreOverrideClasses,
-                $this->getClassesFromDir('override/controllers/')
-            );
-        } else {
-            $coreClassesWOOverrides = $coreClasses;
-        }
-
-        $contentStub = '<?php' . "\n\n";
-
-        foreach ($coreClassesWOOverrides as $coreClassName => $coreClass) {
-            if (substr($coreClassName, -4) == 'Core') {
-                $coreClassNameNoCore = substr($coreClassName, 0, -4);
-                if ($coreClass['type'] != 'interface') {
-                    $contentStub .= $coreClass['type'] . ' ' . $coreClassNameNoCore . ' extends ' . $coreClassName . ' {};' . "\n";
-                }
-            }
-        }
-
-        ksort($classes);
-        $content = '<?php return ' . var_export($classes, true) . '; ?>';
-
-        // Write classes index on disc to cache it
-        $filename = static::getCacheFileIndex();
-        @mkdir(_PS_CACHE_DIR_, 0777, true);
-
-        if (!$this->dumpFile($filename, $content)) {
-            Tools::error_log('Cannot write temporary file ' . $filename);
-        }
-
-        $stubFilename = static::getStubFileIndex();
-        if (!$this->dumpFile($stubFilename, $contentStub)) {
-            Tools::error_log('Cannot write temporary file ' . $stubFilename);
-        }
-
-        $namespacedStubFilename = static::getNamespacedStubFileIndex();
-        if (!$this->dumpFile($namespacedStubFilename, $contentNamespacedStub)) {
-            Tools::error_log('Cannot write temporary file ' . $namespacedStubFilename);
-        }
-
-        $this->index = $classes;
+        $this->index = $this->classLoader->buildClassIndex($this->_include_override_path);
     }
 
     /**
@@ -330,5 +279,3 @@ class PrestaShopAutoload
         return (isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
     }
 }
-
-spl_autoload_register([PrestaShopAutoload::getInstance(), 'load']);
