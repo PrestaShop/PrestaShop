@@ -40,6 +40,7 @@ final class AvifExtensionChecker
 
     public function isAvailable()
     {
+        // TODO add a check to execute imageavif() and see if it fails
         return extension_loaded('gd') &&
             version_compare(PHP_VERSION, '8.1') >= 0 &&
             (bool) $this->psAdditionalImageAvif &&
@@ -47,17 +48,4 @@ final class AvifExtensionChecker
             is_callable('imageavif');
         ;
     }
-
-    /**
-     *             // We try to use the imageavif() function.
-    // It can fail even if `function_exists('imageavif')` returns true.
-    // @see https://stackoverflow.com/questions/71739530/php-8-1-imageavif-avif-image-support-has-been-disabled
-    // @todo When this issue will be fixed on main OS (Debian, CentOS), we need to remove this patch
-    /* try {
-    $image = imagecreatetruecolor(250, 250);
-    imageavif($image, 'test.avif');
-    } catch {
-
-    }*/
-
 }
