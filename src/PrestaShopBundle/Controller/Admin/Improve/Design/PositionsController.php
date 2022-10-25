@@ -279,37 +279,6 @@ class PositionsController extends FrameworkBundleAdminController
         return $this->json($response);
     }
 
-
-    /**
-     * Get hook status
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getStatusAction(Request $request)
-    {
-        $hookId = (int) $request->request->get('hookId');
-        $hookStatus = false;
-
-        try {
-            $hookStatus = $this->getQueryBus()->handle(new GetHookStatus($hookId));
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
-            ];
-        } catch (HookException $e) {
-            $response = [
-                'status' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
-            ];
-        }
-
-        $response['hook_status'] = $hookStatus;
-
-        return $this->json($response);
-    }
-
     /**
      * @return array
      */
