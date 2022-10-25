@@ -32,6 +32,10 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
+/**
+ * Provides data for the product shop selection form, mostly which shops are associated to the product
+ * and which one is the current selected shop.
+ */
 class ProductShopsFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -56,10 +60,13 @@ class ProductShopsFormDataProvider implements FormDataProviderInterface
         $this->contextShopId = $contextShopId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getData($id)
     {
         $associatedShopIds = $this->productRepository->getAssociatedShopIds(new ProductId($id));
-        $selectedShops = array_map(static function (ShopId $shopId) {
+        $selectedShops = array_map(static function (ShopId $shopId): int {
             return $shopId->getValue();
         }, $associatedShopIds);
 
@@ -70,6 +77,9 @@ class ProductShopsFormDataProvider implements FormDataProviderInterface
         ];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getDefaultData()
     {
         // This form is not used for creation only update anyway

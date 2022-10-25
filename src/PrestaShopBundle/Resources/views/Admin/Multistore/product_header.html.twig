@@ -26,7 +26,7 @@
 {% extends '@PrestaShop/Admin/Multistore/header.html.twig' %}
 
 {% block multishop_header_right %}
-  <a class="header-multishop-view-action product-shops-action" href="{{ url('admin_products_shops', {productId: productId}) }}" target="_blank" rel="nofollow">
+  <a class="header-multishop-view-action product-shops-action" href="{{ url('admin_products_select_shops', {productId: productId}) }}" target="_blank" rel="nofollow">
     {{ "Select shops"|trans({}, 'Admin.Navigation.Header') }}
     {% include '@PrestaShop/Admin/Multistore/shop_icon.html.twig' %}
   </a>

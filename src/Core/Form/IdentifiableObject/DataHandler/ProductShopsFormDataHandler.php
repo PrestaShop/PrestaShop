@@ -58,11 +58,17 @@ class ProductShopsFormDataHandler implements FormDataHandlerInterface
         $this->shopRepository = $shopRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function create(array $data)
     {
         // The form is only used for update not creation
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function update($id, array $data)
     {
         $productId = (int) $id;
@@ -70,7 +76,7 @@ class ProductShopsFormDataHandler implements FormDataHandlerInterface
 
         $sourceShopId = (int) $data['source_shop_id'];
         $selectedShops = $data['selected_shops'];
-        $initialShops = array_map(static function (string $shopId) {
+        $initialShops = array_map(static function (string $shopId): int {
             return (int) $shopId;
         }, $data['initial_shops']);
 

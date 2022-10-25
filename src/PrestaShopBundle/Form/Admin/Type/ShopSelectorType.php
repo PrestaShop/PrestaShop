@@ -38,6 +38,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * This form type is used to select one or multiple shops, it is used with the
+ */
 class ShopSelectorType extends ChoiceType
 {
     /**

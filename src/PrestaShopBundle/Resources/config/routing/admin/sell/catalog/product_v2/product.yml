@@ -56,11 +56,11 @@ admin_products_v2_edit:
   options:
     expose: true
 
-admin_products_shops:
+admin_products_select_shops:
   path: /{productId}/shops
   methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::productShopsAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::selectProductShopsAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:assignshops

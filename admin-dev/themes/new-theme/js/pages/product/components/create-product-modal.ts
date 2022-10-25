@@ -31,8 +31,8 @@ import {FormIframeModal} from '@components/modal';
  * it opens an iframe modal, in the iframe the create product page is displayed, allowing you to
  * select the product type (and maybe initial shop) and then you can submit the form.
  *
- * When the creations success the edition form is displayed, at this moment this component catches
- * the refresh even from the iframe and gets the product ID thanks to the edit form data attributes.
+ * Once the creation succeeds, the edition form is displayed, at this moment this component catches
+ * the refresh event from the iframe and gets the product ID from the edit form data attributes.
  *
  * Finally, it opens the edition page of the created product in the current tab.
  */
@@ -48,18 +48,18 @@ export default class CreateProductModal {
     $(ProductMap.create.newProductButton).on('click', (event: JQuery.ClickEvent) => {
       event.preventDefault();
       const $link = $(event.target);
-      const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
+      const formUrl = `${$link.prop('href')}&liteDisplaying=1`;
 
-      this.openCreationModal(linkUrl);
+      this.openCreationModal(formUrl);
     });
   }
 
-  private openCreationModal(linkUrl: string): void {
+  private openCreationModal(formUrl: string): void {
     const iframeModal = new FormIframeModal({
       id: ProductMap.create.modalId,
       // We use the edit form selector because it's the one we need to get data attributes from
       formSelector: ProductMap.productForm,
-      formUrl: linkUrl,
+      formUrl,
       closable: true,
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
       // are not computed in the size)

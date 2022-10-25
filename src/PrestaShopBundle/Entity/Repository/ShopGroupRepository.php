@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
+use PrestaShopBundle\Entity\ShopGroup;
+
 /**
  * ShopGroupRepository.
  *
@@ -39,7 +41,7 @@ class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
      *
      * @param string $searchTerm
      *
-     * @return array
+     * @return ShopGroup[]
      */
     public function findBySearchTerm(string $searchTerm): array
     {
@@ -53,6 +55,9 @@ class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @return ShopGroup[]
+     */
     public function findActive(): array
     {
         return $this->findBy(['active' => true]);

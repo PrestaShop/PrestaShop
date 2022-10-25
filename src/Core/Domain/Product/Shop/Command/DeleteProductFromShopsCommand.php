@@ -48,7 +48,7 @@ class DeleteProductFromShopsCommand
 
     /**
      * @param int $productId
-     * @param array $shopIds
+     * @param int[] $shopIds
      */
     public function __construct(
         int $productId,

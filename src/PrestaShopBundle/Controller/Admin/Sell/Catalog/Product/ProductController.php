@@ -150,7 +150,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function productShopsAction(Request $request, int $productId): Response
+    public function selectProductShopsAction(Request $request, int $productId): Response
     {
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
@@ -171,7 +171,7 @@ class ProductController extends FrameworkBundleAdminController
                     $redirectParams['liteDisplaying'] = true;
                 }
 
-                return $this->redirectToRoute('admin_products_shops', $redirectParams);
+                return $this->redirectToRoute('admin_products_select_shops', $redirectParams);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -209,10 +209,11 @@ class ProductController extends FrameworkBundleAdminController
 
                 $redirectParams = ['productId' => $result->getIdentifiableObjectId()];
 
-                // Force shop context switching to selected shop for creation
                 $createdData = $productForm->getData();
                 if (!empty($createdData['shop_id'])) {
                     $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+
+                    // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
                     $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
                 }
 

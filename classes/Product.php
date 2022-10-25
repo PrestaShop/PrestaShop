@@ -8310,11 +8310,10 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * Checks if product si still associated to its default shop, if not update with the first association found.
+     * Checks if product is still associated to its default shop, if not update with the first association found.
      */
     protected function updateDefaultShop(): void
     {
-        // Update default shop if needed
         $hasDefaultShopAssociation = Db::getInstance()->getValue(
             'SELECT COUNT(p.id_product) FROM `' . _DB_PREFIX_ . 'product_shop` ps
                      LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product` AND ps.`id_shop` = p.`id_shop_default`
@@ -8322,8 +8321,8 @@ class ProductCore extends ObjectModel
         );
 
         if (!$hasDefaultShopAssociation) {
-            $sql = 'SELECT ps.`id_shop` AS id_shop FROM `' . _DB_PREFIX_ . 'product_shop` ps WHERE ps.`id_product` = ' . (int) $this->id . ' ORDER BY ps.`id_shop` ASC';
-            $firstAssociatedShop = (int) Db::getInstance()->getValue($sql);
+            // Update default shop if needed, use the first associated shop (based on its ID) as the default fallback
+            $firstAssociatedShop = (int) Db::getInstance()->getValue('SELECT ps.`id_shop` AS id_shop FROM `' . _DB_PREFIX_ . 'product_shop` ps WHERE ps.`id_product` = ' . (int) $this->id . ' ORDER BY ps.`id_shop` ASC');
             Db::getInstance()->update('product', [
                 'id_shop_default' => $firstAssociatedShop,
             ], 'id_product = ' . (int) $this->id);
