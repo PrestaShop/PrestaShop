@@ -124,8 +124,15 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
         ;
+
+        // Any sorting that is not based on position can be applied
+        if ($searchCriteria->getOrderBy() !== 'position') {
+            $this->searchCriteriaApplicator->applySorting($searchCriteria, $qb);
+        } elseif (array_key_exists('id_category', $searchCriteria->getFilters())) {
+            // Sort by position only works when we filter by category, so we need to be cautious and apply it only when the filter is present
+            $this->searchCriteriaApplicator->applySorting($searchCriteria, $qb);
+        }
 
         return $qb;
     }
