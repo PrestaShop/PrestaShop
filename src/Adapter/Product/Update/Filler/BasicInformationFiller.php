@@ -34,7 +34,7 @@ use Product;
 /**
  * Fills product properties which can be considered as a basic product information
  */
-class ProductBasicInformationPropertyFiller implements ProductUpdatablePropertyFillerInterface
+class BasicInformationFiller implements ProductFillerInterface
 {
     /**
      * @var int

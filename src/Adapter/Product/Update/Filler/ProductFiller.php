@@ -36,15 +36,15 @@ use Product;
  *
  * All the internal property fillers are split just to contain less code and be more readable (because the Product contains many of properties).
  */
-class ProductUpdatablePropertyFiller implements ProductUpdatablePropertyFillerInterface
+class ProductFiller implements ProductFillerInterface
 {
     /**
-     * @var ProductUpdatablePropertyFillerInterface[]
+     * @var ProductFillerInterface[]
      */
     private $updatablePropertyFillers;
 
     /**
-     * @param ProductUpdatablePropertyFillerInterface[] $updatablePropertyFillers
+     * @param ProductFillerInterface[] $updatablePropertyFillers
      */
     public function __construct(
         iterable $updatablePropertyFillers

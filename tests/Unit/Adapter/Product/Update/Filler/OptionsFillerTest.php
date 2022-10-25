@@ -27,14 +27,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductOptionsPropertyFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFillerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\OptionsFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use Product;
 
-class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
+class OptionsFillerTest extends ProductFillerTestCase
 {
     /**
      * @dataProvider getDataForTestShowPriceAndAvailableForOrderProperties
@@ -183,8 +183,8 @@ class ProductOptionsPropertyFillerTest extends PropertyFillerTestCase
         ];
     }
 
-    public function getFiller(): ProductUpdatablePropertyFillerInterface
+    public function getFiller(): ProductFillerInterface
     {
-        return new ProductOptionsPropertyFiller();
+        return new OptionsFiller();
     }
 }
