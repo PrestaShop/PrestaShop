@@ -64,6 +64,7 @@ class PaymentModuleGroupRestrictionsType extends PaymentModuleRestrictionsParent
         $builder
             ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
                     'Please select available payment modules for each customer group.',
                     'Admin.Payment.Help'

@@ -64,6 +64,7 @@ class PaymentModuleCarrierRestrictionsType extends PaymentModuleRestrictionsPare
         $builder
             ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'help' => $this->trans(
                     'Please select available payment modules for each carrier.',
                     'Admin.Payment.Help'
