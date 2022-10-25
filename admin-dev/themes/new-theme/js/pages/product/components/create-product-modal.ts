@@ -45,12 +45,12 @@ export default class CreateProductModal {
   }
 
   private init(): void {
-    $(ProductMap.create.newProductButton).on('click', (event: JQuery.ClickEvent) => {
-      event.preventDefault();
-      const $link = $(event.target);
-      const formUrl = `${$link.prop('href')}&liteDisplaying=1`;
-
-      this.openCreationModal(formUrl);
+    document.querySelectorAll<HTMLElement>(ProductMap.create.newProductButton).forEach((button: HTMLElement) => {
+      button.addEventListener('click', (event: MouseEvent) => {
+        event.preventDefault();
+        const formUrl = `${button.getAttribute('href')}&liteDisplaying=1`;
+        this.openCreationModal(formUrl);
+      });
     });
   }
 

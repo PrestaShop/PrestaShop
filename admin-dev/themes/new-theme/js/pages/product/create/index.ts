@@ -33,20 +33,24 @@ $(() => {
     'ShopSelector',
   ]);
 
-  const $shopSelectorInput = $(ComponentsMap.shopSelector.selectInput);
-  const $shopSelectorGroup = $shopSelectorInput.parents('.form-group').first();
+  const shopSelectorInput = document.querySelector<HTMLSelectElement>(ComponentsMap.shopSelector.selectInput);
+  const shopSelectorGroup = shopSelectorInput?.closest<HTMLElement>('.form-group');
 
   // If multi shop is enabled the shop selector will be present
-  if ($shopSelectorGroup.length > 0) {
+  if (shopSelectorGroup) {
     // Hide all other form groups and only show the shop selector first
-    const $formGroups = $(`${ProductMap.create.createFieldId} > .form-group`);
-    $formGroups.hide();
-    $shopSelectorGroup.show();
+    const formGroups = document.querySelectorAll<HTMLElement>(`${ProductMap.create.createFieldId} > .form-group`);
+    formGroups.forEach((formGroup: HTMLElement) => {
+      formGroup.classList.add('d-none');
+    });
+    shopSelectorGroup.classList.remove('d-none');
 
     // As soon as a shop is selected show the rest of the form
-    $shopSelectorInput.on('change', () => {
-      $formGroups.show();
-      $shopSelectorGroup.hide();
+    shopSelectorInput?.addEventListener('change', () => {
+      formGroups.forEach((formGroup: HTMLElement) => {
+        formGroup.classList.remove('d-none');
+      });
+      shopSelectorGroup.classList.add('d-none');
     });
   }
 

@@ -46,12 +46,12 @@ export default class ProductShopsModal {
   }
 
   private init(): void {
-    $(ProductMap.shops.modalButtons).on('click', (event: JQuery.ClickEvent) => {
-      event.preventDefault();
-      const $link = $(event.target);
-      const formUrl = `${$link.prop('href')}&liteDisplaying=1`;
-
-      this.openCreationModal(formUrl, $link.text());
+    document.querySelectorAll<HTMLElement>(ProductMap.shops.modalButtons).forEach((button: HTMLElement) => {
+      button.addEventListener('click', (event: MouseEvent) => {
+        event.preventDefault();
+        const formUrl = `${button.getAttribute('href')}&liteDisplaying=1`;
+        this.openCreationModal(formUrl, button.innerText);
+      });
     });
   }
 
