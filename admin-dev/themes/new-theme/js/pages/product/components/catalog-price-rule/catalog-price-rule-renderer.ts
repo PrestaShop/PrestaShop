@@ -128,7 +128,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     const field = templateTrClone.querySelector<HTMLElement>(selector);
 
     if (field === null) {
-      console.error(`Error: ${selector} element not found`);
+      throw new Error(`Error: ${selector} element not found`);
     }
     return field;
   }
@@ -137,7 +137,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     const field = templateTrClone.querySelector<HTMLLinkElement>(selector);
 
     if (field === null) {
-      console.error(`Error: ${selector} element not found`);
+      throw new Error(`Error: ${selector} element not found`);
     }
     return field;
   }
