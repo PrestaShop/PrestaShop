@@ -9572,16 +9572,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.3.10",
+            "version": "v3.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "8442df056c51b706793adf80a9fd363406dd3674"
+                "reference": "c38fd6b0b7f370c198db91ffd02e23b517426b58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8442df056c51b706793adf80a9fd363406dd3674",
-                "reference": "8442df056c51b706793adf80a9fd363406dd3674",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c38fd6b0b7f370c198db91ffd02e23b517426b58",
+                "reference": "c38fd6b0b7f370c198db91ffd02e23b517426b58",
                 "shasum": ""
             },
             "require": {
@@ -9596,7 +9596,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -9632,7 +9632,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.3.10"
+                "source": "https://github.com/twigphp/Twig/tree/v3.4.3"
             },
             "funding": [
                 {
@@ -9644,7 +9644,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-06T06:47:41+00:00"
+            "time": "2022-09-28T08:42:51+00:00"
         },
         {
             "name": "willdurand/jsonp-callback-validator",
