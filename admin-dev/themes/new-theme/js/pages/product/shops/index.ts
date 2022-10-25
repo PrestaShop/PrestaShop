@@ -35,7 +35,7 @@ $(() => {
 
   // eslint-disable-next-line
   const iframeClient: IframeClient = window.prestashop.instance.iframeClient;
-  $(ProductMap.shops.cancelButton).on('click', () => {
+  document.querySelector<HTMLElement>(ProductMap.shops.cancelButton)?.addEventListener('click', () => {
     iframeClient.dispatchEvent(ProductEventMap.cancelProductShops);
   });
 });

@@ -24,8 +24,6 @@
  */
 import ComponentsMap from '@components/components-map';
 
-import ClickEvent = JQuery.ClickEvent;
-
 /**
  * Component that handle shop selector, basically a select input customized for better UI.
  * The layout is found in the shop_selector_widget from src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/multishop.html.twig
@@ -38,65 +36,97 @@ import ClickEvent = JQuery.ClickEvent;
  */
 export default class ShopSelector {
   constructor() {
-    $(ComponentsMap.shopSelector.container).each((index, container) => {
-      const $container = $(container);
-      const isMultiple = $container.data('multiple');
+    document.querySelectorAll<HTMLElement>(ComponentsMap.shopSelector.container).forEach((container: HTMLElement) => {
+      const isMultiple = container.dataset.multiple;
 
       if (isMultiple) {
-        const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $container).first();
-        const initialShops: string[] = <string[]> $shopSelector.val() || [];
-        $shopSelector.data('initialShops', initialShops.join(','));
+        const shopSelectorInput = container.querySelector<HTMLSelectElement>(ComponentsMap.shopSelector.selectInput);
+
+        if (shopSelectorInput) {
+          const initialShops: string[] = [];
+          Array.from(shopSelectorInput.selectedOptions).forEach((option: HTMLOptionElement) => {
+            initialShops.push(option.value);
+          });
+          shopSelectorInput.dataset.initialShops = initialShops.join(',');
+        }
       }
     });
 
-    $(document).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
-      const $clickedShop: JQuery = $(event.currentTarget);
-      const $container = $clickedShop.parents(ComponentsMap.shopSelector.container).first();
-      const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $container).first();
-      const isMultiple = $container.data('multiple');
+    document.querySelectorAll<HTMLElement>(ComponentsMap.shopSelector.shopItem).forEach((shopItem: HTMLElement) => {
+      shopItem.addEventListener('click', (event: MouseEvent) => {
+        const clickedShop: HTMLElement = event.currentTarget as HTMLElement;
+        const container = clickedShop.closest<HTMLElement>(ComponentsMap.shopSelector.container);
 
-      if (isMultiple) {
-        this.selectMultipleShops($container, $shopSelector);
-      } else {
-        this.selectSingleShop($clickedShop, $shopSelector);
-      }
+        if (container) {
+          const isMultiple = container.dataset.multiple;
+          const shopSelectorInput = container.querySelector<HTMLSelectElement>(ComponentsMap.shopSelector.selectInput);
+
+          if (!shopSelectorInput) {
+            console.error(`Could not find selector ${ComponentsMap.shopSelector.selectInput}`);
+            return;
+          }
+
+          if (isMultiple) {
+            this.selectMultipleShops(container, shopSelectorInput);
+          } else {
+            this.selectSingleShop(clickedShop, shopSelectorInput);
+          }
+        }
+      });
     });
   }
 
-  private selectSingleShop($selectedShop: JQuery, $shopSelector: JQuery): void {
-    $(ComponentsMap.shopSelector.shopItem).removeClass(ComponentsMap.shopSelector.selectedClass);
-    $selectedShop.addClass(ComponentsMap.shopSelector.selectedClass);
+  private selectSingleShop(selectedShop: HTMLElement, shopSelectorInput: HTMLSelectElement): void {
+    document.querySelectorAll<HTMLElement>(ComponentsMap.shopSelector.shopItem).forEach((shopItem: HTMLElement) => {
+      shopItem.classList.remove(ComponentsMap.shopSelector.selectedClass);
+    });
 
-    $shopSelector.val($selectedShop.data('shopId')).trigger('change');
+    selectedShop.classList.add(ComponentsMap.shopSelector.selectedClass);
+    // eslint-disable-next-line no-param-reassign
+    shopSelectorInput.value = selectedShop.dataset.shopId ?? '';
+    shopSelectorInput.dispatchEvent(new Event('change'));
   }
 
-  private selectMultipleShops($container: JQuery, $shopSelector: JQuery): void {
-    const $shops: JQuery = $(ComponentsMap.shopSelector.shopItem, $container);
-    const selectedShops: string[] = [];
-    const initialShops: string[] = $shopSelector.data('initialShops').split(',').map((shopId: string) => parseInt(shopId, 10));
+  private selectMultipleShops(container: HTMLElement, shopSelectorInput: HTMLSelectElement): void {
+    const selectedShops: number[] = [];
+    const shopData: string = shopSelectorInput.dataset.initialShops ?? '';
+    const initialShops: number[] = shopData.split(',').map((shopId: string) => parseInt(shopId, 10));
 
-    $shops.each((index, shopItem) => {
-      const $shopItem: JQuery = $(shopItem);
+    container.querySelectorAll<HTMLElement>(ComponentsMap.shopSelector.shopItem).forEach((shopItem: HTMLElement) => {
+      const shopId: number = parseInt(shopItem.dataset.shopId ?? '', 10);
 
-      if ($shopItem.hasClass(ComponentsMap.shopSelector.currentClass)) {
-        selectedShops.push($shopItem.data('shopId'));
+      if (Number.isNaN(shopId)) {
         return;
       }
 
-      const $shopStatus: JQuery = $(ComponentsMap.shopSelector.shopStatus, $shopItem);
-      const $checkbox:JQuery = $('input', $shopItem);
-      const initiallySelected: boolean = initialShops.includes($shopItem.data('shopId'));
+      if (shopItem.classList.contains(ComponentsMap.shopSelector.currentClass)) {
+        selectedShops.push(shopId);
+        return;
+      }
 
-      if ($checkbox.is(':checked')) {
-        selectedShops.push($shopItem.data('shopId'));
-        $shopItem.toggleClass(ComponentsMap.shopSelector.selectedClass, !initiallySelected);
-        $shopStatus.html(initiallySelected ? '' : $shopStatus.data('addedLabel'));
+      const shopStatus = shopItem.querySelector<HTMLElement>(ComponentsMap.shopSelector.shopStatus);
+      const checkbox = shopItem.querySelector('input');
+      const initiallySelected: boolean = initialShops.includes(shopId);
+
+      if (checkbox?.checked) {
+        selectedShops.push(shopId);
+        shopItem.classList.toggle(ComponentsMap.shopSelector.selectedClass, !initiallySelected);
+        if (shopStatus) {
+          shopStatus.innerHTML = initiallySelected ? '' : shopStatus?.dataset.addedLabel ?? '';
+        }
       } else {
-        $shopStatus.html(initiallySelected ? $shopStatus.data('removedLabel') : '');
-        $shopItem.toggleClass(ComponentsMap.shopSelector.selectedClass, initiallySelected);
+        shopItem.classList.toggle(ComponentsMap.shopSelector.selectedClass, initiallySelected);
+        if (shopStatus) {
+          shopStatus.innerHTML = initiallySelected ? shopStatus?.dataset.removedLabel ?? '' : '';
+        }
       }
     });
 
-    $shopSelector.val(selectedShops).trigger('change');
+    // Finally apply/update the selected choices
+    Array.from(shopSelectorInput.options).forEach((option: HTMLOptionElement) => {
+      // eslint-disable-next-line no-param-reassign
+      option.selected = selectedShops.includes(parseInt(option.value, 10));
+    });
+    shopSelectorInput.dispatchEvent(new Event('change'));
   }
 }
