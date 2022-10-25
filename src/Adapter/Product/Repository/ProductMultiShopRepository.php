@@ -218,38 +218,15 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     * @param ShopConstraint $shopConstraint
-     * @param int $errorCode
-     */
-    public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
-        $this->validateProduct($product, $propertiesToUpdate);
-        $this->partiallyUpdateObjectModelForShops(
-            $product,
-            $propertiesToUpdate,
-            $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint),
-            CannotUpdateProductException::class,
-            $errorCode
-        );
-    }
-
-    /**
      * @param ProductId $productId
      * @param CarrierReferenceId[] $carrierReferenceIds
      * @param ShopConstraint $shopConstraint
      */
     public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
     {
-        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
         $shopIds = array_map(function (ShopId $shopId): int {
             return $shopId->getValue();
-        }, $shopIds);
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
 
         $productIdValue = $productId->getValue();
 
@@ -446,27 +423,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return ShopId[]
-     *
-     * @throws InvalidShopConstraintException
-     */
-    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
-        if ($shopConstraint->forAllShops()) {
-            return $this->getAssociatedShopIds($productId);
-        }
-
-        return [$shopConstraint->getShopId()];
-    }
-
-    /**
-     * @param ProductId $productId
      *
      * @return Product
      *
@@ -498,6 +454,28 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         );
 
         return $this->loadProduct($product);
+    }
+
+    /**
+     * Returns a single shop ID when the constraint is a single shop, and the list of shops associated to the product
+     * when the constraint is for all shops (shop group constraint is forbidden)
+     *
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return ShopId[]
+     */
+    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            return $this->getAssociatedShopIds($productId);
+        }
+
+        return [$shopConstraint->getShopId()];
     }
 
     /**
