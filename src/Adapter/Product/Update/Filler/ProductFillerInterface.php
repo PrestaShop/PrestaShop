@@ -32,7 +32,7 @@ use Product;
 /**
  * Responsible for filling up the Product with the properties which have to be updated
  */
-interface ProductUpdatablePropertyFillerInterface
+interface ProductFillerInterface
 {
     /**
      * Fill product properties from the command and return an array of the properties to update.

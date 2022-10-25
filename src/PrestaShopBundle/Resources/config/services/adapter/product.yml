@@ -518,25 +518,25 @@ services:
   prestashop.adapter.product.command_handler.update_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler
     arguments:
-      - '@prestashop.adapter.product.update.filler.product_updatable_property_filler'
+      - '@prestashop.adapter.product.update.filler.product_filler'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.update.product_indexation_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
-  prestashop.adapter.product.update.filler.product_updatable_property_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFiller
+  prestashop.adapter.product.update.filler.product_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller
     arguments:
-      - !tagged core.product_updatable_property_filler
+      - !tagged core.product_filler
 
-  prestashop.adapter.product.update.filler.product_basic_information_property_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductBasicInformationPropertyFiller
+  prestashop.adapter.product.update.filler.basic_information_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
       - '@prestashop.adapter.tools'
-    tags: [ 'core.product_updatable_property_filler' ]
+    tags: [ 'core.product_filler' ]
 
-  prestashop.adapter.product.update.filler.product_options_property_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductOptionsPropertyFiller
-    tags: [ 'core.product_updatable_property_filler' ]
+  prestashop.adapter.product.update.filler.options_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\OptionsFiller
+    tags: [ 'core.product_filler' ]

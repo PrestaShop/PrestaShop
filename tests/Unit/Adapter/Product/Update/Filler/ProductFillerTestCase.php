@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFillerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 
-abstract class PropertyFillerTestCase extends TestCase
+abstract class ProductFillerTestCase extends TestCase
 {
     protected const DEFAULT_LANG_ID = 1;
     protected const DEFAULT_SHOP_ID = 2;
@@ -64,9 +64,15 @@ abstract class PropertyFillerTestCase extends TestCase
         $this->assertEquals($expectedProduct, $product);
     }
 
+    /**
+     * @return iterable
+     */
     abstract public function getDataForTestFillsUpdatableProperties(): iterable;
 
-    abstract public function getFiller(): ProductUpdatablePropertyFillerInterface;
+    /**
+     * @return ProductFillerInterface
+     */
+    abstract public function getFiller(): ProductFillerInterface;
 
     /**
      * This method mocks product into its default state.

@@ -27,18 +27,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductBasicInformationPropertyFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductUpdatablePropertyFillerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
 
-class ProductBasicInformationPropertyFillerTest extends PropertyFillerTestCase
+class BasicInformationFillerTest extends ProductFillerTestCase
 {
     /**
-     * @return ProductUpdatablePropertyFillerInterface
+     * @return ProductFillerInterface
      */
-    public function getFiller(): ProductUpdatablePropertyFillerInterface
+    public function getFiller(): ProductFillerInterface
     {
-        return new ProductBasicInformationPropertyFiller(
+        return new BasicInformationFiller(
             self::DEFAULT_LANG_ID,
             $this->mockTools()
         );

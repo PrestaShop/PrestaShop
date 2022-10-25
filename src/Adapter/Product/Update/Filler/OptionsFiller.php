@@ -33,7 +33,7 @@ use Product;
 /**
  * Fills product properties which can be considered as product options
  */
-class ProductOptionsPropertyFiller implements ProductUpdatablePropertyFillerInterface
+class OptionsFiller implements ProductFillerInterface
 {
     /**
      * {@inheritDoc}
