@@ -218,6 +218,30 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
+        $this->validateProduct($product, $propertiesToUpdate);
+        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
+
+        $this->partiallyUpdateObjectModelForShops(
+            $product,
+            $propertiesToUpdate,
+            $shopIds,
+            CannotUpdateProductException::class,
+            $errorCode
+        );
+    }
+
+    /**
      * @param ProductId $productId
      * @param CarrierReferenceId[] $carrierReferenceIds
      * @param ShopConstraint $shopConstraint
