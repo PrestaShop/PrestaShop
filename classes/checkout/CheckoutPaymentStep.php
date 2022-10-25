@@ -90,7 +90,10 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         } else {
             $selectedDeliveryOption = 0;
         }
-        unset($selectedDeliveryOption['product_list']);
+
+        if (true === is_array($selectedDeliveryOption)) {
+            unset($selectedDeliveryOption['product_list']);
+        }
 
         if (count($paymentOptions) === 1) {
             $this->selected_payment_option = 'payment-option-1';
