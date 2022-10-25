@@ -41,7 +41,7 @@ class AdminImagesControllerCore extends AdminController
         $this->className = 'ImageType';
         $this->lang = false;
 
-        $this->generateAdditionalAvif = $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
+        $this->generateAdditionalAvif = $this->buildContainer()->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');

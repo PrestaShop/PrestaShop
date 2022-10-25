@@ -1,0 +1,21 @@
+name: fork-ps
+type: php
+docroot: ""
+php_version: "7.4"
+webserver_type: apache-fpm
+router_http_port: "80"
+router_https_port: "443"
+xdebug_enabled: false
+additional_hostnames: [boutique2]
+additional_fqdns: []
+database:
+  type: mariadb
+  version: "10.4"
+nfs_mount_enabled: false
+mutagen_enabled: false
+use_dns_when_possible: true
+composer_version: "2"
+web_environment: []
+nodejs_version: "14"
+webimage_extra_packages: [build-essential]
+
