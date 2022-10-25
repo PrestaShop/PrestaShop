@@ -83,11 +83,11 @@ class PrestaShopAutoloadTest extends TestCase
         $this->assertFileExists($this->file_index);
         $data = include $this->file_index;
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
-        $this->assertEquals($data['Connection']['override'], false);
+        $this->assertEquals($data['Connection']['path'], '');
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
         PrestaShopAutoload::getInstance()->generateIndex();
         $data = include $this->file_index;
-        $this->assertEquals($data['Connection']['override'], false);
+        $this->assertEquals($data['Connection']['path'], 'override/classes/Connection.php');
     }
 
     public function testClassFromCoreDirShouldntBeLoaded(): void
