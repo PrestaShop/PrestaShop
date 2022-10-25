@@ -9,6 +9,12 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Configuration\PhpExtensionChecker'
     public: true
 
+  prestashop.core.configuration.avif_extension_checker:
+    class: 'PrestaShop\PrestaShop\Core\Configuration\AvifExtensionChecker'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_ADDITIONAL_IMAGE_AVIF")'
+
   prestashop.core.configuration.upload_size_configuration:
     class: 'PrestaShop\PrestaShop\Core\Configuration\UploadSizeConfiguration'
     arguments:

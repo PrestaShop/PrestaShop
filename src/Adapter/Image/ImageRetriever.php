@@ -33,6 +33,7 @@ use ImageManager;
 use ImageType;
 use Language;
 use Link;
+use PrestaShop\PrestaShop\Core\Configuration\AvifExtensionChecker;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -48,9 +49,15 @@ class ImageRetriever
      */
     private $link;
 
-    public function __construct(Link $link)
+    /**
+     * @var AvifExtensionChecker
+     */
+    private $avifExtensionChecker;
+
+    public function __construct(Link $link, AvifExtensionChecker $avifExtensionChecker = null)
     {
         $this->link = $link;
+        $this->avifExtensionChecker = $avifExtensionChecker;
     }
 
     /**
@@ -193,17 +200,6 @@ class ImageRetriever
             }
 
             $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
-            // We try to use the imageavif() function.
-            // It can fail even if `function_exists('imageavif')` returns true.
-            // @see https://stackoverflow.com/questions/71739530/php-8-1-imageavif-avif-image-support-has-been-disabled
-            // @todo When this issue will be fixed on main OS (Debian, CentOS), we need to remove this patch
-            /* try {
-                $image = imagecreatetruecolor(250, 250);
-                imageavif($image, 'test.avif');
-            } catch {
-
-            }*/
-            $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
             if ($generateAdditionalWebP) {
                 $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
@@ -225,7 +221,7 @@ class ImageRetriever
                 $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
             }
 
-            if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+            if ($this->avifExtensionChecker !== null && $this->avifExtensionChecker->isAvailable()) {
                 $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     $id_image . '-' . $image_type['name'] . '.avif',

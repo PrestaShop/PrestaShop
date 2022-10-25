@@ -32,6 +32,7 @@ class AdminImagesControllerCore extends AdminController
     protected $start_time = 0;
     protected $max_execution_time = 7200;
     protected $display_move;
+    protected $generateAdditionalAvif;
 
     public function __construct()
     {
@@ -40,7 +41,7 @@ class AdminImagesControllerCore extends AdminController
         $this->className = 'ImageType';
         $this->lang = false;
 
-        $this->generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
+        $this->generateAdditionalAvif = $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
 
         $this->addRowAction('edit');
         $this->addRowAction('delete');
@@ -595,7 +596,6 @@ class AdminImagesControllerCore extends AdminController
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
         $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
-        $generateAdditionalAvif = version_compare(PHP_VERSION, '8.1') >= 0 && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF') && function_exists('imageavif') && is_callable('imageavif');
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
@@ -623,7 +623,7 @@ class AdminImagesControllerCore extends AdminController
                                 ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
                             }
 
-                            if ($generateAdditionalAvif) {
+                            if ($this->generateAdditionalAvif) {
                                 ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['height'], 'avif', true);
                             }
 
@@ -634,7 +634,7 @@ class AdminImagesControllerCore extends AdminController
                                 if ($generateAdditionalWebP) {
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.webp', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'webp', true);
                                 }
-                                if (version_compare(PHP_VERSION, '8.1') >= 0 && $generateAdditionalAvif) {
+                                if ($this->generateAdditionalAvif) {
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int)$imageType['height'] * 2, 'avif', true);
                                 }
                             }
@@ -666,13 +666,11 @@ class AdminImagesControllerCore extends AdminController
                         }
 
                         if ($generateAdditionalWebP) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['hei
-ght'], 'webp', true);
+                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
                         }
 
-                        if ($generateAdditionalAvif) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['heigh
-t'], 'avif', true);
+                        if ($this->generateAdditionalAvif) {
+                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['height'], 'avif', true);
                         }
 
                         if ($generate_hight_dpi_images) {
