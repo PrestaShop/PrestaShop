@@ -49,8 +49,20 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    /**
+     * @return iterable
+     */
+    public function getExpectedCommands(): iterable
     {
+        yield [
+            [
+                'specifications' => [
+                    'condition' => null,
+                ],
+            ],
+            [],
+        ];
+
         yield [
             [
                 'no_data' => ['useless value'],

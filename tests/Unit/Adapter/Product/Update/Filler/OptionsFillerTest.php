@@ -37,6 +37,25 @@ use Product;
 class OptionsFillerTest extends ProductFillerTestCase
 {
     /**
+     * @dataProvider getDataForTestFillsUpdatableProperties
+     *
+     * @param UpdateProductCommand $command
+     * @param array $expectedUpdatableProperties
+     * @param Product $expectedProduct
+     */
+    public function testFillsUpdatableProperties(
+        UpdateProductCommand $command,
+        array $expectedUpdatableProperties,
+        Product $expectedProduct
+    ): void {
+        $this->fillUpdatableProperties(
+            $command,
+            $expectedUpdatableProperties,
+            $expectedProduct
+        );
+    }
+
+    /**
      * @dataProvider getDataForTestShowPriceAndAvailableForOrderProperties
      *
      * @param Product $product
@@ -59,6 +78,9 @@ class OptionsFillerTest extends ProductFillerTestCase
     }
 
     /**
+     * This provider Provides the initial product and the expected one,
+     * because there are some cases that depends on previous and new values
+     *
      * @return iterable
      */
     public function getDataForTestShowPriceAndAvailableForOrderProperties(): iterable
@@ -73,6 +95,10 @@ class OptionsFillerTest extends ProductFillerTestCase
         ;
 
         $expectedProduct = $this->mockDefaultProduct();
+        // default product properties already has these values,
+        // but we still set them just to be more explicit about the expected change
+        $expectedProduct->show_price = true;
+        $expectedProduct->available_for_order = true;
 
         yield [
             $product,
@@ -85,6 +111,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         ];
 
         $product = $this->mockDefaultProduct();
+        $product->available_for_order = true;
         $product->show_price = false;
 
         $command = $this
@@ -130,6 +157,9 @@ class OptionsFillerTest extends ProductFillerTestCase
         ];
     }
 
+    /**
+     * @return iterable
+     */
     public function getDataForTestFillsUpdatableProperties(): iterable
     {
         $command = $this->getEmptyCommand();

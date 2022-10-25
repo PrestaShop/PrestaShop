@@ -30,13 +30,34 @@ namespace Tests\Unit\Adapter\Product\Update\Filler;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use Product;
 
 class BasicInformationFillerTest extends ProductFillerTestCase
 {
     /**
+     * @dataProvider getDataForTestFillsUpdatableProperties
+     *
+     * @param UpdateProductCommand $command
+     * @param array $expectedUpdatableProperties
+     * @param Product $expectedProduct
+     */
+    public function testFillsUpdatableProperties(
+        UpdateProductCommand $command,
+        array $expectedUpdatableProperties,
+        Product $expectedProduct
+    ): void {
+        $this->fillUpdatableProperties(
+            $command,
+            $expectedUpdatableProperties,
+            $expectedProduct
+        );
+    }
+
+    /**
      * @return ProductFillerInterface
      */
-    public function getFiller(): ProductFillerInterface
+    protected function getFiller(): ProductFillerInterface
     {
         return new BasicInformationFiller(
             self::DEFAULT_LANG_ID,
