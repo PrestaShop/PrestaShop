@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
 
 /**
- * Defines contract for CopyProductToShopHandler
+ * Defines contract to handle @see CopyProductToShopCommand
  */
 interface CopyProductToShopHandlerInterface
 {

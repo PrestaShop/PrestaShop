@@ -71,7 +71,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultShopId;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $contextShopId;
 

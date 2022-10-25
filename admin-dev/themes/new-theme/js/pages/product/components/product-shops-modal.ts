@@ -49,17 +49,17 @@ export default class ProductShopsModal {
     $(ProductMap.shops.modalButtons).on('click', (event: JQuery.ClickEvent) => {
       event.preventDefault();
       const $link = $(event.target);
-      const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
+      const formUrl = `${$link.prop('href')}&liteDisplaying=1`;
 
-      this.openCreationModal(linkUrl, $link.text());
+      this.openCreationModal(formUrl, $link.text());
     });
   }
 
-  private openCreationModal(linkUrl: string, modalTitle: string): void {
+  private openCreationModal(formUrl: string, modalTitle: string): void {
     const iframeModal = new FormIframeModal({
       id: ProductMap.shops.modalId,
       formSelector: ProductMap.shops.form,
-      formUrl: linkUrl,
+      formUrl,
       closable: true,
       modalTitle,
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications

@@ -895,20 +895,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         // Remove association to multishop table
         if (count($this->id_shop_list)) {
-            $id_shop_list = $this->id_shop_list;
+            $shopIdsList = $this->id_shop_list;
         } else {
-            $id_shop_list = Shop::getContextListShopID();
+            $shopIdsList = Shop::getContextListShopID();
         }
-        $id_shop_list = array_map('intval', $id_shop_list);
+        $shopIdsList = array_map('intval', $shopIdsList);
 
         if (Shop::isTableAssociated($this->def['table'])) {
             $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
-                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
 
         if ($this->isLangMultishop()) {
             $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . $this->def['primary'] . '`=' .
-                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
 
         // Database deletion
