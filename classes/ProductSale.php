@@ -234,18 +234,28 @@ class ProductSaleCore
      * Add Product sale.
      *
      * @param int $productId Product ID
-     * @param int $idShop Shop ID
      * @param int $qty Quantity
+     * @param int $idShop Shop ID
      *
      * @return bool Indicates whether the sale was successfully added
      */
-    public static function addProductSale($productId, $idShop, $qty = 1)
+    public static function addProductSale($productId, $qty = 1, $idShop = null)
     {
-        return Db::getInstance()->execute('
+        if (is_null($idShop)) {
+            $idShops = Shop::getContextListShopID();
+        } else {
+            $idShops = [$idShop];
+        }
+        $success = true;
+        foreach ($idShops as $idShop) {
+            $success = $success && Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `id_shop`, `quantity`, `sale_nbr`, `date_upd`)
 			VALUES (' . (int) $productId . ', ' . (int) $idShop . ', ' . (int) $qty . ', 1, NOW())
 			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
+        }
+
+        return $success;
     }
 
     /**
@@ -256,9 +266,14 @@ class ProductSaleCore
      *
      * @return int Number of sales for the given Product
      */
-    public static function getNbrSales($idProduct, $idShop)
+    public static function getNbrSales($idProduct, $idShop = null)
     {
-        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
+        if (is_null($idShop)) {
+            $idShops = Shop::getContextListShopID();
+        } else {
+            $idShops = [$idShop];
+        }
+        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` in (' . implode(', ', $idShops) . ')');
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
         }
@@ -270,25 +285,33 @@ class ProductSaleCore
      * Remove a Product sale.
      *
      * @param int $idProduct Product ID
-     * @param int $idShop Shop ID
      * @param int $qty Quantity
+     * @param int $idShop Shop ID
      *
      * @return bool Indicates whether the product sale has been successfully removed
      */
-    public static function removeProductSale($idProduct, $idShop, $qty = 1)
+    public static function removeProductSale($idProduct, $qty = 1, $idShop = null)
     {
-        $totalSales = ProductSale::getNbrSales($idProduct, $idShop);
-        if ($totalSales > 1) {
-            return Db::getInstance()->execute(
-                '
-				UPDATE ' . _DB_PREFIX_ . 'product_sale
-				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
-				WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop
-            );
-        } elseif ($totalSales == 1) {
-            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
+        if (is_null($idShop)) {
+            $idShops = Shop::getContextListShopID();
+        } else {
+            $idShops = [$idShop];
+        }
+        $success = true;
+        foreach ($idShops as $idShop) {
+            $totalSales = ProductSale::getNbrSales($idProduct, $idShop);
+            if ($totalSales > 1) {
+                $success = $success && Db::getInstance()->execute(
+                        '
+                    UPDATE ' . _DB_PREFIX_ . 'product_sale
+                    SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
+                    WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop
+                    );
+            } elseif ($totalSales == 1) {
+                $success = $success && Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
+            }
         }
 
-        return true;
+        return $success;
     }
 }
