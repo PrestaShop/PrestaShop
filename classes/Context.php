@@ -365,10 +365,13 @@ class ContextCore
         if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
+            $this->cookie->id_guest = (int) $this->cart->id_guest;
         } else {
+            Guest::setNewGuest($this->cookie);
             if (Validate::isLoadedObject($this->cart)) {
                 $idCarrier = (int) $this->cart->id_carrier;
                 $this->cart->secure_key = $customer->secure_key;
+                $this->cart->id_guest = (int) $this->cookie->id_guest;
                 $this->cart->id_carrier = 0;
                 if (!empty($idCarrier)) {
                     $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
