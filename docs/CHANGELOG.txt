@@ -24,6 +24,143 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.0-rc.1 - (2022-09-28)
+####################################
+
+- Back Office:
+  - New feature:
+    - #28752: [BC Break] Improve extendability of the new product page form (by @jolelievre)
+  - Improvement:
+    - #29101: Remove useless controller permission suffix (by @FabienPapet)
+  - Bug fix:
+    - #29530: Fixed exception when downloading credit slip on an order with a deleted product (by @nicosomb)
+    - #29406: Assign product suppliers to combination during combination csv import (by @zuk3975)
+    - #29503: Fix prefilling non-default lang product name (by @zuk3975)
+    - #29660: Fix ModuleManager exception when ps_distributionapiclient is not installed (by @atomiix)
+    - #29635: Do not reset customization in FO when changing combination (178x) (by @zuk3975)
+    - #29322: Fix decorating controllers from module (by @zuk3975)
+    - #29392: Fix menu items not showing on mobile (by @NeOMakinG)
+    - #29551: Text troncated on combine several attribute input (by @lartist)
+    - #29589: Wrong error message display on NumberType symfony input (by @lartist)
+    - #29281: Fix overflow of combination history (by @zuk3975)
+    - #29549: Fix validateSql method not accepting EXISTS after WHERE (by @atomiix)
+    - #29280: Fix updating empty combination reference from list (by @zuk3975)
+    - #29545: Fix php 8.1 Filemanager (by @FabienPapet)
+    - #29512: Fix module upgrade button menu (by @MeKeyCool)
+    - #29060: Order page in BO > partial refund block, bad displaying of products “Quantity” field (by @okom3pom)
+    - #29246: Fix Stock page style with RTL (by @MeKeyCool)
+    - #29426: Put product v2 feature flag in the beta form instead of stable (by @atomiix)
+    - #29441: Fix module translations (by @MeKeyCool)
+    - #29497: Extract missing modules translations (by @jolelievre)
+    - #28923: Fix product import for Product page v2. (by @MeKeyCool)
+    - #29534: Fix broken icon-font on RTL after upgrade (by @matthieu-rolland)
+    - #29523: Combination fields list updated for partial update in Product::updateAttribute (by @jolelievre)
+    - #29195: Fix product state multishop (by @FabienPapet)
+    - #29375: Fix SVG Upload, do not check dimensions if file is svg. (by @FabienPapet)
+    - #29481: Fix BO - The images are not well displayed after adding it in file manager with php8.1 (by @FabienPapet)
+    - #29417: Fix delivery time for multishop (by @MeKeyCool)
+    - #29324: Fix click event not sent in addPaymentButton (by @FabienPapet)
+    - #29416: Fix customer form validation from module (by @zuk3975)
+    - #29388: Fix customer voucher "active" column in customer view page (by @zuk3975)
+    - #29307: Remove module_card.js from the product page v1 (by @NeOMakinG)
+    - #29306: Fix specific price creation for dedicated customer (by @zuk3975)
+    - #29214: Fix logo on pdf for RTL (by @MeKeyCool)
+    - #29180: Fix order payment currency unit (by @FabienPapet)
+    - #29272: Making PHP8.1 implicit conversion explicit (by @FabienPapet)
+    - #29278: Fix undefined quantity index in light product list (by @zuk3975)
+    - #29256: When there no module upgrade script to run, make module upgrade succeed (by @Quetzacoalt91)
+    - #29096: BO - Bad display on Your Profile button on all of pages when hover and click on it (by @okom3pom)
+  - Refactoring:
+    - #29714: Functional tests - Refacto the BO - Delivery Slip - Enable Disable Product Image (by @khouloudbelguith)
+    - #29567: Functional tests - Refacto the BO - Invoices -  generate invoice by status test (by @khouloudbelguith)
+    - #29575: Functional tests - Refacto test BO - Invoices - Enable Disable Invoices (by @khouloudbelguith)
+    - #29566: Functional tests -  refacto the BO - Header - quick access test  (by @khouloudbelguith)
+    - #29288: Restructurize horizontal migration Bridge directories (by @zuk3975)
+    - #28886: Refacto bridge controller initiation and resolve feedback (by @zuk3975)
+- Front Office:
+  - Improvement:
+    - #29752: Lock classic-theme version to 2.0.0 (by @matks)
+  - Bug fix:
+    - #29400: Fix "undefined" error when modifying product quantity in FO product quick view  (by @yanmakouf)
+    - #29471: Fix ps_facetedsearch - bad display after clearing a filter of no result (by @leemyongpakvn)
+    - #29413: Fix displayPackPrice compare price value instead of formatted price (by @jolelievre)
+    - #29122: Fix FO address forms reload when switching address's country (by @yanmakouf)
+    - #29373: Fix checkout when one module and no cgv validation (by @okom3pom)
+- Core:
+  - Improvement:
+    - #29172: Save Smarty caching type setting in file instead of DB (by @atomiix)
+    - #29537: Update productcomments v5.0.2 (by @kpodemski)
+    - #29535: Update ps_linklist to 5.0.5 (by @matks)
+    - #29410: [BC Break] Update hooks for dynamic hooks (by @jolelievre)
+    - #29319: Upgrade symfony version (by @kpodemski)
+    - #29227: Bump wishlist to 2.1.2 (by @NeOMakinG)
+  - Bug fix:
+    - #29595: Add source parameter to actionBeforeInstallModule & actionBeforeUpgradeModule hooks (by @atomiix)
+    - #29484: Fix doctrine cache configuration (by @atomiix)
+    - #29469: Fix hook registration and module enabling/disabling processes (by @matthieu-rolland)
+    - #29502: Do not add theme translation resources if theme is null (by @atomiix)
+    - #29504: Cherry-pick #29502 (by @atomiix)
+    - #27422: [BC Break] Use core translations sources for themes in addition to the translations of the theme itself (by @atomiix)
+    - #GHSA-hrgx-p36p-89q4: Chain: SQL Injection (CWE-89) and Eval Injection (CWE-95) (by @atomiix)
+- Installer:
+  - Improvement:
+    - #29244: Update PHP-CS-Fixer to make it compatible with PHP 8.1 (by @FabienPapet)
+  - Bug fix:
+    - #29670: Restore install sprintf JS lib integrity (by @matks)
+    - #29420: Clear translations cache before translating fixtures (by @atomiix)
+- Web Services:
+  - Bug fix:
+    - #29638: WS : Handle PATCH requests for attachments (by @matks)
+    - #29320: Update class name used by product_option_values ressource (by @PrestaEdit)
+- Localization:
+  - Improvement:
+    - #29279: Fix wrong translation domain (by @jolelievre)
+  - Bug fix:
+    - #29582: Fix wording typos (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #29683: Functional tests : FO - Search no result / Search product bar, consult autocomplete list / Search a product and validate (by @Progi1984)
+    - #29576: Functional tests - Add test "FO - Send message while logged out" (by @Progi1984)
+  - Bug fix:
+    - #29773: Bump `prestashop/classic` to 2.0.1 (by @Progi1984)
+    - #29690: Disable apache mpm_event module in the CI (by @atomiix)
+    - #29643: Lock sebastian/comparator to 4.0.6 (by @atomiix)
+  - Refactoring:
+    - #29492: Sanity tests - Add new test "Bulk delete products" V2 (by @nesrineabdmouleh)
+    - #29772: Add events types and fix path on UI tests code checks workflow (by @boubkerbribri)
+    - #29713: Functional tests - Add new test 'FO > Contact us on GDPR page' (by @nesrineabdmouleh)
+    - #29737: Functional tests - Refacto BO - Catalog -  preview product from the list (by @khouloudbelguith)
+    - #29735: Fix Trigger ESLint on UI tests (by @boubkerbribri)
+    - #29725: Functional Tests - Add New test 'BO - Cart rules - Case 9 - Check Total available'  (by @cfarhani06)
+    - #29718: Functional tests : Refacto BO - Customers - CRUD (by @Progi1984)
+    - #29640: Functional tests - Refacto test BO - Invoices - Other Options (by @khouloudbelguith)
+    - #29697: Add dotenv dependency and create .env.ci file for tests/UI (by @boubkerbribri)
+    - #29691: Functional tests - Add new test FO > User account > 'Check gdpr data in pdf'  (by @nesrineabdmouleh)
+    - #29706: Run code checks only for tests/UI repository (by @boubkerbribri)
+    - #29662: Add functional Tests - User account log out (by @cfarhani06)
+    - #29444: Add workflow for product V2 sanity tests (by @boubkerbribri)
+    - #29687: Functional tests - Fix 'Customer service tests' in FO and BO (by @nesrineabdmouleh)
+    - #29479: Sanity tests - Add new test 'Delete product' V2 (by @nesrineabdmouleh)
+    - #29639: Functional Tests - Add new tests to display all products on FO Page (by @cfarhani06)
+    - #29378: Functional tests - Add new test "Customers > Outstanding page" Pagination - Sort - Filter (by @khouloudbelguith)
+    - #29620: Sanity tests - Fix enable/disable new product page method (by @nesrineabdmouleh)
+    - #29578: Functional tests - Refacto test BO - Invoices - Enable Disable Tax Breakdown (by @khouloudbelguith)
+    - #29555: Fix 'FO > Create and check footer link widget' test (by @nesrineabdmouleh)
+    - #29528: Fix errors in nightly 8.0.x (by @nesrineabdmouleh)
+    - #29514: Sanity tests - Fix random error in 'Create product' V2 test (by @nesrineabdmouleh)
+    - #29511: Fix nightly 8.0.x 01/09/2022 - Fix 'FO > Edit information' , 'FO > CRUD address' and 'BO > Payment block' tests (by @nesrineabdmouleh)
+    - #29468: Sanity tests - Refacto and add new test 'CRUD virtual product' (by @nesrineabdmouleh)
+    - #29438: Sanity tests - Add new test 'CRUD product with combinations' V2 (by @nesrineabdmouleh)
+    - #29443: Functional tests - Fix errors on nightly 8.0.x (by @nesrineabdmouleh)
+    - #29452: Functional tests - Fix 'FO > User account> Edit information' test (by @nesrineabdmouleh)
+    - #29430: Sanity tests - Add new test 'CRUD standard product' V2 (by @nesrineabdmouleh)
+    - #29387: Sanity tests - Add new test 'Filter products table' V2 (by @nesrineabdmouleh)
+    - #28906: Functional tests - Fix CRUD address test on FO (by @nesrineabdmouleh)
+    - #29311: Functional tests - Skip some steps on 'FO > Edit information' test after the new behavior (by @nesrineabdmouleh)
+    - #29290: Fix nightly 8.0.x - 09/08/2022 - 'Enable/Disable guest checkout' and 'Check links in footer page' (by @nesrineabdmouleh)
+    - #28846: Functional tests - Add new test 'Change Currency' in FO (by @sallemiines)
+
+####################################
 #   v8.0-beta.1 - (2022-08-08)
 ####################################
 
