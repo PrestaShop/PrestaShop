@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
@@ -55,7 +56,7 @@ class PricesFillerTest extends ProductFillerTestCase
         Product $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
-            $this->getFiller($ecoTaxEnabled),
+            $this->getFiller($ecoTaxEnabled, $command->getShopConstraint()),
             $product,
             $command,
             $expectedUpdatableProperties,
@@ -117,11 +118,10 @@ class PricesFillerTest extends ProductFillerTestCase
      */
     public function getDataToTestUnitPriceAndPricePropertiesFilling(): iterable
     {
-        //When product price is 0, it should force unit_price to 0 as well
+        //When product price is 0 and ecotax is disabled, it should force unit_price to 0 as well
         $command = $this->getEmptyCommand()
             ->setPrice('0')
         ;
-        // set price to product first, so we can detect the change to 0 after its filled
         $product = $this->mockDefaultProduct();
         $product->price = 20.5;
         $product->unit_price = 3.0;
@@ -129,6 +129,7 @@ class PricesFillerTest extends ProductFillerTestCase
         $expectedProduct = $this->mockDefaultProduct();
         $expectedProduct->price = 0.0;
         $expectedProduct->unit_price = 0.0;
+
         yield [
             $product,
             $command,
@@ -139,14 +140,39 @@ class PricesFillerTest extends ProductFillerTestCase
             false,
             $expectedProduct,
         ];
+
+        //When product price is 0, and ecotax is enabled, then unit_price should not be forced to 0
+        $command = $this->getEmptyCommand()
+            ->setPrice('0')
+        ;
+        $product = $this->mockDefaultProduct();
+        $product->price = 20.5;
+        $product->unit_price = 3.0;
+        $product->ecotax = 3.5;
+
+        $expectedProduct = $this->mockDefaultProduct();
+        $expectedProduct->price = 0.0;
+        $expectedProduct->unit_price = 3.0;
+        $expectedProduct->ecotax = 3.5;
+
+        yield [
+            $product,
+            $command,
+            [
+                'price',
+            ],
+            true,
+            $expectedProduct,
+        ];
     }
 
     /**
      * @param bool $ecoTaxEnabled
+     * @param ShopConstraint $shopConstraint
      *
      * @return ProductFillerInterface
      */
-    private function getFiller(bool $ecoTaxEnabled): ProductFillerInterface
+    private function getFiller(bool $ecoTaxEnabled, ShopConstraint $shopConstraint): ProductFillerInterface
     {
         $numberExtractor = $this->getMockBuilder(NumberExtractor::class)
             ->disableOriginalConstructor()
@@ -167,7 +193,7 @@ class PricesFillerTest extends ProductFillerTestCase
         $configuration
             ->method('get')
             ->willReturnMap([
-                ['PS_USE_ECOTAX', null, null, $ecoTaxEnabled],
+                ['PS_USE_ECOTAX', null, $shopConstraint, $ecoTaxEnabled],
             ])
         ;
 

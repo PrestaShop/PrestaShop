@@ -80,6 +80,8 @@ abstract class ProductFillerTestCase extends TestCase
         $product->description_short = [];
         $product->link_rewrite = [];
         $product->show_price = true;
+        $product->price = 0.0;
+        $product->unit_price_ratio = 0.0;
         $product->available_for_order = true;
         $product->visibility = ProductVisibility::VISIBLE_EVERYWHERE;
         $product->condition = ProductCondition::NEW;
