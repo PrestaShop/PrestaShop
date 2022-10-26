@@ -75,9 +75,9 @@ class PricesFillerTest extends ProductFillerTestCase
             ->setEcotax('0.3')
         ;
         $expectedProduct = $this->mockDefaultProduct();
-        $expectedProduct->wholesale_price = '4.99';
-        $expectedProduct->price = '45.99';
-        $expectedProduct->ecotax = '0.3';
+        $expectedProduct->wholesale_price = 4.99;
+        $expectedProduct->price = 45.99;
+        $expectedProduct->ecotax = 0.3;
 
         yield [
             $this->mockDefaultProduct(),
