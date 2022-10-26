@@ -30,6 +30,17 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProd
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
+/**
+ * This abstract class was introduced during UpdateProductCommand unification process,
+ * and which idea is to remove multiple sub-commands and use single UpdateProductCommand instead.
+ * This abstract context allows sharing assertions which and some other common methods for both implementations during the transition.
+ *
+ * @see UpdateProductCommand
+ * @see UpdateProductHandlerInterface
+ *
+ * @todo: need to check if this abstract class is still needed when UpdateProductCommand is fully finished,
+ *        because one of the contexts that uses it will be deleted, therefore leaving this abstract class useless.
+ */
 abstract class AbstractUpdateOptionsFeatureContext extends AbstractProductFeatureContext
 {
     /**

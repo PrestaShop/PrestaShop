@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractUpdatePricesFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -127,7 +127,7 @@ class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
     private function updatePrices(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $table->getRowsHash();
-        $command = new UpdateProductPricesCommand(
+        $command = new UpdateProductCommand(
             $this->getSharedStorage()->get($productReference),
             $shopConstraint
         );

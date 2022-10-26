@@ -521,6 +521,7 @@ services:
       - '@prestashop.adapter.product.update.filler.product_filler'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.update.product_indexation_updater'
+      - '@prestashop.adapter.product.repository.product_supplier_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
