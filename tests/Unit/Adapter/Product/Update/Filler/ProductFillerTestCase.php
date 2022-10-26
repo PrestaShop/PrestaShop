@@ -43,30 +43,27 @@ abstract class ProductFillerTestCase extends TestCase
     protected const PRODUCT_ID = 3;
 
     /**
+     * @param ProductFillerInterface $filler
+     * @param Product $product
      * @param UpdateProductCommand $command
      * @param array $expectedUpdatableProperties
      * @param Product $expectedProduct
      */
     protected function fillUpdatableProperties(
+        ProductFillerInterface $filler,
+        Product $product,
         UpdateProductCommand $command,
         array $expectedUpdatableProperties,
         Product $expectedProduct
     ) {
-        $product = $this->mockDefaultProduct();
-
         $this->assertSame(
             $expectedUpdatableProperties,
-            $this->getFiller()->fillUpdatableProperties($product, $command)
+            $filler->fillUpdatableProperties($product, $command)
         );
 
         // make sure the product properties were filled as expected.
         $this->assertEquals($expectedProduct, $product);
     }
-
-    /**
-     * @return ProductFillerInterface
-     */
-    abstract protected function getFiller(): ProductFillerInterface;
 
     /**
      * This method mocks product into its default state.

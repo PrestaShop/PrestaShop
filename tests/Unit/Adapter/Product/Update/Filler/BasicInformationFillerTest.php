@@ -48,20 +48,11 @@ class BasicInformationFillerTest extends ProductFillerTestCase
         Product $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
+            $this->getFiller(),
+            $this->mockDefaultProduct(),
             $command,
             $expectedUpdatableProperties,
             $expectedProduct
-        );
-    }
-
-    /**
-     * @return ProductFillerInterface
-     */
-    protected function getFiller(): ProductFillerInterface
-    {
-        return new BasicInformationFiller(
-            self::DEFAULT_LANG_ID,
-            $this->mockTools()
         );
     }
 
@@ -119,6 +110,17 @@ class BasicInformationFillerTest extends ProductFillerTestCase
             ],
             $expectedProduct,
         ];
+    }
+
+    /**
+     * @return ProductFillerInterface
+     */
+    private function getFiller(): ProductFillerInterface
+    {
+        return new BasicInformationFiller(
+            self::DEFAULT_LANG_ID,
+            $this->mockTools()
+        );
     }
 
     /**

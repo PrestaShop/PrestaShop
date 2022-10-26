@@ -49,6 +49,8 @@ class OptionsFillerTest extends ProductFillerTestCase
         Product $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
+            $this->getFiller(),
+            $this->mockDefaultProduct(),
             $command,
             $expectedUpdatableProperties,
             $expectedProduct
@@ -69,12 +71,13 @@ class OptionsFillerTest extends ProductFillerTestCase
         array $expectedUpdatableProperties,
         Product $expectedProduct
     ): void {
-        $this->assertSame(
+        $this->fillUpdatableProperties(
+            $this->getFiller(),
+            $product,
+            $command,
             $expectedUpdatableProperties,
-            $this->getFiller()->fillUpdatableProperties($product, $command)
+            $expectedProduct
         );
-
-        $this->assertEquals($product, $expectedProduct);
     }
 
     /**
@@ -213,7 +216,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         ];
     }
 
-    public function getFiller(): ProductFillerInterface
+    private function getFiller(): ProductFillerInterface
     {
         return new OptionsFiller();
     }
