@@ -87,6 +87,7 @@ const virtualProduct = new ProductFaker({
 // Product with specific price data
 const productWithSpecificPrice = new ProductFaker({
   name: `Product with sp price ${prefixNewProduct}`,
+  reference: 'abcdef',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -416,7 +417,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productReferenceExist = await files.isTextInPDF(
             filePath,
-            `${virtualProduct.reference}, ,  ${virtualProduct.name}`,
+            `${virtualProduct.reference}, ,${virtualProduct.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
         });
@@ -427,10 +428,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productPriceExist = await files.isTextInPDF(
             filePath,
-            `${virtualProduct.name}, ,  `
-            + `${virtualProduct.tax} %, ,  `
-            + `€${virtualProduct.priceTaxExcluded.toFixed(2)}, ,  `
-            + '13, ,  '
+            `${virtualProduct.name}, ,`
+            + `${virtualProduct.tax} %, ,`
+            + `€${virtualProduct.priceTaxExcluded.toFixed(2)}, ,`
+            + '13, ,'
             + `€${(virtualProduct.priceTaxExcluded * 13).toFixed(2)}`,
           );
           await expect(
@@ -446,10 +447,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const taxDetailsVisible = await files.isTextInPDF(
             filePath,
-            'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  '
-            + 'Products, ,  '
-            + '20.000 %, ,  '
-            + `€${(virtualProduct.priceTaxExcluded * 13).toFixed(2)}, ,  `
+            'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,'
+            + 'Products, ,'
+            + '20.000 %, ,'
+            + `€${(virtualProduct.priceTaxExcluded * 13).toFixed(2)}, ,`
             + `€${((virtualProduct.price - virtualProduct.priceTaxExcluded) * 13)
               .toFixed(2)}`,
           );
@@ -492,10 +493,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             // Total Products, Total (Tax excl.), Total Tax, Total
             const isPaymentTableCorrect = await files.isTextInPDF(
               filePath,
-              `Total Products, ,  €${totalPriceTaxExcl.toFixed(2)},,  `
-              + `Total (Tax excl.), ,  €${totalPriceTaxExcl.toFixed(2)},,  `
-              + `Total Tax, ,  €${(tax * 13).toFixed(2)},,  `
-              + `Total, ,  €${priceTaxIncl.toFixed(2)}`,
+              `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},,`
+              + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
+              + `Total Tax, ,€${(tax * 13).toFixed(2)},,`
+              + `Total, ,€${priceTaxIncl.toFixed(2)}`,
             );
             await expect(
               isPaymentTableCorrect,
@@ -649,7 +650,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productReferenceExist = await files.isTextInPDF(
             filePath,
-            `${customizedProduct.reference}, ,  ${customizedProduct.name}`,
+            `${customizedProduct.reference}, ,${customizedProduct.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
         });
@@ -659,7 +660,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const isCustomizedTextVisible = await files.isTextInPDF(
             filePath,
-            `${customizedProduct.customization}: text,  (1)`,
+            `${customizedProduct.customization}: text,(1)`,
           );
           await expect(isCustomizedTextVisible, 'Customized text is not visible!').to.be.false;
         });
@@ -670,9 +671,9 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productPriceExist = await files.isTextInPDF(
             filePath,
-            `${customizedProduct.name}, ,  `
-            + `€${customizedProduct.price.toFixed(2)}, ,  `
-            + '1, ,  '
+            `${customizedProduct.name}, ,`
+            + `€${customizedProduct.price.toFixed(2)}, ,`
+            + '1, ,'
             + `€${(customizedProduct.price * 1).toFixed(2)}`,
           );
           await expect(
@@ -719,10 +720,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
               filePath,
-              `Total Products, ,  €${customizedProduct.price.toFixed(2)},  `
-              + 'Shipping Costs, ,  Free Shipping,,  '
-              + `Total (Tax excl.), ,  €${customizedProduct.price.toFixed(2)},,  `
-              + `Total, ,  €${customizedProduct.price.toFixed(2)}`,
+              `Total Products, ,€${customizedProduct.price.toFixed(2)},`
+              + 'Shipping Costs, ,Free Shipping,,'
+              + `Total (Tax excl.), ,€${customizedProduct.price.toFixed(2)},,`
+              + `Total, ,€${customizedProduct.price.toFixed(2)}`,
             );
             await expect(
               isShippingCostVisible,
@@ -844,7 +845,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productReferenceExist = await files.isTextInPDF(
             filePath,
-            `${productWithSpecificPrice.reference}, ,  ${productWithSpecificPrice.name}`,
+            `${productWithSpecificPrice.reference}, ,${productWithSpecificPrice.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
         });
@@ -868,10 +869,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const basePriceVisible = await files.isTextInPDF(
             filePath,
-            `${productWithSpecificPrice.name}, ,  `
-            + `€${productWithSpecificPrice.price.toFixed(2)}, ,  `
-            + `€${unitPrice.toFixed(2)}, ,  `
-            + '1, ,  '
+            `${productWithSpecificPrice.name}, ,`
+            + `€${productWithSpecificPrice.price.toFixed(2)}, ,`
+            + `€${unitPrice.toFixed(2)}, ,`
+            + '1, ,'
             + `€${unitPrice.toFixed(2)}`,
           );
           await expect(
@@ -925,10 +926,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
               filePath,
-              `Total Products, ,  €${totalPriceTaxExcl.toFixed(2)},  `
-              + 'Shipping Costs, ,  Free Shipping,,  '
-              + `Total (Tax excl.), ,  €${totalPriceTaxExcl.toFixed(2)},,  `
-              + `Total, ,  €${totalPriceTaxExcl.toFixed(2)}`,
+              `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},`
+              + 'Shipping Costs, ,Free Shipping,,'
+              + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
+              + `Total, ,€${totalPriceTaxExcl.toFixed(2)}`,
             );
             await expect(
               isShippingCostVisible,
@@ -1082,7 +1083,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const productReferenceExist = await files.isTextInPDF(
             filePath,
-            `${productWithEcoTax.reference}, ,  ${productWithEcoTax.name}`,
+            `${productWithEcoTax.reference}, ,${productWithEcoTax.name}`,
           );
           await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
         });
@@ -1100,10 +1101,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             const basePriceVisible = await files.isTextInPDF(
               filePath,
-              `${productWithEcoTax.name}, ,  `
-              + `€${productWithEcoTax.price.toFixed(2)},  ,`
-              + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,  `
-              + '1, ,  '
+              `${productWithEcoTax.name}, ,`
+              + `€${productWithEcoTax.price.toFixed(2)},,`
+              + `Ecotax: €${productWithEcoTax.ecoTax.toFixed(2)},,`
+              + '1, ,'
               + `€${productWithEcoTax.price.toFixed(2)}`,
             );
             await expect(basePriceVisible, 'Unit price (Tax excl.), Ecotax, Quantity, '
@@ -1118,10 +1119,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             const taxDetailsVisible = await files.isTextInPDF(
               filePath,
-              'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  '
-              + 'Ecotax, ,  '
-              + '0.000 %, ,  '
-              + `€${productWithEcoTax.ecoTax.toFixed(2)}, ,  `
+              'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,'
+              + 'Ecotax, ,'
+              + '0.000 %, ,'
+              + `€${productWithEcoTax.ecoTax.toFixed(2)}, ,`
               + '€0.00',
             );
             await expect(
@@ -1161,10 +1162,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             // Total Products, Shipping Costs, Total (Tax excl.), Total
             const isShippingCostVisible = await files.isTextInPDF(
               filePath,
-              `Total Products, ,  €${totalPriceTaxExcl.toFixed(2)},  `
-              + 'Shipping Costs, ,  Free Shipping,,  '
-              + `Total (Tax excl.), ,  €${totalPriceTaxExcl.toFixed(2)},,  `
-              + `Total, ,  €${totalPriceTaxExcl.toFixed(2)}`,
+              `Total Products, ,€${totalPriceTaxExcl.toFixed(2)},`
+              + 'Shipping Costs, ,Free Shipping,,'
+              + `Total (Tax excl.), ,€${totalPriceTaxExcl.toFixed(2)},,`
+              + `Total, ,€${totalPriceTaxExcl.toFixed(2)}`,
             );
             await expect(
               isShippingCostVisible,
@@ -1359,10 +1360,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
-              ` Total Products, ,  €${totalPrice.toFixed(2)},  `
-              + 'Shipping Costs, ,  €7.00,,  '
-              + `Total (Tax excl.), ,  €${(totalPrice + 7.00).toFixed(2)},,  `
-              + `Total, ,  €${(totalPrice + 7.00).toFixed(2)}`,
+              // Total Products, ,€25.00,Shipping Costs, ,€7.00,,Total (Tax excl.), ,€32.00,,Total, ,€32.00
+              `Total Products, ,€${totalPrice.toFixed(2)},`
+              + 'Shipping Costs, ,€7.00,,'
+              + `Total (Tax excl.), ,€${(totalPrice + 7.00).toFixed(2)},,`
+              + `Total, ,€${(totalPrice + 7.00).toFixed(2)}`,
             );
             await expect(
               isDiscountVisible,
@@ -1397,7 +1399,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,
-            'Discounts,,  Discount, ,  '
+            'Discounts,,Discount, ,'
             + `- €${discount.toFixed(2)}`,
           );
           await expect(isDiscountVisible, 'Discounts table is not visible in the invoice!').to.be.true;
@@ -1411,11 +1413,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,
-            ` Total Products, ,  €${totalPrice.toFixed(2)},  `
-            + `Total Discounts, ,  - €${discount.toFixed(2)},  `
-            + 'Shipping Costs, ,  €7.00,,  '
-            + `Total (Tax excl.), ,  €${(totalPrice - discount + 7.00).toFixed(2)},,  `
-            + `Total, ,  €${(totalPrice - discount + 7.00).toFixed(2)}`,
+            `Total Products, ,€${totalPrice.toFixed(2)},`
+            + `Total Discounts, ,- €${discount.toFixed(2)},`
+            + 'Shipping Costs, ,€7.00,,'
+            + `Total (Tax excl.), ,€${(totalPrice - discount + 7.00).toFixed(2)},,`
+            + `Total, ,€${(totalPrice - discount + 7.00).toFixed(2)}`,
           );
           await expect(isDiscountVisible, 'Discount is not visible in the invoice!').to.be.true;
         });
@@ -1445,7 +1447,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
           const isDiscountVisible = await files.isTextInPDF(
             filePath,
-            ' Total Discounts,  '
+            ' Total Discounts,'
             + `-€${(totalPrice - discount).toFixed(2)}`,
           );
           await expect(isDiscountVisible, 'Total discount is visible in the invoice!').to.be.false;
