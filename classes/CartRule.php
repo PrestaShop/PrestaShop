@@ -931,6 +931,30 @@ class CartRuleCore extends ObjectModel
             return (!$display_error) ? false : $this->trans('You cannot use this voucher because it has manually been removed.', [], 'Shop.Notifications.Error');
         }
 
+	// Discount (%) on the selection of products
+        if ((float) $this->reduction_percent && $this->reduction_product == -2) {
+            $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
+            if ( is_array($selected_products) ) {
+                $products = $cart->getProducts();
+                $isEligibleProductFound = false;
+                foreach ( $products as $product ) {
+                    if ( ( in_array($product['id_product'] . '-' . $product['id_product_attribute'], $selected_products)
+                           || in_array($product['id_product'] . '-0', $selected_products) )
+                         && ( ( $this->reduction_exclude_special && ! $product['reduction_applies'] )
+                              || ! $this->reduction_exclude_special ) ) {
+                        $isEligibleProductFound = true;
+                        break;
+                    }
+                }
+                if ( ! $isEligibleProductFound ) {
+                    return ( ! $display_error )
+                        ? false
+                        : $this->trans('You cannot use this voucher on products on sale', [],
+                                       'Shop.Notificaions.Error');
+                }
+            }
+        }
+
         if (!$display_error) {
             return true;
         }
