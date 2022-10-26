@@ -26,18 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractUpdateBasicInformationFeatureContext;
 
 /**
- * Context for updating product basic information properties using dedicated UpdateProductBasicInformationCommand
+ * Context for updating product basic information properties using single UpdateProductCommand
  *
- * @see UpdateProductBasicInformationCommand
+ * @see UpdateProductCommand
  */
 class UpdateBasicInformationFeatureContext extends AbstractUpdateBasicInformationFeatureContext
 {
@@ -98,7 +97,7 @@ class UpdateBasicInformationFeatureContext extends AbstractUpdateBasicInformatio
     {
         $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
-        $command = new UpdateProductBasicInformationCommand($productId, $shopConstraint);
+        $command = new UpdateProductCommand($productId, $shopConstraint);
 
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
