@@ -540,3 +540,10 @@ services:
   prestashop.adapter.product.update.filler.options_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\OptionsFiller
     tags: [ 'core.product_filler' ]
+
+  prestashop.adapter.product.update.filler.prices_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller
+    tags: [ 'core.product_filler' ]
+    arguments:
+      - '@prestashop.core.util.number.number_extractor'
+      - '@prestashop.adapter.legacy.configuration'

@@ -23,25 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
-/**
- * @deprecated should be removed when unified UpdateProductCommand is fully done
- * @see PricesFiller instead
- *
- * Fills Product price properties which needs specific handling for update
- */
-class ProductPricePropertiesFiller
+class PricesFiller implements ProductFillerInterface
 {
     /**
      * @var NumberExtractor
@@ -66,6 +59,40 @@ class ProductPricePropertiesFiller
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function fillUpdatableProperties(Product $product, UpdateProductCommand $command): array
+    {
+        $updatableProperties = $this->fillWithPrices(
+            $product,
+            $command->getPrice(),
+            $command->getUnitPrice(),
+            $command->getWholesalePrice(),
+            $command->getEcotax(),
+            $command->getShopConstraint()
+        );
+
+        if (null !== $command->getUnity()) {
+            $product->unity = $command->getUnity();
+            $updatableProperties[] = 'unity';
+        }
+
+        $taxRulesGroupId = $command->getTaxRulesGroupId();
+
+        if (null !== $taxRulesGroupId) {
+            $product->id_tax_rules_group = $taxRulesGroupId;
+            $updatableProperties[] = 'id_tax_rules_group';
+        }
+
+        if (null !== $command->isOnSale()) {
+            $product->on_sale = $command->isOnSale();
+            $updatableProperties[] = 'on_sale';
+        }
+
+        return $updatableProperties;
+    }
+
+    /**
      * Wraps following properties filling: price, unit_price, unit_price_ratio, wholesale_price
      * as most of them (price, unit_price, unit_price_ratio) are highly coupled & depends on each other
      *
@@ -77,7 +104,7 @@ class ProductPricePropertiesFiller
      *
      * @return string[] updatable properties
      */
-    public function fillWithPrices(
+    private function fillWithPrices(
         Product $product,
         ?DecimalNumber $price,
         ?DecimalNumber $unitPrice,
@@ -122,6 +149,14 @@ class ProductPricePropertiesFiller
         return $updatableProperties;
     }
 
+    /**
+     * @param DecimalNumber|null $price
+     * @param DecimalNumber|null $ecotax
+     * @param Product $product
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return DecimalNumber
+     */
     private function getProductFinalPrice(
         ?DecimalNumber $price,
         ?DecimalNumber $ecotax,

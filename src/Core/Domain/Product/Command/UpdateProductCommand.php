@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
@@ -108,6 +109,41 @@ class UpdateProductCommand
     private $manufacturerId;
 
     /**
+     * @var DecimalNumber|null
+     */
+    private $price;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $ecotax;
+
+    /**
+     * @var int|null
+     */
+    private $taxRulesGroupId;
+
+    /**
+     * @var bool|null
+     */
+    private $onSale;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $wholesalePrice;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $unitPrice;
+
+    /**
+     * @var string|null
+     */
+    private $unity;
+
+    /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
      */
@@ -125,6 +161,146 @@ class UpdateProductCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getPrice(): ?DecimalNumber
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param string $price
+     *
+     * @return self
+     */
+    public function setPrice(string $price): self
+    {
+        $this->price = new DecimalNumber($price);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getEcotax(): ?DecimalNumber
+    {
+        return $this->ecotax;
+    }
+
+    /**
+     * @param string $ecotax
+     *
+     * @return self
+     */
+    public function setEcotax(string $ecotax): self
+    {
+        $this->ecotax = new DecimalNumber($ecotax);
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTaxRulesGroupId(): ?int
+    {
+        return $this->taxRulesGroupId;
+    }
+
+    /**
+     * @param int $taxRulesGroupId
+     *
+     * @return self
+     */
+    public function setTaxRulesGroupId(int $taxRulesGroupId): self
+    {
+        $this->taxRulesGroupId = $taxRulesGroupId;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isOnSale(): ?bool
+    {
+        return $this->onSale;
+    }
+
+    /**
+     * @param bool $onSale
+     *
+     * @return self
+     */
+    public function setOnSale(bool $onSale): self
+    {
+        $this->onSale = $onSale;
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWholesalePrice(): ?DecimalNumber
+    {
+        return $this->wholesalePrice;
+    }
+
+    /**
+     * @param string $wholesalePrice
+     *
+     * @return self
+     */
+    public function setWholesalePrice(string $wholesalePrice): self
+    {
+        $this->wholesalePrice = new DecimalNumber($wholesalePrice);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getUnitPrice(): ?DecimalNumber
+    {
+        return $this->unitPrice;
+    }
+
+    /**
+     * @param string $unitPrice
+     *
+     * @return self
+     */
+    public function setUnitPrice(string $unitPrice): self
+    {
+        $this->unitPrice = new DecimalNumber($unitPrice);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUnity(): ?string
+    {
+        return $this->unity;
+    }
+
+    /**
+     * @param string $unity
+     *
+     * @return self
+     */
+    public function setUnity(string $unity): self
+    {
+        $this->unity = $unity;
+
+        return $this;
     }
 
     /**
@@ -214,7 +390,7 @@ class UpdateProductCommand
     /**
      * @param string $visibility
      *
-     * @return $this
+     * @return self
      */
     public function setVisibility(string $visibility): self
     {

@@ -27,12 +27,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles the @see UpdateProductCommand using legacy object model
@@ -55,18 +58,26 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
     private $productIndexationUpdater;
 
     /**
+     * @var ProductSupplierRepository
+     */
+    private $productSupplierRepository;
+
+    /**
      * @param ProductFillerInterface $productUpdatablePropertyFiller
      * @param ProductMultiShopRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
+     * @param ProductSupplierRepository $productSupplierRepository
      */
     public function __construct(
         ProductFillerInterface $productUpdatablePropertyFiller,
         ProductMultiShopRepository $productRepository,
-        ProductIndexationUpdater $productIndexationUpdater
+        ProductIndexationUpdater $productIndexationUpdater,
+        ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productUpdatablePropertyFiller = $productUpdatablePropertyFiller;
         $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -97,6 +108,24 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
         if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
             $this->productIndexationUpdater->updateIndexation($product);
+        }
+
+        if (null !== $command->getWholesalePrice()) {
+            $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param DecimalNumber $wholesalePrice
+     */
+    private function updateDefaultSupplier(ProductId $productId, DecimalNumber $wholesalePrice): void
+    {
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultProductSupplierId($productId);
+        if (null !== $defaultSupplierId) {
+            $defaultProductSupplier = $this->productSupplierRepository->get($defaultSupplierId);
+            $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
+            $this->productSupplierRepository->update($defaultProductSupplier);
         }
     }
 }
