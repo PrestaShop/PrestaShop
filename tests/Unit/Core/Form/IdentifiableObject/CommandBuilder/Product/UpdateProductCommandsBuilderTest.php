@@ -215,10 +215,138 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = $this->getSingleShopCommand();
-        $command->setVisibility(ProductVisibility::INVISIBLE);
-        $command->setLocalizedShortDescriptions($localizedShortDescriptions);
-        $command->setLocalizedDescriptions($localizedDescriptions);
-        $command->setLocalizedNames($localizedNames);
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => '45.56',
+                        'price_tax_included' => '65.56', // Price tax included is ignored
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setEcotax('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'ecotax_tax_excluded' => '45.56',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setTaxRulesGroupId(42);
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'tax_rules_group_id' => '42',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setOnSale(true);
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'on_sale' => '42',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setOnSale(false);
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'on_sale' => '0',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setWholesalePrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'wholesale_price' => '45.56',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setUnitPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'unit_price' => [
+                        'price_tax_excluded' => '45.56',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setUnity('kg');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'unit_price' => [
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand()
+            ->setVisibility(ProductVisibility::INVISIBLE)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+            ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedNames($localizedNames)
+            ->setUnity('pounds')
+            ->setUnitPrice('45.56')
+            ->setWholesalePrice('70.05')
+            ->setEcotax('60.43')
+            ->setTaxRulesGroupId(43)
+        ;
+
         yield [
             [
                 'header' => [
@@ -232,6 +360,19 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'not_handled' => 0,
                     'visibility' => [
                         'visibility' => ProductVisibility::INVISIBLE,
+                    ],
+                ],
+                'pricing' => [
+                    'unit_price' => [
+                        'unity' => 'pounds',
+                        'price_tax_excluded' => '45.56',
+                        'price_tax_included' => '65.56', // Price tax included is ignored
+                    ],
+                    'wholesale_price' => '70.05',
+                    'on_sale' => false,
+                    'retail_price' => [
+                        'ecotax_tax_excluded' => '60.43',
+                        'tax_rules_group_id' => '43',
                     ],
                 ],
             ],
@@ -252,6 +393,9 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
+    /**
+     * @return iterable
+     */
     public function getExpectedCommandsMultiShop(): iterable
     {
         $localizedNames = [

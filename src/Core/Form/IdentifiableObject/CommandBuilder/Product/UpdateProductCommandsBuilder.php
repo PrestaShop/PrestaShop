@@ -61,6 +61,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         $this
             ->configureBasicInformation($config)
             ->configureOptions($config, $formData)
+            ->configurePrices($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -107,6 +108,26 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
         if (!empty($formData['specifications']['condition'])) {
             $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     *
+     * @return self
+     */
+    private function configurePrices(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addMultiShopField('[pricing][retail_price][price_tax_excluded]', 'setPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[pricing][retail_price][ecotax_tax_excluded]', 'setEcotax', DataField::TYPE_STRING)
+            ->addMultiShopField('[pricing][retail_price][tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
+            ->addMultiShopField('[pricing][on_sale]', 'setOnSale', DataField::TYPE_BOOL)
+            ->addMultiShopField('[pricing][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[pricing][unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[pricing][unit_price][unity]', 'setUnity', DataField::TYPE_STRING)
+        ;
 
         return $this;
     }
