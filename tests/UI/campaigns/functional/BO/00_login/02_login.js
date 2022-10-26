@@ -47,7 +47,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter an invalid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidCredentials', baseContext);
 
-    await loginPage.login(page, employeeData.email, employeeData.password, false);
+    await loginPage.failedLogin(page, employeeData.email, employeeData.password);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
@@ -56,7 +56,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter an invalid email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidEmail', baseContext);
 
-    await loginPage.login(page, employeeData.email, DefaultEmployee.password, false);
+    await loginPage.failedLogin(page, employeeData.email, DefaultEmployee.password);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
@@ -65,7 +65,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter an invalid password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidPassword', baseContext);
 
-    await loginPage.login(page, DefaultEmployee.email, employeeData.password, false);
+    await loginPage.failedLogin(page, DefaultEmployee.email, employeeData.password);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
@@ -74,7 +74,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.login(page, DefaultEmployee.email, DefaultEmployee.password);
+    await loginPage.successLogin(page, DefaultEmployee.email, DefaultEmployee.password);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
