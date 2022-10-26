@@ -37,8 +37,8 @@ use Product;
 class OptionsFillerTest extends ProductFillerTestCase
 {
     /**
-     * @dataProvider getDataForTestFillsUpdatableProperties
-     * @dataProvider getDataToTestShowPriceAndAvailableForOrderProperties
+     * @dataProvider getDataToTestUpdatablePropertiesFilling
+     * @dataProvider getDataToTestShowPriceAndAvailableForOrderPropertiesFilling
      *
      * @param Product $product
      * @param UpdateProductCommand $command
@@ -66,7 +66,7 @@ class OptionsFillerTest extends ProductFillerTestCase
      *
      * @return iterable
      */
-    public function getDataToTestShowPriceAndAvailableForOrderProperties(): iterable
+    public function getDataToTestShowPriceAndAvailableForOrderPropertiesFilling(): iterable
     {
         $product = $this->mockDefaultProduct();
         $product->show_price = false;
@@ -143,7 +143,7 @@ class OptionsFillerTest extends ProductFillerTestCase
     /**
      * @return iterable
      */
-    public function getDataForTestFillsUpdatableProperties(): iterable
+    public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand();
         yield [$this->mockDefaultProduct(), $command, [], $this->mockDefaultProduct()];
