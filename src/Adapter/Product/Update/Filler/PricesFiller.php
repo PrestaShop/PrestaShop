@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
+/**
+ * Fills product properties which are related to product price
+ */
 class PricesFiller implements ProductFillerInterface
 {
     /**
