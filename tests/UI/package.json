@@ -12,12 +12,12 @@
     "// Step identifiers": "Script to check step identifiers",
     "check:step-identifiers": "node tools/stepIdentifiersChecker.js ",
     "// Linkchecker": "Script to run link checker",
-    "check:links": "./node_modules/mocha/bin/_mocha tools/linkchecker.js",
+    "check:links": "ts-mocha tools/linkchecker.js",
     "// Specific test": "Script to run a specific test/folder",
-    "test:specific": "./node_modules/mocha/bin/_mocha --recursive --file utils/setup.js campaigns/$TEST_PATH",
-    "test:specific:fast-fail": "./node_modules/mocha/bin/_mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific": "ts-mocha --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "ts-mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
     "// Sanity": "Scripts to run sanity tests",
-    "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
+    "test:sanity": "TEST_PATH='sanity/**/*.{ts,js}' npm run test:specific",
     "test:sanity:fast-fail": "TEST_PATH='sanity/*' npm run test:specific:fast-fail",
     "test:sanity:productV2": "TEST_PATH='productV2/sanity/*' npm run test:specific",
     "test:sanity:productV2:fast-fail": "TEST_PATH='productV2/sanity/*' npm run test:specific:fast-fail",
@@ -43,7 +43,7 @@
     "// Regression tests": "Scripts to run regression tests",
     "test:regression": "TEST_PATH='regression/*' npm run test:specific",
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "./node_modules/mocha/bin/_mocha --recursive --file utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
+    "test:all": "ts-mocha --recursive --file utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",
@@ -82,12 +82,17 @@
     "playwright": "^1.16.2"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.25.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-import": "^2.26.0",
     "jsdoc-to-markdown": "^7.1.1",
-    "mochawesome-merge": "^4.2.0"
+    "mochawesome-merge": "^4.2.0",
+    "ts-mocha": "^10.0.0",
+    "typescript": "^4.8.4"
   }
 }

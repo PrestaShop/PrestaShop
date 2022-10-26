@@ -14,8 +14,8 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'sanity_installShop_installShop';
 
-let browserContext;
-let page;
+let browserContext: any;
+let page: any;
 
 describe('Install Prestashop', async () => {
   // before and after functions
