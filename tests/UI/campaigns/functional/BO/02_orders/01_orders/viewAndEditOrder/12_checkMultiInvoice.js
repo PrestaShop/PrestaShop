@@ -251,7 +251,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const productReferenceExist = await files.isTextInPDF(
         filePath,
-        `${firstProduct.reference}, ,  ${firstProduct.name}`,
+        `${firstProduct.reference}, ,${firstProduct.name}`,
       );
       await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
     });
@@ -262,9 +262,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const priceVisible = await files.isTextInPDF(
         filePath,
-        `${firstProduct.name}, ,  `
-        + `€${newProductPrice.toFixed(2)}, ,  `
-        + '1, ,  '
+        `${firstProduct.name}, ,`
+        + `€${newProductPrice.toFixed(2)}, ,`
+        + '1, ,'
         + `€${newProductPrice.toFixed(2)}`,
       );
       await expect(
@@ -310,9 +310,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const priceVisible = await files.isTextInPDF(
         filePath,
-        `${firstProduct.name}, ,  `
-        + `€${secondNewProductPrice.toFixed(2)}, ,  `
-        + '1, ,  '
+        `${firstProduct.name}, ,`
+        + `€${secondNewProductPrice.toFixed(2)}, ,`
+        + '1, ,'
         + `€${secondNewProductPrice.toFixed(2)}`,
       );
       await expect(
@@ -327,9 +327,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const priceVisible = await files.isTextInPDF(
         filePath,
-        `${firstProduct.name}, ,  `
-        + `€${(secondNewProductPrice).toFixed(2)}, ,  `
-        + '2, ,  '
+        `${firstProduct.name}, ,`
+        + `€${(secondNewProductPrice).toFixed(2)}, ,`
+        + '2, ,'
         + `€${(secondNewProductPrice * 2).toFixed(2)}`,
       );
       await expect(
@@ -440,7 +440,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const productReferenceExist = await files.isTextInPDF(
         filePath,
-        `${secondProduct.reference}, ,  ${secondProduct.name}`,
+        `${secondProduct.reference}, ,${secondProduct.name}`,
       );
       await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
     });
@@ -451,9 +451,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
       const priceVisible = await files.isTextInPDF(
         filePath,
-        `${secondProduct.name}, ,  `
-        + `€${secondProduct.price.toFixed(2)}, ,  `
-        + '1, ,  '
+        `${secondProduct.name}, ,`
+        + `€${secondProduct.price.toFixed(2)}, ,`
+        + '1, ,'
         + `€${secondProduct.price.toFixed(2)}`,
       );
       await expect(
@@ -469,10 +469,10 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
         // Total Products, Shipping Costs, Total (Tax excl.), Total
         const isShippingCostVisible = await files.isTextInPDF(
           filePath,
-          `Total Products, ,  €${secondProduct.price.toFixed(2)},  `
-          + 'Shipping Costs, ,  Free Shipping,,  '
-          + `Total (Tax excl.), ,  €${secondProduct.price.toFixed(2)},,  `
-          + `Total, ,  €${secondProduct.price.toFixed(2)}`,
+          `Total Products, ,€${secondProduct.price.toFixed(2)},`
+          + 'Shipping Costs, ,Free Shipping,,'
+          + `Total (Tax excl.), ,€${secondProduct.price.toFixed(2)},,`
+          + `Total, ,€${secondProduct.price.toFixed(2)}`,
         );
         await expect(
           isShippingCostVisible,
