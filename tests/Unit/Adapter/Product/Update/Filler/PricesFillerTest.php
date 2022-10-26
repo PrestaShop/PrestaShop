@@ -38,7 +38,7 @@ use Product;
 class PricesFillerTest extends ProductFillerTestCase
 {
     /**
-     * @dataProvider getDataForTestFillsUpdatableProperties
+     * @dataProvider getDataToTestUpdatablePropertiesFilling
      * @dataProvider getDataToTestUnitPriceAndPricePropertiesFilling
      *
      * @param Product $product
@@ -66,7 +66,7 @@ class PricesFillerTest extends ProductFillerTestCase
     /**
      * @return iterable
      */
-    public function getDataForTestFillsUpdatableProperties(): iterable
+    public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand()
             ->setWholesalePrice('4.99')

@@ -36,7 +36,7 @@ use Product;
 class BasicInformationFillerTest extends ProductFillerTestCase
 {
     /**
-     * @dataProvider getDataForTestFillsUpdatableProperties
+     * @dataProvider getDataToTestUpdatablePropertiesFilling
      *
      * @param UpdateProductCommand $command
      * @param array $expectedUpdatableProperties
@@ -59,7 +59,7 @@ class BasicInformationFillerTest extends ProductFillerTestCase
     /**
      * @return iterable
      */
-    public function getDataForTestFillsUpdatableProperties(): iterable
+    public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand();
 
