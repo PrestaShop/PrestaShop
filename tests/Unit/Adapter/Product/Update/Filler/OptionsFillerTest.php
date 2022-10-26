@@ -38,34 +38,14 @@ class OptionsFillerTest extends ProductFillerTestCase
 {
     /**
      * @dataProvider getDataForTestFillsUpdatableProperties
+     * @dataProvider getDataToTestShowPriceAndAvailableForOrderProperties
      *
+     * @param Product $product
      * @param UpdateProductCommand $command
      * @param array $expectedUpdatableProperties
      * @param Product $expectedProduct
      */
     public function testFillsUpdatableProperties(
-        UpdateProductCommand $command,
-        array $expectedUpdatableProperties,
-        Product $expectedProduct
-    ): void {
-        $this->fillUpdatableProperties(
-            $this->getFiller(),
-            $this->mockDefaultProduct(),
-            $command,
-            $expectedUpdatableProperties,
-            $expectedProduct
-        );
-    }
-
-    /**
-     * @dataProvider getDataForTestShowPriceAndAvailableForOrderProperties
-     *
-     * @param Product $product
-     * @param UpdateProductCommand $command
-     * @param array<int|string, string|int[]> $expectedUpdatableProperties
-     * @param Product $expectedProduct
-     */
-    public function testFillsShowPriceAndAvailableForOrderProperties(
         Product $product,
         UpdateProductCommand $command,
         array $expectedUpdatableProperties,
@@ -86,7 +66,7 @@ class OptionsFillerTest extends ProductFillerTestCase
      *
      * @return iterable
      */
-    public function getDataForTestShowPriceAndAvailableForOrderProperties(): iterable
+    public function getDataToTestShowPriceAndAvailableForOrderProperties(): iterable
     {
         $product = $this->mockDefaultProduct();
         $product->show_price = false;
@@ -166,7 +146,7 @@ class OptionsFillerTest extends ProductFillerTestCase
     public function getDataForTestFillsUpdatableProperties(): iterable
     {
         $command = $this->getEmptyCommand();
-        yield [$command, [], $this->mockDefaultProduct()];
+        yield [$this->mockDefaultProduct(), $command, [], $this->mockDefaultProduct()];
 
         $command = $this
             ->getEmptyCommand()
@@ -178,6 +158,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         $expectedProduct->condition = ProductCondition::USED;
 
         yield [
+            $this->mockDefaultProduct(),
             $command,
             [
                 'visibility',
@@ -203,6 +184,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         $expectedProduct->show_price = false;
 
         yield [
+            $this->mockDefaultProduct(),
             $command,
             [
                 'visibility',
