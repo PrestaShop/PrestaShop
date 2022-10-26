@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "module": "es6",
+    "target": "es5",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "@pages": ["pages"],
+      "@commonTests": ["commonTests"],
+      "@data": ["data"],
+      "@utils": ["utils"],
+      "@tools": ["tools"]
+    },
+    "typeRoots": ["types", "node_modules/@types", "types/global.d.ts"]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

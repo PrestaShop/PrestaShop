@@ -50,4 +50,27 @@ module.exports = {
     'import/extensions': ['off', 'never'],
     'no-use-before-define': 0,
   },
+  overrides: [
+    {
+      files: ['*.ts'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['prestashop', 'plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
+      rules: {
+        'spaced-comment': 0,
+        '@typescript-eslint/no-extra-semi': 0,
+        'max-len': ['error', {ignoreComments: true, code: 130}],
+        'class-methods-use-this': 0,
+        'no-alert': 0,
+        '@typescript-eslint/ban-ts-comment': 0,
+        '@typescript-eslint/no-non-null-assertion': 0,
+        '@typescript-eslint/no-explicit-any': 0,
+        '@typescript-eslint/no-this-alias': 0,
+        '@typescript-eslint/no-inferrable-types': 0,
+        '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
+        'func-names': 0,
+        'no-new': 0,
+      },
+    },
+  ]
 };
