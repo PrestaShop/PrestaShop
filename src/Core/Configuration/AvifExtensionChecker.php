@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
+use PrestaShop\PrestaShop\Core\Exception\AvifUnavailableException;
+
 /**
  * Class AvifExtensionChecker provides object-oriented way to check if AVIF extension is installed and available.
  */
@@ -51,7 +53,9 @@ final class AvifExtensionChecker
         if (function_exists('imageavif')) {
             set_error_handler(
                 function ($severity, $message) {
-                    throw new \Exception($message);
+                    if (str_contains($message, 'imageavif(): AVIF image support has been disabled')) {
+                        throw new AvifUnavailableException($message);
+                    }
                 },
                 E_WARNING
             );
@@ -59,7 +63,7 @@ final class AvifExtensionChecker
             try {
                 $image = imagecreatetruecolor(250, 250);
                 imageavif($image, 'test-avif-support.avif');
-            } catch (\Exception $e) {
+            } catch (AvifUnavailableException $e) {
                 $isAvailable = false;
             } finally {
                 @unlink('test-avif-support.avif');
