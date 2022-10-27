@@ -1,9 +1,7 @@
 require('module-alias/register');
+import helper from '@utils/helpers';
 
 const {expect} = require('chai');
-
-// Import browser helper
-const helper = require('@utils/helpers');
 
 // Import pages
 const installPage = require('@pages/install');

@@ -1,9 +1,10 @@
+import helper from '@utils/helpers';
+import { BrowserContext, Page } from 'playwright';
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -17,9 +18,9 @@ const ordersPage = require('@pages/BO/orders');
 const {Orders} = require('@data/demo/orders');
 
 const baseContext = 'sanity_ordersBO_filterOrders';
-let numberOfOrders;
-let browserContext;
-let page;
+let numberOfOrders: number;
+let browserContext: BrowserContext;
+let page: Page;
 
 /*
   Connect to the BO
