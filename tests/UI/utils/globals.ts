@@ -33,23 +33,23 @@ global.INSTALL = {
 global.BROWSER = {
   name: process.env.BROWSER || 'chromium',
   lang: process.env.BROWSER_LANG || 'en-GB',
-  width: parseInt(process.env.BROWSER_WIDTH, 10) || 1680,
-  height: parseInt(process.env.BROWSER_HEIGHT, 10) || 900,
+  width: process.env.BROWSER_WIDTH ? parseInt(process.env.BROWSER_WIDTH, 10) : 1680,
+  height: process.env.BROWSER_HEIGHT ? parseInt(process.env.BROWSER_HEIGHT, 10) : 900,
   sandboxArgs: ['--no-sandbox', '--disable-setuid-sandbox'],
   acceptDownloads: true,
   config: {
-    headless: JSON.parse(process.env.HEADLESS || true),
+    headless: process.env.HEADLESS ? JSON.parse(process.env.HEADLESS) : true,
     timeout: 0,
-    slowMo: parseInt(process.env.SLOW_MO, 10) || 5,
+    slowMo: process.env.SLOW_MO ? parseInt(process.env.SLOW_MO, 10) : 5,
   },
-  interceptErrors: JSON.parse(process.env.INTERCEPT_ERRORS || false),
+  interceptErrors: process.env.INTERCEPT_ERRORS ? JSON.parse(process.env.INTERCEPT_ERRORS) : false,
 };
 
-global.GENERATE_FAILED_STEPS = JSON.parse(process.env.GENERATE_FAILED_STEPS || false);
+global.GENERATE_FAILED_STEPS = process.env.GENERATE_FAILED_STEPS ? JSON.parse(process.env.GENERATE_FAILED_STEPS) : false;
 
 global.SCREENSHOT = {
   FOLDER: process.env.SCREENSHOT_FOLDER || './screenshots',
-  AFTER_FAIL: JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL || false),
+  AFTER_FAIL: process.env.TAKE_SCREENSHOT_AFTER_FAIL ? JSON.parse(process.env.TAKE_SCREENSHOT_AFTER_FAIL) : false,
 };
 
 global.maildevConfig = {

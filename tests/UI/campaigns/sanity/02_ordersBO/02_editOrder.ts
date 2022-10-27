@@ -1,3 +1,5 @@
+import { BrowserContext, Page } from "playwright";
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
@@ -19,8 +21,8 @@ const {Statuses} = require('@data/demo/orderStatuses');
 
 const baseContext = 'sanity_ordersBO_editOrder';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /*
   Connect to the BO

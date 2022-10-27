@@ -1,4 +1,5 @@
-const addContext = require('mochawesome/addContext');
+import { Context } from 'mocha';
+import addContext from 'mochawesome/addContext'
 
 /**
  * @module TestContextHelper
@@ -13,7 +14,7 @@ module.exports = {
    * @param baseContext {?string} File contest based on file location
    * @return {Promise<void>}
    */
-  async addContextItem(testObj, title, value, baseContext = undefined) {
+  async addContextItem(testObj: Context, title: string, value: string, baseContext: string | undefined = undefined) {
     addContext(
       testObj,
       {
