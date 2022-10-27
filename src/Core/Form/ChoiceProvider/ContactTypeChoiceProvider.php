@@ -26,31 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Contact;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-class CustomerThreadStatusesChoiceProvider implements ConfigurableFormChoiceProviderInterface
+class ContactTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var int
      */
-    private $translator;
+    private $langId;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(int $langId)
     {
-        $this->translator = $translator;
+        $this->langId = $langId;
     }
 
-    public function getChoices(array $options = [])
+    public function getChoices(): array
     {
-        return [
-            $this->translator->trans('Opened', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::OPEN,
-            $this->translator->trans('Closed', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::CLOSED,
-            $this->translator->trans('Pending 1', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_1,
-            $this->translator->trans('Pending 2', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_2,
-        ];
+        $contacts = Contact::getContacts($this->langId);
+
+        $contactArray = [];
+
+        foreach ($contacts as $contact) {
+            $contactArray[$contact['name']] = $contact['id_contact'];
+        }
+
+        return $contactArray;
     }
 }

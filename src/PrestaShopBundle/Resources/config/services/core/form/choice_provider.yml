@@ -304,7 +304,12 @@ services:
     arguments:
       - '@translator'
 
+  prestashop.core.form.choice_provider.contact_type_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactTypeChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+
   prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerThreadStatusesChoiceProvider'
     arguments:
       - '@translator'
