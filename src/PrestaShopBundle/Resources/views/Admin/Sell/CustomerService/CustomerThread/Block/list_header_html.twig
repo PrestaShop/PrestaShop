@@ -1,0 +1,78 @@
+{# **
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * #}
+
+{# {% extends file="helpers/list/list_header.tpl" %} #}
+
+{% block leadin %}
+  <div id="CustomerThreadContacts" class="row">
+    {% set nb_categories = categories|length %}
+    {% for key, val in categories %}
+
+      {% set total_thread = 0 %}
+      {% set id_customer_thread = 0 %}
+
+      {% for tmp, tmp2 in contacts %}
+        {% if val.id_contact == tmp2.id_contact %}
+          {% set total_thread = tmp2.total %}
+          {% set id_customer_thread = tmp2.id_customer_thread %}
+        {% endif %}
+      {% endfor %}
+      <div class="col-lg-3 p-0 card">
+        <div class="card-header">
+          {{ val.name }}
+        </div>
+        <div class="card-body">
+
+          {% if nb_categories < 6 %}
+            <p>{{ val.description }}</p>
+          {% endif %}
+          {% if total_thread == 0 %}
+            <span class="message-mail">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+          {% else %}
+            <a
+              href="{currentIndex|escape:'html':'UTF-8'}&amp;token={token|escape:'html':'UTF-8'}&amp;id_customer_thread={id_customer_thread}&amp;viewcustomer_thread"
+              class="button">
+              {{ total_thread }}
+              {% if total_thread > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    <div class="col-lg-3 p-0 card">
+      <div class="card-header">
+        {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </div>
+      <ul class="list-unstyled card-body">
+        {% set count = 0 %}
+        {% for key, val in params %}
+          {% set count = count+1 %}
+          <li>{{ key }} <span class="badge bg-primary text-light">{{ val }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

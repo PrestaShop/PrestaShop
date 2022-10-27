@@ -29,6 +29,7 @@
 {% endblock %}
 
 {% block content %}
+  {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/list_header_html.twig' with {'grid': customerThreadGrid} %}
   {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerThreadGrid} %}
 {% endblock %}
 
