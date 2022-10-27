@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
 use Contact;
 use Context;
@@ -54,7 +54,7 @@ use Validate;
 /**
  * @internal
  */
-final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
+class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
 {
     /**
      * @var Context

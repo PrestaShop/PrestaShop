@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
 use Contact;
 use Context;
@@ -45,7 +45,7 @@ use Validate;
 /**
  * @internal
  */
-final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandlerInterface
+class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandlerInterface
 {
     /**
      * @var Context
