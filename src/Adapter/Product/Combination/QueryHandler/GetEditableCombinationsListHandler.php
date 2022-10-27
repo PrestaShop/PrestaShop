@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditab
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -133,8 +132,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
             $attributesInformation,
             $total,
             $imageIdsByCombinationIds,
-            $productImageIds,
-            $shopId
+            $productImageIds
         );
     }
 
@@ -152,8 +150,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
         array $attributesInformationByCombinationId,
         int $totalCombinationsCount,
         array $imageIdsByCombinationIds,
-        array $defaultImageIds,
-        ShopId $shopId
+        array $defaultImageIds
     ): CombinationListForEditing {
         $combinationsForEditing = [];
 

@@ -220,7 +220,8 @@ class CombinationCore extends ObjectModel
                 StockAvailable::setProductOutOfStock((int) $this->id_product, 1, $shopId, (int) $this->id);
             }
         } else {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), null, $this->id);
+            // This creates stock_available for combination as a side effect
+            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), $this->id_shop, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
