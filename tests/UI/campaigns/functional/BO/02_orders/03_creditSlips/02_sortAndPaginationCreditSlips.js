@@ -194,11 +194,12 @@ describe('BO - Orders - Credit Slips - Sort & Pagination Credit Slips', async ()
         await expect(result).to.equal(Statuses.shipped.status);
       });
 
-      const tests = [
-        {args: {productID: 1, quantity: 1, documentRow: 4}},
-      ];
+      // const tests = [
+      //   {args: {productID: 1, quantity: 1, documentRow: 4}},
+      //   {args: {productID: 1, quantity: 1, documentRow: 5}},
+      // ];
 
-      tests.forEach((test, index) => {
+      // tests.forEach((test, index) => {
         it(`should create the partial refund n°${index + 1}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
@@ -220,7 +221,7 @@ describe('BO - Orders - Credit Slips - Sort & Pagination Credit Slips', async ()
           await expect(documentType).to.be.equal('Credit slip');
         });
 
-      });
+      // });
 
     };
 
