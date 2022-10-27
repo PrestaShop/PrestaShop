@@ -567,14 +567,18 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         ShopConstraint $shopConstraint
     ): void {
         $defaultShopId = $this->getDefaultShopIdForCombination($newDefaultCombinationId);
-        $constraintShopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
+        $shopIds = $this->getShopIdsByConstraint($newDefaultCombinationId, $shopConstraint);
 
-        // we need to update the common table only for default shop, but only when default shop is impacted by the constraint
-        if (in_array($defaultShopId->getValue(), $constraintShopIds, true)) {
-            $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
+        foreach ($shopIds as $shopId) {
+            // we need to update the common table only for default shop, but only when default shop is impacted by the constraint
+            if ($defaultShopId->getValue() === $shopId->getValue()) {
+                $this->setDefaultCombinationInCommonTable($productId, $newDefaultCombinationId);
+
+                break;
+            }
         }
 
-        $this->setDefaultCombinationInShopTable($productId, $newDefaultCombinationId, $constraintShopIds);
+        $this->setDefaultCombinationInShopTable($productId, $newDefaultCombinationId, $shopIds);
     }
 
     /**
@@ -607,7 +611,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      *
      * @param ProductId $productId
      * @param CombinationId $newDefaultCombinationId
-     * @param int[] $shopIds
+     * @param ShopId[] $shopIds
      */
     private function setDefaultCombinationInShopTable(
         ProductId $productId,
@@ -618,9 +622,11 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             return;
         }
 
-        $shopIdsString = implode(',', $shopIds);
         $shopCombinationTable = sprintf('%sproduct_attribute_shop', $this->dbPrefix);
-
+        $shopIdsString = implode(
+            ',',
+            array_map(function (ShopId $shopId): int { return $shopId->getValue(); }, $shopIds)
+        );
         // find current default combination and make it non-default
         // important to check NULL, because it is impossible to have "0" as falsy value due to sql constraint
         $this->connection->executeStatement(sprintf(
@@ -643,7 +649,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      * @param CombinationId $combinationId
      * @param ShopConstraint $shopConstraint
      *
-     * @return int[]
+     * @return ShopId[]
      *
      * @throws InvalidShopConstraintException
      */
@@ -653,16 +659,10 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             throw new InvalidShopConstraintException('Product combinations has no features related with shop group use single shop and all shops constraints');
         }
 
-        $shopIds = [];
         if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds($combinationId);
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
+            return $this->getAssociatedShopIds($combinationId);
         }
 
-        return $shopIds;
+        return [$shopConstraint->getShopId()];
     }
 }
