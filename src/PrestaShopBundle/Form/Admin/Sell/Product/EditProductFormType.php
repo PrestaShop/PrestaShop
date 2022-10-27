@@ -63,28 +63,20 @@ class EditProductFormType extends TranslatorAwareType
     private $toolbarButtonsProvider;
 
     /**
-     * @var int
-     */
-    private $shopId;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $productTypeListener
      * @param ToolbarButtonsProviderInterface $toolbarButtonsProvider
-     * @param int $shopId
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         EventSubscriberInterface $productTypeListener,
-        ToolbarButtonsProviderInterface $toolbarButtonsProvider,
-        int $shopId
+        ToolbarButtonsProviderInterface $toolbarButtonsProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productTypeListener = $productTypeListener;
         $this->toolbarButtonsProvider = $toolbarButtonsProvider;
-        $this->shopId = $shopId;
     }
 
     /**
@@ -93,6 +85,8 @@ class EditProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = $options['product_id'];
+        $shopId = $options['shop_id'];
+
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
@@ -141,7 +135,7 @@ class EditProductFormType extends TranslatorAwareType
         $formVars = [
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
-            'shop_id' => $this->shopId,
+            'shop_id' => $options['shop_id'],
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -166,10 +160,12 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->setRequired([
                 'product_id',
+                'shop_id',
                 'product_type',
                 'tax_rules_group_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])
