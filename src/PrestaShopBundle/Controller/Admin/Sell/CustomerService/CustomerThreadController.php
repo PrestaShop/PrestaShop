@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use Contact;
+use CustomerMessage;
+use CustomerThread;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
@@ -69,10 +72,21 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
 
+        $params = [
+            $this->trans('Total threads', 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
+            $this->trans('Threads pending', 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->trans('Total number of customer messages', 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
+            $this->trans('Total number of employee messages', 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
+            $this->trans('Unread threads', 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+            $this->trans('Closed threads', 'Admin.Catalog.Feature') => $all - ($unread + $pending),
+        ];
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'enableSidebar' => true,
+            'categories' => Contact::getCategoriesContacts(),
+            'contacts' => CustomerThread::getContacts(),
+            'params' => $params
         ]);
     }
 
