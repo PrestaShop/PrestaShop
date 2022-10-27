@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProductCombinationBuilderTest extends TestCase
+class ProductCombinationFiltersBuilderTest extends TestCase
 {
     /**
      * @dataProvider getSupportsValues
