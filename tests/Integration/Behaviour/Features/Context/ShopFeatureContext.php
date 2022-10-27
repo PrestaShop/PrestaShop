@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreConfig;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -79,6 +80,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             'product_lang',
         ]);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Configuration::set(MultistoreConfig::FEATURE_STATUS, 0);
         Shop::resetStaticCache();
     }
 

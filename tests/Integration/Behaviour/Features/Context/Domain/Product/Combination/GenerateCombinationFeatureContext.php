@@ -97,7 +97,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertCombinationName(string $combinationReference, string $combinationName): void
     {
-        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
+        $combinationForEditing = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId());
 
         Assert::assertSame(
             $combinationName,
@@ -118,7 +118,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertDefaultCombinationForDefaultShop(string $productReference, string $combinationReference): void
     {
-        $this->assertDefaultCombination($productReference, $combinationReference);
+        $this->assertDefaultCombination($productReference, $combinationReference, $this->getDefaultShopId());
     }
 
     /**
@@ -133,29 +133,33 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         string $shopReference,
         string $combinationReference
     ): void {
-        $this->assertDefaultCombination($productReference, $combinationReference, $shopReference);
+        $this->assertDefaultCombination(
+            $productReference,
+            $combinationReference,
+            $this->getSharedStorage()->get($shopReference)
+        );
     }
 
     /**
      * @param string $productReference
      * @param string $combinationReference
-     * @param string|null $shopReference
+     * @param int $shopId
      */
     private function assertDefaultCombination(
         string $productReference,
         string $combinationReference,
-        ?string $shopReference = null
+        int $shopId
     ) {
         $combinationId = $this->getSharedStorage()->get($combinationReference);
 
         $this->assertCachedDefaultCombinationId(
             $productReference,
             $combinationId,
-            $shopReference
+            $shopId
         );
 
         Assert::assertTrue(
-            $this->getCombinationForEditing($combinationReference, $shopReference)->isDefault(),
+            $this->getCombinationForEditing($combinationReference, $shopId)->isDefault(),
             sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
         );
     }
@@ -168,7 +172,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertProductHasNoCachedDefaultCombination(string $productReference): void
     {
-        $this->assertCachedDefaultCombinationId($productReference, 0);
+        $this->assertCachedDefaultCombinationId($productReference, 0, $this->getDefaultShopId());
     }
 
     /**
@@ -178,20 +182,24 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertProductHasNoCachedDefaultCombinationForShop(string $productReference, string $shopReference): void
     {
-        $this->assertCachedDefaultCombinationId($productReference, 0, $shopReference);
+        $this->assertCachedDefaultCombinationId(
+            $productReference,
+            0,
+            $this->getSharedStorage()->get($shopReference)
+        );
     }
 
     /**
      * @param string $productReference
      * @param int $combinationId
      */
-    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId, ?string $shopReference = null): void
+    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId, int $shopId): void
     {
         $product = new Product(
             $this->getSharedStorage()->get($productReference),
             false,
             null,
-            $shopReference ? $this->getSharedStorage()->get($shopReference) : $this->getDefaultShopId()
+            $shopId
         );
 
         Assert::assertEquals(
