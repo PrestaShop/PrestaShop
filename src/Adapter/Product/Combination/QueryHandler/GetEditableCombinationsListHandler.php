@@ -192,7 +192,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 $impactOnPrice,
                 (int) $combination['quantity'],
                 $imagePath,
-                new DecimalNumber( $combination['ecotax'])
+                new DecimalNumber($combination['ecotax'])
             );
         }
 
