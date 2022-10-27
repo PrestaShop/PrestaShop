@@ -54,7 +54,7 @@ final class CustomerThreadGridDataFactoryDecorator implements GridDataFactoryInt
     /**
      * {@inheritdoc}
      */
-    public function getData(SearchCriteriaInterface $searchCriteria)
+    public function getData(SearchCriteriaInterface $searchCriteria): GridData
     {
         $customerThreadData = $this->customerDoctrineGridDataFactory->getData($searchCriteria);
 
@@ -72,7 +72,7 @@ final class CustomerThreadGridDataFactoryDecorator implements GridDataFactoryInt
      *
      * @return RecordCollection
      */
-    private function applyModifications(RecordCollectionInterface $customerThreads)
+    private function applyModifications(RecordCollectionInterface $customerThreads): RecordCollection
     {
         $modifiedCustomerThreads = [];
 

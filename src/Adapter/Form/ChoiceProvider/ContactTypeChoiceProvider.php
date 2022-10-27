@@ -24,11 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\DataProvider;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Contact;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
-class ContactTypeProvider
+class ContactTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
      * @var int
@@ -40,7 +43,7 @@ class ContactTypeProvider
         $this->langId = $langId;
     }
 
-    public function getContactTypes(): array
+    public function getChoices(): array
     {
         $contacts = Contact::getContacts($this->langId);
 
