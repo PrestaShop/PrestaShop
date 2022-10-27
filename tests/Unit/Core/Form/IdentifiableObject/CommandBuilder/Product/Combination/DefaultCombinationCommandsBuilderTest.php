@@ -104,23 +104,6 @@ class DefaultCombinationCommandsBuilderTest extends AbstractCombinationCommandBu
             [],
         ];
 
-        yield [
-            [
-                'is_default' => null,
-            ],
-            [],
-        ];
-
-        yield [
-            [
-                'is_default' => false,
-                'header' => [
-                    'is_default' => null,
-                ],
-            ],
-            [],
-        ];
-
         $command = new SetDefaultCombinationCommand($this->getCombinationId()->getValue());
         yield [
             [
@@ -145,31 +128,6 @@ class DefaultCombinationCommandsBuilderTest extends AbstractCombinationCommandBu
                 'header' => [
                     'is_default' => '1',
                 ],
-            ],
-            [$command],
-        ];
-
-        yield [
-            [
-                'header' => [
-                    'is_default' => false,
-                ],
-                'is_default' => true,
-            ],
-            [$command],
-        ];
-        yield [
-            [
-                'header' => [
-                    'is_default' => true,
-                ],
-                'is_default' => true,
-            ],
-            [$command],
-        ];
-        yield [
-            [
-                'is_default' => true,
             ],
             [$command],
         ];
