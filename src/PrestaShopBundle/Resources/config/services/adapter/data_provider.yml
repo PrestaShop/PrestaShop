@@ -105,8 +105,3 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Employee\ContextEmployeeProvider
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().employee'
-
-  prestashop.core.domain.customer_service.data_provider.contact_type:
-    class: PrestaShop\PrestaShop\Core\Domain\CustomerService\DataProvider\ContactTypeProvider
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

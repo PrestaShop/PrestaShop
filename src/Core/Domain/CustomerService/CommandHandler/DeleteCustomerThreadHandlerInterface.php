@@ -33,5 +33,5 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThre
  */
 interface DeleteCustomerThreadHandlerInterface
 {
-    public function handle(DeleteCustomerThreadCommand $command);
+    public function handle(DeleteCustomerThreadCommand $command): void;
 }

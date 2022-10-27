@@ -61,7 +61,7 @@ class BulkDeleteCustomerThreadCommand
      *
      * @throws CustomerServiceException
      */
-    public function setCustomerThreadIds(array $customerThreadIds)
+    private function setCustomerThreadIds(array $customerThreadIds): void
     {
         foreach ($customerThreadIds as $customerThreadId) {
             $this->customerThreadIds[] = new CustomerThreadId($customerThreadId);

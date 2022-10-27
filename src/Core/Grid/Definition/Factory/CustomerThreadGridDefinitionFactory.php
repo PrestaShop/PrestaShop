@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\DataProvider\ContactTypeProvider;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
@@ -63,7 +62,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'customer_thread';
 
     /**
-     * @var ContactTypeProvider
+     * @var FormChoiceProviderInterface
      */
     private $contactTypeProvider;
 
@@ -79,7 +78,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher = null,
-        ContactTypeProvider $contactTypeProvider,
+        FormChoiceProviderInterface $contactTypeProvider,
         FormChoiceProviderInterface $shopNameByIdChoiceProvider,
         ConfigurableFormChoiceProviderInterface $customerThreadStatusesChoiceProvider
     ) {
@@ -250,7 +249,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('contact')
                     ->setTypeOptions([
                         'required' => false,
-                        'choices' => $this->contactTypeProvider->getContactTypes(),
+                        'choices' => $this->contactTypeProvider->getChoices(),
                     ])
             )
             ->add(

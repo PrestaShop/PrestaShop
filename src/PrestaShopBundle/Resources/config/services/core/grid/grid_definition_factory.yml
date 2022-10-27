@@ -342,7 +342,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerThreadGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - '@prestashop.core.domain.customer_service.data_provider.contact_type'
+      - '@prestashop.adapter.form.choice_provider.contact_type_choice_provider'
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
       - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
     public: true

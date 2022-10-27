@@ -46,7 +46,7 @@ class BulkDeleteCustomerThreadHandler implements BulkDeleteCustomerThreadHandler
         $this->customerThreadRepository = $customerThreadRepository;
     }
 
-    public function handle(BulkDeleteCustomerThreadCommand $command)
+    public function handle(BulkDeleteCustomerThreadCommand $command): void
     {
         foreach ($command->getCustomerThreadIds() as $customerThreadId) {
             $this->customerThreadRepository->delete($customerThreadId);
