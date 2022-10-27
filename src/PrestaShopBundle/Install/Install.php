@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Install;
 
-use AppKernel;
 use Language as LanguageLegacy;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
@@ -58,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
 use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
+use PrestaShop\PrestaShop\Core\Version;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestaShopException;
@@ -432,7 +432,7 @@ class Install extends AbstractInstall
             if (!$all_languages) {
                 $iso_codes_to_install = [$this->language->getLanguageIso()];
                 if ($iso_country) {
-                    $version = str_replace('.', '', AppKernel::VERSION);
+                    $version = str_replace('.', '', Version::VERSION);
                     $version = substr($version, 0, 2);
                     $localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
@@ -836,7 +836,7 @@ class Install extends AbstractInstall
         Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'country SET active = 0 WHERE id_country != ' . (int) $id_country);
 
         // Set localization configuration
-        $version = str_replace('.', '', AppKernel::VERSION);
+        $version = str_replace('.', '', Version::VERSION);
         $version = substr($version, 0, 2);
         $localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 

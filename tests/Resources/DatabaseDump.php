@@ -27,10 +27,10 @@
 
 namespace Tests\Resources;
 
-use AppKernel;
 use Cache;
 use Db;
 use Exception;
+use PrestaShop\PrestaShop\Core\Version;
 use Tools;
 
 class DatabaseDump
@@ -111,7 +111,7 @@ class DatabaseDump
 
         $this->databaseName = _DB_NAME_;
         if ($dumpFile === null) {
-            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, AppKernel::VERSION);
+            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, Version::VERSION);
         } else {
             $this->dumpFile = $dumpFile;
         }
@@ -248,7 +248,7 @@ class DatabaseDump
             '%s/ps_dump_%s_%s_%s.sql',
             sys_get_temp_dir(),
             $this->databaseName,
-            AppKernel::VERSION,
+            Version::VERSION,
             $table
         );
     }
@@ -259,7 +259,7 @@ class DatabaseDump
             '%s/ps_dump_%s_%s_%s.md5',
             sys_get_temp_dir(),
             $this->databaseName,
-            AppKernel::VERSION,
+            Version::VERSION,
             $table
         );
     }
