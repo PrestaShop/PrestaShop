@@ -61,6 +61,7 @@ services:
       - '@prestashop.adapter.product.image.validate.product_image_validator'
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
   prestashop.adapter.product.image.update.product_image_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater

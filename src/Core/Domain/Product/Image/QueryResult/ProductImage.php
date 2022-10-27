@@ -62,6 +62,10 @@ class ProductImage
      * @var string
      */
     private $thumbnailUrl;
+    /**
+     * @var array
+     */
+    private $shopIds;
 
     /**
      * @param int $imageId
@@ -77,7 +81,8 @@ class ProductImage
         int $position,
         array $localizedLegends,
         string $imageUrl,
-        string $thumbnailUrl
+        string $thumbnailUrl,
+        array $shopIds
     ) {
         $this->imageId = $imageId;
         $this->cover = $cover;
@@ -85,6 +90,7 @@ class ProductImage
         $this->localizedLegends = $localizedLegends;
         $this->imageUrl = $imageUrl;
         $this->thumbnailUrl = $thumbnailUrl;
+        $this->shopIds = $shopIds;
     }
 
     /**
@@ -133,5 +139,13 @@ class ProductImage
     public function getThumbnailUrl(): string
     {
         return $this->thumbnailUrl;
+    }
+
+    /**
+     * @return array
+     */
+    public function getShopIds(): array
+    {
+        return $this->shopIds;
     }
 }

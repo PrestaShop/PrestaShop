@@ -86,7 +86,7 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
         $this->imageValidator->assertFileUploadLimits($command->getFilePath());
         $this->imageValidator->assertIsValidImageType($command->getFilePath());
 
-        $image = $this->productImageRepository->create($command->getProductId(), $this->contextShopIds);
+        $image = $this->productImageRepository->create($command->getProductId(), $command->getShopConstraint());
         $this->productImageUploader->upload($image, $command->getFilePath());
 
         return new ImageId((int) $image->id);

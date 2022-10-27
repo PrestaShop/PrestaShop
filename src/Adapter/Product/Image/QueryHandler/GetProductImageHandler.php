@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles @see GetProductImage query
@@ -70,7 +71,10 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
     {
         $image = $this->productImageRepository->get($query->getImageId());
 
-        return $this->formatImage($image);
+        return $this->formatImage(
+            $image,
+            $this->productImageRepository->getAssociatedShopIdsByImageId(new ImageId($image->id))
+        );
     }
 
     /**
@@ -78,7 +82,7 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
      *
      * @return ProductImage
      */
-    private function formatImage(Image $image): ProductImage
+    private function formatImage(Image $image, array $shopIds): ProductImage
     {
         $imageId = new ImageId((int) $image->id);
 
@@ -88,7 +92,13 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
             (int) $image->position,
             $image->legend,
             $this->productImageUrlFactory->getPath($imageId),
-            $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
+            $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT),
+            array_map(
+                static function(ShopId $shopId): int {
+                    return $shopId->getValue();
+                },
+                $shopIds
+            )
         );
     }
 }
