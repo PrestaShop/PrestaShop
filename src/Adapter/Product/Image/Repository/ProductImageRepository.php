@@ -34,6 +34,7 @@ use ImageType;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
@@ -42,6 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageExcept
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
@@ -74,6 +78,10 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @var CombinationRepository
      */
     protected $combinationRepository;
+    /**
+     * @var ProductMultiShopRepository
+     */
+    private $productMultiShopRepository;
 
     /**
      * @param Connection $connection
@@ -86,13 +94,15 @@ class ProductImageRepository extends AbstractObjectModelRepository
         string $dbPrefix,
         ProductImageValidator $productImageValidator,
         ProductImagePathFactory $productImagePathFactory,
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        ProductMultiShopRepository $productMultiShopRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productImageValidator = $productImageValidator;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->combinationRepository = $combinationRepository;
+        $this->productMultiShopRepository = $productMultiShopRepository;
     }
 
     /**
@@ -105,7 +115,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @throws ProductImageException
      * @throws CannotAddProductImageException
      */
-    public function create(ProductId $productId, array $shopIds): Image
+    public function create(ProductId $productId, ShopConstraint $shopConstraint): Image
     {
         $productIdValue = $productId->getValue();
         $image = new Image();
@@ -113,6 +123,8 @@ class ProductImageRepository extends AbstractObjectModelRepository
         $image->cover = !Image::getCover($productIdValue);
 
         $this->addObjectModel($image, CannotAddProductImageException::class);
+
+        $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
 
         try {
             if (!$image->associateTo($shopIds)) {
@@ -431,5 +443,27 @@ class ProductImageRepository extends AbstractObjectModelRepository
         }
 
         return null;
+    }
+
+    public function getAssociatedShopIdsByImageId(ImageId $imageId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'image_shop')
+            ->where('id_image = :imageId')
+            ->setParameter('imageId', $imageId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        $shops = [];
+        foreach ($result as $shop) {
+            $shops[] = new ShopId((int) $shop['id_shop']);
+        }
+        return $shops;
     }
 }
