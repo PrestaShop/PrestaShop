@@ -36,7 +36,7 @@ use Product;
 class BasicInformationFillerTest extends ProductFillerTestCase
 {
     /**
-     * @dataProvider getDataForTestFillsUpdatableProperties
+     * @dataProvider getDataToTestUpdatablePropertiesFilling
      *
      * @param UpdateProductCommand $command
      * @param array $expectedUpdatableProperties
@@ -48,6 +48,8 @@ class BasicInformationFillerTest extends ProductFillerTestCase
         Product $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
+            $this->getFiller(),
+            $this->mockDefaultProduct(),
             $command,
             $expectedUpdatableProperties,
             $expectedProduct
@@ -55,20 +57,9 @@ class BasicInformationFillerTest extends ProductFillerTestCase
     }
 
     /**
-     * @return ProductFillerInterface
-     */
-    protected function getFiller(): ProductFillerInterface
-    {
-        return new BasicInformationFiller(
-            self::DEFAULT_LANG_ID,
-            $this->mockTools()
-        );
-    }
-
-    /**
      * @return iterable
      */
-    public function getDataForTestFillsUpdatableProperties(): iterable
+    public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand();
 
@@ -119,6 +110,17 @@ class BasicInformationFillerTest extends ProductFillerTestCase
             ],
             $expectedProduct,
         ];
+    }
+
+    /**
+     * @return ProductFillerInterface
+     */
+    private function getFiller(): ProductFillerInterface
+    {
+        return new BasicInformationFiller(
+            self::DEFAULT_LANG_ID,
+            $this->mockTools()
+        );
     }
 
     /**

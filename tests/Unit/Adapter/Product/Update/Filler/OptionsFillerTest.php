@@ -37,44 +37,27 @@ use Product;
 class OptionsFillerTest extends ProductFillerTestCase
 {
     /**
-     * @dataProvider getDataForTestFillsUpdatableProperties
+     * @dataProvider getDataToTestUpdatablePropertiesFilling
+     * @dataProvider getDataToTestShowPriceAndAvailableForOrderPropertiesFilling
      *
+     * @param Product $product
      * @param UpdateProductCommand $command
      * @param array $expectedUpdatableProperties
      * @param Product $expectedProduct
      */
     public function testFillsUpdatableProperties(
-        UpdateProductCommand $command,
-        array $expectedUpdatableProperties,
-        Product $expectedProduct
-    ): void {
-        $this->fillUpdatableProperties(
-            $command,
-            $expectedUpdatableProperties,
-            $expectedProduct
-        );
-    }
-
-    /**
-     * @dataProvider getDataForTestShowPriceAndAvailableForOrderProperties
-     *
-     * @param Product $product
-     * @param UpdateProductCommand $command
-     * @param array<int|string, string|int[]> $expectedUpdatableProperties
-     * @param Product $expectedProduct
-     */
-    public function testFillsShowPriceAndAvailableForOrderProperties(
         Product $product,
         UpdateProductCommand $command,
         array $expectedUpdatableProperties,
         Product $expectedProduct
     ): void {
-        $this->assertSame(
+        $this->fillUpdatableProperties(
+            $this->getFiller(),
+            $product,
+            $command,
             $expectedUpdatableProperties,
-            $this->getFiller()->fillUpdatableProperties($product, $command)
+            $expectedProduct
         );
-
-        $this->assertEquals($product, $expectedProduct);
     }
 
     /**
@@ -83,7 +66,7 @@ class OptionsFillerTest extends ProductFillerTestCase
      *
      * @return iterable
      */
-    public function getDataForTestShowPriceAndAvailableForOrderProperties(): iterable
+    public function getDataToTestShowPriceAndAvailableForOrderPropertiesFilling(): iterable
     {
         $product = $this->mockDefaultProduct();
         $product->show_price = false;
@@ -160,10 +143,10 @@ class OptionsFillerTest extends ProductFillerTestCase
     /**
      * @return iterable
      */
-    public function getDataForTestFillsUpdatableProperties(): iterable
+    public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand();
-        yield [$command, [], $this->mockDefaultProduct()];
+        yield [$this->mockDefaultProduct(), $command, [], $this->mockDefaultProduct()];
 
         $command = $this
             ->getEmptyCommand()
@@ -175,6 +158,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         $expectedProduct->condition = ProductCondition::USED;
 
         yield [
+            $this->mockDefaultProduct(),
             $command,
             [
                 'visibility',
@@ -200,6 +184,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         $expectedProduct->show_price = false;
 
         yield [
+            $this->mockDefaultProduct(),
             $command,
             [
                 'visibility',
@@ -213,7 +198,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         ];
     }
 
-    public function getFiller(): ProductFillerInterface
+    private function getFiller(): ProductFillerInterface
     {
         return new OptionsFiller();
     }
