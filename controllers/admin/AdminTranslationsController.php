@@ -374,7 +374,7 @@ class AdminTranslationsControllerCore extends AdminController
             // translations array is ordered by key (easy merge)
             ksort($to_insert);
             $tab = $translation_informations['var'];
-            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = array();\n");
+            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = [];\n");
             foreach ($to_insert as $key => $value) {
                 fwrite($fd, '$' . $tab . '[\'' . pSQL($key, true) . '\'] = \'' . pSQL($value, true) . '\';' . "\n");
             }
