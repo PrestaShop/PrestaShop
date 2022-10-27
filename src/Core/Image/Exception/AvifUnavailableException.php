@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Exception;
+namespace PrestaShop\PrestaShop\Core\Image\Exception;
 
 /**
  * Class AvifUnavailableException used when AVIF seems to be available, but in fact, not.

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
-use PrestaShop\PrestaShop\Core\Exception\AvifUnavailableException;
+use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
 
 /**
  * Class AvifExtensionChecker provides object-oriented way to check if AVIF extension is installed and available.
