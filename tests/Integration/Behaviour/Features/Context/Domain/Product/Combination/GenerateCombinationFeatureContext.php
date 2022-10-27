@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -234,7 +235,8 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
             $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $groupedAttributeIds,
-                $shopId
+                //@todo: not yet handled for all shops
+                ShopConstraint::shop($shopId)
             ));
         } catch (InvalidProductTypeException $e) {
             $this->setLastException($e);

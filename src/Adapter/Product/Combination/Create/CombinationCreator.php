@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMult
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
@@ -100,16 +101,19 @@ class CombinationCreator
     /**
      * @param ProductId $productId
      * @param GroupedAttributeIds[] $groupedAttributeIdsList
-     * @param ShopId $shopId
+     * @param ShopConstraint $shopConstraint
      *
      * @return CombinationId[]
      *
      * @throws CoreException
      * @throws InvalidProductTypeException
      */
-    public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopId $shopId): array
+    public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopConstraint $shopConstraint): array
     {
-        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+        if (!$shopConstraint->getShopId()) {
+            throw new CombinationException('Combination generation is only supported for single shop');
+        }
+
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
@@ -120,7 +124,7 @@ class CombinationCreator
         // avoid applying specificPrice on each combination.
         $this->disableSpecificPriceRulesApplication();
 
-        $combinationIds = $this->addCombinations($product, $generatedCombinations, $shopId);
+        $combinationIds = $this->addCombinations($product, $generatedCombinations, $shopConstraint->getShopId());
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
