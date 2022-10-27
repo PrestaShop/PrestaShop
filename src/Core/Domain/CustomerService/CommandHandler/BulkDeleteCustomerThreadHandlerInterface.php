@@ -33,5 +33,5 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomer
  */
 interface BulkDeleteCustomerThreadHandlerInterface
 {
-    public function handle(BulkDeleteCustomerThreadCommand $command);
+    public function handle(BulkDeleteCustomerThreadCommand $command): void;
 }
