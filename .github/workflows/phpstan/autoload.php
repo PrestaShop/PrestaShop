@@ -136,6 +136,7 @@ $constantsToDefine = [
     '_THEME_SUP_DIR_' => 'string',
     '_THEME_PROFILE_DIR_' => 'string',
     '_THEMES_DIR_' => 'string',
+    'PS_INSTALLATION_LOCK_FILE' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {
