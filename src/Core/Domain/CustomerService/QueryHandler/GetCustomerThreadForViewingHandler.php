@@ -36,7 +36,6 @@ use Employee;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimeline;
