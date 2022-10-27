@@ -1,5 +1,6 @@
 require('module-alias/register');
 import helper from '@utils/helpers';
+import { BrowserContext, Page } from 'playwright';
 
 const {expect} = require('chai');
 
@@ -12,8 +13,8 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'sanity_installShop_installShop';
 
-let browserContext: any;
-let page: any;
+let browserContext: BrowserContext;
+let page: Page;
 
 describe('Install Prestashop', async () => {
   // before and after functions
