@@ -206,6 +206,13 @@ class AddCartRule extends BOBasePage {
       await page.click(this.customerGroupRemoveButton);
     }
 
+    // Choose the country selection
+    if (cartRuleData.countrySelection) {
+      await page.click(this.countrySelection);
+      await page.click(this.firstCountrySelection);
+      await page.click(this.countryGroupRemoveButton);
+    }
+
     // Fill minimum amount values
     await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
