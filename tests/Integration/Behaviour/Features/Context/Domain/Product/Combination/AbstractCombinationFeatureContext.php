@@ -64,10 +64,8 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return CombinationForEditing
      */
-    protected function getCombinationForEditing(string $combinationReference, ?string $shopReference = null): CombinationForEditing
+    protected function getCombinationForEditing(string $combinationReference, int $shopId): CombinationForEditing
     {
-        $shopId = $shopReference ? $this->getSharedStorage()->get($shopReference) : $this->getDefaultShopId();
-
         return $this->getQueryBus()->handle(new GetCombinationForEditing(
             $this->getSharedStorage()->get($combinationReference),
             ShopConstraint::shop($shopId)

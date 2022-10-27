@@ -83,7 +83,7 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
      */
     public function assertCombinationPrices(string $combinationReference, CombinationPrices $expectedPrices): void
     {
-        $actualPrices = $this->getCombinationForEditing($combinationReference)->getPrices();
+        $actualPrices = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getPrices();
 
         Assert::assertTrue(
             $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),

@@ -68,21 +68,23 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @When I delete combination :combinationReference from shop :shopReference
+     * @When I delete combination :combinationReference from shops ":shopReferences"
      *
      * @param string $combinationReference
-     * @param string $shopReference
+     * @param string $shopReferences
      */
-    public function deleteCombinationInShop(string $combinationReference, string $shopReference): void
+    public function deleteCombinationInShops(string $combinationReference, string $shopReferences): void
     {
-        $this->deleteSingleCombination($combinationReference, $this->getSharedStorage()->get($shopReference));
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->deleteSingleCombination($combinationReference, $this->getSharedStorage()->get($shopReference));
+        }
     }
 
     /**
      * @param string $combinationReference
-     * @param int|null $shopId
+     * @param int $shopId
      */
-    private function deleteSingleCombination(string $combinationReference, ?int $shopId): void
+    private function deleteSingleCombination(string $combinationReference, int $shopId): void
     {
         $this->getCommandBus()->handle(new DeleteCombinationCommand(
             (int) $this->getSharedStorage()->get($combinationReference),
