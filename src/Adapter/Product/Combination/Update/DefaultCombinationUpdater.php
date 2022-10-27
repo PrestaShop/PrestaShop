@@ -83,6 +83,6 @@ class DefaultCombinationUpdater
             $shopConstraint
         );
 
-        $this->productRepository->updateCachedDefaultCombination($productId);
+        $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
     }
 }

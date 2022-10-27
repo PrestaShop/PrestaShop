@@ -360,27 +360,29 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      *
      * @param ProductId $productId
      */
-    public function updateCachedDefaultCombination(ProductId $productId): void
+    public function updateCachedDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): void
     {
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
         $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
         $defaultCombinations = $this->connection->fetchAllAssociative(
             sprintf('
                 SELECT id_product_attribute, id_shop
                 FROM %sproduct_attribute_shop
                 WHERE id_product = %d
+                AND id_shop IN (%s)
                 AND default_on = 1
                 ORDER BY id_shop ASC
             ',
                 $this->dbPrefix,
-                $productId->getValue()
+                $productId->getValue(),
+                implode(',', $shopIds)
             )
         );
 
         $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
-        $productShopIds = array_map(function (ShopId $shopId) {
-            return $shopId->getValue();
-        }, $this->getAssociatedShopIds($productId));
-
         $combinationIdForDefaultShop = null;
         $combinationShopIds = [];
 
@@ -409,7 +411,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             $productId->getValue()
         ));
 
-        $unhandledShopIds = array_diff($productShopIds, $combinationShopIds);
+        $unhandledShopIds = array_diff($shopIds, $combinationShopIds);
         foreach ($unhandledShopIds as $shopId) {
             // reset default combination to 0 to all shop ids which have no combinations
             $this->connection->executeStatement(sprintf(

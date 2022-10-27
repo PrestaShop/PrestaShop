@@ -109,7 +109,8 @@ class CombinationCreator
      */
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopId $shopId): array
     {
-        $product = $this->productRepository->getByShopConstraint($productId, ShopConstraint::shop($shopId->getValue()));
+        $shopConstraint = ShopConstraint::shop($shopId->getValue());
+        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
         }
@@ -123,7 +124,7 @@ class CombinationCreator
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
-        $this->productRepository->updateCachedDefaultCombination($productId);
+        $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
 
         return $combinationIds;
     }
