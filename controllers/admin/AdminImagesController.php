@@ -39,48 +39,18 @@ class AdminImagesControllerCore extends AdminController
         $this->bootstrap = true;
         $this->table = 'image_type';
         $this->className = 'ImageType';
-        $this->lang = false;
 
-        $this->generateAdditionalAvif = $this->buildContainer()->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
+        parent::__construct();
+    }
 
+    public function init()
+    {
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
-        parent::__construct();
+        parent::init();
 
-        $this->bulk_actions = [
-            'delete' => [
-                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
-            ],
-        ];
-
-        $this->fields_list = [
-            'id_image_type' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
-            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
-            'width' => ['title' => $this->trans('Width', [], 'Admin.Global'),  'suffix' => ' px'],
-            'height' => ['title' => $this->trans('Height', [], 'Admin.Global'),  'suffix' => ' px'],
-            'products' => ['title' => $this->trans('Products', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'categories' => ['title' => $this->trans('Categories', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'manufacturers' => ['title' => $this->trans('Brands', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-        ];
-
-        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
-        $this->display_move = false;
-        $dir = _PS_PRODUCT_IMG_DIR_;
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false && $this->display_move == false) {
-                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
-                        $this->display_move = true;
-                    }
-                }
-                closedir($dh);
-            }
-        }
+        $this->generateAdditionalAvif = $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
 
         $fields = [
             'PS_IMAGE_QUALITY' => [
@@ -107,22 +77,22 @@ class AdminImagesControllerCore extends AdminController
 
         if (true === $this->generateAdditionalAvif) {
             $fields = array_merge($fields, [
-                'PS_ADDITIONAL_IMAGE_AVIF' => [
-                    'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
-                    'show' => true,
-                    'required' => false,
-                    'type' => 'bool',
-                    'is_bool' => true,
-                ],
-                'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
-                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                ],
-            ]
+                    'PS_ADDITIONAL_IMAGE_AVIF' => [
+                        'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                        'show' => true,
+                        'required' => false,
+                        'type' => 'bool',
+                        'is_bool' => true,
+                    ],
+                    'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
+                        'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
+                        'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                        'validation' => 'isUnsignedId',
+                        'required' => true,
+                        'cast' => 'intval',
+                        'type' => 'text',
+                    ],
+                ]
             );
         }
 
@@ -236,6 +206,40 @@ class AdminImagesControllerCore extends AdminController
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
         ];
+
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                'icon' => 'icon-trash',
+            ],
+        ];
+
+        $this->fields_list = [
+            'id_image_type' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
+            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
+            'width' => ['title' => $this->trans('Width', [], 'Admin.Global'),  'suffix' => ' px'],
+            'height' => ['title' => $this->trans('Height', [], 'Admin.Global'),  'suffix' => ' px'],
+            'products' => ['title' => $this->trans('Products', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'categories' => ['title' => $this->trans('Categories', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'manufacturers' => ['title' => $this->trans('Brands', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+        ];
+
+        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
+        $this->display_move = false;
+        $dir = _PS_PRODUCT_IMG_DIR_;
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false && $this->display_move == false) {
+                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
+                        $this->display_move = true;
+                    }
+                }
+                closedir($dh);
+            }
+        }
 
         if ($this->display_move) {
             $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = [
