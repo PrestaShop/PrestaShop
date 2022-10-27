@@ -136,7 +136,7 @@ describe('BO - Customer Service : View messages', async () => {
 
     // Check form content
     const formContent = await viewPage.getYourAnswerFormContent(page);
-    expect(formContent).to.contains('Dear Customer Regards, Customer service');
+    expect(formContent).to.contains('Dear Customer, Regards, Customer service');
   });
 
   it('should check orders and messages timeline', async function () {

@@ -22,7 +22,7 @@ class ViewCustomer extends BOBasePage {
     this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
     this.statusButton = statusName => `${this.messagesThredDiv} form[action*='/update-status/${statusName}'] button`;
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
-    this.yourAnswerFormTextarea = '#main-div div[data-role="employee-answer"]';
+    this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
     this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
   }
 
