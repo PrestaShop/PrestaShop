@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\DataProvider;
 
 use Contact;
 

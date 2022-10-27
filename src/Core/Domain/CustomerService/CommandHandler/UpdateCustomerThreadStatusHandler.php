@@ -24,11 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
 use Doctrine\DBAL\Driver\Connection;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateCustomerThreadStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 
 /**

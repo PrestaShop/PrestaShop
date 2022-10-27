@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.customer_message.command_handler.add_order_customer_message:
-    class: PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\AddOrderCustomerMessageHandler
+  prestashop.core.domain.customer_service.command_handler.add_order_customer_message:
+    class: PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\AddOrderCustomerMessageHandler
     arguments:
       - '@translator'
       - '@validator'
