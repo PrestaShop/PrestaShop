@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Generates attribute combinations for product
@@ -50,23 +50,23 @@ class GenerateProductCombinationsCommand
     private $groupedAttributeIdsList;
 
     /**
-     * @var ShopId
+     * @var ShopConstraint
      */
-    private $shopId;
+    private $shopConstraint;
 
     /**
      * @param int $productId
      * @param array<int, array<int>> $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
-     * @param int $shopId
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
         int $productId,
         array $groupedAttributeIds,
-        int $shopId
+        ShopConstraint $shopConstraint
     ) {
         $this->setGroupedAttributeIdsList($groupedAttributeIds);
         $this->productId = new ProductId($productId);
-        $this->shopId = new ShopId($shopId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -86,11 +86,11 @@ class GenerateProductCombinationsCommand
     }
 
     /**
-     * @return ShopId
+     * @return ShopConstraint
      */
-    public function getShopId(): ShopId
+    public function getShopConstraint(): ShopConstraint
     {
-        return $this->shopId;
+        return $this->shopConstraint;
     }
 
     /**

@@ -68,7 +68,7 @@ final class GenerateProductCombinationsHandler implements GenerateProductCombina
         $combinationIds = $this->combinationCreator->createCombinations(
             $command->getProductId(),
             $command->getGroupedAttributeIdsList(),
-            $command->getShopId()
+            $command->getShopConstraint()
         );
 
         $this->productSupplierUpdater->updateMissingProductSuppliers($command->getProductId());
