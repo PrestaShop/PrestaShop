@@ -93,8 +93,3 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
-
-  prestashop.adapter.form.choice_provider.contact_type_choice_provider:
-    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ContactTypeChoiceProvider'
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

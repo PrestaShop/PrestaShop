@@ -26,33 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use Contact;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ContactTypeChoiceProvider implements FormChoiceProviderInterface
+class CustomerThreadStatusesChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * @var int
+     * @var TranslatorInterface
      */
-    private $langId;
+    private $translator;
 
-    public function __construct(int $langId)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->langId = $langId;
+        $this->translator = $translator;
     }
 
-    public function getChoices(): array
+    public function getChoices(array $options = [])
     {
-        $contacts = Contact::getContacts($this->langId);
-
-        $contactArray = [];
-
-        foreach ($contacts as $contact) {
-            $contactArray[$contact['name']] = $contact['id_contact'];
-        }
-
-        return $contactArray;
+        return [
+            $this->translator->trans('Opened', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::OPEN,
+            $this->translator->trans('Closed', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::CLOSED,
+            $this->translator->trans('Pending 1', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_1,
+            $this->translator->trans('Pending 2', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_2,
+        ];
     }
 }
