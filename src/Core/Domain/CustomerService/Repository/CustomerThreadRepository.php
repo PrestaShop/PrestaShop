@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository;
 
 use CustomerThread;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCustomerThreadException;
