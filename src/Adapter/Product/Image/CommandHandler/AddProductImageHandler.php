@@ -51,11 +51,6 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
     private $productImageRepository;
 
     /**
-     * @var array
-     */
-    private $contextShopIds;
-
-    /**
      * @var ImageValidator
      */
     private $imageValidator;
@@ -64,17 +59,14 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
      * @param ProductImageUploader $productImageUploader
      * @param ProductImageRepository $productImageRepository
      * @param ImageValidator $imageValidator
-     * @param array $contextShopIds
      */
     public function __construct(
         ProductImageUploader $productImageUploader,
         ProductImageRepository $productImageRepository,
-        ImageValidator $imageValidator,
-        array $contextShopIds
+        ImageValidator $imageValidator
     ) {
         $this->productImageUploader = $productImageUploader;
         $this->productImageRepository = $productImageRepository;
-        $this->contextShopIds = $contextShopIds;
         $this->imageValidator = $imageValidator;
     }
 

@@ -73,12 +73,13 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
 
         return $this->formatImage(
             $image,
-            $this->productImageRepository->getAssociatedShopIdsByImageId(new ImageId($image->id))
+            $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
         );
     }
 
     /**
      * @param Image $image
+     * @param ShopId[] $shopIds
      *
      * @return ProductImage
      */
@@ -94,7 +95,7 @@ class GetProductImageHandler implements GetProductImageHandlerInterface
             $this->productImageUrlFactory->getPath($imageId),
             $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT),
             array_map(
-                static function(ShopId $shopId): int {
+                static function (ShopId $shopId): int {
                     return $shopId->getValue();
                 },
                 $shopIds

@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
 
@@ -93,7 +92,16 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for "([^"]*)"$/
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for shop "([^"]*)"$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param string $shopReference
+     *
+     * @return void
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
     public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference)
     {
@@ -104,6 +112,12 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for all shops$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     *
+     * @return void
      */
     public function uploadImageForAllShops(string $imageReference, string $fileName, string $productReference)
     {
@@ -273,6 +287,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^product "([^"]*)" should have no images for shops "([^"]*)"$/
+     */
+    public function productShouldHaveNoImagesForShops($arg1, $arg2)
+    {
+        throw new PendingException();
+    }
+
+    /**
      * @Then product :productReference should have following cover :coverUrl
      *
      * @param string $productReference
@@ -298,16 +320,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given /^product "([^"]*)" should have following images for "([^"]*)":$/
-     */
-    public function assertProductImagesForSpecificShop(string $productReference, string $shopReference, TableNode $table)
-    {
-        $shopId= $this->getSharedStorage()->get(trim($shopReference));
-        $this->assertProductImagesForShops($productReference, $table, [$shopId]);
-    }
-
-    /**
+     * @Given /^product "([^"]*)" should have following images for shop "([^"]*)":$/
      * @Given /^product "([^"]*)" should have following images for shops "([^"]*)":$/
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     *
+     * @return void
      */
     public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences)
     {
@@ -343,7 +363,15 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         ));
     }
 
-    public function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint)
+    /**
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     */
+    private function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint)
     {
         $pathName = DummyFileUploader::upload($fileName);
 
@@ -367,6 +395,13 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $this->getSharedStorage()->set($fileName, md5_file($imagePath));
     }
 
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param array $expectedShopIds
+     *
+     * @return void
+     */
     private function assertProductImagesForShops(string $productReference, TableNode $tableNode, array $expectedShopIds)
     {
         $images = $this->getProductImages($productReference);
@@ -439,5 +474,4 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             );
         }
     }
-
 }

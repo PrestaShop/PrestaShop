@@ -45,6 +45,7 @@ class AddProductImageCommand
      * @var string
      */
     private $filePath;
+
     /**
      * @var ShopConstraint
      */
@@ -53,6 +54,7 @@ class AddProductImageCommand
     /**
      * @param int $productId
      * @param string $pathName
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
         int $productId,

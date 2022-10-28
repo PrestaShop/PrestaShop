@@ -8,7 +8,6 @@ services:
       - '@prestashop.adapter.product.image.uploader.product_image_uploader'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - "@prestashop.adapter.image.image_validator"
-      - "@=service('prestashop.adapter.shop.context').getContextListShopID()"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
