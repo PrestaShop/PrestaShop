@@ -209,7 +209,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         $product->link_rewrite = $localizedLinkRewrites;
 
         $this->productValidator->validateCreation($product);
-        $this->addObjectModelToShop($product, $shopId->getValue(), CannotAddProductException::class);
+        $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);
         $product->addToCategories([$product->id_category_default]);
 
         return $product;

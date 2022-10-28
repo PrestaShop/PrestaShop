@@ -70,16 +70,19 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
     /**
      * @param ObjectModel $objectModel
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
      * @return int
      */
-    protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
+    protected function addObjectModelToShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): int
     {
         // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
         // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = [$shopId];
+        $objectModel->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
         return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
     }

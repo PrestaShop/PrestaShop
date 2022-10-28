@@ -143,9 +143,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             return $shopId->getValue();
         }, $shopIds);
 
-        foreach ($shopIds as $shopId) {
-            $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
-        }
+        $this->addObjectModelToShops($combination, $shopIds, CannotAddCombinationException::class);
 
         return $combination;
     }
