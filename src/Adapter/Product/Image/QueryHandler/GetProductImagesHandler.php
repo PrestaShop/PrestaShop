@@ -74,7 +74,7 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
         foreach ($images as $image) {
             $productImages[] = $this->formatImage(
                 $image,
-                $this->productImageRepository->getAssociatedShopIdsByImageId(new ImageId($image->id))
+                $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
             );
         }
 
@@ -89,6 +89,7 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private function formatImage(Image $image, array $shopIds): ProductImage
     {
         $imageId = new ImageId((int) $image->id);
+
         return new ProductImage(
             (int) $image->id,
             (bool) $image->cover,
@@ -97,7 +98,7 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
             $this->productImageUrlFactory->getPath($imageId),
             $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT),
             array_map(
-                static function(ShopId $shopId): int {
+                static function (ShopId $shopId): int {
                     return $shopId->getValue();
                 },
                 $shopIds

@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageExcept
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -78,6 +77,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @var CombinationRepository
      */
     protected $combinationRepository;
+    
     /**
      * @var ProductMultiShopRepository
      */
@@ -107,7 +107,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param int[] $shopIds
+     * @param ShopConstraint $shopConstraint
      *
      * @return Image
      *
@@ -445,7 +445,11 @@ class ProductImageRepository extends AbstractObjectModelRepository
         return null;
     }
 
-    public function getAssociatedShopIdsByImageId(ImageId $imageId): array
+    /**
+     * @param ImageId $imageId
+     * @return ShopId[]
+    /*
+    public function getAssociatedShopIds(ImageId $imageId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
@@ -464,6 +468,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
         foreach ($result as $shop) {
             $shops[] = new ShopId((int) $shop['id_shop']);
         }
+
         return $shops;
     }
 }

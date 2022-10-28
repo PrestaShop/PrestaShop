@@ -62,8 +62,9 @@ class ProductImage
      * @var string
      */
     private $thumbnailUrl;
+
     /**
-     * @var array
+     * @var int[]
      */
     private $shopIds;
 
@@ -74,6 +75,7 @@ class ProductImage
      * @param array $localizedLegends
      * @param string $imageUrl
      * @param string $thumbnailUrl
+     * @param int[] $shopIds
      */
     public function __construct(
         int $imageId,
@@ -142,7 +144,7 @@ class ProductImage
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getShopIds(): array
     {

@@ -89,7 +89,8 @@ class ProductImagesChoiceProviderTest extends TestCase
                 1,
                 [],
                 'image42.jpg',
-                'thumbnail42.jpg'
+                'thumbnail42.jpg',
+                []
             ),
             new ProductImage(
                 51,
@@ -97,7 +98,8 @@ class ProductImagesChoiceProviderTest extends TestCase
                 2,
                 [],
                 'image51.jpg',
-                'thumbnail51.jpg'
+                'thumbnail51.jpg',
+                []
             ),
         ];
     }

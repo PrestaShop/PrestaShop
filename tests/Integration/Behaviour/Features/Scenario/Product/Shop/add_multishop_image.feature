@@ -27,14 +27,14 @@ Feature: Add product image from Back Office (BO)
       | mediumDefault | medium_default | 452   | 452    |
       | smallDefault  | small_default  | 98    | 98     |
     And product "product1" should have no images
-    When I add new image "image1" named "app_icon.png" to product "product1" for "shop1"
+    When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
     Then image "image1" should have same file as "app_icon.png"
-    And product "product1" should have following images for "shop1":
+    And product "product1" should have following images for shop "shop1":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    When I add new image "image2" named "logo.jpg" to product "product1" for "shop1"
+    When I add new image "image2" named "logo.jpg" to product "product1" for shop "shop1"
     Then image "image2" should have same file as "logo.jpg"
-    And product "product1" should have following images for "shop1":
+    And product "product1" should have following images for shop "shop1":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
       | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
@@ -45,8 +45,9 @@ Feature: Add product image from Back Office (BO)
       | large_default  | 800   | 800    |
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
+    #todo: And product "product1" should have no images for shops "shop2" when GetProductImage is upgrade by ShopConstraint
 
-  Scenario: Add new product image for specific all shop
+  Scenario: Add new product image for all shops
     Given following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
