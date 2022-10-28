@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use Product;
@@ -113,9 +112,9 @@ class BasicInformationFillerTest extends ProductFillerTestCase
     }
 
     /**
-     * @return ProductFillerInterface
+     * @return BasicInformationFiller
      */
-    private function getFiller(): ProductFillerInterface
+    private function getFiller(): BasicInformationFiller
     {
         return new BasicInformationFiller(
             self::DEFAULT_LANG_ID,
