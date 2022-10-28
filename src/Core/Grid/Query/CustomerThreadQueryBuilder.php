@@ -71,10 +71,16 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
             ->select('ct.*, CONCAT(c.`firstname`," ",c.`lastname`) as customer')
-            ->addSelect('cm.message, cm.private, cl.name as contact, l.name as langName')
+            ->addSelect('cm.private, cl.name as contact, l.name as langName')
             ->addSelect('s.name as shopName')
 
             // we need to get only the latest message and its employee
+            ->addSelect('(
+				SELECT cm3.message
+				FROM `' . _DB_PREFIX_ . 'customer_message` cm3
+				WHERE cm3.`id_customer_thread` = ct.`id_customer_thread`
+				ORDER BY cm3.`date_add` DESC LIMIT 1
+			) as message')
             ->addSelect('(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
@@ -84,6 +90,8 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
 					AND cm2.`id_customer_thread` = ct.`id_customer_thread`
 				ORDER BY cm2.`date_add` DESC LIMIT 1
 			) as employee')
+
+            ->addOrderBy('cm.date_add', 'DESC')
             ->groupBy('ct.id_customer_thread');
 
         $this->searchCriteriaApplicator
