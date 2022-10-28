@@ -337,7 +337,7 @@ class AdminControllerCore extends Controller
     protected $row_hover = true;
 
     /** @var string Action to perform : 'edit', 'view', 'add', ... */
-    protected $action;
+    protected $action = '';
 
     /** @var string|null */
     protected $display;
