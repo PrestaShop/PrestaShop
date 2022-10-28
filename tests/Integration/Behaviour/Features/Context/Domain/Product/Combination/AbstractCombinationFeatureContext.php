@@ -50,7 +50,7 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $shopId,
+            ShopConstraint::shop($shopId),
             $combinationFilters ? $combinationFilters->getLimit() : null,
             $combinationFilters ? $combinationFilters->getOffset() : null,
             $combinationFilters ? $combinationFilters->getOrderBy() : null,
