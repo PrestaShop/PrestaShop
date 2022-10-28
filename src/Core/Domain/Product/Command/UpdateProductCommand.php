@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -144,13 +145,30 @@ class UpdateProductCommand
     private $unity;
 
     /**
-     * @param int $productId
-     * @param ShopConstraint $shopConstraint
+     * @var string[]|null
      */
-    public function __construct(
-        int $productId,
-        ShopConstraint $shopConstraint
-    ) {
+    private $localizedMetaTitles;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedMetaDescriptions;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedLinkRewrites;
+
+    /**
+     * @var RedirectOption|null
+     */
+    private $redirectOption;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId, ShopConstraint $shopConstraint)
+    {
         $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
     }
@@ -161,6 +179,95 @@ class UpdateProductCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedMetaTitles(): ?array
+    {
+        return $this->localizedMetaTitles;
+    }
+
+    /**
+     * @param string[] $localizedMetaTitles key => value pairs where each key represents language id
+     *
+     * @return self
+     */
+    public function setLocalizedMetaTitles(array $localizedMetaTitles): self
+    {
+        $this->localizedMetaTitles = $localizedMetaTitles;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedMetaDescriptions(): ?array
+    {
+        return $this->localizedMetaDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedMetaDescriptions key => value pairs where each key represents language id
+     *
+     * @return self
+     */
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions): self
+    {
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedLinkRewrites(): ?array
+    {
+        return $this->localizedLinkRewrites;
+    }
+
+    /**
+     * @param string[] $localizedLinkRewrites key => value pairs where each key represents language id
+     *
+     * @return self
+     */
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites): self
+    {
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
+
+        return $this;
+    }
+
+    /**
+     * @return RedirectOption|null
+     */
+    public function getRedirectOption(): ?RedirectOption
+    {
+        return $this->redirectOption;
+    }
+
+    /**
+     * @param string $redirectType
+     * @param int $redirectTarget
+     *
+     * @return self
+     */
+    public function setRedirectOption(string $redirectType, int $redirectTarget): self
+    {
+        $this->redirectOption = new RedirectOption($redirectType, $redirectTarget);
+
+        return $this;
     }
 
     /**
@@ -301,14 +408,6 @@ class UpdateProductCommand
         $this->unity = $unity;
 
         return $this;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 
     /**

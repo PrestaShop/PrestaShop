@@ -23,28 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
-/**
- * @deprecated should be removed when unified UpdateProductCommand is fully done
- * @see SeoFiller instead
- *
- * Fills Product object model SEO information fields according to domain specifics
- */
-class ProductSeoPropertiesFiller
+class SeoFiller implements ProductFillerInterface
 {
     /**
      * @var ProductRepository
@@ -57,15 +51,73 @@ class ProductSeoPropertiesFiller
     private $categoryRepository;
 
     /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
      * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
+     * @param Tools $tools
      */
     public function __construct(
         ProductRepository $productRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        Tools $tools
     ) {
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->tools = $tools;
+    }
+
+    /**
+     * @param Product $product
+     * @param UpdateProductCommand $command
+     *
+     * @return array
+     */
+    public function fillUpdatableProperties(Product $product, UpdateProductCommand $command): array
+    {
+        $updatableProperties = [];
+
+        if (null !== $command->getRedirectOption()) {
+            $updatableProperties = array_merge(
+                $updatableProperties,
+                $this->fillWithRedirectOption($product, $command->getRedirectOption())
+            );
+        }
+
+        $localizedMetaDescriptions = $command->getLocalizedMetaDescriptions();
+        if (null !== $localizedMetaDescriptions) {
+            $product->meta_description = $localizedMetaDescriptions;
+            $updatableProperties['meta_description'] = array_keys($localizedMetaDescriptions);
+        }
+
+        $localizedMetaTitles = $command->getLocalizedMetaTitles();
+        if (null !== $localizedMetaTitles) {
+            $product->meta_title = $localizedMetaTitles;
+            $updatableProperties['meta_title'] = array_keys($localizedMetaTitles);
+        }
+
+        $localizedLinkRewrites = $command->getLocalizedLinkRewrites();
+
+        if (null !== $localizedLinkRewrites) {
+            foreach ($localizedLinkRewrites as $langId => $linkRewrite) {
+                if (!empty($linkRewrite)) {
+                    $product->link_rewrite[$langId] = $linkRewrite;
+                } elseif (!empty($product->name[$langId])) {
+                    // When link rewrite is provided empty, then use product name.
+                    // There is similar behavior in UpdateProductBasicInformationHandler
+                    $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+                } else {
+                    continue;
+                }
+
+                $updatableProperties['link_rewrite'][] = $langId;
+            }
+        }
+
+        return $updatableProperties;
     }
 
     /**
@@ -77,7 +129,7 @@ class ProductSeoPropertiesFiller
      * @throws CategoryNotFoundException
      * @throws CoreException
      */
-    public function fillWithRedirectOption(Product $product, RedirectOption $redirectOption): array
+    private function fillWithRedirectOption(Product $product, RedirectOption $redirectOption): array
     {
         $redirectType = $redirectOption->getRedirectType();
         $redirectTarget = $redirectOption->getRedirectTarget();
