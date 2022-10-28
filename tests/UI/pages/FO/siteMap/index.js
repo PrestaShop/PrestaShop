@@ -21,7 +21,7 @@ class SiteMap extends FOBasePage {
     this.categoryPageNameSelect = id => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
     this.brandsPageLink = '#manufacturer-page';
-    this.categoryPageLink = '#category-page-';
+    this.categoryPageLink = categoryID => `#category-page-${categoryID}`;
   }
 
   /*
@@ -82,7 +82,7 @@ class SiteMap extends FOBasePage {
    * @return {Promise<void>}
    */
   async viewCreatedCategory(page, categoryID) {
-    return this.clickAndWaitForNavigation(page, this.categoryPageLink + categoryID);
+    return this.clickAndWaitForNavigation(page, this.categoryPageLink(categoryID));
   }
 }
 
