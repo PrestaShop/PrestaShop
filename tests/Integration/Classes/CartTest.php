@@ -179,7 +179,7 @@ class CartTest extends TestCase
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
         $product->price = $price;
-        $product->link_rewrite = Tools::link_rewrite($name);
+        $product->link_rewrite = Tools::str2url($name);
         self::assertTrue($product->save());
 
         return $product;

@@ -1423,7 +1423,7 @@ class AdminImportControllerCore extends AdminController
                 $category_to_create = new Category();
                 $category_to_create->name = AdminImportController::createMultiLangField($category->parent);
                 $category_to_create->active = true;
-                $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
+                $category_link_rewrite = Tools::str2url($category_to_create->name[$id_lang]);
                 $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                 $category_to_create->id_parent = (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 
@@ -1464,7 +1464,7 @@ class AdminImportControllerCore extends AdminController
 
         $bak = $category->link_rewrite[$default_language_id];
         if ((isset($category->link_rewrite) && empty($category->link_rewrite[$default_language_id])) || !$valid_link) {
-            $category->link_rewrite = Tools::link_rewrite($category->name[$default_language_id]);
+            $category->link_rewrite = Tools::str2url($category->name[$default_language_id]);
             if ($category->link_rewrite == '') {
                 $category->link_rewrite = 'friendly-url-autogeneration-failed';
                 $this->warnings[] = $this->trans(
@@ -1893,7 +1893,7 @@ class AdminImportControllerCore extends AdminController
                         $category_to_create->name = AdminImportController::createMultiLangField($value);
                         $category_to_create->active = true;
                         $category_to_create->id_parent = (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
-                        $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+                        $category_link_rewrite = Tools::str2url($category_to_create->name[$default_language_id]);
                         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                         if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                             ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
@@ -1948,7 +1948,7 @@ class AdminImportControllerCore extends AdminController
         $link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
         $valid_link = Validate::isLinkRewrite($link_rewrite);
         if ((isset($product->link_rewrite[$id_lang]) && empty($product->link_rewrite[$id_lang])) || !$valid_link) {
-            $link_rewrite = Tools::link_rewrite($product->name[$id_lang]);
+            $link_rewrite = Tools::str2url($product->name[$id_lang]);
             if ($link_rewrite == '') {
                 $link_rewrite = 'friendly-url-autogeneration-failed';
             }
@@ -2445,7 +2445,7 @@ class AdminImportControllerCore extends AdminController
         $category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
         $category_to_create->active = true;
         $category_to_create->id_parent = (int) $id_parent_category ? (int) $id_parent_category : (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
-        $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
+        $category_link_rewrite = Tools::str2url($category_to_create->name[$default_language_id]);
         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 
         if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) !== true ||
