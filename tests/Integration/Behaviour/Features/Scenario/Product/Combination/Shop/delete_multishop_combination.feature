@@ -21,7 +21,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And shop "shop1" with name "test_shop" exists
-    And multistore feature is enabled
+    And I enable multishop feature
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
