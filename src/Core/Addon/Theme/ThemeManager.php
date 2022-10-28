@@ -559,7 +559,7 @@ class ThemeManager implements AddonManagerInterface
             try {
                 $lang = $translationService->findLanguageByLocale($locale);
             } catch (Exception $exception) {
-                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exist');
 
                 continue;
             }
