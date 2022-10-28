@@ -56,12 +56,12 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | Size  | [L]           |
       | Color | [White,Black] |
     Then product "product1" should have the following combinations for shops "shop2":
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1LWhiteShop2 | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
-      | product1LBlackShop2 | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
     And product "product1" should have no combinations for shops "shop1"
     And product "product1" should not have a default combination for shop "shop1"
-    And product "product1" default combination for shop "shop2" should be "product1LWhiteShop2"
+    And product "product1" default combination for shop "shop2" should be "product1LWhite"
 
   Scenario: Generate different combinations in different shops
     When I generate combinations in shop "shop1" for product product1 using following attributes:
@@ -78,26 +78,26 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | Size  | [S,M]   |
       | Color | [Black] |
     And product "product1" should have the following combinations for shops "shop2":
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
-      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-    And product "product1" default combination for shop "shop2" should be "product1SBlackShop2"
-    And product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop2" should be "product1SBlack"
+    And product "product1" should have the following combinations for shops "shop1":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
-    When I delete combination "product1SBlackShop2" from shops "shop2"
-    And I delete combination "product1MBlackShop2" from shops "shop2"
+    When I delete combination "product1SBlack" from shops "shop2"
+    And I delete combination "product1MBlack" from shops "shop2"
     And product "product1" should have no combinations for shops "shop2"
     And product "product1" should not have a default combination for shop "shop2"
     And I generate combinations in shop "shop2" for product product1 using following attributes:
       | Size  | [S,M]   |
       | Color | [Black] |
     And product "product1" should have the following combinations for shops "shop2":
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
-      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
 
   Scenario: Delete default combination and generate same combination again
     Given I generate combinations in shop "shop1" for product product1 using following attributes:
@@ -110,16 +110,16 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
     And I delete combination "product1SWhite" from shops "shop1"
     Then product "product1" should have the following combinations for shops "shop1":
-      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
-      | product1SBlue | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0        | true       |
+      | combination id | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1SBlue  | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0        | true       |
     And product "product1" default combination for shop "shop1" should be "product1SBlue"
     When I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S]     |
       | Color | [White] |
     Then product "product1" should have the following combinations for shops "shop1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | true       |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      | id reference   | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      |                | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | true       |
+      | product1SWhite |                | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SBlue"
 
   Scenario: Delete default combination and generate it again in same shop while other shop has the same combinations
@@ -140,17 +140,17 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
     And product "product1" should have the following combinations for shops "shop2":
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product1SBlueShop2  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
-      | product1MWhiteShop2 | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlueShop2  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    And product "product1" default combination for shop "shop2" should be "product1SWhiteShop2"
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop2" should be "product1SWhite"
     Given I delete combination "product1SWhite" from shops "shop1"
     And product "product1" should have the following combinations for shops "shop1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
       | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
@@ -161,15 +161,15 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | Size  | [S]     |
       | Color | [White] |
     Then product "product1" should have the following combinations for shops "shop1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | id reference   | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite |                | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      |                | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      |                | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      |                | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      |                | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      |                | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SBlack"
-    And product "product1" default combination for shop "shop2" should be "product1SWhiteShop2"
+    And product "product1" default combination for shop "shop2" should be "product1SWhite"
 
   Scenario: Combinations having the same attributes must have the same ID between the shops
     Given I generate combinations in shop "shop1" for product product1 using following attributes:
@@ -180,8 +180,5 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
     When I generate combinations in shop "shop2" for product product1 using following attributes:
       | Size | [S] |
     And product "product1" should have the following combinations for shops "shop2":
-      | id reference   | combination name | reference | attributes | impact on price | quantity | is default |
-      | product1SShop2 | Size - S         |           | [Size:S]   | 0               | 0        | true       |
-    And following combination ids should match:
-      | product1S      |
-      | product1SShop2 |
+      | combination id | combination name | reference | attributes | impact on price | quantity | is default |
+      | product1S      | Size - S         |           | [Size:S]   | 0               | 0        | true       |
