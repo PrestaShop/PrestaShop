@@ -24,7 +24,7 @@
  * #}
 
 {% if column.options.max_displayed_characters > 0 %}
-  {{ record[column.options.field]|slice(0, column.options.max_displayed_characters) }}
+  {{ record[column.options.field]|slice(0, column.options.max_displayed_characters) }}&mldr;
 {% else %}
   {{ record[column.options.field] }}
 {% endif %}
