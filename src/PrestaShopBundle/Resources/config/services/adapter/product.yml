@@ -535,8 +535,9 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
-      - '@prestashop.adapter.tools'
-    tags: [ 'core.product_filler' ]
+    tags:
+      # its important that BasicInformationFiller is prioritized before the SeoFiller, because of link_rewrite overriding
+      - { name: 'core.product_filler', priority: 10 }
 
   prestashop.adapter.product.update.filler.options_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\OptionsFiller

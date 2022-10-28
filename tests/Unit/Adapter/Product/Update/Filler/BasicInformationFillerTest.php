@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use Product;
 
@@ -117,27 +116,7 @@ class BasicInformationFillerTest extends ProductFillerTestCase
     private function getFiller(): BasicInformationFiller
     {
         return new BasicInformationFiller(
-            self::DEFAULT_LANG_ID,
-            $this->mockTools()
+            self::DEFAULT_LANG_ID
         );
-    }
-
-    /**
-     * @return Tools
-     */
-    private function mockTools(): Tools
-    {
-        $toolsMock = $this->getMockBuilder(Tools::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['linkRewrite'])
-            ->getMock()
-        ;
-
-        $toolsMock
-            ->method('linkRewrite')
-            ->willReturnArgument(0)
-        ;
-
-        return $toolsMock;
     }
 }

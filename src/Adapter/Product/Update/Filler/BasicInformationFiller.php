@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update\Filler;
 
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use Product;
 
@@ -42,20 +41,12 @@ class BasicInformationFiller implements ProductFillerInterface
     private $defaultLanguageId;
 
     /**
-     * @var Tools
-     */
-    private $tools;
-
-    /**
      * @param int $defaultLanguageId
-     * @param Tools $tools
      */
     public function __construct(
-        int $defaultLanguageId,
-        Tools $tools
+        int $defaultLanguageId
     ) {
         $this->defaultLanguageId = $defaultLanguageId;
-        $this->tools = $tools;
     }
 
     /**
@@ -77,15 +68,6 @@ class BasicInformationFiller implements ProductFillerInterface
             }
             $product->name = $localizedNames;
             $updatableProperties['name'] = array_keys($localizedNames);
-        }
-
-        foreach ($product->link_rewrite as $langId => $linkRewrite) {
-            if (!empty($linkRewrite) || empty($product->name[$langId])) {
-                continue;
-            }
-
-            $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
-            $updatableProperties['link_rewrite'][] = $langId;
         }
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
