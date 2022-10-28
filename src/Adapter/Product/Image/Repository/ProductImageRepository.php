@@ -77,7 +77,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @var CombinationRepository
      */
     protected $combinationRepository;
-    
+
     /**
      * @var ProductMultiShopRepository
      */
@@ -447,8 +447,9 @@ class ProductImageRepository extends AbstractObjectModelRepository
 
     /**
      * @param ImageId $imageId
+     *
      * @return ShopId[]
-    /*
+     */
     public function getAssociatedShopIds(ImageId $imageId): array
     {
         $qb = $this->connection->createQueryBuilder();
