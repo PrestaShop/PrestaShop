@@ -47,7 +47,7 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
         $idLang = (int) Context::getContext()->language->id;
         $category = new Category();
         $category->name = [$idLang => $categoryName];
-        $category->link_rewrite = [$idLang => Tools::link_rewrite($categoryName)];
+        $category->link_rewrite = [$idLang => Tools::str2url($categoryName)];
         $category->add();
         $this->categories[$categoryName] = $category;
     }

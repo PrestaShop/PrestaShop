@@ -1370,6 +1370,8 @@ class ToolsCore
     /**
      * Return the friendly url from the provided string.
      *
+     * @deprecated since 8.1
+     *
      * @param string $str
      * @param bool $utf8_decode (deprecated)
      *
@@ -1377,6 +1379,11 @@ class ToolsCore
      */
     public static function link_rewrite($str, $utf8_decode = null)
     {
+        @trigger_error(
+            'This function is deprecated, use Tools::str2url($str) instead.',
+            E_USER_DEPRECATED
+        );
+
         if ($utf8_decode !== null) {
             Tools::displayParameterAsDeprecated('utf8_decode');
         }

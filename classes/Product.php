@@ -7483,7 +7483,7 @@ class ProductCore extends ObjectModel
         $sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         foreach ($attributes as &$a) {
             foreach ($a as &$b) {
-                $b = str_replace($sep, '_', Tools::link_rewrite((string) $b));
+                $b = str_replace($sep, '_', Tools::str2url((string) $b));
             }
             $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['group'] . $sep . $a['name'];
         }
@@ -7908,9 +7908,9 @@ class ProductCore extends ObjectModel
 
         foreach ($this->name as $id_lang => $name) {
             if (empty($this->link_rewrite[$id_lang])) {
-                $this->link_rewrite[$id_lang] = Tools::link_rewrite($name);
+                $this->link_rewrite[$id_lang] = Tools::str2url($name);
             } elseif (!Validate::isLinkRewrite($this->link_rewrite[$id_lang])) {
-                $this->link_rewrite[$id_lang] = Tools::link_rewrite($this->link_rewrite[$id_lang]);
+                $this->link_rewrite[$id_lang] = Tools::str2url($this->link_rewrite[$id_lang]);
             }
         }
 
