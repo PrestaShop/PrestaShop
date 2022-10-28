@@ -990,7 +990,7 @@ class WebserviceRequestCore
                 return false;
             }
         } else {
-            $this->setErrorDidYouMean(400, 'Resource of type "' . $this->urlSegment[0] . '" does not exists', $this->urlSegment[0], $resourceNames, 27);
+            $this->setErrorDidYouMean(400, 'Resource of type "' . $this->urlSegment[0] . '" does not exist', $this->urlSegment[0], $resourceNames, 27);
 
             return false;
         }
@@ -1023,7 +1023,7 @@ class WebserviceRequestCore
         }
 
         if (!empty($arr_avoid_id) || empty($ids)) {
-            $this->setError(404, 'Id(s) not exists: ' . implode(', ', $arr_avoid_id), 87);
+            $this->setError(404, 'Id(s) not exisitng: ' . implode(', ', $arr_avoid_id), 87);
             $this->_outputEnabled = true;
         }
     }
@@ -1088,7 +1088,7 @@ class WebserviceRequestCore
                             // We have to allow new specific field for price calculation too
                             $error = (!isset($this->resourceConfiguration['fields'][$field_name]) && !isset($this->urlFragments['price'][$field_name]));
                         } else {
-                            // if this association does not exists
+                            // if this association does not exist
                             if (!array_key_exists($field_name, $this->resourceConfiguration['associations'])) {
                                 $error = true;
                             }
@@ -1389,7 +1389,7 @@ class WebserviceRequestCore
 
                 $check = ' WHERE (' . implode('OR', $OR) . ') AND `' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = ' . (int) $this->urlSegment[1];
                 if (!Db::getInstance()->getValue($sql . $check)) {
-                    $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $this->urlSegment[1] . ') does not exists on this shop', 131);
+                    $this->setError(404, 'This ' . $this->resourceConfiguration['retrieveData']['className'] . ' (' . (int) $this->urlSegment[1] . ') does not exist on this shop', 131);
                 }
             }
 
@@ -1495,7 +1495,7 @@ class WebserviceRequestCore
         $postponeNTreeRegeneration = false;
 
         if (!empty($arr_avoid_id) || empty($ids)) {
-            $this->setError(404, 'Id(s) not exists: ' . implode(', ', $arr_avoid_id), 87);
+            $this->setError(404, 'Id(s) not existing: ' . implode(', ', $arr_avoid_id), 87);
             $this->_outputEnabled = true;
         } else {
             foreach ($objects as $object) {
@@ -1690,7 +1690,7 @@ class WebserviceRequestCore
                                         return false;
                                     }
                                 } elseif ($association->getName() != 'i18n') {
-                                    $this->setError(400, 'The association "' . $association->getName() . '" does not exists', 86);
+                                    $this->setError(400, 'The association "' . $association->getName() . '" does not exist', 86);
 
                                     return false;
                                 }
