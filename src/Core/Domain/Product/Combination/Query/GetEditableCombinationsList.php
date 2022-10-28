@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Retrieves product combinations
@@ -122,14 +121,6 @@ class GetEditableCombinationsList
     public function getLanguageId(): LanguageId
     {
         return $this->languageId;
-    }
-
-    /**
-     * @return ShopId
-     */
-    public function getShopId(): ShopId
-    {
-        return $this->shopId;
     }
 
     /**
