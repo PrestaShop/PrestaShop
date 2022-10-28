@@ -163,23 +163,14 @@ class CombinationCreator
         $hasCombinations = $this->productRepository->hasCombinations($productId);
         $newCombinationIds = [];
 
-        foreach ($shopIds as $shopId) {
-            foreach ($generatedCombinations as $generatedCombination) {
-                if (!$hasCombinations) {
-                    // Product has no combinations yet, so we create new combinations and skip the rest of the loop
-                    $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
-                    continue;
-                }
+        foreach ($generatedCombinations as $generatedCombination) {
+            if (!$hasCombinations || !$matchingCombinationId = $this->findMatchingCombinationId($productId, $generatedCombination)) {
+                // Product has no combinations yet, so we create new combinations and skip the rest of the loop
+                $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopIds);
+                continue;
+            }
 
-                $attributeIds = array_values($generatedCombination);
-                $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
-
-                if (!$matchingCombinationId) {
-                    // if there is no combination of provided attributes yet, we create a new one and skip to next iteration
-                    $newCombinationIds[] = $this->persistCombination($productId, $generatedCombination, $shopId);
-                    continue;
-                }
-
+            foreach ($shopIds as $shopId) {
                 // if there is a combination of provided attributes, and it is already associated with the shop, then we don't do anything and skip to next iteration
                 if ($this->combinationRepository->isAssociatedWithShop($matchingCombinationId, $shopId)) {
                     continue;
@@ -190,7 +181,20 @@ class CombinationCreator
                 // create dedicated stock_available for combination in related shop
                 $this->stockAvailableMultiShopRepository->createStockAvailable($productId, $shopId, $matchingCombinationId);
             }
+        }
 
+        $this->updateDefaultCombination($productId, $shopIds);
+
+        return $newCombinationIds;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     */
+    private function updateDefaultCombination(ProductId $productId, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
             // set default combination if none is set yet
             if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $shopId)) {
                 $shopConstraint = ShopConstraint::shop($shopId->getValue());
@@ -198,30 +202,43 @@ class CombinationCreator
                 $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
             }
         }
-
-        return $newCombinationIds;
     }
 
     /**
      * @param ProductId $productId
      * @param int[] $generatedCombination
-     * @param ShopId $shopId
+     *
+     * @return CombinationId|null
+     */
+    private function findMatchingCombinationId(ProductId $productId, array $generatedCombination): ?CombinationId
+    {
+        $attributeIds = array_values($generatedCombination);
+
+        return $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param int[] $generatedCombination
+     * @param ShopId[] $shopIds
      *
      * @return CombinationId
      */
     private function persistCombination(
         ProductId $productId,
         array $generatedCombination,
-        ShopId $shopId
+        array $shopIds
     ): CombinationId {
-        $combination = $this->combinationRepository->create($productId, $shopId);
+        $combination = $this->combinationRepository->create($productId, $shopIds);
         $combinationId = new CombinationId((int) $combination->id);
 
-        //@todo: Use DB transaction instead if they are accepted (PR #21740)
         try {
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
-            $this->combinationRepository->delete($combinationId, ShopConstraint::shop($shopId->getValue()));
+            foreach ($shopIds as $shopId) {
+                $this->combinationRepository->delete($combinationId, ShopConstraint::shop($shopId->getValue()));
+            }
+
             throw $e;
         }
 
