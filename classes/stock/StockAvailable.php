@@ -636,7 +636,7 @@ class StockAvailableCore extends ObjectModel
      *
      * @param int $id_product
      * @param int|null $id_product_attribute Optional
-     * @param int|Shop|null $shop Shop id or shop object Optional
+     * @param Shop|int|null $shop Shop id or shop object Optional
      *
      * @return bool
      */
@@ -650,32 +650,34 @@ class StockAvailableCore extends ObjectModel
             if (!($shop instanceof Shop)) {
                 $shop = new Shop($shop);
             }
+            $groupSharedStock = (bool) $shop->getGroup()->share_stock;
+        } else {
+            $groupSharedStock = Shop::getContext() == Shop::CONTEXT_SHOP && (bool) Shop::getContextShopGroup()->share_stock;
         }
 
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            if (Shop::getContextShopGroup()->share_stock == 1) {
-                $pa_sql = '';
-                if ($id_product_attribute !== null) {
-                    $pa_sql = '_attribute';
-                    $id_product_attribute_sql = $id_product_attribute;
-                } else {
-                    $id_product_attribute_sql = $id_product;
-                }
+        // If stock is shared by group and the product is still associated to some shops from the group no need to delete the stock
+        if ($groupSharedStock) {
+            $pa_sql = '';
+            if ($id_product_attribute !== null) {
+                $pa_sql = '_attribute';
+                $id_product_attribute_sql = $id_product_attribute;
+            } else {
+                $id_product_attribute_sql = $id_product;
+            }
 
-                if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
+            if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
 						FROM ' . _DB_PREFIX_ . 'product' . $pa_sql . '_shop
 						WHERE id_product' . $pa_sql . '=' . (int) $id_product_attribute_sql . '
 							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(Shop::SHARE_STOCK))) . ')')) {
-                    return true;
-                }
+                return true;
             }
         }
 
         $res = Db::getInstance()->execute('
 		DELETE FROM ' . _DB_PREFIX_ . 'stock_available
 		WHERE id_product = ' . (int) $id_product .
-        ($id_product_attribute ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
-        StockAvailable::addSqlShopRestriction(null, $shop));
+            ($id_product_attribute ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') .
+            StockAvailable::addSqlShopRestriction(null, $shop));
 
         if ($id_product_attribute) {
             if ($shop === null || !Validate::isLoadedObject($shop)) {
