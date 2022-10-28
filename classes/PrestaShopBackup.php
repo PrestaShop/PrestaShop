@@ -114,7 +114,7 @@ class PrestaShopBackupCore
      *
      * @param string $filename prefix of the backup file (datetime will be the second part)
      *
-     * @return string The full path of the backup file, or false if the backup file does not exists
+     * @return string The full path of the backup file, or false if the backup file does not exist
      */
     public static function getBackupPath($filename = '')
     {
