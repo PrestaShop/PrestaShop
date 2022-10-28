@@ -85,7 +85,6 @@ class EditProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = $options['product_id'];
-        $shopId = $options['shop_id'];
 
         $builder
             ->add('header', HeaderType::class, [
