@@ -127,21 +127,25 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
     /**
      * @param ProductId $productId
-     * @param ShopId $shopId
+     * @param ShopId[] $shopIds
      * @param bool $isDefault
      *
      * @return Combination
      *
      * @throws CannotAddCombinationException
      */
-    public function create(ProductId $productId, ShopId $shopId, bool $isDefault = false): Combination
+    public function create(ProductId $productId, array $shopIds, bool $isDefault = false): Combination
     {
-        $combination = new Combination(null, null, $shopId->getValue());
+        $combination = new Combination();
         $combination->id_product = $productId->getValue();
         $combination->default_on = $isDefault;
-        $combination->id_shop_list = [$shopId->getValue()];
+        $combination->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
-        $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
+        foreach ($shopIds as $shopId) {
+            $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
+        }
 
         return $combination;
     }
