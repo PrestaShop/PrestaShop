@@ -548,3 +548,11 @@ services:
     arguments:
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.product.update.filler.seo_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller
+    tags: [ 'core.product_filler' ]
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.category.repository.category_repository'
+      - '@prestashop.adapter.tools'
