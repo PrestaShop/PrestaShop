@@ -215,13 +215,19 @@ class CombinationCore extends ObjectModel
             $shopIdsList = Shop::getContextListShopID();
         }
 
-        if ($product->getType() == Product::PTYPE_VIRTUAL && !empty($shopIdsList)) {
+        if ($product->getType() == Product::PTYPE_VIRTUAL) {
+            $outOfStock = 1;
+        } else {
+            $outOfStock = StockAvailable::outOfStock((int) $this->id_product);
+        }
+
+        if (!empty($shopIdsList)) {
             foreach ($shopIdsList as $shopId) {
-                StockAvailable::setProductOutOfStock((int) $this->id_product, 1, $shopId, (int) $this->id);
+                StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $shopId, (int) $this->id);
             }
         } else {
             // This creates stock_available for combination as a side effect
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), $this->id_shop, $this->id);
+            StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $this->id_shop, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
