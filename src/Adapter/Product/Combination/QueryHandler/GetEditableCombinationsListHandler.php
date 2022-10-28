@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
@@ -99,7 +100,15 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
      */
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
-        $shopId = $query->getShopId();
+        $shopId = $query->getShopConstraint()->getShopId();
+
+        if (!$shopId) {
+            throw new CombinationException(sprintf(
+                'Only single shop constraint is supported for query %s',
+                GetEditableCombinationsList::class
+            ));
+        }
+
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
         $filters['shop_id'] = $shopId->getValue();

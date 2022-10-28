@@ -999,6 +999,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
 
         $productForm = $formBuilder->getFormFor($productId, [], [
             'product_id' => $productId,
+            'shop_id' => (int) Configuration::get('PS_SHOP_DEFAULT'),
             'method' => Request::METHOD_POST,
         ]);
     }

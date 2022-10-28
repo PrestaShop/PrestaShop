@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
@@ -48,9 +49,9 @@ class GetEditableCombinationsList
     private $languageId;
 
     /**
-     * @var ShopId
+     * @var ShopConstraint
      */
-    private $shopId;
+    private $shopConstraint;
 
     /**
      * @var int|null
@@ -80,7 +81,7 @@ class GetEditableCombinationsList
     /**
      * @param int $productId
      * @param int $languageId
-     * @param int $shopId
+     * @param ShopConstraint $shopConstraint
      * @param int|null $limit
      * @param int|null $offset
      * @param string|null $orderBy
@@ -90,7 +91,7 @@ class GetEditableCombinationsList
     public function __construct(
         int $productId,
         int $languageId,
-        int $shopId,
+        ShopConstraint $shopConstraint,
         ?int $limit = null,
         ?int $offset = null,
         ?string $orderBy = null,
@@ -99,7 +100,7 @@ class GetEditableCombinationsList
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
-        $this->shopId = new ShopId($shopId);
+        $this->shopConstraint = $shopConstraint;
         $this->limit = $limit;
         $this->offset = $offset;
         $this->filters = $filters;
@@ -129,6 +130,14 @@ class GetEditableCombinationsList
     public function getShopId(): ShopId
     {
         return $this->shopId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**
