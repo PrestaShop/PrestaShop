@@ -62,6 +62,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureBasicInformation($config)
             ->configureOptions($config, $formData)
             ->configurePrices($config)
+            ->configureSeo($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -127,6 +128,29 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[pricing][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
             ->addMultiShopField('[pricing][unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)
             ->addMultiShopField('[pricing][unit_price][unity]', 'setUnity', DataField::TYPE_STRING)
+        ;
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     *
+     * @return $this
+     */
+    private function configureSeo(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
+            ->addMultiShopCompoundField('setRedirectOption', [
+                '[seo][redirect_option][type]' => DataField::TYPE_STRING,
+                '[seo][redirect_option][target][id]' => [
+                    'type' => DataField::TYPE_INT,
+                    'default' => 0,
+                ],
+            ])
         ;
 
         return $this;

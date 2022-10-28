@@ -48,6 +48,13 @@ services:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
+  prestashop.core.form.command_builder.tags.seo:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder
+    # @todo: tag commented out until UpdateProductCommand is finished and the SeoCommandsBuilder is removed
+    # tags: [ 'core.product_command_builder' ]
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+
   prestashop.core.form.command_builder.product.shipping:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
     arguments:
