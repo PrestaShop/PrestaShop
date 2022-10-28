@@ -107,12 +107,27 @@ class SeoFiller implements ProductFillerInterface
                     $product->link_rewrite[$langId] = $linkRewrite;
                 } elseif (!empty($product->name[$langId])) {
                     // When link rewrite is provided empty, then use product name.
-                    // There is similar behavior in UpdateProductBasicInformationHandler
                     $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
                 } else {
                     continue;
                 }
 
+                $updatableProperties['link_rewrite'][] = $langId;
+            }
+        }
+
+        foreach ($product->link_rewrite as $langId => $linkRewrite) {
+            if (!empty($linkRewrite) || empty($product->name[$langId])) {
+                continue;
+            }
+
+            $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+
+            if (!isset($updatableProperties['link_rewrite']) ||
+                // strict false is important, because array_search could also return 0 as found item index
+                false === array_search($langId, $updatableProperties['link_rewrite'], true)
+            ) {
+                // we only add updatable property for lang if it is not yet added
                 $updatableProperties['link_rewrite'][] = $langId;
             }
         }

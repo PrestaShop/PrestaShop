@@ -166,6 +166,7 @@ class UpdateProductCommand
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(int $productId, ShopConstraint $shopConstraint)
     {
