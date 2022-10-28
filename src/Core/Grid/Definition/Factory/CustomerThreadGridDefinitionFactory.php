@@ -176,6 +176,7 @@ class CustomerThreadGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Messages', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'message',
+                        'max_displayed_characters' => 32,
                     ])
             )
             ->add(
