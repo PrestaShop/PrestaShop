@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,30 +22,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% form_theme invoiceOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+declare(strict_types=1);
 
-{% block invoice_options %}
-  {{ form_start(invoiceOptionsForm, {method: 'POST', action: path('admin_order_invoices_process'), attr: {id: 'form-invoices-options'}}) }}
-    <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">settings</i>
-        {{ 'Invoice options'|trans }}
-      </h3>
-      <div class="card-body">
-        <div class="form-wrapper">
-          {% block invoice_options_form_widget %}
-            {{ form_widget(invoiceOptionsForm) }}
-          {% endblock %}
-        </div>
-      </div>
-      <div class="card-footer">
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" id="save-invoices-options-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-        </div>
-      </div>
-    </div>
-  {{ form_end(invoiceOptionsForm) }}
-{% endblock %}
+namespace PrestaShopBundle\Controller\Exception;
+
+use Exception;
+
+/**
+ * Class FieldLabelNotFoundException
+ *
+ * Thrown when field label for error message is not found
+ */
+class FieldLabelNotFoundException extends Exception
+{
+}

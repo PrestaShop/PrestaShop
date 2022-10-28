@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Exception\DataProviderException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -128,14 +129,17 @@ class InvoicesController extends FrameworkBundleAdminController
      *
      * @return bool false if an error occurred, true otherwise
      */
-    private function processForm(FormHandlerInterface $formHandler, Request $request)
+    private function processForm(FormHandlerInterface $formHandler, Request $request): bool
     {
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($errors = $formHandler->save($form->getData())) {
-                $this->flashErrors($errors);
+            try {
+                $formHandler->save($form->getData());
+            } catch (DataProviderException $e) {
+                $errorMessageFactory = $this->get('prestashop.form.error_message.configuration_error_factory');
+                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
 
                 return false;
             }

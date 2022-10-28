@@ -24,16 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-namespace PrestaShopBundle\Form\Exception;
-
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-
-class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
+interface ConfigurationErrorInterface
 {
-    protected function getType(): string
-    {
-        return InvalidConfigurationDataError::class;
-    }
+    /**
+     * Constants for common errors
+     */
+    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 'error_not_numeric_or_lower_than_zero';
+    public const ERROR_CONTAINS_HTML_TAGS = 'contains_html_tags';
+
+    /**
+     * @return string
+     */
+    public function getErrorCode(): string;
+
+    /**
+     * @return string
+     */
+    public function getFieldName(): string;
+
+    /**
+     * @return int|null
+     */
+    public function getLanguageId(): ?int;
 }

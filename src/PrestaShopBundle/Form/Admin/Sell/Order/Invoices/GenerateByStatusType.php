@@ -27,19 +27,24 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class generates "By order status" form
  * in "Sell > Orders > Invoices" page.
+ *
+ * Backwards compatibility break introduced in 8.0.0 due to extension of TranslationAwareType
  */
-class GenerateByStatusType extends CommonAbstractType
+class GenerateByStatusType extends TranslatorAwareType
 {
+    public const FIELD_ORDER_STATES = 'order_states';
+
     /**
      * @var array
      */
@@ -50,11 +55,18 @@ class GenerateByStatusType extends CommonAbstractType
     private $orderStateChoiceProvider;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param FormChoiceProviderInterface $orderStateChoiceProvider
      * @param array $orderCountsByState
      */
-    public function __construct(FormChoiceProviderInterface $orderStateChoiceProvider, array $orderCountsByState)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $orderStateChoiceProvider,
+        array $orderCountsByState
+    ) {
+        parent::__construct($translator, $locales);
         $this->orderCountsByState = $orderCountsByState;
         $this->orderStateChoiceProvider = $orderStateChoiceProvider;
     }
@@ -65,10 +77,13 @@ class GenerateByStatusType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('order_states', ChoiceType::class, [
+            ->add(static::FIELD_ORDER_STATES, ChoiceType::class, [
+                'required' => false,
                 'expanded' => true,
                 'multiple' => true,
                 'choices' => $this->orderStateChoiceProvider->getChoices(),
+                'label' => $this->trans('Order statuses', 'Admin.Orderscustomers.Feature'),
+                'help' => $this->trans('You can also export orders which have not been charged yet.', 'Admin.Orderscustomers.Help'),
             ]);
     }
 
