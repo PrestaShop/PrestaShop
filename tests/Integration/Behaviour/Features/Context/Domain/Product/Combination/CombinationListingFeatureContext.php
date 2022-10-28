@@ -328,9 +328,22 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 );
             }
 
+            // similarly to id reference this also contains the string which references combination id
+            // but when we already have references saved into the shared storage, we can use combination id just to assert them
+            // without needing to reassign it to shared storage again
+            if (!empty($expectedCombination['combination id'])) {
+                Assert::assertSame(
+                    $editableCombinationForListing->getCombinationId(),
+                    $this->getSharedStorage()->get($expectedCombination['combination id']),
+                    'Combination ids doesn\'t match'
+                );
+            }
+
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 
-            $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
+            if (!empty($expectedCombination['id reference'])) {
+                $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
+            }
         }
 
         return $idsByIdReferences;
