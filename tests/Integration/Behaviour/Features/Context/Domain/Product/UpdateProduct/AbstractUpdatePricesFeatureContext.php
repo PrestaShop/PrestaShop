@@ -48,7 +48,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
  * @todo: need to check if this abstract class is still needed when UpdateProductCommand is fully finished,
  *        because one of the contexts that uses it will be deleted, therefore leaving this abstract class useless.
  */
-class AbstractUpdatePricesFeatureContext extends AbstractProductFeatureContext
+abstract class AbstractUpdatePricesFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @param string $productReference

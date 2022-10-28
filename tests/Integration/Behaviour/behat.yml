@@ -488,7 +488,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdatePricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateSeoFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
