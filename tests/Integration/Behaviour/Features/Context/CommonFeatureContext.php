@@ -183,6 +183,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * This hook can be used to flag a feature for database hard reset
+     *
+     * @BeforeFeature @restore-all-tables-after-feature
+     */
+    public static function restoreAllTablesAfterFeature()
+    {
+        DatabaseDump::restoreAllTables();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
      * This hook can be used to flag a feature for kernel reboot
      *
      * @BeforeFeature @reboot-kernel-before-feature

@@ -344,6 +344,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext

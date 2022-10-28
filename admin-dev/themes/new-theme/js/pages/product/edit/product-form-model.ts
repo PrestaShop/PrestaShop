@@ -28,6 +28,7 @@ import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import {NumberFormatter} from '@app/cldr';
+import ProductMap from '@pages/product/product-map';
 
 export default class ProductFormModel {
   private eventEmitter: EventEmitter;
@@ -38,6 +39,8 @@ export default class ProductFormModel {
 
   private numberFormatter: NumberFormatter;
 
+  private $taxRuleGroupHelpLabel: JQuery;
+
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
 
@@ -46,6 +49,8 @@ export default class ProductFormModel {
       $form,
       ProductFormMapping,
     );
+
+    this.$taxRuleGroupHelpLabel = $(ProductMap.priceSummary.taxRuleGroupHelpLabel);
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
@@ -69,6 +74,7 @@ export default class ProductFormModel {
       'price.wholesalePrice',
     ];
     this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateProductPrices(event));
+    this.updateTaxRulesGroupInfo(this.getTaxRatio());
   }
 
   getProduct(): any {
@@ -123,6 +129,19 @@ export default class ProductFormModel {
 
   displayPrice(price: BigNumber): string {
     return this.numberFormatter.format(price.toNumber());
+  }
+
+  getStateIsoCode(): string {
+    const $taxRulesGroupIdInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
+
+    if (!$taxRulesGroupIdInput) {
+      console.error('Could not find tax rules input');
+      return '';
+    }
+
+    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
+
+    return $selectedTaxOption.data('stateIsoCode') ?? '';
   }
 
   removeTax(price: BigNumber): string {
@@ -215,14 +234,7 @@ export default class ProductFormModel {
       }
 
       case 'price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
-        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set(
-          'price.priceTaxIncluded',
-          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
-        );
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        this.updateTaxRulesGroupInfo(taxRatio);
         break;
       }
     }
@@ -240,5 +252,40 @@ export default class ProductFormModel {
     }
 
     return taxRate.dividedBy(100).plus(1);
+  }
+
+  // update tax included price and tax rates help label
+  private updateTaxRulesGroupInfo(taxRatio: BigNumber) {
+    const isTaxEnabled = this.$taxRuleGroupHelpLabel.data('is-tax-enabled');
+
+    if (!isTaxEnabled) {
+      return;
+    }
+    const stateIsoCode = this.getStateIsoCode();
+    const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+    const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+    this.mapper.set(
+      'price.priceTaxIncluded',
+      priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+    );
+
+    const taxPlaceholder = this.$taxRuleGroupHelpLabel.data(
+      stateIsoCode ? 'place-holder-with-state' : 'place-holder-without-state',
+    );
+
+    this.$taxRuleGroupHelpLabel.html(
+      taxPlaceholder
+        .replace(
+          new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
+          taxRatio.minus(1).times(100).toPrecision(),
+        )
+        .replace(
+          new RegExp('_STATE_ISO_CODE_HELP_PLACEHOLDER_', 'g'),
+          stateIsoCode,
+        ),
+    );
+
+    const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
+    this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
   }
 }

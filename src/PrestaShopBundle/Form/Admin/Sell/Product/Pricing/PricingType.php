@@ -65,7 +65,9 @@ class PricingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('retail_price', RetailPriceType::class)
+            ->add('retail_price', RetailPriceType::class, [
+                'tax_rules_group_id' => $options['tax_rules_group_id'],
+            ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Cost price', 'Admin.Catalog.Feature'),
@@ -99,8 +101,7 @@ class PricingType extends TranslatorAwareType
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('Define which condition should apply first when a customer is eligible for multiple specific prices.', 'Admin.Catalog.Help'),
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -109,9 +110,13 @@ class PricingType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
-            'required' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->setRequired([
+                'tax_rules_group_id',
+            ]);
     }
 }
