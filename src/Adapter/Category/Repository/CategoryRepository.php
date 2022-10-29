@@ -73,12 +73,16 @@ class CategoryRepository extends AbstractObjectModelRepository
      */
     public function get(CategoryId $categoryId): Category
     {
-        /** @var Category $category */
-        $category = $this->getObjectModel(
-            $categoryId->getValue(),
-            Category::class,
-            CategoryNotFoundException::class
-        );
+        try {
+            /** @var Category $category */
+            $category = $this->getObjectModel(
+                $categoryId->getValue(),
+                Category::class,
+                CategoryException::class
+            );
+        } catch (CategoryException $e) {
+            throw new CategoryNotFoundException($categoryId, $e->getMessage());
+        }
 
         return $category;
     }
