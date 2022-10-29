@@ -224,7 +224,6 @@ class AddCartRule extends BOBasePage {
     await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser);
   }
 
-
   /**
    * Fill actions tab
    * @param page {Page} Browser tab
