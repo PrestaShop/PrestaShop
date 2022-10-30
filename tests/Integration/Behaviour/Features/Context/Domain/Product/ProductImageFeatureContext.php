@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
@@ -84,27 +86,42 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string $fileName
      * @param string $productReference
      */
-    public function uploadImage(string $imageReference, string $fileName, string $productReference): void
+    public function uploadImageForDefaultShop(string $imageReference, string $fileName, string $productReference): void
     {
-        $pathName = DummyFileUploader::upload($fileName);
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
-            $this->getSharedStorage()->get($productReference),
-            $pathName
-        ));
+    /**
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for shop "([^"]*)"$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param string $shopReference
+     *
+     * @return void
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     */
+    public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference)
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, $shopConstraint);
+    }
 
-        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
-
-        // Save uploaded file MD5 for future checks
-        if ($this->getSharedStorage()->exists($fileName)) {
-            return;
-        }
-
-        /** @var ProductImage $productImage */
-        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
-
-        $imagePath = $this->getImagePath($productImage->getImageId());
-        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+    /**
+     * @When /^I add new image "([^"]*)" named "([^"]*)" to product "([^"]*)" for all shops$/
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     *
+     * @return void
+     */
+    public function uploadImageForAllShops(string $imageReference, string $fileName, string $productReference)
+    {
+        $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, ShopConstraint::allShops());
     }
 
     /**
@@ -270,6 +287,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^product "([^"]*)" should have no images for shops "([^"]*)"$/
+     */
+    public function productShouldHaveNoImagesForShops($arg1, $arg2)
+    {
+        throw new PendingException();
+    }
+
+    /**
      * @Then product :productReference should have following cover :coverUrl
      *
      * @param string $productReference
@@ -289,7 +314,95 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertProductImages(string $productReference, TableNode $tableNode): void
+    public function assertProductImagesForDefaultShop(string $productReference, TableNode $tableNode): void
+    {
+        $this->assertProductImagesForShops($productReference, $tableNode, [$this->getDefaultShopId()]);
+    }
+
+    /**
+     * @Given /^product "([^"]*)" should have following images for shop "([^"]*)":$/
+     * @Given /^product "([^"]*)" should have following images for shops "([^"]*)":$/
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences)
+    {
+        $shopReferences = explode(',', $shopReferences);
+        $shopIds = [];
+        foreach ($shopReferences as $shopReference) {
+            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+        }
+        $this->assertProductImagesForShops($productReference, $table, $shopIds);
+    }
+
+    /**
+     * @param int $imageId
+     *
+     * @return string
+     */
+    private function getImagePath(int $imageId): string
+    {
+        $imageFolder = implode('/', str_split((string) $imageId));
+
+        return _PS_PRODUCT_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return ProductImage[]
+     */
+    private function getProductImages(string $productReference): array
+    {
+        return $this->getQueryBus()->handle(new GetProductImages(
+            $this->getSharedStorage()->get($productReference)
+        ));
+    }
+
+    /**
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $productReference
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     */
+    private function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint)
+    {
+        $pathName = DummyFileUploader::upload($fileName);
+
+        $imageId = $this->getCommandBus()->handle(new AddProductImageCommand(
+            $this->getSharedStorage()->get($productReference),
+            $pathName,
+            $shopConstraint
+        ));
+
+        $this->getSharedStorage()->set($imageReference, $imageId->getValue());
+
+        // Save uploaded file MD5 for future checks
+        if ($this->getSharedStorage()->exists($fileName)) {
+            return;
+        }
+
+        /** @var ProductImage $productImage */
+        $productImage = $this->getQueryBus()->handle(new GetProductImage($imageId->getValue()));
+
+        $imagePath = $this->getImagePath($productImage->getImageId());
+        $this->getSharedStorage()->set($fileName, md5_file($imagePath));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param array $expectedShopIds
+     *
+     * @return void
+     */
+    private function assertProductImagesForShops(string $productReference, TableNode $tableNode, array $expectedShopIds)
     {
         $images = $this->getProductImages($productReference);
         $dataRows = $this->localizeByColumns($tableNode);
@@ -354,30 +467,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                     'Unexpected product thumbnail url'
                 );
             }
+
+            Assert::assertEquals(
+                $expectedShopIds,
+                $actualImage->getShopIds()
+            );
         }
-    }
-
-    /**
-     * @param int $imageId
-     *
-     * @return string
-     */
-    private function getImagePath(int $imageId): string
-    {
-        $imageFolder = implode('/', str_split((string) $imageId));
-
-        return _PS_PRODUCT_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
-    }
-
-    /**
-     * @param string $productReference
-     *
-     * @return ProductImage[]
-     */
-    private function getProductImages(string $productReference): array
-    {
-        return $this->getQueryBus()->handle(new GetProductImages(
-            $this->getSharedStorage()->get($productReference)
-        ));
     }
 }

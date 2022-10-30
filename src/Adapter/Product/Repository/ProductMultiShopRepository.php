@@ -372,12 +372,15 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * Returns a single shop ID when the constraint is a single shop, and the list of shops associated to the product
+     * when the constraint is for all shops (shop group constraint is forbidden)
+     *
      * @param ProductId $productId
      * @param ShopConstraint $shopConstraint
      *
      * @return int[]
      */
-    private function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
+    public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');

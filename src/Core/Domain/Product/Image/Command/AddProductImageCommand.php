@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Adds new product image
@@ -46,15 +47,23 @@ class AddProductImageCommand
     private $filePath;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      * @param string $pathName
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
         int $productId,
-        string $pathName
+        string $pathName,
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
         $this->filePath = $pathName;
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -71,5 +80,13 @@ class AddProductImageCommand
     public function getFilePath(): string
     {
         return $this->filePath;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

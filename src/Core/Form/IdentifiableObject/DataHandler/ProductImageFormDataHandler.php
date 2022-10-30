@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ProductImageFormDataHandler implements FormDataHandlerInterface
@@ -43,12 +44,26 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $bus
      */
     public function __construct(
-        CommandBusInterface $bus
+        CommandBusInterface $bus,
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->bus = $bus;
+        $this->defaultShopId = $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -61,9 +76,11 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
             throw new FileUploadException('No file was uploaded', UPLOAD_ERR_NO_FILE);
         }
 
+        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
-            $uploadedFile->getPathname()
+            $uploadedFile->getPathname(),
+            $shopConstraint
         );
 
         /** @var ImageId $imageId */
