@@ -30,7 +30,6 @@ namespace Tests\Unit\Adapter\Product\Update\Filler;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -170,9 +169,9 @@ class PricesFillerTest extends ProductFillerTestCase
      * @param bool $ecoTaxEnabled
      * @param ShopConstraint $shopConstraint
      *
-     * @return ProductFillerInterface
+     * @return PricesFiller
      */
-    private function getFiller(bool $ecoTaxEnabled, ShopConstraint $shopConstraint): ProductFillerInterface
+    private function getFiller(bool $ecoTaxEnabled, ShopConstraint $shopConstraint): PricesFiller
     {
         $numberExtractor = $this->getMockBuilder(NumberExtractor::class)
             ->disableOriginalConstructor()

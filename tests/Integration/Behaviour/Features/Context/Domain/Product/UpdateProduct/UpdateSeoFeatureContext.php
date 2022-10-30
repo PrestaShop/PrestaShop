@@ -23,18 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractUpdateSeoFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
@@ -119,42 +117,6 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
     }
 
     /**
-     * @Then product :productReference should not have a redirect target
-     *
-     * @param string $productReference
-     */
-    public function assertHasNoRedirectTargetId(string $productReference)
-    {
-        $this->performAssertHasNoRedirectTargetId($productReference);
-    }
-
-    /**
-     * @param string $productReference
-     * @param ShopConstraint $shopConstraint
-     * @param TableNode $tableNode
-     */
-    private function updateSeo(
-        string $productReference,
-        ShopConstraint $shopConstraint,
-        TableNode $tableNode
-    ): void {
-        $dataRows = $this->localizeByRows($tableNode);
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        try {
-            $command = new UpdateProductSeoCommand($productId, $shopConstraint);
-            $unhandledData = $this->fillUpdateSeoCommand($dataRows, $command);
-            Assert::assertEmpty(
-                $unhandledData,
-                sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
-            );
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
      * @When I update product :productReference localized SEO field :field with a value of :length symbols length
      *
      * @param string $productReference
@@ -174,6 +136,38 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
         );
     }
 
+    /**
+     * @param string $productReference
+     * @param ShopConstraint $shopConstraint
+     * @param TableNode $tableNode
+     */
+    private function updateSeo(
+        string $productReference,
+        ShopConstraint $shopConstraint,
+        TableNode $tableNode
+    ): void {
+        $dataRows = $this->localizeByRows($tableNode);
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductCommand($productId, $shopConstraint);
+            $unhandledData = $this->fillCommand($dataRows, $command);
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
+            );
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $field
+     * @param int $length
+     * @param ShopConstraint $shopConstraint
+     */
     private function updateLocalizedSeoFieldsTooLongValue(
         string $productReference,
         string $field,
@@ -181,7 +175,7 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
         ShopConstraint $shopConstraint
     ): void {
         try {
-            $command = new UpdateProductSeoCommand(
+            $command = new UpdateProductCommand(
                 $this->getSharedStorage()->get($productReference),
                 $shopConstraint
             );
@@ -211,14 +205,24 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
     }
 
     /**
+     * @Then product :productReference should not have a redirect target
+     *
+     * @param string $productReference
+     */
+    public function assertHasNoRedirectTargetId(string $productReference)
+    {
+        $this->performAssertHasNoRedirectTargetId($productReference);
+    }
+
+    /**
      * Fills command with data and returns all additional data that wasn't handled if there is any
      *
      * @param array $dataRows
-     * @param UpdateProductSeoCommand $command
+     * @param UpdateProductCommand $command
      *
      * @return array
      */
-    private function fillUpdateSeoCommand(array $dataRows, UpdateProductSeoCommand $command): array
+    private function fillCommand(array $dataRows, UpdateProductCommand $command): array
     {
         if (isset($dataRows['meta_title'])) {
             $command->setLocalizedMetaTitles($dataRows['meta_title']);

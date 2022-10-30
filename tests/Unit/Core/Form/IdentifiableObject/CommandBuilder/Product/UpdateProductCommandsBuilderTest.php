@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder;
 
@@ -335,6 +336,111 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        $localizedMetaTitles = [
+            1 => 'Titre français recherche',
+            2 => 'English title seo',
+        ];
+
+        $localizedMetaDescriptions = [
+            1 => 'Description française recherche',
+            2 => 'English description seo',
+        ];
+
+        $localizedLinkRewrites = [
+            1 => 'produit-francais',
+            2 => 'english-product',
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+        ;
+        yield 'meta title' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+        ;
+        yield 'meta description' => [
+            [
+                'seo' => [
+                    'meta_description' => $localizedMetaDescriptions,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+        ;
+        yield 'link rewrite' => [
+            [
+                'seo' => [
+                    'link_rewrite' => $localizedLinkRewrites,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0)
+        ;
+        yield 'redirect not found' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_NOT_FOUND,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'redirect to product' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
+        yield 'redirect to category' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => [
+                            'id' => 51,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $command = $this->getSingleShopCommand()
             ->setVisibility(ProductVisibility::INVISIBLE)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
@@ -345,6 +451,10 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setWholesalePrice('70.05')
             ->setEcotax('60.43')
             ->setTaxRulesGroupId(43)
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
         ;
 
         yield [
@@ -373,6 +483,17 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'retail_price' => [
                         'ecotax_tax_excluded' => '60.43',
                         'tax_rules_group_id' => '43',
+                    ],
+                ],
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    'meta_description' => $localizedMetaDescriptions,
+                    'link_rewrite' => $localizedLinkRewrites,
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                        ],
                     ],
                 ],
             ],
@@ -602,16 +723,124 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$singleShopCommand, $allShopsCommand],
         ];
 
+        $localizedMetaTitles = [
+            1 => 'Titre français recherche',
+            2 => 'English title seo',
+        ];
+
+        $localizedMetaDescriptions = [
+            1 => 'Description française recherche',
+            2 => 'English description seo',
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+        ;
+        yield 'meta title' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+        ;
+        yield 'meta description' => [
+            [
+                'seo' => [
+                    'meta_description' => $localizedMetaDescriptions,
+                ],
+            ],
+            [$command],
+        ];
+
+        $localizedLinkRewrites = [
+            1 => 'produit-francais',
+            2 => 'english-product',
+        ];
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+        ;
+        yield 'link rewrite' => [
+            [
+                'seo' => [
+                    'link_rewrite' => $localizedLinkRewrites,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0)
+        ;
+        yield 'redirect not found' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_NOT_FOUND,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'redirect to product' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
+        yield 'redirect to category' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => [
+                            'id' => 51,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $singleShopCommand = $this->getSingleShopCommand();
         $singleShopCommand
             ->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
         ;
         $allShopsCommand = $this->getAllShopsCommand();
         $allShopsCommand
             ->setAvailableForOrder(true)
             ->setLocalizedNames($localizedNames)
             ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
         ;
 
         yield [
@@ -632,6 +861,21 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                         'available_for_order' => true,
                         self::MODIFY_ALL_SHOPS_PREFIX . 'available_for_order' => true,
+                    ],
+                ],
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'meta_title' => false,
+                    'meta_description' => $localizedMetaDescriptions,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'meta_description' => true,
+                    'link_rewrite' => $localizedLinkRewrites,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'link_rewrite' => false,
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'id' => true,
+                        ],
                     ],
                 ],
             ],

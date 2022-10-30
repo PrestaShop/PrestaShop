@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\OptionsFiller;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
@@ -198,7 +197,7 @@ class OptionsFillerTest extends ProductFillerTestCase
         ];
     }
 
-    private function getFiller(): ProductFillerInterface
+    private function getFiller(): OptionsFiller
     {
         return new OptionsFiller();
     }
