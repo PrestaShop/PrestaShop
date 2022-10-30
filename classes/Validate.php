@@ -61,8 +61,16 @@ class ValidateCore
         return preg_match('#^-?[0-9]+$#', (string) $ip);
     }
 
+    /**
+     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
+     */
     public static function isAnything()
     {
+        @trigger_error(
+            'This function is deprecated PrestaShop 8.1 and will be removed in Prestashop 9.0.',
+            E_USER_DEPRECATED
+        );
+
         return true;
     }
 
