@@ -2244,6 +2244,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'maintenance_skip_admin_ip_check' => !(bool) Configuration::get('PS_SKIP_ADMIN_IP_CHECK'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,
