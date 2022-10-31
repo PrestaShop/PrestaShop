@@ -52,8 +52,8 @@ class SqlManager extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.sqlQueryGridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.sqlQueryGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.sqlQueryGridPanel} .pagination .previous a.page-link`;
+    this.paginationNextLink = `${this.sqlQueryGridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.sqlQueryGridPanel} [data-role=previous-page-link]`;
 
     // Bulk Actions
     this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;
