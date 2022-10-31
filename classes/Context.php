@@ -514,7 +514,7 @@ class ContextCore
     {
         if ($this->priceComputingPrecision === null) {
             $computingPrecision = new ComputingPrecision();
-            $this->priceComputingPrecision = $computingPrecision->getPrecision($this->currency->precision);
+            $this->priceComputingPrecision = $computingPrecision->getPrecision(isset($this->currency->precision)?$this->currency->precision:2);
         }
 
         return $this->priceComputingPrecision;
