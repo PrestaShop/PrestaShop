@@ -58,6 +58,7 @@ const firstOrderByCustomer = {
 const customizedProduct = new ProductFaker({
   name: `Customized product ${prefixNewProduct}`,
   type: 'Standard product',
+  reference: 'bbcdef',
   taxRule: 'No tax',
   customization: {
     label: 'Type your text here',
