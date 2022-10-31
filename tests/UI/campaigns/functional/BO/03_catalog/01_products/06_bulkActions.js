@@ -27,6 +27,7 @@ let browserContext;
 let page;
 
 let numberOfProducts = 0;
+let numberOfFilteredProductsAfterDuplicate = 0;
 
 /*
 Go to products page
@@ -144,6 +145,9 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
     it('should duplicate products by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDuplicate', baseContext);
 
+      numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
+      await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
+
       const duplicateTextResult = await productsPage.duplicateAllProductsWithBulkActions(page);
       await expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
     });
@@ -152,7 +156,10 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDuplicate', baseContext);
 
       const numberOfProductsAfterDuplicate = await productsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfProductsAfterDuplicate).to.be.equal(numberOfProducts + 4);
+      await expect(numberOfProductsAfterDuplicate)
+        .to
+        .be
+        .equal(numberOfProducts + numberOfFilteredProductsAfterDuplicate);
     });
   });
 
