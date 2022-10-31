@@ -382,7 +382,7 @@ class FOBasePage extends CommonPage {
   async clickAutocompleteSearchResult(page, productName, nthResult) {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
-    await page.click(this.autocompleteSearchResultItemLink(nthResult));
+    await this.clickAndWaitForNavigation(page, this.autocompleteSearchResultItemLink(nthResult));
   }
 
   // Footer methods
