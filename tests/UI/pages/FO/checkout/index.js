@@ -52,6 +52,11 @@ class Checkout extends FOBasePage {
     this.checkoutGuestGdprCheckbox = `${this.checkoutGuestForm} input[name='psgdpr']`;
     this.checkoutGuestContinueButton = `${this.checkoutGuestForm} button[name='continue']`;
 
+    this.checkoutSummary = '#js-checkout-summary';
+    this.checkoutPromoBlock = `${this.checkoutSummary} div.block-promo`;
+    this.checkoutHavePromoCodeButton = `${this.checkoutPromoBlock} p.promo-code-button a`;
+    this.checkoutRemoveDiscountLink = `${this.checkoutPromoBlock} i.material-icons`;
+
     // Checkout login form
     this.checkoutLoginForm = `${this.personalInformationStepForm} #checkout-login-form`;
     this.emailInput = `${this.checkoutLoginForm} input[name='email']`;
@@ -322,7 +327,6 @@ class Checkout extends FOBasePage {
     return this.elementNotVisible(page, this.checkoutRemoveDiscountLink, 1000);
   }
 
-
   /**
    * Get cart rule error text
    * @param page {Page} Browser tab
@@ -331,7 +335,6 @@ class Checkout extends FOBasePage {
   async getCartRuleErrorMessage(page) {
     return this.getTextContent(page, this.cartRuleAlertMessage);
   }
-
 
   /**
    * Order when no payment is needed
