@@ -153,7 +153,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'GoToFirstProductPage',
+        'goToFirstProductPage',
         baseContext,
       );
 
@@ -167,7 +167,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddProductToCart',
+        'addProductToCart',
         baseContext,
       );
 
@@ -182,7 +182,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'AddPromoCode',
+          'addPromoCode',
           baseContext,
         );
 
@@ -205,7 +205,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'CheckLogoLink',
+        'checkLogoLink',
         baseContext,
       );
 
@@ -219,7 +219,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'GoToFirstProductPage',
+        'goToFirstProductPage2',
         baseContext,
       );
 
@@ -233,7 +233,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddProductToCart',
+        'addProductToCart2',
         baseContext,
       );
 
@@ -247,7 +247,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'AddPromoCode',
+        'addPromoCode2',
         baseContext,
       );
 
@@ -270,7 +270,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'CheckLogoLink',
+        'checkLogoLink2',
         baseContext,
       );
 
@@ -284,7 +284,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'CheckLogoLink',
+        'goToCartPage',
         baseContext,
       );
 
@@ -307,5 +307,5 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
   });
 
   // post condition : delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, baseContext);
+  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
 });
