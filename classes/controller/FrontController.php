@@ -735,6 +735,13 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
+
+            $is_admin = (int)(new Cookie('psAdmin'))->id_employee;
+            $skip_admin_ip_check = (int) Configuration::get('PS_SKIP_ADMIN_IP_CHECK');
+            if ($is_admin && $skip_admin_ip_check) {
+                return;
+            }
+
             $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
             if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
