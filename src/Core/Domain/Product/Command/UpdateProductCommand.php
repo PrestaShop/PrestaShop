@@ -33,10 +33,14 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstra
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
@@ -163,6 +167,31 @@ class UpdateProductCommand
      * @var RedirectOption|null
      */
     private $redirectOption;
+
+    /**
+     * @var Isbn|null
+     */
+    private $isbn;
+
+    /**
+     * @var Upc|null
+     */
+    private $upc;
+
+    /**
+     * @var Ean13|null
+     */
+    private $ean13;
+
+    /**
+     * @var string|null
+     */
+    private $mpn;
+
+    /**
+     * @var Reference|null
+     */
+    private $reference;
 
     /**
      * @param int $productId
@@ -612,6 +641,106 @@ class UpdateProductCommand
             new NoManufacturerId() :
             new ManufacturerId($manufacturerId)
         ;
+
+        return $this;
+    }
+
+    /**
+     * @return Isbn|null
+     */
+    public function getIsbn(): ?Isbn
+    {
+        return $this->isbn;
+    }
+
+    /**
+     * @param string $isbn
+     *
+     * @return self
+     */
+    public function setIsbn(string $isbn): self
+    {
+        $this->isbn = new Isbn($isbn);
+
+        return $this;
+    }
+
+    /**
+     * @return Upc|null
+     */
+    public function getUpc(): ?Upc
+    {
+        return $this->upc;
+    }
+
+    /**
+     * @param string $upc
+     *
+     * @return self
+     */
+    public function setUpc(string $upc): self
+    {
+        $this->upc = new Upc($upc);
+
+        return $this;
+    }
+
+    /**
+     * @return Ean13|null
+     */
+    public function getEan13(): ?Ean13
+    {
+        return $this->ean13;
+    }
+
+    /**
+     * @param string $ean13
+     *
+     * @return self
+     */
+    public function setEan13(string $ean13): self
+    {
+        $this->ean13 = new Ean13($ean13);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMpn(): ?string
+    {
+        return $this->mpn;
+    }
+
+    /**
+     * @param string $mpn
+     *
+     * @return self
+     */
+    public function setMpn(string $mpn): self
+    {
+        $this->mpn = $mpn;
+
+        return $this;
+    }
+
+    /**
+     * @return Reference|null
+     */
+    public function getReference(): ?Reference
+    {
+        return $this->reference;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return self
+     */
+    public function setReference(string $reference): self
+    {
+        $this->reference = new Reference($reference);
 
         return $this;
     }

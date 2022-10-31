@@ -557,3 +557,7 @@ services:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.category.repository.category_repository'
       - '@prestashop.adapter.tools'
+
+  prestashop.adapter.product.update.filler.details_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller
+    tags: [ 'core.product_filler' ]
