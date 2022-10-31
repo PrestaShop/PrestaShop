@@ -124,7 +124,11 @@
 			</div>
 			<div class="panel-footer">
         <input type="hidden" name="submitRegenerate{$table}" value="" />
-				<button id="submitRegenerate{$table}" class="btn btn-default pull-right">
+				<button
+          type="submit"
+          value=""
+          class="btn btn-default pull-right"
+        >
 					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
 				</button>
 			</div>

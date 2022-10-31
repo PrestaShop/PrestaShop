@@ -24,7 +24,7 @@
  *}
 <div class="modal-body">
   {l
-    s="Are you sure you want to regenerate thumbnails for the selected images? With the erase option enabled, the previous thumbnails of your selection will be deleted."
+    s="Regenerate thumbnails for the selected images? With the erase option enabled, the previous thumbnails that you selected will be deleted."
     d="Admin.Design.Notification"
   }
 </div>
