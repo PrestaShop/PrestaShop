@@ -235,24 +235,24 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Select product combination
+   * Select product attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param combination {{size: ?string, color: ?string}}  Product's combination data to select
+   * @param attributes {{size: ?string, color: ?string}}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectCombination(page, quantity, combination) {
-    if (combination.color !== null) {
+  async selectAttributes(page, quantity, attributes) {
+    if (attributes.color !== null) {
       await Promise.all([
-        this.waitForVisibleSelector(page, `${this.productColorInput(combination.color)}[checked]`),
-        page.click(this.productColorInput(combination.color)),
+        this.waitForVisibleSelector(page, `${this.productColorInput(attributes.color)}[checked]`),
+        page.click(this.productColorInput(attributes.color)),
       ]);
     }
 
-    if (combination.size !== null) {
+    if (attributes.size !== null) {
       await Promise.all([
-        this.waitForAttachedSelector(page, `${this.productSizeOption(combination.size)}[selected]`),
-        this.selectByVisibleText(page, this.productSizeSelect, combination.size),
+        this.waitForAttachedSelector(page, `${this.productSizeOption(attributes.size)}[selected]`),
+        this.selectByVisibleText(page, this.productSizeSelect, attributes.size),
       ]);
     }
   }
@@ -270,7 +270,7 @@ class Product extends FOBasePage {
     color: null,
     size: null,
   }, proceedToCheckout = true, customizedText = 'text') {
-    await this.selectCombination(page, quantity, combination);
+    await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
     }
