@@ -63,6 +63,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureOptions($config, $formData)
             ->configurePrices($config)
             ->configureSeo($config)
+            ->configureDetails($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -75,7 +76,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     /**
      * @param CommandBuilderConfig $config
      *
-     * @return $this
+     * @return self
      */
     private function configureBasicInformation(CommandBuilderConfig $config): self
     {
@@ -91,7 +92,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     /**
      * @param CommandBuilderConfig $config
      *
-     * @return $this
+     * @return self
      */
     private function configureOptions(CommandBuilderConfig $config, array $formData): self
     {
@@ -136,7 +137,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     /**
      * @param CommandBuilderConfig $config
      *
-     * @return $this
+     * @return self
      */
     private function configureSeo(CommandBuilderConfig $config): self
     {
@@ -151,6 +152,24 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
                     'default' => 0,
                 ],
             ])
+        ;
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     *
+     * @return self
+     */
+    private function configureDetails(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addField('[specifications][references][reference]', 'setReference', DataField::TYPE_STRING)
+            ->addField('[specifications][references][mpn]', 'setMpn', DataField::TYPE_STRING)
+            ->addField('[specifications][references][upc]', 'setUpc', DataField::TYPE_STRING)
+            ->addField('[specifications][references][ean_13]', 'setEan13', DataField::TYPE_STRING)
+            ->addField('[specifications][references][isbn]', 'setIsbn', DataField::TYPE_STRING)
         ;
 
         return $this;
