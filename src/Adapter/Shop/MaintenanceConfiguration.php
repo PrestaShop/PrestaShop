@@ -37,7 +37,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * @var array<int, string>
      */
-    private const CONFIGURATION_FIELDS = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
+    private const CONFIGURATION_FIELDS = ['enable_shop', 'skip_admin_ip_check', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
@@ -48,6 +48,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE', false, $shopConstraint),
+            'skip_admin_ip_check' => (bool) $this->configuration->get('PS_SKIP_ADMIN_IP_CHECK', false, $shopConstraint),
             'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP', null, $shopConstraint),
             'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT', null, $shopConstraint),
         ];
@@ -62,6 +63,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_SKIP_ADMIN_IP_CHECK', 'skip_admin_ip_check', $configurationInputValues, $shopConstraint);
             $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
             $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
         }
@@ -77,6 +79,7 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
         $resolver = new OptionsResolver();
         $resolver->setDefined(self::CONFIGURATION_FIELDS);
         $resolver->setAllowedTypes('enable_shop', 'bool');
+        $resolver->setAllowedTypes('skip_admin_ip_check', 'bool');
         $resolver->setAllowedTypes('maintenance_ip', ['string', 'null']);
         $resolver->setAllowedTypes('maintenance_text', ['array', 'null']);
 

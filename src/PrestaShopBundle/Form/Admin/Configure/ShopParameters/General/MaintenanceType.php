@@ -83,6 +83,19 @@ class MaintenanceType extends TranslatorAwareType
                 ]
             )
             ->add(
+                'skip_admin_ip_check',
+                SwitchType::class,
+                [
+                    'required' => false,
+                    'multistore_configuration_key' => 'PS_SKIP_ADMIN_IP_CHECK',
+                    'label' => $this->trans('Allow admin access without IP check', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'When enabled, admins will access the shop front-end without storing their IP.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ]
+            )
+            ->add(
                 'maintenance_ip',
                 IpAddressType::class,
                 [
