@@ -109,7 +109,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
       args:
         {
           type: 'suppliers_import',
-          textToCheck: 'Supplier ID;Active (0/1);Name *;Description;Short description;Meta title;'
+          textToCheck: 'Supplier ID;Active (0/1);Name *;Description;Meta title;'
             + 'Meta keywords;Meta description;Image URL',
         },
     },
