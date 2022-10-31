@@ -112,6 +112,6 @@ api_platform:
   version: 1.0.0
   mapping:
     paths:
-      - '%kernel.project_dir%/src/Core/Domain/Hook/Query'
+      - '%kernel.project_dir%/app/config/api_platform'
 
   metadata_backward_compatibility_layer: false
