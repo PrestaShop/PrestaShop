@@ -700,7 +700,8 @@ class AdminGroupsControllerCore extends AdminController
      *
      * @see AdminController::initContent()
      */
-    public function initContent() {
+    public function initContent()
+    {
         if (!Group::isFeatureActive()) {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
             $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
@@ -709,6 +710,7 @@ class AdminGroupsControllerCore extends AdminController
             $this->context->smarty->assign([
                 'content' => $this->content,
             ]);
+
             return;
         }
 
