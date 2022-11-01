@@ -82,7 +82,7 @@
     "chai-string": "^1.5.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.0.3",
-    "eslint-config-prestashop": "0.0.2",
+    "eslint-config-prestashop": "0.1.1",
     "js-image-generator": "^1.0.2",
     "maildev": "^2.0.5",
     "mocha": "^6.1.4",
