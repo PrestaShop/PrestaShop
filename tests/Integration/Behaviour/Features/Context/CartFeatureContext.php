@@ -28,8 +28,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Cart;
 use Context;
-use Tests\Integration\Utility\CartOld;
 use PHPUnit\Framework\Assert;
+use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
