@@ -69,7 +69,6 @@ $(() => {
           }
         }
 
-
         const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
 
         // If amount reduction type is selected update the reduction value symbol

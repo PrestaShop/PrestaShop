@@ -49,7 +49,5 @@ export default class PermissionsRowSelector {
           });
       },
     );
-
-    return {};
   }
 }

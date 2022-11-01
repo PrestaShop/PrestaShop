@@ -48,11 +48,10 @@ export default class ProductTypeSelector {
     });
 
     // On over/out toggle displayed description
-    $(ProductTypeMap.choicesContainer).on('mouseenter', ProductTypeMap.typeChoices,
-      (event: JQuery.TriggeredEvent) => {
-        const overChoice = $(event.currentTarget);
-        this.displayDescription(overChoice.data('description'));
-      },
+    $(ProductTypeMap.choicesContainer).on('mouseenter', ProductTypeMap.typeChoices, (event: JQuery.TriggeredEvent) => {
+      const overChoice = $(event.currentTarget);
+      this.displayDescription(overChoice.data('description'));
+    },
     );
     $(ProductTypeMap.choicesContainer).on('mouseleave', ProductTypeMap.typeChoices, () => {
       this.displaySelectedDescription();

@@ -41,17 +41,17 @@ const ProductCategoryMap = ProductMap.categories;
 export default class CategoryTreeSelector {
   eventEmitter: EventEmitter;
 
-  selectedCategories: Array<Category>
+  selectedCategories: Array<Category>;
 
-  treeCategories: Array<TreeCategory>
+  treeCategories: Array<TreeCategory>;
 
   typeaheadCategories: Array<TypeaheadCategory>;
 
   defaultCategoryId: number;
 
-  modalContentContainer: HTMLElement|null
+  modalContentContainer: HTMLElement|null;
 
-  modal: ModalType|null
+  modal: ModalType|null;
 
   categoryTree: HTMLElement|null;
 
