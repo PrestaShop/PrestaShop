@@ -409,6 +409,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.shipping_preferences.package:
+    class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PackageType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.shipping_preferences.carrier_options:
     class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\CarrierOptionsType'
     parent: 'form.type.translatable.aware'

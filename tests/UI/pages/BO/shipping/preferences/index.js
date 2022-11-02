@@ -13,6 +13,11 @@ class Preferences extends BOBasePage {
     this.handlingChargesInput = '#handling_shipping_handling_charges';
     this.saveHandlingButton = `${this.handlingForm} button`;
 
+    // Package form selectors
+    this.packageForm = '#package';
+    this.packageWeightInput = '#package_package_weight';
+    this.savePackageButton = `${this.packageForm} button`;
+
     // Carrier options selectors
     this.carrierOptionForm = '#carrier-options';
     this.defaultCarrierSelect = '#carrier-options_default_carrier';
@@ -34,6 +39,22 @@ class Preferences extends BOBasePage {
 
     // Save handling form and return successful message
     await this.clickAndWaitForNavigation(page, this.saveHandlingButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Package methods */
+
+  /**
+   * Set package weight button
+   * @param page {Page} Browser tab
+   * @param value {String} The handling charges value
+   * @returns {Promise<string>}
+   */
+  async setPackageWeight(page, value) {
+    await this.setValue(page, this.packageWeightInput, value);
+
+    // Save package form and return successful message
+    await this.clickAndWaitForNavigation(page, this.savePackageButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

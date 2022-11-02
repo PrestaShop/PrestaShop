@@ -210,3 +210,11 @@ tools/build/releases/*
 # Docker configuration
 install.lock
 docker-compose.override.yml
+
+# PhpStorm file
+.idea/
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride

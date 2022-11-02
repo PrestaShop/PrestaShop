@@ -35,6 +35,11 @@
     {# Block for "Carrier options" fieldset #}
     {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
   {{ form_end(carrierOptionsForm) }}
+
+  {{ form_start(packageForm, {attr : {class: 'form', id: 'configuration_package_form'}, action: path('admin_shipping_preferences_package_save') }) }}
+  {# Block for "Package" fieldset #}
+  {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_package.html.twig' %}
+  {{ form_end(packageForm) }}
 {% endblock %}
 {% block javascripts %}
   {{ parent() }}

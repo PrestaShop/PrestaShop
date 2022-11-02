@@ -204,6 +204,19 @@ class CarrierCore extends ObjectModel
     }
 
     /**
+     * @param float $total_weight
+     * @return float
+     */
+    public static function adjustTotalWeight(float $total_weight): float
+    {
+        $package_weight = (float) Configuration::get('PS_PACKAGE_WEIGHT');
+        if ($package_weight > 0) {
+            $total_weight += $package_weight;
+        }
+        return $total_weight;
+    }
+
+    /**
      * Adds current Carrier as a new Object to the database.
      *
      * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
@@ -285,6 +298,8 @@ class CarrierCore extends ObjectModel
      */
     public function getDeliveryPriceByWeight($total_weight, $id_zone)
     {
+        $total_weight = self::adjustTotalWeight($total_weight);
+
         $id_carrier = (int) $this->id;
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight[$cache_key])) {
@@ -324,6 +339,7 @@ class CarrierCore extends ObjectModel
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
+        $total_weight = self::adjustTotalWeight($total_weight);
         $id_carrier = (int) $id_carrier;
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight2[$cache_key])) {
