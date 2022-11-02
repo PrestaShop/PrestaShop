@@ -88,7 +88,7 @@ class MaintenanceType extends TranslatorAwareType
                 [
                     'required' => false,
                     'multistore_configuration_key' => 'PS_MAINTENANCE_ALLOW_ADMINS',
-                    'label' => $this->trans('Allow admin access without IP check', 'Admin.Shopparameters.Feature'),
+                    'label' => $this->trans('Enable store for logged-in employees', 'Admin.Shopparameters.Feature'),
                     'help' => $this->trans(
                         'When enabled, admins will access the shop front-end without storing their IP.',
                         'Admin.Shopparameters.Help'
