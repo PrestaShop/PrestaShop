@@ -31,7 +31,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const invoiceData = new InvoiceOptionFaker();
+const invoiceData = new InvoiceOptionFaker({legalFreeText: 'Legal free text'});
 let fileName;
 let filePath;
 const orderByCustomerData = {

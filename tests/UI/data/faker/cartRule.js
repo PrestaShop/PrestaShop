@@ -74,6 +74,9 @@ class CartRuleData {
     /** @type {boolean} True to enable customer group on the cart rule */
     this.countrySelection = cartRuleToCreate.countrySelection || false;
 
+    /** @type {number} Country id to remove in country selection */
+    this.countryIDToRemove = cartRuleToCreate.countryIDToRemove || 8;
+
     /** @type {boolean} True to enable carrier restriction on the cart rule */
     this.carrierRestriction = cartRuleToCreate.carrierRestriction || false;
 

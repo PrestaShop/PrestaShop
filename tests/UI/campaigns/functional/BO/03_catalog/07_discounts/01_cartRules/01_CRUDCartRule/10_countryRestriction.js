@@ -8,13 +8,11 @@ const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import common tests
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule.js');
-const {removeCountryQuickAccessTest} = require('@commonTests/BO/international/removeCountryQuickAccess.js');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-const addNewQuickAccessPage = require('@pages/BO/quickAccess/add');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
 
@@ -41,11 +39,12 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-const cartRuleCode = new CartRuleFaker(
+const cartRule = new CartRuleFaker(
   {
     name: 'addCartRuleName',
     code: '4QABV6L3',
     countrySelection: true,
+    countryIDToRemove: countries.france.id,
     discountType: 'Amount',
     discountPercent: 100,
   },
@@ -62,11 +61,11 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create a Cart Rules with Country Restriction', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
 
+  describe(`Enable the country '${countries.unitedStates.name}'`, async () => {
     it('should go to \'International > Locations\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
@@ -106,34 +105,31 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
       await expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.afghanistan.name);
+      const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
       await expect(textColumn).to.equal(countries.unitedStates.name);
     });
 
-    it('should check that this country is not activated', async function () {
+    it('should enable the country', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTheCountryStatus', baseContext);
 
-      const countryStatus = await countriesPage.getCountryStatus(page);
-      await expect(countryStatus).to.be.false;
+      await countriesPage.setCountryStatus(page, 1, true);
+
+      const currentStatus = await countriesPage.getCountryStatus(page, 1);
+      await expect(currentStatus).to.be.true;
     });
 
-
-    it('should add current page to Quick access', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addCurrentPageToQuickAccess', baseContext);
-
-      await addNewQuickAccessPage.reloadPage(page);
-
-      const validationMessage = await addNewQuickAccessPage.addCurrentPageToQuickAccess(page, 'New Quick Access');
-      await expect(validationMessage).to.contains(addNewQuickAccessPage.successfulUpdateMessage);
-    });
-
-    it('should Reset Filter', async function () {
+    it('should reset filter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterCountry', baseContext);
 
       await countriesPage.resetFilter(page);
+
+      const numberOfCountriesAfterReset = await countriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCountriesAfterReset).to.be.at.least(1);
     });
+  });
 
 
+  describe('Create new cart rule with country restriction', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
@@ -159,10 +155,12 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     it('should create cart rule', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
 
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleCode);
+      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRule);
       await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
+  });
 
+  describe('Check the created discount in FO', async () => {
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop1', baseContext);
 
@@ -210,7 +208,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
         baseContext,
       );
 
-      await cartPage.addPromoCode(page, cartRuleCode.code);
+      await cartPage.addPromoCode(page, cartRule.code);
 
       const chooseDeliveryAddressNotification = await cartPage.getAlertWarningForPromoCode(page);
       await expect(chooseDeliveryAddressNotification).to.equal(cartPage.alertChooseDeliveryAddressWarningtext);
@@ -240,11 +238,11 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should confirm adress after signIn', async function () {
+    it('should confirm address after signIn', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'chooseAndConfirmAdressStep',
+        'chooseAndConfirmAddressStep',
         baseContext,
       );
 
@@ -262,12 +260,15 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
         baseContext,
       );
 
-      await checkoutPage.addPromoCode(page, cartRuleCode.code);
+      await checkoutPage.addPromoCode(page, cartRule.code);
 
       const cartRuleName = await cartPage.getCartRuleName(page, 1);
-      await expect(cartRuleName).to.equal(cartRuleCode.name);
+      await expect(cartRuleName).to.equal(cartRule.name);
     });
+  });
 
+
+  describe('Delete the shopping cart', async () => {
     it('should remove the discount', async function () {
       await testContext.addContextItem(
         this,
@@ -280,7 +281,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(isDeleteIconNotVisible, 'The discount is not removed').to.be.true;
     });
 
-    it('should click on the logo of the shop', async function () {
+    it('should go to Home page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -321,7 +322,5 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
   });
 
   // post condition : delete cart rule
-  deleteCartRuleTest(cartRuleCode.name, `${baseContext}_postTest_1`);
-  // post condition : delete country from quick access
-  removeCountryQuickAccessTest(`${baseContext}_postTest_2`);
+  deleteCartRuleTest(cartRule.name, `${baseContext}_postTest_1`);
 });
