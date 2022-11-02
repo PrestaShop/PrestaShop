@@ -17,8 +17,8 @@ class MyProfile extends EmployeeBasePage {
     this.successfulUpdateMessageFR = 'Mise à jour réussie';
     this.errorInvalidFirstNameMessage = 'The "First name" field is invalid.';
     this.errorInvalidLastNameMessage = 'The "Last name" field is invalid.';
-    this.errorInvalidFormatImageMessage = 'An unexpected error occurred. [PrestaShop\\PrestaShop\\Core\\Image\\'
-      + 'Uploader\\Exception\\UploadedImageConstraintException code 2]';
+    this.errorInvalidFormatImageMessage = 'Image format not recognized, allowed formats are: image/gif, image/jpg, '
+      + 'image/jpeg, image/pjpeg, image/png, image/x-png, image/webp, image/svg+xml, image/svg';
 
     // Selectors
     this.passwordButton = '#employee_change_password_change_password_button';
