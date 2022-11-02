@@ -1973,8 +1973,6 @@ class AdminControllerCore extends Controller
      */
     public function initHeader()
     {
-        header('Cache-Control: no-store, no-cache');
-
         $this->context->smarty->assign([
             'table' => $this->table,
             'current' => self::$currentIndex,
@@ -2731,6 +2729,8 @@ class AdminControllerCore extends Controller
      */
     public function init()
     {
+        header('Cache-Control: no-store, no-cache');
+
         Hook::exec(
             'actionAdminControllerInitBefore',
             [
