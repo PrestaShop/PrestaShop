@@ -737,8 +737,8 @@ class FrontControllerCore extends Controller
             $this->maintenance = true;
 
             $is_admin = (int) (new Cookie('psAdmin'))->id_employee;
-            $skip_admin_ip_check = (int) Configuration::get('PS_SKIP_ADMIN_IP_CHECK');
-            if ($is_admin && $skip_admin_ip_check) {
+            $maintenance_allow_admins = (int) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
+            if ($is_admin && $maintenance_allow_admins) {
                 return;
             }
 

@@ -64,7 +64,7 @@
           <p class="text-left">
               {l s='To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' d='Admin.Navigation.Notification'}
           </p>
-          {if isset($maintenance_skip_admin_ip_check) && $maintenance_skip_admin_ip_check}
+          {if isset($maintenance_allow_admins) && $maintenance_allow_admins}
             <p class="text-left">
               {l s='Admins can access the shop front-end without storing their IP.' d='Admin.Navigation.Notification'}
             </p>
@@ -80,7 +80,7 @@
              href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons"
-              style="{if isset($maintenance_skip_admin_ip_check) && $maintenance_skip_admin_ip_check}color: var(--green);{/if}"
+              style="{if isset($maintenance_allow_admins) && $maintenance_allow_admins}color: var(--green);{/if}"
             >build</i>
             <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
