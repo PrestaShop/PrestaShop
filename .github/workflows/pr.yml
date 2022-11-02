@@ -24,7 +24,7 @@ jobs:
           EOF
           )
           if [[ $description =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
-              echo ::set-output name=isMerge::true
+              echo "isMerge=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Block Merge Commits

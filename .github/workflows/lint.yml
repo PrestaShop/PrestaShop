@@ -29,6 +29,7 @@ jobs:
 
       - name: BackOffice Theme `default`
         run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
+
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
@@ -60,6 +61,7 @@ jobs:
 
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
+
   yamllint_sf:
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
@@ -78,8 +80,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
@@ -100,6 +101,7 @@ jobs:
 
       - name: Run Lint Yaml on `.t9n.yml`
         run: php bin/console lint:yaml .t9n.yml
+
   yamllint:
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
@@ -129,6 +131,7 @@ jobs:
 
       - name: yamllint on `.t9n.yml`
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml .t9n.yml
+
   twiglint:
     name: Twig Lint
     runs-on: ubuntu-latest
@@ -147,8 +150,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
