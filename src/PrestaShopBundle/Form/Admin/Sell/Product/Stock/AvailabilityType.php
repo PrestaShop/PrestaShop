@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -38,6 +40,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class AvailabilityType extends TranslatorAwareType
 {
@@ -90,6 +93,19 @@ class AvailabilityType extends TranslatorAwareType
                 'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'modify_all_shops' => true,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                        new Length([
+                            'max' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH]
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -99,6 +115,19 @@ class AvailabilityType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'modify_all_shops' => true,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                        new Length([
+                            'max' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH]
+                            ),
+                        ]),
+                    ],
+                ],
             ])
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
