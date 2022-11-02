@@ -60,11 +60,8 @@ class AddCartRule extends BOBasePage {
 
     // Restrictions
     // Country Group Selection
-    this.countrySelection = '#country_restriction';
-    this.countryGroupSelection = '#country_select_2';
-    this.itemCountrySelection = item => `${this.countryGroupSelection} option:nth-child(${item})`;
-    this.firstCountrySelection = this.itemCountrySelection(1);
-    this.secondCountrySelection = this.itemCountrySelection(2);
+    this.countryRestriction = '#country_restriction';
+    this.countrySelection = '#country_select_2';
     this.countryGroupRemoveButton = '#country_select_remove';
     this.countryGroupAddButton = '#country_select_add';
 
@@ -193,24 +190,16 @@ class AddCartRule extends BOBasePage {
 
     // Choose the country selection
     if (cartRuleData.countrySelection) {
-      await page.click(this.countrySelection);
-      await page.click(this.firstCountrySelection);
+      await this.setChecked(page, this.countryRestriction);
+      await this.selectByValue(page, this.countrySelection, cartRuleData.countryIDToRemove);
       await page.click(this.countryGroupRemoveButton);
     }
-
 
     // Set Customer Group Selection
     if (cartRuleData.customerGroupSelection) {
       await this.setChecked(page, this.customerGroupRestriction);
       await page.click(this.customerGroupCustomer);
       await page.click(this.customerGroupRemoveButton);
-    }
-
-    // Choose the country selection
-    if (cartRuleData.countrySelection) {
-      await page.click(this.countrySelection);
-      await page.click(this.firstCountrySelection);
-      await page.click(this.countryGroupRemoveButton);
     }
 
     // Fill minimum amount values
