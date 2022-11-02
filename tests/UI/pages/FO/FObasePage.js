@@ -436,7 +436,7 @@ class FOBasePage extends CommonPage {
         selector = this.newProductsLink;
         break;
 
-      case 'Best sales':
+      case 'Best sellers':
         selector = this.bestSalesLink;
         break;
 
