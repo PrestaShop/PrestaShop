@@ -290,6 +290,18 @@ class CommonPage {
   }
 
   /**
+   * Select option by value
+   * @param page {Page} Browser tab
+   * @param selector {string} String to locate the select
+   * @param valueToSelect {number} Value to select
+   * @param force {boolean} Forcing the value of the select
+   * @returns {Promise<void>}
+   */
+  async selectByValue(page, selector, valueToSelect, force = false) {
+    await page.selectOption(selector, {value: valueToSelect.toString()}, {force});
+  }
+
+  /**
    * To get a number from text
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element
