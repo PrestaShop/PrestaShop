@@ -344,6 +344,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\PricesAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateSeoFeatureContext
@@ -489,6 +490,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdatePricesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\PricesAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateSeoFeatureContext

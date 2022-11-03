@@ -35,10 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
+class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I update product :productReference prices for shop :shopReference with following information:
@@ -97,29 +98,6 @@ class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
     }
 
     /**
-     * @Then product :productReference should have following prices information for shops :shopReference:
-     *
-     * @param string $productReference
-     * @param string $shopReferences
-     * @param TableNode $tableNode
-     */
-    public function assertPriceFieldsForShops(string $productReference, string $shopReferences, TableNode $tableNode): void
-    {
-        $this->performAssertPriceFieldsForShops($productReference, $shopReferences, $tableNode);
-    }
-
-    /**
-     * @Then product :productReference should have following prices information:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function assertPriceFields(string $productReference, TableNode $tableNode): void
-    {
-        $this->performAssertPriceFields($productReference, $tableNode);
-    }
-
-    /**
      * @param string $productReference
      * @param TableNode $table
      * @param ShopConstraint $shopConstraint
@@ -157,7 +135,7 @@ class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
         }
 
         try {
-            $this->getQueryBus()->handle($command);
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
         }

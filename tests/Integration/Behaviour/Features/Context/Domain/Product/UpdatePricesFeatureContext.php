@@ -34,11 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractUpdatePricesFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
+class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I update product :productReference prices for shop :shopReference with following information:
@@ -94,29 +93,6 @@ class UpdatePricesFeatureContext extends AbstractUpdatePricesFeatureContext
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
-    }
-
-    /**
-     * @Then product :productReference should have following prices information for shops :shopReference:
-     *
-     * @param string $productReference
-     * @param string $shopReferences
-     * @param TableNode $tableNode
-     */
-    public function assertPriceFieldsForShops(string $productReference, string $shopReferences, TableNode $tableNode): void
-    {
-        $this->performAssertPriceFieldsForShops($productReference, $shopReferences, $tableNode);
-    }
-
-    /**
-     * @Then product :productReference should have following prices information:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function assertPriceFields(string $productReference, TableNode $tableNode): void
-    {
-        $this->performAssertPriceFields($productReference, $tableNode);
     }
 
     /**
