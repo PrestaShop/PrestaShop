@@ -1,4 +1,4 @@
-{# **
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +21,9 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * #}
+ *#}
 
-{% if column.options.max_displayed_characters > 0 %}
+{% if column.options.max_displayed_characters > 0 and record[column.options.field]|length > column.options.max_displayed_characters %}
   {{ record[column.options.field]|slice(0, column.options.max_displayed_characters) }}&mldr;
 {% else %}
   {{ record[column.options.field] }}
