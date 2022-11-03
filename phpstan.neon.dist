@@ -20,6 +20,8 @@ parameters:
 		- Order
 		- OrderInvoice
 		- Product
+	dynamicConstantNames:
+		- _PS_ALLOW_MULTI_STATEMENTS_QUERIES_
 
 
 services:

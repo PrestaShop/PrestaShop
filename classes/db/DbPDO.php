@@ -89,6 +89,7 @@ class DbPDOCore extends Db
                 PDO::ATTR_TIMEOUT => $timeout,
                 PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+                PDO::MYSQL_ATTR_MULTI_STATEMENTS => _PS_ALLOW_MULTI_STATEMENTS_QUERIES_,
             ]
         );
     }
