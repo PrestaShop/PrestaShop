@@ -23,15 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
 {
@@ -44,10 +45,12 @@ class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
     public function updateProductDetails(string $productReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
-        $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductDetailsCommand($productId);
+            $command = new UpdateProductCommand(
+                $this->getSharedStorage()->get($productReference),
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
             $this->fillCommand($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
@@ -58,10 +61,10 @@ class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param array $data
-     * @param UpdateProductDetailsCommand $command
+     * @param array<string, mixed> $data
+     * @param UpdateProductCommand $command
      */
-    private function fillCommand(array $data, UpdateProductDetailsCommand $command): void
+    private function fillCommand(array $data, UpdateProductCommand $command): void
     {
         if (isset($data['isbn'])) {
             $command->setIsbn($data['isbn']);
