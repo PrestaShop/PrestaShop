@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
+/**
+ * Context for product assertions related to Details related properties
+ */
 class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
 {
     /**
