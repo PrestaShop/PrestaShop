@@ -150,6 +150,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         order_return_state:
           paths:
@@ -337,6 +338,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
@@ -480,7 +482,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateBasicInformationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateDetailsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateOptionsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
