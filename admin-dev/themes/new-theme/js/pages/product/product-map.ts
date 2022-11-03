@@ -54,6 +54,7 @@ export default {
   create: {
     newProductButton: '.new-product-button',
     createModalSelector: '#create_product_type',
+    form: 'form.product-form',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
