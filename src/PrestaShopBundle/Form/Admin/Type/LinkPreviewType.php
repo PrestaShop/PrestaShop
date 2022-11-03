@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This form type is used to display a text value without providing an interactive input to edit it.
+ * This form type is used to display button.
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * a data in a form.
  */
@@ -67,7 +67,7 @@ class LinkPreviewType extends HiddenType
             'error_bubbling' => true,
             'compound' => false,
             'required' => false,
-            'button_label' => '', // Start automatically TinyMCE
+            'button_label' => '',
         ]);
         $resolver->setAllowedTypes('button_label', 'string');
     }

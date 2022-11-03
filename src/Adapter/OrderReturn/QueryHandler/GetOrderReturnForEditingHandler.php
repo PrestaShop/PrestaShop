@@ -80,13 +80,12 @@ class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandler
      */
     public function handle(GetOrderReturnForEditing $query): OrderReturnForEditing
     {
-        $orderReturnId = $query->getOrderReturnId();
-        $orderReturn = $this->orderReturnRepository->get($orderReturnId);
+        $orderReturn = $this->orderReturnRepository->get($query->getOrderReturnId());
         $customer = $this->customerRepository->get(new CustomerId((int) $orderReturn->id_customer));
         $order = $this->orderRepository->get(new OrderId((int) $orderReturn->id_order));
 
         return new OrderReturnForEditing(
-            $orderReturnId->getValue(),
+            $query->getOrderReturnId()->getValue(),
             (int) $orderReturn->id_customer,
             $customer->firstname,
             $customer->lastname,
