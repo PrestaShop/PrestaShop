@@ -49,4 +49,4 @@ Thank you for your help in making PrestaShop even better!
 [7]: https://opensource.org/licenses/OSL-3.0
 [8]: https://opensource.org/licenses/AFL-3.0
 [9]: https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
-[10]: https://build.prestashop.com/news/a-definition-of-the-good-first-issue-label
+[10]: https://build.prestashop-project.org/news/a-definition-of-the-good-first-issue-label

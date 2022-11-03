@@ -25,7 +25,7 @@
  */
 
 $documentationLink = 'https://devdocs.prestashop-project.org/';
-$blogLink = 'https://build.prestashop.com/';
+$blogLink = 'https://build.prestashop-project.org/';
 
 return [
     'links' => [
@@ -36,7 +36,7 @@ return [
         $blogLink => $this->translator->trans('Blog', array(), 'Install'),
     ],
     'footer.links' => [
-        'http://prestashop-project.org/' => 'PrestaShop Project',
+        'https://www.prestashop-project.org' => 'PrestaShop Project',
         $documentationLink => $this->translator->trans('Documentation', array(), 'Install'),
     ],
 ];

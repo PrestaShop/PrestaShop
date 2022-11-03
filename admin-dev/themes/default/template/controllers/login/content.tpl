@@ -171,7 +171,7 @@
 
 	<div id="login-footer">
 		<p class="text-center text-muted">
-			<a href="https://www.prestashop.com/" onclick="return !window.open(this.href);">
+			<a href="https://www.prestashop-project.org" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
 		</p>

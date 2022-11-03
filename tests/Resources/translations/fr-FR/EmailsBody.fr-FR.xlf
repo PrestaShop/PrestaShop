@@ -2004,7 +2004,7 @@ File: modules/ps_emailgenerator/templates/core/employee_password.php:24</note>
   <file original="modules/ps_emailgenerator/templates/core/footer.php" source-language="en" target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="e1c65ac2c128f4835c77d0c7aefccb7e" approved="yes">
-        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></source>
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="https://www.prestashop-project.org">PrestaShop</a>]]></source>
         <target state="final"><![CDATA[<a href="{shop_url}">{shop_name}</a> propulsé par <a href="http://www.prestashop.com/">PrestaShop™</a>]]></target>
         <note>Context:
 File: modules/ps_emailgenerator/templates/core/footer.php:6</note>

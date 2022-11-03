@@ -16,4 +16,4 @@ Important Security Tips:
 
 You can now place orders on our shop: [{shop_name}]({shop_url})
 
-[{shop_name}]({shop_url}) powered by [PrestaShop™](http://www.prestashop.com/)
+[{shop_name}]({shop_url}) powered by [PrestaShop™](https://www.prestashop-project.org)

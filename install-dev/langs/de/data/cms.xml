@@ -11,7 +11,7 @@
     <meta_title>Rechtliche Hinweise</meta_title>
     <meta_description>Rechtliche Hinweise</meta_description>
     <meta_keywords>Hinweise, rechtlich, Gutscheine</meta_keywords>
-    <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Konzept und Gestaltung:&lt;/p&gt;&lt;p&gt;Diese Webseite wurde hergestellt unter Verwendung von &lt;a href="http://www.prestashop.com"&gt;PrestaShop&lt;/a&gt;&amp;trade; open-source software.&lt;/p&gt;</content>
+    <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Konzept und Gestaltung:&lt;/p&gt;&lt;p&gt;Diese Webseite wurde hergestellt unter Verwendung von &lt;a href="https://www.prestashop-project.org"&gt;PrestaShop&lt;/a&gt;&amp;trade; open-source software.&lt;/p&gt;</content>
     <link_rewrite>rechtliche-hinweise</link_rewrite>
   </cms>
   <cms id="Terms_and_conditions_of_use">

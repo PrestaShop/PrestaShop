@@ -377,7 +377,7 @@ class TabCore extends ObjectModel
         ];
 
         if (in_array($className, $legacyClassNames)) {
-            @trigger_error($className . ' is a deprecated tab since version 1.7.0 and "Default" will be removed in 1.7.1.. Upgrade module using the docs: http://build.prestashop.com/news/how-we-reorganized-main-menu-prestashop-1.7/.', E_USER_DEPRECATED);
+            @trigger_error($className . ' is a deprecated tab since version 1.7.0 and "Default" will be removed in 1.7.1.. Upgrade module using the docs: http://build.prestashop-project.org/news/how-we-reorganized-main-menu-prestashop-1.7/.', E_USER_DEPRECATED);
             $className = 'DEFAULT';
         }
 

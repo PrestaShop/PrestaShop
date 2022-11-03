@@ -28,7 +28,7 @@ The 'develop' branch of this repository contains the work in progress source cod
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
-The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop.com/tag/1.7/).
+The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7th, 2016. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/1.7/).
 
 Server configuration
 --------
@@ -128,7 +128,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
-[download]: https://www.prestashop.com/en/download
+[download]: https://www.prestashop-project.org
 [forums]: https://www.prestashop.com/forums/
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com

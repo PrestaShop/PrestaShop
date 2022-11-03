@@ -78,7 +78,7 @@ Essential links about PrestaShop:
 * User Guide: https://docs.prestashop-project.org/1.7-documentation/user-guide
 * Tech docs (modules & themes): https://devdocs.prestashop-project.org/
 * Official blog: https://www.prestashop.com/en/blog
-* Developer blog: https://build.prestashop.com/
+* Developer blog: https://build.prestashop-project.org/
 * Get community support: https://www.prestashop.com/forums/
 * Contribute with code: https://github.com/PrestaShop/PrestaShop
 * Contribute with translation: https://crowdin.net/project/prestashop-official

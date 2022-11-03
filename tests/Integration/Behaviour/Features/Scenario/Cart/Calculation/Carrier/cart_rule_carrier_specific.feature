@@ -77,7 +77,6 @@ Feature: Cart calculation with carrier specific cart rules
     Then my cart total should be 0.0 tax included
     Then my cart total using previous calculation method should be 0.0 tax included
 
-  # following is testing the bug http://forge.prestashop.com/browse/BOOM-3307
   Scenario: one product in cart, quantity 1, carrier 2
     Given I have an empty default cart
     Given there is a product in the catalog named "product1" with a price of 19.812 and 1000 items in stock
