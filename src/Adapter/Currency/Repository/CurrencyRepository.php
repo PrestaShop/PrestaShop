@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
 
 /**
  * Methods to access data source of Currency
@@ -68,5 +69,32 @@ class CurrencyRepository extends AbstractObjectModelRepository
         );
 
         return $currency;
+    }
+
+    /**
+     * @param CurrencyId $currencyId
+     *
+     * @return string|null
+     */
+    public function findIsoCode(CurrencyId $currencyId): ?string
+    {
+        try {
+            $isoCode = Currency::getIsoCodeById($currencyId->getValue());
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get currency Iso code by id [%s]',
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
+
+        if (empty($isoCode)) {
+            return null;
+        }
+
+        return $isoCode;
     }
 }

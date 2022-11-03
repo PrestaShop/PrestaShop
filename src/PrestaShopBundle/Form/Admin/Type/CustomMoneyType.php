@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Currency;
+use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -53,15 +54,23 @@ class CustomMoneyType extends AbstractTypeExtension
     private $defaultCurrencyId;
 
     /**
+     * @var CurrencyRepository
+     */
+    private $currencyRepository;
+
+    /**
      * @param Locale $locale
      * @param int $defaultCurrencyId
+     * @param CurrencyRepository $currencyRepository
      */
     public function __construct(
         Locale $locale,
-        int $defaultCurrencyId
+        int $defaultCurrencyId,
+        CurrencyRepository $currencyRepository
     ) {
         $this->locale = $locale;
         $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->currencyRepository = $currencyRepository;
     }
 
     public static function getExtendedTypes(): iterable
@@ -74,14 +83,12 @@ class CustomMoneyType extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $defaultCurrencyIso = Currency::getIsoCodeById($this->defaultCurrencyId);
-
         $resolver->setDefaults([
             'precision' => null,
             'scale' => self::PRESTASHOP_DECIMALS,
             'grouping' => false,
             'divisor' => 1,
-            'currency' => !empty($defaultCurrencyIso) ? $defaultCurrencyIso : 'EUR',
+            'currency' => $this->currencyRepository->findIsoCode(new CurrencyId($this->defaultCurrencyId)) ?: 'EUR',
             'compound' => false,
         ]);
 
