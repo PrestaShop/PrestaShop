@@ -60,7 +60,7 @@ jobs:
       ADMIN_PASSWD: 'Correct Horse Battery Staple'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -74,7 +74,7 @@ jobs:
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -100,7 +100,7 @@ jobs:
           FILENAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"
           mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR_PATH }}/${FILENAME}.json
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         name: Upload report
         with:
           name: reports_${{ env.GH_BRANCH }}
@@ -126,19 +126,19 @@ jobs:
       COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         name: Download reports
         with:
           name: reports_${{ env.GH_BRANCH }}
           path: ${{ env.REPORTS_DIR }}
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
 

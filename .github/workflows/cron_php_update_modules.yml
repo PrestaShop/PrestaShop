@@ -15,7 +15,7 @@ jobs:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist
