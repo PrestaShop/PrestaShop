@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Currency;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -47,12 +48,20 @@ class CustomMoneyType extends AbstractTypeExtension
     private $locale;
 
     /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
      * @param Locale $locale
+     * @param int $defaultCurrencyId
      */
     public function __construct(
-        Locale $locale
+        Locale $locale,
+        int $defaultCurrencyId
     ) {
         $this->locale = $locale;
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     public static function getExtendedTypes(): iterable
@@ -65,12 +74,14 @@ class CustomMoneyType extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $defaultCurrencyIso = Currency::getIsoCodeById($this->defaultCurrencyId);
+
         $resolver->setDefaults([
             'precision' => null,
             'scale' => self::PRESTASHOP_DECIMALS,
             'grouping' => false,
             'divisor' => 1,
-            'currency' => 'EUR',
+            'currency' => !empty($defaultCurrencyIso) ? $defaultCurrencyIso : 'EUR',
             'compound' => false,
         ]);
 
