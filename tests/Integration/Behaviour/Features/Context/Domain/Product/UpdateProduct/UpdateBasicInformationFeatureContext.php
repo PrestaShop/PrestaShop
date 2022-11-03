@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Context for updating product basic information properties using single UpdateProductCommand
+ * Context for updating product basic information properties using UpdateProductCommand
  *
  * @see UpdateProductCommand
  */

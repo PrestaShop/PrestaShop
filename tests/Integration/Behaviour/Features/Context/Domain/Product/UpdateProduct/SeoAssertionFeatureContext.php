@@ -34,24 +34,18 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 /**
- * This abstract class was introduced during UpdateProductCommand unification process,
- * and which idea is to remove multiple sub-commands and use single UpdateProductCommand instead.
- * This abstract context allows sharing assertions which and some other common methods for both implementations during the transition.
- *
- * @see UpdateProductCommand
- * @see UpdateProductHandlerInterface
- *
- * @todo: need to check if this abstract class is still needed when UpdateProductCommand is fully finished,
- *        because one of the contexts that uses it will be deleted, therefore leaving this abstract class useless.
+ * Context for product assertions related to SEO properties
  */
-abstract class AbstractUpdateSeoFeatureContext extends AbstractProductFeatureContext
+class SeoAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @Then product :productReference should have following seo options for shops :shopReferences:
+     *
      * @param string $productReference
      * @param string $shopReferences
      * @param TableNode $tableNode
      */
-    protected function performAssertSeoOptionsForShops(
+    public function assertSeoOptionsForShops(
         string $productReference,
         string $shopReferences,
         TableNode $tableNode
@@ -66,10 +60,12 @@ abstract class AbstractUpdateSeoFeatureContext extends AbstractProductFeatureCon
     }
 
     /**
+     * @Then product :productReference should have following seo options:
+     *
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    protected function performAssertSeoOptionsForDefaultShop(string $productReference, TableNode $tableNode): void
+    public function assertSeoOptionsForDefaultShop(string $productReference, TableNode $tableNode): void
     {
         $this->assertSeoOptions(
             $productReference,
@@ -79,9 +75,11 @@ abstract class AbstractUpdateSeoFeatureContext extends AbstractProductFeatureCon
     }
 
     /**
+     * @Then product :productReference should not have a redirect target
+     *
      * @param string $productReference
      */
-    public function performAssertHasNoRedirectTargetId(string $productReference)
+    public function assertHasNoRedirectTargetId(string $productReference)
     {
         $productForEditing = $this->getProductForEditing($productReference);
 

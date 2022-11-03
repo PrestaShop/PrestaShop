@@ -39,6 +39,11 @@ use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductF
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
+/**
+ * Context for updating product prices by using UpdateProductCommand
+ *
+ * @see UpdateProductCommand
+ */
 class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 {
     /**

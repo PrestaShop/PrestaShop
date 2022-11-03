@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
- * Context for updating product options properties using single UpdateProductCommand
+ * Context for updating product options properties using UpdateProductCommand
  *
  * @see UpdateProductCommand
  */
