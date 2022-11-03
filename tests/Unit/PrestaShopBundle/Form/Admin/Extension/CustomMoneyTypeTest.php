@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Extension;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 use PrestaShopBundle\Form\Admin\Type\CustomMoneyType;
@@ -36,6 +37,7 @@ use Symfony\Component\Form\FormView;
 
 class CustomMoneyTypeTest extends TestCase
 {
+    private const DEFAULT_CURRENCY_ID = 1;
     /**
      * @dataProvider getDataForTestBuildViewAssignsCorrectMoneyPatternVariable
      *
@@ -50,7 +52,13 @@ class CustomMoneyTypeTest extends TestCase
         string $cldrPattern,
         string $expectedPattern
     ): void {
-        $customMoneyType = new CustomMoneyType($this->mockLocale($cldrPattern, $symbol));
+        $currencyRepository = $this->createMock(CurrencyRepository::class);
+        $currencyRepository->method('findIsoCode')->willReturn($currencyIso);
+        $customMoneyType = new CustomMoneyType(
+            $this->mockLocale($cldrPattern, $symbol),
+            self::DEFAULT_CURRENCY_ID,
+            $currencyRepository
+        );
         $formView = $this->mockFormView();
 
         $customMoneyType->buildView($formView, $this->mockFormInterface(), [
