@@ -54,7 +54,7 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
      * @param int $contextShopId
      */
     public function __construct(
-        $contextShopId,
+        int $contextShopId,
         PatternTransformer $patternTransformer
     ) {
         $this->contextShopId = $contextShopId;

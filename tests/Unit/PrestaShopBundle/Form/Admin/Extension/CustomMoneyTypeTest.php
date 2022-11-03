@@ -53,7 +53,7 @@ class CustomMoneyTypeTest extends TestCase
         string $expectedPattern
     ): void {
         $currencyRepository = $this->createMock(CurrencyRepository::class);
-        $currencyRepository->method('findIsoCode')->willReturn($currencyIso);
+        $currencyRepository->method('getIsoCode')->willReturn($currencyIso);
         $customMoneyType = new CustomMoneyType(
             $this->mockLocale($cldrPattern, $symbol),
             self::DEFAULT_CURRENCY_ID,

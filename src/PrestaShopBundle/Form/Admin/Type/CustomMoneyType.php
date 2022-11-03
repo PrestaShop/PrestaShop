@@ -88,7 +88,7 @@ class CustomMoneyType extends AbstractTypeExtension
             'scale' => self::PRESTASHOP_DECIMALS,
             'grouping' => false,
             'divisor' => 1,
-            'currency' => $this->currencyRepository->findIsoCode(new CurrencyId($this->defaultCurrencyId)) ?: 'EUR',
+            'currency' => $this->currencyRepository->getIsoCode(new CurrencyId($this->defaultCurrencyId)) ?: 'EUR',
             'compound' => false,
         ]);
 
