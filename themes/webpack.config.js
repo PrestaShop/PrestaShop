@@ -36,6 +36,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname),
       filename: 'core.js',
+      chunkFilename: '[chunkhash]-chunk.js',
     },
     module: {
       rules: [

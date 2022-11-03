@@ -47,6 +47,8 @@ class ShoppingCarts extends BOBasePage {
     this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
     this.tableColumnOnline = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnActions = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a.btn-default`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -326,6 +328,16 @@ class ShoppingCarts extends BOBasePage {
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /**
+   * Go to view page
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<void>}
+   */
+  async goToViewPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 }
 

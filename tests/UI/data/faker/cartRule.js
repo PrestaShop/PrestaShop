@@ -71,6 +71,18 @@ class CartRuleData {
     /** @type {number} Amount of times a user can use the cart rule */
     this.quantityPerUser = cartRuleToCreate.quantityPerUser || 1;
 
+    /** @type {boolean} True to enable customer group on the cart rule */
+    this.countrySelection = cartRuleToCreate.countrySelection || false;
+
+    /** @type {number} Country id to remove in country selection */
+    this.countryIDToRemove = cartRuleToCreate.countryIDToRemove || 8;
+
+    /** @type {boolean} True to enable carrier restriction on the cart rule */
+    this.carrierRestriction = cartRuleToCreate.carrierRestriction || false;
+
+    /** @type {boolean} True to enable group selection on the cart rule */
+    this.customerGroupSelection = cartRuleToCreate.customerGroupSelection || false;
+
     // Actions
     /** @type {boolean} True to enable free shipping on the cart rule */
     this.freeShipping = cartRuleToCreate.freeShipping === undefined ? false : cartRuleToCreate.freeShipping;

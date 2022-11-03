@@ -60,8 +60,8 @@ class SearchEngines extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridForm} .col-form-label`;
-    this.paginationNextLink = `${this.gridForm} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridForm} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.gridForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridForm} [data-role='previous-page-link']`;
 
     // Bulk actions selectors
     this.bulkActionMenuButton = 'button.js-bulk-actions-btn';

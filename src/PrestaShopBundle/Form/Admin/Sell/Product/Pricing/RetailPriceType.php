@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use Country;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -129,6 +130,18 @@ class RetailPriceType extends TranslatorAwareType
         } else {
             $ecotaxRate = new DecimalNumber('0');
         }
+        $country = new Country($this->contextCountryId);
+
+        $taxRateHelpPlaceholderWithoutState = $this->trans(
+            'Tax %1$s : %2$s%%',
+            'Admin.Catalog.Feature',
+            ['%1$s' => $country->iso_code, '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_']
+        );
+        $taxRateHelpPlaceholderWithState = $this->trans(
+            'Tax %1$s-%3$s: %2$s%%',
+            'Admin.Catalog.Feature',
+            ['%1$s' => $country->iso_code, '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => '_STATE_ISO_CODE_HELP_PLACEHOLDER_']
+        );
 
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
@@ -166,15 +179,22 @@ class RetailPriceType extends TranslatorAwareType
                     'class' => 'retail-price-tax-rules-group-id',
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
-                'help' => !$this->isTaxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
+                'help' => !$this->isTaxEnabled ?
+                    $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
+                    : '', //we replace help text in js on load when tax is enabled
+                'help_attr' => [
+                    'class' => 'js-tax-rule-help',
+                    'data-place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
+                    'data-place-holder-with-state' => $taxRateHelpPlaceholderWithState,
+                    'data-is-tax-enabled' => $this->isTaxEnabled,
+                ],
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_taxes_index'),
                     'align' => 'right',
                 ],
                 'modify_all_shops' => true,
-            ])
-        ;
+            ]);
 
         if ($this->isEcotaxEnabled) {
             $builder->add('ecotax_tax_excluded', MoneyType::class, [
@@ -213,8 +233,7 @@ class RetailPriceType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0.0,
                 'modify_all_shops' => true,
-            ])
-        ;
+            ]);
 
         if ($this->isEcotaxEnabled) {
             $helpMessage = '';
@@ -257,6 +276,9 @@ class RetailPriceType extends TranslatorAwareType
             ],
             // Ecotax can be removed so there might be extra data in the request during type switching
             'allow_extra_fields' => true,
-        ]);
+        ])
+            ->setRequired([
+                'tax_rules_group_id',
+            ]);
     }
 }

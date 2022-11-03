@@ -36,8 +36,8 @@ class Outstanding extends BOBasePage {
     this.cardHeaderTitle = '#outstanding_grid_panel .card-header-title';
     this.paginationLabel = '#outstanding_grid .col-form-label';
     this.paginationLimitSelect = '#paginator_select_page_limit';
-    this.paginationNextLink = '#pagination_next_url';
-    this.paginationPreviousLink = '#outstanding_grid_panel .pagination .previous a.page-link';
+    this.paginationNextLink = '#outstanding_grid_panel [data-role=next-page-link]';
+    this.paginationPreviousLink = '#outstanding_grid_panel [data-role=previous-page-link]';
   }
 
   /* Methods */

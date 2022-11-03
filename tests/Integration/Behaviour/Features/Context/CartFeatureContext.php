@@ -28,6 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Cart;
 use Context;
+use PHPUnit\Framework\Assert;
 use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
@@ -199,5 +200,15 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         if ($expectedTotal != $shippingFees) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
         }
+    }
+
+    /**
+     * @Then /^I should have a voucher named "(.+)" with (\d+\.\d+) of discount$/
+     */
+    public function cartVoucher($voucherName, $discountAmount)
+    {
+        $cartRules = $this->getCurrentCart()->getCartRules();
+        Assert::assertEquals($cartRules[0]['code'], $voucherName);
+        Assert::assertEquals((float) $cartRules[0]['value_real'], (float) $discountAmount);
     }
 }

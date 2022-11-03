@@ -86,8 +86,7 @@
 
   // Todo: Looks like we don't have any custom select without JS to add in a form
   // Please notice that you have two different select2 component inside order view
-  .select2-container,
-  .select2-selection {
+  .select2-container {
     min-width: 36ch;
     height: 100%;
   }
@@ -425,7 +424,17 @@
 
       &-actions {
         display: flex;
+        flex-wrap: wrap;
         width: 100%;
+
+        .select2-container,
+        .btn-primary {
+          // stylelint-disable-next-line declaration-no-important
+          width: 100% !important;
+          // stylelint-disable-next-line declaration-no-important
+          min-width: inherit !important;
+          max-width: 100%;
+        }
       }
     }
 

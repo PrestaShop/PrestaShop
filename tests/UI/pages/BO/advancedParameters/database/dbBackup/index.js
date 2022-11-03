@@ -22,8 +22,7 @@ class DbBackup extends BOBasePage {
     this.sqlManagerSubTabLink = '#subtab-AdminRequestSql';
 
     // New Backup for selectors
-    this.newBackupForm = 'form[action*=\'backups/new\']';
-    this.newBackupButton = `${this.newBackupForm} button`;
+    this.newBackupButton = 'button[data-role=create-backup-btn]';
 
     // Download backup selectors
     this.downloadBackupButton = 'a.download-file-link';
@@ -53,8 +52,8 @@ class DbBackup extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
+    this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridPanel} [data-role=previous-page-link]`;
   }
 
   /* Header methods */

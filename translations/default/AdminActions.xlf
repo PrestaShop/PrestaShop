@@ -5,12 +5,12 @@
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
         <target>Edit</target>
-        <note>Line: 443</note>
+        <note>Line: 521</note>
       </trans-unit>
       <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
         <source>Uninstall</source>
         <target>Uninstall</target>
-        <note>Line: 505</note>
+        <note>Line: 583</note>
       </trans-unit>
     </body>
   </file>
@@ -1222,6 +1222,15 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/not_found.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1e358e21f52685ac91dbc13dbd2dc7b3">
+        <source>Close and refresh</source>
+        <target>Close and refresh</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2198b1d436332a45070fb5e9cecb9abe">
@@ -1260,7 +1269,7 @@
       <trans-unit id="fe6a889f652bc87e0023c32d33592c25">
         <source>Save and publish</source>
         <target>Save and publish</target>
-        <note>Line: 100</note>
+        <note>Line: 101</note>
       </trans-unit>
     </body>
   </file>
@@ -1315,7 +1324,7 @@
       <trans-unit id="1dda0a32a88a31cac7f6b103ff13e2ac">
         <source>View pack content</source>
         <target>View pack content</target>
-        <note>Line: 177</note>
+        <note>Line: 176</note>
       </trans-unit>
     </body>
   </file>

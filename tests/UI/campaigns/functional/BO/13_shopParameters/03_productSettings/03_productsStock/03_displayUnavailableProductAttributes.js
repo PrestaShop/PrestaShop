@@ -31,7 +31,7 @@ let page;
 const productData = new ProductFaker(
   {
     type: 'Standard product',
-    combinations: {
+    attributes: {
       color: ['White'],
       size: ['S'],
     },
@@ -75,7 +75,7 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
 
     await productsPage.goToAddProductPage(page);
     await addProductPage.createEditBasicProduct(page, productData);
-    const validationMessage = await addProductPage.setCombinationsInProduct(page, productData);
+    const validationMessage = await addProductPage.setAttributesInProduct(page, productData);
     await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
@@ -126,14 +126,14 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
 
       const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(
         page,
-        productData.combinations.size[0],
+        productData.attributes.size[0],
       );
 
       await expect(sizeIsVisible).to.be.equal(test.args.enable);
 
       const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
         page,
-        productData.combinations.color[0],
+        productData.attributes.color[0],
       );
 
       await expect(colorIsVisible).to.be.equal(test.args.enable);
