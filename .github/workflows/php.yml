@@ -21,7 +21,7 @@ jobs:
         with:
           php-version: 8.0
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -68,7 +68,7 @@ jobs:
           php-version: '8.0'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -111,7 +111,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml

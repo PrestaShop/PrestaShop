@@ -22,7 +22,7 @@ jobs:
           all_but_latest: true
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup environment
         uses: ./.github/actions/setup-prestashop-env
@@ -48,7 +48,7 @@ jobs:
         run: npm install && npm run test:sanity:fast-fail
         working-directory: ./tests/UI
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: screenshots-${{ matrix.php }}
