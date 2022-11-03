@@ -111,11 +111,13 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
      */
     private function buildOrderReturnInformation(OrderReturnForEditing $orderReturnForEditing): string
     {
-        return sprintf(
-            '#%s %s %s',
-            $orderReturnForEditing->getOrderId(),
-            $this->translator->trans('from', [], 'Admin.Global'),
-            $orderReturnForEditing->getOrderDate()->format($this->dateFormat)
+        return $this->translator->trans(
+            '#%order_id% from %order_date%',
+            [
+                '%order_id%' => $orderReturnForEditing->getOrderId(),
+                '%order_date%' => $orderReturnForEditing->getOrderDate()->format($this->dateFormat),
+            ],
+            'Admin.Orderscustomers.Feature'
         );
     }
 }
