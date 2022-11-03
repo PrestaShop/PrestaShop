@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
 use Contact;
 use Context;
@@ -34,7 +34,6 @@ use CustomerThread;
 use Language;
 use Mail;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\ReplyToCustomerThreadHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use ShopUrl;
@@ -45,7 +44,7 @@ use Validate;
 /**
  * @internal
  */
-final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterface
+class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandlerInterface
 {
     /**
      * @var Context
@@ -105,11 +104,11 @@ final class ReplyToCustomerThreadHandler implements ReplyToCustomerThreadHandler
         $customerMessage->message = $replyMessage;
 
         if (false === $customerMessage->validateField('message', $customerMessage->message)) {
-            throw new CustomerServiceException('Invalid reply message');
+            throw new CustomerServiceException('Invalid reply message', CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
         }
 
         if (false === $customerMessage->add()) {
-            throw new CustomerServiceException('Failed to add customer message');
+            throw new CustomerServiceException('Failed to add customer message', CustomerServiceException::FAILED_TO_ADD_CUSTOMER_MESSAGE);
         }
 
         return $customerMessage;

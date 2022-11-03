@@ -24,42 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Handles command for customer thread bulk deletion
  */
-final class DataColumn extends AbstractColumn
+class BulkDeleteCustomerThreadHandler implements BulkDeleteCustomerThreadHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @var CustomerThreadRepository
      */
-    public function getType()
+    private $customerThreadRepository;
+
+    public function __construct(CustomerThreadRepository $customerThreadRepository)
     {
-        return 'data';
+        $this->customerThreadRepository = $customerThreadRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function handle(BulkDeleteCustomerThreadCommand $command): void
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
+        foreach ($command->getCustomerThreadIds() as $customerThreadId) {
+            $this->customerThreadRepository->delete($customerThreadId);
+        }
     }
 }

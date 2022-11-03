@@ -24,42 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Class Column defines most simple column in the grid that renders raw data.
- */
-final class DataColumn extends AbstractColumn
+use Contact;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+
+class ContactTypeChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function getType()
+    private $langId;
+
+    public function __construct(int $langId)
     {
-        return 'data';
+        $this->langId = $langId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getChoices(): array
     {
-        parent::configureOptions($resolver);
+        $contacts = Contact::getContacts($this->langId);
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
+        $contactArray = [];
+
+        foreach ($contacts as $contact) {
+            $contactArray[$contact['name']] = $contact['id_contact'];
+        }
+
+        return $contactArray;
     }
 }

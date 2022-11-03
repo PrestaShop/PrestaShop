@@ -24,42 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-/**
- * Class Column defines most simple column in the grid that renders raw data.
- */
-final class DataColumn extends AbstractColumn
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+class CustomerThreadStatusesChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var TranslatorInterface
      */
-    public function getType()
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
     {
-        return 'data';
+        $this->translator = $translator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getChoices(array $options = [])
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
+        return [
+            $this->translator->trans('Opened', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::OPEN,
+            $this->translator->trans('Closed', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::CLOSED,
+            $this->translator->trans('Pending 1', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_1,
+            $this->translator->trans('Pending 2', [], 'Admin.Catalog.Feature') => CustomerThreadStatus::PENDING_2,
+        ];
     }
 }

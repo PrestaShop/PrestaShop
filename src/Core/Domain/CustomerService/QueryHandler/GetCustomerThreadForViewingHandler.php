@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
 use Contact;
 use Context;
@@ -36,7 +36,6 @@ use Employee;
 use Order;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerThreadForViewingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerInformation;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadMessage;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadTimeline;
@@ -54,7 +53,7 @@ use Validate;
 /**
  * @internal
  */
-final class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
+class GetCustomerThreadForViewingHandler implements GetCustomerThreadForViewingHandlerInterface
 {
     /**
      * @var Context

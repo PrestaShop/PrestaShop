@@ -24,42 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception;
 
-/**
- * Class Column defines most simple column in the grid that renders raw data.
- */
-final class DataColumn extends AbstractColumn
+class CannotDeleteCustomerThreadException extends CustomerServiceException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'data';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
-    }
 }

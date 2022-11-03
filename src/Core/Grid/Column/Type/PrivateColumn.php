@@ -30,16 +30,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Displays locks on private column
  */
-final class DataColumn extends AbstractColumn
+final class PrivateColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'data';
+        return 'private';
     }
 
     /**
@@ -47,19 +47,15 @@ final class DataColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
         $resolver
             ->setRequired([
                 'field',
             ])
             ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
+                'clickable' => false,
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
         ;
     }
 }

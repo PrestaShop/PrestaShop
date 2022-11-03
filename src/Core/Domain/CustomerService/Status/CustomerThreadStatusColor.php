@@ -24,42 +24,45 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
-
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Status;
 
 /**
- * Class Column defines most simple column in the grid that renders raw data.
+ * Defines colors for order statuses
  */
-final class DataColumn extends AbstractColumn
+class CustomerThreadStatusColor
 {
     /**
-     * {@inheritdoc}
+     * Used for status when customer thread is open.
      */
-    public function getType()
-    {
-        return 'data';
-    }
+    public const OPENED = '#01B887';
 
     /**
-     * {@inheritdoc}
+     * Used for statuses when customer thread is closed.
+     * Example statuses: Processing in progress, On backorder (paid), Payment accepted.
      */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
+    public const CLOSED = '#2C3E50';
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
+    /**
+     * Used for status when customer thread is pending_1.
+     */
+    public const PENDING_1 = '#3498D8';
+
+    /**
+     * Used for status when customer thread is pending_2.
+     */
+    public const PENDING_2 = '#34209E';
+
+    public const CUSTOMER_THREAD_STATUSES = [
+        'open' => self::OPENED,
+        'closed' => self::CLOSED,
+        'pending1' => self::PENDING_1,
+        'pending2' => self::PENDING_2,
+    ];
+
+    /**
+     * Class is not meant to be initialized.
+     */
+    private function __construct()
+    {
     }
 }

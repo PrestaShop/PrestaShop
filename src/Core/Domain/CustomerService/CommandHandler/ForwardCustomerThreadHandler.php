@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
 use Contact;
 use Context;
@@ -35,7 +35,6 @@ use Mail;
 use Order;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ForwardCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\ForwardCustomerThreadHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -45,7 +44,7 @@ use Validate;
 /**
  * @internal
  */
-final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandlerInterface
+class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandlerInterface
 {
     /**
      * @var Context
@@ -309,7 +308,10 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
         $customerMessage->ip_address = (string) (int) ip2long(Tools::getRemoteAddr());
 
         if (false === $customerMessage->validateField('message', $command->getComment())) {
-            throw new CustomerServiceException(sprintf('Comment "%s" is not valid.', $command->getComment()));
+            throw new CustomerServiceException(
+                sprintf('Comment "%s" is not valid.', $command->getComment()),
+                CustomerServiceException::INVALID_COMMENT
+            );
         }
 
         return $customerMessage;

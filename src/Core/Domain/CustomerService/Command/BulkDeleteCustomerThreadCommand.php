@@ -24,42 +24,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
-/**
- * Class Column defines most simple column in the grid that renders raw data.
- */
-final class DataColumn extends AbstractColumn
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadId;
+
+class BulkDeleteCustomerThreadCommand
 {
     /**
-     * {@inheritdoc}
+     * @var CustomerThreadId[]
      */
-    public function getType()
+    private $customerThreadIds;
+
+    /**
+     * @param array<int, int> $customerThreadIds
+     *
+     * @throws CustomerServiceException
+     */
+    public function __construct(array $customerThreadIds)
     {
-        return 'data';
+        $this->setCustomerThreadIds($customerThreadIds);
     }
 
     /**
-     * {@inheritdoc}
+     * @return CustomerThreadId[]
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    public function getCustomerThreadIds(): array
     {
-        parent::configureOptions($resolver);
+        return $this->customerThreadIds;
+    }
 
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'max_displayed_characters' => 0,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('max_displayed_characters', 'int')
-        ;
+    /**
+     * @param array<int, int> $customerThreadIds
+     *
+     * @throws CustomerServiceException
+     */
+    private function setCustomerThreadIds(array $customerThreadIds): void
+    {
+        foreach ($customerThreadIds as $customerThreadId) {
+            $this->customerThreadIds[] = new CustomerThreadId($customerThreadId);
+        }
     }
 }
