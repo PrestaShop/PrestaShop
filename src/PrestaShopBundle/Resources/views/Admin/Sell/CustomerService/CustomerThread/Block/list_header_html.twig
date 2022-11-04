@@ -27,7 +27,7 @@
 
 {% block leadin %}
   <div class="">
-    <div id="CustomerThreadContacts" class="d-flex justify-content-between">
+    <div id="CustomerThreadContacts" class="d-flex justify-content-around">
       {% set nb_categories = categories|length %}
       {% for key, val in categories %}
 
@@ -41,15 +41,15 @@
             {% if nb_categories < 6 %}
               <p>{{ val.description }}</p>
             {% endif %}
-                {% if total_threads[val.id_contact] == 0 %}
+                {% if servicesSummary[val.id_contact].getTotalThreads() == 0 %}
                   <span
                     class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
                 {% else %}
                   <a
-                    href="{{ urls[val.id_contact] }}"
+                    href="{{ servicesSummary[val.id_contact].getViewUrl() }}"
                     class="button">
-                    {{ total_threads[val.id_contact] }}
-                    {% if total_threads[val.id_contact] > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {{ servicesSummary[val.id_contact].getTotalThreads() }}
+                    {% if servicesSummary[val.id_contact].getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
                     {% endif %}
                   </a>
                 {% endif %}

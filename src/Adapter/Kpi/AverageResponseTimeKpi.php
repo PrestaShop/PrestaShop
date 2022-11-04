@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 
 class AverageResponseTimeKpi implements KpiInterface
 {
-
     public function render()
     {
         /** @var Context $context */
@@ -48,7 +47,7 @@ class AverageResponseTimeKpi implements KpiInterface
         $helper->icon = 'watch';
         $helper->color = 'color2';
         $helper->title = $translator->trans('Average Response Time', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $translator->trans('30 days', [],'Admin.Global');
+        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
