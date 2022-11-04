@@ -29,10 +29,13 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -192,6 +195,51 @@ class UpdateProductCommand
      * @var Reference|null
      */
     private $reference;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $width;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $height;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $depth;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $weight;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $additionalShippingCost;
+
+    /**
+     * @var CarrierReferenceId[]|null
+     */
+    private $carrierReferenceIds;
+
+    /**
+     * @var DeliveryTimeNoteType
+     */
+    private $deliveryTimeNoteType;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeInStockNotes;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeOutOfStockNotes;
 
     /**
      * @param int $productId
@@ -743,5 +791,224 @@ class UpdateProductCommand
         $this->reference = new Reference($reference);
 
         return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWidth(): ?DecimalNumber
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param string $width
+     *
+     * @return self
+     */
+    public function setWidth(string $width): self
+    {
+        $width = new DecimalNumber($width);
+        $this->assertPackageDimensionIsPositiveOrZero($width, 'width');
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getHeight(): ?DecimalNumber
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param string $height
+     *
+     * @return self
+     */
+    public function setHeight(string $height): self
+    {
+        $height = new DecimalNumber($height);
+        $this->assertPackageDimensionIsPositiveOrZero($height, 'height');
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getDepth(): ?DecimalNumber
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @param string $depth
+     *
+     * @return self
+     */
+    public function setDepth(string $depth): self
+    {
+        $depth = new DecimalNumber($depth);
+        $this->assertPackageDimensionIsPositiveOrZero($depth, 'depth');
+        $this->depth = $depth;
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWeight(): ?DecimalNumber
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     *
+     * @return self
+     */
+    public function setWeight(string $weight): self
+    {
+        $weight = new DecimalNumber($weight);
+        $this->assertPackageDimensionIsPositiveOrZero($weight, 'weight');
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getAdditionalShippingCost(): ?DecimalNumber
+    {
+        return $this->additionalShippingCost;
+    }
+
+    /**
+     * @param string $additionalShippingCost
+     *
+     * @return self
+     */
+    public function setAdditionalShippingCost(string $additionalShippingCost): self
+    {
+        $this->additionalShippingCost = new DecimalNumber($additionalShippingCost);
+
+        return $this;
+    }
+
+    /**
+     * @return CarrierReferenceId[]|null
+     */
+    public function getCarrierReferenceIds(): ?array
+    {
+        return $this->carrierReferenceIds;
+    }
+
+    /**
+     * @param int[] $carrierReferenceIds
+     *
+     * @return self
+     */
+    public function setCarrierReferenceIds(array $carrierReferenceIds): self
+    {
+        foreach (array_unique($carrierReferenceIds) as $carrierReferenceId) {
+            $this->carrierReferenceIds[] = new CarrierReferenceId((int) $carrierReferenceId);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return DeliveryTimeNoteType|null
+     */
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
+    {
+        return $this->deliveryTimeNoteType;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return self
+     */
+    public function setDeliveryTimeNoteType(int $type): self
+    {
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDeliveryTimeInStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeInStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeInStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeInStockNotes(array $localizedDeliveryTimeInStockNotes): self
+    {
+        $this->localizedDeliveryTimeInStockNotes = $localizedDeliveryTimeInStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedDeliveryTimeOutOfStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeOutOfStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeOutOfStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes): self
+    {
+        $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @todo: dimensions deserves dedicated VO and might be worth reusing in Carriers page.
+     *
+     * @todo Check https://github.com/PrestaShop/PrestaShop/issues/19666#issuecomment-756088706
+     *
+     * @param DecimalNumber $value
+     * @param string $dimensionName
+     *
+     * @throws ProductConstraintException
+     */
+    private function assertPackageDimensionIsPositiveOrZero(DecimalNumber $value, string $dimensionName): void
+    {
+        if ($value->isGreaterOrEqualThanZero()) {
+            return;
+        }
+
+        $codeByDimension = [
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+        ];
+
+        throw new ProductConstraintException(
+            sprintf('Invalid product %s, it must be positive number or zero', $dimensionName),
+            $codeByDimension[$dimensionName]
+        );
     }
 }

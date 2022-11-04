@@ -113,6 +113,14 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         if (null !== $command->getWholesalePrice()) {
             $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
         }
+
+        if (null !== $command->getCarrierReferenceIds()) {
+            $this->productRepository->setCarrierReferences(
+                new ProductId((int) $product->id),
+                $command->getCarrierReferenceIds(),
+                $shopConstraint
+            );
+        }
     }
 
     /**
