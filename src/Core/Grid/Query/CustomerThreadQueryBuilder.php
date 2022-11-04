@@ -130,7 +130,7 @@ class CustomerThreadQueryBuilder extends AbstractDoctrineQueryBuilder
                 'l',
                 'ct.id_lang = l.id_lang'
             )
-            ->innerJoin(
+            ->leftJoin(
                 'ct',
                 $this->dbPrefix . 'customer_message',
                 'cm',

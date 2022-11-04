@@ -98,3 +98,12 @@ services:
 
   prestashop.adapter.kpi.net_profit_per_visit:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\NetProfitPerVisitKpi'
+
+  prestashop.adapter.kpi.avarge_response_time:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\AverageResponseTimeKpi'
+
+  prestashop.adapter.kpi.messages_per_thread:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\MessagesPerThreadKpi'
+
+  prestashop.adapter.kpi.pending_discussion_threads:
+    class: 'PrestaShop\PrestaShop\Adapter\Kpi\PendingDiscussionThreadsKpi'
