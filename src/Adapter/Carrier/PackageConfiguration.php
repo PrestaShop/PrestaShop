@@ -68,10 +68,7 @@ class PackageConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('package_weight', 'float')
-            ->setAllowedTypes('package_width', 'float')
-            ->setAllowedTypes('package_height', 'float')
-            ->setAllowedTypes('package_depth', 'float');
+            ->setAllowedTypes('package_weight', 'float');
 
         return $resolver;
     }
