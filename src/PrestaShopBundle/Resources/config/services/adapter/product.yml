@@ -570,3 +570,7 @@ services:
   prestashop.adapter.product.update.filler.details_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller
     tags: [ 'core.product_filler' ]
+
+  prestashop.adapter.product.update.filler.shipping_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ShippingFiller
+    tags: [ 'core.product_filler' ]
