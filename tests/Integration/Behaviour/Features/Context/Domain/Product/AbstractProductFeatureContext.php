@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCust
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -49,8 +49,8 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
     protected const DATE_KEYS_BY_TYPE = [
-        StockMovementEvent::EDITION_TYPE => ['add'],
-        StockMovementEvent::ORDERS_TYPE => ['from', 'to'],
+        StockMovement::EDITION_TYPE => ['add'],
+        StockMovement::ORDERS_TYPE => ['from', 'to'],
     ];
 
     /**

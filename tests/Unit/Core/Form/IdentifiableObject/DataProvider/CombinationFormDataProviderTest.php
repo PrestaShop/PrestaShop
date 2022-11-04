@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -130,7 +130,7 @@ class CombinationFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movements' => [
                 [
-                    'type' => StockMovementEvent::ORDERS_TYPE,
+                    'type' => StockMovement::ORDERS_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
                     'to_date' => '2021-05-24 15:24:32',
                     'stock_movement_ids' => [321, 322, 323, 324, 325],
@@ -140,7 +140,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => -19,
                 ],
                 [
-                    'type' => StockMovementEvent::EDITION_TYPE,
+                    'type' => StockMovement::EDITION_TYPE,
                     'date_add' => '2021-05-24 15:24:32',
                     'stock_movement_id' => 320,
                     'stock_id' => 42,
@@ -150,7 +150,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementEvent::ORDERS_TYPE,
+                    'type' => StockMovement::ORDERS_TYPE,
                     'from_date' => '2021-05-24 15:24:32',
                     'to_date' => '2021-05-22 16:35:48',
                     'stock_movement_ids' => [221, 222, 223, 224, 225],
@@ -160,7 +160,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => -23,
                 ],
                 [
-                    'type' => StockMovementEvent::EDITION_TYPE,
+                    'type' => StockMovement::EDITION_TYPE,
                     'date_add' => '2021-05-22 16:35:48',
                     'stock_movement_id' => 220,
                     'stock_id' => 42,
@@ -170,7 +170,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementEvent::ORDERS_TYPE,
+                    'type' => StockMovement::ORDERS_TYPE,
                     'from_date' => '2021-05-22 16:35:48',
                     'to_date' => '2021-01-24 15:24:32',
                     'stock_movement_ids' => [121, 122, 123, 124, 125],
@@ -453,7 +453,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovementEvent[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovement[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -590,14 +590,14 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return StockMovementEvent[]
+     * @return StockMovement[]
      */
     private function createStockMovementHistories(array $combinationData): array
     {
         return array_map(
-            static function (array $historyData): StockMovementEvent {
-                if (StockMovementEvent::EDITION_TYPE === $historyData['type']) {
-                    return StockMovementEvent::createEditionEvent(
+            static function (array $historyData): StockMovement {
+                if (StockMovement::EDITION_TYPE === $historyData['type']) {
+                    return StockMovement::createEditionMovement(
                         $historyData['date_add'],
                         $historyData['stock_movement_id'],
                         $historyData['stock_id'],
@@ -607,8 +607,8 @@ class CombinationFormDataProviderTest extends TestCase
                         $historyData['delta_quantity']
                     );
                 }
-                if (StockMovementEvent::ORDERS_TYPE === $historyData['type']) {
-                    return StockMovementEvent::createOrdersEvent(
+                if (StockMovement::ORDERS_TYPE === $historyData['type']) {
+                    return StockMovement::createOrdersMovement(
                         $historyData['from_date'],
                         $historyData['to_date'],
                         $historyData['stock_movement_ids'],

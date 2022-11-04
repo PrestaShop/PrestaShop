@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockIn
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -524,39 +524,39 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param StockMovementEvent[] $stockMovementHistories
+     * @param StockMovement[] $stockMovements
      * @param TableNode $table
      */
-    private function assertStockMovementHistories(array $stockMovementHistories, TableNode $table): void
+    private function assertStockMovementHistories(array $stockMovements, TableNode $table): void
     {
         $movementsData = $table->getColumnsHash();
 
-        Assert::assertEquals(count($movementsData), count($stockMovementHistories));
+        Assert::assertEquals(count($movementsData), count($stockMovements));
         $index = 0;
         foreach ($movementsData as $movementDatum) {
-            $stockMovementEvent = $stockMovementHistories[$index];
+            $stockMovement = $stockMovements[$index];
             Assert::assertEquals(
                 $movementDatum['employee'],
-                $stockMovementEvent->getEmployeeName(),
+                $stockMovement->getEmployeeName(),
                 sprintf(
                     'Invalid employee name of stock movement event, expected "%s" instead of "%s"',
                     $movementDatum['employee'],
-                    $stockMovementEvent->getEmployeeName()
+                    $stockMovement->getEmployeeName()
                 )
             );
             Assert::assertEquals(
                 (int) $movementDatum['delta_quantity'],
-                $stockMovementEvent->getDeltaQuantity(),
+                $stockMovement->getDeltaQuantity(),
                 sprintf(
                     'Invalid delta quantity of stock movement event, expected "%d" instead of "%d"',
                     $movementDatum['delta_quantity'],
-                    $stockMovementEvent->getDeltaQuantity()
+                    $stockMovement->getDeltaQuantity()
                 )
             );
-            foreach ($this->resolveHistoryDateKeys($stockMovementEvent->getType()) as $dateKey) {
+            foreach ($this->resolveHistoryDateKeys($stockMovement->getType()) as $dateKey) {
                 Assert::assertInstanceOf(
                     DateTimeImmutable::class,
-                    $stockMovementEvent->getDate($dateKey)
+                    $stockMovement->getDate($dateKey)
                 );
             }
 
@@ -565,11 +565,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     private function assertStockMovements(
-        StockMovementEvent $stockMovementEvent,
+        StockMovement $stockMovement,
         string $movementType,
         int $movementQuantity
     ): void {
-        $lastMovementType = $stockMovementEvent->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
+        $lastMovementType = $stockMovement->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
 
         Assert::assertEquals(
             $movementType,
@@ -582,11 +582,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         );
         Assert::assertEquals(
             $movementQuantity,
-            abs($stockMovementEvent->getDeltaQuantity()),
+            abs($stockMovement->getDeltaQuantity()),
             sprintf(
                 'Invalid stock movement quantity, expected "%d" instead of "%d"',
                 $movementQuantity,
-                abs($stockMovementEvent->getDeltaQuantity())
+                abs($stockMovement->getDeltaQuantity())
             )
         );
     }

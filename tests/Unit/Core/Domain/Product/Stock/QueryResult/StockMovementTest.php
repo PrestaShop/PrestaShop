@@ -31,10 +31,10 @@ use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use RuntimeException;
 
-class StockMovementEventTest extends TestCase
+class StockMovementTest extends TestCase
 {
     /**
      * @dataProvider getSingleHistoryValidValues
@@ -48,7 +48,7 @@ class StockMovementEventTest extends TestCase
         ?string $employeeName,
         int $deltaQuantity
     ): void {
-        $history = StockMovementEvent::createEditionEvent(
+        $history = StockMovement::createEditionMovement(
             $dateAdd,
             $stockMovementId,
             $stockId,
@@ -59,7 +59,7 @@ class StockMovementEventTest extends TestCase
         );
         Assert::assertTrue($history->isEdition());
         Assert::assertFalse($history->isFromOrders());
-        Assert::assertSame(StockMovementEvent::EDITION_TYPE, $history->getType());
+        Assert::assertSame(StockMovement::EDITION_TYPE, $history->getType());
         Assert::assertEquals(new DateTimeImmutable($dateAdd), $history->getDate('add'));
         Assert::assertSame([$stockMovementId], $history->getStockMovementIds());
         Assert::assertSame([$stockId], $history->getStockIds());
@@ -123,7 +123,7 @@ class StockMovementEventTest extends TestCase
         array $employeeIds,
         int $deltaQuantity
     ): void {
-        $history = StockMovementEvent::createOrdersEvent(
+        $history = StockMovement::createOrdersMovement(
             $fromDate,
             $toDate,
             $stockMovementIds,
@@ -134,7 +134,7 @@ class StockMovementEventTest extends TestCase
         );
         Assert::assertFalse($history->isEdition());
         Assert::assertTrue($history->isFromOrders());
-        Assert::assertSame(StockMovementEvent::ORDERS_TYPE, $history->getType());
+        Assert::assertSame(StockMovement::ORDERS_TYPE, $history->getType());
         Assert::assertEquals(new DateTimeImmutable($fromDate), $history->getDate('from'));
         Assert::assertEquals(new DateTimeImmutable($toDate), $history->getDate('to'));
         Assert::assertEquals($stockMovementIds, $history->getStockMovementIds());
@@ -178,7 +178,7 @@ class StockMovementEventTest extends TestCase
     /**
      * @dataProvider getInvalidDateKeyFromHistory
      */
-    public function testHistoryFailsOnInvalidDateKey(StockMovementEvent $history, string $key): void
+    public function testHistoryFailsOnInvalidDateKey(StockMovement $history, string $key): void
     {
         $this->expectException(RuntimeException::class);
 
@@ -187,7 +187,7 @@ class StockMovementEventTest extends TestCase
 
     public function getInvalidDateKeyFromHistory(): Generator
     {
-        $singleHistory = StockMovementEvent::createEditionEvent(
+        $singleHistory = StockMovement::createEditionMovement(
             '2022-01-13 18:21:33',
             1,
             2,
@@ -196,7 +196,7 @@ class StockMovementEventTest extends TestCase
             'Penelope Cruz',
             5
         );
-        $groupHistory = StockMovementEvent::createOrdersEvent(
+        $groupHistory = StockMovement::createOrdersMovement(
             '2022-01-13 18:20:58',
             '2022-01-13 18:21:18',
             [1, 2],

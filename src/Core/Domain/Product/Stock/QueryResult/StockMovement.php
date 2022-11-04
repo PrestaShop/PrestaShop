@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult;
 use DateTimeImmutable;
 use RuntimeException;
 
-class StockMovementEvent
+class StockMovement
 {
     public const EDITION_TYPE = 'edition';
     public const ORDERS_TYPE = 'orders';
@@ -138,7 +138,7 @@ class StockMovementEvent
         );
     }
 
-    public static function createEditionEvent(
+    public static function createEditionMovement(
         string $dateAdd,
         int $stockMovementId,
         int $stockId,
@@ -170,7 +170,7 @@ class StockMovementEvent
      * @param string[]|int[] $employeeIds
      * @param int $deltaQuantity
      */
-    public static function createOrdersEvent(
+    public static function createOrdersMovement(
         string $fromDate,
         string $toDate,
         array $stockMovementIds,

@@ -32,7 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 
 class CombinationStockMovementsFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -74,49 +74,49 @@ class CombinationStockMovementsFeatureContext extends AbstractCombinationFeature
 
     private function assertStockMovements(GetCombinationStockMovements $query, TableNode $table): void
     {
-        $stockMovementHistories = $this->getQueryBus()->handle($query);
+        $combinationStockMovements = $this->getQueryBus()->handle($query);
         $tableRows = $table->getColumnsHash();
 
         Assert::assertCount(
             count($tableRows),
-            $stockMovementHistories,
+            $combinationStockMovements,
             'Unexpected history size'
         );
         foreach ($tableRows as $index => $tableRow) {
-            /** @var StockMovementEvent $stockMovementEvent */
-            $stockMovementEvent = $stockMovementHistories[$index];
+            /** @var StockMovement $stockMovement */
+            $stockMovement = $combinationStockMovements[$index];
 
             Assert::assertSame(
                 $tableRow['type'],
-                $stockMovementEvent->getType(),
+                $stockMovement->getType(),
                 sprintf(
                     'Invalid stock movement event type, expected "%s" instead of "%s"',
                     $tableRow['type'],
-                    $stockMovementEvent->getType()
+                    $stockMovement->getType()
                 )
             );
             Assert::assertEquals(
                 $tableRow['employee'],
-                $stockMovementEvent->getEmployeeName(),
+                $stockMovement->getEmployeeName(),
                 sprintf(
                     'Invalid employee name of stock movement event, expected "%s" instead of "%s"',
                     $tableRow['employee'],
-                    $stockMovementEvent->getEmployeeName()
+                    $stockMovement->getEmployeeName()
                 )
             );
             Assert::assertSame(
                 (int) $tableRow['delta_quantity'],
-                $stockMovementEvent->getDeltaQuantity(),
+                $stockMovement->getDeltaQuantity(),
                 sprintf(
                     'Invalid delta quantity of stock movement event, expected "%d" instead of "%d"',
                     $tableRow['delta_quantity'],
-                    $stockMovementEvent->getDeltaQuantity()
+                    $stockMovement->getDeltaQuantity()
                 )
             );
-            foreach ($this->resolveHistoryDateKeys($stockMovementEvent->getType()) as $dateKey) {
+            foreach ($this->resolveHistoryDateKeys($stockMovement->getType()) as $dateKey) {
                 Assert::assertInstanceOf(
                     DateTimeImmutable::class,
-                    $stockMovementEvent->getDate($dateKey)
+                    $stockMovement->getDate($dateKey)
                 );
             }
         }
