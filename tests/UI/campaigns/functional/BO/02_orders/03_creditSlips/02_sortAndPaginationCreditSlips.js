@@ -2,8 +2,9 @@ require('module-alias/register');
 
 // Import utils
 const helper = require('@utils/helpers');
-const files = require('@utils/files');
 const {getDateFormat} = require('@utils/date');
+const basicHelper = require('@utils/basicHelper');
+
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -15,6 +16,7 @@ const ordersPage = require('@pages/BO/orders/index');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
+// const creditSlipsListingPage = require('@pages/BO/catalog/products/index');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -37,13 +39,12 @@ const creditSlipDocumentName = 'Credit slip';
 const orderByCustomerData = {
   customer: DefaultCustomer,
   product: 1,
-  productQuantity: 5,
+  productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-let numberOfOrder2Create = 2;
-let creditSlipToAddForExistingOrder = 1;
-let numberOfOrder2Refund = numberOfOrder2Create + creditSlipToAddForExistingOrder;
+let numberOfOrder2Create = 11;
+
 /*
 Pre-condition:
 - Create order in FO
@@ -53,24 +54,25 @@ Scenario:
  */
 
 describe('BO - Orders - Credit slips : Generate Credit slip file by date', async () => {
+  // before and after functions
+  before(async function () {
+    browserContext = await helper.createBrowserContext(this.browser);
+    page = await helper.newTab(browserContext);
+  });
+
+  after(async () => {
+    await helper.closeBrowserContext(browserContext);
+  });
+
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
   for(var i=0; i<numberOfOrder2Create; i++){
-  // Pre-condition: Create order in FO
+    // Pre-condition: Create order in FO
     createOrderByCustomerTest(orderByCustomerData, baseContext);
 
-    // before and after functions
-    before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
-    });
-
-    after(async () => {
-      await helper.closeBrowserContext(browserContext);
-    });
-
     describe('Create Credit slip ', async () => {
-      it('should login in BO', async function () {
-        await loginCommon.loginBO(this, page);
-      });
 
       it('should go to \'Orders > Orders\' page\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
@@ -119,24 +121,118 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     });
   }
 
-  for(var i=0; i<numberOfOrder2Refund; i++){
+  describe('Sort Credit Slip Table', async () => {
+    it('should go to Credit slips page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
 
-    describe('Generate Credit slip file by date', async () => {
-      it('should go to Credit slips page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
+      await orderPageTabListBlock.goToSubMenu(
+        page,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.creditSlipsLink,
+      );
 
-        await orderPageTabListBlock.goToSubMenu(
-          page,
-          orderPageTabListBlock.ordersParentLink,
-          orderPageTabListBlock.creditSlipsLink,
-        );
+      await creditSlipsPage.closeSfToolBar(page);
 
-        await creditSlipsPage.closeSfToolBar(page);
-
-        const pageTitle = await creditSlipsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
-      });
-  
+      const pageTitle = await creditSlipsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(creditSlipsPage.pageTitle);
     });
-  }
+
+    it('should reset all filters and get number of credit slips', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+
+      numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCreditSlips).to.be.above(0);
+    });
+
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemssNumberTo10', baseContext);
+    
+      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '100');
+      expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
+    });
+
+    const tests = [
+      {args: {testIdentifier: 'sortByOrderIDAsc', sortBy: 'id_order', sortDirection: 'asc', isFloat: true}},
+      {args: {testIdentifier: 'sortByOrderIDDesc', sortBy: 'id_order', sortDirection: 'desc', isFloat: true}},
+      {
+        args: {
+          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_order_slip', sortDirection: 'desc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_order_slip', sortDirection: 'asc', isFloat: true,
+        },
+      },
+    ];
+
+    tests.forEach((test) => {
+      it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await creditSlipsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+  describe('Pagination credit slip table', async () => {
+
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemssNumberTo10', baseContext);
+
+      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '10');
+      expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`)
+        .to.contains(`(page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`);
+    });
+
+    it('should click on next', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
+
+      const paginationNumber = await creditSlipsPage.paginationNext(page);
+      expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`)
+        .to.contains(`(page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`);
+    });
+
+    it('should click on previous', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
+
+      const paginationNumber = await creditSlipsPage.paginationPrevious(page);
+      expect(paginationNumber, `Number of pages is not (page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`)
+        .to.contains(`(page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`);
+    });
+
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
+
+      const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '50');
+      expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
+    });
+  });
 });
