@@ -52,3 +52,12 @@ services:
         - '@prestashop.adapter.kpi.net_profit_per_visit'
       - '@prestashop.core.hook.dispatcher'
       - 'orders'
+
+  prestashop.core.kpi_row.factory.customer_thread:
+    class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+    arguments:
+      - - '@prestashop.adapter.kpi.pending_discussion_threads'
+        - '@prestashop.adapter.kpi.avarge_response_time'
+        - '@prestashop.adapter.kpi.messages_per_thread'
+      - '@prestashop.core.hook.dispatcher'
+      - 'customer_threads'

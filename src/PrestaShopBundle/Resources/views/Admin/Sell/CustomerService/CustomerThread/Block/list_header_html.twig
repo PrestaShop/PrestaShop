@@ -26,53 +26,49 @@
 {# {% extends file="helpers/list/list_header.tpl" %} #}
 
 {% block leadin %}
-  <div id="CustomerThreadContacts" class="row">
-    {% set nb_categories = categories|length %}
-    {% for key, val in categories %}
+  <div class="">
+    <div id="CustomerThreadContacts" class="d-flex justify-content-between">
+      {% set nb_categories = categories|length %}
+      {% for key, val in categories %}
 
-      {% set total_thread = 0 %}
-      {% set id_customer_thread = 0 %}
+        {% set id_customer_thread = 0 %}
+        <div class="col-lg-3 p-0 card">
+          <div class="card-header">
+            {{ val.name }}
+          </div>
+          <div class="card-body">
 
-      {% for tmp, tmp2 in contacts %}
-        {% if val.id_contact == tmp2.id_contact %}
-          {% set total_thread = tmp2.total %}
-          {% set id_customer_thread = tmp2.id_customer_thread %}
-        {% endif %}
+            {% if nb_categories < 6 %}
+              <p>{{ val.description }}</p>
+            {% endif %}
+                {% if total_threads[val.id_contact] == 0 %}
+                  <span
+                    class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+                {% else %}
+                  <a
+                    href="{{ urls[val.id_contact] }}"
+                    class="button">
+                    {{ total_threads[val.id_contact] }}
+                    {% if total_threads[val.id_contact] > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                    {% endif %}
+                  </a>
+                {% endif %}
+          </div>
+        </div>
       {% endfor %}
       <div class="col-lg-3 p-0 card">
         <div class="card-header">
-          {{ val.name }}
+          {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </div>
-        <div class="card-body">
-
-          {% if nb_categories < 6 %}
-            <p>{{ val.description }}</p>
-          {% endif %}
-          {% if total_thread == 0 %}
-            <span class="message-mail">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-          {% else %}
-            <a
-              href="{currentIndex|escape:'html':'UTF-8'}&amp;token={token|escape:'html':'UTF-8'}&amp;id_customer_thread={id_customer_thread}&amp;viewcustomer_thread"
-              class="button">
-              {{ total_thread }}
-              {% if total_thread > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              {% endif %}
-            </a>
-          {% endif %}
-        </div>
+        <ul class="list-unstyled card-body">
+          {% set count = 0 %}
+          {% for key, val in params %}
+            {% set count = count+1 %}
+            <li class="border-bottom">{{ key }} <span class="text-dark float-right font-weight-bold">{{ val }}</span>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
-    {% endfor %}
-    <div class="col-lg-3 p-0 card">
-      <div class="card-header">
-        {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
-      </div>
-      <ul class="list-unstyled card-body">
-        {% set count = 0 %}
-        {% for key, val in params %}
-          {% set count = count+1 %}
-          <li>{{ key }} <span class="badge bg-primary text-light">{{ val }}</span></li>
-        {% endfor %}
-      </ul>
     </div>
   </div>
 {% endblock %}
