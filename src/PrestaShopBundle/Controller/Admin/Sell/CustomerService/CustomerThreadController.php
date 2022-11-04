@@ -69,6 +69,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
+        $customerServicesSummaryQueryHandler = $this->get('prestashop.core.domain.customer_service.query_handler.GetCustomerServicesSummaryHandler');
         $customerThreadKpiFactory = $this->get('prestashop.core.kpi_row.factory.customer_thread');
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
@@ -82,26 +83,6 @@ class CustomerThreadController extends FrameworkBundleAdminController
             $this->trans('Closed threads', 'Admin.Catalog.Feature') => $all - ($unread + $pending),
         ];
 
-        $urls = [];
-        $totalThreads = [];
-        foreach (Contact::getCategoriesContacts() as $categoriesContact) {
-            $totalThreads[$categoriesContact['id_contact']] = 0;
-            foreach (CustomerThread::getContacts() as $contact) {
-                if ($categoriesContact['id_contact'] === $contact['id_contact']) {
-                    $totalThreads[$categoriesContact['id_contact']] = $contact['total'];
-                    $idCustomerThread[$categoriesContact['id_contact']] = $contact['id_customer_thread'];
-                }
-            }
-            if (isset($idCustomerThread[$categoriesContact['id_contact']])) {
-                $urls[$categoriesContact['id_contact']] = $this->generateUrl(
-                    'admin_customer_threads_view',
-                    [
-                        'customerThreadId' => $idCustomerThread[$categoriesContact['id_contact']]
-                    ]
-                );
-            }
-        }
-
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
@@ -110,8 +91,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'contacts' => CustomerThread::getContacts(),
             'params' => $params,
             'customerThreadKpi' => $customerThreadKpiFactory->build(),
-            'urls' => $urls,
-            'total_threads' => $totalThreads,
+            'servicesSummary' => $customerServicesSummaryQueryHandler->handle(),
         ]);
     }
 
@@ -198,7 +178,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         try {
             $this->getCommandBus()->handle(
-                new ReplyToCustomerThreadCommand((int)$customerThreadId, $data['reply_message'])
+                new ReplyToCustomerThreadCommand((int) $customerThreadId, $data['reply_message'])
             );
 
             $this->addFlash(
@@ -306,19 +286,19 @@ class CustomerThreadController extends FrameworkBundleAdminController
 
         if ($data['employee_id']) {
             /** @var Email $employeeEmail */
-            $employeeEmail = $this->getQueryBus()->handle(new GetEmployeeEmailById((int)$data['employee_id']));
+            $employeeEmail = $this->getQueryBus()->handle(new GetEmployeeEmailById((int) $data['employee_id']));
             $forwardEmail = $employeeEmail->getValue();
 
             $command = ForwardCustomerThreadCommand::toAnotherEmployee(
-                (int)$customerThreadId,
-                (int)$data['employee_id'],
+                (int) $customerThreadId,
+                (int) $data['employee_id'],
                 $data['comment']
             );
         } else {
             $forwardEmail = $data['someone_else_email'];
 
             $command = ForwardCustomerThreadCommand::toSomeoneElse(
-                (int)$customerThreadId,
+                (int) $customerThreadId,
                 $data['someone_else_email'],
                 $data['comment']
             );
@@ -453,7 +433,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(
-                new UpdateCustomerThreadStatusCommand((int)$customerThreadId, $newStatus)
+                new UpdateCustomerThreadStatusCommand($customerThreadId, $newStatus)
             );
 
             $this->addFlash(

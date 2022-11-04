@@ -31,12 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use ConfigurationKPI;
 use Context;
 use HelperKpi;
-use HelperKpiRow;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 
 class MessagesPerThreadKpi implements KpiInterface
 {
-
     public function render()
     {
         /** @var Context $context */
@@ -49,7 +47,7 @@ class MessagesPerThreadKpi implements KpiInterface
         $helper->icon = 'message';
         $helper->color = 'color3';
         $helper->title = $translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $translator->trans('30 day', [],  'Admin.Global');
+        $helper->subtitle = $translator->trans('30 day', [], 'Admin.Global');
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }

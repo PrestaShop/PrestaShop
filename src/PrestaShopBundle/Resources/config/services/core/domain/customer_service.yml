@@ -74,3 +74,10 @@ services:
 
   prestashop.core.domain.customer_service.repository.customer_thread_repository:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
+
+  prestashop.core.domain.customer_service.query_handler.GetCustomerServicesSummaryHandler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandler'
+    arguments:
+      - '@router'
+    tags:
+      - name: tactician.handler
