@@ -29,7 +29,6 @@ namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
@@ -87,7 +86,12 @@ abstract class ProductFillerTestCase extends TestCase
         $product->condition = ProductCondition::NEW;
         $product->show_condition = false;
         $product->online_only = false;
-        $product->id_manufacturer = NoManufacturerId::NO_MANUFACTURER_ID;
+        $product->width = 0;
+        $product->height = 0;
+        $product->depth = 0;
+        $product->weight = 0;
+        $product->additional_shipping_cost = 0;
+        $product->additional_delivery_times = 1;
 
         return $product;
     }
