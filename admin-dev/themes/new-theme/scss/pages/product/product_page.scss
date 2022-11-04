@@ -1254,61 +1254,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  #product_stock_quantities_stock_movements_list {
-    max-width: 600px;
-  }
-
-  #product_stock_quantities_stock_movements_list,
-  #combination_form_stock_quantities_stock_movements_list {
-    .table {
-      margin-bottom: 0.8rem;
-      border-bottom: none;
-    }
-
-    td {
-      padding-top: 0.8rem;
-      padding-bottom: 0.8rem;
-      border: none;
-    }
-
-    .employee_preview {
-      display: inline-block;
-      max-width: 300px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stock_movement_quantity {
-      @include border-radius(5px);
-      display: inline-block;
-      min-width: 55px;
-      padding: 2px;
-      font-size: 0.7rem;
-      color: #fff;
-      text-align: center;
-
-      &.increased_quantity {
-        background-color: $brand-primary;
-      }
-
-      &.decreased_quantity {
-        background-color: $gray-dark;
-      }
-    }
-
-    .entity-item {
-      border-bottom: none;
-    }
-
-    .orders-stock-movement {
-      background-color: rgba(219, 225, 227, 0.5);
-
-      .text-preview {
-        font-weight: 700;
-      }
-    }
-  }
-
   #product_description_related_products {
     .search-with-icon {
       max-width: 377px;
@@ -1491,6 +1436,59 @@ $product-page-padding-bottom: 80px !default;
           margin-bottom: 0;
         }
       }
+    }
+  }
+}
+
+// Stock movement style is common to product and combination page
+.stock-movement-list {
+  max-width: 600px;
+
+  .table {
+    margin-bottom: 0.8rem;
+    border-bottom: none;
+  }
+
+  td {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    border: none;
+  }
+
+  .employee_preview {
+    display: inline-block;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stock_movement_quantity {
+    @include border-radius(5px);
+    display: inline-block;
+    min-width: 55px;
+    padding: 2px;
+    font-size: 0.7rem;
+    color: #fff;
+    text-align: center;
+
+    &.increased_quantity {
+      background-color: $brand-primary;
+    }
+
+    &.decreased_quantity {
+      background-color: $gray-dark;
+    }
+  }
+
+  .entity-item {
+    border-bottom: none;
+  }
+
+  .orders-stock-movement {
+    background-color: rgba(219, 225, 227, 0.5);
+
+    .text-preview {
+      font-weight: 700;
     }
   }
 }
