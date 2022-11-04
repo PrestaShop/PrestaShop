@@ -337,3 +337,12 @@ services:
     arguments:
       - '@prestashop.core.form.choice_provider.gender_choice_provider'
     public: true
+
+  prestashop.core.grid.definition.factory.customer_thread:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CustomerThreadGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.form.choice_provider.contact_type_choice_provider'
+      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+      - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
+    public: true

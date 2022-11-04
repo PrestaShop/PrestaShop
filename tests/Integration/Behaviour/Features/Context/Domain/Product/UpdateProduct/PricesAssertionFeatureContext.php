@@ -38,24 +38,18 @@ use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureCont
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
- * This abstract class was introduced during UpdateProductCommand unification process,
- * and which idea is to remove multiple sub-commands and use single UpdateProductCommand instead.
- * This abstract context allows sharing assertions which and some other common methods for both implementations during the transition.
- *
- * @see UpdateProductCommand
- * @see UpdateProductHandlerInterface
- *
- * @todo: need to check if this abstract class is still needed when UpdateProductCommand is fully finished,
- *        because one of the contexts that uses it will be deleted, therefore leaving this abstract class useless.
+ * Context for product assertions related to Prices related properties
  */
-abstract class AbstractUpdatePricesFeatureContext extends AbstractProductFeatureContext
+class PricesAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @Then product :productReference should have following prices information for shops :shopReference:
+     *
      * @param string $productReference
      * @param string $shopReferences
      * @param TableNode $tableNode
      */
-    protected function performAssertPriceFieldsForShops(string $productReference, string $shopReferences, TableNode $tableNode): void
+    public function assertPriceFieldsForShops(string $productReference, string $shopReferences, TableNode $tableNode): void
     {
         $data = $tableNode->getRowsHash();
 
@@ -72,10 +66,12 @@ abstract class AbstractUpdatePricesFeatureContext extends AbstractProductFeature
     }
 
     /**
+     * @Then product :productReference should have following prices information:
+     *
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    protected function performAssertPriceFields(string $productReference, TableNode $tableNode): void
+    public function assertPriceFields(string $productReference, TableNode $tableNode): void
     {
         $data = $tableNode->getRowsHash();
         $pricesInfo = $this->getProductForEditing($productReference)->getPricesInformation();

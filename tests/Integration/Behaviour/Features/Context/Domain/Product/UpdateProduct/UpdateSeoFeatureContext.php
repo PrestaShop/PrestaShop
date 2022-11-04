@@ -33,9 +33,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
+/**
+ * Context for updating product SEO properties by using UpdateProductCommand
+ *
+ * @see UpdateProductCommand
+ */
+class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I update product :productReference SEO information for shop :shopReference with following values:
@@ -88,32 +94,6 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
             ),
             $tableNode
         );
-    }
-
-    /**
-     * @Then product :productReference should have following seo options for shops :shopReferences:
-     *
-     * @param string $productReference
-     * @param string $shopReferences
-     * @param TableNode $tableNode
-     */
-    public function assertSeoOptionsForShops(
-        string $productReference,
-        string $shopReferences,
-        TableNode $tableNode
-    ): void {
-        $this->performAssertSeoOptionsForShops($productReference, $shopReferences, $tableNode);
-    }
-
-    /**
-     * @Then product :productReference should have following seo options:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function assertSeoOptionsForDefaultShop(string $productReference, TableNode $tableNode): void
-    {
-        $this->performAssertSeoOptionsForDefaultShop($productReference, $tableNode);
     }
 
     /**
@@ -202,16 +182,6 @@ class UpdateSeoFeatureContext extends AbstractUpdateSeoFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
-    }
-
-    /**
-     * @Then product :productReference should not have a redirect target
-     *
-     * @param string $productReference
-     */
-    public function assertHasNoRedirectTargetId(string $productReference)
-    {
-        $this->performAssertHasNoRedirectTargetId($productReference);
     }
 
     /**

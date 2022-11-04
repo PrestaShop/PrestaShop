@@ -29,12 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
 {
@@ -57,47 +54,6 @@ class UpdateDetailsFeatureContext extends AbstractProductFeatureContext
             $this->setLastException($e);
         } catch (ManufacturerException $e) {
             $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Transform table:product detail,value
-     *
-     * @param TableNode $tableNode
-     *
-     * @return ProductDetails
-     */
-    public function transformDetails(TableNode $tableNode): ProductDetails
-    {
-        $dataRows = $tableNode->getRowsHash();
-
-        return new ProductDetails(
-            $dataRows['isbn'],
-            $dataRows['upc'],
-            $dataRows['ean13'],
-            $dataRows['mpn'],
-            $dataRows['reference']
-        );
-    }
-
-    /**
-     * @Then product :productReference should have following details:
-     *
-     * @param string $productReference
-     * @param ProductDetails $expectedDetails
-     */
-    public function assertDetails(string $productReference, ProductDetails $expectedDetails): void
-    {
-        $properties = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getProductForEditing($productReference)->getDetails();
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-        foreach ($properties as $propertyName) {
-            Assert::assertSame(
-                $propertyAccessor->getValue($expectedDetails, $propertyName),
-                $propertyAccessor->getValue($actualDetails, $propertyName),
-                sprintf('Unexpected %s of "%s"', $propertyName, $productReference)
-            );
         }
     }
 

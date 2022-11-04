@@ -441,6 +441,71 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        $command = $this->getSingleShopCommand();
+        $command->setReference('ref');
+        yield [
+            [
+                'specifications' => [
+                    'references' => [
+                        'reference' => 'ref',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setIsbn('0-8044-2957-X');
+        yield [
+            [
+                'specifications' => [
+                    'references' => [
+                        'isbn' => '0-8044-2957-X',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setEan13('13');
+        yield [
+            [
+                'specifications' => [
+                    'references' => [
+                        'ean_13' => '13',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setUpc('1345');
+        yield [
+            [
+                'specifications' => [
+                    'references' => [
+                        'upc' => '1345',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setMpn('mpn');
+        yield [
+            [
+                'specifications' => [
+                    'references' => [
+                        'mpn' => 'mpn',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $command = $this->getSingleShopCommand()
             ->setVisibility(ProductVisibility::INVISIBLE)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
@@ -455,6 +520,11 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+            ->setIsbn('0-8044-2957-X')
+            ->setEan13('13')
+            ->setUpc('1345')
+            ->setMpn('mpn')
+            ->setReference('0123456789')
         ;
 
         yield [
@@ -494,6 +564,15 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'target' => [
                             'id' => 42,
                         ],
+                    ],
+                ],
+                'specifications' => [
+                    'references' => [
+                        'isbn' => '0-8044-2957-X',
+                        'ean_13' => '13',
+                        'upc' => '1345',
+                        'mpn' => 'mpn',
+                        'reference' => '0123456789',
                     ],
                 ],
             ],

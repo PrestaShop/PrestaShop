@@ -55,9 +55,11 @@ final class DataColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'clickable' => true,
+                'max_displayed_characters' => 0,
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('clickable', 'bool')
+            ->setAllowedTypes('max_displayed_characters', 'int')
         ;
     }
 }

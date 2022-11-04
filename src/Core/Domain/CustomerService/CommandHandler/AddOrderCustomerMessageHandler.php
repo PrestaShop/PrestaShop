@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
 use Configuration;
 use Customer;
@@ -43,7 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tools;
 
-final class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
+class AddOrderCustomerMessageHandler implements AddOrderCustomerMessageHandlerInterface
 {
     /**
      * @var int

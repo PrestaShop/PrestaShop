@@ -66,7 +66,9 @@ module.exports = {
     customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
     customer_preferences: './js/pages/customer-preferences',
+    customer_thread: './js/pages/customer-thread/index',
     customer_thread_view: './js/pages/customer-thread/view',
+    customer_threads: './scss/pages/customer_thread/customer_thread.scss',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
@@ -139,6 +141,8 @@ module.exports = {
     zone: './js/pages/zone',
     country: './js/pages/country',
     country_form: './js/pages/country/form',
+    create_product: './js/pages/product/create-product',
+    create_product_default_theme: './scss/pages/product/create_product_default_theme.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
