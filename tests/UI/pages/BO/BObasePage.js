@@ -45,6 +45,7 @@ class BOBasePage extends CommonPage {
     this.helpButton = '#product_form_open_help';
 
     // left navbar
+    this.menuCollapse = '.nav-bar > .menu-collapse';
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
 
@@ -123,6 +124,8 @@ class BOBasePage extends CommonPage {
     // Payment
     this.paymentParentLink = '#subtab-AdminParentPayment';
     // Preferences
+    this.paymentMethodsLink = '#subtab-AdminPayment';
+    // Preferences
     this.preferencesLink = '#subtab-AdminPaymentPreferences';
 
     // International
@@ -155,8 +158,12 @@ class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Information
+    this.informationLink = '#subtab-AdminInformation';
     // Performance
     this.performanceLink = '#subtab-AdminPerformance';
+    // Administration
+    this.administrationLink = '#subtab-AdminAdminPreferences';
     // E-mail
     this.emailLink = '#subtab-AdminEmails';
     // Import
@@ -171,10 +178,108 @@ class BOBasePage extends CommonPage {
     this.logsLink = '#subtab-AdminLogs';
     // New & Experimental Features
     this.featureFlagLink = '#subtab-AdminFeatureFlag';
+    // Security
+    this.securityLink = '#subtab-AdminParentSecurity';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
     // Deprecated tab used for regression test
     this.menuTabLink = '#subtab-AdminTabs';
+
+    this.menuTree = [
+      {
+        parent: this.ordersParentLink,
+        children: [
+          this.ordersLink,
+          this.invoicesLink,
+          this.creditSlipsLink,
+          this.deliverySlipslink,
+          this.shoppingCartsLink,
+        ],
+      },
+      {
+        parent: this.customersParentLink,
+        children: [
+          this.customersLink,
+          this.addressesLink,
+        ],
+      },
+      {
+        parent: this.customerServiceParentLink,
+        children: [
+          this.customerServiceLink,
+          this.orderMessagesLink,
+          this.merchandiseReturnsLink,
+        ],
+      },
+      {
+        parent: this.modulesParentLink,
+        children: [
+          this.moduleManagerLink,
+        ],
+      },
+      {
+        parent: this.designParentLink,
+        children: [
+          this.themeAndLogoParentLink,
+          this.emailThemeLink,
+          this.pagesLink,
+          this.positionsLink,
+          this.imageSettingsLink,
+          this.linkWidgetLink,
+        ],
+      },
+      {
+        parent: this.shippingLink,
+        children: [
+          this.carriersLink,
+          this.shippingPreferencesLink,
+        ],
+      },
+      {
+        parent: this.paymentParentLink,
+        children: [
+          this.paymentMethodsLink,
+          this.preferencesLink,
+        ],
+      },
+      {
+        parent: this.internationalParentLink,
+        children: [
+          this.localizationLink,
+          this.locationsLink,
+          this.taxesLink,
+          this.translationsLink,
+        ],
+      },
+      {
+        parent: this.shopParametersParentLink,
+        children: [
+          this.shopParametersGeneralLink,
+          this.orderSettingsLink,
+          this.productSettingsLink,
+          this.customerSettingsLink,
+          this.contactLink,
+          this.trafficAndSeoLink,
+          this.searchLink,
+        ],
+      },
+      {
+        parent: this.advancedParametersLink,
+        children: [
+          this.informationLink,
+          this.performanceLink,
+          this.administrationLink,
+          this.emailLink,
+          this.importLink,
+          this.teamLink,
+          this.databaseLink,
+          this.logsLink,
+          this.webserviceLink,
+          this.featureFlagLink,
+          this.securityLink,
+        ],
+      },
+    ];
 
     // Growls
     this.growlDiv = '#growls';
@@ -279,18 +384,112 @@ class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(page, parentSelector, linkSelector) {
-    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
+    await this.clickSubMenu(page, parentSelector);
+    await this.scrollTo(page, linkSelector);
+    await this.clickAndWaitForNavigation(page, linkSelector);
+    if (await this.isSidebarCollapsed(page)) {
+      await this.waitForHiddenSelector(page, `${linkSelector}.link-active`);
+    } else {
+      await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
+    }
+  }
+
+  /**
+   * Open a subMenu
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @returns {Promise<void>}
+   */
+  async clickSubMenu(page, parentSelector) {
+    const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
+    if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
       // open the block
       await this.scrollTo(page, parentSelector);
 
       await Promise.all([
         page.click(parentSelector),
-        this.waitForVisibleSelector(page, `${parentSelector}.open`),
+        this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
       ]);
     }
-    await this.scrollTo(page, linkSelector);
-    await this.clickAndWaitForNavigation(page, linkSelector);
-    await this.waitForVisibleSelector(page, `${linkSelector}.link-active`);
+  }
+
+  /**
+   * Return is a submenu is active
+   * @param page {Page} Browser tab
+   * @param linkSelector {string} Selector of the menu
+   * @return {Promise<boolean>}
+   */
+  async isSubMenuActive(page, linkSelector) {
+    return (await page.$$(`${linkSelector}.link-active`)).length > 0;
+  }
+
+  /**
+   * Return is the navbar is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isNavbarVisible(page) {
+    return this.elementVisible(page, '.nav-bar:not(.mobile-nav)', 1000);
+  }
+
+  /**
+   * Return is the navbar is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isMobileMenuVisible(page) {
+    return this.elementVisible(page, '.js-mobile-menu', 1000);
+  }
+
+  /**
+   * Returns if Submenu is visible
+   * @param page {Page} Browser tab
+   * @param parentSelector {string} Selector of the parent menu
+   * @param linkSelector {string} Selector of the child menu
+   * @return {Promise<boolean>}
+   */
+  async isSubmenuVisible(page, parentSelector, linkSelector) {
+    const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
+    if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
+      // Scroll before opening menu
+      await this.scrollTo(page, parentSelector);
+
+      await Promise.all([
+        page.click(parentSelector),
+        this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`),
+      ]);
+
+      await this.waitForVisibleSelector(page, `${parentSelector}${openSelector}`);
+    }
+    return this.elementVisible(page, linkSelector, 1000);
+  }
+
+  /**
+   * Collapse the sidebar
+   * @param page {Page} Browser tab
+   * @param isCollapsed {boolean} Selector of the parent menu
+   * @return {Promise<boolean>}
+   */
+  async setSidebarCollapsed(page, isCollapsed) {
+    const isCurrentCollapsed = this.isSidebarCollapsed(page);
+    if (isCurrentCollapsed !== isCollapsed) {
+      await Promise.all([
+        page.click(this.menuCollapse),
+        this.waitForVisibleSelector(
+          page,
+          isCollapsed ? 'body.page-sidebar-closed' : 'body:not(.page-sidebar-closed)',
+        ),
+      ]);
+    }
+  }
+
+  /**
+   * Returns if the sidebar is collapsed
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  async isSidebarCollapsed(page) {
+    return this.elementVisible(page, 'body.page-sidebar-closed', 1000);
   }
 
   /**
@@ -407,28 +606,6 @@ class BOBasePage extends CommonPage {
    */
   async getHelpDocumentURL(page) {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
-  }
-
-  /**
-   * Check if Submenu is visible
-   * @param page {Page} Browser tab
-   * @param parentSelector {string} Selector of the parent menu
-   * @param linkSelector {string} Selector of the child menu
-   * @return {Promise<boolean>}
-   */
-  async isSubmenuVisible(page, parentSelector, linkSelector) {
-    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
-      // Scroll before opening menu
-      await this.scrollTo(page, parentSelector);
-
-      await Promise.all([
-        page.click(parentSelector),
-        this.waitForVisibleSelector(page, `${parentSelector}.open`),
-      ]);
-
-      await this.waitForVisibleSelector(page, `${parentSelector}.open`);
-    }
-    return this.elementVisible(page, linkSelector, 1000);
   }
 
   /**
