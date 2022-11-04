@@ -25,6 +25,9 @@
 <template>
   <tr>
     <td>
+      {{ product.product_id }}
+    </td>
+    <td>
       <div class="d-flex align-items-center">
         <PSMedia
           class="d-flex align-items-center"

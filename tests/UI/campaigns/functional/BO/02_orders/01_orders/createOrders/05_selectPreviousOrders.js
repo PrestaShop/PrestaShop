@@ -51,7 +51,7 @@ const orderData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 let orderIframe;
-const paymentMethod = 'Payments by check';
+const paymentMethod = PaymentMethods.checkPayment.moduleName;
 const orderStatus = Statuses.paymentAccepted;
 /*
 Pre-condition:

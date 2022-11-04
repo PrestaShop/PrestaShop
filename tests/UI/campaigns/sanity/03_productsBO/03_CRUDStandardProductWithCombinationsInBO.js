@@ -82,7 +82,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
 
     await productsPage.goToAddProductPage(page);
     await addProductPage.createEditBasicProduct(page, productWithCombinations);
-    const createProductMessage = await addProductPage.setCombinationsInProduct(
+    const createProductMessage = await addProductPage.setAttributesInProduct(
       page,
       productWithCombinations,
     );
@@ -124,7 +124,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
     await addProductPage.createEditBasicProduct(page, editedProductWithCombinations);
-    const createProductMessage = await addProductPage.setCombinationsInProduct(
+    const createProductMessage = await addProductPage.setAttributesInProduct(
       page,
       editedProductWithCombinations,
     );

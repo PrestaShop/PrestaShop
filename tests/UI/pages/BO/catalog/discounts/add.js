@@ -58,6 +58,29 @@ class AddCartRule extends BOBasePage {
     this.quantityInput = 'input[name=quantity]';
     this.quantityPerUserInput = 'input[name=quantity_per_user]';
 
+    // Restrictions
+    // Country Group Selection
+    this.countryRestriction = '#country_restriction';
+    this.countrySelection = '#country_select_2';
+    this.countryGroupRemoveButton = '#country_select_remove';
+    this.countryGroupAddButton = '#country_select_add';
+
+    // ---Carrier Restriction
+    this.carrierRestriction = '#carrier_restriction';
+    this.carrierRestrictionPickUpInStore = '#carrier_select_2 > option:nth-child(1)';
+    this.carrierRestrictionDeliveryNextDay = '#carrier_select_2 > option:nth-child(2)';
+    this.carrierRestrictionRemoveButton = '#carrier_select_remove';
+    this.carrierRestrictionAddButton = '#carrier_select_add';
+
+    // Customer group selection
+    this.customerGroupRestriction = '#group_restriction';
+    this.customerGroupSelection = '#group_select_2';
+    this.customerGroupCustomer = `${this.customerGroupSelection} option:nth-child(1)`;
+    this.customerGroupGuest = `${this.customerGroupSelection} option:nth-child(2)`;
+    this.customerGroupVisitor = `${this.customerGroupSelection} option:nth-child(3)`;
+    this.customerGroupRemoveButton = '#group_select_remove';
+    this.customerGroupAddButton = '#group_select_add';
+
     // Actions tab
     this.actionsTabLink = '#cart_rule_link_actions';
     this.freeShippingToggle = toggle => `${this.cartRuleForm} #free_shipping_${toggle}`;
@@ -158,6 +181,27 @@ class AddCartRule extends BOBasePage {
       await page.press(this.dateToInput, 'Enter');
     }
 
+    // Set carrier discount
+    if (cartRuleData.carrierRestriction) {
+      await this.setChecked(page, this.carrierRestriction);
+      await page.click(this.carrierRestrictionPickUpInStore);
+      await page.click(this.carrierRestrictionRemoveButton);
+    }
+
+    // Choose the country selection
+    if (cartRuleData.countrySelection) {
+      await this.setChecked(page, this.countryRestriction);
+      await this.selectByValue(page, this.countrySelection, cartRuleData.countryIDToRemove);
+      await page.click(this.countryGroupRemoveButton);
+    }
+
+    // Set Customer Group Selection
+    if (cartRuleData.customerGroupSelection) {
+      await this.setChecked(page, this.customerGroupRestriction);
+      await page.click(this.customerGroupCustomer);
+      await page.click(this.customerGroupRemoveButton);
+    }
+
     // Fill minimum amount values
     await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
@@ -168,7 +212,6 @@ class AddCartRule extends BOBasePage {
     await this.setValue(page, this.quantityInput, cartRuleData.quantity);
     await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser);
   }
-
 
   /**
    * Fill actions tab

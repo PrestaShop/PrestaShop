@@ -41,5 +41,13 @@ module.exports = {
         zone: 'Asia',
         status: false,
       },
+      unitedStates: {
+        id: 21,
+        name: 'United States',
+        isoCode: 'US',
+        callPrefix: 1,
+        zone: 'North America',
+        status: false,
+      },
     },
 };

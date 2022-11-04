@@ -55,8 +55,8 @@ class Addresses extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.addressGridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.addressGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.addressGridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.addressGridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.addressGridPanel} [data-role='previous-page-link']`;
 
     // Required field section
     this.setRequiredFieldsButton = 'button[data-target=\'#addressRequiredFieldsContainer\']';

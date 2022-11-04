@@ -2,7 +2,7 @@
 @restore-products-before-feature
 @update-product-prices
 @update-prices
-Feature: Update product price fields from Back Office (BO).
+Feature: Update product price fields from Back Office (BO) when default country has states.
   As a BO user I want to be able to update product fields associated with price.
 
   Background:
@@ -275,3 +275,54 @@ Feature: Update product price fields from Back Office (BO).
       | unity                   | bag of ten      |
     # Reset configuration to its initial value
     Then shop configuration for "PS_TAX" is set to 1
+
+  Scenario: When first tax rule for specific state is deleted the tax rule group takes the next one
+    And I add new tax "us-tax-state-1" with following properties:
+      | name       | US Tax (6%) |
+      | rate       | 6           |
+      | is_enabled | true        |
+    And I add new tax "us-tax-state-2" with following properties:
+      | name       | US Tax (5%) |
+      | rate       | 5           |
+      | is_enabled | true        |
+    And I add the tax rule group "us-tax-group-multiple-states" for the tax "us-tax-state-1" with the following conditions:
+      | name    | US Tax group |
+      | country | US           |
+      | state   | AK           |
+    And I add the tax rule "us-tax-state-2" for tax rule group "us-tax-group-multiple-states":
+      | name    | US Tax (5%) |
+      | country | US          |
+      | state   | AR          |
+    And product product1 should not have any suppliers assigned
+    And product product1 should not have a default supplier
+    When I update product "product1" prices with following information:
+      | price           | 100.99       |
+      | ecotax          | 0            |
+      | tax rules group | US Tax group |
+      | on_sale         | true         |
+      | wholesale_price | 70           |
+      | unit_price      | 900          |
+      | unity           | bag of ten   |
+    Then product product1 should have following prices information:
+      | price                   | 100.99       |
+      | price_tax_included      | 107.0494     |
+      | ecotax                  | 0            |
+      | tax rules group         | US Tax group |
+      | on_sale                 | true         |
+      | wholesale_price         | 70           |
+      | unit_price              | 900          |
+      | unit_price_tax_included | 954          |
+      | unit_price_ratio        | 0.112211     |
+      | unity                   | bag of ten   |
+    When I delete tax rules that has tax "us-tax-state-1":
+    Then product product1 should have following prices information:
+      | price                   | 100.99       |
+      | price_tax_included      | 106.0395     |
+      | ecotax                  | 0            |
+      | tax rules group         | US Tax group |
+      | on_sale                 | true         |
+      | wholesale_price         | 70           |
+      | unit_price              | 900          |
+      | unit_price_tax_included | 945          |
+      | unit_price_ratio        | 0.112211     |
+      | unity                   | bag of ten   |

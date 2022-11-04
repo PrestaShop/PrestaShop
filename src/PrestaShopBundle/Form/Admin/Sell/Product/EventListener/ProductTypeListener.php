@@ -83,10 +83,23 @@ class ProductTypeListener implements EventSubscriberInterface
         }
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
-            $this->removeSuppliers($form);
+            $this->removeProductSuppliers($form);
             $this->removeStock($form);
         } elseif ($initialProductType !== ProductType::TYPE_COMBINATIONS) {
             $this->removeCombinations($form);
+        }
+
+        $optionsField = $form->get('options');
+
+        // As this is also executed on pre-submit, we need to verify that suppliers exist before removing it
+        if ($optionsField->has('suppliers')) {
+            $suppliers = $optionsField->get('suppliers')->get('supplier_ids')->getConfig()->getOptions()['choices'];
+
+            // Don't display the suppliers part if there are no suppliers
+            if (count($suppliers) <= 0) {
+                $this->removeSuppliers($form);
+                $this->removeProductSuppliers($form);
+            }
         }
 
         if (ProductType::TYPE_PACK !== $productType) {
@@ -117,11 +130,25 @@ class ProductTypeListener implements EventSubscriberInterface
         }
     }
 
+    protected function removeProductSuppliers(FormInterface $form): void
+    {
+        if ($form->has('options')) {
+            $optionsForm = $form->get('options');
+
+            if ($optionsForm->has('product_suppliers')) {
+                $optionsForm->remove('product_suppliers');
+            }
+        }
+    }
+
     protected function removeSuppliers(FormInterface $form): void
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
-            $optionsForm->remove('product_suppliers');
+
+            if ($optionsForm->has('suppliers')) {
+                $optionsForm->remove('suppliers');
+            }
         }
     }
 

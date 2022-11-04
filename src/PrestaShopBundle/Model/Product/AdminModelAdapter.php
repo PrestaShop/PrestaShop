@@ -264,6 +264,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
             } elseif (RedirectType::TYPE_CATEGORY_PERMANENT == $form_data['redirect_type'] || RedirectType::TYPE_CATEGORY_TEMPORARY == $form_data['redirect_type']) {
                 $form_data['id_type_redirected'] = 0;
+            } elseif (RedirectType::TYPE_GONE == $form_data['redirect_type']) {
+                $form_data['id_type_redirected'] = 0;
+                $form_data['redirect_type'] = RedirectType::TYPE_GONE;
             } else {
                 $form_data['id_type_redirected'] = 0;
                 $form_data['redirect_type'] = RedirectType::TYPE_CATEGORY_PERMANENT;

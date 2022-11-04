@@ -34,8 +34,8 @@ const customerServicePage = require('@pages/BO/customerService/customerService')
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
-const messageOption = `${Products.demo_1.name} (Size: ${Products.demo_1.combination.size[0]} `
-  + `- Color: ${Products.demo_1.combination.color[0]})`;
+const messageOption = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes.size[0]} `
+  + `- Color: ${Products.demo_1.attributes.color[0]})`;
 
 let browserContext;
 let page;
@@ -144,6 +144,13 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       const pageTitle = await ordersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should reset all filters ', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
+
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should update order status to '${Statuses.paymentAccepted.status}'`, async function () {

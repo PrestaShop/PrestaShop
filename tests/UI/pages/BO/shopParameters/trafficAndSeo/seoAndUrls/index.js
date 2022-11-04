@@ -63,8 +63,8 @@ class SeoAndUrls extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
 
     // Set up URL form
     this.friendlyUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;

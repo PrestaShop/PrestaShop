@@ -24,6 +24,7 @@ const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {Products} = require('@data/demo/products');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import faker data
 const AddressFaker = require('@data/faker/address');
@@ -42,7 +43,7 @@ let addAddressIframe;
 // Variable used for the created order ID
 let orderID;
 // Const used for the payment status
-const paymentMethod = 'Payments by check';
+const paymentMethod = PaymentMethods.checkPayment.moduleName;
 // Variable used to create new address in Pre-condition
 const newAddressToCreate = new AddressFaker({email: DefaultCustomer.email, lastName: 'test', country: 'France'});
 // Variable used to edit demo address

@@ -72,7 +72,13 @@
 			{else}
 				<h2>{l s='No order was created from this cart.' d='Admin.Orderscustomers.Feature'}</h2>
 				{if $customer->id}
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders', true, [], ['id_cart' => $cart->id|intval, 'addorder' => 1])|escape:'html':'UTF-8'}"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.' d='Admin.Orderscustomers.Feature'}</a>
+					<a
+            class="btn btn-default"
+            href="{$link->getAdminLink('AdminOrders', true, [], ['id_cart' => $cart->id|intval, 'addorder' => 1])|escape:'html':'UTF-8'}"
+            id="create-order-from-cart"
+          >
+            <i class="icon-shopping-cart"></i> {l s='Create an order from this cart.' d='Admin.Orderscustomers.Feature'}
+          </a>
 				{/if}
 			{/if}
 		</div>

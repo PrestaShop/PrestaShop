@@ -131,6 +131,7 @@ GitHub contributors:
 - cgordenne
 - cgordenne_wepika
 - Chafik
+- Chedly Farhani
 - Chen.Zhidong
 - Chris
 - Chris Gurk
@@ -347,6 +348,7 @@ GitHub contributors:
 - idnovate
 - Igor Stępień
 - indesign47
+- Ines Sallemi
 - Inetbiz
 - ironwo0d
 - Ish Gupta
@@ -447,6 +449,7 @@ GitHub contributors:
 - ldecoker
 - Léa Mendes Da Silva
 - Leandro F. L
+- leemyongpakvn
 - Léo Cunéaz
 - Lesley Paone
 - Lionel Massin
@@ -732,7 +735,7 @@ GitHub contributors:
 - Sacha Froment
 - sadlyblue
 - sagaradonis
-- sallemiines
+- Salim Benouamer
 - Sam Berry
 - Sam Sanchez
 - Samir Shah
@@ -892,6 +895,7 @@ GitHub contributors:
 - Xesau
 - xitromedia
 - xKnut
+- Yani Makouf
 - yanngarras
 - Yannick A
 - Yannick Armand
