@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -62,7 +62,7 @@ abstract class AbstractGetStockMovementsHandler
     }
 
     /**
-     * @return StockMovementEvent[]
+     * @return StockMovement[]
      */
     protected function getStockMovements(StockId $stockId, int $offset, int $limit): array
     {
@@ -73,10 +73,10 @@ abstract class AbstractGetStockMovementsHandler
         );
 
         return array_map(
-            function (array $historyRow): StockMovementEvent {
-                return $historyRow['grouping_type'] === StockMovementEvent::EDITION_TYPE
-                    ? $this->createEditionStockMovementEvent($historyRow)
-                    : $this->createOrdersStockMovementEvent($historyRow)
+            function (array $historyRow): StockMovement {
+                return $historyRow['grouping_type'] === StockMovement::EDITION_TYPE
+                    ? $this->createEditionStockMovement($historyRow)
+                    : $this->createOrdersStockMovement($historyRow)
                 ;
             },
             $lastStockMovements
@@ -86,9 +86,9 @@ abstract class AbstractGetStockMovementsHandler
     /**
      * @param array<string, string|int|null> $historyRow
      *
-     * @return StockMovementEvent
+     * @return StockMovement
      */
-    protected function createEditionStockMovementEvent(array $historyRow): StockMovementEvent
+    protected function createEditionStockMovement(array $historyRow): StockMovement
     {
         $employeeName = $this->translator->trans('%firstname% %lastname%', [
             '%firstname%' => $historyRow['employee_firstname'],
@@ -97,7 +97,7 @@ abstract class AbstractGetStockMovementsHandler
             'Admin.Global'
         );
 
-        return StockMovementEvent::createEditionEvent(
+        return StockMovement::createEditionMovement(
             $historyRow['date_add_min'],
             (int) $historyRow['id_stock_mvt_min'],
             (int) $historyRow['id_stock_list'],
@@ -111,11 +111,11 @@ abstract class AbstractGetStockMovementsHandler
     /**
      * @param array<string, string|int|null> $historyRow
      *
-     * @return StockMovementEvent
+     * @return StockMovement
      */
-    protected function createOrdersStockMovementEvent(array $historyRow): StockMovementEvent
+    protected function createOrdersStockMovement(array $historyRow): StockMovement
     {
-        return StockMovementEvent::createOrdersEvent(
+        return StockMovement::createOrdersMovement(
             $historyRow['date_add_min'],
             $historyRow['date_add_max'],
             explode(',', $historyRow['id_stock_mvt_list']),

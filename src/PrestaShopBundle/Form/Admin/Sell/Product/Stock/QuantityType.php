@@ -87,7 +87,7 @@ class QuantityType extends TranslatorAwareType
                     'label' => $this->trans('Recent stock movements', 'Admin.Catalog.Feature'),
                     'label_tag_name' => 'h4',
                     'layout' => 'table',
-                    'entry_type' => StockMovementEventType::class,
+                    'entry_type' => StockMovementType::class,
                     // No search input
                     'allow_search' => false,
                     // No delete button

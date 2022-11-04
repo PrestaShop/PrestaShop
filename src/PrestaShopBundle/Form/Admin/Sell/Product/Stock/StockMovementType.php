@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-class StockMovementEventType extends TranslatorAwareType
+class StockMovementType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -57,11 +57,11 @@ class StockMovementEventType extends TranslatorAwareType
                 $form = $event->getForm();
 
                 // Check that data exists, during prototype rendering it will be empty
-                $type = $data['type'] ?? StockMovementEvent::EDITION_TYPE;
+                $type = $data['type'] ?? StockMovement::EDITION_TYPE;
                 $increasedQuantity = !empty($data['delta_quantity']) && $data['delta_quantity'] > 0;
 
                 // For orders, we display the kind of movements instead of the data range
-                if ($type === StockMovementEvent::ORDERS_TYPE) {
+                if ($type === StockMovement::ORDERS_TYPE) {
                     $dateData = $increasedQuantity ?
                         $this->trans('Returned products', 'Admin.Catalog.Feature') :
                         $this->trans('Shipped products', 'Admin.Catalog.Feature')

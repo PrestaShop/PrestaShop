@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationFo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -135,20 +135,20 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private function getStockMovementHistories(int $combinationId, ShopConstraint $shopConstraint): array
     {
         return array_map(
-            function (StockMovementEvent $history): array {
+            function (StockMovement $stockMovement): array {
                 $date = null;
-                if ($history->isEdition()) {
-                    $date = $history
+                if ($stockMovement->isEdition()) {
+                    $date = $stockMovement
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)
                     ;
                 }
 
                 return [
-                    'type' => $history->getType(),
+                    'type' => $stockMovement->getType(),
                     'date' => $date,
-                    'employee_name' => $history->getEmployeeName(),
-                    'delta_quantity' => $history->getDeltaQuantity(),
+                    'employee_name' => $stockMovement->getEmployeeName(),
+                    'delta_quantity' => $stockMovement->getDeltaQuantity(),
                 ];
             },
             $this->queryBus->handle(

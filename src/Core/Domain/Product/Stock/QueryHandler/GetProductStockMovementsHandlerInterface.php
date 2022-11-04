@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 
 /**
  * Defines contract for GetStockMovementsHistoryHandler
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEve
 interface GetProductStockMovementsHandlerInterface
 {
     /**
-     * @return StockMovementEvent[]
+     * @return StockMovement[]
      */
     public function handle(GetProductStockMovements $query): array;
 }

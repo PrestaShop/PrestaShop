@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -404,20 +404,20 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function getStockMovementHistory(int $productId, ShopConstraint $shopConstraint): array
     {
         return array_map(
-            function (StockMovementEvent $history): array {
+            function (StockMovement $stockMovement): array {
                 $date = null;
-                if ($history->isEdition()) {
-                    $date = $history
+                if ($stockMovement->isEdition()) {
+                    $date = $stockMovement
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)
                     ;
                 }
 
                 return [
-                    'type' => $history->getType(),
+                    'type' => $stockMovement->getType(),
                     'date' => $date,
-                    'employee_name' => $history->getEmployeeName(),
-                    'delta_quantity' => $history->getDeltaQuantity(),
+                    'employee_name' => $stockMovement->getEmployeeName(),
+                    'delta_quantity' => $stockMovement->getDeltaQuantity(),
                 ];
             },
             $this->queryBus->handle(
