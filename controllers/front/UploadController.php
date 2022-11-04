@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-class UploadControllerCore extends GetFileControllerCore
+class UploadControllerCore extends GetFileController
 {
     private $filename;
 
@@ -37,7 +37,7 @@ class UploadControllerCore extends GetFileControllerCore
             $this->filename = pSQL(Tools::getValue('file'));
         }
 
-        if (!file_exists($this->getPath()) || !$this->isCustomization() && !$this->isEmployee()) {
+        if (!file_exists($this->getPath()) || (!$this->isCustomization() && !$this->isEmployee())) {
             $this->redirect_after = '404';
             $this->redirect();
         }
