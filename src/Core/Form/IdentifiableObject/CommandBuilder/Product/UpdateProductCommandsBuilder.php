@@ -64,6 +64,7 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configurePrices($config)
             ->configureSeo($config)
             ->configureDetails($config)
+            ->configureShipping($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -170,6 +171,28 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addField('[specifications][references][upc]', 'setUpc', DataField::TYPE_STRING)
             ->addField('[specifications][references][ean_13]', 'setEan13', DataField::TYPE_STRING)
             ->addField('[specifications][references][isbn]', 'setIsbn', DataField::TYPE_STRING)
+        ;
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     *
+     * @return self
+     */
+    private function configureShipping(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addField('[shipping][dimensions][width]', 'setWidth', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][height]', 'setHeight', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][depth]', 'setDepth', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][weight]', 'setWeight', DataField::TYPE_STRING)
+            ->addField('[shipping][delivery_time_note_type]', 'setDeliveryTimeNoteType', DataField::TYPE_INT)
+            ->addMultiShopField('[shipping][additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
+            ->addMultiShopField('[shipping][delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[shipping][delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[shipping][carriers]', 'setCarrierReferenceIds', DataField::TYPE_ARRAY)
         ;
 
         return $this;
