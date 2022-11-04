@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class PackageConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['package_weight', 'package_width', 'package_height', 'package_depth'];
+    private const CONFIGURATION_FIELDS = ['package_weight'];
 
     /**
      * {@inheritdoc}
