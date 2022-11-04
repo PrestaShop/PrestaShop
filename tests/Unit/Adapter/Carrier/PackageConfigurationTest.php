@@ -56,9 +56,6 @@ class PackageConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_PACKAGE_WEIGHT', null, $shopConstraint, 2.6],
-                    ['PS_PACKAGE_WIDTH', null, $shopConstraint, 50.45],
-                    ['PS_PACKAGE_HEIGHT', null, $shopConstraint, 50.45],
-                    ['PS_PACKAGE_DEPTH', null, $shopConstraint, 80.6],
                 ]
             );
 
@@ -66,9 +63,6 @@ class PackageConfigurationTest extends AbstractConfigurationTestCase
         $this->assertSame(
             [
                 'package_weight' => 2.6,
-                'package_width' => 50.45,
-                'package_height' => 50.45,
-                'package_depth' => 80.6,
             ],
             $result
         );
@@ -95,10 +89,7 @@ class PackageConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['package_weight' => 'wrong_value', 'package_width' => 10.5, 'package_height' => 10.5, 'package_depth' => 10.5]],
-            [InvalidOptionsException::class, ['package_weight' => 10.5, 'package_width' => 'wrong_value', 'package_height' => 10.5, 'package_depth' => 10.5]],
-            [InvalidOptionsException::class, ['package_weight' => 10.5, 'package_width' => 10.5, 'package_height' => 'wrong_value', 'package_depth' => 10.5]],
-            [InvalidOptionsException::class, ['package_weight' => 10.5, 'package_width' => 10.5, 'package_height' => 10.5, 'package_depth' => 'wrong_value']],
+            [InvalidOptionsException::class, ['package_weight' => 'wrong_value']],
         ];
     }
 
@@ -108,9 +99,6 @@ class PackageConfigurationTest extends AbstractConfigurationTestCase
 
         $res = $HandlingConfiguration->updateConfiguration([
             'package_weight' => 1.5,
-            'package_width' => 50.600,
-            'package_height' => 75.8,
-            'package_depth' => 75.8,
         ]);
 
         $this->assertSame([], $res);

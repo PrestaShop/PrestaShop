@@ -51,7 +51,6 @@ class PackageType extends TranslatorAwareType
         /** @var Configuration $configuration */
         $configuration = $this->getConfiguration();
         $weightUnit = $configuration->get('PS_WEIGHT_UNIT');
-        $dimensionUnit = $configuration->get('PS_DIMENSION_UNIT');
 
         $builder
             ->add('package_weight', NumberType::class, [
@@ -67,48 +66,6 @@ class PackageType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                 ],
                 'multistore_configuration_key' => 'PS_PACKAGE_WEIGHT',
-            ])
-            ->add('package_width', NumberType::class, [
-                'unit' => $dimensionUnit,
-                'required' => false,
-                'empty_data' => '0',
-                'label' => $this->trans(
-                    'Package width',
-                    'Admin.Shipping.Feature'
-                ),
-                'constraints' => [
-                    new GreaterThanOrEqual(['value' => 0]),
-                    new Type(['type' => 'numeric']),
-                ],
-                'multistore_configuration_key' => 'PS_PACKAGE_WIDTH',
-            ])
-            ->add('package_height', NumberType::class, [
-                'unit' => $dimensionUnit,
-                'required' => false,
-                'empty_data' => '0',
-                'label' => $this->trans(
-                    'Package height',
-                    'Admin.Shipping.Feature'
-                ),
-                'constraints' => [
-                    new GreaterThanOrEqual(['value' => 0]),
-                    new Type(['type' => 'numeric']),
-                ],
-                'multistore_configuration_key' => 'PS_PACKAGE_HEIGHT',
-            ])
-            ->add('package_depth', NumberType::class, [
-                'unit' => $dimensionUnit,
-                'required' => false,
-                'empty_data' => '0',
-                'label' => $this->trans(
-                    'Package depth',
-                    'Admin.Shipping.Feature'
-                ),
-                'constraints' => [
-                    new GreaterThanOrEqual(['value' => 0]),
-                    new Type(['type' => 'numeric']),
-                ],
-                'multistore_configuration_key' => 'PS_PACKAGE_DEPTH',
             ]);
     }
 

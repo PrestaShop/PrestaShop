@@ -45,9 +45,6 @@ class PackageConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'package_weight' => (float) $this->configuration->get('PS_PACKAGE_WEIGHT', null, $shopConstraint),
-            'package_width' => (float) $this->configuration->get('PS_PACKAGE_WIDTH', null, $shopConstraint),
-            'package_height' => (float) $this->configuration->get('PS_PACKAGE_HEIGHT', null, $shopConstraint),
-            'package_depth' => (float) $this->configuration->get('PS_PACKAGE_DEPTH', null, $shopConstraint),
         ];
     }
 
@@ -59,9 +56,6 @@ class PackageConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
             $this->updateConfigurationValue('PS_PACKAGE_WEIGHT', 'package_weight', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_PACKAGE_WIDTH', 'package_width', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_PACKAGE_HEIGHT', 'package_height', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_PACKAGE_DEPTH', 'package_depth', $configuration, $shopConstraint);
         }
 
         return [];
