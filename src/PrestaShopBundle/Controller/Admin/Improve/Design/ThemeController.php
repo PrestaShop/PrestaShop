@@ -53,10 +53,9 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController as AbstractAdminController;
+use PrestaShopBundle\Event\ThemeManagementEvent;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\AdaptThemeToRTLLanguagesType;
 use PrestaShopBundle\Form\Admin\Improve\Design\Theme\ImportThemeType;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -219,6 +218,8 @@ class ThemeController extends AbstractAdminController
                 }
 
                 $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
+                $event = new ThemeManagementEvent('montheme');
+                $this->get('event_dispatcher')->dispatch($event, ThemeManagementEvent::INSTALL);
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {

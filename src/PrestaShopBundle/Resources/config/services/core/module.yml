@@ -27,6 +27,13 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+  prestashop.core.admin.theme.repository.eventsubscriber:
+    class: PrestaShop\PrestaShop\Core\Theme\EventSubscriber
+    arguments:
+      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+    tags:
+      - { name: kernel.event_subscriber }
+
   prestashop.module.sourcehandler.zip:
     class: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
     arguments:
