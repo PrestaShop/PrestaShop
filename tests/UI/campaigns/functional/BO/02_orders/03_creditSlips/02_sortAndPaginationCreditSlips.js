@@ -2,7 +2,6 @@ require('module-alias/register');
 
 // Import utils
 const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
 const basicHelper = require('@utils/basicHelper');
 
 
@@ -33,7 +32,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
+let numberOfCreditSlips;
 
 const creditSlipDocumentName = 'Credit slip';
 const orderByCustomerData = {
@@ -43,7 +42,7 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-let numberOfOrder2Create = 11;
+const numberOfOrder2Create = 11;
 
 /*
 Pre-condition:
@@ -68,12 +67,13 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     await loginCommon.loginBO(this, page);
   });
 
-  for(var i=0; i<numberOfOrder2Create; i++){
+  it('should create Order by customer', async () => {
     // Pre-condition: Create order in FO
     createOrderByCustomerTest(orderByCustomerData, baseContext);
+  });
 
-    describe('Create Credit slip ', async () => {
-
+  for (let i = 0; i < numberOfOrder2Create; i++) {
+    describe('Create Credit slip', async () => {
       it('should go to \'Orders > Orders\' page\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -141,19 +141,27 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCreditSlips).to.be.above(0);
+      expect(numberOfCreditSlips).to.be.above(0);
     });
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemssNumberTo10', baseContext);
-    
+
       const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '100');
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
 
     const tests = [
-      {args: {testIdentifier: 'sortByOrderIDAsc', sortBy: 'id_order', sortDirection: 'asc', isFloat: true}},
-      {args: {testIdentifier: 'sortByOrderIDDesc', sortBy: 'id_order', sortDirection: 'desc', isFloat: true}},
+      {
+        args: {
+          testIdentifier: 'sortByOrderIDAsc', sortBy: 'id_order', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByOrderIDDesc', sortBy: 'id_order', sortDirection: 'desc', isFloat: true,
+        },
+      },
       {
         args: {
           testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
@@ -194,19 +202,19 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          expect(sortedTable).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          expect(sortedTable).to.deep.equal(expectedResult.reverse());
         }
       });
     });
   });
 
   describe('Pagination credit slip table', async () => {
-
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemssNumberTo10', baseContext);
 
+      const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
       const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '10');
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOfCreditSlips / 10)})`);
@@ -215,6 +223,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
+      const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
       const paginationNumber = await creditSlipsPage.paginationNext(page);
       expect(paginationNumber, `Number of pages is not (page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`)
         .to.contains(`(page 2 / ${Math.ceil(numberOfCreditSlips / 10)})`);
