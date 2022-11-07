@@ -417,7 +417,7 @@ describe('FO - Account : Check order return PDF', async () => {
         const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${DefaultCustomer.firstName}`
           + ` ${DefaultCustomer.lastName},${Address.second.company},${Address.second.address},`
           + `${Address.second.secondAddress},${Address.second.postalCode} ${Address.second.city}`
-          + `,${Address.second.country},${Address.second.phone},, ,`);
+          + `,${Address.second.country},${Address.second.phone},,`);
 
         await expect(isVisible, 'Billing and delivery address are not correct!').to.be.true;
       });
