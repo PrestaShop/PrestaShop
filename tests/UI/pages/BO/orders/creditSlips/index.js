@@ -26,7 +26,7 @@ class CreditSlips extends BOBasePage {
     this.creditSlipGridTable = '#credit_slip_grid_table';
     this.filterResetButton = `${this.creditSlipGridTable} .grid-reset-button`;
     this.filterSearchButton = `${this.creditSlipGridTable} .grid-search-button`;
-    // ////
+
     // Sort Credit Slip Selectors
     this.tableHead = `${this.creditSlipGridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -217,7 +217,6 @@ class CreditSlips extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
-
 
   /* Sort functions */
   /**
