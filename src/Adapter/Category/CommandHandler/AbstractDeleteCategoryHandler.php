@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
+use Category;
 use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use Product;
@@ -138,16 +139,24 @@ abstract class AbstractDeleteCategoryHandler
      */
     private function findCategoryParentId(int $categoryId, array $deletedCategoryIdsByParent): ?int
     {
-        $parentCategoryId = null;
         foreach ($deletedCategoryIdsByParent as $parentId => $deletedIds) {
-            // find parent id for deleted category
-            if (in_array($categoryId, $deletedIds, true)) {
-                $parentCategoryId = $parentId;
-                break;
+            if (!in_array($categoryId, $deletedIds, true)) {
+                continue;
             }
+
+            //@todo: use repository
+            if (!Category::existsInDatabase($categoryId)) {
+                // if category doesn't exist, we could continue trying to find another parent
+                // but most of the time this command will be run from BO, which is constructed in a way that
+                // all the deleted category ids will have the same parent,
+                // so there is no point looping and checking the same category id existence over again
+                return null;
+            }
+
+            return $parentId;
         }
 
-        return $parentCategoryId;
+        return null;
     }
 
     /**
