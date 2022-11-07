@@ -63,6 +63,7 @@ class LinkPreviewType extends HiddenType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
             'error_bubbling' => true,
             'compound' => false,
