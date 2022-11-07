@@ -63,6 +63,11 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
         cart:
             paths:
                 - "%paths.base%/Features/Scenario/Cart"
