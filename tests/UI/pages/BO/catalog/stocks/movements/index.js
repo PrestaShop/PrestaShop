@@ -28,10 +28,10 @@ class Movements extends BOBasePage {
     this.gridTable = '.stock-movements table.table';
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
-    this.tableProductNameColumn = row => `${this.tableRow(row)} td:nth-child(2) div.media-body p`;
-    this.tableProductReferenceColumn = row => `${this.tableRow(row)} td:nth-child(3)`;
-    this.tableQuantityColumn = row => `${this.tableRow(row)} td:nth-child(5) span.qty-number`;
+    this.tableRow = (row) => `${this.tableRows}:nth-child(${row})`;
+    this.tableProductNameColumn = (row) => `${this.tableRow(row)} td:nth-child(2) div.media-body p`;
+    this.tableProductReferenceColumn = (row) => `${this.tableRow(row)} td:nth-child(3)`;
+    this.tableQuantityColumn = (row) => `${this.tableRow(row)} td:nth-child(5) span.qty-number`;
 
     // Loader
     this.productListLoading = `${this.tableRow(1)} td:nth-child(1) div.ps-loader`;

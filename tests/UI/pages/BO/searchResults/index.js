@@ -19,14 +19,14 @@ class SearchResults extends BOBasePage {
     // Selectors
     this.contentDiv = '#content';
     this.headerTitle = `${this.contentDiv} h2`;
-    this.typeDiv = type => `${this.contentDiv} div.panel[data-role="${type}"]`;
-    this.typeTable = type => `${this.typeDiv(type)} table`;
+    this.typeDiv = (type) => `${this.contentDiv} div.panel[data-role="${type}"]`;
+    this.typeTable = (type) => `${this.typeDiv(type)} table`;
     this.typeTableColumn = (type, row, column) => `${this.typeTable(type)} tbody tr:nth-of-type(${row}) `
       + `td:nth-of-type(${column})`;
-    this.typeHeaderTitle = type => `${this.typeDiv(type)} h3`;
+    this.typeHeaderTitle = (type) => `${this.typeDiv(type)} h3`;
     this.searchPanels = `${this.contentDiv} div[data-role="search-panels"]`;
     this.searchPanelsLinks = `${this.searchPanels} a`;
-    this.searchPanelsLink = nth => `${this.searchPanelsLinks}:nth-of-type(${nth})`;
+    this.searchPanelsLink = (nth) => `${this.searchPanelsLinks}:nth-of-type(${nth})`;
 
     /**
      * @private
@@ -61,6 +61,7 @@ class SearchResults extends BOBasePage {
       const headerTitle = await this.getTextContent(page, this.headerTitle);
       const results = /\d+/g.exec(headerTitle.match(/([0-9]+) result[s]{0,1} match[es]{0,2} your query /));
       const numberResults = results === null ? 0 : results.toString();
+
       return parseInt(numberResults, 10);
     }
 
@@ -71,6 +72,7 @@ class SearchResults extends BOBasePage {
     const typeHeaderTitle = await this.getTextContent(page, this.typeHeaderTitle(type));
     const results = /\d+/g.exec(typeHeaderTitle.match(this.allowedTypes[type]));
     const numberResults = results === null ? 0 : results.toString();
+
     return parseInt(numberResults, 10);
   }
 

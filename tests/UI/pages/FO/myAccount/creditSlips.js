@@ -23,7 +23,7 @@ class CreditSlip extends FOBasePage {
     // Selectors
     this.creditSlipsTable = '#content table';
     this.creditSlipsTableRows = `${this.creditSlipsTable} tbody tr`;
-    this.creditSlipsTableRow = row => `${this.creditSlipsTableRows}:nth-child(${row})`;
+    this.creditSlipsTableRow = (row) => `${this.creditSlipsTableRows}:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
     this.backToYourAccountLink = 'a.account-link[data-role="back-to-your-account"]';
     this.homeLink = 'a.account-link[data-role="home"]';

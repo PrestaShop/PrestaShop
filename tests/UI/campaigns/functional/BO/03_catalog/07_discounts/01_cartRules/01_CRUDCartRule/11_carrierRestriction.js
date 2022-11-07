@@ -239,6 +239,7 @@ describe('BO - Catalog - Cart rules : Case 11 - Carrier Restriction', async () =
       await checkoutPage.addPromoCode(page, cartRuleCode.code);
 
       let discountedPrice = cartRuleCode.discountAmount.value;
+
       if (discountedPrice >= Products.demo_1.finalPrice) {
         discountedPrice = Products.demo_1.finalPrice;
       }
