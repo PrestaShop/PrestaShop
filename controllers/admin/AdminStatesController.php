@@ -290,6 +290,8 @@ class AdminStatesControllerCore extends AdminController
 
     /**
      * Allow the assignation of zone only if the form is displayed.
+     *
+     * @return void|bool
      */
     protected function processBulkAffectZone()
     {

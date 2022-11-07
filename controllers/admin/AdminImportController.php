@@ -638,6 +638,12 @@ class AdminImportControllerCore extends AdminController
         $this->addJs(__PS_BASE_URI__ . 'js/vendor/ladda.js');
     }
 
+    /**
+     * @return bool|string
+     *
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         // If import was executed - collect errors or success message

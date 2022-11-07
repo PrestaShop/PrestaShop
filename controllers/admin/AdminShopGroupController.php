@@ -172,6 +172,11 @@ class AdminShopGroupControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         $this->fields_form = [
@@ -351,18 +356,31 @@ class AdminShopGroupControllerCore extends AdminController
         }
     }
 
+    /**
+     * @param ShopGroup $new_shop_group
+     *
+     * @return bool|void
+     */
     protected function afterAdd($new_shop_group)
     {
         //Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 
+    /**
+     * @param ShopGroup $new_shop_group
+     *
+     * @return bool|void
+     */
     protected function afterUpdate($new_shop_group)
     {
         //Reset available quantitites
         StockAvailable::resetProductFromStockAvailableByShopGroup($new_shop_group);
     }
 
+    /**
+     * @return string|void
+     */
     public function renderOptions()
     {
         if ($this->fields_options && is_array($this->fields_options)) {

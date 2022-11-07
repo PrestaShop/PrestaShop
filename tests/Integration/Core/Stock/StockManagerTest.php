@@ -468,6 +468,11 @@ class FakeStockAvailable4759 extends StockAvailable
         $this->quantity = $quantity;
     }
 
+    /**
+     * @param $null_values
+     *
+     * @return bool|int|string|void
+     */
     public function update($null_values = false)
     {
     }

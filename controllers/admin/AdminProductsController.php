@@ -580,6 +580,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
+     */
     public function processDelete()
     {
         $object = $this->loadObject();
@@ -655,6 +660,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|void
+     *
+     * @throws PrestaShopException
+     */
     protected function processBulkDelete()
     {
         if ($this->access('delete')) {
@@ -1113,6 +1123,10 @@ class AdminProductsControllerCore extends AdminController
 
     /**
      * Overrides parent for custom redirect link.
+     *
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
      */
     public function processPosition()
     {
