@@ -26,7 +26,7 @@ class CreditSlips extends BOBasePage {
     this.creditSlipGridTable = '#credit_slip_grid_table';
     this.filterResetButton = `${this.creditSlipGridTable} .grid-reset-button`;
     this.filterSearchButton = `${this.creditSlipGridTable} .grid-search-button`;
-    //////
+    // ////
     // Sort Credit Slip Selectors
     this.tableHead = `${this.creditSlipGridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
@@ -39,7 +39,7 @@ class CreditSlips extends BOBasePage {
     this.paginationNextLink = `${this.creditSlipGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.creditSlipGridPanel} .pagination .previous a.page-link`;
 
-    /////
+    // ///
     this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
     this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
@@ -218,7 +218,7 @@ class CreditSlips extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-  
+
   /* Sort functions */
   /**
    * Sort table by clicking on column name
@@ -227,7 +227,7 @@ class CreditSlips extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
-   async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -240,30 +240,31 @@ class CreditSlips extends BOBasePage {
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
   }
 
-    /**
+  /**
    * Get column content in all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
-     async getAllRowsColumnContent(page, column) {
-      let rowContent;
-      const rowsNumber = await this.getNumberOfElementInGrid(page);
-      const allRowsContentTable = [];
-      for (let i = 1; i <= rowsNumber; i++) {
-          rowContent = await this.getTextColumnFromTableCreditSlips(page, i, column);
-          allRowsContentTable.push(rowContent);
-      }
-  
-      return allRowsContentTable;
+  async getAllRowsColumnContent(page, column) {
+    let rowContent;
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      rowContent = await this.getTextColumnFromTableCreditSlips(page, i, column);
+      allRowsContentTable.push(rowContent);
     }
-/* Pagination methods */
+
+    return allRowsContentTable;
+  }
+
+  /* Pagination methods */
   /**
    * Get pagination label
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-   getPaginationLabel(page) {
+  getPaginationLabel(page) {
     return this.getTextContent(page, this.paginationLabel);
   }
 
