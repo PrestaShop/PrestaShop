@@ -67,20 +67,19 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     await loginCommon.loginBO(this, page);
   });
 
-  it('should create Order by customer', async () => {
+  for (let i = 0; i < numberOfOrder2Create; i++) {
     // Pre-condition: Create order in FO
     createOrderByCustomerTest(orderByCustomerData, baseContext);
-  });
 
-  for (let i = 0; i < numberOfOrder2Create; i++) {
+    // eslint-disable-next-line no-loop-func
     describe('Create Credit slip', async () => {
       it('should go to \'Orders > Orders\' page\'', async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          'goToOrdersPage', 
-          baseContext
-          );
+          this,
+          'testIdentifier',
+          'goToOrdersPage',
+          baseContext,
+        );
 
         await dashboardPage.goToSubMenu(
           page,
@@ -94,11 +93,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       it('should go to the first order page', async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          'goToCreatedOrderPage', 
-          baseContext
-          );
+          this,
+          'testIdentifier',
+          'goToCreatedOrderPage',
+          baseContext,
+        );
 
         await ordersPage.goToOrder(page, 1);
 
@@ -108,11 +107,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          'updateCreatedOrderStatus', 
-          baseContext
-          );
+          this,
+          'testIdentifier',
+          'updateCreatedOrderStatus',
+          baseContext,
+        );
 
         const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
         await expect(result).to.equal(Statuses.shipped.status);
@@ -120,11 +119,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       it('should add a partial refund', async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          'addPartialRefund', 
-          baseContext
-          );
+          this,
+          'testIdentifier',
+          'addPartialRefund',
+          baseContext,
+        );
 
         await orderPageTabListBlock.clickOnPartialRefund(page);
 
@@ -134,11 +133,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       it('should check the existence of the Credit slip document', async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          'checkCreditSlipDocumentName', 
-          baseContext
-          );
+          this,
+          'testIdentifier',
+          'checkCreditSlipDocumentName',
+          baseContext,
+        );
 
         const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
         await expect(documentType).to.be.equal(creditSlipDocumentName);
@@ -152,7 +151,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         this,
         'testIdentifier',
         'goToCreditSlipsPage',
-        baseContext
+        baseContext,
       );
 
       await orderPageTabListBlock.goToSubMenu(
@@ -169,10 +168,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
     it('should reset all filters and get number of credit slips', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'resetFilterFirst', 
-        baseContext
+        this,
+        'testIdentifier',
+        'resetFilterFirst',
+        baseContext,
       );
 
       numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
@@ -181,10 +180,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'changeItemssNumberTo10', 
-        baseContext);
+        this,
+        'testIdentifier',
+        'changeItemssNumberTo10',
+        baseContext,
+      );
 
       const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '100');
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
@@ -226,10 +226,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     tests.forEach((test) => {
       it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
         await testContext.addContextItem(
-          this, 
-          'testIdentifier', 
-          test.args.testIdentifier, 
-          baseContext
+          this,
+          'testIdentifier',
+          test.args.testIdentifier,
+          baseContext,
         );
 
         let nonSortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -257,10 +257,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   describe('Pagination credit slip table', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'changeItemssNumberTo10', 
-        baseContext
+        this,
+        'testIdentifier',
+        'changeItemssNumberTo10',
+        baseContext,
       );
 
       const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
@@ -271,10 +271,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
     it('should click on next', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'clickOnNext', 
-        baseContext
+        this,
+        'testIdentifier',
+        'clickOnNext',
+        baseContext,
       );
 
       const numberOfCreditSlips = await creditSlipsPage.resetAndGetNumberOfLines(page);
@@ -285,10 +285,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
     it('should click on previous', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'clickOnPrevious', 
-        baseContext
+        this,
+        'testIdentifier',
+        'clickOnPrevious',
+        baseContext,
       );
 
       const paginationNumber = await creditSlipsPage.paginationPrevious(page);
@@ -298,10 +298,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(
-        this, 
-        'testIdentifier', 
-        'changeItemsNumberTo50', 
-        baseContext
+        this,
+        'testIdentifier',
+        'changeItemsNumberTo50',
+        baseContext,
       );
 
       const paginationNumber = await creditSlipsPage.selectPaginationLimit(page, '50');
