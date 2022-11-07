@@ -363,13 +363,13 @@ class AdminImagesControllerCore extends AdminController
         $this->modals[] = [
             'modal_id' => 'modalRegenerateThumbnails',
             'modal_class' => 'modal-md',
-            'modal_title' => $this->trans('Regenerate thumbnails', [], 'Admin.Actions'),
+            'modal_title' => $this->trans('Regenerate thumbnails', [], 'Admin.Design.Feature'),
             'modal_content' => $this->context->smarty->fetch('controllers/images/modal_regenerate_thumbnails.tpl'),
             'modal_cancel_label' => $this->trans('Cancel', [], 'Admin.Actions'),
             'modal_actions' => [
                 [
                     'type' => 'button',
-                    'label' => $this->trans('Regenerate', [], 'Admin.Actions'),
+                    'label' => $this->trans('Regenerate', [], 'Admin.Design.Feature'),
                     'class' => 'btn-default btn-regenerate-thumbnails',
                     'value' => '',
                 ],
