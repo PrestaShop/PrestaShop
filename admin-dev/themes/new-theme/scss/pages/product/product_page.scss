@@ -1468,7 +1468,7 @@ $product-page-padding-bottom: 80px !default;
     min-width: 55px;
     padding: 2px;
     font-size: 0.7rem;
-    color: #fff;
+    color: $white;
     text-align: center;
 
     &.increased_quantity {
@@ -1485,7 +1485,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .orders-stock-movement {
-    background-color: rgba(219, 225, 227, 0.5);
+    background-color: $background-grey;
 
     .text-preview {
       font-weight: 700;
