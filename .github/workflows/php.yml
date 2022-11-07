@@ -8,6 +8,7 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
         with:
+          all_but_latest: true
           access_token: ${{ github.token }}
 
       - name: Setup PHP
@@ -51,6 +52,7 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
         with:
+          all_but_latest: true
           access_token: ${{ github.token }}
 
       - name: Setup PHP
@@ -92,6 +94,7 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.9.0
         with:
+          all_but_latest: true
           access_token: ${{ github.token }}
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
