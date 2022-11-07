@@ -8,6 +8,12 @@ jobs:
     name: SCSS Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Setup Node
@@ -27,6 +33,12 @@ jobs:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       - name: Setup Node
@@ -52,6 +64,12 @@ jobs:
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -86,6 +104,12 @@ jobs:
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
@@ -109,6 +133,12 @@ jobs:
     name: Twig Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
