@@ -56,7 +56,7 @@
       {if isset($maintenance_mode) && $maintenance_mode == true}
         {capture name="title"}
           <p class="text-left text-nowrap">
-            <strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong>
+            <strong>{l s='Your store is in maintenance mode.' d='Admin.Navigation.Notification'}</strong>
           </p>
           <p class="text-left">
               {l s='Your visitors and customers cannot access your shop while in maintenance mode.' d='Admin.Navigation.Notification'}
@@ -66,7 +66,7 @@
           </p>
           {if isset($maintenance_allow_admins) && $maintenance_allow_admins}
             <p class="text-left">
-              {l s='Admins can access the shop front-end without storing their IP.' d='Admin.Navigation.Notification'}
+              {l s='Admins can access the store front office without storing their IP.' d='Admin.Navigation.Notification'}
             </p>
           {/if}
         {/capture}
