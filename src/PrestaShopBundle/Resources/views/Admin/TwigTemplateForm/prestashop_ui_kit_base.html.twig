@@ -1299,7 +1299,13 @@
     {% endif %}
 
     {# This just outputs the value #}
-    {{ value|e('html') }}
+    {% if  form.vars.allow_html %}
+      {# This outputs raw value #}
+      {{ form.vars.value|raw }}
+    {% else %}
+      {# This just outputs the value #}
+      {{ form.vars.value|e('html') }}
+    {% endif %}
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
