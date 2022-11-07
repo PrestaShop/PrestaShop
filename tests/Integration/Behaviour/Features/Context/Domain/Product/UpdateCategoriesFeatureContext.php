@@ -83,7 +83,6 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCategories(string $productReference, TableNode $table)
     {
-        Cache::clear();
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedCategories = $table->getColumnsHash();
         $categoriesInfo = $productForEditing->getCategoriesInformation();

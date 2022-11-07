@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s category
 @restore-all-tables-before-feature
+@clear-cache-before-feature
 Feature: Category Management
   PrestaShop allows BO users to manage categories for products
   As a BO user
@@ -192,12 +193,16 @@ Feature: Category Management
     And I assign product product1 to following categories:
       | categories       | [home,category3] |
       | default category | category3        |
-    When I delete category "category3" choosing mode "associate_and_disable"
+    Then product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | false      |
+      | category3    | PC parts 3  | true       |
+    When I bulk delete categories "category3" choosing mode "associate_and_disable"
+    Then category "category3" does not exist
     Then product "product1" should be assigned to following categories:
       | id reference     | name[en-US]      | is default |
+      | home             | Home             | false      |
+      #@todo: expecting home accessories, but its id is different than i would expect
+      #       probably cuz of retarded parent category assign by name instead of reference
+      #       on line 191
       | home-accessories | Home Accessories | true       |
-    Then product product1 should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | home         | Home        | Home        | false      |
-      | men          | Men         | Men         | false      |
-      | clothes      | Clothes     | Clothes     | true       |

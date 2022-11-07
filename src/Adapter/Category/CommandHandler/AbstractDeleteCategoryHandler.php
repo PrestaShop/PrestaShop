@@ -169,10 +169,11 @@ abstract class AbstractDeleteCategoryHandler
         // @todo: inject rootCategoryId into constructor
         $rootCategoryId = (int) Configuration::get('PS_ROOT_CATEGORY');
 
-        $parentCategoryId = $this->findCategoryParentId($categoryId, $deletedCategoryIdsByParent);
-        $product->id_category_default = $parentCategoryId ?: $rootCategoryId;
-        $product->addToCategories($parentCategoryId);
+        $parentCategoryId = $this->findCategoryParentId($categoryId, $deletedCategoryIdsByParent) ?: $rootCategoryId;
+        $product->id_category_default = $parentCategoryId;
         $product->save();
+
+        $product->addToCategories($parentCategoryId);
     }
 
     /**
