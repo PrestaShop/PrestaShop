@@ -138,7 +138,7 @@ class AddOrder extends BOBasePage {
     this.orderMessageTextArea = '#cart_summary_order_message';
     this.paymentMethodSelect = `${this.summaryBlock} #select2-cart_summary_payment_module-container`;
     this.paymentMethodSelectResult = 'body span.select2-results';
-    this.paymentMethodOption = paymentMethod => '#select2-cart_summary_payment_module-results '
+    this.paymentMethodOption = (paymentMethod) => '#select2-cart_summary_payment_module-results '
       + `li[data-select2-id*='${paymentMethod}']`;
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';

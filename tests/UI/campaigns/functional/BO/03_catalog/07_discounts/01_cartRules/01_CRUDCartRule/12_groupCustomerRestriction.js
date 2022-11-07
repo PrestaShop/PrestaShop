@@ -254,6 +254,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
       await cartPage.addPromoCode(page, cartRuleCode.code);
 
       let discountedPrice = cartRuleCode.discountAmount.value;
+
       if (discountedPrice >= Products.demo_1.finalPrice) {
         discountedPrice = Products.demo_1.finalPrice;
       }

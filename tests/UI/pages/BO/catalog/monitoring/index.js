@@ -17,29 +17,29 @@ class Monitoring extends BOBasePage {
     this.pageTitle = 'Monitoring •';
 
     // Selectors
-    this.gridPanel = table => `#${table}_grid_panel`;
-    this.gridTable = table => `#${table}_grid_table`;
-    this.gridHeaderTitle = table => `${this.gridPanel(table)} div.card-header h3`;
+    this.gridPanel = (table) => `#${table}_grid_panel`;
+    this.gridTable = (table) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} div.card-header h3`;
 
     // Bulk actions
-    this.bulkActionsButton = table => `${this.gridPanel(table)} .js-bulk-actions-btn`;
-    this.deleteSelectButton = table => `#${table}_grid_bulk_action_delete_selection`;
+    this.bulkActionsButton = (table) => `${this.gridPanel(table)} .js-bulk-actions-btn`;
+    this.deleteSelectButton = (table) => `#${table}_grid_bulk_action_delete_selection`;
 
     // Filters
-    this.selectAllCheckBox = table => `${this.gridPanel(table)} .js-bulk-action-select-all`;
+    this.selectAllCheckBox = (table) => `${this.gridPanel(table)} .js-bulk-action-select-all`;
     this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
+    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Table
-    this.tableBody = table => `${this.gridTable(table)} tbody`;
+    this.tableBody = (table) => `${this.gridTable(table)} tbody`;
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
-    this.tableEmptyRow = table => `${this.tableBody(table)} tr.empty_row`;
+    this.tableEmptyRow = (table) => `${this.tableBody(table)} tr.empty_row`;
     this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
 
     // Enable column
     this.enableColumn = (table, row) => this.tableColumn(table, row, 'active');
-    this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
+    this.enableColumnValidIcon = (row) => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
 
     // Actions buttons in Row
     this.actionsColumn = (table, row) => `${this.tableRow(table, row)} td.column-actions`;
@@ -49,30 +49,30 @@ class Monitoring extends BOBasePage {
     this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
 
     // Category selectors
-    this.viewCategoryRowLink = row => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
-    this.editCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
-    this.deleteCategoryRowLink = row => `${this.dropdownToggleMenu('empty_category', row)
+    this.viewCategoryRowLink = (row) => `${this.actionsColumn('empty_category', row)} a.grid-view-row-link`;
+    this.editCategoryRowLink = (row) => `${this.dropdownToggleMenu('empty_category', row)} a.grid-edit-row-link`;
+    this.deleteCategoryRowLink = (row) => `${this.dropdownToggleMenu('empty_category', row)
     } a.grid-delete-row-link`;
     this.deleteModeCategoryModal = '#empty_category_grid_delete_categories_modal';
-    this.deleteModeInput = position => `#delete_categories_delete_mode_${position} + i`;
+    this.deleteModeInput = (position) => `#delete_categories_delete_mode_${position} + i`;
     this.deleteModeCategoryModalDiv = '#delete_categories_delete_mode';
     this.submitDeleteCategoryButton = `${this.deleteModeCategoryModal} button.js-submit-delete-categories`;
 
     // Sort Selectors
-    this.tableHead = table => `${this.gridTable(table)} thead`;
+    this.tableHead = (table) => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
 
     // Modal products list
-    this.deleteProductModal = table => `#${table}-grid-confirm-modal`;
-    this.submitDeleteProductButton = table => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
+    this.deleteProductModal = (table) => `#${table}-grid-confirm-modal`;
+    this.submitDeleteProductButton = (table) => `${this.deleteProductModal(table)} button.btn-confirm-submit`;
 
     // Pagination selectors
-    this.paginationLimitSelect = table => `${this.gridPanel(table)} #paginator_select_page_limit`;
-    this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
-    this.paginationNextLink = table => `${this.gridPanel(table)} [data-role=next-page-link]`;
-    this.paginationPreviousLink = table => `${this.gridPanel(table)} [data-role='previous-page-link']`;
+    this.paginationLimitSelect = (table) => `${this.gridPanel(table)} #paginator_select_page_limit`;
+    this.paginationLabel = (table) => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = (table) => `${this.gridPanel(table)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = (table) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
   }
 
   /* Reset Methods */
@@ -190,7 +190,7 @@ class Monitoring extends BOBasePage {
   async bulkDeleteElementsInTable(page, tableName) {
     // Select all elements in table
     await Promise.all([
-      page.$eval(this.selectAllCheckBox(tableName), el => el.click()),
+      page.$eval(this.selectAllCheckBox(tableName), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsButton(tableName)}:not([disabled])`),
     ]);
 
@@ -202,7 +202,7 @@ class Monitoring extends BOBasePage {
 
     // Click on delete selected and wait for modal
     await Promise.all([
-      page.$eval(this.deleteSelectButton(tableName), el => el.click()),
+      page.$eval(this.deleteSelectButton(tableName), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
     ]);
 

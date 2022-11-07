@@ -14,7 +14,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   constructor() {
     super();
 
-    this.successBadge = id => `.tab-content span.badge-success:nth-child(${id + 3})`;
+    this.successBadge = (id) => `.tab-content span.badge-success:nth-child(${id + 3})`;
 
     // Status tab
     this.historyTabContent = '#historyTabContent';
@@ -22,9 +22,9 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
     this.statusGridTable = 'table[data-role=\'history-grid-table\']';
     this.statusTableBody = `${this.statusGridTable} tbody`;
-    this.statusTableRow = row => `${this.statusTableBody} tr:nth-child(${row})`;
+    this.statusTableRow = (row) => `${this.statusTableBody} tr:nth-child(${row})`;
     this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td[data-role='${column}-column']`;
-    this.resendEmailButton = row => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
+    this.resendEmailButton = (row) => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
     this.orderNoteTextarea = '#internal_note_note';
@@ -36,23 +36,23 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
     this.documentsTablegrid = '#documents-grid-table';
     this.documentsTableBody = `${this.documentsTablegrid} tbody`;
-    this.documentsTableRow = row => `${this.documentsTableBody} tr:nth-child(${row})`;
+    this.documentsTableRow = (row) => `${this.documentsTableBody} tr:nth-child(${row})`;
     this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
-    this.documentDate = row => `${this.documentsTableColumn(row, 'documents-table-column-date')}`;
-    this.documentNumberLink = row => `${this.documentsTableColumn(row, 'documents-table-column-download-link')} a`;
-    this.documentType = row => `${this.documentsTableColumn(row, 'documents-table-column-type')}`;
-    this.addDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
-    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
-    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
-    this.editDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.btn-edit`;
-    this.enterPaymentButton = row => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
+    this.documentDate = (row) => `${this.documentsTableColumn(row, 'documents-table-column-date')}`;
+    this.documentNumberLink = (row) => `${this.documentsTableColumn(row, 'documents-table-column-download-link')} a`;
+    this.documentType = (row) => `${this.documentsTableColumn(row, 'documents-table-column-type')}`;
+    this.addDocumentNoteButton = (row) => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = (row) => `${this.documentsTableRow(row)} td input.invoice-note`;
+    this.documentNoteSaveButton = (row) => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
+    this.editDocumentNoteButton = (row) => `${this.documentsTableRow(row)} td button.btn-edit`;
+    this.enterPaymentButton = (row) => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
 
     // Carriers tab
     this.carriersTab = '#orderShippingTab';
     this.orderShippingTabContent = '#orderShippingTabContent';
     this.carriersGridTable = '#shipping-grid-table';
     this.carriersTableBody = `${this.carriersGridTable} tbody`;
-    this.carriersTableRow = row => `${this.carriersTableBody} tr:nth-child(${row})`;
+    this.carriersTableRow = (row) => `${this.carriersTableBody} tr:nth-child(${row})`;
     this.carriersTableColumn = (row, column) => `${this.carriersTableRow(row)} td.${column}`;
     this.editLink = `${this.orderShippingTabContent} a.js-update-shipping-btn`;
     this.updateOrderShippingModal = '#updateOrderShippingModal';
@@ -60,7 +60,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
     this.carrierSelect = '#select2-update_order_shipping_new_carrier_id-container';
     this.carriersSelectResult = '#select2-update_order_shipping_new_carrier_id-results';
-    this.carrierToSelect = id => `${this.carriersSelectResult} li:nth-child(${id})`;
+    this.carrierToSelect = (id) => `${this.carriersSelectResult} li:nth-child(${id})`;
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
     this.giftMessage = '#gift-message';
 
@@ -69,7 +69,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`;
     this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
-    this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
+    this.merchandiseReturnsTableRow = (row) => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
     this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
       + ` td[data-role='merchandise-${column}']`;
   }

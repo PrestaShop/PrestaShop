@@ -27,7 +27,7 @@ class ShoppingCarts extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='cartFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='cartFilter_${filterBy}']`;
     this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
     this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
     this.filterSearchButton = '#submitFilterButtoncart';
@@ -36,19 +36,19 @@ class ShoppingCarts extends BOBasePage {
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(1)`;
-    this.tableColumnOrderId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnTotal = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnOnline = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnActionsViewLink = row => `${this.tableColumnActions(row)} a.btn-default`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(1)`;
+    this.tableColumnOrderId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnCustomer = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnTotal = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnCarrier = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnDate = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnOnline = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a.btn-default`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -61,14 +61,14 @@ class ShoppingCarts extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Filter methods */

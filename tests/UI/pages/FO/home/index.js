@@ -18,10 +18,10 @@ class Home extends FOBasePage {
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
-    this.carouselControlDirectionLink = direction => `${this.carouselSliderId} a.${direction}.carousel-control`;
+    this.carouselControlDirectionLink = (direction) => `${this.carouselSliderId} a.${direction}.carousel-control`;
     this.carouselSliderInnerList = `${this.carouselSliderId} ul.carousel-inner`;
     this.carouselSliderInnerListItems = `${this.carouselSliderInnerList} li`;
-    this.carouselSliderInnerListItem = position => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
+    this.carouselSliderInnerListItem = (position) => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
@@ -249,7 +249,7 @@ class Home extends FOBasePage {
     }
     if (attributes.dimension) {
       await Promise.all([
-        page.waitForResponse(response => response.url().includes('product&token=')),
+        page.waitForResponse((response) => response.url().includes('product&token=')),
         this.selectByVisibleText(page, this.quickViewProductDimension, attributes.dimension),
       ]);
     }
@@ -330,6 +330,7 @@ class Home extends FOBasePage {
    */
   async getSelectedAttributesFromQuickViewModal(page, attribute) {
     let attributes;
+
     if (attribute.size) {
       attributes = {
         size: await page.getAttribute(`${this.quickViewProductSize} option[selected]`, 'title'),
