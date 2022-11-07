@@ -2,50 +2,6 @@
 $component-name: shop-selector;
 
 .#{$component-name} {
-  &-search {
-    min-height: auto;
-    padding: 0.3rem 1rem;
-    padding-left: 2.2rem;
-
-    &-container {
-      position: relative;
-      margin-bottom: 1rem;
-
-      @include media-breakpoint-down(sm) {
-        display: none;
-      }
-
-      i {
-        position: absolute;
-        top: 0.5rem;
-        left: 0.75rem;
-        z-index: 1;
-        font-size: 1.2rem;
-        color: $medium-gray;
-        pointer-events: none;
-      }
-
-      .tt-menu {
-        width: 100%;
-        overflow: hidden;
-        background-color: $white;
-        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
-        @include border-bottom-radius(4px);
-
-        .tt-dataset > div {
-          padding: 0.5rem 1rem;
-          cursor: pointer;
-          @include transition(0.25s ease-out);
-
-          &:hover,
-          &.tt-cursor {
-            background-color: #f4fcfd;
-          }
-        }
-      }
-    }
-  }
-
   ul.#{$component-name}-group-list {
     position: relative;
     max-height: 500px;
@@ -109,19 +65,19 @@ $component-name: shop-selector;
         margin-left: auto;
         color: $brand-primary;
       }
-    }
 
-    &-name:hover {
-      background-color: rgba(37, 185, 215, 0.15);
+      &:hover {
+        background-color: $multishop-selector-selected-background;
 
-      .material-icons {
-        opacity: 1;
+        .material-icons {
+          opacity: 1;
+        }
       }
     }
 
     &.selected-shop {
       .shop-selector-item-name {
-        background-color: rgba(37, 185, 215, 0.15);
+        background-color: $multishop-selector-selected-background;
       }
     }
 
@@ -140,41 +96,5 @@ $component-name: shop-selector;
     margin-right: 1rem;
     background-color: $multishop-header-default-background;
     @include border-radius(3px);
-
-    &-container {
-      &.#{$component-name}-color-check {
-        margin-right: 0.95rem;
-
-        a {
-          display: none;
-          margin: 0.2rem 0;
-        }
-
-        i {
-          width: 1rem;
-          font-size: 1.15rem;
-        }
-      }
-
-      &:not(.#{$component-name}-color-check) {
-        i {
-          display: none;
-        }
-
-        a {
-          display: block;
-        }
-      }
-
-      &.#{$component-name}-color-check:hover {
-        a {
-          display: block;
-        }
-
-        i {
-          display: none;
-        }
-      }
-    }
   }
 }
