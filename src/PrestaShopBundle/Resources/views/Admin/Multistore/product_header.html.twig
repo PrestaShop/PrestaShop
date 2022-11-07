@@ -43,10 +43,25 @@
 
 {# We don't display shop groups links in product header #}
 {% block shop_group_item %}
-  <span class="multishop-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
-    <i class="material-icons">check</i>
+  <span class="multishop-modal-color-container">
     <span class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %}>
     </span>
   </span>
   {{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}
+{% endblock %}
+
+{# We don't display shop links in product header #}
+{% block shop_item %}
+  <div class="multishop-modal-item-left">
+    <span class="multishop-modal-color-container">
+      <span class="multishop-modal-color"{% if shop.color is not empty %} style="background-color: {{shop.color}};"{% endif %}>
+      </span>
+    </span>
+    <a class="multishop-modal-shop-name{% if shop.hasMainUrl() == false %} multishop-modal-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
+  </div>
+  {% if shop.hasMainUrl() %}
+    <a class="multishop-modal-shop-view" href="{{ link.getBaseLink(shop.id) }}" target="_blank" rel="noreferrer">{{ "View my shop"|trans({}, 'Admin.Navigation.Header') }} <i class="material-icons">visibility</i></a>
+  {% else %}
+    <a class="multishop-modal-shop-view" href="{{ getAdminLink('AdminShopUrl', true, {'shop_id' : shop.id, 'addshop_url' : 1}) }}" rel="noreferrer">{{ "Configure URL"|trans({}, 'Admin.Actions') }} <i class="material-icons">visibility</i></a>
+  {% endif %}
 {% endblock %}
