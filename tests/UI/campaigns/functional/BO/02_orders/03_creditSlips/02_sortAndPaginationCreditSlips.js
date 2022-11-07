@@ -42,17 +42,17 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-const numberOfOrder2Create = 11;
+const numberOfOrderToCreate = 11;
 
 /*
 Pre-condition:
 - Create order in FO
 Scenario:
 - Create credit slip on the created order
-- Generate credit slip file by date
+- Sort (by ID, Date and OrderID) and Pagination of Credit Slips
  */
 
-describe('BO - Orders - Credit slips : Generate Credit slip file by date', async () => {
+describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagination of Credit Slips', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -67,7 +67,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     await loginCommon.loginBO(this, page);
   });
 
-  for (let i = 0; i < numberOfOrder2Create; i++) {
+  for (let i = 0; i < numberOfOrderToCreate; i++) {
     // Pre-condition: Create order in FO
     createOrderByCustomerTest(orderByCustomerData, `baseContext_${i}`);
 
@@ -121,7 +121,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          `addPartialRefund`,
+          `addPartialRefund${i}`,
           baseContext,
         );
 
@@ -150,7 +150,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `goToCreditSlipsPage${i}`,
+        'goToCreditSlipsPage',
         baseContext,
       );
 
@@ -170,7 +170,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `resetFilterFirst${i}`,
+        'resetFilterFirst',
         baseContext,
       );
 
@@ -178,11 +178,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       expect(numberOfCreditSlips).to.be.above(0);
     });
 
-    it('should change the items number to 10 per page', async function () {
+    it('should change the items number to 100 per page', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        `changeItemssNumberTo10${i}`,
+        'changeItemssNumberTo100',
         baseContext,
       );
 
