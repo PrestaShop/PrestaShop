@@ -33,6 +33,8 @@ The first stable version of PrestaShop 1.7, 1.7.0.0, was released on November 7t
 Server configuration
 --------
 
+# toto modifications
+
 To install the latest PrestaShop 1.7, you need a web server running PHP 7.1+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.). Versions between 1.7.0 and 1.7.6 work with PHP 5.6+.
 
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
