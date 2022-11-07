@@ -69,7 +69,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
   for (let i = 0; i < numberOfOrder2Create; i++) {
     // Pre-condition: Create order in FO
-    createOrderByCustomerTest(orderByCustomerData, baseContext);
+    createOrderByCustomerTest(orderByCustomerData, `baseContext_${i}`);
 
     // eslint-disable-next-line no-loop-func
     describe('Create Credit slip', async () => {
@@ -77,7 +77,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'goToOrdersPage',
+          `goToOrdersPage${i}`,
           baseContext,
         );
 
@@ -95,7 +95,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'goToCreatedOrderPage',
+          `goToCreatedOrderPage${i}`,
           baseContext,
         );
 
@@ -109,7 +109,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'updateCreatedOrderStatus',
+          `updateCreatedOrderStatus${i}`,
           baseContext,
         );
 
@@ -121,7 +121,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'addPartialRefund',
+          `addPartialRefund`,
           baseContext,
         );
 
@@ -135,7 +135,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
         await testContext.addContextItem(
           this,
           'testIdentifier',
-          'checkCreditSlipDocumentName',
+          `checkCreditSlipDocumentName${i}`,
           baseContext,
         );
 
@@ -150,7 +150,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'goToCreditSlipsPage',
+        `goToCreditSlipsPage${i}`,
         baseContext,
       );
 
@@ -170,7 +170,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'resetFilterFirst',
+        `resetFilterFirst${i}`,
         baseContext,
       );
 
@@ -182,7 +182,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(
         this,
         'testIdentifier',
-        'changeItemssNumberTo10',
+        `changeItemssNumberTo10${i}`,
         baseContext,
       );
 
