@@ -43,9 +43,13 @@ class BOBasePage extends CommonPage {
 
     // Header links
     this.helpButton = '#product_form_open_help';
+    this.menuMobileButton = '.js-mobile-menu';
 
     // left navbar
-    this.menuCollapse = '.nav-bar > .menu-collapse';
+    this.desktopNavbar = '.nav-bar:not(.mobile-nav)';
+    this.navbarCollapseButton = '.nav-bar > .menu-collapse';
+    this.navbarCollapsed = isCollapsed => `body${isCollapsed ? '.page-sidebar-closed' : ':not(.page-sidebar-closed)'}`;
+
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
 
@@ -429,7 +433,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isNavbarVisible(page) {
-    return this.elementVisible(page, '.nav-bar:not(.mobile-nav)', 1000);
+    return this.elementVisible(page, this.desktopNavbar, 1000);
   }
 
   /**
@@ -438,7 +442,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isMobileMenuVisible(page) {
-    return this.elementVisible(page, '.js-mobile-menu', 1000);
+    return this.elementVisible(page, this.menuMobileButton, 1000);
   }
 
   /**
@@ -474,10 +478,10 @@ class BOBasePage extends CommonPage {
     const isCurrentCollapsed = this.isSidebarCollapsed(page);
     if (isCurrentCollapsed !== isCollapsed) {
       await Promise.all([
-        page.click(this.menuCollapse),
+        page.click(this.navbarCollapseButton),
         this.waitForVisibleSelector(
           page,
-          isCollapsed ? 'body.page-sidebar-closed' : 'body:not(.page-sidebar-closed)',
+          this.navbarCollapsed(isCollapsed),
         ),
       ]);
     }
@@ -489,7 +493,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isSidebarCollapsed(page) {
-    return this.elementVisible(page, 'body.page-sidebar-closed', 1000);
+    return this.elementVisible(page, this.navbarCollapsed(true), 1000);
   }
 
   /**
@@ -702,6 +706,17 @@ class BOBasePage extends CommonPage {
     await this.setValue(page, this.navbarSarchInput, query);
     await page.keyboard.press('Enter');
     await page.waitForNavigation('networkidle');
+  }
+
+  /**
+   * Resize the page to defined viewport
+   * @param page {Page} Browser tab
+   * @param mobileSize {boolean} Define if the viewport is for mobile or not
+   * @returns {Promise<void>}
+   */
+  async resize(page, mobileSize) {
+    await super.resize(page, mobileSize);
+    await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
   }
 }
 

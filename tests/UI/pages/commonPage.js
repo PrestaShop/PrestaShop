@@ -504,7 +504,6 @@ class CommonPage {
     } else {
       await page.setViewportSize({width: global.BROWSER.width, height: global.BROWSER.height});
     }
-    await this.waitForSelector(page, '.js-mobile-menu', mobileSize ? 'visible' : 'hidden');
   }
 }
 
