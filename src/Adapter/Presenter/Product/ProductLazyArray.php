@@ -948,7 +948,7 @@ class ProductLazyArray extends AbstractLazyArray
                 // We will primarily use label from combination if set, then label on product, then the default label from PS settings
                 if (!empty($combinationData['available_now'])) {
                     $this->product['availability_message'] = $combinationData['available_now'];
-                } elseif ($product['available_now']) {
+                } elseif (!empty($product['available_now'])) {
                     $this->product['availability_message'] = $product['available_now'];
                 } else {
                     $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
@@ -964,7 +964,7 @@ class ProductLazyArray extends AbstractLazyArray
             // We will primarily use label from combination if set, then label on product, then the default label from PS settings
             if (!empty($combinationData['available_later'])) {
                 $this->product['availability_message'] = $combinationData['available_later'];
-            } elseif ($product['available_now']) {
+            } elseif (!empty($product['available_later'])) {
                 $this->product['availability_message'] = $product['available_later'];
             } else {
                 $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA');
