@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
@@ -69,14 +68,6 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
             $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS
         );
-
-        if (null !== $command->getCarrierReferenceIds()) {
-            $this->productMultiShopRepository->setCarrierReferences(
-                new ProductId((int) $product->id),
-                $command->getCarrierReferenceIds(),
-                $shopConstraint
-            );
-        }
     }
 
     /**

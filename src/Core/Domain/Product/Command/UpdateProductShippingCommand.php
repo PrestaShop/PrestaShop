@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -69,11 +68,6 @@ class UpdateProductShippingCommand
      * @var DecimalNumber|null
      */
     private $additionalShippingCost;
-
-    /**
-     * @var CarrierReferenceId[]|null
-     */
-    private $carrierReferenceIds;
 
     /**
      * @var DeliveryTimeNoteType
@@ -221,28 +215,6 @@ class UpdateProductShippingCommand
     public function setAdditionalShippingCost(string $additionalShippingCost): UpdateProductShippingCommand
     {
         $this->additionalShippingCost = new DecimalNumber($additionalShippingCost);
-
-        return $this;
-    }
-
-    /**
-     * @return CarrierReferenceId[]|null
-     */
-    public function getCarrierReferenceIds(): ?array
-    {
-        return $this->carrierReferenceIds;
-    }
-
-    /**
-     * @param int[] $carrierReferenceIds
-     *
-     * @return UpdateProductShippingCommand
-     */
-    public function setCarrierReferenceIds(array $carrierReferenceIds): UpdateProductShippingCommand
-    {
-        foreach (array_unique($carrierReferenceIds) as $carrierReferenceId) {
-            $this->carrierReferenceIds[] = new CarrierReferenceId((int) $carrierReferenceId);
-        }
 
         return $this;
     }
