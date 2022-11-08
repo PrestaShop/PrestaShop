@@ -15,3 +15,5 @@ updates:
       - "develop"
       - "E2E Tests"
       - "TE"
+    ignore:
+      - dependency-name: "playwright"
