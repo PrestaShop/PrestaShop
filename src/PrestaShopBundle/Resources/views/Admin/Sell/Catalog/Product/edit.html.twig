@@ -37,7 +37,6 @@
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set shopId = productForm.vars.shop_id %}
-  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
 
   <div class="header-toolbar d-print-none">
     {{ multistoreHeader() }}

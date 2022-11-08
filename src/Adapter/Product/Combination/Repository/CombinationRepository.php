@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
@@ -125,25 +124,6 @@ class CombinationRepository extends AbstractObjectModelRepository
         }
 
         return new ProductId((int) $result['id_product']);
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param bool $isDefault
-     *
-     * @return Combination
-     *
-     * @throws CoreException
-     */
-    public function create(ProductId $productId, bool $isDefault): Combination
-    {
-        $combination = new Combination();
-        $combination->id_product = $productId->getValue();
-        $combination->default_on = $isDefault;
-
-        $this->addObjectModel($combination, CannotAddCombinationException::class);
-
-        return $combination;
     }
 
     /**
