@@ -78,15 +78,15 @@ class OrderReturnFormDataProviderTest extends TestCase
      */
     private function createRouterMock(): Router
     {
-        $queryBusMock = $this->createMock(Router::class);
+        $routerMock = $this->createMock(Router::class);
 
-        $queryBusMock
+        $routerMock
             ->method('generate')
             ->willReturnCallback(function ($route, $arguments) {
                 return $this->createResultBasedOnQuery($route, $arguments);
             });
 
-        return $queryBusMock;
+        return $routerMock;
     }
 
     /**
@@ -109,7 +109,7 @@ class OrderReturnFormDataProviderTest extends TestCase
                         'Admin.Orderscustomers.Feature',
                         null,
                         '#3 from 2020-02-22',
-                    ]
+                    ],
                 ]
             );
 
