@@ -94,13 +94,26 @@ class OrderReturnFormDataProviderTest extends TestCase
      */
     private function createTranslatorMock(): TranslatorInterface
     {
-        $queryBusMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock = $this->createMock(TranslatorInterface::class);
 
-        $queryBusMock
+        $translatorMock
             ->method('trans')
-            ->willReturn('from');
+            ->willReturnMap(
+                [
+                    [
+                        '#%order_id% from %order_date%',
+                        [
+                            '%order_id%' => 3,
+                            '%order_date%' => '2020-02-22',
+                        ],
+                        'Admin.Orderscustomers.Feature',
+                        null,
+                        '#3 from 2020-02-22',
+                    ]
+                ]
+            );
 
-        return $queryBusMock;
+        return $translatorMock;
     }
 
     /**
