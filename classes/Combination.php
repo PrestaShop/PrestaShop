@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+
 /**
  * Class CombinationCore.
  */
@@ -216,7 +218,7 @@ class CombinationCore extends ObjectModel
         }
 
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
-            $outOfStock = 1;
+            $outOfStock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         } else {
             $outOfStock = StockAvailable::outOfStock((int) $this->id_product);
         }
