@@ -39,7 +39,6 @@ class CreditSlips extends BOBasePage {
     this.paginationNextLink = `${this.creditSlipGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.creditSlipGridPanel} .pagination .previous a.page-link`;
 
-    // ///
     this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
     this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
