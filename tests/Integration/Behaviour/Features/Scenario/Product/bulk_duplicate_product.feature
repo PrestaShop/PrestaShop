@@ -91,7 +91,9 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time in stock notes[fr-FR]     | en stock             |
       | delivery time out of stock notes[en-US] | product out of stock |
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
-      | carriers                                | [carrier1,carrier2]  |
+    And I assign product product1 with following carriers:
+      | carrier1 |
+      | carrier2 |
     When I associate suppliers to product "product1"
       | supplier  | product_supplier  |
       | supplier1 | product1supplier1 |
@@ -169,7 +171,9 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time in stock notes[fr-FR]     | en stock             |
       | delivery time out of stock notes[en-US] | product out of stock |
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
-      | carriers                                | [carrier1,carrier2]  |
+    And I assign product product2 with following carriers:
+      | carrier1 |
+      | carrier2 |
     When I associate suppliers to product "product2"
       | supplier  | product_supplier  |
       | supplier1 | product2supplier1 |

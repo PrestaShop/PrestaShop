@@ -30,7 +30,9 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time notes type                | specific             |
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
-      | carriers                                | [carrier1,carrier2]  |
+    And I assign product product1 with following carriers:
+      | carrier1 |
+      | carrier2 |
     Then product product1 should have following shipping information:
       | width                                   | 10.5                 |
       | height                                  | 6                    |
@@ -122,7 +124,14 @@ Feature: Update product shipping options from Back Office (BO)
     When I update product product1 shipping information with following values:
       | delivery time in stock notes[en-US]     |  |
       | delivery time out of stock notes[en-US] |  |
-    Given product product1 should have following shipping information:
+    Then product product1 should have following shipping information:
       | delivery time notes type                | specific |
       | delivery time in stock notes[en-US]     |          |
       | delivery time out of stock notes[en-US] |          |
+
+  Scenario: Remove all product carriers
+    When I assign product product1 with following carriers:
+      | carrier1 |
+      | carrier2 |
+    Then product product1 should have following shipping information:
+      | carriers | [carrier1,carrier2] |

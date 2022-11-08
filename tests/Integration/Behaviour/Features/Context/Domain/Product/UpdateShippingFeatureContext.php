@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Carrier;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
@@ -76,6 +77,56 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
     public function updateProductShippingForAllShops(string $productReference, TableNode $table): void
     {
         $this->updateShipping($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
+     * @When I assign product :productReference with following carriers:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I assign product :productReference with following carriers for shop :shopReference:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+    }
+
+    /**
+     * @When I assign product :productReference with following carriers for all shops:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function setCarriers(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $carrierReferences = $this->getCarrierReferenceIds(array_keys($table->getRowsHash()));
+
+        $this->getCommandBus()->handle(new SetCarriersCommand(
+            (int) $this->getSharedStorage()->get($productReference),
+            $carrierReferences,
+            $shopConstraint
+        ));
     }
 
     /**
@@ -192,7 +243,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         )->getShippingInformation();
 
         if (isset($data['carriers'])) {
-            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
+            $expectedReferenceIds = $this->getCarrierReferenceIds(PrimitiveUtils::castStringArrayIntoArray($data['carriers']));
             $actualReferenceIds = $productShippingInformation->getCarrierReferences();
 
             Assert::assertEquals(
@@ -306,23 +357,18 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
             unset($unhandledValues['delivery time out of stock notes']);
         }
 
-        if (isset($data['carriers'])) {
-            $command->setCarrierReferenceIds($this->getCarrierReferenceIds($data['carriers']));
-            unset($unhandledValues['carriers']);
-        }
-
         return $unhandledValues;
     }
 
     /**
-     * @param string $carrierReferencesInput
+     * @param string[] $carrierReferencesInput
      *
      * @return int[]
      */
-    private function getCarrierReferenceIds(string $carrierReferencesInput): array
+    private function getCarrierReferenceIds(array $carrierReferences): array
     {
         $referenceIds = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($carrierReferencesInput) as $carrierReference) {
+        foreach ($carrierReferences as $carrierReference) {
             $carrier = new Carrier($this->getSharedStorage()->get($carrierReference));
             $referenceIds[] = (int) $carrier->id_reference;
         }

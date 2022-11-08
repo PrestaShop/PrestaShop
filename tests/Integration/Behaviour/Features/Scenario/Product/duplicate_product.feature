@@ -82,7 +82,9 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time in stock notes[fr-FR]     | en stock             |
       | delivery time out of stock notes[en-US] | product out of stock |
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
-      | carriers                                | [carrier1,carrier2]  |
+    And I assign product product1 with following carriers:
+      | carrier1 |
+      | carrier2 |
     And I add new supplier supplier1 with following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
