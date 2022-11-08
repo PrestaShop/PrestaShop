@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -52,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use RuntimeException;
+use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
@@ -130,23 +132,42 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function addNewCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
-        $testCaseData = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
+        $command = new AddCategoryCommand(
+//          @todo: localize like in product scenarios
+            $data['name'],
+            $data['link rewrite'],
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['displayed']),
+            $this->getSharedStorage()->get($data['parent category'])
+        );
 
-        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-        $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
-        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        if (isset($data['description'])) {
+            //@todo: localize
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (isset($data['meta description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta description']);
+        }
+        if (isset($data['meta title']) ) {
+            $command->setLocalizedMetaTitles($data['meta title']);
+        }
+        if (isset($data['active'])) {
+            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($table['active']));
+        }
+        if (isset($data['additional description']) ) {
+            $command->setLocalizedAdditionalDescriptions($data['additional description']);
+        }
+        if (isset($data['group access']) ) {
+            $command->setAssociatedGroupIds($this->referencesToIds($data['associated shops']));
+        }
+        if (isset($data['associated shops']) ) {
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
+        }
 
-        /** @var CategoryId $categoryIdObject */
-        $categoryIdObject = $this->getCommandBus()->handle(new AddCategoryCommand(
-            [$this->defaultLanguageId => $testCaseData['Name']],
-            [$this->defaultLanguageId => $testCaseData['Friendly URL']],
-            PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN),
-            $parentCategoryId
-        ));
+        /** @var CategoryId $categoryId */
+        $categoryId = $this->getCommandBus()->handle($command);
 
-        SharedStorage::getStorage()->set($categoryReference, $categoryIdObject->getValue());
+        SharedStorage::getStorage()->set($categoryReference, $categoryId->getValue());
     }
 
     /**
@@ -179,16 +200,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
-        $testCaseData = $table->getRowsHash();
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
+//      | Name                   | dummy category name      |
+//      | Active                   | dummy category name      |
+//      | Displayed              | false                    |
+//      | Parent category        | home-accessories         |
+//      | Description            | dummy description        |
+//      | Additional description | dummy bottom description |
+//      | Meta title             | dummy meta title         |
+//      | Meta description       | dummy meta description   |
+//      | Friendly URL           | dummy                    |
+//      | Group access           | Visitor,Guest,Customer   |
+        $tableData = $table->getRowsHash();
 
-        /** @var EditableCategory $editableCategoryTestData */
-        $editableCategoryTestData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
-
-        $command = new EditCategoryCommand($categoryId);
-        $command->setIsActive($editableCategoryTestData->isActive());
-        $command->setLocalizedLinkRewrites($editableCategoryTestData->getLinkRewrite());
-        $command->setLocalizedNames($editableCategoryTestData->getName());
+        $command = new EditCategoryCommand(SharedStorage::getStorage()->get($categoryReference));
+        $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($tableData['Active']));
+        $command->setLocalizedLinkRewrites($tableData['Friendly URL']);
+//        $command->setLocalizedNames($this-);
         $command->setParentCategoryId($editableCategoryTestData->getParentId());
         $command->setLocalizedDescriptions($editableCategoryTestData->getDescription());
         $command->setLocalizedAdditionalDescriptions($editableCategoryTestData->getAdditionalDescription());
@@ -276,21 +303,14 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit root category :rootCategory with following details:
+     * @When I edit home category :categoryReference with following details:
      *
-     * @param string $rootCategory
+     * @param string $categoryReference
      * @param TableNode $table
      */
-    public function editRootCategoryWithFollowingDetails(string $rootCategory, TableNode $table)
+    public function editHomeCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
-        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-        $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
-        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-        $categoryId = $categoryTreeIterator->getCategoryId($rootCategory);
-
-        SharedStorage::getStorage()->set($rootCategory, $categoryId);
-
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
         $testCaseData = $table->getRowsHash();
         $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
@@ -310,17 +330,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new root category :categoryReference with following details:
+     * @When I add new home category :categoryReference with following details:
      *
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function addNewRootCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function addNewHomeCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
     {
         $testCaseData = $table->getRowsHash();
         $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData);
 
-        /** @var EditCategoryCommand $command */
         $command = new AddRootCategoryCommand(
             $editableRootCategoryTestCaseData->getName(),
             $editableRootCategoryTestCaseData->getLinkRewrite(),
@@ -516,6 +535,27 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * NOTE: It is the actual ROOT category (the one with no parents), not the HOME category.
+     *
+     * @Given category ":categoryReference" is the root category and it cannot be edited
+     */
+    public function assertRootCategoryIsNotEditable(string $categoryReference): void
+    {
+        Assert::assertSame(
+            $this->getSharedStorage()->get($categoryReference),
+            (int) Configuration::get('PS_ROOT_CATEGORY')
+        );
+
+        try {
+            $this->getEditableCategory($categoryReference);
+
+            throw new RuntimeException(sprintf('%s exception was expected', CannotEditRootCategoryException::class));
+        } catch (CannotEditRootCategoryException $e) {
+            // this is expected. We want to make sure that root category cannot be edited.
+        }
+    }
+
+    /**
      * @Given category ":reference" is the default one
      *
      * @param string $reference
@@ -535,6 +575,45 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $defaultCategoryId,
             $this->getSharedStorage()->get($reference),
             'Unexpected default category'
+        );
+    }
+
+    /**
+     * @Given category ":categoryReference" is set as the home category for shop ":shopReference"
+     *
+     * @param string $categoryReference
+     * @param string $shopReference
+     */
+    public function assertIsHomeCategoryForShop(string $categoryReference, string $shopReference): void
+    {
+        if (!$this->getSharedStorage()->exists($shopReference)) {
+            throw new RuntimeException(sprintf(
+                'Shop referenced as "%s" was not set in sharedStorage',
+                $categoryReference
+            ));
+        }
+
+        if (!$this->getSharedStorage()->exists($categoryReference)) {
+            throw new RuntimeException(sprintf(
+                'Category referenced as "%s" was not set in sharedStorage',
+                $categoryReference
+            ));
+        }
+
+        $shopId = (int) $this->getSharedStorage()->get($shopReference);
+        $shop = new Shop($shopId);
+        if ((int) $shop->id !== $shopId) {
+            throw new RuntimeException(sprintf(
+                'Failed to load shop with id %d, referenced as %s',
+                $shopId,
+                $shopReference
+            ));
+        }
+
+        Assert::assertSame(
+            (int) $shop->id_category,
+            $this->getSharedStorage()->get($categoryReference),
+            sprintf('Unexpected default category for shop %s', $shopReference)
         );
     }
 
@@ -615,108 +694,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return [];
-    }
-
-    /**
-     * @param array $testCaseData
-     * @param int $categoryId
-     * @param array|null $coverImage
-     * @param array $subcategories
-     *
-     * @return EditableCategory
-     */
-    private function mapDataToEditableCategory(
-        array $testCaseData,
-        int $categoryId = self::DEFAULT_ROOT_CATEGORY_ID,
-        array $subcategories = [],
-        array $coverImage = null
-    ): EditableCategory {
-        $parentCategoryId = $this->getParentCategoryId($testCaseData);
-        $groupAssociationIds = $this->getGroupAssociationIds($testCaseData);
-        $isActive = PrimitiveUtils::castElementInType($testCaseData['Displayed'], PrimitiveUtils::TYPE_BOOLEAN);
-
-        $name = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Name'])) {
-            $name = [$this->defaultLanguageId => $testCaseData['Name']];
-        }
-        $description = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Description'])) {
-            $description = [$this->defaultLanguageId => $testCaseData['Description']];
-        }
-        $additionalDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Additional description'])) {
-            $additionalDescription = [$this->defaultLanguageId => $testCaseData['Additional description']];
-        }
-        $metaTitle = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Meta title'])) {
-            $metaTitle = [$this->defaultLanguageId => $testCaseData['Meta title']];
-        }
-        $metaDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Meta description'])) {
-            $metaDescription = [$this->defaultLanguageId => $testCaseData['Meta description']];
-        }
-        $linkRewrite = [$this->defaultLanguageId => self::EMPTY_VALUE];
-        if (isset($testCaseData['Friendly URL'])) {
-            $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
-        }
-        if (isset($testCaseData['Category cover image'])) {
-            $coverImage = $this->pretendImageUploaded(
-                $this->psCatImgDir,
-                $testCaseData['Category cover image'],
-                $categoryId
-            );
-        }
-        $menuThumbNailsImages = [];
-        if (isset($testCaseData['Menu thumbnails'])) {
-            $menuThumbNailsImages = $this->pretendMenuThumbnailImagesUploaded(
-                $testCaseData,
-                $menuThumbNailsImages,
-                $categoryId
-            );
-        }
-
-        //@todo: useless test. Must retrieve it from db.
-        return new EditableCategory(
-            new CategoryId($categoryId),
-            $name,
-            $isActive,
-            $description,
-            $parentCategoryId,
-            $metaTitle,
-            $metaDescription,
-            [$this->defaultLanguageId => self::EMPTY_VALUE],
-            $linkRewrite,
-            $groupAssociationIds,
-            [0 => 1],
-            $parentCategoryId === 1,
-            $coverImage,
-            null,
-            $menuThumbNailsImages,
-            $subcategories,
-            $additionalDescription
-        );
-    }
-
-    /**
-     * @param array $testCaseData
-     *
-     * @return int
-     */
-    private function getParentCategoryId(array $testCaseData): int
-    {
-        $parentCategoryId = null;
-        if (isset($testCaseData['Parent category'])) {
-            /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-            $categoryTreeChoiceProvider = $this->container->get(
-                'prestashop.adapter.form.choice_provider.category_tree_choice_provider');
-            $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-            $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
-        }
-        if ($parentCategoryId === null) {
-            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
-        }
-
-        return $parentCategoryId;
     }
 
     /**
