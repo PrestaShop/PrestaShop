@@ -30,13 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler;
 
 use DateTimeImmutable;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
-use PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository;
-use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
+use PrestaShop\PrestaShop\Core\Order\Repository\OrderRepositoryInterface;
+use PrestaShop\PrestaShop\Core\OrderReturn\Repository\OrderReturnRepositoryInterface;
 
 /**
  * Handles query which gets order return for editing
@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEdit
 class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandlerInterface
 {
     /**
-     * @var OrderReturnRepository
+     * @var OrderReturnRepositoryInterface
      */
     private $orderReturnRepository;
 
@@ -54,21 +54,21 @@ class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandler
     private $customerRepository;
 
     /**
-     * @var OrderRepository
+     * @var OrderRepositoryInterface
      */
     private $orderRepository;
 
     /**
      * GetOrderReturnForEditingHandler constructor.
      *
-     * @param OrderReturnRepository $orderReturnRepository
+     * @param OrderReturnRepositoryInterface $orderReturnRepository
      * @param CustomerRepository $customerRepository
-     * @param OrderRepository $orderRepository
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
-        OrderReturnRepository $orderReturnRepository,
+        OrderReturnRepositoryInterface $orderReturnRepository,
         CustomerRepository $customerRepository,
-        OrderRepository $orderRepository
+        OrderRepositoryInterface $orderRepository
     ) {
         $this->orderReturnRepository = $orderReturnRepository;
         $this->customerRepository = $customerRepository;
