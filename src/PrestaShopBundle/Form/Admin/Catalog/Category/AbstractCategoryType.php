@@ -170,7 +170,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
-                        'If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.',
+                        'If you want a category to appear in your store's menu, configure your menu module in [1]Modules > Module Manager[/1].',
                         'Admin.Catalog.Help',
                         [
                             '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
@@ -181,17 +181,17 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('cover_image', FileType::class, [
                 'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('This is the cover image for your category: it will be displayed on the category\'s page. The description will appear in its top-left corner.', 'Admin.Catalog.Help'),
                 'required' => false,
             ])
             ->add('thumbnail_image', FileType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Displays a small image in the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
             ])
             ->add('menu_thumbnail_images', FileType::class, [
                 'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
                 'required' => false,
                 'disabled' => $disableMenuThumbnailsUpload,
@@ -265,7 +265,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_keyword', TranslatableType::class, [
                 'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help')
+                'help' => $this->trans('To add tags, press the 'enter' key. You can also use the 'comma' key. Invalid characters: <>;=#{}', 'Admin.Shopparameters.Help')
                     . '<br>' . $genericCharactersHint,
                 'required' => false,
                 'options' => [
@@ -295,7 +295,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Global'),
-                'help' => $this->trans('Unless the \'Accented URL\' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Allowed characters: letters, numbers, underscores (_) and hyphens (-). To allow more characters, enable the \'Accented URL\' feature in Shop Parameters > Traffic & SEO.', 'Admin.Catalog.Help'),
                 'type' => TextType::class,
                 'constraints' => [
                     new DefaultLanguage(),
@@ -324,7 +324,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('group_association', MaterialChoiceTableType::class, [
                 'label' => $this->trans('Group access', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Mark all of the customer groups which you would like to have access to this category.', 'Admin.Catalog.Help'),
+                'help' => $this->trans('Select the customer groups which will have access to this category.', 'Admin.Catalog.Help'),
                 'choices' => $this->customerGroupChoices,
                 'required' => true,
                 'constraints' => [

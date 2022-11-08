@@ -113,7 +113,7 @@ abstract class AbstractCategoryFormDataHandler implements FormDataHandlerInterfa
         $availableKeys = $this->getAvailableKeys($categoryId);
 
         if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
-            throw new MenuThumbnailsLimitException(sprintf('Maximum number of menu thumbnails was reached for category "%d"', $categoryId));
+            throw new MenuThumbnailsLimitException(sprintf('The maximum number of menu thumbnails has been reached for the %d category', $categoryId));
         }
         $command = $this->createEditCategoryCommand($categoryId, $data);
 
