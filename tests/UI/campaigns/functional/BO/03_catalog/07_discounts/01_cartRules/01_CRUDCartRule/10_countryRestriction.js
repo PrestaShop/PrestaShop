@@ -128,7 +128,6 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
     });
   });
 
-
   describe('Create new cart rule with country restriction', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
@@ -266,7 +265,6 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
       await expect(cartRuleName).to.equal(cartRule.name);
     });
   });
-
 
   describe('Delete the shopping cart', async () => {
     it('should remove the discount', async function () {

@@ -14,7 +14,7 @@ const featuresPage = require('@pages/BO/catalog/features');
 const addFeaturePage = require('@pages/BO/catalog/features/addFeature');
 
 // Import data
-const {FeatureData} = require('@data/faker/featureAndValue');
+const FeatureData = require('@data/faker/feature');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -180,8 +180,8 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
         let sortedTable = await featuresPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

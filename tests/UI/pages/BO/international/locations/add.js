@@ -19,7 +19,7 @@ class AddZone extends BOBasePage {
 
     // Selectors
     this.nameInput = '#zone_name';
-    this.statusToggle = toggle => `#zone_enabled_${toggle}`;
+    this.statusToggle = (toggle) => `#zone_enabled_${toggle}`;
     this.saveZoneButton = '#save-button';
   }
 

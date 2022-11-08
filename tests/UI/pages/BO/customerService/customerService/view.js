@@ -20,7 +20,7 @@ class ViewCustomer extends BOBasePage {
     this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
     this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
     this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
-    this.statusButton = statusName => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
+    this.statusButton = (statusName) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
     this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
     this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
     this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
@@ -95,6 +95,7 @@ class ViewCustomer extends BOBasePage {
    */
   async setStatus(page, status) {
     let statusName;
+
     switch (status) {
       case 'Re-open':
         statusName = 'open';

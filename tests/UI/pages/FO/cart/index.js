@@ -22,31 +22,32 @@ class Cart extends FOBasePage {
 
     // Selectors for cart page
     // Shopping cart block selectors
-    this.productItem = number => `#main li:nth-of-type(${number})`;
-    this.productName = number => `${this.productItem(number)} div.product-line-info a`;
-    this.productRegularPrice = number => `${this.productItem(number)} span.regular-price`;
-    this.productDiscountPercentage = number => `${this.productItem(number)} span.discount-percentage`;
-    this.productPrice = number => `${this.productItem(number)} div.current-price span`;
-    this.productTotalPrice = number => `${this.productItem(number)} span.product-price`;
-    this.productQuantity = number => `${this.productItem(number)} div.input-group input.js-cart-line-product-quantity`;
-    this.productSize = number => `${this.productItem(number)} div.product-line-info.size span.value`;
-    this.productColor = number => `${this.productItem(number)} div.product-line-info.color span.value`;
-    this.productImage = number => `${this.productItem(number)} span.product-image img`;
-    this.deleteIcon = number => `${this.productItem(number)} .remove-from-cart`;
+    this.productItem = (number) => `#main li:nth-of-type(${number})`;
+    this.productName = (number) => `${this.productItem(number)} div.product-line-info a`;
+    this.productRegularPrice = (number) => `${this.productItem(number)} span.regular-price`;
+    this.productDiscountPercentage = (number) => `${this.productItem(number)} span.discount-percentage`;
+    this.productPrice = (number) => `${this.productItem(number)} div.current-price span`;
+    this.productTotalPrice = (number) => `${this.productItem(number)} span.product-price`;
+    this.productQuantity = (number) => `${this.productItem(number)} div.input-group `
+      + 'input.js-cart-line-product-quantity';
+    this.productSize = (number) => `${this.productItem(number)} div.product-line-info.size span.value`;
+    this.productColor = (number) => `${this.productItem(number)} div.product-line-info.color span.value`;
+    this.productImage = (number) => `${this.productItem(number)} span.product-image img`;
+    this.deleteIcon = (number) => `${this.productItem(number)} .remove-from-cart`;
 
     // Cart summary block selectors
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.blockPromoDiv = '.block-promo';
-    this.cartSummaryLine = line => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
-    this.cartRuleName = line => `${this.cartSummaryLine(line)} span.label`;
-    this.discountValue = line => `${this.cartSummaryLine(line)} div span`;
+    this.cartSummaryLine = (line) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartRuleName = (line) => `${this.cartSummaryLine(line)} span.label`;
+    this.discountValue = (line) => `${this.cartSummaryLine(line)} div span`;
 
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
-    this.promoCodeRemoveIcon = line => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
+    this.promoCodeRemoveIcon = (line) => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';

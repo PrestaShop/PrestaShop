@@ -156,7 +156,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_1', baseContext);
 
       const discountedPrice = Products.demo_1.finalPrice
-        - (Products.demo_1.finalPrice * newCartRuleData.discountPercent / 100);
+        - ((Products.demo_1.finalPrice * newCartRuleData.discountPercent) / 100);
 
       const priceATI = await cartPage.getATIPrice(page);
       await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));
@@ -265,7 +265,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_2', baseContext);
 
       const discountedPrice = Products.demo_1.finalPrice
-        - (Products.demo_1.finalPrice * editCartRuleData.discountPercent / 100);
+        - ((Products.demo_1.finalPrice * editCartRuleData.discountPercent) / 100);
 
       const priceATI = await cartPage.getATIPrice(page);
       await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));

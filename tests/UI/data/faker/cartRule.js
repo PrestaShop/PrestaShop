@@ -2,7 +2,7 @@ const {faker} = require('@faker-js/faker');
 
 const {Products} = require('@data/demo/products');
 
-const ProductsNames = Object.values(Products).map(product => product.name);
+const ProductsNames = Object.values(Products).map((product) => product.name);
 
 /**
  * Create new cart rule to use on creation cart rule form on BO

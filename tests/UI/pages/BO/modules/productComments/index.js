@@ -16,13 +16,13 @@ class ProductComments extends ModuleConfiguration.constructor {
 
     // Selectors
     // Table Selectors
-    this.reviewsTable = table => `#table-${table}-productcomments-list`;
-    this.reviewsTableBody = table => `${this.reviewsTable(table)} tbody`;
-    this.reviewsTableRows = table => `${this.reviewsTableBody(table)} tr`;
+    this.reviewsTable = (table) => `#table-${table}-productcomments-list`;
+    this.reviewsTableBody = (table) => `${this.reviewsTable(table)} tbody`;
+    this.reviewsTableRows = (table) => `${this.reviewsTableBody(table)} tr`;
     this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
     this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)}`
       + ` td.product-comment-${column}`;
-    this.reviewsTableEmptyRows = table => `${this.reviewsTableRows(table)} td.list-empty`;
+    this.reviewsTableEmptyRows = (table) => `${this.reviewsTableRows(table)} td.list-empty`;
     // Buttons Selectors
     this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
     this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
@@ -47,7 +47,8 @@ class ProductComments extends ModuleConfiguration.constructor {
       return 0;
     }
     const selector = this.reviewsTableRows(table);
-    return page.$$eval(selector, rows => rows.length);
+
+    return page.$$eval(selector, (rows) => rows.length);
   }
 
   /**

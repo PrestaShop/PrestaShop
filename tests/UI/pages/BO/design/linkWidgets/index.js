@@ -22,9 +22,9 @@ class LinkList extends BOBasePage {
 
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';
-    this.gridPanel = hookName => `div[data-hook-name='${hookName}']`;
-    this.gridHeaderTitle = hookName => `${this.gridPanel(hookName)} h3.card-header-title`;
-    this.gridTable = hookName => `${this.gridPanel(hookName)} table.grid-table`;
+    this.gridPanel = (hookName) => `div[data-hook-name='${hookName}']`;
+    this.gridHeaderTitle = (hookName) => `${this.gridPanel(hookName)} h3.card-header-title`;
+    this.gridTable = (hookName) => `${this.gridPanel(hookName)} table.grid-table`;
     this.tableRow = (hookName, row) => `${this.gridTable(hookName)} tbody tr:nth-child(${row})`;
     this.tableColumn = (hookName, row, column) => `${this.tableRow(hookName, row)} td.column-${column}`;
     this.actionsColumn = (hookName, row) => `${this.tableRow(hookName, row)} td.column-actions`;

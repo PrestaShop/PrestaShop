@@ -24,7 +24,7 @@ class AddAttribute extends BOBasePage {
     this.publicNameInput = '#public_name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = toggle => `#indexable_${toggle}`;
+    this.indexableToggle = (toggle) => `#indexable_${toggle}`;
     this.attributeTypeSelect = '#group_type';
     this.saveButton = '#attribute_group_form_submit_btn';
   }

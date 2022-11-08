@@ -24,11 +24,11 @@ class AddImageType extends BOBasePage {
     this.nameInput = '#name';
     this.widthInput = '#width';
     this.heightInput = '#height';
-    this.productsToggle = toggle => `${this.imageTypeForm} #products_${toggle}`;
-    this.categoriesToggle = toggle => `${this.imageTypeForm} #categories_${toggle}`;
-    this.manufacturersToggle = toggle => `${this.imageTypeForm} #manufacturers_${toggle}`;
-    this.suppliersToggle = toggle => `${this.imageTypeForm} #suppliers_${toggle}`;
-    this.storesToggle = toggle => `${this.imageTypeForm} #stores_${toggle}`;
+    this.productsToggle = (toggle) => `${this.imageTypeForm} #products_${toggle}`;
+    this.categoriesToggle = (toggle) => `${this.imageTypeForm} #categories_${toggle}`;
+    this.manufacturersToggle = (toggle) => `${this.imageTypeForm} #manufacturers_${toggle}`;
+    this.suppliersToggle = (toggle) => `${this.imageTypeForm} #suppliers_${toggle}`;
+    this.storesToggle = (toggle) => `${this.imageTypeForm} #stores_${toggle}`;
     this.saveButton = '#image_type_form_submit_btn';
   }
 

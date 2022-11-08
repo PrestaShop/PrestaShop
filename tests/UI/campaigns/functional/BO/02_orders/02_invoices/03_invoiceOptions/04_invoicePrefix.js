@@ -30,7 +30,6 @@ let fileName;
 const invoiceData = new InvoiceOptionsFaker();
 const defaultPrefix = '#IN';
 
-
 /*
 Edit invoice prefix
 Change the Order status to Shipped

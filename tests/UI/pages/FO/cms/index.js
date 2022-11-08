@@ -1,4 +1,3 @@
-
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 

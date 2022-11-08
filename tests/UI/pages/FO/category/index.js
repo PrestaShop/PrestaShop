@@ -28,10 +28,10 @@ class Category extends FOBasePage {
 
     // Products list
     this.productList = '#js-product-list';
-    this.productArticle = number => `${this.productList} .products div:nth-child(${number}) article`;
-    this.productImg = number => `${this.productArticle(number)} img`;
-    this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
-    this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productArticle = (number) => `${this.productList} .products div:nth-child(${number}) article`;
+    this.productImg = (number) => `${this.productArticle(number)} img`;
+    this.productDescriptionDiv = (number) => `${this.productArticle(number)} div.product-description`;
+    this.productQuickViewLink = (number) => `${this.productArticle(number)} a.quick-view`;
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -128,7 +128,7 @@ class Category extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -137,7 +137,7 @@ class Category extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), el => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
     ]);
   }
 

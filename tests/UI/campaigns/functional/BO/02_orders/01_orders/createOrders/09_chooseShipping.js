@@ -221,7 +221,6 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should enable \'Recycled packaging\' and \'Gift\' and add a gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-
       await addOrderPage.setRecycledPackaging(page, true);
       await addOrderPage.setGiftMessage(page, giftMessage);
       await addOrderPage.setGift(page, true);

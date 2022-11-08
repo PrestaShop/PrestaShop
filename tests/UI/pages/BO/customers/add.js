@@ -19,7 +19,7 @@ class AddCustomer extends BOBasePage {
     this.updateSuccessfullMessage = 'Update successful';
 
     // Selectors
-    this.socialTitleInput = id => `#customer_gender_id_${id}`;
+    this.socialTitleInput = (id) => `#customer_gender_id_${id}`;
     this.firstNameInput = '#customer_first_name';
     this.lastNameInput = '#customer_last_name';
     this.emailInput = '#customer_email';
@@ -27,14 +27,14 @@ class AddCustomer extends BOBasePage {
     this.yearOfBirthSelect = 'select#customer_birthday_year';
     this.monthOfBirthSelect = 'select#customer_birthday_month';
     this.dayOfBirthSelect = 'select#customer_birthday_day';
-    this.statusToggleInput = toggle => `#customer_is_enabled_${toggle}`;
-    this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
+    this.statusToggleInput = (toggle) => `#customer_is_enabled_${toggle}`;
+    this.partnerOffersToggleInput = (toggle) => `#customer_is_partner_offers_subscribed_${toggle}`;
     this.companyInput = '#customer_company_name';
     this.allowedOutstandingAmountInput = '#customer_allowed_outstanding_amount';
     this.riskRatingSelect = '#customer_risk_id';
 
     // Group access selector
-    this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
+    this.groupAccessCheckbox = (id) => `#customer_group_ids_${id}`;
     this.visitorCheckbox = this.groupAccessCheckbox(0);
     this.guestCheckbox = this.groupAccessCheckbox(1);
     this.customerCheckbox = this.groupAccessCheckbox(2);
@@ -98,7 +98,6 @@ class AddCustomer extends BOBasePage {
     await this.setValue(page, this.allowedOutstandingAmountInput, customerData.allowedOutstandingAmount);
     await this.selectByVisibleText(page, this.riskRatingSelect, customerData.riskRating);
   }
-
 
   /**
    * Fill form for add/edit customer and get successful message after saving

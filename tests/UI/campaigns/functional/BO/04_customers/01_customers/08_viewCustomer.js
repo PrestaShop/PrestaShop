@@ -349,9 +349,7 @@ describe('BO - Customers - Customers : View information about customer', async (
     ].forEach((test) => {
       it(`should check ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(
-          this, 'testIdentifier',
-          `check${test.args.blockName}NumberAfterEdit`,
-          baseContext,
+          this, 'testIdentifier', `check${test.args.blockName}NumberAfterEdit`, baseContext,
         );
 
         const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(page, test.args.blockName);

@@ -18,23 +18,23 @@ class Home extends FOBasePage {
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
-    this.carouselControlDirectionLink = direction => `${this.carouselSliderId} a.${direction}.carousel-control`;
+    this.carouselControlDirectionLink = (direction) => `${this.carouselSliderId} a.${direction}.carousel-control`;
     this.carouselSliderInnerList = `${this.carouselSliderId} ul.carousel-inner`;
     this.carouselSliderInnerListItems = `${this.carouselSliderInnerList} li`;
-    this.carouselSliderInnerListItem = position => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
+    this.carouselSliderInnerListItem = (position) => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
     this.popularProductTitle = '#content section h2';
-    this.productArticle = number => `#content .products div:nth-child(${number}) article`;
-    this.productImg = number => `${this.productArticle(number)} img`;
-    this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
-    this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productArticle = (number) => `#content .products div:nth-child(${number}) article`;
+    this.productImg = (number) => `${this.productArticle(number)} img`;
+    this.productDescriptionDiv = (number) => `${this.productArticle(number)} div.product-description`;
+    this.productQuickViewLink = (number) => `${this.productArticle(number)} a.quick-view`;
     this.productColorLink = (number, color) => `${this.productArticle(number)} .variant-links a[aria-label='${color}']`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
-    this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
-    this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
+    this.productPrice = (number) => `${this.productArticle(number)} span[aria-label="Price"]`;
+    this.newFlag = (number) => `${this.productArticle(number)} .product-flag.new`;
     this.newsletterFormField = '.block_newsletter [name=email]';
     this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
 
@@ -192,7 +192,7 @@ class Home extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -201,7 +201,7 @@ class Home extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), el => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
     ]);
   }
 
@@ -218,12 +218,12 @@ class Home extends FOBasePage {
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
-   * @param quantity_wanted {number} Quantity to order
+   * @param quantityWanted {number} Quantity to order
    * @return {Promise<void>}
    */
-  async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
+  async addProductToCartByQuickView(page, id, quantityWanted = 1) {
     await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted);
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
@@ -249,7 +249,7 @@ class Home extends FOBasePage {
     }
     if (attributes.dimension) {
       await Promise.all([
-        page.waitForResponse(response => response.url().includes('product&token=')),
+        page.waitForResponse((response) => response.url().includes('product&token=')),
         this.selectByVisibleText(page, this.quickViewProductDimension, attributes.dimension),
       ]);
     }
@@ -330,6 +330,7 @@ class Home extends FOBasePage {
    */
   async getSelectedAttributesFromQuickViewModal(page, attribute) {
     let attributes;
+
     if (attribute.size) {
       attributes = {
         size: await page.getAttribute(`${this.quickViewProductSize} option[selected]`, 'title'),
@@ -387,13 +388,14 @@ class Home extends FOBasePage {
   async selectProductColor(page, id, color) {
     await page.hover(this.productImg(id));
     let displayed = false;
+
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -490,6 +492,7 @@ class Home extends FOBasePage {
    */
   async getSocialSharingLink(page, socialSharing) {
     let selector;
+
     switch (socialSharing) {
       case 'Facebook':
         selector = this.quickViewFacebookSocialSharing;

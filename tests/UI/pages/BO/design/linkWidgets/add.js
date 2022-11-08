@@ -18,12 +18,12 @@ class AddLinkBlock extends BOBasePage {
 
     // Selectors
     this.changeNamelangButton = '#form_link_block_block_name';
-    this.changeNameLangSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
-    this.nameInput = id => `#form_link_block_block_name_${id}`;
+    this.changeNameLangSpan = (lang) => `div.dropdown-menu span[data-locale='${lang}']`;
+    this.nameInput = (id) => `#form_link_block_block_name_${id}`;
     this.hookSelect = '#form_link_block_id_hook';
-    this.cmsPagesCheckbox = id => `#form_link_block_cms_${id} + i`;
-    this.productsPagesCheckbox = id => `#form_link_block_product_${id} + i`;
-    this.staticContentCheckbox = id => `#form_link_block_static_${id} + i`;
+    this.cmsPagesCheckbox = (id) => `#form_link_block_cms_${id} + i`;
+    this.productsPagesCheckbox = (id) => `#form_link_block_product_${id} + i`;
+    this.staticContentCheckbox = (id) => `#form_link_block_static_${id} + i`;
     this.customTitleInput = (position, id) => `#form_link_block_custom_${position}_${id}_title`;
     this.customUrlInput = (position, id) => `#form_link_block_custom_${position}_${id}_url`;
     this.addCustomBlockButton = 'button[data-collection-id=\'form_link_block_custom\']';
@@ -78,7 +78,7 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, el => el.click());
+      await page.$eval(selector, (el) => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -107,7 +107,7 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, el => el.click());
+      await page.$eval(selector, (el) => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -142,7 +142,7 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, el => el.click());
+      await page.$eval(selector, (el) => el.click());
     }
     /* eslint-enable no-restricted-syntax */
   }

@@ -25,16 +25,16 @@ class Addresses extends BOBasePage {
     this.addressGridPanel = '#address_grid_panel';
     this.addressGridTitle = `${this.addressGridPanel} h3.card-header-title`;
     this.addressesListForm = '#address_grid';
-    this.addressesListTableRow = row => `${this.addressesListForm} tbody tr:nth-child(${row})`;
+    this.addressesListTableRow = (row) => `${this.addressesListForm} tbody tr:nth-child(${row})`;
     this.addressesListTableColumn = (row, column) => `${this.addressesListTableRow(row)} td.column-${column}`;
-    this.addressesListTableColumnAction = row => this.addressesListTableColumn(row, 'actions');
-    this.addressesListTableToggleDropDown = row => `${this.addressesListTableColumnAction(row)}`
+    this.addressesListTableColumnAction = (row) => this.addressesListTableColumn(row, 'actions');
+    this.addressesListTableToggleDropDown = (row) => `${this.addressesListTableColumnAction(row)}`
       + ' a[data-toggle=\'dropdown\']';
-    this.addressesListTableDeleteLink = row => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.addressesListTableEditLink = row => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.addressesListTableDeleteLink = (row) => `${this.addressesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.addressesListTableEditLink = (row) => `${this.addressesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.addressFilterColumnInput = filterBy => `${this.addressesListForm} #address_${filterBy}`;
+    this.addressFilterColumnInput = (filterBy) => `${this.addressesListForm} #address_${filterBy}`;
     this.filterSearchButton = `${this.addressesListForm} .grid-search-button`;
     this.filterResetButton = `${this.addressesListForm} .grid-reset-button`;
 
@@ -49,8 +49,8 @@ class Addresses extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.addressesListForm} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -60,7 +60,7 @@ class Addresses extends BOBasePage {
 
     // Required field section
     this.setRequiredFieldsButton = 'button[data-target=\'#addressRequiredFieldsContainer\']';
-    this.requiredFieldCheckBox = id => `#required_fields_address_required_fields_${id}`;
+    this.requiredFieldCheckBox = (id) => `#required_fields_address_required_fields_${id}`;
     this.requiredFieldsForm = '#addressRequiredFieldsContainer';
     this.saveButton = `${this.requiredFieldsForm} button`;
   }
@@ -201,7 +201,7 @@ class Addresses extends BOBasePage {
   async deleteAddressesBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

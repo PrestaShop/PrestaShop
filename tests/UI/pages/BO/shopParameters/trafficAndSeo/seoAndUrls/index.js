@@ -30,8 +30,8 @@ class SeoAndUrls extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridPanel} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
@@ -39,22 +39,22 @@ class SeoAndUrls extends BOBasePage {
     this.bulkActionsDeleteButton = `${this.gridPanel} #meta_grid_bulk_action_delete_selection`;
 
     // Filters
-    this.filterColumn = filterBy => `${this.gridTable} #meta_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.gridTable} #meta_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
 
     // Actions buttons in Row
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = (row) => `${this.actionsColumn(row)} a.grid-edit-row-link`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Delete modal
     this.confirmDeleteModal = '#meta-grid-confirm-modal';
@@ -67,12 +67,12 @@ class SeoAndUrls extends BOBasePage {
     this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
 
     // Set up URL form
-    this.friendlyUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
-    this.accentedUrlToggleInput = toggle => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
+    this.friendlyUrlToggleInput = (toggle) => `#meta_settings_set_up_urls_form_friendly_url_${toggle}`;
+    this.accentedUrlToggleInput = (toggle) => `#meta_settings_set_up_urls_form_accented_url_${toggle}`;
     this.saveSeoAndUrlFormButton = '#form-set-up-urls-save-button';
 
     // Seo options form
-    this.displayAttributesToggleInput = toggle => '#meta_settings_seo_options_form_product_attributes_in_title_'
+    this.displayAttributesToggleInput = (toggle) => '#meta_settings_seo_options_form_product_attributes_in_title_'
       + `${toggle}`;
     this.saveSeoOptionsFormButton = '#meta_settings_seo_options_form_save_button';
   }
@@ -106,7 +106,7 @@ class SeoAndUrls extends BOBasePage {
   async bulkDeleteSeoUrlPage(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 

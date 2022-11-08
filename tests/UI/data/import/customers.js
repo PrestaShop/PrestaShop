@@ -1,7 +1,7 @@
 const {faker} = require('@faker-js/faker');
 const {groupAccess} = require('@data/demo/groupAccess');
 
-const groups = Object.values(groupAccess).map(group => group.name);
+const groups = Object.values(groupAccess).map((group) => group.name);
 
 const records = [];
 
@@ -23,6 +23,7 @@ function createRecord() {
       defaultGroup: faker.helpers.arrayElement(groups),
     });
   }
+
   return records;
 }
 

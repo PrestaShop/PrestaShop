@@ -22,12 +22,12 @@ class MessagesBlock extends ViewOrderBasePage.constructor {
     this.messageTextarea = '#order_message_message';
     this.sendMessageButton = `${this.messageBlock} .btn-primary`;
     this.messageBlockList = `${this.messageBlock} .messages-block`;
-    this.messageListChild = messageID => `${this.messageBlockList} li:nth-child(${messageID})`;
-    this.messageBlockEmployee = messageID => `${this.messageListChild(messageID)}.messages-block-employee`;
-    this.messageBlockCustomer = messageID => `${this.messageListChild(messageID)}.messages-block-customer`;
-    this.messageEmployeeBlockContent = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
-    this.messageCustomerBlockContent = messageID => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
-    this.messageBlockIcon = messageID => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
+    this.messageListChild = (messageID) => `${this.messageBlockList} li:nth-child(${messageID})`;
+    this.messageBlockEmployee = (messageID) => `${this.messageListChild(messageID)}.messages-block-employee`;
+    this.messageBlockCustomer = (messageID) => `${this.messageListChild(messageID)}.messages-block-customer`;
+    this.messageEmployeeBlockContent = (messageID) => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
+    this.messageCustomerBlockContent = (messageID) => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
+    this.messageBlockIcon = (messageID) => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
     this.configureLink = `${this.messageBlock} .configure-link`;
   }
 

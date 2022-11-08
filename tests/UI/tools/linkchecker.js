@@ -71,7 +71,6 @@ describe('Crawl every page for defects and issues', async () => {
       });
     });
 
-
     // Intercept console errors
     await page.on('console', (msg) => {
       // Handle only errors.
@@ -86,7 +85,6 @@ describe('Crawl every page for defects and issues', async () => {
       }
     });
   });
-
 
   after(async () => {
     await helper.closeBrowser(browser);

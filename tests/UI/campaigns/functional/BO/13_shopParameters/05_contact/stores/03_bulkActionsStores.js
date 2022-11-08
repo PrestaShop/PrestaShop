@@ -42,7 +42,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
   after(async () => {
     await helper.closeBrowserContext(browserContext);
 
-    storesToCreate.forEach(storeToCreate => files.deleteFile(storeToCreate.imageName));
+    storesToCreate.forEach((storeToCreate) => files.deleteFile(storeToCreate.imageName));
   });
 
   it('should login in BO', async function () {
@@ -141,7 +141,6 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
         }
       });
     });
-
 
     it('should delete stores with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteStores', baseContext);

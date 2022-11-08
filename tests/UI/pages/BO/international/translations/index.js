@@ -44,7 +44,7 @@ class Translations extends BOBasePage {
 
     // Prestashop translation
     this.prestashopTranslationRadio = '#form_core_selectors_core_type';
-    this.prestashopTranslationTypeCheckbox = position => `#form_core_selectors_selected_value_${position}`;
+    this.prestashopTranslationTypeCheckbox = (position) => `#form_core_selectors_selected_value_${position}`;
 
     // Theme translation
     this.themeTranslationRadio = '#form_themes_selectors_themes_type';

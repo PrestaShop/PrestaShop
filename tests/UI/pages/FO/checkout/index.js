@@ -17,7 +17,7 @@ class Checkout extends FOBasePage {
     // Selectors
     this.checkoutPageBody = 'body#checkout';
     this.paymentStepSection = '#checkout-payment-step';
-    this.paymentOptionInput = name => `${this.paymentStepSection} input[name='payment-option']`
+    this.paymentOptionInput = (name) => `${this.paymentStepSection} input[name='payment-option']`
       + `[data-module-name='${name}']`;
     this.conditionToApproveLabel = `${this.paymentStepSection} #conditions-to-approve label`;
     this.conditionToApproveCheckbox = '#conditions_to_approve\\[terms-and-conditions\\]';
@@ -40,7 +40,7 @@ class Checkout extends FOBasePage {
     this.activeLink = `${this.personalInformationStepForm} .nav-link.active`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
-    this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
+    this.checkoutGuestGenderInput = (pos) => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
     this.checkoutGuestFirstnameInput = `${this.checkoutGuestForm} input[name='firstname']`;
     this.checkoutGuestLastnameInput = `${this.checkoutGuestForm} input[name='lastname']`;
     this.checkoutGuestEmailInput = `${this.checkoutGuestForm} input[name='email']`;
@@ -78,15 +78,15 @@ class Checkout extends FOBasePage {
     // Shipping method step
     this.deliveryStepSection = '#checkout-delivery-step';
     this.deliveryOptionsRadios = 'input[id*=\'delivery_option_\']';
-    this.deliveryOptionLabel = id => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
-    this.deliveryOptionNameSpan = id => `${this.deliveryOptionLabel(id)} span.carrier-name`;
+    this.deliveryOptionLabel = (id) => `${this.deliveryStepSection} label[for='delivery_option_${id}']`;
+    this.deliveryOptionNameSpan = (id) => `${this.deliveryOptionLabel(id)} span.carrier-name`;
     this.deliveryOptionAllNamesSpan = '#js-delivery .delivery-option .carriere-name-container span.carrier-name';
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
     this.deliveryAddressBlock = '#delivery-addresses';
     this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
-    this.deliveryAddressPosition = position => `#delivery-addresses article:nth-child(${position})`;
+    this.deliveryAddressPosition = (position) => `#delivery-addresses article:nth-child(${position})`;
 
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
@@ -238,7 +238,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersPrices(page) {
-    return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
+    return page.$$eval(this.deliveryOptionAllPricesSpan, (all) => all.map((el) => el.textContent));
   }
 
   /**
@@ -271,7 +271,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllCarriersNames(page) {
-    return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
+    return page.$$eval(this.deliveryOptionAllNamesSpan, (all) => all.map((el) => el.textContent));
   }
 
   /**

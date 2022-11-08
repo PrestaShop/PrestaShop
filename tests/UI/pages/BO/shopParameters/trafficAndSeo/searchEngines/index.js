@@ -28,31 +28,30 @@ class SearchEngines extends BOBasePage {
 
     // Sort selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;
-    this.filterColumn = filterBy => `${this.filterRow} #search_engine_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.filterRow} #search_engine_${filterBy}`;
     this.filterSearchButton = 'button.grid-search-button';
     this.filterResetButton = 'button.grid-reset-button';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumns = row => `${this.tableBodyRow(row)} td`;
-
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumns = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
     this.tableBodyColumn = (row, column) => `${this.tableBodyColumns(row)}.column-${column}`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumns(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} a.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} a.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#search_engine-grid-confirm-modal button.btn-confirm-submit';
@@ -260,7 +259,7 @@ class SearchEngines extends BOBasePage {
    */
   async bulkSelectRows(page) {
     await Promise.all([
-      page.$eval(this.selectAllLink, el => el.click()),
+      page.$eval(this.selectAllLink, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionMenuButton}:not([disabled])`),
     ]);
   }

@@ -43,22 +43,22 @@ class Zones extends BOBasePage {
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Filters
-    this.zonesFilterColumnInput = filterBy => `${this.zonesGridTable} #zone_${filterBy}`;
+    this.zonesFilterColumnInput = (filterBy) => `${this.zonesGridTable} #zone_${filterBy}`;
     this.resetFilterButton = `${this.zonesGridTable} .grid-reset-button`;
     this.searchFilterButton = `${this.zonesGridTable} .grid-search-button`;
-    this.zonesGridRow = row => `${this.zonesGridTable} tbody tr:nth-child(${row})`;
+    this.zonesGridRow = (row) => `${this.zonesGridTable} tbody tr:nth-child(${row})`;
     this.zonesGridColumn = (row, column) => `${this.zonesGridRow(row)} td.column-${column}`;
-    this.zonesGridStatusColumn = row => `${this.zonesGridColumn(row, 'active')} .ps-switch`;
-    this.zonesGridStatusColumnToggleInput = row => `${this.zonesGridStatusColumn(row)} input`;
-    this.zonesGridActionsColumn = row => this.zonesGridColumn(row, 'actions');
-    this.zonesGridColumnEditLink = row => `${this.zonesGridActionsColumn(row)} a.grid-edit-row-link`;
-    this.zonesGridColumnToggleDropdown = row => `${this.zonesGridActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.zonesGridDeleteLink = row => `${this.zonesGridActionsColumn(row)} a.grid-delete-row-link`;
+    this.zonesGridStatusColumn = (row) => `${this.zonesGridColumn(row, 'active')} .ps-switch`;
+    this.zonesGridStatusColumnToggleInput = (row) => `${this.zonesGridStatusColumn(row)} input`;
+    this.zonesGridActionsColumn = (row) => this.zonesGridColumn(row, 'actions');
+    this.zonesGridColumnEditLink = (row) => `${this.zonesGridActionsColumn(row)} a.grid-edit-row-link`;
+    this.zonesGridColumnToggleDropdown = (row) => `${this.zonesGridActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.zonesGridDeleteLink = (row) => `${this.zonesGridActionsColumn(row)} a.grid-delete-row-link`;
 
     // Sort
     this.tableHead = `${this.zonesGridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -262,7 +262,7 @@ class Zones extends BOBasePage {
   async bulkSelectRows(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, el => el.click()),
+      page.$eval(this.selectAllLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
   }

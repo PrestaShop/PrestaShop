@@ -64,7 +64,7 @@ class PasswordReminder extends FOBasePage {
    */
   async openForgotPasswordPage(page, emailBody) {
     // To get reset email password from received email
-    const resetPasswordURL = emailBody.split(new RegExp('(.*)(http.*password-recovery\\?.*)(\\s.*)'))[2];
+    const resetPasswordURL = emailBody.split(/(.*)(http.*password-recovery\\?.*)(\\s.*)/)[2];
     await this.goTo(page, resetPasswordURL);
   }
 

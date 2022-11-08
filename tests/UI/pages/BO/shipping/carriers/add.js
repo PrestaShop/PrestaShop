@@ -28,8 +28,8 @@ class AddCarrier extends BOBasePage {
     this.trackingURLInput = '#url';
 
     // Shipping locations and costs
-    this.addHandlingCostsToggle = toggle => `${this.carrierForm} #shipping_handling_${toggle}`;
-    this.freeShippingToggle = toggle => `${this.carrierForm} #is_free_${toggle}`;
+    this.addHandlingCostsToggle = (toggle) => `${this.carrierForm} #shipping_handling_${toggle}`;
+    this.freeShippingToggle = (toggle) => `${this.carrierForm} #is_free_${toggle}`;
     this.billingPriceRadioButton = '#billing_price';
     this.billingWeightButton = '#billing_weight';
     this.taxRuleSelect = '#id_tax_rules_group';
@@ -38,7 +38,7 @@ class AddCarrier extends BOBasePage {
     this.rangeSupInput = `${this.zonesTable} tr.range_sup td.range_data input[name*='range_sup']`;
     this.allZonesRadioButton = `${this.zonesTable} tr.fees_all input[onclick*='checkAllZones']`;
     this.allZonesValueInput = `${this.zonesTable} tr.fees_all .input-group input`;
-    this.zoneRadioButton = zoneID => `${this.zonesTable} #zone_${zoneID}`;
+    this.zoneRadioButton = (zoneID) => `${this.zonesTable} #zone_${zoneID}`;
 
     // Size, weight and group access
     this.maxWidthInput = '#max_width';
@@ -47,7 +47,7 @@ class AddCarrier extends BOBasePage {
     this.maxWeightInput = '#max_weight';
 
     // Summary
-    this.enableToggle = toggle => `${this.carrierForm} #active_${toggle}`;
+    this.enableToggle = (toggle) => `${this.carrierForm} #active_${toggle}`;
 
     this.nextButton = `${this.carrierForm} .buttonNext`;
     this.finishButton = `${this.carrierForm} .buttonFinish`;

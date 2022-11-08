@@ -39,30 +39,30 @@ class Taxes extends BOBasePage {
     this.confirmDeleteButton = `${this.confirmDeleteModal} button.btn-confirm-submit`;
 
     // Filters
-    this.taxesFilterColumnInput = filterBy => `${this.taxesGridTable} #tax_${filterBy}`;
+    this.taxesFilterColumnInput = (filterBy) => `${this.taxesGridTable} #tax_${filterBy}`;
     this.resetFilterButton = `${this.taxesGridTable} .grid-reset-button`;
     this.searchFilterButton = `${this.taxesGridTable} .grid-search-button`;
-    this.taxesGridRow = row => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
+    this.taxesGridRow = (row) => `${this.taxesGridTable} tbody tr:nth-child(${row})`;
     this.taxesGridColumn = (row, column) => `${this.taxesGridRow(row)} td.column-${column}`;
-    this.taxesGridStatusColumn = row => `${this.taxesGridColumn(row, 'active')} .ps-switch`;
-    this.taxesGridStatusColumnToggleInput = row => `${this.taxesGridStatusColumn(row)} input`;
-    this.taxesGridActionsColumn = row => this.taxesGridColumn(row, 'actions');
-    this.taxesGridColumnEditLink = row => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
-    this.taxesGridColumnToggleDropDown = row => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.taxesGridDeleteLink = row => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
+    this.taxesGridStatusColumn = (row) => `${this.taxesGridColumn(row, 'active')} .ps-switch`;
+    this.taxesGridStatusColumnToggleInput = (row) => `${this.taxesGridStatusColumn(row)} input`;
+    this.taxesGridActionsColumn = (row) => this.taxesGridColumn(row, 'actions');
+    this.taxesGridColumnEditLink = (row) => `${this.taxesGridActionsColumn(row)} a.grid-edit-row-link`;
+    this.taxesGridColumnToggleDropDown = (row) => `${this.taxesGridActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.taxesGridDeleteLink = (row) => `${this.taxesGridActionsColumn(row)} a.grid-delete-row-link`;
 
     // Form Taxes Options
-    this.taxStatusToggleInput = toggle => `#form_enable_tax_${toggle}`;
-    this.displayTaxInCartToggleInput = toggle => `#form_display_tax_in_cart_${toggle}`;
+    this.taxStatusToggleInput = (toggle) => `#form_enable_tax_${toggle}`;
+    this.displayTaxInCartToggleInput = (toggle) => `#form_display_tax_in_cart_${toggle}`;
     this.taxAddressTypeSelect = '#form_tax_address_type';
-    this.useEcoTaxToggleInput = toggle => `#form_use_eco_tax_${toggle}`;
+    this.useEcoTaxToggleInput = (toggle) => `#form_use_eco_tax_${toggle}`;
     this.ecoTaxSelect = '#form_eco_tax_rule_group';
     this.saveTaxOptionButton = '#form-tax-options-save-button';
 
     // Sort Selectors
     this.tableHead = `${this.taxesGridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -128,7 +128,6 @@ class Taxes extends BOBasePage {
     // click on search
     await this.clickAndWaitForNavigation(page, this.searchFilterButton);
   }
-
 
   /**
    * Get toggle column value for a row
@@ -245,7 +244,7 @@ class Taxes extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, el => el.click()),
+      page.$eval(this.selectAllLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -266,7 +265,7 @@ class Taxes extends BOBasePage {
   async deleteTaxesBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllLabel, el => el.click()),
+      page.$eval(this.selectAllLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

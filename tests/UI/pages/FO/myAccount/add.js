@@ -20,7 +20,7 @@ class CreateAccount extends FOBasePage {
     // Selectors
     this.pageHeaderTitle = '#main .page-header h1';
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
+    this.genderRadioButton = (id) => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
     this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
     this.lastNameInput = `${this.createAccountForm} input[name='lastname']`;
     this.newEmailInput = `${this.createAccountForm} input[name='email']`;

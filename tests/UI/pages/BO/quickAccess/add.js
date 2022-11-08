@@ -19,7 +19,7 @@ class AddQuickAccess extends BOBasePage {
     // Selectors
     this.nameInput = '#name_1';
     this.urlInput = '#link';
-    this.newWindowToggle = toggle => `#new_window_${toggle}`;
+    this.newWindowToggle = (toggle) => `#new_window_${toggle}`;
     this.saveButton = '#quick_access_form_submit_btn';
   }
 

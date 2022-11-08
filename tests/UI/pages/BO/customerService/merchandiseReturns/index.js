@@ -20,16 +20,16 @@ class MerchandiseReturns extends BOBasePage {
     // Selectors
     // Merchandise returns table
     this.gridTable = '#table-order_return';
-    this.filterColumn = filterBy => `${this.gridTable} input[name='order_returnFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.gridTable} input[name='order_returnFilter_${filterBy}']`;
     this.filterSearchButton = `${this.gridTable} #submitFilterButtonorder_return`;
     this.filterResetButton = `${this.gridTable} button[name='submitResetorder_return']`;
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
 
     // Options
     this.generalForm = '#order_return_fieldset_general';
-    this.enableOrderReturnLabel = toggle => `${this.generalForm} #PS_ORDER_RETURN_${toggle}`;
+    this.enableOrderReturnLabel = (toggle) => `${this.generalForm} #PS_ORDER_RETURN_${toggle}`;
     this.returnsPrefixInput = '#conf_id_PS_RETURN_PREFIX input[name=\'PS_RETURN_PREFIX_1\']';
     this.saveButton = `${this.generalForm} button[name='submitOptionsorder_return']`;
   }
