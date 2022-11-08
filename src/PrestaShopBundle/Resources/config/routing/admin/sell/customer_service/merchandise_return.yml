@@ -44,7 +44,7 @@ admin_order_returns_update:
     _controller: PrestaShopBundle:Admin/Sell/CustomerService/MerchandiseReturn:edit
     _legacy_controller: AdminReturn
     #    _legacy_link: AdminReturn:updateorder_return
-    #    _legacy_parameters:
-    #      id_order_return: orderReturnId
+    _legacy_parameters:
+      id_order_return: orderReturnId
   requirements:
     orderReturnId: \d+
