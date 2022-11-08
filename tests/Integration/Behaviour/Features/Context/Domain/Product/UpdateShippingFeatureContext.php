@@ -361,7 +361,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param string[] $carrierReferencesInput
+     * @param string[] $carrierReferences
      *
      * @return int[]
      */
