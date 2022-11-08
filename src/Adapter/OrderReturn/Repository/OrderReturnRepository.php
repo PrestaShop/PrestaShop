@@ -60,11 +60,16 @@ class OrderReturnRepository extends AbstractObjectModelRepository implements Ord
      * @return OrderReturn
      *
      * @throws OrderReturnException
+     * @throws CoreException
      */
     public function get(OrderReturnId $orderReturnId): OrderReturn
     {
         /* @var OrderReturn $orderReturn */
-        $orderReturn = $this->getObjectModel($orderReturnId->getValue(), OrderReturn::class, OrderReturnNotFoundException::class);
+        $orderReturn = $this->getObjectModel(
+            $orderReturnId->getValue(),
+            OrderReturn::class,
+            OrderReturnNotFoundException::class
+        );
 
         return $orderReturn;
     }

@@ -2,8 +2,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Order\Repository;
 
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use Order;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 
 interface OrderRepositoryInterface
 {
