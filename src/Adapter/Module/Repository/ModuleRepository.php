@@ -119,7 +119,7 @@ class ModuleRepository extends AbstractObjectModelRepository
      */
     public function getActiveModulesPaths(): array
     {
-        if (null === $this->activeModulesPaths) {
+        if (empty($this->activeModulesPaths)) {
             $this->activeModulesPaths = [];
             $activeModules = $this->getActiveModules();
 
@@ -131,6 +131,11 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $this->activeModulesPaths;
+    }
+
+    public function clearActiveModulesPaths(): void
+    {
+        $this->activeModulesPaths = [];
     }
 
     /**
