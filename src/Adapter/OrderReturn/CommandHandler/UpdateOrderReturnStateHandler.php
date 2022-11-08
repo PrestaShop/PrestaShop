@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
@@ -46,6 +47,11 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      * @var OrderReturnStateRepositoryInterface
      */
     private $orderReturnStateRepository;
+    
+    /**
+     * @var OrderReturnValidator
+     */
+    private $orderReturnValidator;
 
     /**
      * UpdateOrderReturnStateHandler constructor.
@@ -55,10 +61,12 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      */
     public function __construct(
         OrderReturnRepositoryInterface $orderReturnRepository,
-        OrderReturnStateRepositoryInterface $orderReturnStateRepository
+        OrderReturnStateRepositoryInterface $orderReturnStateRepository,
+        OrderReturnValidator $orderReturnValidator
     ) {
         $this->orderReturnRepository = $orderReturnRepository;
         $this->orderReturnStateRepository = $orderReturnStateRepository;
+        $this->orderReturnValidator = $orderReturnValidator;
     }
 
     /**
@@ -68,7 +76,7 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     {
         $orderReturn = $this->orderReturnRepository->get($command->getOrderReturnId());
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
-
+        $this->orderReturnValidator->validate($orderReturn);
         $this->orderReturnRepository->update($orderReturn);
     }
 
