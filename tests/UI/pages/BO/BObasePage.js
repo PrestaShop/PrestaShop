@@ -48,7 +48,9 @@ class BOBasePage extends CommonPage {
     // left navbar
     this.desktopNavbar = '.nav-bar:not(.mobile-nav)';
     this.navbarCollapseButton = '.nav-bar > .menu-collapse';
-    this.navbarCollapsed = isCollapsed => `body${isCollapsed ? '.page-sidebar-closed' : ':not(.page-sidebar-closed)'}`;
+    this.navbarCollapsed = (isCollapsed) => `body${isCollapsed
+      ? '.page-sidebar-closed'
+      : ':not(.page-sidebar-closed)'}`;
 
     // Dashboard
     this.dashboardLink = '#tab-AdminDashboard';
@@ -406,6 +408,7 @@ class BOBasePage extends CommonPage {
    */
   async clickSubMenu(page, parentSelector) {
     const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
+
     if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
       // open the block
       await this.scrollTo(page, parentSelector);
@@ -454,6 +457,7 @@ class BOBasePage extends CommonPage {
    */
   async isSubmenuVisible(page, parentSelector, linkSelector) {
     const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
+
     if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
       // Scroll before opening menu
       await this.scrollTo(page, parentSelector);
@@ -476,6 +480,7 @@ class BOBasePage extends CommonPage {
    */
   async setSidebarCollapsed(page, isCollapsed) {
     const isCurrentCollapsed = this.isSidebarCollapsed(page);
+
     if (isCurrentCollapsed !== isCollapsed) {
       await Promise.all([
         page.click(this.navbarCollapseButton),
