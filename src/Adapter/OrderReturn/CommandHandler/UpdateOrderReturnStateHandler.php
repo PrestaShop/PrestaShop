@@ -53,7 +53,6 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      *
      * @param OrderReturnRepository $orderReturnRepository
      * @param OrderReturnStateRepository $orderReturnStateRepository
-     * @param OrderReturnValidator $orderReturnValidator
      */
     public function __construct(
         OrderReturnRepository $orderReturnRepository,
