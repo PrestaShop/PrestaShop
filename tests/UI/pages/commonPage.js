@@ -491,6 +491,20 @@ class CommonPage {
       await page.waitForTimeout(100);
     }
   }
+
+  /**
+   * Resize the page to defined viewport
+   * @param page {Page} Browser tab
+   * @param mobileSize {boolean} Define if the viewport is for mobile or not
+   * @returns {Promise<void>}
+   */
+  async resize(page, mobileSize) {
+    if (mobileSize) {
+      await page.setViewportSize({width: 600, height: 600});
+    } else {
+      await page.setViewportSize({width: global.BROWSER.width, height: global.BROWSER.height});
+    }
+  }
 }
 
 module.exports = CommonPage;
