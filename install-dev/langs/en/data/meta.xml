@@ -10,7 +10,7 @@
     <title>Best sellers</title>
     <description>Our best sales</description>
     <keywords/>
-    <url_rewrite>best-sales</url_rewrite>
+    <url_rewrite>best-sellers</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
     <title>Contact us</title>
