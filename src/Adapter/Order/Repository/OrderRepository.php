@@ -33,10 +33,11 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Order\Repository\OrderRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 
-class OrderRepository extends AbstractObjectModelRepository
+class OrderRepository extends AbstractObjectModelRepository implements OrderRepositoryInterface
 {
     /**
      * Gets legacy Order
