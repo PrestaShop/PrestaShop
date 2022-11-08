@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
 use Category;
-use Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
 use Product;
 use Shop;
@@ -37,6 +36,20 @@ use Shop;
  */
 abstract class AbstractDeleteCategoryHandler
 {
+    /**
+     * @var int
+     */
+    protected $homeCategoryId;
+
+    /**
+     * @param int $homeCategoryId
+     */
+    public function __construct(
+        int $homeCategoryId
+    ) {
+        $this->homeCategoryId = $homeCategoryId;
+    }
+
     /**
      * @deprecated
      * @todo: mark as deprecated properly
@@ -145,7 +158,7 @@ abstract class AbstractDeleteCategoryHandler
             }
 
             //@todo: use repository
-            if (!Category::existsInDatabase($categoryId)) {
+            if (!Category::existsInDatabase($parentId)) {
                 // if category doesn't exist, we could continue trying to find another parent
                 // but most of the time this command will be run from BO, which is constructed in a way that
                 // all the deleted category ids will have the same parent,
@@ -166,10 +179,7 @@ abstract class AbstractDeleteCategoryHandler
      */
     private function addProductDefaultCategory(Product $product, int $categoryId, array $deletedCategoryIdsByParent): void
     {
-        // @todo: inject rootCategoryId into constructor
-        $rootCategoryId = (int) Configuration::get('PS_ROOT_CATEGORY');
-
-        $parentCategoryId = $this->findCategoryParentId($categoryId, $deletedCategoryIdsByParent) ?: $rootCategoryId;
+        $parentCategoryId = $this->findCategoryParentId($categoryId, $deletedCategoryIdsByParent) ?: $this->homeCategoryId;
         $product->id_category_default = $parentCategoryId;
         $product->save();
 

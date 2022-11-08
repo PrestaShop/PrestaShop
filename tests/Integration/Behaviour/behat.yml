@@ -68,6 +68,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
         cart:
             paths:
                 - "%paths.base%/Features/Scenario/Cart"

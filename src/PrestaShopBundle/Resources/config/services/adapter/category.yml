@@ -34,14 +34,24 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\SetCategoryIsEnabledCommand
 
+  prestashop.adapter.category.command_handler.abstract_delete_category_handler:
+    class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\AbstractDeleteCategoryHandler
+    abstract: true
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
+
   prestashop.adapter.category.command_handler.delete_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
+    parent: prestashop.adapter.category.command_handler.abstract_delete_category_handler
+    public: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\DeleteCategoryCommand
 
   prestashop.adapter.category.command_handler.bulk_delete_categories_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\BulkDeleteCategoriesHandler
+    parent: prestashop.adapter.category.command_handler.abstract_delete_category_handler
+    public: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand
