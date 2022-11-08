@@ -15,7 +15,6 @@ const ordersPage = require('@pages/BO/orders/index');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
-// const creditSlipsListingPage = require('@pages/BO/catalog/products/index');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -46,10 +45,12 @@ const numberOfOrderToCreate = 11;
 
 /*
 Pre-condition:
-- Create order in FO
+- Create 11 orders in FO
+- Create credit slip for each order
 Scenario:
-- Create credit slip on the created order
-- Sort (by ID, Date and OrderID) and Pagination of Credit Slips
+- Go to Orders > credit slips page
+- Sort credit slips table by (ID, order ID, date issued)
+- Pagination next and previous
  */
 
 describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagination of Credit Slips', async () => {
@@ -72,7 +73,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
     createOrderByCustomerTest(orderByCustomerData, `baseContext_${i}`);
 
     // eslint-disable-next-line no-loop-func
-    describe('Create Credit slip', async () => {
+    describe(`Create Credit slip n°${i + 1}`, async () => {
       it('should go to \'Orders > Orders\' page\'', async function () {
         await testContext.addContextItem(
           this,
