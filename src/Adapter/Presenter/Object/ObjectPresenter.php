@@ -55,13 +55,6 @@ class ObjectPresenter implements PresenterInterface
 
         $presentedObject['id'] = $object->id;
 
-        $mustRemove = ['deleted', 'active'];
-        foreach ($mustRemove as $fieldName) {
-            if (isset($presentedObject[$fieldName])) {
-                unset($presentedObject[$fieldName]);
-            }
-        }
-
         $this->filterHtmlContent($object::$definition['table'], $presentedObject, $object->getHtmlFields());
 
         return $presentedObject;

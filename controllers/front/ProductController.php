@@ -197,7 +197,14 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
                 $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
             }
-            switch ($this->product->redirect_type) {
+
+            $redirect_type = $this->product->redirect_type;
+            // If product has no specified redirect settings, we get default from configuration
+            if (empty($redirect_type) || $redirect_type == RedirectType::TYPE_DEFAULT) {
+                $redirect_type = Configuration::get('PS_PRODUCT_REDIRECTION_DEFAULT');
+            }
+
+            switch ($redirect_type) {
                 case RedirectType::TYPE_PRODUCT_PERMANENT:
                     header('HTTP/1.1 301 Moved Permanently');
                     header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
@@ -216,6 +223,26 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     header('Cache-Control: no-cache');
                     header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                     exit;
+                case RedirectType::TYPE_SUCCESS_DISPLAYED:
+                    break;
+                case RedirectType::TYPE_NOT_FOUND_DISPLAYED:
+                    // We want to send this response only on initial page load
+                    // Sending it for ajax requests can cause problems in scripts relying on 200 response
+                    if (!$this->ajax) {
+                        header('HTTP/1.1 404 Not Found');
+                        header('Status: 404 Not Found');
+                    }
+
+                    break;
+                case RedirectType::TYPE_GONE_DISPLAYED:
+                    // We want to send this response only on initial page load
+                    // Sending it for ajax requests can cause problems in scripts relying on 200 response
+                    if (!$this->ajax) {
+                        header('HTTP/1.1 410 Gone');
+                        header('Status: 410 Gone');
+                    }
+
+                    break;
                 case RedirectType::TYPE_GONE:
                     header('HTTP/1.1 410 Gone');
                     header('Status: 410 Gone');

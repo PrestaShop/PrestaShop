@@ -17,7 +17,7 @@ Feature: Update product SEO options from Back Office (BO)
       | name[en-US] | just boots |
       | type        | standard   |
     And product product1 should have following seo options:
-      | redirect_type | 404 |
+      | redirect_type | default |
     And product product1 should not have a redirect target
     And product "product1" localized "meta_title" is:
       | locale | value |
@@ -32,7 +32,7 @@ Feature: Update product SEO options from Back Office (BO)
       | name[en-US] | magical boots |
       | type        | virtual       |
     And product product2 should have following seo options:
-      | redirect_type | 404 |
+      | redirect_type | default |
     And product product2 should not have a redirect target
     And product "product2" localized "meta_title" is:
       | locale | value |
@@ -164,14 +164,14 @@ Feature: Update product SEO options from Back Office (BO)
       | redirect_target | men              |
     Then I should get error that product redirect_type is invalid
     And product product2 should have following seo options:
-      | redirect_type | 404 |
+      | redirect_type | default |
     And product product2 should not have a redirect target
     When I update product product2 SEO information with following values:
       | redirect_type   | 303-product1 |
       | redirect_target | product1     |
     Then I should get error that product redirect_type is invalid
     And product product2 should have following seo options:
-      | redirect_type | 404 |
+      | redirect_type | default |
     And product product2 should not have a redirect target
     Then product "product2" localized "meta_title" should be:
       | locale | value               |
