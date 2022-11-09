@@ -1,4 +1,4 @@
-import Context from 'mocha';
+import {Context} from 'mocha';
 import addContext from 'mochawesome/addContext';
 
 /**

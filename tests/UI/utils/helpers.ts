@@ -8,7 +8,7 @@ require('./globals');
  * @module BrowserHelper
  * @description Helper used to wrap low level functions from playwright using global parameters.
  */
-export = {
+export default {
   /**
    * Create playwright browser with options on global
    * @param attempt {number} Number of attempts to restart browser creation if function throw error

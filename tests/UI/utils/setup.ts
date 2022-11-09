@@ -1,7 +1,6 @@
+import 'module-alias/register';
 import helper from '@utils/helpers';
 import files from '@utils/files';
-
-require('module-alias/register');
 
 let screenshotNumber = 1;
 
