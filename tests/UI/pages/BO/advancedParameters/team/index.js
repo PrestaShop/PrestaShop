@@ -75,7 +75,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async goToPermissionsTab(page) {
-    await page.click(this.permissionsTab);
+    await this.clickAndWaitForNavigation(page, this.permissionsTab);
     return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
   }
 

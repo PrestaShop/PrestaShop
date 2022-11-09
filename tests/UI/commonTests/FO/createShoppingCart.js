@@ -8,7 +8,6 @@ const foLoginPage = require('@pages/FO/login');
 const searchResultsPage = require('@pages/FO/searchResults');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -57,7 +56,7 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
-    it('should sign in with customer 1', async function () {
+    it('should sign in with customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, orderData.customer);
@@ -84,26 +83,6 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isDeliveryStep = await checkoutPage.isDeliveryStep(page);
-      await expect(isDeliveryStep, 'Step Address is not visible').to.be.true;
-    });
-
-    it('should go to home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
-
-      await checkoutPage.clickOnHeaderLink(page, 'Logo');
-
-      const pageTitle = await homePage.getPageTitle(page);
-      await expect(pageTitle).to.equal(homePage.pageTitle);
     });
 
     it('should sign out from FO', async function () {

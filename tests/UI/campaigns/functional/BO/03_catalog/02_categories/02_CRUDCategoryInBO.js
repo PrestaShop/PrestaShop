@@ -130,8 +130,8 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         }
       });
 
-      it('should go to FO and check the created category', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
+      it('should go to FO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckCreatedCategory', baseContext);
 
         categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
 
@@ -143,6 +143,10 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
 
         const isHomePage = await foHomePage.isHomePage(page);
         await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+      });
+
+      it('should check the created category', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCategoryFO', baseContext);
 
         // Go to sitemap page
         await foHomePage.goToFooterLink(page, 'Sitemap');
@@ -390,8 +394,6 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
     it('should go to FO and check that the category does not exist', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCategoryFO', baseContext);
 
-      const categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
-
       // View shop
       page = await categoriesPage.viewMyShop(page);
 
@@ -446,6 +448,8 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
         editCategoryData.name,
       );
 
+      categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+
       const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
       await expect(textColumn).to.contains(editCategoryData.name);
     });
@@ -460,10 +464,8 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       await expect(numberOfCategoriesAfterDeletion).to.be.equal(numberOfCategories);
     });
 
-    it('should go to FO and check that the deleted category does not exist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedCategoryFO', baseContext);
-
-      const categoryID = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'id_category');
+    it('should go to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       // View shop
       page = await categoriesPage.viewMyShop(page);
@@ -471,14 +473,20 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
 
+      const isHomePage = await foHomePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should check that the deleted category does not exist', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedCategoryFO', baseContext);
+
       // Go to sitemap page
       await foHomePage.goToFooterLink(page, 'Sitemap');
       const pageTitle = await siteMapPage.getPageTitle(page);
       await expect(pageTitle).to.equal(siteMapPage.pageTitle);
 
-      // Check category name
       const categoryName = await siteMapPage.isVisibleCategory(page, categoryID);
-      await expect(categoryName).to.be.false;
+      await expect(categoryName, 'Category is visible in FO!').to.be.false;
     });
   });
 });
