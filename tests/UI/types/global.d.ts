@@ -1,3 +1,5 @@
+/* eslint-disable vars-on-top, no-var */
+
 type GlobalInstall = {
   URL: string
   LANGUAGE: string
@@ -58,15 +60,15 @@ type GlobalMaildevConfig = {
 }
 
 declare global {
-  let INSTALL: GlobalInstall;
-  let URLHasPort: boolean;
-  let FO: GlobalFO;
-  let BO: GlobalBO;
-  let BROWSER: GlobalBrowser;
-  let GENERATE_FAILED_STEPS: any;
-  let SCREENSHOT: GlobalScreenshot;
-  let maildevConfig: GlobalMaildevConfig;
-  let browserErrors: GlobalBrowserErrors;
+  var INSTALL: GlobalInstall;
+  var URLHasPort: boolean;
+  var FO: GlobalFO;
+  var BO: GlobalBO;
+  var BROWSER: GlobalBrowser;
+  var GENERATE_FAILED_STEPS: any;
+  var SCREENSHOT: GlobalScreenshot;
+  var maildevConfig: GlobalMaildevConfig;
+  var browserErrors: GlobalBrowserErrors;
 }
 
 export {};
