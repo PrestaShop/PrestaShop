@@ -1649,7 +1649,10 @@ class CategoryCore extends ObjectModel
      */
     public function cleanGroups()
     {
-        return Db::getInstance()->delete('category_group', 'id_category = ' . (int) $this->id);
+        $result = Db::getInstance()->delete('category_group', 'id_category = ' . (int) $this->id);
+        Cache::clean($this->getGroupsCacheId());
+
+        return $result;
     }
 
     /**
@@ -1674,6 +1677,8 @@ class CategoryCore extends ObjectModel
                 Db::getInstance()->insert('category_group', ['id_category' => (int) $this->id, 'id_group' => (int) $group]);
             }
         }
+
+        Cache::clean($this->getGroupsCacheId());
     }
 
     /**
@@ -1683,7 +1688,7 @@ class CategoryCore extends ObjectModel
      */
     public function getGroups()
     {
-        $cacheId = 'Category::getGroups_' . (int) $this->id;
+        $cacheId = $this->getGroupsCacheId();
         if (!Cache::isStored($cacheId)) {
             $sql = new DbQuery();
             $sql->select('cg.`id_group`');
@@ -1692,7 +1697,7 @@ class CategoryCore extends ObjectModel
             $result = Db::getInstance()->executeS($sql);
             $groups = [];
             foreach ($result as $group) {
-                $groups[] = $group['id_group'];
+                $groups[] = (int) $group['id_group'];
             }
             Cache::store($cacheId, $groups);
 
@@ -2447,5 +2452,13 @@ class CategoryCore extends ObjectModel
     public function isRootCategory(): bool
     {
         return 0 === (int) $this->id_parent;
+    }
+
+    /**
+     * @return string
+     */
+    private function getGroupsCacheId(): string
+    {
+        return 'Category::getGroups_' . (int) $this->id;
     }
 }
