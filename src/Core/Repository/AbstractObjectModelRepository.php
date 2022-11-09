@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Repository;
 
 use ObjectModel;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopException;
@@ -311,42 +310,5 @@ abstract class AbstractObjectModelRepository
     protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
     {
         return new $objectModelClass($id, null, $shopId);
-    }
-
-    /**
-     * @param ObjectModel $objectModel
-     * @param ShopId[] $shopIds
-     * @param string $exceptionClass
-     * @param int $errorCode
-     *
-     * @throws CoreException
-     */
-    protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
-    {
-        try {
-            // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
-            // this way we can control exactly which shop is deleted
-            $objectModel->id_shop_list = array_map(static function (ShopId $shopId): int {
-                return $shopId->getValue();
-            }, $shopIds);
-
-            if (!$objectModel->delete()) {
-                throw new $exceptionClass(
-                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
-                    $errorCode
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to delete %s #%d [%s]',
-                    get_class($objectModel),
-                    $objectModel->id,
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
-        }
     }
 }
