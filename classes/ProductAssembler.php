@@ -101,9 +101,9 @@ class ProductAssemblerCore
 
     /**
      * Return the SQL query to get all product fields
-     * 
+     *
      * @param array $productIds
-     * 
+     *
      * @return string
      */
     private function getSqlQueryProductFields(array $productIds): string
