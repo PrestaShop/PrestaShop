@@ -59,6 +59,10 @@ if [ ! -f ./config/settings.inc.php ]; then
             export PS_DOMAIN=$(hostname -i)
         fi
 
+        if [ "$PS_DOMAIN" = "UFFIZZI_URL" ]; then
+            export PS_DOMAIN=`echo $UFFIZZI_URL | grep -oP 'https://\K\S+'`
+        fi
+
         echo "\n* Launching the installer script..."
         runuser -g www-data -u www-data -- php /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
         --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
