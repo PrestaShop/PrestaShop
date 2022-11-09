@@ -145,7 +145,7 @@ Feature: Category Management
     When I delete category "category5" choosing mode "remove_associated"
     Then category "category5" does not exist
 
-  Scenario: delete categories which are assigned to products
+  Scenario: Delete category which is assigned to product and it is the only one left by using different deletion modes
     Given I add new category "category6" with following details:
       | name[en-US]         | Mobile phones6    |
       | name[fr-FR]         | Mobile phones6 fr |
@@ -156,31 +156,149 @@ Feature: Category Management
     And I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
-    Then product "product1" should be disabled
-    And product "product1" type should be standard
+    And I enable product "product1"
+    And product "product1" should be enabled
     And product "product1" should be assigned to following categories:
       | id reference | name[en-US] | name[fr-FR] | is default |
       | home         | Home        | Home        | true       |
     And I assign product product1 to following categories:
-      | categories       | [home,category6] |
-      | default category | category6        |
+      | categories       | [category6] |
+      | default category | category6   |
     Then product "product1" should be assigned to following categories:
       | id reference | name[en-US]    | name[fr-FR]       | is default |
-      | home         | Home           | Home              | false      |
       | category6    | Mobile phones6 | Mobile phones6 fr | true       |
+    # associate_and_disable mode case
     When I delete category "category6" choosing mode "associate_and_disable"
     Then category "category6" does not exist
+    # product should be disabled and associated with the deleted category parent
     Then product "product1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product1" should be disabled
+    Given I add new category "category7" with following details:
+      | name[en-US]         | Mobile phones7    |
+      | name[fr-FR]         | Mobile phones7 fr |
+      | active              | false             |
+      | parent category     | home-accessories  |
+      | link rewrite[en-US] | mobile-phones-en  |
+      | link rewrite[fr-FR] | mobile-phones-fr  |
+    And I enable product "product1"
+    And I assign product product1 to following categories:
+      | categories       | [category7] |
+      | default category | category7   |
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US]    | name[fr-FR]       | is default |
+      | category7    | Mobile phones7 | Mobile phones7 fr | true       |
+    # associate_only mode case
+    When I delete category "category7" choosing mode "associate_only"
+    # product should be still be enabled and associated with the deleted category parent
+    Then product "product1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product1" should be enabled
+    Given I add new category "category8" with following details:
+      | name[en-US]         | Mobile phones8    |
+      | name[fr-FR]         | Mobile phones8 fr |
+      | active              | false             |
+      | parent category     | home-accessories  |
+      | link rewrite[en-US] | mobile-phones-en  |
+      | link rewrite[fr-FR] | mobile-phones-fr  |
+    And I assign product product1 to following categories:
+      | categories       | [category8] |
+      | default category | category8   |
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US]    | name[fr-FR]       | is default |
+      | category8    | Mobile phones8 | Mobile phones8 fr | true       |
+    # remove_associated mode case
+    When I delete category "category8" choosing mode "remove_associated"
+    # product should be removed
+    Then product "product1" should not exist anymore
+
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
+    Given I add new category "category9" with following details:
+      | name[en-US]         | Mobile phones9    |
+      | name[fr-FR]         | Mobile phones9 fr |
+      | active              | false             |
+      | parent category     | home-accessories  |
+      | link rewrite[en-US] | mobile-phones-en  |
+      | link rewrite[fr-FR] | mobile-phones-fr  |
+    And I add product "product2" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I enable product "product2"
+    And I assign product product2 to following categories:
+      | categories       | [home,category9] |
+      | default category | category9        |
+    Then product "product2" should be assigned to following categories:
+      | id reference | name[en-US]    | name[fr-FR]       | is default |
+      | home         | Home           | Home              | false      |
+      | category9    | Mobile phones9 | Mobile phones9 fr | true       |
+    When I delete category "category9" choosing mode "associate_and_disable"
+    Then category "category9" does not exist
+    # should assign the parent of the deleted category as the default one. Product status shouldn't be impacted.
+    Then product "product2" should be assigned to following categories:
       | id reference     | name[en-US]      | name[fr-FR]      | is default |
       | home             | Home             | Home             | false      |
       | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product2" should be enabled
+    # repeat the same with different modes to ensure that the modes doesn't have impact
+    Given I add new category "category10" with following details:
+      | name[en-US]         | Mobile phones10    |
+      | name[fr-FR]         | Mobile phones10 fr |
+      | active              | false              |
+      | parent category     | home-accessories   |
+      | link rewrite[en-US] | mobile-phones-en   |
+      | link rewrite[fr-FR] | mobile-phones-fr   |
+    And I assign product product2 to following categories:
+      | categories       | [home,category10] |
+      | default category | category10        |
+    # associate_only mode case
+    When I delete category "category10" choosing mode "associate_only"
+    Then category "category10" does not exist
+    Then product "product2" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home             | Home             | Home             | false      |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product2" should be enabled
+    Given I add new category "category11" with following details:
+      | name[en-US]         | Mobile phones11    |
+      | name[fr-FR]         | Mobile phones11 fr |
+      | active              | false              |
+      | parent category     | home-accessories   |
+      | link rewrite[en-US] | mobile-phones-en   |
+      | link rewrite[fr-FR] | mobile-phones-fr   |
+    And I assign product product2 to following categories:
+      | categories       | [home,category11] |
+      | default category | category11        |
+    # remove_associated mode case
+    When I delete category "category11" choosing mode "remove_associated"
+    Then category "category11" does not exist
+    Then product "product2" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home             | Home             | Home             | false      |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product2" should be enabled
 
-#  Scenario: Bulk delete categories
-#    And I bulk delete categories "category1,category2" choosing mode "associate_and_disable"
-#    Then category "category1" does not exist
-#    And category "category2" does not exist
+  Scenario: Bulk delete categories
+    Given I add new category "category12" with following details:
+      | name[en-US]         | Mobile phones12    |
+      | name[fr-FR]         | Mobile phones12 fr |
+      | active              | false              |
+      | parent category     | home-accessories   |
+      | link rewrite[en-US] | mobile-phones-en   |
+      | link rewrite[fr-FR] | mobile-phones-fr   |
+    Given I add new category "category13" with following details:
+      | name[en-US]         | Mobile phones12    |
+      | name[fr-FR]         | Mobile phones12 fr |
+      | active              | false              |
+      | parent category     | home-accessories   |
+      | link rewrite[en-US] | mobile-phones-en   |
+      | link rewrite[fr-FR] | mobile-phones-fr   |
+    And I bulk delete categories "category12,category13" choosing mode "associate_and_disable"
+    Then category "category12" does not exist
+    And category "category13" does not exist
 
-##    update category not available for multi shop context
+  # update category not available for multi shop context
 #  Scenario: Update category position
 #    When I add new category "category2" with following details:
 #      | Name            | PC parts 2       |
