@@ -1,5 +1,7 @@
-require('dotenv').config();
-const {DefaultEmployee} = require('@data/demo/employees');
+import {DefaultEmployee} from '@data/demo/employees';
+import {config} from 'dotenv';
+
+config();
 
 global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',

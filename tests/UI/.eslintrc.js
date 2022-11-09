@@ -55,7 +55,7 @@ module.exports = {
       files: ['*.ts'],
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],
-      extends: ['prestashop', 'plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
+      extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended'],
       rules: {
         'spaced-comment': 0,
         '@typescript-eslint/no-extra-semi': 0,
@@ -72,5 +72,5 @@ module.exports = {
         'no-new': 0,
       },
     },
-  ]
+  ],
 };
