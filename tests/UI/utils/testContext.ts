@@ -5,7 +5,7 @@ import addContext from 'mochawesome/addContext';
  * @module TestContextHelper
  * @description Helper for mochawesome test context
  */
-module.exports = {
+export default {
   /**
    *
    * @param testObj {context} Mocha step context
@@ -14,7 +14,12 @@ module.exports = {
    * @param baseContext {?string} File contest based on file location
    * @return {Promise<void>}
    */
-  async addContextItem(testObj: Context, title: string, value: string, baseContext: string | undefined = undefined) {
+  async addContextItem(
+    testObj: Context,
+    title: string,
+    value: string,
+    baseContext: string | undefined = undefined,
+  ): Promise<void> {
     addContext(
       testObj,
       {
