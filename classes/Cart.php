@@ -4365,6 +4365,11 @@ class CartCore extends ObjectModel
             return [];
         }
 
+        // if cart is not set, return nothing to prevent loading of other users data.
+        if (0 === (int) $this->id) {
+            return [];
+        }
+
         $result = Db::getInstance()->executeS(
             'SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
             FROM `' . _DB_PREFIX_ . 'customization` cu
