@@ -68,6 +68,13 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetAttributeFilter', baseContext);
+
+    const numberOfAttributesAfterReset = await attributesPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfAttributesAfterReset).to.be.above(0);
+  });
+
   it('should filter list of attributes by name \'Color\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDeleteAttributes', baseContext);
 
