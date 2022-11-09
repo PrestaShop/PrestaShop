@@ -260,11 +260,11 @@ abstract class AbstractDomainFeatureContext implements Context
     {
         $ids = [];
         foreach (explode(',', $references) as $reference) {
-            if ($this->getSharedStorage()->exists($reference)) {
-                $ids[] = $this->getSharedStorage()->get($reference);
+            if (!$this->getSharedStorage()->exists($reference)) {
+                throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
             }
 
-            throw new RuntimeException('Reference %s does not exist in shared storage');
+            $ids[] = $this->getSharedStorage()->get($reference);
         }
 
         return $ids;

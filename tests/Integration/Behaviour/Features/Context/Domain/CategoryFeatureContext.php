@@ -77,6 +77,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /** @var string */
     private $psCatImgDir;
 
+    private const PROPERTY_TYPE_BASIC = 0;
+    private const PROPERTY_TYPE_REFERENCE = 1;
+    private const PROPERTY_TYPE_REFERENCE_ARRAY = 2;
+    private const PROPERTY_TYPE_BOOL = 3;
+
     /**
      * CategoryFeatureContext constructor.
      */
@@ -130,37 +135,35 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function addNewCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function addCategory(string $categoryReference, TableNode $table): void
     {
         $data = $this->localizeByRows($table);
         $command = new AddCategoryCommand(
-//          @todo: localize like in product scenarios
             $data['name'],
             $data['link rewrite'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['displayed']),
+            PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
             $this->getSharedStorage()->get($data['parent category'])
         );
 
         if (isset($data['description'])) {
-            //@todo: localize
             $command->setLocalizedDescriptions($data['description']);
         }
         if (isset($data['meta description'])) {
             $command->setLocalizedMetaDescriptions($data['meta description']);
         }
-        if (isset($data['meta title']) ) {
+        if (isset($data['meta title'])) {
             $command->setLocalizedMetaTitles($data['meta title']);
         }
         if (isset($data['active'])) {
-            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($table['active']));
+            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
         }
-        if (isset($data['additional description']) ) {
+        if (isset($data['additional description'])) {
             $command->setLocalizedAdditionalDescriptions($data['additional description']);
         }
-        if (isset($data['group access']) ) {
-            $command->setAssociatedGroupIds($this->referencesToIds($data['associated shops']));
+        if (isset($data['group access'])) {
+            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
         }
-        if (isset($data['associated shops']) ) {
+        if (isset($data['associated shops'])) {
             $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
         }
 
@@ -171,60 +174,71 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then category :categoryReference should have following details:
-     *
-     * @param string $categoryReference
-     * @param TableNode $table
-     */
-    public function categoryShouldHaveFollowingDetails(string $categoryReference, TableNode $table)
-    {
-        $testCaseData = $table->getRowsHash();
-        $editableCategory = $this->getEditableCategory($categoryReference);
-        $subCategories = $editableCategory->getSubCategories();
-
-        /** @var EditableCategory $expectedEditableCategory */
-        $expectedEditableCategory = $this->mapDataToEditableCategory(
-            $testCaseData,
-            $editableCategory->getId()->getValue(),
-            $subCategories
-        );
-
-        Assert::assertEquals($expectedEditableCategory, $editableCategory);
-    }
-
-    /**
      * @When I edit category :categoryReference with following details:
      *
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function editCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function editCategory(string $categoryReference, TableNode $table)
     {
-//      | Name                   | dummy category name      |
-//      | Active                   | dummy category name      |
-//      | Displayed              | false                    |
-//      | Parent category        | home-accessories         |
-//      | Description            | dummy description        |
-//      | Additional description | dummy bottom description |
-//      | Meta title             | dummy meta title         |
-//      | Meta description       | dummy meta description   |
-//      | Friendly URL           | dummy                    |
-//      | Group access           | Visitor,Guest,Customer   |
-        $tableData = $table->getRowsHash();
-
+        $data = $this->localizeByRows($table);
         $command = new EditCategoryCommand(SharedStorage::getStorage()->get($categoryReference));
-        $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($tableData['Active']));
-        $command->setLocalizedLinkRewrites($tableData['Friendly URL']);
-//        $command->setLocalizedNames($this-);
-        $command->setParentCategoryId($editableCategoryTestData->getParentId());
-        $command->setLocalizedDescriptions($editableCategoryTestData->getDescription());
-        $command->setLocalizedAdditionalDescriptions($editableCategoryTestData->getAdditionalDescription());
-        $command->setLocalizedMetaTitles($editableCategoryTestData->getMetaTitle());
-        $command->setLocalizedMetaDescriptions($editableCategoryTestData->getMetaDescription());
-        $command->setLocalizedMetaKeywords($editableCategoryTestData->getMetaKeywords());
-        $command->setAssociatedGroupIds($editableCategoryTestData->getGroupAssociationIds());
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames($data['name']);
+        }
+        if (isset($data['link rewrite'])) {
+            $command->setLocalizedLinkRewrites($data['link rewrite']);
+        }
+        if (isset($data['active'])) {
+            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (isset($data['parent category'])) {
+            $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));
+        }
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (isset($data['meta description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta description']);
+        }
+        if (isset($data['meta title'])) {
+            $command->setLocalizedMetaTitles($data['meta title']);
+        }
+        if (isset($data['additional description'])) {
+            $command->setLocalizedAdditionalDescriptions($data['additional description']);
+        }
+        if (isset($data['group access'])) {
+            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
+        }
+        if (isset($data['associated shops'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
+        }
 
         $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then category :categoryReference should have following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function assertEditableCategory(string $categoryReference, TableNode $table): void
+    {
+        $data = $this->localizeByRows($table);
+        $editableCategory = $this->getEditableCategory($categoryReference);
+
+        $this->assertProperty($data, 'name', $editableCategory->getName());
+        $this->assertProperty($data, 'link rewrite', $editableCategory->getLinkRewrite());
+        $this->assertProperty($data, 'active', $editableCategory->isActive(), self::PROPERTY_TYPE_BOOL);
+        $this->assertProperty($data, 'parent category', $editableCategory->getParentId(), self::PROPERTY_TYPE_REFERENCE);
+        $this->assertProperty($data, 'description', $editableCategory->getDescription());
+        $this->assertProperty($data, 'meta description', $editableCategory->getMetaDescription());
+        $this->assertProperty($data, 'meta title', $editableCategory->getMetaTitle());
+        $this->assertProperty($data, 'additional description', $editableCategory->getAdditionalDescription());
+        $this->assertProperty($data, 'group access', $editableCategory->getGroupAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
+        $this->assertProperty($data, 'associated shops', $editableCategory->getShopAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
     }
 
     /**
@@ -780,5 +794,39 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $menuThumbNailsImages[] = $menuThumbnailImage;
 
         return $menuThumbNailsImages;
+    }
+
+    /**
+     * @param array<string, mixed> $localizedData
+     * @param string $index
+     * @param $actualValue
+     * @param int $type
+     */
+    private function assertProperty(array $localizedData, string $index, $actualValue, int $type = self::PROPERTY_TYPE_BASIC): void
+    {
+        if (!isset($localizedData[$index])) {
+            return;
+        }
+
+        switch ($type) {
+            case self::PROPERTY_TYPE_REFERENCE:
+                $expectedValue = $this->getSharedStorage()->get($localizedData[$index]);
+                break;
+            case self::PROPERTY_TYPE_REFERENCE_ARRAY:
+                $expectedValue = $this->referencesToIds($localizedData[$index]);
+                break;
+            case self::PROPERTY_TYPE_BOOL:
+                $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($localizedData[$index]);
+                break;
+            default:
+                $expectedValue = $localizedData[$index];
+                break;
+        }
+
+        Assert::assertSame(
+            $expectedValue,
+            $actualValue,
+            sprintf('Unexpected %s', $index)
+        );
     }
 }
