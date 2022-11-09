@@ -70,6 +70,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
         cart:
             paths:
                 - "%paths.base%/Features/Scenario/Cart"

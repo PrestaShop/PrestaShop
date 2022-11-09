@@ -17,47 +17,104 @@ Feature: Category Management
     And single shop context is loaded
     And category "home" is set as the home category for shop "shop1"
     And category "home-accessories" in default language named "Home Accessories" exists
+    And group "visitorGroup" named "Visitor" exists
+    And group "guestGroup" named "Guest" exists
+    And group "customerGroup" named "Customer" exists
 
-  Scenario: Add category
-    When I add new category "category1" with following details:
-      | name[en-US]         | PC parts         |
-      | name[fr-FR]         | PC parts fr      |
-      | displayed           | false            |
-      | parent category     | home-accessories |
-      | link rewrite[en-US] | pc-parts         |
-      | link rewrite[fr-FR] | pc-parts-fr      |
+#  Scenario: Add category
+#    When I add new category "category1" with following details:
+#      | name[en-US]                   | PC parts                       |
+#      | name[fr-FR]                   | PC parts fr                    |
+#      | active                        | false                          |
+#      | parent category               | home-accessories               |
+#      | link rewrite[en-US]           | pc-parts                       |
+#      | link rewrite[fr-FR]           | pc-parts-fr                    |
+#      | group access                  | visitorGroup,guestGroup        |
+#      | associated shops              | shop1                          |
+#      | description[en-US]            | description english            |
+#      | description[fr-FR]            | description french             |
+#      | additional description[en-US] | additional description english |
+#      | additional description[fr-FR] | additional description french  |
+#      | meta description[en-US]       | meta description english       |
+#      | meta description[fr-FR]       | meta description french        |
+#      | meta title[en-US]             | meta title english             |
+#      | meta title[fr-FR]             | meta title french              |
 #    Then category "category1" should have following details:
-#      | Name                   | dummy category name      |
-#      | Displayed              | false                    |
-#      | Parent category        | home-accessories         |
-#      | Description            | dummy description        |
-#      | Additional description | dummy bottom description |
-#      | Meta title             | dummy meta title         |
-#      | Meta description       | dummy meta description   |
-#      | Friendly URL           | dummy                    |
-#      | Group access           | Visitor,Guest,Customer   |
-#  Scenario: Edit category
-#    When I edit category "category1" with following details:
-#      | Name                   | dummy category name      |
-#      | Displayed              | false                    |
-#      | Parent category        | home-accessories         |
-#      | Description            | dummy description        |
-#      | Additional description | dummy bottom description |
-#      | Meta title             | dummy meta title         |
-#      | Meta description       | dummy meta description   |
-#      | Friendly URL           | dummy                    |
-#      | Group access           | Visitor,Guest,Customer   |
-#    Then category "category1" should have following details:
-#      | Name                   | dummy category name      |
-#      | Displayed              | false                    |
-#      | Parent category        | home-accessories         |
-#      | Description            | dummy description        |
-#      | Additional description | dummy bottom description |
-#      | Meta title             | dummy meta title         |
-#      | Meta description       | dummy meta description   |
-#      | Friendly URL           | dummy                    |
-#      | Group access           | Visitor,Guest,Customer   |
+#      | name[en-US]                   | PC parts                       |
+#      | name[fr-FR]                   | PC parts fr                    |
+#      | active                        | false                          |
+#      | parent category               | home-accessories               |
+#      | link rewrite[en-US]           | pc-parts                       |
+#      | link rewrite[fr-FR]           | pc-parts-fr                    |
+#      | group access                  | visitorGroup,guestGroup        |
+#      | associated shops              | shop1                          |
+#      | description[en-US]            | description english            |
+#      | description[fr-FR]            | description french             |
+#      | additional description[en-US] | additional description english |
+#      | additional description[fr-FR] | additional description french  |
+#      | meta description[en-US]       | meta description english       |
+#      | meta description[fr-FR]       | meta description french        |
+#      | meta title[en-US]             | meta title english             |
+#      | meta title[fr-FR]             | meta title french              |
 
+  Scenario: Edit category
+    Given I add new category "category2" with following details:
+      | name[en-US]         | Mobile phones    |
+      | name[fr-FR]         | Mobile phones fr |
+      | active              | false            |
+      | parent category     | home             |
+      | link rewrite[en-US] | mobile-phones-en |
+      | link rewrite[fr-FR] | mobile-phones-fr |
+    And category "category2" should have following details:
+      | name[en-US]                   | Mobile phones                         |
+      | name[fr-FR]                   | Mobile phones fr                      |
+      | active                        | false                                 |
+      | parent category               | home                                  |
+      | link rewrite[en-US]           | mobile-phones-en                      |
+      | link rewrite[fr-FR]           | mobile-phones-fr                      |
+      | group access                  | visitorGroup,guestGroup,customerGroup |
+      | associated shops              | shop1                                 |
+      | description[en-US]            |                                       |
+      | description[fr-FR]            |                                       |
+      | additional description[en-US] |                                       |
+      | additional description[fr-FR] |                                       |
+      | meta description[en-US]       |                                       |
+      | meta description[fr-FR]       |                                       |
+      | meta title[en-US]             |                                       |
+      | meta title[fr-FR]             |                                       |
+    When I edit category "category2" with following details:
+      | name[en-US]                   | Mobile phones super            |
+      | name[fr-FR]                   | Mobile phones super fr         |
+      | active                        | true                           |
+      | parent category               | home-accessories               |
+      | link rewrite[en-US]           | mobile-phones-super-en         |
+      | link rewrite[fr-FR]           | mobile-phones-super-fr         |
+      | group access                  | guestGroup                     |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+    Then category "category2" should have following details:
+      | name[en-US]                   | Mobile phones super            |
+      | name[fr-FR]                   | Mobile phones super fr         |
+      | active                        | true                           |
+      | parent category               | home-accessories               |
+      | link rewrite[en-US]           | mobile-phones-super-en         |
+      | link rewrite[fr-FR]           | mobile-phones-super-fr         |
+      | group access                  | guestGroup                     |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
 #  Scenario: Delete category
 #    When I delete category "category1" choosing mode "associate_and_disable"
 #    Then category "category1" does not exist
