@@ -15,7 +15,7 @@ const viewFeaturePage = require('@pages/BO/catalog/features/view');
 const addValuePage = require('@pages/BO/catalog/features/addValue');
 
 // Import data
-const {FeatureValueData} = require('@data/faker/featureValue');
+const FeatureValueData = require('@data/faker/featureValue');
 
 // Import test context
 const testContext = require('@utils/testContext');
