@@ -24,7 +24,7 @@ const {Statuses} = require('@data/demo/orderStatuses');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_creditSlips_sortAndPaginationCreditSlip';
+const baseContext = 'functional_BO_orders_creditSlips_sortAndPaginationCreditSlips';
 
 // Import expect from chai
 const {expect} = require('chai');
