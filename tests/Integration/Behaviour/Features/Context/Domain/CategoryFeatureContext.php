@@ -31,7 +31,6 @@ use Category;
 use Configuration;
 use Language;
 use PHPUnit\Framework\Assert as Assert;
-use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CategoryTreeChoiceProvider;
 use PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\GroupByIdChoiceProvider;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
@@ -56,18 +55,16 @@ use RuntimeException;
 use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\CategoryTreeIterator;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
-    public const EMPTY_VALUE = '';
-    public const DEFAULT_ROOT_CATEGORY_ID = 1;
+    public const JPG_IMAGE_TYPE = '.jpg';
     public const THUMB0 = '0_thumb';
 
-    public const CATEGORY_POSITION_WAYS_MAP = [
-        0 => 'Up',
-        1 => 'Down',
+    private const CATEGORY_POSITION_WAYS_MAP = [
+        'up' => 0,
+        'down' => 1,
     ];
 
     /** @var ContainerInterface */
@@ -130,6 +127,19 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then category ":categoryReference" should be positioned lower by one position
+     *
+     * @param string $categoryReference
+     */
+    public function assertCategoryPositionIsLowerThanBefore(string $categoryReference): void
+    {
+        $category = $this->getCategory($this->getSharedStorage()->get($categoryReference));
+        $latestPosition = (int) $this->getSharedStorage()->get($categoryReference . 'latest_position');
+
+        Assert::assertSame($latestPosition + 1, (int) $category->position, 'Unexpected category position');
+    }
+
+    /**
      * @When I add new category :categoryReference with following details:
      *
      * @param string $categoryReference
@@ -171,6 +181,10 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $categoryId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($categoryReference, $categoryId->getValue());
+
+        // save category generated position for later so we can assert position update.
+        $newCategory = $this->getCategory($categoryId->getValue());
+        SharedStorage::getStorage()->set($categoryReference . 'latest_position', (int) $newCategory->position);
     }
 
     /**
@@ -286,34 +300,67 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update category :categoryReference with generated position and following details:
+     * @When /^I move category "(.*)" (up|down) to a position "(.*)"$/
      *
      * @param string $categoryReference
-     * @param TableNode $table
      */
-    public function updateCategoryWithGeneratedPositionAndFollowingDetails(string $categoryReference, TableNode $table)
+    public function updatePosition(string $categoryReference, string $way, int $newPosition)
     {
-        /** @var array $testCaseData */
-        $testCaseData = $table->getRowsHash();
-
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
+        $parentCategoryId = $this->getEditableCategory($categoryReference)->getParentId();
+        /** @var EditableCategory $parentCategory */
+        $parentCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($parentCategoryId));
+        // all the categories from same parent to mimic the position change in BO
+        // (we can change the position in a list of categories from a certain parent)
+        $siblingCategories = $parentCategory->getSubCategories();
 
-        /** @var CategoryTreeChoiceProvider $categoryTreeChoiceProvider */
-        $categoryTreeChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.category_tree_choice_provider'
-        );
-        $categoryTreeIterator = new CategoryTreeIterator($categoryTreeChoiceProvider);
-        $parentCategoryId = $categoryTreeIterator->getCategoryId($testCaseData['Parent category']);
+        $idsByPositions = [];
+        $previousPosition = null;
+        foreach ($siblingCategories as $siblingCategoryId) {
+            $siblingCategoryId = (int) $siblingCategoryId;
+            $siblingCategory = $this->getCategory($siblingCategoryId);
+            // organize categories by position
+            $idsByPositions[(int) $siblingCategory->position] = $siblingCategoryId;
 
-        $wayId = array_flip(self::CATEGORY_POSITION_WAYS_MAP)[$testCaseData['Way']];
+            if ($categoryId === $siblingCategoryId) {
+                // find the previous position of the category that is being updated
+                $previousPosition = (int) $siblingCategory->position;
+            }
+        }
+
+        // find the id that was in the new position before changing it
+        $previousIdInNewPosition = $idsByPositions[$newPosition];
+
+        // switch the positions
+        $idsByPositions[$newPosition] = $categoryId;
+        $idsByPositions[$previousPosition] = $previousIdInNewPosition;
+
+        $generatedPositions = [];
+        foreach ($idsByPositions as $position => $id) {
+            // mimic generating of positions like in list
+            //@todo: the whole UpdateCategoryPositionCommand needs to be refactored, it shouldn't depend on UI
+            $generatedPositions[$position] = 'tr_' . $parentCategoryId . '_' . $id;
+        }
 
         $this->getCommandBus()->handle(new UpdateCategoryPositionCommand(
             $categoryId,
             $parentCategoryId,
-            $wayId,
-            ['tr_' . $parentCategoryId . '_' . $categoryId], // generated position
-            $testCaseData['Found first']
+            self::CATEGORY_POSITION_WAYS_MAP[$way],
+            $generatedPositions,
+            false
         ));
+    }
+
+    /**
+     * @Then category ":categoryReference" position should be ":expectedPosition"
+     *
+     * @param string $categoryReference
+     */
+    public function assertCurrentPosition(string $categoryReference, int $expectedPosition): void
+    {
+        $category = $this->getCategory($this->getSharedStorage()->get($categoryReference));
+
+        Assert::assertSame($expectedPosition, (int) $category->position);
     }
 
     /**
@@ -828,5 +875,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $actualValue,
             sprintf('Unexpected %s', $index)
         );
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return Category
+     */
+    private function getCategory(int $categoryId): Category
+    {
+        // There is no position in EditableCategory class, so we ensure its correct by loading legacy ObjectModel
+        $category = new Category($categoryId);
+
+        if ((int) $category->id !== $categoryId) {
+            throw new RuntimeException(sprintf('Failed to load category with id %d', $categoryId, ));
+        }
+
+        return $category;
     }
 }
