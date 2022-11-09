@@ -179,9 +179,9 @@
 .accordion-form {
   .card {
     margin-bottom: 0;
+    overflow: initial;
     border: none;
     box-shadow: none;
-    overflow: initial;
 
     .card-header {
       padding: 0;
