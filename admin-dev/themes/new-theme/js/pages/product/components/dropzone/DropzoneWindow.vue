@@ -126,7 +126,7 @@
           {{ selectedLocale.iso_code }}
         </button>
         <div
-          class="dropdown-menu locale-dropdown-menu"
+          class="dropdown-menu dropdown-menu-right locale-dropdown-menu"
           aria-labelledby="form_invoice_prefix"
         >
           <span
