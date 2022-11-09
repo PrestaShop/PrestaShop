@@ -21,41 +21,41 @@ Feature: Category Management
     And group "guestGroup" named "Guest" exists
     And group "customerGroup" named "Customer" exists
 
-#  Scenario: Add category
-#    When I add new category "category1" with following details:
-#      | name[en-US]                   | PC parts                       |
-#      | name[fr-FR]                   | PC parts fr                    |
-#      | active                        | false                          |
-#      | parent category               | home-accessories               |
-#      | link rewrite[en-US]           | pc-parts                       |
-#      | link rewrite[fr-FR]           | pc-parts-fr                    |
-#      | group access                  | visitorGroup,guestGroup        |
-#      | associated shops              | shop1                          |
-#      | description[en-US]            | description english            |
-#      | description[fr-FR]            | description french             |
-#      | additional description[en-US] | additional description english |
-#      | additional description[fr-FR] | additional description french  |
-#      | meta description[en-US]       | meta description english       |
-#      | meta description[fr-FR]       | meta description french        |
-#      | meta title[en-US]             | meta title english             |
-#      | meta title[fr-FR]             | meta title french              |
-#    Then category "category1" should have following details:
-#      | name[en-US]                   | PC parts                       |
-#      | name[fr-FR]                   | PC parts fr                    |
-#      | active                        | false                          |
-#      | parent category               | home-accessories               |
-#      | link rewrite[en-US]           | pc-parts                       |
-#      | link rewrite[fr-FR]           | pc-parts-fr                    |
-#      | group access                  | visitorGroup,guestGroup        |
-#      | associated shops              | shop1                          |
-#      | description[en-US]            | description english            |
-#      | description[fr-FR]            | description french             |
-#      | additional description[en-US] | additional description english |
-#      | additional description[fr-FR] | additional description french  |
-#      | meta description[en-US]       | meta description english       |
-#      | meta description[fr-FR]       | meta description french        |
-#      | meta title[en-US]             | meta title english             |
-#      | meta title[fr-FR]             | meta title french              |
+  Scenario: Add category
+    When I add new category "category1" with following details:
+      | name[en-US]                   | PC parts                       |
+      | name[fr-FR]                   | PC parts fr                    |
+      | active                        | false                          |
+      | parent category               | home-accessories               |
+      | link rewrite[en-US]           | pc-parts                       |
+      | link rewrite[fr-FR]           | pc-parts-fr                    |
+      | group access                  | visitorGroup,guestGroup        |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+    Then category "category1" should have following details:
+      | name[en-US]                   | PC parts                       |
+      | name[fr-FR]                   | PC parts fr                    |
+      | active                        | false                          |
+      | parent category               | home-accessories               |
+      | link rewrite[en-US]           | pc-parts                       |
+      | link rewrite[fr-FR]           | pc-parts-fr                    |
+      | group access                  | visitorGroup,guestGroup        |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
 
   Scenario: Edit category
     Given I add new category "category2" with following details:
@@ -115,20 +115,71 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
-#  Scenario: Delete category
-#    When I delete category "category1" choosing mode "associate_and_disable"
-#    Then category "category1" does not exist
-#
+
+  Scenario: Delete category
+    Given I add new category "category3" with following details:
+      | name[en-US]         | Mobile phones3   |
+      | name[fr-FR]         | Mobile phones fr |
+      | active              | false            |
+      | parent category     | home             |
+      | link rewrite[en-US] | mobile-phones-en |
+      | link rewrite[fr-FR] | mobile-phones-fr |
+    And I add new category "category4" with following details:
+      | name[en-US]         | Mobile phones4   |
+      | name[fr-FR]         | Mobile phones fr |
+      | active              | false            |
+      | parent category     | home             |
+      | link rewrite[en-US] | mobile-phones-en |
+      | link rewrite[fr-FR] | mobile-phones-fr |
+    And I add new category "category5" with following details:
+      | name[en-US]         | Mobile phones5   |
+      | name[fr-FR]         | Mobile phones fr |
+      | active              | false            |
+      | parent category     | home             |
+      | link rewrite[en-US] | mobile-phones-en |
+      | link rewrite[fr-FR] | mobile-phones-fr |
+    When I delete category "category3" choosing mode "associate_and_disable"
+    Then category "category3" does not exist
+    When I delete category "category4" choosing mode "associate_only"
+    Then category "category4" does not exist
+    When I delete category "category5" choosing mode "remove_associated"
+    Then category "category5" does not exist
+
+  Scenario: delete categories which are assigned to products
+    Given I add new category "category6" with following details:
+      | name[en-US]         | Mobile phones6    |
+      | name[fr-FR]         | Mobile phones6 fr |
+      | active              | false             |
+      | parent category     | home-accessories  |
+      | link rewrite[en-US] | mobile-phones-en  |
+      | link rewrite[fr-FR] | mobile-phones-fr  |
+    And I add product "product1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "product1" should be disabled
+    And product "product1" type should be standard
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | home         | Home        | Home        | true       |
+    And I assign product product1 to following categories:
+      | categories       | [home,category6] |
+      | default category | category6        |
+    Then product "product1" should be assigned to following categories:
+      | id reference | name[en-US]    | name[fr-FR]       | is default |
+      | home         | Home           | Home              | false      |
+      | category6    | Mobile phones6 | Mobile phones6 fr | true       |
+    When I delete category "category6" choosing mode "associate_and_disable"
+    Then category "category6" does not exist
+    Then product "product1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home             | Home             | Home             | false      |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+
 #  Scenario: Bulk delete categories
-#    When I add new category "category2" with following details:
-#      | Name            | PC parts 2       |
-#      | Displayed       | true             |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts2        |
 #    And I bulk delete categories "category1,category2" choosing mode "associate_and_disable"
 #    Then category "category1" does not exist
 #    And category "category2" does not exist
-#
+
 ##    update category not available for multi shop context
 #  Scenario: Update category position
 #    When I add new category "category2" with following details:
@@ -244,39 +295,3 @@ Feature: Category Management
 #    Then category "category1" is disabled
 #    And category "category2" is disabled
 #
-#  Scenario: delete categories which are assigned to products
-#    When I add new home category "root1" with following details:
-#      | Name             | dummy root category name    |
-#      | Displayed        | false                       |
-#      | Description      | dummy root description      |
-#      | Meta title       | dummy root meta title       |
-#      | Meta description | dummy root meta description |
-#      | Friendly URL     | dummy-root                  |
-#      | Group access     | Visitor,Guest,Customer      |
-#    Given category "root1" in default language named "dummy root category name" exists
-#    And I add product "product1" with following information:
-#      | name[en-US] | bottle of beer |
-#      | type        | standard       |
-#    Then product "product1" should be disabled
-#    And product "product1" type should be standard
-#    And product "product1" should be assigned to following categories:
-#      | id reference | name[en-US] | is default |
-#      | home         | Home        | true       |
-#    And I add new category "category3" with following details:
-#      | Name            | PC parts 3       |
-#      | Displayed       | true             |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts3        |
-#    And I assign product product1 to following categories:
-#      | categories       | [home,category3] |
-#      | default category | category3        |
-#    Then product "product1" should be assigned to following categories:
-#      | id reference | name[en-US] | is default |
-#      | home         | Home        | false      |
-#      | category3    | PC parts 3  | true       |
-#    When I delete category "category3" choosing mode "associate_and_disable"
-#    Then category "category3" does not exist
-#    Then product "product1" should be assigned to following categories:
-#      | id reference     | name[en-US]      | is default |
-#      | home             | Home             | false      |
-#      | home-accessories | Home Accessories | true       |
