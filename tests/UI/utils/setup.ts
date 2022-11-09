@@ -1,7 +1,7 @@
-require('module-alias/register');
 import helper from '@utils/helpers';
+import files from '@utils/files';
 
-const files = require('@utils/files');
+require('module-alias/register');
 
 let screenshotNumber = 1;
 

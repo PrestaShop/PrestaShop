@@ -1,5 +1,5 @@
-import { Context } from 'mocha';
-import addContext from 'mochawesome/addContext'
+import Context from 'mocha';
+import addContext from 'mochawesome/addContext';
 
 /**
  * @module TestContextHelper

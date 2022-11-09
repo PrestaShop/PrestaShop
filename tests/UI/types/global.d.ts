@@ -23,9 +23,9 @@ type GlobalBO = {
 }
 
 type GlobalBrowserConfig = {
-  headless: any 
-  timeout: number 
-  slowMo: number 
+  headless: any
+  timeout: number
+  slowMo: number
   args?: Array<string>
 }
 
@@ -58,15 +58,15 @@ type GlobalMaildevConfig = {
 }
 
 declare global {
-  var INSTALL: GlobalInstall
-  var URLHasPort: boolean
-  var FO: GlobalFO
-  var BO: GlobalBO
-  var BROWSER: GlobalBrowser
-  var GENERATE_FAILED_STEPS: any
-  var SCREENSHOT: GlobalScreenshot
-  var maildevConfig: GlobalMaildevConfig
-  var browserErrors: GlobalBrowserErrors
+  let INSTALL: GlobalInstall;
+  let URLHasPort: boolean;
+  let FO: GlobalFO;
+  let BO: GlobalBO;
+  let BROWSER: GlobalBrowser;
+  let GENERATE_FAILED_STEPS: any;
+  let SCREENSHOT: GlobalScreenshot;
+  let maildevConfig: GlobalMaildevConfig;
+  let browserErrors: GlobalBrowserErrors;
 }
 
-export {}
+export {};

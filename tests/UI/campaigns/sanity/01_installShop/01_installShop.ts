@@ -1,15 +1,16 @@
-require('module-alias/register');
 import helper from '@utils/helpers';
-import { BrowserContext, Page } from 'playwright';
+import {BrowserContext, Page} from 'playwright';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
 
 // Import pages
-const installPage = require('@pages/install');
-const homePage = require('@pages/FO/home');
+import installPage from '@pages/install';
+import homePage from '@pages/FO/home';
 
 // Import test context
-const testContext = require('@utils/testContext');
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 const baseContext = 'sanity_installShop_installShop';
 

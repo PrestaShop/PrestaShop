@@ -1,4 +1,6 @@
-import playwright, { BrowserContext, Browser, BrowserType, Page } from "playwright";
+import playwright, {
+  BrowserContext, Browser, BrowserType, Page,
+} from 'playwright';
 
 require('./globals');
 
@@ -16,8 +18,8 @@ export = {
     const browsers: Record<string, BrowserType> = {
       chromium: playwright.chromium,
       webkit: playwright.webkit,
-      firefox: playwright.firefox
-    }
+      firefox: playwright.firefox,
+    };
 
     try {
       const browserConfig = global.BROWSER.config;
@@ -68,7 +70,7 @@ export = {
    * @param context {BrowserContext} Context created
    * @return {Promise<Page>}
    */
-  async newTab(context: BrowserContext) {
+  async newTab(context: BrowserContext): Promise<Page> {
     const page = await context.newPage();
 
     if (global.BROWSER.interceptErrors) {
@@ -82,7 +84,7 @@ export = {
    * @param browserContext {BrowserContext} Instance of the browser context to destroy
    * @return {Promise<void>}
    */
-  async closeBrowserContext(browserContext: BrowserContext) {
+  async closeBrowserContext(browserContext: BrowserContext): Promise<void> {
     await browserContext.close();
   },
 
@@ -91,7 +93,7 @@ export = {
    * @param browser {Browser} Instance of the browser to close
    * @return {Promise<void>}
    */
-  async closeBrowser(browser: Browser) {
+  async closeBrowser(browser: Browser): Promise<void> {
     await browser.close();
   },
 
@@ -99,7 +101,7 @@ export = {
    * Intercept response errors
    * @param page {Page} Browser tab given
    */
-  interceptResponseErrors(page: Page) {
+  interceptResponseErrors(page: Page): void {
     page.on('response', (response) => {
       const status = response.status().toString();
       const url = page.url();
@@ -115,7 +117,7 @@ export = {
    * Intercept js errors
    * @param page {Page} Browser tab given
    */
-  interceptJsErrors(page: Page) {
+  interceptJsErrors(page: Page): void {
     page.on('pageerror', (e) => {
       global.browserErrors.js.push(
         {
@@ -130,7 +132,7 @@ export = {
    * Intercept console errors
    * @param page {Page} Browser tab given
    */
-  interceptConsoleErrors(page: Page) {
+  interceptConsoleErrors(page: Page): void {
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
         global.browserErrors.console.push({
@@ -145,7 +147,7 @@ export = {
    * Intercept all errors (response, js, console)
    * @param page {Page} Browser tab given
    */
-  interceptAllErrors(page: Page) {
+  interceptAllErrors(page: Page): void {
     this.interceptResponseErrors(page);
     this.interceptJsErrors(page);
     this.interceptConsoleErrors(page);
@@ -156,12 +158,12 @@ export = {
    * @param browser {Browser} Browser given
    * @returns {Promise<Page>}
    */
-  async getLastOpenedTab(browser: Browser) {
+  async getLastOpenedTab(browser: Browser): Promise<Page> {
     // Get contexts
-    const contexts = await browser.contexts();
+    const contexts = browser.contexts();
 
     // Get pages from last created context
-    const tabs = await contexts[contexts.length - 1].pages();
+    const tabs = contexts[contexts.length - 1].pages();
 
     return tabs[tabs.length - 1];
   },
@@ -169,9 +171,13 @@ export = {
   /**
    * Returns the number of tabs
    * @param browser {Browser} Browser given
-   * @returns {int}
+   * @returns {number}
    */
-  getNumberTabs(browser) {
-    return browser.pages().length;
+  getNumberTabs(browser: Browser): number {
+    // Get contexts
+    const contexts = browser.contexts();
+
+    // Get pages from last created context
+    return contexts[contexts.length - 1].pages().length;
   },
 };

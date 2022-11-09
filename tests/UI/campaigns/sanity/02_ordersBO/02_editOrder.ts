@@ -1,23 +1,19 @@
-import { BrowserContext, Page } from "playwright";
+import {BrowserContext, Page} from 'playwright';
+// Using chai
+import {expect} from 'chai';
+// Import utils
+import helper from '@utils/helpers';
+import addContextItem from '@utils/testContext';
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
+import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
+// Import data
+import {Statuses} from '@data/demo/orderStatuses';
 
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders');
-const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
-
-// Import data
-const {Statuses} = require('@data/demo/orderStatuses');
 
 const baseContext = 'sanity_ordersBO_editOrder';
 
@@ -46,7 +42,7 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
   });
 
   it('should go to the \'Orders > Orders\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+    await addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
