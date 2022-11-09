@@ -257,22 +257,55 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['is_virtual'] = 0;
         }
 
-        // Product redirection
+        // Product redirection type and object ID
         $form_data['redirect_type'] = (string) $form_data['redirect_type'];
-        if ($form_data['redirect_type'] != RedirectType::TYPE_NOT_FOUND) {
-            if (isset($form_data['id_type_redirected']) && !empty($form_data['id_type_redirected']['data'])) {
+
+        /**
+         * In case of categories, we will use the category ID, but if it's missing,
+         * it can be assigned to zero. Product default category will be used.
+         */
+        if (RedirectType::TYPE_CATEGORY_PERMANENT == $form_data['redirect_type'] ||
+            RedirectType::TYPE_CATEGORY_TEMPORARY == $form_data['redirect_type']) {
+            if (!empty($form_data['id_type_redirected']['data'][0])) {
                 $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
-            } elseif (RedirectType::TYPE_CATEGORY_PERMANENT == $form_data['redirect_type'] || RedirectType::TYPE_CATEGORY_TEMPORARY == $form_data['redirect_type']) {
+            } else {
                 $form_data['id_type_redirected'] = 0;
-            } elseif (RedirectType::TYPE_GONE == $form_data['redirect_type']) {
-                $form_data['id_type_redirected'] = 0;
-                $form_data['redirect_type'] = RedirectType::TYPE_GONE;
+            }
+        /**
+         * For redirects to products, we need that ID. If its missing and it was still submitted
+         * somehow, we will fall back to default category redirect with no object ID.
+         */
+        } elseif (RedirectType::TYPE_PRODUCT_PERMANENT == $form_data['redirect_type'] ||
+            RedirectType::TYPE_PRODUCT_TEMPORARY == $form_data['redirect_type']) {
+            if (!empty($form_data['id_type_redirected']['data'][0])) {
+                $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
             } else {
                 $form_data['id_type_redirected'] = 0;
                 $form_data['redirect_type'] = RedirectType::TYPE_CATEGORY_PERMANENT;
             }
+        /**
+         * For all other redirection types that don't need any other object ID.
+         */
         } else {
             $form_data['id_type_redirected'] = 0;
+        }
+
+        // If redirection is set to category and we have proper data, we assign it
+        if ((RedirectType::TYPE_CATEGORY_PERMANENT == $form_data['redirect_type'] ||
+            RedirectType::TYPE_CATEGORY_TEMPORARY == $form_data['redirect_type']) &&
+            !empty($form_data['id_type_redirected']['data'][0])) {
+            $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
+        }
+
+        // If redirection is set to product and we have proper data, we assign it
+        // Otherwise, we fallback to category permament redirect
+        if (RedirectType::TYPE_PRODUCT_PERMANENT == $form_data['redirect_type'] ||
+            RedirectType::TYPE_PRODUCT_TEMPORARY == $form_data['redirect_type']) {
+            if (!empty($form_data['id_type_redirected']['data'][0])) {
+                $form_data['id_type_redirected'] = $form_data['id_type_redirected']['data'][0];
+            } else {
+                $form_data['redirect_type'] = RedirectType::TYPE_CATEGORY_PERMANENT;
+            }
         }
 
         //map inputPackItems

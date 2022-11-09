@@ -92,8 +92,10 @@ class ProductLazyArrayTest extends TestCase
         'pack' => 0,
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
         'customizable' => 0,
+        'active' => 1,
     ];
 
+    private const PRODUCT_DISCONTINUED = 'This product is no longer for sale';
     private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
     private const PRODUCT_AVAILABLE_LATER = 'This product is available on backorder';
     private const CONFIGURATION_AVAILABLE_NOW_LABEL = 'This product is available now - default';
@@ -412,6 +414,22 @@ class ProductLazyArrayTest extends TestCase
                 ]
             ),
             self::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+        ];
+
+        // Discontinued product
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 0,
+                    'stock_quantity' => 0,
+                    'quantity' => 0,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                    'active' => 0,
+                ]
+            ),
+            self::PRODUCT_DISCONTINUED,
         ];
 
         // Product out stock, backorders disabled
