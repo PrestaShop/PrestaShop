@@ -4365,6 +4365,10 @@ class CartCore extends ObjectModel
             return [];
         }
 
+        if (0 === (int) $this->id) {
+            return [];
+        }
+
         $result = Db::getInstance()->executeS(
             'SELECT cu.id_customization, cd.index, cd.value, cd.type, cu.in_cart, cu.quantity
             FROM `' . _DB_PREFIX_ . 'customization` cu
