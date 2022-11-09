@@ -47,7 +47,7 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      * @var OrderReturnStateRepositoryInterface
      */
     private $orderReturnStateRepository;
-    
+
     /**
      * @var OrderReturnValidator
      */
