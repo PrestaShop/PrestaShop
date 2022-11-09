@@ -146,11 +146,12 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
     it('should duplicate products by bulk actions', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDuplicate', baseContext);
 
-      numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
-
       const duplicateTextResult = await productsPage.duplicateAllProductsWithBulkActions(page);
       await expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
+
+
+      numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
+      await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
     });
 
     it('should reset all filters', async function () {
