@@ -6,19 +6,21 @@ body:
     attributes:
       value: |
         Thank you for taking the time to fill out this bug report. Please take the time to provide as much details as possible. Following our [bug report guidelines](https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
+        
+        Do not report bugs called "error 500" or "white page", this is a universal error and won't tell us anything. Instead, enable debug mode in Performance section of PrestaShop and try again. You will get a proper error message.
   - type: checkboxes
     attributes:
       label: Prerequisites
       options:
-        - label: I understand and accept the project's [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md)
+        - label: I understand and accept the project's [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md).
           required: true
         - label: I have already [searched in existing issues](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+label%3ABug) and found no previous report of this bug.
           required: true
   - type: textarea
     id: what-happened
     attributes:
-      label: Describe the bug and add screenshots
-      description: What went wrong? If applicable, add screenshots or screen recordings to help explain your problem.
+      label: Describe the bug and add attachments
+      description: What went wrong? If applicable, add screenshots, error logs or screen recordings to help explain your problem.
     validations:
       required: true
   - type: textarea
@@ -32,14 +34,11 @@ body:
     id: steps-reproduce
     attributes:
       label: Steps to reproduce
-      description: List the exact steps to reproduce the issue
+      description: List the exact steps to reproduce the issue.
       placeholder: |
         1. Go to '...'
-
         2. Click on '....'
-
         3. Scroll down to '....'
-
         4. See error
     validations:
       required: true
