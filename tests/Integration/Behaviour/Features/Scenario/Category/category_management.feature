@@ -298,17 +298,52 @@ Feature: Category Management
     Then category "category12" does not exist
     And category "category13" does not exist
 
-  # update category not available for multi shop context
-#  Scenario: Update category position
-#    When I add new category "category2" with following details:
-#      | Name            | PC parts 2       |
-#      | Displayed       | true             |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts2        |
-#    And I update category "category2" with generated position and following details:
-#      | Parent category | Home Accessories |
-#      | Way             | Up               |
-#      | Found first     | false            |
+  Scenario: Update category position
+    Given I add new category "category-500" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | true          |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    Given I add new category "category14" with following details:
+      | name[en-US]         | PC parts 14    |
+      | name[fr-FR]         | PC parts 14 fr |
+      | active              | true           |
+      | parent category     | category-500   |
+      | link rewrite[en-US] | pc-parts14     |
+      | link rewrite[en-US] | pc-parts14-fr  |
+    And I add new category "category15" with following details:
+      | name[en-US]         | PC parts 15    |
+      | name[fr-FR]         | PC parts 15 fr |
+      | active              | true           |
+      | parent category     | category-500   |
+      | link rewrite[en-US] | pc-parts15     |
+      | link rewrite[en-US] | pc-parts15-fr  |
+    And I add new category "category16" with following details:
+      | name[en-US]         | PC parts 16    |
+      | name[fr-FR]         | PC parts 16 fr |
+      | active              | true           |
+      | parent category     | category-500   |
+      | link rewrite[en-US] | pc-parts16     |
+      | link rewrite[en-US] | pc-parts16-fr  |
+    And I add new category "category17" with following details:
+      | name[en-US]         | PC parts 17    |
+      | name[fr-FR]         | PC parts 17 fr |
+      | active              | true           |
+      | parent category     | category-500   |
+      | link rewrite[en-US] | pc-parts16     |
+      | link rewrite[en-US] | pc-parts17-fr  |
+    # "category14" is the first category in "category-500" parent, so I assume its position is 0
+    And category "category14" position should be "0"
+    And category "category15" position should be "1"
+    And category "category16" position should be "2"
+    And category "category17" position should be "3"
+    When I move category "category14" down to a position "2"
+    Then category "category15" position should be "0"
+    Then category "category16" position should be "1"
+    Then category "category14" position should be "2"
+    Then category "category17" position should be "3"
 #
 #  Scenario: Edit home category
 #    When I edit home category "Home" with following details:
