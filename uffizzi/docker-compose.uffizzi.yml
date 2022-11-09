@@ -1,0 +1,48 @@
+version: '3.0'
+
+x-uffizzi:
+  ingress:
+    service: prestashop
+    port: 80
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 'prestashop'
+      MYSQL_DATABASE: 'prestashop'
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"      
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+
+  prestashop:
+    image: "${APP_IMAGE}"
+    environment:
+      DISABLE_MAKE: 0
+      PS_INSTALL_AUTO: 1
+      DB_PASSWD: prestashop
+      DB_NAME: prestashop
+      DB_SERVER: 127.0.0.1
+      DB_PREFIX: ps_
+      PS_DOMAIN: UFFIZZI_URL
+      PS_FOLDER_INSTALL: install-dev
+      PS_FOLDER_ADMIN: admin-dev
+      PS_COUNTRY: fr
+      PS_LANGUAGE: fr
+      PS_DEV_MODE: 0
+      PS_DEMO_MODE: 1
+      PS_ENABLE_SSL: 1
+      ADMIN_MAIL: demo@prestashop.com
+      ADMIN_PASSWD: Correct Horse Battery Staple
+    command: ["/tmp/wait-for-it.sh", "--timeout=1800", "--strict", "127.0.0.1:3306", "--", "/tmp/docker_run_git.sh"]
+    ports:
+      - "8001:80"
+    deploy:
+      resources:
+        limits:
+          memory: 2000M
