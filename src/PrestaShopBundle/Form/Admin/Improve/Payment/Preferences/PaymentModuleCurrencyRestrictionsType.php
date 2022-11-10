@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -38,8 +39,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsParentType
 {
-    public const CUSTOMER_CURRENCY = -1;
-    public const SHOP_DEFAULT_CURRENCY = -2;
     /**
      * @var array
      */
@@ -129,8 +128,8 @@ class PaymentModuleCurrencyRestrictionsType extends PaymentModuleRestrictionsPar
     private function getAdditionalCurrencyChoices(): array
     {
         return [
-            $this->trans('Customer currency', 'Admin.Payment.Feature') => static::CUSTOMER_CURRENCY,
-            $this->trans('Shop default currency', 'Admin.Payment.Feature') => static::SHOP_DEFAULT_CURRENCY,
+            $this->trans('Customer currency', 'Admin.Payment.Feature') => PaymentModulePreferencesConfiguration::CUSTOMER_CURRENCY,
+            $this->trans('Shop default currency', 'Admin.Payment.Feature') => PaymentModulePreferencesConfiguration::SHOP_DEFAULT_CURRENCY,
         ];
     }
 }

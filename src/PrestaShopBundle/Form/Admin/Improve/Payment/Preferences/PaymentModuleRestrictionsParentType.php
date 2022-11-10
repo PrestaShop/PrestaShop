@@ -45,7 +45,7 @@ class PaymentModuleRestrictionsParentType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array<string, ModuleInterface>  $paymentModules
+     * @param array<string, ModuleInterface> $paymentModules
      */
     public function __construct(
         TranslatorInterface $translator,
