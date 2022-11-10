@@ -49,12 +49,9 @@
           {{ 'If it is not checked then this means that the payment module is disabled.'|trans({}, 'Admin.Payment.Help') }}
         </p>
       </div>
-
-      {% if formsSeparated %}
-        {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_separated_form_block.html.twig' %}
-      {% else %}
+      {% block paymentPreferencesForm %}
         {% include '@PrestaShop/Admin/Improve/Payment/Preferences/Blocks/payment_preferences_form_block.html.twig' %}
-      {% endif %}
+      {% endblock %}
     {% endif %}
   </div>
 {% endblock %}
