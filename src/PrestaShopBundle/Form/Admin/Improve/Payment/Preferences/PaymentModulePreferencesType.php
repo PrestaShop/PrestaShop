@@ -110,7 +110,7 @@ class PaymentModulePreferencesType extends TranslatorAwareType
                 'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
                 'help' => $this->trans(
-                    'Please select available payment modules for each currency.',
+                    'Please mark each checkbox for the currency, or currencies, for which you want the payment module(s) to be available.',
                     'Admin.Payment.Help'
                 ),
                 'required' => false,
