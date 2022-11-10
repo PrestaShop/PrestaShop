@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.admin.theme.repository.cache_eventsubscriber:
+    class: PrestaShop\PrestaShop\Core\Theme\CacheClearerSubscriber
+    arguments:
+      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+    tags:
+      - { name: kernel.event_subscriber }

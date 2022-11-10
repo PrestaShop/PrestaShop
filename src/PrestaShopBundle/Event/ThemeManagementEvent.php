@@ -31,16 +31,19 @@ use Symfony\Contracts\EventDispatcher\Event;
 class ThemeManagementEvent extends Event
 {
     public const INSTALL = 'theme.install';
-    public const UNINSTALL = 'theme.uninstall';
 
-    protected $theme;
+    /** @var string */
+    protected string $theme;
 
-    public function __construct($theme)
+    /**
+     * @param string $theme
+     */
+    public function __construct(string $theme)
     {
         $this->theme = $theme;
     }
 
-    public function getTheme()
+    public function getTheme(): string
     {
         return $this->theme;
     }

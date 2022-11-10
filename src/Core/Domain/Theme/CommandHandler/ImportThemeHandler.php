@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\ImportedThemeAlreadyExistsException;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeImportSource;
 use PrestaShop\PrestaShop\Core\Domain\Theme\ValueObject\ThemeName;
+use PrestaShopBundle\Event\ThemeManagementEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class ImportThemeHandler
@@ -56,18 +58,26 @@ final class ImportThemeHandler implements ImportThemeHandlerInterface
     private $configuration;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * @param ThemeUploaderInterface $themeUploader
      * @param ThemeManager $themeManager
      * @param ConfigurationInterface $configuration
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ThemeUploaderInterface $themeUploader,
         ThemeManager $themeManager,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        EventDispatcherInterface $eventDispatcher,
     ) {
         $this->themeUploader = $themeUploader;
         $this->themeManager = $themeManager;
         $this->configuration = $configuration;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -100,6 +110,9 @@ final class ImportThemeHandler implements ImportThemeHandlerInterface
             if (ThemeImportSource::FROM_ARCHIVE === $type) {
                 @unlink($themePath);
             }
+
+            $event = new ThemeManagementEvent('plop');
+            $this->eventDispatcher->dispatch($event, ThemeManagementEvent::INSTALL);
         }
     }
 }

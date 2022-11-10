@@ -32,15 +32,12 @@ use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShopBundle\Event\ThemeManagementEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EventSubscriber implements EventSubscriberInterface
+class CacheClearerSubscriber implements EventSubscriberInterface
 {
     /**
      * @var SymfonyCacheClearer
      */
     private $cacheClearer;
-
-    /** @var bool */
-    private $cleared = false;
 
     public function __construct(SymfonyCacheClearer $cacheClearer)
     {
@@ -51,15 +48,11 @@ class EventSubscriber implements EventSubscriberInterface
     {
         return [
             ThemeManagementEvent::INSTALL => 'onThemeInstalledOrUninstalled',
-            ThemeManagementEvent::UNINSTALL => 'onThemeInstalledOrUninstalled',
         ];
     }
 
     public function onThemeInstalledOrUninstalled(ThemeManagementEvent $event): void
     {
-        if (!$this->cleared) {
-            $this->cacheClearer->clear();
-            $this->cleared = true;
-        }
+        $this->cacheClearer->clear();
     }
 }

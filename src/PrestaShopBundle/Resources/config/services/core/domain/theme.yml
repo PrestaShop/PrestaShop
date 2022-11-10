@@ -10,6 +10,7 @@ services:
       - '@prestashop.core.addon.theme.theme_zip_uploader'
       - '@prestashop.core.addon.theme.theme_manager'
       - '@prestashop.adapter.legacy.configuration'
+      - '@event_dispatcher'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Theme\Command\ImportThemeCommand }
 

@@ -220,8 +220,6 @@ class ThemeController extends AbstractAdminController
                 }
 
                 $this->getCommandBus()->handle(new ImportThemeCommand($importSource));
-                $event = new ThemeManagementEvent('montheme');
-                $this->get('event_dispatcher')->dispatch($event, ThemeManagementEvent::INSTALL);
 
                 return $this->redirectToRoute('admin_themes_index');
             } catch (ThemeException $e) {
