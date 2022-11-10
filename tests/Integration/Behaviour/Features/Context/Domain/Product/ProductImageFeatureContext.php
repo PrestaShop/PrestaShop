@@ -75,7 +75,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $actualType = $imageTypes[$key];
             Assert::assertEquals($expectedType['name'], $actualType->name, 'Unexpected image type name');
             Assert::assertEquals($expectedType['width'], $actualType->width, 'Unexpected image type width');
-            Assert::assertEquals($expectedType['height'], $actualType->width, 'Unexpected image type height');
+            Assert::assertEquals($expectedType['height'], $actualType->height, 'Unexpected image type height');
 
             $this->getSharedStorage()->set($expectedType['reference'], (int) $actualType->id);
         }

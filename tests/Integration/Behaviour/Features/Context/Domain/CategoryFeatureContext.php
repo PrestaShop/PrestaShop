@@ -56,11 +56,13 @@ use Shop;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
+use Tests\Resources\DummyFileUploader;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     public const JPG_IMAGE_TYPE = '.jpg';
-    public const THUMB0 = '0_thumb';
+    private const MENU_THUMB_SUFFIX = '0_thumb';
 
     private const CATEGORY_POSITION_WAYS_MAP = [
         'up' => 0,
@@ -69,8 +71,10 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
     /** @var ContainerInterface */
     private $container;
+
     /** @var int */
     private $defaultLanguageId;
+
     /** @var string */
     private $psCatImgDir;
 
@@ -127,19 +131,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then category ":categoryReference" should be positioned lower by one position
-     *
-     * @param string $categoryReference
-     */
-    public function assertCategoryPositionIsLowerThanBefore(string $categoryReference): void
-    {
-        $category = $this->getCategory($this->getSharedStorage()->get($categoryReference));
-        $latestPosition = (int) $this->getSharedStorage()->get($categoryReference . 'latest_position');
-
-        Assert::assertSame($latestPosition + 1, (int) $category->position, 'Unexpected category position');
-    }
-
-    /**
      * @When I add new category :categoryReference with following details:
      *
      * @param string $categoryReference
@@ -158,7 +149,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function addHomeCategory(string $categoryReference, TableNode $table): void
     {
-        $this->addNewCategory($categoryReference, $table, false);
+        $this->addNewCategory($categoryReference, $table, true);
     }
 
     /**
@@ -320,15 +311,15 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @see AddCategoryCommand
+     * @param string $categoryReference
+     * @param TableNode $table
+     * @param bool $isHome
+     *
      * @see AddRootCategoryCommand
      *
      * Technically both commands should be filled separately,
      * but it happens to match almost all properties except $parentId, so we can reuse them here.
-     *
-     * @param string $categoryReference
-     * @param TableNode $table
-     * @param bool $isHome
+     * @see AddCategoryCommand
      */
     private function addNewCategory(string $categoryReference, TableNode $table, bool $isHome): void
     {
@@ -376,11 +367,13 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->getCommandBus()->handle($command);
-
         SharedStorage::getStorage()->set($categoryReference, $categoryId->getValue());
     }
 
     /**
+     * @param EditCategoryCommand|EditRootCategoryCommand $command
+     * @param TableNode $tableNode
+     *
      * @see EditCategoryCommand
      * @see EditRootCategoryCommand
      *
@@ -391,9 +384,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * but that would require some more refactoring and BC breaks, so for now, lets just avoid duplicating the code at least here in test.
      * If in future these commands evolves differently (which probably won't happen),
      * then don't hesitate to extract this method into 2 dedicated ones.
-     *
-     * @param EditCategoryCommand|EditRootCategoryCommand $command
-     * @param TableNode $tableNode
      */
     private function fillEditCommandWithData($command, TableNode $tableNode): void
     {
@@ -441,7 +431,17 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I delete category :categoryReference cover image
+     * @Then image ":imageReference" should not exist
+     *
+     * @param string $imageReference
+     */
+    public function assertFileDoesNotExist(string $imageReference): void
+    {
+        Assert::assertFalse(file_exists($this->getSharedStorage()->get($imageReference)));
+    }
+
+    /**
+     * @When I delete cover image for category ":categoryReference"
      *
      * @param string $categoryReference
      */
@@ -452,7 +452,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category :categoryReference has cover image
+     * @Then category ":categoryReference" should have a cover image
      *
      * @param string $categoryReference
      */
@@ -460,19 +460,40 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $coverImage = $editableCategory->getCoverImage();
-        ASSERT::assertNotNull($coverImage);
+        Assert::assertNotNull($coverImage);
     }
 
     /**
-     * @Then category :categoryReference does not have cover image
+     * @Then category :categoryReference should not have a cover image
      *
      * @param string $categoryReference
      */
-    public function categoryDoesNotHaveCoverImage(string $categoryReference)
+    public function assertCategoryHasNoCoverImage(string $categoryReference): void
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
-        $coverImage = $editableCategory->getCoverImage();
-        ASSERT::assertNull($coverImage);
+        Assert::assertNull($editableCategory->getCoverImage());
+    }
+
+    /**
+     * @Then category :categoryReference should not have a thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function assertCategoryHasNoThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        Assert::assertNull($editableCategory->getThumbnailImage());
+    }
+
+    /**
+     * @Then category :categoryReference should have a thumbnail image
+     *
+     * @param string $categoryReference
+     */
+    public function assertCategoryHasThumbnailImage(string $categoryReference)
+    {
+        $editableCategory = $this->getEditableCategory($categoryReference);
+        Assert::assertNotNull($editableCategory->getThumbnailImage());
     }
 
     /**
@@ -484,7 +505,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        ASSERT::assertCount(1, $menuThumbnailImages);
+        Assert::assertCount(1, $menuThumbnailImages);
     }
 
     /**
@@ -497,7 +518,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
         $editableCategory = $this->getEditableCategory($categoryReference);
 
-        /** @var array $menuThumbnailImages - collection of objects returned would be better style */
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
         $menuThumbnailImageId = $menuThumbnailImages[0]['id'];
 
@@ -517,14 +537,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category :categoryReference is disabled
+     * @Given /^category "(.*)" is (enabled|disabled)$/
+     *
+     * Status type "enabled|disabled" should be converted by transform context. @see StringToBoolTransformContext
      *
      * @param string $categoryReference
+     * @param bool $expectedStatus
      */
-    public function categoryIsDisabled(string $categoryReference): void
+    public function assertCategoryStatus(string $categoryReference, bool $expectedStatus): void
     {
-        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        Assert::assertFalse($categoryIsEnabled);
+        /** @var bool $isEnabled */
+        $isEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled($this->getSharedStorage()->get($categoryReference)));
+        Assert::assertSame($expectedStatus, $isEnabled);
     }
 
     /**
@@ -536,8 +560,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $this->getCommandBus()->handle(new SetCategoryIsEnabledCommand(
-            $editableCategory->getId()->getValue(),
-            true)
+                $editableCategory->getId()->getValue(),
+                true)
         );
     }
 
@@ -556,44 +580,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then category :categoryReference is enabled
+     * @When /^I bulk (enable|disable) categories "(.*)"$/
      *
-     * @param string $categoryReference
+     * @param bool $enable
+     * @param string $categoryReferences
      */
-    public function categoryIsEnabled(string $categoryReference)
+    public function bulkUpdateCategoriesStatus(bool $enable, string $categoryReferences)
     {
-        $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        Assert::assertTrue($categoryIsEnabled);
-    }
-
-    /**
-     * @When I bulk enable categories :categoriesReferences
-     *
-     * @param string $categoriesReferences
-     */
-    public function bulkEnableCategories(string $categoriesReferences)
-    {
-        $categoriesReferencesArray = explode(',', $categoriesReferences);
-        $categoryIds = [];
-        foreach ($categoriesReferencesArray as $categoryReference) {
-            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
-        }
-        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, true));
-    }
-
-    /**
-     * @When I bulk disable categories :categoriesReferences
-     *
-     * @param string $categoriesReferences
-     */
-    public function bulkDisableCategories(string $categoriesReferences)
-    {
-        $categoriesReferencesArray = explode(',', $categoriesReferences);
-        $categoryIds = [];
-        foreach ($categoriesReferencesArray as $categoryReference) {
-            $categoryIds[] = SharedStorage::getStorage()->get($categoryReference);
-        }
-        $this->getCommandBus()->handle(new BulkUpdateCategoriesStatusCommand($categoryIds, false));
+        $this->getCommandBus()->handle(
+            new BulkUpdateCategoriesStatusCommand($this->referencesToIds($categoryReferences), $enable)
+        );
     }
 
     /**
@@ -639,9 +635,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category ":reference" is the default one
-     *
      * @param string $reference
+     * @todo: should start naming "home" everywhere instead of "default".
+     * @Given category ":reference" is the default one
      */
     public function assertIsDefaultCategory(string $reference): void
     {
@@ -780,33 +776,77 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param array $testCaseData
+     * @When I upload cover image ":imageReference" named ":fileName" to category ":categoryReference"
      *
-     * @return array
+     * @return string
      */
-    private function getGroupAssociationIds(array $testCaseData): array
+    public function uploadCoverImage(string $imageReference, string $fileName, string $categoryReference): string
     {
-        /** @var GroupByIdChoiceProvider $groupByIdChoiceProvider */
-        $groupByIdChoiceProvider = $this->container->get(
-            'prestashop.adapter.form.choice_provider.group_by_id_choice_provider'
-        );
-        $groupChoicesArray = $groupByIdChoiceProvider->getChoices();
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
 
-        $groupAssociationIds = [];
-        if (isset($testCaseData['Group access'])) {
-            $groupAssociations = explode(',', $testCaseData['Group access']);
-            foreach ($groupAssociations as $groupAssociation) {
-                $groupAssociationIds[] = (int) $groupChoicesArray[$groupAssociation];
-            }
-        } else {
-            $groupAssociationIds = [
-                0 => '1',
-                1 => '2',
-                2 => '3',
-            ];
+        return $this->uploadImage(
+            $imageReference,
+            $fileName,
+            $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE
+        );
+    }
+
+    /**
+     * @When I upload thumbnail image ":imageReference" named ":fileName" to category ":categoryReference"
+     *
+     * @return string
+     */
+    public function uploadThumbnailImage(string $imageReference, string $fileName, string $categoryReference): string
+    {
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
+
+        return $this->uploadImage(
+            $imageReference,
+            $fileName,
+            $this->psCatImgDir . $categoryId . '-small_default' . self::JPG_IMAGE_TYPE
+        );
+    }
+
+    /**
+     * @When I upload menu thumbnail image ":imageReference" named ":fileName" to category ":categoryReference"
+     *
+     * @return string
+     */
+    public function uploadMenuThumbnailImage(string $imageReference, string $fileName, string $categoryReference): string
+    {
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
+
+        return $this->uploadImage(
+            $imageReference,
+            $fileName,
+            $this->psCatImgDir . $categoryId . '-' . self::MENU_THUMB_SUFFIX . self::JPG_IMAGE_TYPE
+        );
+    }
+
+    /**
+     * @todo: this doesn't actually test the upload,
+     *        it only mimics it, so we can later assert EditableCategory and test image deletion.
+     *        Whole image upload is not easily testable due to these reasons:
+     *          - image uploads depends on HTTP request (move_uploaded_file is used in uploader service)
+     *          - EditableCategory images (all types) are regenerated thumbnails with timestamps, so it is complicated to assert their value
+     *
+     * @param string $imageReference
+     * @param string $fileName
+     * @param string $destinationPath
+     *
+     * @return string
+     */
+    private function uploadImage(string $imageReference, string $fileName, string $destinationPath): string
+    {
+        $sourcePath = DummyFileUploader::getDummyFilesPath() . $fileName;
+
+        if (!copy($sourcePath, $destinationPath) || !file_exists($destinationPath)) {
+            throw new RuntimeException('Failed to upload category image file');
         }
 
-        return $groupAssociationIds;
+        $this->getSharedStorage()->set($imageReference, $destinationPath);
+
+        return $fileName;
     }
 
     /**
@@ -816,53 +856,12 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function getEditableCategory(string $categoryReference): EditableCategory
     {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
         /** @var EditableCategory $editableCategory */
-        $editableCategory = $this->getQueryBus()->handle(new GetCategoryForEditing($categoryId));
+        $editableCategory = $this->getQueryBus()->handle(
+            new GetCategoryForEditing(SharedStorage::getStorage()->get($categoryReference))
+        );
 
         return $editableCategory;
-    }
-
-    /**
-     * @param string $categoryReference
-     *
-     * @return mixed
-     */
-    private function getCategoryIsEnabled(string $categoryReference)
-    {
-        $categoryId = SharedStorage::getStorage()->get($categoryReference);
-        $categoryIsEnabled = $this->getQueryBus()->handle(new GetCategoryIsEnabled($categoryId));
-
-        return $categoryIsEnabled;
-    }
-
-    /**
-     * @param array $testCaseData
-     * @param array $menuThumbNailsImages
-     * @param int $categoryId
-     *
-     * @return array
-     */
-    private function pretendMenuThumbnailImagesUploaded(
-        array $testCaseData,
-        array $menuThumbNailsImages,
-        int $categoryId
-    ): array {
-        $data = base64_decode(self::JPG_IMAGE_STRING);
-        $im = imagecreatefromstring($data);
-        if ($im !== false) {
-            header('Content-Type: image/jpg');
-            imagejpeg(
-                $im,
-                $this->psCatImgDir . $categoryId . '-' . self::THUMB0 . self::JPG_IMAGE_TYPE,
-                0
-            );
-            imagedestroy($im);
-        }
-        $menuThumbnailImage = $testCaseData['Menu thumbnails'];
-        $menuThumbNailsImages[] = $menuThumbnailImage;
-
-        return $menuThumbNailsImages;
     }
 
     /**
