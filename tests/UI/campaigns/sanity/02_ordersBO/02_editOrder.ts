@@ -3,7 +3,7 @@ import {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 // Import utils
 import helper from '@utils/helpers';
-import addContextItem from '@utils/testContext';
+import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
@@ -42,7 +42,7 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
   });
 
   it('should go to the \'Orders > Orders\' page', async function () {
-    await addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
