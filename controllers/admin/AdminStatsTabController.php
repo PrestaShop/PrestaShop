@@ -174,10 +174,16 @@ abstract class AdminStatsTabControllerCore extends AdminController
 
     protected function getModules()
     {
-        return array_map(
-            function ($moduleArray) {return ['name' => $moduleArray['module']]; },
-            Hook::getHookModuleExecList('displayAdminStatsModules')
-        );
+        if (true === is_array(Hook::getHookModuleExecList('displayAdminStatsModules'))) {
+            return array_map(
+                function ($moduleArray) {
+                    return ['name' => $moduleArray['module']];
+                },
+                Hook::getHookModuleExecList('displayAdminStatsModules')
+            );
+        }
+
+        return [];
     }
 
     public function displayStats()
