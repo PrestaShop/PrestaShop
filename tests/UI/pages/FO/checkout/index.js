@@ -140,7 +140,7 @@ class Checkout extends FOBasePage {
    */
   async isDeliveryStep(page) {
     await this.waitForVisibleSelector(page, this.addressStepContent);
-    return this.elementVisible(page, this.addressStepContent);
+    return this.elementVisible(page, this.addressStepContent, 1000);
   }
 
   /**
