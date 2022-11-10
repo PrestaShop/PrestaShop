@@ -93,5 +93,5 @@ services:
       - "@prestashop.adapter.legacy.configuration"
 
   PrestaShopBundle\DependencyInjection\RuntimeConstEnvVarProcessor:
-      public: false
-      tags: ['container.env_var_processor']
+    public: false
+    tags: [ 'container.env_var_processor' ]

@@ -129,6 +129,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
 
         $cleanedContent = false;
         $file = self::CUSTOM_DEFINES_FILE;
+        $content = '';
         if (is_readable(self::CUSTOM_DEFINES_FILE)) {
             $content = file_get_contents(self::CUSTOM_DEFINES_FILE);
             $cleanedContent = php_strip_whitespace(self::CUSTOM_DEFINES_FILE);
