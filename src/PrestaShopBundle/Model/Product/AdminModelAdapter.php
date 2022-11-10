@@ -260,7 +260,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         // Product redirection type and object ID
         $form_data['redirect_type'] = (string) $form_data['redirect_type'];
 
-        /**
+        /*
          * In case of categories, we will use the category ID, but if it's missing,
          * it can be assigned to zero. Product default category will be used.
          */
@@ -271,10 +271,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             } else {
                 $form_data['id_type_redirected'] = 0;
             }
-        /**
-         * For redirects to products, we need that ID. If its missing and it was still submitted
-         * somehow, we will fall back to default category redirect with no object ID.
-         */
+            /*
+             * For redirects to products, we need that ID. If its missing and it was still submitted
+             * somehow, we will fall back to default category redirect with no object ID.
+             */
         } elseif (RedirectType::TYPE_PRODUCT_PERMANENT == $form_data['redirect_type'] ||
             RedirectType::TYPE_PRODUCT_TEMPORARY == $form_data['redirect_type']) {
             if (!empty($form_data['id_type_redirected']['data'][0])) {
@@ -283,9 +283,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['id_type_redirected'] = 0;
                 $form_data['redirect_type'] = RedirectType::TYPE_CATEGORY_PERMANENT;
             }
-        /**
-         * For all other redirection types that don't need any other object ID.
-         */
+            /*
+             * For all other redirection types that don't need any other object ID.
+             */
         } else {
             $form_data['id_type_redirected'] = 0;
         }
