@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
+use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -50,7 +51,7 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array $paymentModules
+     * @param array<string, ModuleInterface> $paymentModules
      * @param array $countryChoices
      * @param CountryDataProvider $countryDataProvider
      */

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
+use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -44,7 +45,7 @@ class PaymentModuleRestrictionsParentType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param array $paymentModules
+     * @param array<string, ModuleInterface>  $paymentModules
      */
     public function __construct(
         TranslatorInterface $translator,

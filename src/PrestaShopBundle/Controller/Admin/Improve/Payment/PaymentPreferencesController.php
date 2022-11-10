@@ -61,25 +61,18 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
 
         $isSingleShopContext = $shopContext->isSingleShopContext();
 
-        $paymentPreferencesForm = null;
         $paymentModulesCount = 0;
-
         if ($isSingleShopContext) {
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
-            $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
         if ($separationEnabled) {
-            $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-            $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-            $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-            $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
             $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
             if ($isSingleShopContext) {
-                $carrierRestrictionsView = $carrierRestrictionsForm->createView();
-                $countryRestrictionsView = $countryRestrictionsForm->createView();
-                $currencyRestrictionsView = $currencyRestrictionsForm->createView();
-                $groupRestrictionsView = $groupRestrictionsForm->createView();
+                $carrierRestrictionsView = $this->getPaymentCarrierRestrictionsFormHandler()->getForm()->createView();
+                $countryRestrictionsView = $this->getPaymentCountryRestrictionsFormHandler()->getForm()->createView();
+                $currencyRestrictionsView = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm()->createView();
+                $groupRestrictionsView = $this->getPaymentGroupRestrictionsFormHandler()->getForm()->createView();
                 $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
             }
 
@@ -94,6 +87,11 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
                 'isSingleShopContext' => $isSingleShopContext,
                 'paymentModulesCount' => $paymentModulesCount,
             ]);
+        }
+
+        $paymentPreferencesForm = null;
+        if ($isSingleShopContext) {
+            $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
         /* In next major version for separate views should be passed one for each restriction group */
