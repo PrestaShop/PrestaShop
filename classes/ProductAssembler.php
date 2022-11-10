@@ -57,7 +57,7 @@ class ProductAssemblerCore
     {
         $sql = $this->getSqlQueryProductFields([(int) $rawProduct['id_product']]);
         $rows = Db::getInstance()->executeS($sql);
-        if ($rows === false) {
+        if (empty($rows)) {
             return $rawProduct;
         }
 
@@ -76,10 +76,7 @@ class ProductAssemblerCore
     private function addMissingProductFieldsForMultipleProducts(array $rawProducts): array
     {
         // Get product IDs we want to retrieve from database
-        $productIds = [];
-        foreach ($rawProducts as $rawProduct) {
-            $productIds[] = (int) $rawProduct['id_product'];
-        }
+        $productIds = array_column($rawProducts, 'id_product');
 
         // Retrieve data and reassign them to new array by their key
         $productData = [];
