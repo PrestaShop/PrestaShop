@@ -370,17 +370,21 @@ class Products extends BOBasePage {
 
     // Choose category to filter with
     const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: categoryName};
-    const found = await page.evaluate(async (args) => {
-      /* eslint-env browser */
-      const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
-      const category = await allCategories.find((el) => el.textContent.includes(args.val));
+    // eslint-disable-next-line no-eval
+    const fn = eval(`({
+      async categoryClick(args) {
+        /* eslint-env browser */
+        const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
+        const category = await allCategories.find((el) => el.textContent.includes(args.val));
 
-      if (category === undefined) {
-        return false;
+        if (category === undefined) {
+          return false;
+        }
+        await category.querySelector('input').click();
+        return true;
       }
-      await category.querySelector('input').click();
-      return true;
-    }, args);
+    })`);
+    const found = await page.evaluate(fn.categoryClick, args);
 
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
