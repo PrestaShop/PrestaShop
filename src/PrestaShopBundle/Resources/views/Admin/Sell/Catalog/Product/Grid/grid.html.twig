@@ -28,6 +28,8 @@
 {% form_theme categoryFilterForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig' %}
 
 {% block grid_bulk_actions_block %}
-  {{ form_row(categoryFilterForm) }}
+  {{ form_start(categoryFilterForm, {attr: {class: 'd-inline-block'}}) }}
+    {{ form_row(categoryFilterForm) }}
+  {{ form_end(categoryFilterForm) }}
   {{ parent() }}
 {% endblock %}

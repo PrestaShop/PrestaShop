@@ -310,13 +310,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('reference')
             )
             ->add(
-                (new HiddenFilter('id_category'))
-                    ->setTypeOptions([
-                        'required' => false,
-                    ])
-                    ->setAssociatedColumn('id_category')
-            )
-            ->add(
                 (new Filter('category', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
@@ -349,10 +342,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
-                        ],
+                        'reset_route' => 'admin_products_reset_grid_search',
                         'redirect_route' => 'admin_products_v2_index',
                     ])
                     ->setAssociatedColumn('actions')

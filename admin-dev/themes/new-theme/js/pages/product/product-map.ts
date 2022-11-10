@@ -293,7 +293,6 @@ export default {
       container: '.product_list_category_filter',
       categoryRadio: '.category-label input:radio',
       filterForm: '#product_filter_form',
-      categoryInput: 'input[name="product[id_category]"]',
       positionInput: 'input[name="product[position]"]',
       expandedClass: 'less',
       collapsedClass: 'more',
