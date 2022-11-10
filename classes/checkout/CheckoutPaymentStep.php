@@ -91,7 +91,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
             $selectedDeliveryOption = 0;
         }
 
-        if (true === is_array($selectedDeliveryOption)) {
+        if (true === is_array($selectedDeliveryOption) && isset($selectedDeliveryOption['product_list'])) {
             unset($selectedDeliveryOption['product_list']);
         }
 
