@@ -39,6 +39,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
     Then category "category1" should have following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -56,6 +58,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
 
   Scenario: Edit category
     Given I add new category "category2" with following details:
@@ -82,6 +86,8 @@ Feature: Category Management
       | meta description[fr-FR]       |                                       |
       | meta title[en-US]             |                                       |
       | meta title[fr-FR]             |                                       |
+      | meta keywords[en-US]          |                                       |
+      | meta keywords[fr-FR]          |                                       |
     When I edit category "category2" with following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -98,6 +104,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
     Then category "category2" should have following details:
       | name[en-US]                   | Mobile phones super            |
       | name[fr-FR]                   | Mobile phones super fr         |
@@ -115,6 +123,8 @@ Feature: Category Management
       | meta description[fr-FR]       | meta description french        |
       | meta title[en-US]             | meta title english             |
       | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
 
   Scenario: Delete category
     Given I add new category "category3" with following details:
@@ -344,27 +354,52 @@ Feature: Category Management
     Then category "category16" position should be "1"
     Then category "category14" position should be "2"
     Then category "category17" position should be "3"
-#
-#  Scenario: Edit home category
-#    When I edit home category "Home" with following details:
-#      | Name             | dummy root category name    |
-#      | Displayed        | false                       |
-#      | Description      | dummy root description      |
-#      | Meta title       | dummy root meta title       |
-#      | Meta description | dummy root meta description |
-#      | Friendly URL     | dummy-root                  |
-#      | Group access     | Visitor,Guest,Customer      |
-#    Then category "Home" should have following details:
-#      | Name             | dummy root category name    |
-#      | Displayed        | false                       |
-#      | Parent category  | Root                        |
-#      | Description      | dummy root description      |
-#      | Meta title       | dummy root meta title       |
-#      | Meta description | dummy root meta description |
-#      | Friendly URL     | dummy-root                  |
-#      | Group access     | Visitor,Guest,Customer      |
-#
-#  Scenario: Add root category
+    When I move category "category17" up to a position "1"
+    Then category "category15" position should be "0"
+    Then category "category17" position should be "1"
+    Then category "category16" position should be "2"
+    Then category "category14" position should be "3"
+
+  Scenario: Edit home category
+    When I edit home category "home" with following details:
+      | name[en-US]                   | PC parts                       |
+      | name[fr-FR]                   | PC parts fr                    |
+      | active                        | false                          |
+      | link rewrite[en-US]           | pc-parts                       |
+      | link rewrite[fr-FR]           | pc-parts-fr                    |
+      | group access                  | visitorGroup,guestGroup        |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
+    Then category "home" should have following details:
+      | name[en-US]                   | PC parts                       |
+      | name[fr-FR]                   | PC parts fr                    |
+      | active                        | false                          |
+      | parent category               | root                           |
+      | link rewrite[en-US]           | pc-parts                       |
+      | link rewrite[fr-FR]           | pc-parts-fr                    |
+      | group access                  | visitorGroup,guestGroup        |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,keyword,english           |
+      | meta keywords[fr-FR]          | meta,keyword,french            |
+##
+#  Scenario: Add home category
 #    When I add new root category "root1" with following details:
 #      | Name             | dummy root category name    |
 #      | Displayed        | false                       |
@@ -382,7 +417,7 @@ Feature: Category Management
 #      | Meta description | dummy root meta description |
 #      | Friendly URL     | dummy-root                  |
 #      | Group access     | Visitor,Guest,Customer      |
-#
+
 #  Scenario: delete category cover image
 #    Given I edit category "category1" with following details:
 #      | Name                 | dummy category name    |

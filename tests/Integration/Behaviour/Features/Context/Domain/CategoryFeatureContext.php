@@ -147,44 +147,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function addCategory(string $categoryReference, TableNode $table): void
     {
-        $data = $this->localizeByRows($table);
-        $command = new AddCategoryCommand(
-            $data['name'],
-            $data['link rewrite'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
-            $this->getSharedStorage()->get($data['parent category'])
-        );
+        $this->addNewCategory($categoryReference, $table, false);
+    }
 
-        if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($data['description']);
-        }
-        if (isset($data['meta description'])) {
-            $command->setLocalizedMetaDescriptions($data['meta description']);
-        }
-        if (isset($data['meta title'])) {
-            $command->setLocalizedMetaTitles($data['meta title']);
-        }
-        if (isset($data['active'])) {
-            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
-        }
-        if (isset($data['additional description'])) {
-            $command->setLocalizedAdditionalDescriptions($data['additional description']);
-        }
-        if (isset($data['group access'])) {
-            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
-        }
-        if (isset($data['associated shops'])) {
-            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
-        }
-
-        /** @var CategoryId $categoryId */
-        $categoryId = $this->getCommandBus()->handle($command);
-
-        SharedStorage::getStorage()->set($categoryReference, $categoryId->getValue());
-
-        // save category generated position for later so we can assert position update.
-        $newCategory = $this->getCategory($categoryId->getValue());
-        SharedStorage::getStorage()->set($categoryReference . 'latest_position', (int) $newCategory->position);
+    /**
+     * @When I add new home category :categoryReference with following details:
+     *
+     * @param string $categoryReference
+     * @param TableNode $table
+     */
+    public function addHomeCategory(string $categoryReference, TableNode $table): void
+    {
+        $this->addNewCategory($categoryReference, $table, false);
     }
 
     /**
@@ -195,40 +169,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function editCategory(string $categoryReference, TableNode $table)
     {
-        $data = $this->localizeByRows($table);
         $command = new EditCategoryCommand(SharedStorage::getStorage()->get($categoryReference));
-
-        if (isset($data['name'])) {
-            $command->setLocalizedNames($data['name']);
-        }
-        if (isset($data['link rewrite'])) {
-            $command->setLocalizedLinkRewrites($data['link rewrite']);
-        }
-        if (isset($data['active'])) {
-            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
-        }
-        if (isset($data['parent category'])) {
-            $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));
-        }
-        if (isset($data['description'])) {
-            $command->setLocalizedDescriptions($data['description']);
-        }
-        if (isset($data['meta description'])) {
-            $command->setLocalizedMetaDescriptions($data['meta description']);
-        }
-        if (isset($data['meta title'])) {
-            $command->setLocalizedMetaTitles($data['meta title']);
-        }
-        if (isset($data['additional description'])) {
-            $command->setLocalizedAdditionalDescriptions($data['additional description']);
-        }
-        if (isset($data['group access'])) {
-            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
-        }
-        if (isset($data['associated shops'])) {
-            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
-        }
-
+        $this->fillEditCommandWithData($command, $table);
         $this->getCommandBus()->handle($command);
     }
 
@@ -253,6 +195,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $this->assertProperty($data, 'additional description', $editableCategory->getAdditionalDescription());
         $this->assertProperty($data, 'group access', $editableCategory->getGroupAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
         $this->assertProperty($data, 'associated shops', $editableCategory->getShopAssociationIds(), self::PROPERTY_TYPE_REFERENCE_ARRAY);
+        $this->assertProperty($data, 'meta keywords', $editableCategory->getMetaKeywords());
     }
 
     /**
@@ -369,53 +312,132 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * @param string $categoryReference
      * @param TableNode $table
      */
-    public function editHomeCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    public function editHomeCategory(string $categoryReference, TableNode $table)
     {
-        $categoryId = $this->getSharedStorage()->get($categoryReference);
-        $testCaseData = $table->getRowsHash();
-        $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
-
-        /** @var EditCategoryCommand $command */
-        $command = new EditRootCategoryCommand($categoryId);
-        $command->setIsActive($editableRootCategoryTestCaseData->isActive());
-        $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
-        $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
-        $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
-        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
-        $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
-        $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
-        $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
-        $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
-
+        $command = new EditRootCategoryCommand($this->getSharedStorage()->get($categoryReference));
+        $this->fillEditCommandWithData($command, $table);
         $this->getCommandBus()->handle($command);
     }
 
     /**
-     * @When I add new home category :categoryReference with following details:
+     * @see AddCategoryCommand
+     * @see AddRootCategoryCommand
+     *
+     * Technically both commands should be filled separately,
+     * but it happens to match almost all properties except $parentId, so we can reuse them here.
      *
      * @param string $categoryReference
      * @param TableNode $table
+     * @param bool $isHome
      */
-    public function addNewHomeCategoryWithFollowingDetails(string $categoryReference, TableNode $table)
+    private function addNewCategory(string $categoryReference, TableNode $table, bool $isHome): void
     {
-        $testCaseData = $table->getRowsHash();
-        $editableRootCategoryTestCaseData = $this->mapDataToEditableCategory($testCaseData);
+        $data = $this->localizeByRows($table);
 
-        $command = new AddRootCategoryCommand(
-            $editableRootCategoryTestCaseData->getName(),
-            $editableRootCategoryTestCaseData->getLinkRewrite(),
-            $editableRootCategoryTestCaseData->isActive()
-        );
-        $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
-        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
-        $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
-        $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
-        $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
-        $command->setAssociatedGroupIds($editableRootCategoryTestCaseData->getGroupAssociationIds());
+        if ($isHome) {
+            $command = new AddRootCategoryCommand(
+                $data['name'],
+                $data['link rewrite'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
+            );
+        } else {
+            $command = new AddCategoryCommand(
+                $data['name'],
+                $data['link rewrite'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
+                $this->getSharedStorage()->get($data['parent category'])
+            );
+        }
 
-        /** @var CategoryId $categoryIdObj */
-        $categoryIdObj = $this->getCommandBus()->handle($command);
-        SharedStorage::getStorage()->set($categoryReference, $categoryIdObj->getValue());
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (isset($data['meta description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta description']);
+        }
+        if (isset($data['meta title'])) {
+            $command->setLocalizedMetaTitles($data['meta title']);
+        }
+        if (isset($data['active'])) {
+            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (isset($data['additional description'])) {
+            $command->setLocalizedAdditionalDescriptions($data['additional description']);
+        }
+        if (isset($data['group access'])) {
+            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
+        }
+        if (isset($data['associated shops'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
+        }
+        if (isset($data['meta keywords'])) {
+            $command->setLocalizedMetaKeywords($data['meta keywords']);
+        }
+
+        /** @var CategoryId $categoryId */
+        $categoryId = $this->getCommandBus()->handle($command);
+
+        SharedStorage::getStorage()->set($categoryReference, $categoryId->getValue());
+    }
+
+    /**
+     * @see EditCategoryCommand
+     * @see EditRootCategoryCommand
+     *
+     * Technically both commands should be filled separately,
+     * but it happens to match almost all properties except $parentId, so we can reuse them here.
+     *
+     * Probably these commands are implemented wrong and instead should have extended each other if they supposed to share the properties and the logic,
+     * but that would require some more refactoring and BC breaks, so for now, lets just avoid duplicating the code at least here in test.
+     * If in future these commands evolves differently (which probably won't happen),
+     * then don't hesitate to extract this method into 2 dedicated ones.
+     *
+     * @param EditCategoryCommand|EditRootCategoryCommand $command
+     * @param TableNode $tableNode
+     */
+    private function fillEditCommandWithData($command, TableNode $tableNode): void
+    {
+        $supportedCommands = [EditCategoryCommand::class, EditRootCategoryCommand::class];
+
+        if (!in_array(get_class($command), $supportedCommands, true)) {
+            throw new RuntimeException('Unsupported command provided for filling the data in test');
+        }
+
+        $data = $this->localizeByRows($tableNode);
+
+        if (isset($data['name'])) {
+            $command->setLocalizedNames($data['name']);
+        }
+        if (isset($data['link rewrite'])) {
+            $command->setLocalizedLinkRewrites($data['link rewrite']);
+        }
+        if (isset($data['active'])) {
+            $command->setIsActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['active']));
+        }
+        if (isset($data['description'])) {
+            $command->setLocalizedDescriptions($data['description']);
+        }
+        if (isset($data['meta description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta description']);
+        }
+        if (isset($data['meta title'])) {
+            $command->setLocalizedMetaTitles($data['meta title']);
+        }
+        if (isset($data['additional description'])) {
+            $command->setLocalizedAdditionalDescriptions($data['additional description']);
+        }
+        if (isset($data['group access'])) {
+            $command->setAssociatedGroupIds($this->referencesToIds($data['group access']));
+        }
+        if (isset($data['associated shops'])) {
+            $command->setAssociatedShopIds($this->referencesToIds($data['associated shops']));
+        }
+        if (isset($data['meta keywords'])) {
+            $command->setLocalizedMetaKeywords($data['meta keywords']);
+        }
+        if ($command instanceof EditCategoryCommand && isset($data['parent category'])) {
+            $command->setParentCategoryId($this->getSharedStorage()->get($data['parent category']));
+        }
     }
 
     /**
