@@ -28,7 +28,7 @@ The 'develop' branch of this repository contains the work in progress source cod
  
 For more information on our branch system, read our guide on [installing PrestaShop for development][install-guide-dev].
 
-The first stable version of PrestaShop 8.0, was released on October 26th, 2022. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop.com/tag/8.0/).
+The first stable version of PrestaShop 8.0, was released on October 26th, 2022. Further updates have been released since then. Learn more about it on [the Build devblog](https://build.prestashop-project.org/tag/8.0/).
 
 Server configuration
 --------
@@ -133,9 +133,9 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com
 [contributing-md]: CONTRIBUTING.md
-[contributing-tutorial]: https://devdocs.prestashop.com/8/contribute/
+[contributing-tutorial]: https://devdocs.prestashop-project.org/8/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
-[getting-started]: https://docs.prestashop-project.org/-documentation/getting-started
+[getting-started]: https://docs.prestashop-project.org/1.7-documentation/getting-started
 [user-guide]: https://docs.prestashop-project.org/1.7-documentation/user-guide
 [updating-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/updating-prestashop
 [merchant-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/merchants-guide
