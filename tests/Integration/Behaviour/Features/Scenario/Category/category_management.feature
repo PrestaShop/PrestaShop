@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s category
 @restore-all-tables-before-feature
 @clear-cache-before-feature
+@reset-img-after-feature
 Feature: Category Management
   PrestaShop allows BO users to manage categories for products
   As a BO user
@@ -21,7 +22,7 @@ Feature: Category Management
     And group "guestGroup" named "Guest" exists
     And group "customerGroup" named "Customer" exists
 
-  Scenario: Add category
+  Scenario: Add new category
     When I add new category "category1" with following details:
       | name[en-US]                   | PC parts                       |
       | name[fr-FR]                   | PC parts fr                    |
@@ -398,88 +399,134 @@ Feature: Category Management
       | meta title[fr-FR]             | meta title french              |
       | meta keywords[en-US]          | meta,keyword,english           |
       | meta keywords[fr-FR]          | meta,keyword,french            |
-##
-#  Scenario: Add home category
-#    When I add new root category "root1" with following details:
-#      | Name             | dummy root category name    |
-#      | Displayed        | false                       |
-#      | Description      | dummy root description      |
-#      | Meta title       | dummy root meta title       |
-#      | Meta description | dummy root meta description |
-#      | Friendly URL     | dummy-root                  |
-#      | Group access     | Visitor,Guest,Customer      |
-#    Then category "root1" should have following details:
-#      | Name             | dummy root category name    |
-#      | Displayed        | false                       |
-#      | Parent category  | Root                        |
-#      | Description      | dummy root description      |
-#      | Meta title       | dummy root meta title       |
-#      | Meta description | dummy root meta description |
-#      | Friendly URL     | dummy-root                  |
-#      | Group access     | Visitor,Guest,Customer      |
 
-#  Scenario: delete category cover image
-#    Given I edit category "category1" with following details:
-#      | Name                 | dummy category name    |
-#      | Displayed            | false                  |
-#      | Parent category      | Home Accessories       |
-#      | Description          | dummy description      |
-#      | Meta title           | dummy meta title       |
-#      | Meta description     | dummy meta description |
-#      | Friendly URL         | dummy                  |
-#      | Group access         | Visitor,Guest,Customer |
-#      | Category cover image | logo.jpg               |
-#    And category "category1" has cover image
-#    When I delete category "category1" cover image
-#    Then category "category1" does not have cover image
-#
-#  Scenario: delete category menu thumbnail image
-#    Given I edit category "category1" with following details:
-#      | Name             | dummy category name    |
-#      | Displayed        | false                  |
-#      | Parent category  | Home Accessories       |
-#      | Description      | dummy description      |
-#      | Meta title       | dummy meta title       |
-#      | Meta description | dummy meta description |
-#      | Friendly URL     | dummy                  |
-#      | Group access     | Visitor,Guest,Customer |
-#      | Menu thumbnails  | logo.jpg               |
-#    And category "category1" has menu thumbnail image
-#    When I delete category "category1" menu thumbnail image
-#    Then category "category1" does not have menu thumbnail image
-#
-##    enabled seems to be the same as displayed
-#  Scenario: enable category
-#    Given category "category1" is disabled
-#    When I enable category "category1"
-#    Then category "category1" is enabled
-#
-#  Scenario: disable category
-#    Given I add new category "category2" with following details:
-#      | Name            | PC parts 2       |
-#      | Displayed       | true             |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts2        |
-#    When I disable category "category2"
-#    Then category "category2" is disabled
-#
-#  Scenario: bulk enable selected categories
-#    Given I add new category "category2" with following details:
-#      | Name            | PC parts 2       |
-#      | Displayed       | false            |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts2        |
-#    When I bulk enable categories "category1,category2"
-#    Then category "category1" is enabled
-#    And category "category2" is enabled
-#
-#  Scenario: bulk disable selected categories
-#    Given I add new category "category2" with following details:
-#      | Name            | PC parts 2       |
-#      | Displayed       | true             |
-#      | Parent category | Home Accessories |
-#      | Friendly URL    | pc-parts2        |
-#    When I bulk disable categories "category1,category2"
-#    Then category "category1" is disabled
-#    And category "category2" is disabled
-#
+  Scenario: Add new home category
+    When I add new home category "home2" with following details:
+      | name[en-US]                   | Home sweet home                |
+      | name[fr-FR]                   | Home sweet home fr             |
+      | active                        | true                           |
+      | link rewrite[en-US]           | home-sweet-home                |
+      | link rewrite[fr-FR]           | home-sweet-home-fr             |
+      | group access                  | customerGroup                  |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,english                   |
+      | meta keywords[fr-FR]          | meta,french                    |
+    Then category "home2" should have following details:
+      | name[en-US]                   | Home sweet home                |
+      | name[fr-FR]                   | Home sweet home fr             |
+      | active                        | true                           |
+      | parent category               | root                           |
+      | link rewrite[en-US]           | home-sweet-home                |
+      | link rewrite[fr-FR]           | home-sweet-home-fr             |
+      | group access                  | customerGroup                  |
+      | associated shops              | shop1                          |
+      | description[en-US]            | description english            |
+      | description[fr-FR]            | description french             |
+      | additional description[en-US] | additional description english |
+      | additional description[fr-FR] | additional description french  |
+      | meta description[en-US]       | meta description english       |
+      | meta description[fr-FR]       | meta description french        |
+      | meta title[en-US]             | meta title english             |
+      | meta title[fr-FR]             | meta title french              |
+      | meta keywords[en-US]          | meta,english                   |
+      | meta keywords[fr-FR]          | meta,french                    |
+
+  # We cannot test the actual image upload due to its dependency from real HTTP upload,
+  # but we can mimic the upload and test EditableCategory construct and images deletion
+  Scenario: Assert and delete category cover image
+    Given I add new category "category18" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | true          |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And category "category18" should not have a cover image
+    When I upload cover image "cover1" named "app_icon.png" to category "category18"
+    # @todo: asserting image details is too much for current PR scope.
+    # each category image is actually a regenerated thumbnail with a timestamp (is that expected?).
+    # It is not so easy to test it, because it looks something like this:
+    # ['size' => '19.187kB', 'path' => '/img/tmp/category_29.jpg?time=1668089857']
+    Then category "category18" should have a cover image
+    When I delete cover image for category "category18"
+    Then category "category18" should not have a cover image
+    And image "cover1" should not exist
+
+  Scenario: Assert category thumbnail image
+    # @todo: there seems to be no command for thumbnail deletion (is it intentional or forgotten?)
+    Given I add new category "category19" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | true          |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And category "category19" should not have a thumbnail image
+    When I upload thumbnail image "thumb1" named "app_icon.png" to category "category19"
+    Then category "category19" should have a thumbnail image
+
+  Scenario: Assert and delete category menu thumbnail images
+    Given I add new category "category20" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | true          |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    Then category "category20" does not have menu thumbnail image
+    When I upload menu thumbnail image "menu_thumb1" named "app_icon.png" to category "category20"
+    When I delete category "category20" menu thumbnail image
+    Then category "category20" does not have menu thumbnail image
+
+  # enabled seems to be the same as displayed
+  Scenario: Update category status
+    Given I add new category "category21" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And category "category21" is disabled
+    When I enable category "category21"
+    Then category "category21" is enabled
+    When I disable category "category21"
+    Then category "category21" is disabled
+
+  Scenario: Update category status using bulk action
+    Given I add new category "category22" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    Given I add new category "category23" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | home          |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    When I bulk enable categories "category22,category23"
+    Then category "category22" is enabled
+    And category "category23" is enabled
+    When I bulk disable categories "category22,category23"
+    Then category "category22" is disabled
+    And category "category23" is disabled
+    When I enable category "category22"
+    And I bulk disable categories "category22,category23"
+    Then category "category22" is disabled
+    And category "category23" is disabled
+    When I enable category "category23"
+    And I bulk enable categories "category22,category23"
+    Then category "category22" is enabled
+    And category "category23" is enabled
