@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
@@ -16,9 +21,6 @@ const addTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 // Import data
 const TaxRuleGroupFaker = require('@data/faker/taxRuleGroup');
 const {taxRules} = require('@data/demo/taxRule');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_taxes_taxRules_filterSortAndPagination';
 

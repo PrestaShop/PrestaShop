@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
@@ -14,9 +19,6 @@ const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 
 // Import data
 const AttributeData = require('@data/faker/attribute');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_attributes_sortPaginationAndBulkDelete';
 

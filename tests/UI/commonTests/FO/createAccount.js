@@ -1,6 +1,10 @@
-require('module-alias/register');
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -9,9 +13,6 @@ const foMyAccountPage = require('@pages/FO/myAccount');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
 const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // Import expect from chai
 const {expect} = require('chai');

@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -78,9 +81,6 @@ const orderToMake = {
   giftDiscountValue: giftCartRule.freeGiftProduct.price,
   atiPrice: 117.178,
 };
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'regression_currencies_computingPrecision_FO';
 

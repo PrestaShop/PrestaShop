@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import Utils
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Import login steps
@@ -31,9 +36,6 @@ const {Carriers} = require('@data/demo/carriers');
 const {Products} = require('@data/demo/products');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousCarts';
 

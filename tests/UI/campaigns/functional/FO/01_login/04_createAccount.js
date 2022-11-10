@@ -1,9 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -15,9 +18,6 @@ const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCust
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_login_createAccount';
 

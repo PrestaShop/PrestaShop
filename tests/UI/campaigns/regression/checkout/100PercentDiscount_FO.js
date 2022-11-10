@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -38,9 +41,6 @@ const percentCartRule = new CartRuleFaker({
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'regression_checkout_100PercentDiscount_FO';
 

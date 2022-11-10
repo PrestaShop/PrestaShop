@@ -1,7 +1,10 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -15,9 +18,6 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 const InvoiceOptionsFaker = require('@data/faker/invoice');
-
-// Test context imports
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_invoiceOptions_invoicePrefix';
 

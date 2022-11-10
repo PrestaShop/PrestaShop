@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import BO commons tests
@@ -21,9 +26,6 @@ const myProfilePage = require('@pages/BO/advancedParameters/team/myProfile');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_header_myProfile';
 

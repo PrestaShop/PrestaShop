@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Importing pages
@@ -12,9 +17,6 @@ const menuTabPage = require('@pages/BO/advancedParameters/menuTab');
 
 // Setup data
 const pageUrl = `${global.BO.URL}index.php?controller=AdminTabs`;
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'regression_menu_deniedAccessToMenuTab';
 

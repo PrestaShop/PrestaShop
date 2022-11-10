@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -20,9 +25,6 @@ const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // context
 const baseContext = 'functional_FO_newsletter_subscribeNewsletter';

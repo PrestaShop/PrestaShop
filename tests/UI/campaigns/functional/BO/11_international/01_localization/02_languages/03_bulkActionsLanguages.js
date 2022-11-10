@@ -1,8 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const loginCommon = require('@commonTests/BO/loginBO');
 
@@ -14,9 +19,6 @@ const addLanguagePage = require('@pages/BO/international/languages/add');
 
 // Import data
 const LanguageFaker = require('@data/faker/language');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_languages_bulkActionsLanguages';
 

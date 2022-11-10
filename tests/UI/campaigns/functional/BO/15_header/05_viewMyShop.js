@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
@@ -11,9 +16,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_header_viewMyShop';
 

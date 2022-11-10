@@ -1,10 +1,15 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
@@ -20,9 +25,6 @@ const brandsPage = require('@pages/BO/catalog/brands');
 const addBrandPage = require('@pages/BO/catalog/brands/add');
 const viewBrandPage = require('@pages/BO/catalog/brands/view');
 const addBrandAddressPage = require('@pages/BO/catalog/brands/addAddress');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_CRUDBrandAndAddress';
 

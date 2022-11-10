@@ -1,8 +1,10 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');

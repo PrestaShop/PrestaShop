@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 const {getDateFormat} = require('@utils/date');
 
@@ -32,9 +37,6 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const EmployeeFaker = require('@data/faker/employee');
 const AddressFaker = require('@data/faker/address');
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 

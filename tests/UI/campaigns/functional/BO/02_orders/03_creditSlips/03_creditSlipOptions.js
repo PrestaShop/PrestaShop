@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -22,9 +25,6 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_creditSlipOptions';
 

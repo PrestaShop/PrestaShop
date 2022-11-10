@@ -1,8 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -15,9 +20,6 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 const {countries} = require('@data/demo/countries');
 
 const countriesToTest = [countries.netherlands.name, countries.france.name];
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_defaultCountry';
 

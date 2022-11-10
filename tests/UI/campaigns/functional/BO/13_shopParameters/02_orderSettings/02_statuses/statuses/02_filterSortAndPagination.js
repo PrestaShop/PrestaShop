@@ -1,12 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');

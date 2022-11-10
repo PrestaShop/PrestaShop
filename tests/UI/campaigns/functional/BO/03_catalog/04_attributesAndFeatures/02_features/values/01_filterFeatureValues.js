@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -14,9 +17,6 @@ const viewFeaturePage = require('@pages/BO/catalog/features/view');
 
 // Import data
 const {Features} = require('@data/demo/features');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_features_filterFeatureValues';
 

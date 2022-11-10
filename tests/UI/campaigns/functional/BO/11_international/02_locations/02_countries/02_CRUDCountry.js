@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
@@ -20,9 +25,6 @@ const foNewAddressesPage = require('@pages/FO/myAccount/addAddress');
 // Import data
 const CountryFaker = require('@data/faker/country');
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_countries_CRUDCountry';
 

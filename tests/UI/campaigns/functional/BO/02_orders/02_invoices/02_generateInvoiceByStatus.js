@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
@@ -15,9 +20,6 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
-
-// Test context imports
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_invoices_generateInvoiceByStatus';
 

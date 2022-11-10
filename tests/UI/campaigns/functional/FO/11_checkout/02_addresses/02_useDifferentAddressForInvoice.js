@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -29,9 +34,6 @@ const AddressFaker = require('@data/faker/address');
 const guestData = new CustomerFaker({password: ''});
 const deliveryAddress = new AddressFaker({country: 'France'});
 const invoiceAddress = new AddressFaker({country: 'France'});
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // context
 const baseContext = 'functional_FO_checkout_addresses_useDifferentAddressForInvoice';

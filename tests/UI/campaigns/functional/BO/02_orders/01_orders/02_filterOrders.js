@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Import login steps
@@ -16,9 +21,6 @@ const {Orders} = require('@data/demo/orders');
 
 const today = getDateFormat('yyyy-mm-dd');
 const dateToCheck = getDateFormat('mm/dd/yyyy');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_filterOrders';
 // Import expect from chai

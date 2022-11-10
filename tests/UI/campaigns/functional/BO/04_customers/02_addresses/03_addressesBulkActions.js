@@ -1,10 +1,15 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -14,9 +19,6 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
 const AddressFaker = require('@data/faker/address');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_addresses_addressesBulkActions';
 

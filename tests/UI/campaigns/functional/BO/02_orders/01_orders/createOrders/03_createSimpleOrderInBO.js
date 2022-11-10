@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -50,9 +53,6 @@ const orderToMake = {
   orderStatus: Statuses.paymentAccepted,
   totalPrice: (Products.demo_5.price * 4) * 1.2, // Price tax included
 };
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_createSimpleOrderInBO';
 

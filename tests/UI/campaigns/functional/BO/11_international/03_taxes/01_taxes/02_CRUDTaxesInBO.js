@@ -1,8 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -11,9 +16,6 @@ const taxesPage = require('@pages/BO/international/taxes');
 const addTaxPage = require('@pages/BO/international/taxes/add');
 
 const TaxFaker = require('@data/faker/tax');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_taxes_taxes_CRUDTaxesInBO';
 

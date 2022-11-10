@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
@@ -25,9 +30,6 @@ const contactUsPage = require('@pages/FO/contactUs');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // context
 const baseContext = 'functional_FO_orderConfirmation_contactUs';

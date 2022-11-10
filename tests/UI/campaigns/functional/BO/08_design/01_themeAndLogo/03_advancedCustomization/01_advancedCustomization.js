@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
@@ -20,9 +25,6 @@ const homePage = require('@pages/FO/home');
 
 // Import demo data
 const {themeCustomization} = require('@data/demo/modules');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
 
