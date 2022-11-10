@@ -37,9 +37,21 @@ admin_products_search:
   path: /
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.product
-    redirectRoute: admin_products_v2_index
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchGridAction
+    _legacy_controller: AdminProducts
+
+admin_products_reset_grid_search:
+  path: /reset_grid_search
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::resetGridSearchAction
+    _legacy_controller: AdminProducts
+
+admin_products_grid_category_filter:
+  path: /grid_category_filter
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::gridCategoryFilterAction
     _legacy_controller: AdminProducts
 
 admin_products_v2_create:
