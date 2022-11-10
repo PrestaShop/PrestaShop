@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 trans('404 error', 'Shop.Navigation');
-trans('Best sellers', 'Shop.Theme.Catalog');
+trans('Best sellers', 'Shop.Navigation');
 trans('Contact us', 'Shop.Navigation');
 trans('Brands', 'Shop.Navigation');
 trans('New products', 'Shop.Navigation');
