@@ -71,3 +71,4 @@ parameters:
     - PHP_VERSION_ID
     - Memcached::HAVE_IGBINARY
     - PaymentModuleCore::DEBUG_MODE
+    - _PS_ALLOW_MULTI_STATEMENTS_QUERIES_

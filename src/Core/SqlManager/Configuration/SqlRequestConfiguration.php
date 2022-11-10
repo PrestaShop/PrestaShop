@@ -38,6 +38,10 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\SqlRequestSettings;
  */
 final class SqlRequestConfiguration implements DataConfigurationInterface
 {
+    private const DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+    private const CUSTOM_DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
+    private const PATTERN = '/(define\(\'_PS_ALLOW_MULTI_STATEMENTS_QUERIES_\', )([a-zA-Z]+)(\);)/Ui';
+
     /**
      * @var CommandBusInterface
      */
@@ -70,6 +74,7 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
 
         return [
             'default_file_encoding' => $sqlRequestSettings->getFileEncoding(),
+            'enable_multi_statements' => $this->getMultiStatementsStatus(),
         ];
     }
 
@@ -90,6 +95,16 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
             } catch (SqlRequestSettingsConstraintException $e) {
                 $errors = $this->handleUpdateException($e);
             }
+
+            if ($configuration['enable_multi_statements'] !== $this->getMultiStatementsStatus()
+                && !$this->setMultiStatementsStatus($configuration['enable_multi_statements'])
+            ) {
+                $errors[] = [
+                    'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
+                    'domain' => 'Admin.Advparameters.Notification',
+                    'parameters' => [self::DEFINES_FILE],
+                ];
+            }
         }
 
         return $errors;
@@ -101,6 +116,40 @@ final class SqlRequestConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         return isset($configuration['default_file_encoding']);
+    }
+
+    private function getMultiStatementsStatus(): bool
+    {
+        return defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_') && _PS_ALLOW_MULTI_STATEMENTS_QUERIES_;
+    }
+
+    private function setMultiStatementsStatus(bool $status): bool
+    {
+        $replacement = '$1' . ($status ? 'true' : 'false') . '$3';
+
+        $cleanedContent = false;
+        $file = self::CUSTOM_DEFINES_FILE;
+        if (is_readable(self::CUSTOM_DEFINES_FILE)) {
+            $content = file_get_contents(self::CUSTOM_DEFINES_FILE);
+            $cleanedContent = php_strip_whitespace(self::CUSTOM_DEFINES_FILE);
+        }
+
+        if (!$cleanedContent || !preg_match(self::PATTERN, $cleanedContent)) {
+            $content = file_get_contents(self::DEFINES_FILE);
+            $cleanedContent = php_strip_whitespace(self::DEFINES_FILE);
+            $file = self::DEFINES_FILE;
+            if (!$cleanedContent || !preg_match(self::PATTERN, $cleanedContent)) {
+                return false;
+            }
+        }
+
+        $status = file_put_contents($file, preg_replace(self::PATTERN, $replacement, $content));
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($file);
+        }
+
+        return $status !== false;
     }
 
     /**
