@@ -27,11 +27,12 @@ let browserContext;
 let page;
 
 let numberOfProducts = 0;
+let numberOfFilteredProductsAfterDuplicate = 0;
 
 /*
 Go to products page
 Create 2 products
-Enable/Disable/Delete products by bulk actions
+Enable/Disable/Duplicate/Delete products by bulk actions
 */
 
 describe('BO - Catalog - Products : Bulk actions products', async () => {
@@ -128,6 +129,38 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
 
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts + 2);
+    });
+  });
+
+  describe('Bulk duplicate products', async () => {
+    it('should filter products by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDuplicate', baseContext);
+
+      await productsPage.filterProducts(page, 'name', 'TO DELETE');
+
+      const textColumn = await productsPage.getProductNameFromList(page, 1);
+      await expect(textColumn).to.contains('TO DELETE');
+    });
+
+    it('should duplicate products by bulk actions', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDuplicate', baseContext);
+
+      const duplicateTextResult = await productsPage.duplicateAllProductsWithBulkActions(page);
+      await expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
+
+
+      numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
+      await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDuplicate', baseContext);
+
+      const numberOfProductsAfterDuplicate = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterDuplicate)
+        .to
+        .be
+        .equal(numberOfProducts + numberOfFilteredProductsAfterDuplicate);
     });
   });
 
