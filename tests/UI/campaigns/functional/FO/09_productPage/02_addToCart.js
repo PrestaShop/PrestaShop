@@ -1,8 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
@@ -21,9 +26,6 @@ const boAddProductPage = require('@pages/BO/catalog/products/add');
 // Import data
 const {Products} = require('@data/demo/products');
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_productPage_addToCart';
 

@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -16,9 +19,6 @@ const viewCustomerPage = require('@pages/BO/customers/view');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_searchViewCustomer';
 

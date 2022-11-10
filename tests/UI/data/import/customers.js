@@ -7,14 +7,15 @@ const records = [];
 
 function createRecord() {
   for (let i = 0; i < 10; i++) {
+    const lastName = faker.name.lastName();
     records.push({
       id: i + 3,
       active: faker.datatype.number({min: 0, max: 1}),
       title: faker.datatype.number({min: 1, max: 2}),
-      email: `test.${this.lastName}@prestashop.com`,
+      email: `test.${lastName}@prestashop.com`,
       password: faker.internet.password(),
       birthdate: faker.date.between('1950-01-01', '2000-12-31').toISOString().slice(0, 10),
-      lastName: faker.name.lastName(),
+      lastName,
       firstName: faker.name.firstName(),
       newsletter: faker.datatype.number({min: 0, max: 1}),
       optIn: faker.datatype.number({min: 0, max: 1}),

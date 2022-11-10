@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const basicHelper = require('@utils/basicHelper');
 const {getDateFormat} = require('@utils/date');
@@ -34,9 +39,6 @@ const Address = require('@data/demo/address');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 

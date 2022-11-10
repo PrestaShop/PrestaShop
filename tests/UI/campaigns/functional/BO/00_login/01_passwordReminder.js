@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 
 // Import common tests
@@ -16,9 +21,6 @@ const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_login_passwordReminder';
 

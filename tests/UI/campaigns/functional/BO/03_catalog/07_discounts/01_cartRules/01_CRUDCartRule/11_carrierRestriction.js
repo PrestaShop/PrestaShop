@@ -1,7 +1,10 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -25,9 +28,6 @@ const CartRuleFaker = require('@data/faker/cartRule');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
-
-// import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_carrierRestriction';
 

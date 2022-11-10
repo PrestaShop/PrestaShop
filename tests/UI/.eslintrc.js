@@ -49,6 +49,8 @@ module.exports = {
     'import/no-unresolved': 0,
     'import/extensions': ['off', 'never'],
     'no-use-before-define': 0,
+    // Remove after Typescript Migration
+    'import/no-import-module-exports': 0,
   },
   overrides: [
     {

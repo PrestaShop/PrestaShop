@@ -1,16 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import utils
-const helper = require('@utils/helpers');
-
 // Import common tests
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');

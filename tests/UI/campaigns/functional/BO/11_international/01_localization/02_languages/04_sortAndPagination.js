@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
 
@@ -15,9 +20,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const languagesPage = require('@pages/BO/international/languages');
 const addLanguagePage = require('@pages/BO/international/languages/add');
-
-// Import pages
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_localization_languages_sortAndPagination';
 
