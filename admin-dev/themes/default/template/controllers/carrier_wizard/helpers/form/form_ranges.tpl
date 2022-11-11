@@ -114,7 +114,7 @@
 					</tr>
 					{/foreach}
 					<tr class="package_weight">
-						<td>{l s='Package weight' d='Admin.Actions'}</td>
+						<td>{l s='Package weight' d='Admin.Shipping.Feature'}</td>
 						<td>&nbsp;</td>
 						{foreach from=$ranges name=ranges key=r item=range}
 								<td>
