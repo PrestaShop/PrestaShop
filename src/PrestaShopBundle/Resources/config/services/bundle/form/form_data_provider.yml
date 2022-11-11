@@ -7,11 +7,6 @@ services:
     arguments:
       - '@prestashop.adapter.shipping_preferences.handling_configuration'
 
-  prestashop.admin.shipping_preferences.package.data_provider:
-    class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesPackageFormDataProvider'
-    arguments:
-      - '@prestashop.adapter.shipping_preferences.package_configuration'
-
   prestashop.admin.shipping_preferences.carrier_options.data_provider:
     class: 'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\PreferencesCarrierOptionsFormDataProvider'
     arguments:

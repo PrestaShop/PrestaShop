@@ -113,6 +113,19 @@
 						{/foreach}
 					</tr>
 					{/foreach}
+					<tr class="package_weight">
+						<td>{l s='Package weight' d='Admin.Actions'}</td>
+						<td>&nbsp;</td>
+						{foreach from=$ranges name=ranges key=r item=range}
+								<td>
+                  <div class="input-group fixed-width-md">
+                    <span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
+                    <input type="text" class="form-control" name="package_weight[{$range.id_range|intval}]"
+                            {if isset($package_weight_by_range[$range.id_range]) && $package_weight_by_range[$range.id_range]} value="{$package_weight_by_range[$range.id_range]|string_format:'%.6f'}" {else} value="" {/if} />
+                  </div>
+								</td>
+						{/foreach}
+					</tr>
 					<tr class="delete_range">
 						<td>&nbsp;</td>
 						<td>&nbsp;</td>

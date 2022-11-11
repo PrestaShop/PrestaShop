@@ -50,10 +50,9 @@ class PreferencesController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $handlingForm = $this->getHandlingFormHandler()->getForm();
-        $packageForm = $this->getPackageFormHandler()->getForm();
         $carrierOptionsForm = $this->getCarrierOptionsFormHandler()->getForm();
 
-        return $this->renderForm($handlingForm, $carrierOptionsForm, $packageForm, $request);
+        return $this->renderForm($handlingForm, $carrierOptionsForm, $request);
     }
 
     /**
@@ -91,7 +90,7 @@ class PreferencesController extends FrameworkBundleAdminController
             $this->flashErrors($saveErrors);
         }
 
-        return $this->renderForm($this->getHandlingFormHandler()->getForm(), $form, $this->getPackageFormHandler()->getForm(), $request);
+        return $this->renderForm($this->getHandlingFormHandler()->getForm(), $form, $request);
     }
 
     /**
@@ -128,44 +127,7 @@ class PreferencesController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->renderForm($form, $this->getCarrierOptionsFormHandler()->getForm(), $this->getPackageFormHandler()->getForm(), $request);
-    }
-
-    /**
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_shipping_preferences")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function processPackageFormAction(Request $request)
-    {
-        $formHandler = $this->getPackageFormHandler();
-        $this->dispatchHook(
-            'actionAdminShippingPreferencesControllerPostProcessPackageBefore',
-            ['controller' => $this]
-        );
-
-        $this->dispatchHook('actionAdminShippingPreferencesControllerPostProcessBefore', ['controller' => $this]);
-
-        $form = $formHandler->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
-
-            if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-
-                return $this->redirectToRoute('admin_shipping_preferences');
-            }
-        }
-
-        return $this->renderForm($this->getHandlingFormHandler()->getForm(), $this->getCarrierOptionsFormHandler()->getForm(),$form, $request);
+        return $this->renderForm($form, $this->getCarrierOptionsFormHandler()->getForm(), $request);
     }
 
     /**
@@ -179,14 +141,6 @@ class PreferencesController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    protected function getPackageFormHandler(): FormHandlerInterface
-    {
-        return $this->get('prestashop.admin.shipping_preferences.package.form_handler');
-    }
-
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getCarrierOptionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.shipping_preferences.carrier_options.form_handler');
@@ -195,12 +149,11 @@ class PreferencesController extends FrameworkBundleAdminController
     /**
      * @param FormInterface $handlingForm
      * @param FormInterface $carrierOptionsForm
-     * @param FormInterface $packageForm
      * @param Request $request
      *
      * @return Response|null
      */
-    protected function renderForm($handlingForm, $carrierOptionsForm, $packageForm, $request)
+    protected function renderForm($handlingForm, $carrierOptionsForm, $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
@@ -209,7 +162,6 @@ class PreferencesController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'handlingForm' => $handlingForm->createView(),
-            'packageForm' => $packageForm->createView(),
             'carrierOptionsForm' => $carrierOptionsForm->createView(),
         ]);
     }

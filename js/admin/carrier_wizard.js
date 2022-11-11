@@ -107,6 +107,7 @@ function displayRangeType()
 	{
 		string = string_weight;
 		$('.weight_unit').show();
+		$('.package_weight').show();
 		$('.price_unit').hide();
 	}
 	else
@@ -114,6 +115,7 @@ function displayRangeType()
 		string = string_price;
 		$('.price_unit').show();
 		$('.weight_unit').hide();
+    $('.package_weight').hide();
 	}
 	is_freeClick($('input[name="is_free"]:checked'));
 	$('.range_type').html(string);

@@ -39,6 +39,10 @@ class RangeWeightCore extends ObjectModel
      * @var float
      */
     public $delimiter2;
+    /**
+     * @var float
+     */
+    public $package_weight = 0.1;
 
     /**
      * @see ObjectModel::$definition
@@ -50,6 +54,7 @@ class RangeWeightCore extends ObjectModel
             'id_carrier' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'delimiter1' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true],
             'delimiter2' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true],
+            'package_weight' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => false],
         ],
     ];
 

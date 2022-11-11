@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class CarrierCore extends ObjectModel
@@ -156,6 +157,7 @@ class CarrierCore extends ObjectModel
 
     protected static $price_by_weight = [];
     protected static $price_by_weight2 = [];
+    protected static $package_weight_by_weight = [];
     protected static $price_by_price = [];
     protected static $price_by_price2 = [];
 
@@ -204,15 +206,39 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * @param float $total_weight
+     * Adds package weight searching into range
+     *
+     * @param int $id_carrier Carrier ID
+     * @param float $total_weight Total weight
+     *
      * @return float
      */
-    public static function addPackingWeight(float $total_weight): float
+    public static function addPackingWeight($id_carrier, $total_weight): float
     {
-        $package_weight = (float) Configuration::get('PS_PACKAGE_WEIGHT');
-        if ($package_weight > 0) {
-            $total_weight += $package_weight;
+        $cache_key = $id_carrier . '_package_weight_' . $total_weight;
+
+        PrestaShopLogger::addLog('Wieght ' . $total_weight);
+        if (!isset(self::$package_weight_by_weight[$cache_key])) {
+            $sql = 'SELECT w.`package_weight`
+                    FROM `' . _DB_PREFIX_ . 'delivery` d
+                    LEFT JOIN `' . _DB_PREFIX_ . 'range_weight` w ON (d.`id_range_weight` = w.`id_range_weight`)
+                    WHERE ' . (float) $total_weight . ' >= w.`delimiter1`
+                        AND ' . (float) $total_weight . ' < w.`delimiter2`
+                        AND d.`id_carrier` = ' . $id_carrier . '
+                        ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
+                    ORDER BY w.`delimiter1` ASC';
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+            if (!isset($result['package_weight'])) {
+                self::$package_weight_by_weight[$cache_key] = self::getMaxPackageWeightByWeight($id_carrier);
+            } else {
+                self::$package_weight_by_weight[$cache_key] = $result['package_weight'];
+            }
         }
+
+        if (self::$package_weight_by_weight[$cache_key] > 0) {
+            $total_weight += self::$package_weight_by_weight[$cache_key];
+        }
+
         return $total_weight;
     }
 
@@ -274,8 +300,8 @@ class CarrierCore extends ObjectModel
         Carrier::cleanPositions();
 
         return Db::getInstance()->delete('cart_rule_carrier', 'id_carrier = ' . (int) $this->id) &&
-                Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference) &&
-                $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
+            Db::getInstance()->delete('module_carrier', 'id_reference = ' . (int) $this->id_reference) &&
+            $this->deleteTaxRulesGroup(Shop::getShops(true, null, true));
     }
 
     /**
@@ -298,9 +324,9 @@ class CarrierCore extends ObjectModel
      */
     public function getDeliveryPriceByWeight($total_weight, $id_zone)
     {
-        $total_weight = self::addPackingWeight($total_weight);
-
         $id_carrier = (int) $this->id;
+        $total_weight = self::addPackingWeight($id_carrier, $total_weight);
+
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight[$cache_key])) {
             $sql = 'SELECT d.`price`
@@ -339,7 +365,7 @@ class CarrierCore extends ObjectModel
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
-        $total_weight = self::addPackingWeight($total_weight);
+        $total_weight = self::addPackingWeight($id_carrier, $total_weight);
         $id_carrier = (int) $id_carrier;
         $cache_key = $id_carrier . '_' . $total_weight . '_' . $id_zone;
         if (!isset(self::$price_by_weight2[$cache_key])) {
@@ -380,6 +406,32 @@ class CarrierCore extends ObjectModel
                     INNER JOIN `' . _DB_PREFIX_ . 'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
                     WHERE d.`id_zone` = ' . (int) $id_zone . '
                         AND d.`id_carrier` = ' . (int) $this->id . '
+                        ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
+                    ORDER BY w.`delimiter2` DESC';
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+            Cache::store($cache_id, $result);
+
+            return $result;
+        }
+
+        return Cache::retrieve($cache_id);
+    }
+
+    /**
+     * Get maximum package weight when range weight is used.
+     *
+     * @param int $id_carrier Carrier ID
+     *
+     * @return false|string|null Maximum package weight
+     */
+    public static function getMaxPackageWeightByWeight($id_carrier)
+    {
+        $cache_id = 'Carrier::getMaxPackageWeightByWeight_' . (int) $id_carrier;
+        if (!Cache::isStored($cache_id)) {
+            $sql = 'SELECT w.`package_weight`
+                    FROM `' . _DB_PREFIX_ . 'delivery` d
+                    INNER JOIN `' . _DB_PREFIX_ . 'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
+                    WHERE d.`id_carrier` = ' . (int) $id_carrier . '
                         ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
                     ORDER BY w.`delimiter2` DESC';
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -547,7 +599,7 @@ class CarrierCore extends ObjectModel
                 FROM `' . _DB_PREFIX_ . 'carrier` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'carrier_lang` cl ON (c.`id_carrier` = cl.`id_carrier` AND cl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('cl') . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)' .
-                ($id_zone ? 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = ' . (int) $id_zone . ')' : '') . '
+            ($id_zone ? 'LEFT JOIN `' . _DB_PREFIX_ . 'zone` z ON (z.`id_zone` = ' . (int) $id_zone . ')' : '') . '
                 ' . Shop::addSqlAssociation('carrier', 'c') . '
                 WHERE c.`deleted` = ' . ($delete ? '1' : '0');
         if ($active) {
@@ -903,9 +955,9 @@ class CarrierCore extends ObjectModel
     /**
      * Gets a specific group.
      *
-     * @since 1.5.0
-     *
      * @return array Group
+     *
+     * @since 1.5.0
      */
     public function getGroups()
     {
@@ -1308,11 +1360,11 @@ class CarrierCore extends ObjectModel
     /**
      * Returns the Tax rates associated to the Carrier.
      *
-     * @since 1.5
-     *
      * @param Address $address Address optional
      *
      * @return float Total Tax rate for this Carrier
+     *
+     * @since 1.5
      */
     public function getTaxesRate(Address $address = null)
     {
@@ -1328,11 +1380,11 @@ class CarrierCore extends ObjectModel
     /**
      * Returns the taxes calculator associated to the carrier.
      *
-     * @since 1.5
-     *
      * @param Address $address Address
      *
      * @return TaxCalculator|AverageTaxOfProductsTaxCalculator Tax calculator object
+     *
+     * @since 1.5
      */
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
@@ -1348,11 +1400,11 @@ class CarrierCore extends ObjectModel
     /**
      * This tricky method generates a SQL clause to check if ranged data are overloaded by multishop.
      *
-     * @since 1.5.0
-     *
      * @param string $range_table Range table
      *
      * @return string SQL quoer to get the delivery range table in this Shop(Group)
+     *
+     * @since 1.5.0
      */
     public static function sqlDeliveryRangeShop($range_table, $alias = 'd')
     {
@@ -1382,12 +1434,12 @@ class CarrierCore extends ObjectModel
     /**
      * Moves a carrier.
      *
-     * @since 1.5.0
-     *
      * @param bool $way Up (1) or Down (0)
      * @param int|null $position Current position of the Carrier
      *
      * @return bool Whether the update was successful
+     *
+     * @since 1.5.0
      */
     public function updatePosition($way, $position)
     {
@@ -1417,10 +1469,10 @@ class CarrierCore extends ObjectModel
             SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
             WHERE `position`
             ' . ($way
-                ? '> ' . (int) $moved_carrier['position'] . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $moved_carrier['position'] . ' AND `position` >= ' . (int) $position . '
+                    ? '> ' . (int) $moved_carrier['position'] . ' AND `position` <= ' . (int) $position
+                    : '< ' . (int) $moved_carrier['position'] . ' AND `position` >= ' . (int) $position . '
             AND `deleted` = 0'))
-        && Db::getInstance()->execute('
+            && Db::getInstance()->execute('
             UPDATE `' . _DB_PREFIX_ . 'carrier`
             SET `position` = ' . (int) $position . '
             WHERE `id_carrier` = ' . (int) $moved_carrier['id_carrier']);
@@ -1430,9 +1482,9 @@ class CarrierCore extends ObjectModel
      * Reorder Carrier positions
      * Called after deleting a Carrier.
      *
-     * @since 1.5.0
-     *
      * @return bool $return
+     *
+     * @since 1.5.0
      */
     public static function cleanPositions()
     {
@@ -1458,9 +1510,9 @@ class CarrierCore extends ObjectModel
     /**
      * Gets the highest carrier position.
      *
-     * @since 1.5.0
-     *
      * @return int $position
+     *
+     * @since 1.5.0
      */
     public static function getHigherPosition()
     {
@@ -1475,18 +1527,18 @@ class CarrierCore extends ObjectModel
     /**
      * For a given {product, warehouse}, gets the carrier available.
      *
-     * @since 1.5.0
-     *
      * @param Product $product The id of the product, or an array with at least the package size and weight
      * @param int|null $id_warehouse Warehouse ID
      * @param int|null $id_address_delivery Delivery Address ID
-     * @param int|null$id_shop Shop ID
+     * @param int|null $id_shop Shop ID
      * @param CartCore|null $cart Cart object
      * @param array|null $error contain an error message if an error occurs
      *
      * @return array Available Carriers
      *
      * @throws PrestaShopDatabaseException
+     *
+     * @since 1.5.0
      */
     public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = [])
     {
@@ -1638,12 +1690,12 @@ class CarrierCore extends ObjectModel
     /**
      * Assign one (ore more) group to all carriers.
      *
-     * @since 1.5.0
-     *
      * @param int|array $id_group_list Group ID or array of Group IDs
      * @param array $exception List of Carrier IDs to ignore
      *
      * @return bool
+     *
+     * @since 1.5.0
      */
     public static function assignGroupToAllCarriers($id_group_list, $exception = [])
     {
