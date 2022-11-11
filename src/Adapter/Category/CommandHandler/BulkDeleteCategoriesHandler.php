@@ -63,7 +63,7 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
                 throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true)));
             }
 
-            $deletedCategoryIdsByParent[(int) $category->id_parent] = [$categoryId->getValue()];
+            $deletedCategoryIdsByParent[(int) $category->id_parent][] = $categoryId->getValue();
         }
 
         if (empty($deletedCategoryIdsByParent)) {
