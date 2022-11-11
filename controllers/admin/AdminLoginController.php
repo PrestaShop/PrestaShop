@@ -318,9 +318,9 @@ class AdminLoginControllerCore extends AdminController
                 die(json_encode([
                     'hasErrors' => false,
                     'confirm' => $this->trans(
-                        'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', 
+                        'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
                         [
-                            '%email%' => $email
+                            '%email%' => $email,
                         ], 
                         'Admin.Login.Notification'
                     ),
