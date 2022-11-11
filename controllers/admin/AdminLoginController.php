@@ -321,7 +321,7 @@ class AdminLoginControllerCore extends AdminController
                         'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.',
                         [
                             '%email%' => $email,
-                        ], 
+                        ],
                         'Admin.Login.Notification'
                     ),
                 ]));
