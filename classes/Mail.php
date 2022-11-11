@@ -412,7 +412,7 @@ class MailCore extends ObjectModel
             // get templatePath
             $templatePathDirectories = explode(DIRECTORY_SEPARATOR, $templatePath);
             $pos = array_search('modules', $templatePathDirectories);
-            if ( $pos && array_key_exists($pos + 1, $templatePathDirectories)){
+            if ($pos && array_key_exists($pos + 1, $templatePathDirectories)) {
                 $moduleName = $templatePathDirectories[$pos + 1];
             }
 
