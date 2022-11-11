@@ -47,7 +47,7 @@ class MessagesPerThreadKpi implements KpiInterface
         $helper->icon = 'message';
         $helper->color = 'color3';
         $helper->title = $translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $translator->trans('30 day', [], 'Admin.Global');
+        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
