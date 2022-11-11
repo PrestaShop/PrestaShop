@@ -26,8 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
-use Category;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryDeleteMode;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use Shop;
 
@@ -42,17 +46,33 @@ abstract class AbstractDeleteCategoryHandler
     protected $homeCategoryId;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @param int $homeCategoryId
+     * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(
-        int $homeCategoryId
+        int $homeCategoryId,
+        ProductRepository $productRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->homeCategoryId = $homeCategoryId;
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
-     * @deprecated
-     * @todo: mark as deprecated properly
+     * @deprecated since 8.1.0 and will be removed in next major version.
+     * @see updateProductCategories instead
      *
      * Handle products category after its deletion.
      *
@@ -114,16 +134,18 @@ abstract class AbstractDeleteCategoryHandler
                 continue;
             }
 
-            //@todo: use repository
-            if (!Category::existsInDatabase($parentId)) {
+            try {
+                // check if the found parent category exists
+                $this->categoryRepository->assertCategoryExists(new CategoryId($parentId));
+
+                return $parentId;
+            } catch (CategoryNotFoundException $e) {
                 // if category doesn't exist, we could continue trying to find another parent
                 // but most of the time this command will be run from BO, which is constructed in a way that
                 // all the deleted category ids will have the same parent,
                 // so there is no point looping and checking the same category id existence over again
                 return null;
             }
-
-            return $parentId;
         }
 
         return null;
@@ -149,15 +171,10 @@ abstract class AbstractDeleteCategoryHandler
      */
     private function updateProductsWithoutCategories(array $deletedCategoryIdsByParent, CategoryDeleteMode $mode): void
     {
-        $productsWithoutCategories = $this->findProductsWithoutCategories();
+        $productIdsWithoutCategories = $this->productRepository->findProductIdsWithoutCategories();
 
-        foreach ($productsWithoutCategories as $productWithoutCategory) {
-            //@todo: use ProductRepository->get()?
-            $product = new Product((int) $productWithoutCategory['id_product']);
-
-            if (!$product->id) {
-                continue;
-            }
+        foreach ($productIdsWithoutCategories as $productId) {
+            $product = $this->productRepository->get($productId);
 
             if ($mode->shouldRemoveProducts()) {
                 $product->delete();
@@ -178,35 +195,12 @@ abstract class AbstractDeleteCategoryHandler
      */
     private function updateProductsByDefaultCategories(array $deletedCategoryIdsByParent): void
     {
-        $affectedProductsByDefaultCategory = $this->findProductsByDefaultCategories($deletedCategoryIdsByParent);
+        $productIds = $this->findProductsByDefaultCategories($deletedCategoryIdsByParent);
 
-        foreach ($affectedProductsByDefaultCategory as $affectedProduct) {
-            $product = new Product((int) $affectedProduct['id_product']);
-            if (!$product->id) {
-                continue;
-            }
-
+        foreach ($productIds as $productId) {
+            $product = $this->productRepository->get($productId);
             $this->addProductDefaultCategory($product, (int) $product->id_category_default, $deletedCategoryIdsByParent);
         }
-    }
-
-    /**
-     * @todo: move to repository
-     *
-     * @return array
-     */
-    private function findProductsWithoutCategories(): array
-    {
-        $productsWithoutCategory = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
-
-        return $productsWithoutCategory ?? [];
     }
 
     /**
@@ -214,22 +208,15 @@ abstract class AbstractDeleteCategoryHandler
      *
      * @param array<int, int[]> $deletedCategoryIdsByParent
      *
-     * @return array
+     * @return ProductId[]
      */
     private function findProductsByDefaultCategories(array $deletedCategoryIdsByParent): array
     {
         $deletedCategoryIds = [];
         foreach ($deletedCategoryIdsByParent as $deletedIds) {
-            $deletedCategoryIds = array_merge($deletedCategoryIds, array_map('intval', $deletedIds));
+            $deletedCategoryIds = array_merge($deletedCategoryIds, $deletedIds);
         }
 
-        $affectedProducts = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE p.id_category_default IN (' . implode(',', $deletedCategoryIds) . ')
-		');
-
-        return $affectedProducts ?? [];
+        return $this->productRepository->findProductIdsByDefaultCategories($deletedCategoryIds);
     }
 }
