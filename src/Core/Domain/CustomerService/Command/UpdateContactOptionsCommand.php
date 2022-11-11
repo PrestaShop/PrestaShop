@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,32 +22,47 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/customer_threads' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
-{% endblock %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block orders_kpi %}
-    {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
-      { 'kpiRow': customerThreadKpi }
-    )) }}
-  {% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Command;
 
-  {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/list_header_html.twig' %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerThreadGrid} %}
+class UpdateContactOptionsCommand
+{
+    /**
+     * @return bool
+     */
+    private $allowFileUploading;
 
-  {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/contact_option.html.twig' %}
+    /**
+     * @var <int, string>
+     */
+    private $defaultMessage;
 
-{% endblock %}
+    /**
+     * @param $allowFileUploading
+     * @param <int, string> $defaultMessage
+     */
+    public function __construct($allowFileUploading, array $defaultMessage)
+    {
+        $this->allowFileUploading = $allowFileUploading;
+        $this->defaultMessage = $defaultMessage;
+    }
 
-{% block javascripts %}
-  {{ parent() }}
+    /**
+     * @return mixed
+     */
+    public function getAllowFileUploading()
+    {
+        return $this->allowFileUploading;
+    }
 
-  <script src="{{ asset('themes/new-theme/public/customer_thread.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
-
+    /**
+     * @return <int, string>
+     */
+    public function getDefaultMessage(): array
+    {
+        return $this->defaultMessage;
+    }
+}

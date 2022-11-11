@@ -82,3 +82,11 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary
+
+  prestashop.core.domain.customer_service.command_handler.update_contact_options_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateContactOptionsHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,32 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/customer_threads' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
-{% endblock %}
+declare(strict_types=1);
 
-{% block content %}
-  {% block orders_kpi %}
-    {{ render(controller(
-      'PrestaShopBundle:Admin\\Common:renderKpiRow',
-      { 'kpiRow': customerThreadKpi }
-    )) }}
-  {% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
 
-  {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/list_header_html.twig' %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerThreadGrid} %}
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand;
 
-  {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/contact_option.html.twig' %}
-
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/customer_thread.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
-
+interface UpdateContactOptionsInterface
+{
+    public function handle(UpdateContactOptionsCommand $command): void;
+}

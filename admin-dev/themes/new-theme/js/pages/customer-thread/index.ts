@@ -37,6 +37,7 @@ import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filt
 import ChoiceExtension from '@components/grid/extension/choice-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
+import TranslatableInput from '@js/components/translatable-input';
 
 const {$} = window;
 
@@ -56,4 +57,5 @@ $(() => {
   grid.addExtension(new SubmitRowActionExtension());
   grid.addExtension(new ChoiceExtension());
   grid.addExtension(new PositionExtension(grid));
+  new TranslatableInput();
 });
