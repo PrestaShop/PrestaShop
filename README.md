@@ -15,10 +15,10 @@ About PrestaShop
 PrestaShop is an Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][available-features].
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/92941405/138826023-3523bbbc-8d51-4997-92c7-607c237653c1.png" alt="PrestaShop 8.0 back office"/>
+  <img src="https://user-images.githubusercontent.com/2137763/201319765-9157f702-4970-4258-8390-1187de2ad587.png" alt="PrestaShop 8.0 back office"/>
 </p>
 
-This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.0), please go to [the download page][download] on the official PrestaShop site.
+This repository contains the source code of PrestaShop, which is intended for development and preview only. To download the latest stable public version of PrestaShop (currently, version 8.0), please go to [the releases page][download].
 
 
 About the 'develop' branch
@@ -43,7 +43,7 @@ You can find more information on our [System requirements][system-requirements] 
 Installation
 --------
 
-If you downloaded the source code from GitHub, read our guide on [installing PrestaShop for development][install-guide-dev]. If you intend to install a production shop, make sure to download the latest version from [our download page][download], then read the [install guide for users][install-guide].
+If you downloaded the source code from GitHub, read our guide on [installing PrestaShop for development][install-guide-dev]. If you intend to install a production shop, make sure to download the latest version from [our releases page][download], then read the [install guide for users][install-guide].
 
 Docker compose
 --------
@@ -123,12 +123,12 @@ PrestaShop is a very extensible e-commerce platform, both through modules and th
 Community forums
 --------
 
-You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [the PrestaShop forums][forums] or on the [PrestaShop Slack channel][chat].
+You can discuss about e-commerce, help other merchants and get help, and contribute to improving PrestaShop together with the PrestaShop community on [PrestaShop Slack channel][chat] or on the [the PrestaShop forums][forums].
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
 
 [available-features]: https://www.prestashop.com/en/online-store-builder
-[download]: https://www.prestashop.com/en/download
+[download]: https://github.com/PrestaShop/PrestaShop/releases
 [forums]: https://www.prestashop.com/forums/
 [chat]: https://www.prestashop-project.org/slack/
 [user-doc]: https://doc.prestashop.com
@@ -139,16 +139,16 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [user-guide]: https://docs.prestashop-project.org/1.7-documentation/user-guide
 [updating-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/updating-prestashop
 [merchant-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/merchants-guide
-[faq-17]: https://devdocs.prestashop.com/8/faq/
+[faq-17]: https://devdocs.prestashop-project.org/8/faq/
 [sysadmin-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide
 [contributors-md]: CONTRIBUTORS.md
-[example-nginx]: https://devdocs.prestashop.com/8/basics/installation/nginx/
+[example-nginx]: https://devdocs.prestashop-project.org/8/basics/installation/nginx/
 [docker-compose]: https://docs.docker.com/compose/
-[install-guide-dev]: https://devdocs.prestashop.com/8/basics/installation/
-[system-requirements]: https://devdocs.prestashop.com/8/basics/installation/system-requirements/
+[install-guide-dev]: https://devdocs.prestashop-project.org/8/basics/installation/
+[system-requirements]: https://devdocs.prestashop-project.org/8/basics/installation/system-requirements/
 [install-guide]: https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop
-[devdocs]: https://devdocs.prestashop.com/
+[devdocs]: https://devdocs.prestashop-project.org/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
-[reporting-issues]: https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/
-[modules-devdocs]: https://devdocs.prestashop.com/8/modules/
-[themes-devdocs]: https://devdocs.prestashop.com/8/themes/
+[reporting-issues]: https://devdocs.prestashop-project.org/8/contribute/contribute-reporting-issues/
+[modules-devdocs]: https://devdocs.prestashop-project.org/8/modules/
+[themes-devdocs]: https://devdocs.prestashop-project.org/8/themes/
