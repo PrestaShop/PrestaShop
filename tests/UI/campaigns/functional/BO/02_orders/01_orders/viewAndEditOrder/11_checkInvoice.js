@@ -166,10 +166,6 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
   // Pre-condition - Create 4 products
   [
     virtualProduct,
@@ -179,6 +175,10 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   ].forEach((product, index) => {
     describe(`PRE-TEST: Create product '${product.name}'`, async () => {
       if (index === 0) {
+        it('should login in BO', async function () {
+          await loginCommon.loginBO(this, page);
+        });
+
         it('should go to \'Catalog > Products\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
