@@ -38,3 +38,7 @@ trans('This page benefits from increased performance and includes new features s
 // Product multi store feature flag in 8.0
 trans('New product page - Multistore', 'Admin.Advparameters.Feature');
 trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
+
+// Legacy link feature flags
+trans('Attribute groups', 'Admin.Advparameters.Feature');
+trans('Enable or disable the migrated attribute groups page.', 'Admin.Advparameters.Help');

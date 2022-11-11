@@ -5,7 +5,8 @@ admin_attribute_groups_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::indexAction'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups
+    _legacy_link: AdminAttributesGroups
+    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_search:
   path: /
@@ -13,9 +14,10 @@ admin_attribute_groups_search:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributeGroups:submitFilterattribute_group
+    _legacy_link: AdminAttributeGroups:submitFilterattribute_group
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attribute_group
     redirectRoute: admin_attribute_groups_index
+    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_create:
   path: /new
@@ -24,7 +26,8 @@ admin_attribute_groups_create:
     # todo: implement create
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::indexAction'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributeGroups:addattribute_group
+    _legacy_link: AdminAttributeGroups:addattribute_group
+    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_view:
   path: /{attributeGroupId}/view
@@ -32,7 +35,8 @@ admin_attribute_groups_view:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeController::indexAction'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:viewattribute_group
+    _legacy_link: AdminAttributesGroups:viewattribute_group
+    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -44,7 +48,8 @@ admin_attribute_groups_edit:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::editAction'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:updateattribute_group
+    _legacy_link: AdminAttributesGroups:updateattribute_group
+    _legacy_feature_flag: attribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -56,7 +61,8 @@ admin_attribute_groups_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::deleteAction'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:deleteattribute_group
+    _legacy_feature_flag: attribute_group
+    _legacy_link: AdminAttributesGroups:deleteattribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -68,7 +74,8 @@ admin_attribute_groups_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::bulkDeleteAction'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:submitBulkdeleteattribute_group
+    _legacy_link: AdminAttributesGroups:submitBulkdeleteattribute_group
+    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_export:
   path: /export
@@ -76,7 +83,8 @@ admin_attribute_groups_export:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::exportAction'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:exportattribute_group
+    _legacy_link: AdminAttributesGroups:exportattribute_group
+    _legacy_feature_flag: attribute_group
 
 admin_attribute_groups_update_position:
   path: /update-position
@@ -84,4 +92,5 @@ admin_attribute_groups_update_position:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::updatePositionAction'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:updateGroupsPositions
+    _legacy_link: AdminAttributesGroups:updateGroupsPositions
+    _legacy_feature_flag: attribute_group
