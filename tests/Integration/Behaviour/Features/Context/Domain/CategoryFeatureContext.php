@@ -905,11 +905,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     private function getCategory(int $categoryId): Category
     {
-        // There is no position in EditableCategory class, so we ensure its correct by loading legacy ObjectModel
+        // There is no position in EditableCategory class, so we ensure it is correct by loading legacy ObjectModel
         $category = new Category($categoryId);
 
         if ((int) $category->id !== $categoryId) {
-            throw new RuntimeException(sprintf('Failed to load category with id %d', $categoryId, ));
+            throw new RuntimeException(sprintf('Failed to load category with id %d', $categoryId));
         }
 
         return $category;
