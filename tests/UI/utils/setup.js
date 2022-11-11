@@ -47,7 +47,6 @@ after(async function () {
   }
 });
 
-
 /**
  * @function afterEach
  * @description Take a screenshot if a step is failed

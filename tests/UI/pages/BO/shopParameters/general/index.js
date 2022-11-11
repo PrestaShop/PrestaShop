@@ -18,9 +18,9 @@ class ShopParamsGeneral extends BOBasePage {
 
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
-    this.displaySuppliersToggleInput = toggle => `#form_display_suppliers_${toggle}`;
-    this.displayBrandsToggleInput = toggle => `#form_display_manufacturers_${toggle}`;
-    this.enableMultiStoreToggleInput = toggle => `#form_multishop_feature_active_${toggle}`;
+    this.displaySuppliersToggleInput = (toggle) => `#form_display_suppliers_${toggle}`;
+    this.displayBrandsToggleInput = (toggle) => `#form_display_manufacturers_${toggle}`;
+    this.enableMultiStoreToggleInput = (toggle) => `#form_multishop_feature_active_${toggle}`;
     this.saveFormButton = '#form-preferences-save-button';
   }
 

@@ -224,6 +224,9 @@ class AdminGroupsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     */
     public function renderView()
     {
         $this->context = Context::getContext();
@@ -326,6 +329,12 @@ class AdminGroupsControllerCore extends AdminController
         return $value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>';
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($group = $this->loadObject(true))) {

@@ -22,9 +22,9 @@ class AddTax extends BOBasePage {
     this.nameEnInput = '#tax_name_1';
     this.nameFrInput = '#tax_name_2';
     this.inputLangDropdownButton = 'button#tax_name_dropdown';
-    this.inputLangChoiceSpan = lang => `div.dropdown-menu span[data-locale='${lang}']`;
+    this.inputLangChoiceSpan = (lang) => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
-    this.statusToggleInput = toggle => `#tax_is_enabled_${toggle}`;
+    this.statusToggleInput = (toggle) => `#tax_is_enabled_${toggle}`;
     this.saveTaxButton = '#save-button';
   }
 

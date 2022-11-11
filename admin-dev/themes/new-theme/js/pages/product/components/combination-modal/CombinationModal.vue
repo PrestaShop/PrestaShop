@@ -144,6 +144,7 @@
   import Router from '@components/router';
   import Vue from 'vue';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+  import PsModal from '@components/modal/modal';
   import History from './History.vue';
 
   export interface Combination {
@@ -248,6 +249,19 @@
         const iframeBody = <HTMLElement> this.getIframeDocument().body;
 
         this.applyIframeStyling();
+
+        // if form is not found it means that combination is missing
+        const editionForm = iframeBody.querySelector<HTMLFormElement>(ProductMap.combinations.editionForm);
+
+        if (!editionForm) {
+          // submitted combinations is set to true to update combination list if combination is not found
+          this.hasSubmittedCombinations = true;
+          this.closeModal();
+          const modal = new PsModal({id: 'combination-not-found-modal'});
+          modal.render(iframeBody.innerHTML);
+          modal.show();
+          return;
+        }
 
         this.selectedCombinationName = iframeBody.querySelector(
           ProductMap.combinations.combinationName,

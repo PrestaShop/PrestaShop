@@ -228,7 +228,7 @@ class CommonPage {
   async clearInput(page, selector) {
     await this.waitForVisibleSelector(page, selector);
     // eslint-disable-next-line no-return-assign,no-param-reassign
-    await page.$eval(selector, el => el.value = '');
+    await page.$eval(selector, (el) => el.value = '');
   }
 
   /**
@@ -274,7 +274,7 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async scrollTo(page, selector) {
-    await page.$eval(selector, el => el.scrollIntoView());
+    await page.$eval(selector, (el) => el.scrollIntoView());
   }
 
   /**
@@ -287,6 +287,18 @@ class CommonPage {
    */
   async selectByVisibleText(page, selector, textValue, force = false) {
     await page.selectOption(selector, {label: textValue.toString()}, {force});
+  }
+
+  /**
+   * Select option by value
+   * @param page {Page} Browser tab
+   * @param selector {string} String to locate the select
+   * @param valueToSelect {number} Value to select
+   * @param force {boolean} Forcing the value of the select
+   * @returns {Promise<void>}
+   */
+  async selectByValue(page, selector, valueToSelect, force = false) {
+    await page.selectOption(selector, {value: valueToSelect.toString()}, {force});
   }
 
   /**
@@ -374,7 +386,7 @@ class CommonPage {
   async setCheckedWithIcon(page, checkboxSelector, valueWanted = true) {
     if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       // The selector is not visible, that why '+ i' is required here
-      await page.$eval(`${checkboxSelector} + i`, el => el.click());
+      await page.$eval(`${checkboxSelector} + i`, (el) => el.click());
     }
   }
 
@@ -440,7 +452,7 @@ class CommonPage {
    */
   getParentElement(page, selector) {
     /* eslint-env browser */
-    return page.evaluateHandle(sl => document.querySelector(sl).parentElement, selector);
+    return page.evaluateHandle((sl) => document.querySelector(sl).parentElement, selector);
   }
 
   /**
@@ -454,7 +466,7 @@ class CommonPage {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {
-      await page.$eval(selector, el => el.target = '');
+      await page.$eval(selector, (el) => el.target = '');
     }
     /* eslint-enable no-return-assign, no-param-reassign */
 
@@ -473,9 +485,24 @@ class CommonPage {
    */
   async waitForPageTitleToLoad(page) {
     let isTitleEmpty = true;
+
     for (let i = 0; i < 20 && isTitleEmpty; i++) {
       isTitleEmpty = (await this.getPageTitle(page) === '');
       await page.waitForTimeout(100);
+    }
+  }
+
+  /**
+   * Resize the page to defined viewport
+   * @param page {Page} Browser tab
+   * @param mobileSize {boolean} Define if the viewport is for mobile or not
+   * @returns {Promise<void>}
+   */
+  async resize(page, mobileSize) {
+    if (mobileSize) {
+      await page.setViewportSize({width: 600, height: 600});
+    } else {
+      await page.setViewportSize({width: global.BROWSER.width, height: global.BROWSER.height});
     }
   }
 }

@@ -2,7 +2,7 @@ const {faker} = require('@faker-js/faker');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {countries} = require('@data/demo/countries');
 
-const countriesNames = Object.values(countries).map(country => country.name);
+const countriesNames = Object.values(countries).map((country) => country.name);
 
 const records = [];
 
@@ -32,6 +32,7 @@ function createRecord() {
       dni: '',
     });
   }
+
   return records;
 }
 

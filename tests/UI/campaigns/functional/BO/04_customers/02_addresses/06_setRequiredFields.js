@@ -102,7 +102,6 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       await expect(connected, 'Customer is not connected in FO').to.be.true;
     });
 
-
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 

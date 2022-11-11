@@ -24,16 +24,16 @@ class Profiles extends BOBasePage {
     this.profileGridPanel = '#profile_grid_panel';
     this.profileGridTitle = `${this.profileGridPanel} h3.card-header-title`;
     this.profilesListForm = '#profile_grid';
-    this.profilesListTableRow = row => `${this.profilesListForm} tbody tr:nth-child(${row})`;
+    this.profilesListTableRow = (row) => `${this.profilesListForm} tbody tr:nth-child(${row})`;
     this.profilesListTableColumn = (row, column) => `${this.profilesListTableRow(row)} td.column-${column}`;
-    this.profilesListTableColumnAction = row => this.profilesListTableColumn(row, 'actions');
-    this.profilesListTableToggleDropDown = row => `${this.profilesListTableColumnAction(row)
+    this.profilesListTableColumnAction = (row) => this.profilesListTableColumn(row, 'actions');
+    this.profilesListTableToggleDropDown = (row) => `${this.profilesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = row => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.profilesListTableEditLink = row => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.profilesListTableDeleteLink = (row) => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.profilesListTableEditLink = (row) => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.profileFilterInput = filterBy => `${this.profilesListForm} #profile_${filterBy}`;
+    this.profileFilterInput = (filterBy) => `${this.profilesListForm} #profile_${filterBy}`;
     this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
     this.filterResetButton = `${this.profilesListForm} .grid-reset-button`;
 
@@ -49,13 +49,13 @@ class Profiles extends BOBasePage {
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.profilesListForm} .col-form-label`;
-    this.pagesPaginationNextLink = `${this.profilesListForm} #pagination_next_url`;
-    this.pagesPaginationPreviousLink = `${this.profilesListForm} [aria-label='Previous']`;
+    this.pagesPaginationNextLink = `${this.profilesListForm} [data-role=next-page-link]`;
+    this.pagesPaginationPreviousLink = `${this.profilesListForm} [data-role='previous-page-link']`;
 
     // Sort Selectors
     this.tableHead = `${this.profileGridPanel} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -161,7 +161,6 @@ class Profiles extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-
   /**
    * Confirm delete with in modal
    * @param page {Page} Browser tab
@@ -179,7 +178,7 @@ class Profiles extends BOBasePage {
   async deleteBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

@@ -580,6 +580,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
+     */
     public function processDelete()
     {
         $object = $this->loadObject();
@@ -655,6 +660,11 @@ class AdminProductsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|void
+     *
+     * @throws PrestaShopException
+     */
     protected function processBulkDelete()
     {
         if ($this->access('delete')) {
@@ -1113,6 +1123,10 @@ class AdminProductsControllerCore extends AdminController
 
     /**
      * Overrides parent for custom redirect link.
+     *
+     * @return bool|ObjectModel|void|null
+     *
+     * @throws PrestaShopException
      */
     public function processPosition()
     {
@@ -1777,7 +1791,7 @@ class AdminProductsControllerCore extends AdminController
                     $warehouse_location_entity->id_product = $this->object->id;
                     $warehouse_location_entity->id_product_attribute = 0;
                     $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-                    $warehouse_location_entity->location = pSQL('');
+                    $warehouse_location_entity->location = '';
                     $warehouse_location_entity->save();
                 }
 

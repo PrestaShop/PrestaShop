@@ -201,6 +201,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
           const expectedResult = await basicHelper.sortArray(sortedCarriers, true);
+
           if (test.args.orderBy === 'Ascending') {
             await expect(sortedCarriers).to.deep.equal(expectedResult);
           } else {
@@ -208,6 +209,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
           }
         } else if (test.args.sortBy === 'Position') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersNames(page);
+
           if (test.args.orderBy === 'Ascending') {
             await expect(sortedCarriers).to.deep.equal(sortByPosition);
           } else {

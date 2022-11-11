@@ -74,8 +74,8 @@ describe('BO - Catalog - Attributes & Features : Change attribute position', asy
 
       let sortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
 
-      nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-      sortedTable = await sortedTable.map(text => parseFloat(text));
+      nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+      sortedTable = await sortedTable.map((text) => parseFloat(text));
 
       const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
 

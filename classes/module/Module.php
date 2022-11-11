@@ -3285,7 +3285,7 @@ abstract class ModuleCore implements ModuleInterface
 
             // Get Parent directory
             $splDir = $splDir->getPathInfo();
-        } while ($splDir->getPathname() !== $directoryOverride);
+        } while ($splDir->getRealPath() !== $directoryOverride);
     }
 
     private function getWidgetHooks()

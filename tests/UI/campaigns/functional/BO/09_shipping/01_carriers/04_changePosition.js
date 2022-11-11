@@ -72,8 +72,8 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
 
       let sortedTable = await carriersPage.getAllRowsColumnContent(page, 'a!position');
 
-      nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-      sortedTable = await sortedTable.map(text => parseFloat(text));
+      nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+      sortedTable = await sortedTable.map((text) => parseFloat(text));
 
       const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
 

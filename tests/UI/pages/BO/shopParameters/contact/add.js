@@ -19,12 +19,12 @@ class AddContact extends BOBasePage {
 
     // Selectors
     this.pageTitleLangButton = '#contact_title_dropdown';
-    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'contact_title_dropdown\']'
+    this.pageTitleLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'contact_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
-    this.enableSaveMessagesToggleInput = toggle => `#contact_is_messages_saving_enabled_${toggle}`;
+    this.enableSaveMessagesToggleInput = (toggle) => `#contact_is_messages_saving_enabled_${toggle}`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
     this.saveContactButton = '#save-button';

@@ -27,7 +27,7 @@
 <form action="{{ path('admin_backups_create') }}" method="post">
   <input type="hidden" name="_token" value="{{ csrf_token('backup') }}">
 
-  <button type="submit" class="btn btn-outline-primary">
+  <button type="submit" class="btn btn-outline-primary" data-role="create-backup-btn">
     <i class="material-icons">save</i>
     {{ 'I have read the disclaimer. Please create a new backup.'|trans({}, 'Admin.Advparameters.Notification') }}
   </button>

@@ -18,23 +18,23 @@ class Home extends FOBasePage {
 
     // Selectors of slider
     this.carouselSliderId = '#carousel';
-    this.carouselControlDirectionLink = direction => `${this.carouselSliderId} a.${direction}.carousel-control`;
+    this.carouselControlDirectionLink = (direction) => `${this.carouselSliderId} a.${direction}.carousel-control`;
     this.carouselSliderInnerList = `${this.carouselSliderId} ul.carousel-inner`;
     this.carouselSliderInnerListItems = `${this.carouselSliderInnerList} li`;
-    this.carouselSliderInnerListItem = position => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
+    this.carouselSliderInnerListItem = (position) => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
     // Selectors for home page
     this.homePageSection = 'section#content.page-home';
     this.popularProductTitle = '#content section h2';
-    this.productArticle = number => `#content .products div:nth-child(${number}) article`;
-    this.productImg = number => `${this.productArticle(number)} img`;
-    this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
-    this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productArticle = (number) => `#content .products div:nth-child(${number}) article`;
+    this.productImg = (number) => `${this.productArticle(number)} img`;
+    this.productDescriptionDiv = (number) => `${this.productArticle(number)} div.product-description`;
+    this.productQuickViewLink = (number) => `${this.productArticle(number)} a.quick-view`;
     this.productColorLink = (number, color) => `${this.productArticle(number)} .variant-links a[aria-label='${color}']`;
     this.allProductLink = '#content a.all-product-link';
     this.totalProducts = '#js-product-list-top .total-products > p';
-    this.productPrice = number => `${this.productArticle(number)} span[aria-label="Price"]`;
-    this.newFlag = number => `${this.productArticle(number)} .product-flag.new`;
+    this.productPrice = (number) => `${this.productArticle(number)} span[aria-label="Price"]`;
+    this.newFlag = (number) => `${this.productArticle(number)} .product-flag.new`;
     this.newsletterFormField = '.block_newsletter [name=email]';
     this.newsletterSubmitButton = '.block_newsletter [name=submitNewsletter]';
 
@@ -53,6 +53,8 @@ class Home extends FOBasePage {
     this.quickViewProductVariants = `${this.quickViewModalDiv} div.product-variants`;
     this.quickViewProductSize = `${this.quickViewProductVariants} select#group_1`;
     this.quickViewProductColor = `${this.quickViewProductVariants} ul#group_2`;
+    this.quickViewProductDimension = `${this.quickViewProductVariants} select#group_3`;
+    this.productAvailability = '#product-availability';
     this.quickViewCoverImage = `${this.quickViewModalDiv} img.js-qv-product-cover`;
     this.quickViewThumbImage = `${this.quickViewModalDiv} img.js-thumb.selected`;
     this.quickViewQuantityWantedInput = `${this.quickViewModalDiv} input#quantity_wanted`;
@@ -75,6 +77,7 @@ class Home extends FOBasePage {
     this.cartModalSubtotalBlock = `${this.cartContentBlock} .subtotal.value`;
     this.cartModalproductTaxInclBlock = `${this.cartContentBlock} .product-total .value`;
     this.cartModalCheckoutLink = `${this.blockCartModalDiv} div.cart-content-btn a`;
+    this.continueShoppingButton = `${this.blockCartModalDiv} div.cart-content-btn button.btn-secondary`;
 
     // Newsletter subscription messages
     this.successSubscriptionMessage = 'You have successfully subscribed to this newsletter.';
@@ -189,7 +192,7 @@ class Home extends FOBasePage {
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -198,7 +201,7 @@ class Home extends FOBasePage {
     /* eslint-enable no-await-in-loop */
     await Promise.all([
       this.waitForVisibleSelector(page, this.quickViewModalDiv),
-      page.$eval(this.productQuickViewLink(id), el => el.click()),
+      page.$eval(this.productQuickViewLink(id), (el) => el.click()),
     ]);
   }
 
@@ -215,12 +218,12 @@ class Home extends FOBasePage {
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
-   * @param quantity_wanted {number} Quantity to order
+   * @param quantityWanted {number} Quantity to order
    * @return {Promise<void>}
    */
-  async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
+  async addProductToCartByQuickView(page, id, quantityWanted = 1) {
     await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted);
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantityWanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
@@ -228,25 +231,68 @@ class Home extends FOBasePage {
   }
 
   /**
-   * Change combination and add to cart
+   * Change product attributes
    * @param page {Page} Browser tab
-   * @param combination {object} The combination data (size, color, quantity)
+   * @param attributes {object} The attributes data (size, color, dimension)
    * @returns {Promise<void>}
    */
-  async changeCombinationAndAddToCart(page, combination) {
-    await this.selectByVisibleText(page, this.quickViewProductSize, combination.size);
-    await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${combination.color}']`);
-    await this.setValue(page, this.quickViewQuantityWantedInput, combination.quantity);
+  async changeAttributes(page, attributes) {
+    if (attributes.size) {
+      await this.selectByVisibleText(page, this.quickViewProductSize, attributes.size);
+    }
+    if (attributes.color) {
+      await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.color}']`);
+      await this.waitForVisibleSelector(
+        page,
+        `${this.quickViewProductColor} input[title='${attributes.color}'][checked]`,
+      );
+    }
+    if (attributes.dimension) {
+      await Promise.all([
+        page.waitForResponse((response) => response.url().includes('product&token=')),
+        this.selectByVisibleText(page, this.quickViewProductDimension, attributes.dimension),
+      ]);
+    }
+  }
+
+  /**
+   * Change product quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} The product quantity to change
+   * @returns {Promise<void>}
+   */
+  async changeQuantity(page, quantity) {
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantity);
+  }
+
+  /**
+   * Click on add to cart button from quick view modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async addToCartByQuickView(page) {
     await this.waitForSelectorAndClick(page, this.addToCartButton);
   }
 
   /**
-   * Get product details from quick view modal
+   * Change attributes and add to cart
+   * @param page {Page} Browser tab
+   * @param attributes {object} The attributes data (size, color, quantity)
+   * @returns {Promise<void>}
+   */
+  async changeAttributesAndAddToCart(page, attributes) {
+    await this.changeAttributes(page, attributes);
+    await this.changeQuantity(page, attributes.quantity);
+    await this.addToCartByQuickView(page);
+  }
+
+  /**
+   * Get product with discount details from quick view modal
    * @param page {Page} Browser tab
    * @returns {Promise<{discountPercentage: string, thumbImage: string, price: number, taxShippingDeliveryLabel: string,
    * regularPrice: number, coverImage: string, name: string, shortDescription: string}>}
    */
-  async getProductDetailsFromQuickViewModal(page) {
+  async getProductWithDiscountDetailsFromQuickViewModal(page) {
     return {
       name: await this.getTextContent(page, this.quickViewProductName),
       regularPrice: parseFloat((await this.getTextContent(page, this.quickViewRegularPrice)).replace('€', '')),
@@ -257,6 +303,45 @@ class Home extends FOBasePage {
       coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
       thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
     };
+  }
+
+  /**
+   * Get product details from quick view modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<{thumbImage: string, price: number, taxShippingDeliveryLabel: string,
+   * coverImage: string, name: string, shortDescription: string}>}
+   */
+  async getProductDetailsFromQuickViewModal(page) {
+    return {
+      name: await this.getTextContent(page, this.quickViewProductName),
+      price: parseFloat((await this.getTextContent(page, this.quickViewProductPrice)).replace('€', '')),
+      taxShippingDeliveryLabel: await this.getTextContent(page, this.quickViewTaxShippingDeliveryLabel),
+      shortDescription: await this.getTextContent(page, this.quickViewShortDescription),
+      coverImage: await this.getAttributeContent(page, this.quickViewCoverImage, 'src'),
+      thumbImage: await this.getAttributeContent(page, this.quickViewThumbImage, 'src'),
+    };
+  }
+
+  /**
+   * Get selected attribute from quick view
+   * @param page {Page} Browser tab
+   * @param attribute {object} Attribute to get value
+   * @returns {Promise<{size: string, color: string}|{dimension: string}>}
+   */
+  async getSelectedAttributesFromQuickViewModal(page, attribute) {
+    let attributes;
+
+    if (attribute.size) {
+      attributes = {
+        size: await page.getAttribute(`${this.quickViewProductSize} option[selected]`, 'title'),
+        color: await page.getAttribute(`${this.quickViewProductColor} input[checked='checked']`, 'title'),
+      };
+    } else if (attribute.dimension) {
+      attributes = {
+        dimension: await page.getAttribute(`${this.quickViewProductDimension} option[selected]`, 'title'),
+      };
+    }
+    return attributes;
   }
 
   /**
@@ -303,13 +388,14 @@ class Home extends FOBasePage {
   async selectProductColor(page, id, color) {
     await page.hover(this.productImg(id));
     let displayed = false;
+
     /* eslint-disable no-await-in-loop */
     // Only way to detect if element is displayed is to get value of computed style 'product description' after hover
     // and compare it with value 'block'
     for (let i = 0; i < 10 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector), ':after')
+        (selector) => window.getComputedStyle(document.querySelector(selector), ':after')
           .getPropertyValue('display') === 'block',
         this.productDescriptionDiv(id),
       );
@@ -320,7 +406,34 @@ class Home extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.productColorLink(id, color));
   }
 
+  /**
+   * Get product availability text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductAvailabilityText(page) {
+    return this.getTextContent(page, this.productAvailability);
+  }
+
+  /**
+   * Is add to cart button enabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddToCartButtonEnabled(page) {
+    return !await this.elementVisible(page, `${this.addToCartButton}[disabled]`, 1000);
+  }
+
   // Block cart modal methods
+  /**
+   * Is block cart modal visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isBlockCartModalVisible(page) {
+    return this.elementVisible(page, this.blockCartModalDiv, 2000);
+  }
+
   /**
    * Get product details from blockCart modal
    * @param page {Page} Browser tab
@@ -362,6 +475,16 @@ class Home extends FOBasePage {
   }
 
   /**
+   * Click on continue shopping
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async continueShopping(page) {
+    await this.waitForSelectorAndClick(page, this.continueShoppingButton);
+    return this.elementNotVisible(page, this.blockCartModalDiv, 2000);
+  }
+
+  /**
    * Go to social sharing link
    * @param page {Page} Browser tab
    * @param socialSharing {string} The social network name
@@ -369,6 +492,7 @@ class Home extends FOBasePage {
    */
   async getSocialSharingLink(page, socialSharing) {
     let selector;
+
     switch (socialSharing) {
       case 'Facebook':
         selector = this.quickViewFacebookSocialSharing;

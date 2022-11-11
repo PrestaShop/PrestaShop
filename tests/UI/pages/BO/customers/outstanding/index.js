@@ -18,26 +18,26 @@ class Outstanding extends BOBasePage {
     this.gridTable = '#outstanding_grid_table';
 
     // Filters
-    this.outstandingFilterColumnInput = filterBy => `#outstanding_${filterBy}`;
+    this.outstandingFilterColumnInput = (filterBy) => `#outstanding_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     this.tableColumnActionType = (row, column) => `${this.tableColumn(row, column)} a`;
 
     this.cardHeaderTitle = '#outstanding_grid_panel .card-header-title';
     this.paginationLabel = '#outstanding_grid .col-form-label';
     this.paginationLimitSelect = '#paginator_select_page_limit';
-    this.paginationNextLink = '#pagination_next_url';
-    this.paginationPreviousLink = '#outstanding_grid_panel .pagination .previous a.page-link';
+    this.paginationNextLink = '#outstanding_grid_panel [data-role=next-page-link]';
+    this.paginationPreviousLink = '#outstanding_grid_panel [data-role=previous-page-link]';
   }
 
   /* Methods */
@@ -66,7 +66,6 @@ class Outstanding extends BOBasePage {
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
   }
-
 
   /**
    * Click on view order
@@ -197,6 +196,7 @@ class Outstanding extends BOBasePage {
     let rowContent;
     const rowsNumber = await this.getNumberOfOutstandingInPage(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'outstanding_allow_amount') {
         rowContent = await this.getOutstandingAllowancePrice(page, i);

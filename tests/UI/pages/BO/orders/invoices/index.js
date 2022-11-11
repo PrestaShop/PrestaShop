@@ -35,16 +35,16 @@ class Invoice extends BOBasePage {
 
     // Invoice options form
     this.invoiceOptionsForm = '#form-invoices-options';
-    this.invoiceOptionsStatusToggleInput = toggle => `#form_enable_invoices_${toggle}`;
-    this.taxBreakdownStatusToggleInput = toggle => `#form_enable_tax_breakdown_${toggle}`;
-    this.invoiceOptionStatusToggleInput = toggle => `#form_enable_product_images_${toggle}`;
+    this.invoiceOptionsStatusToggleInput = (toggle) => `#form_enable_invoices_${toggle}`;
+    this.taxBreakdownStatusToggleInput = (toggle) => `#form_enable_tax_breakdown_${toggle}`;
+    this.invoiceOptionStatusToggleInput = (toggle) => `#form_enable_product_images_${toggle}`;
     this.invoiceNumberInput = '#form_invoice_number';
     this.legalFreeTextInput = '#form_legal_free_text_1';
     this.footerTextInput = '#form_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
-    this.invoiceAddCurrentYearToggleInput = toggle => `#form_add_current_year_${toggle}`;
-    this.optionYearPositionRadioButton = id => `#form_year_position_${id} + i`;
+    this.invoiceAddCurrentYearToggleInput = (toggle) => `#form_add_current_year_${toggle}`;
+    this.optionYearPositionRadioButton = (id) => `#form_year_position_${id} + i`;
   }
 
   /*
@@ -102,7 +102,7 @@ class Invoice extends BOBasePage {
     const statusElements = await page.$$(this.statusOrderStateSpan);
 
     for (let i = 0; i < statusElements.length; i++) {
-      if (await page.evaluate(element => element.textContent, statusElements[i]) === statusName) {
+      if (await page.evaluate((element) => element.textContent, statusElements[i]) === statusName) {
         await statusElements[i].click();
         break;
       }

@@ -248,14 +248,18 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           '"GENERALINFO"GenderName"Birthdate"AgeEmailLanguage"Creationaccountdata""Lastvisit"'
           + `SiretApeCompanyWebsite${customerData.socialTitle}"${customerData.firstName}${customerData.lastName}"`
           + `${customerData.birthDate.toISOString().slice(0, 10)}`,
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'General info is not correct!').to.be.true;
 
         isVisible = await files.isTextInFile(
           filePath,
           `${customerData.email}"English(English)""${registrationDate}""${lastVisitDate}`,
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'General info is not correct!').to.be.true;
       });
@@ -266,7 +270,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"Noaddresses"',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Addresses table is not empty!').to.be.true;
       });
@@ -277,7 +283,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'RDERSReferencePayment"Orderstate""Totalpaid"Date"Noorders"',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Orders table is not empty!').to.be.true;
       });
@@ -288,7 +296,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Carts table is not empty!').to.be.true;
       });
@@ -299,7 +309,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'MESSAGESIPMessageDate"Nomessages""',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Messages table is not empty!').to.be.true;
       });
@@ -311,7 +323,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           `LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate0${ipAddress}`
           + `"${lastVisitDate}"`,
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
       });
@@ -322,7 +336,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Newsletter subscription table is not empty!').to.be.true;
       });
@@ -333,7 +349,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Products comments is not empty!').to.be.true;
       });
@@ -344,7 +362,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Mail alert table is not empty!').to.be.true;
       });
@@ -465,7 +485,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           `CARTSId"Totalproducts"Date#${shoppingCartID}1`
           + `"${shoppingCartDate}""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity`
           + `#${shoppingCartID}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}"2`,
-          true, true, 'utf16le',
+          true,
+          true,
+          'utf16le',
         );
         await expect(isVisible, 'Data in Carts table is not correct!').to.be.true;
       });
@@ -612,7 +634,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
       });
 
@@ -625,7 +649,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
           + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
       });
 
@@ -635,7 +661,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Carts table is not empty!').to.be.true;
       });
     });
@@ -747,7 +775,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
       });
 
@@ -760,7 +790,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
           + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
       });
 
@@ -770,7 +802,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Carts table is not empty!').to.be.true;
       });
 
@@ -780,7 +814,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
       });
     });
@@ -916,7 +952,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           `ADDRESSESAliasCompanyNameAddressPhone(s)CountryDate"MyAddress"${addressData.company}`
           + `"${addressData.firstName}${addressData.lastName}""${addressData.address.replace(/\s/g, '')}"`
           + `"${addressData.phone}"${addressData.country}"`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Addresses table is not correct!').to.be.true;
       });
 
@@ -929,7 +967,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           + `"Awaitingbankwirepayment""${totalPaid}EUR""${orderDate}""PRODUCTSBOUGHT""Orderref""Productref"`
           + `NameQuantity${orderReference}${Products.demo_1.reference}"${Products.demo_1.name.replace(/\s/g, '')}`
           + '(Size:S-Color:White)"2',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Orders table is not correct!').to.be.true;
       });
 
@@ -939,7 +979,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           'CARTSId"Totalproducts"Date"Nocarts""PRODUCT(S)STILLINCART""CartID""Productreference"NameQuantity"Nocarts"',
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Carts table is not empty!').to.be.true;
       });
 
@@ -949,7 +991,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const isVisible = await files.isTextInFile(
           filePath,
           `MESSAGESIPMessageDate${ipAddress}"${contactUsData.message.replace(/\s/g, '')}""${messageDate}`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
       });
 
@@ -960,7 +1004,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           filePath,
           'LASTCONNECTIONS""Originrequest""Pageviewed""Timeonthepage""IPaddress"DateCountryDate'
           + `${connectionOrigin}0${ipAddress}"${secondLastVisitDate}"0${ipAddress}"${lastVisitDate}"`,
-          true, true, 'utf16le');
+          true,
+          true,
+          'utf16le');
         await expect(isVisible, 'The data in Last connections table is not correct!').to.be.true;
       });
     });

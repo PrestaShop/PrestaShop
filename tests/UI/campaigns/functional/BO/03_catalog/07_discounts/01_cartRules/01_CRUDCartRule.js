@@ -17,7 +17,6 @@ const cartPage = require('@pages/FO/cart');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const ProductData = require('@data/FO/product');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
@@ -127,7 +126,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
 
       await foHomePage.goToProductPage(page, 1);
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
@@ -157,7 +156,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_1', baseContext);
 
       const discountedPrice = Products.demo_1.finalPrice
-        - (Products.demo_1.finalPrice * newCartRuleData.discountPercent / 100);
+        - ((Products.demo_1.finalPrice * newCartRuleData.discountPercent) / 100);
 
       const priceATI = await cartPage.getATIPrice(page);
       await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));
@@ -236,7 +235,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
 
       await foHomePage.goToProductPage(page, 1);
       const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+      await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
     });
 
     it('should add product to cart', async function () {
@@ -266,7 +265,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount_2', baseContext);
 
       const discountedPrice = Products.demo_1.finalPrice
-        - (Products.demo_1.finalPrice * editCartRuleData.discountPercent / 100);
+        - ((Products.demo_1.finalPrice * editCartRuleData.discountPercent) / 100);
 
       const priceATI = await cartPage.getATIPrice(page);
       await expect(priceATI).to.equal(parseFloat(discountedPrice.toFixed(2)));

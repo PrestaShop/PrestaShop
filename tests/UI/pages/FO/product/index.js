@@ -33,9 +33,9 @@ class Product extends FOBasePage {
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
     this.productSizeSelect = '#group_1';
-    this.productSizeOption = size => `${this.productSizeSelect} option[title=${size}]`;
+    this.productSizeOption = (size) => `${this.productSizeSelect} option[title=${size}]`;
     this.productColorUl = '#group_2';
-    this.productColorInput = color => `${this.productColorUl} input[title=${color}]`;
+    this.productColorInput = (color) => `${this.productColorUl} input[title=${color}]`;
     this.productColors = 'div.product-variants div:nth-child(2)';
     this.metaLink = '#main > meta';
     this.facebookSocialSharing = '.social-sharing .facebook a';
@@ -61,11 +61,11 @@ class Product extends FOBasePage {
     this.emptyReviewBlock = '#empty-product-comment';
     this.productReviewList = '#product-comments-list';
     this.productReviewRows = `${this.productReviewList} div.product-comment-list-item.row`;
-    this.productReviewRow = row => `${this.productReviewRows}:nth-child(${row})`;
-    this.productReviewTitle = row => `${this.productReviewRow(row)} h4`;
-    this.productReviewContent = row => `${this.productReviewRow(row)} p`;
-    this.productRatingBlock = row => `${this.productReviewRow(row)} .grade-stars`;
-    this.productRatingStar = row => `${this.productReviewRow(row)} .star-on`;
+    this.productReviewRow = (row) => `${this.productReviewRows}:nth-child(${row})`;
+    this.productReviewTitle = (row) => `${this.productReviewRow(row)} h4`;
+    this.productReviewContent = (row) => `${this.productReviewRow(row)} p`;
+    this.productRatingBlock = (row) => `${this.productReviewRow(row)} .grade-stars`;
+    this.productRatingStar = (row) => `${this.productReviewRow(row)} .star-on`;
     // Add review selectors
     this.emptyReviewAddReviewButton = '#empty-product-comment button';
     this.notEmptyReviewAddReviewButton = '#product-comments-list-footer button';
@@ -73,7 +73,7 @@ class Product extends FOBasePage {
     this.reviewForm = '#post-product-comment-form';
     this.reviewTitle = `${this.reviewForm} input[name=comment_title]`;
     this.reviewTextContent = `${this.reviewForm} textarea[name=comment_content]`;
-    this.reviewRating = rating => `.star-full div:nth-child(${rating})`;
+    this.reviewRating = (rating) => `.star-full div:nth-child(${rating})`;
     this.reviewSubmitButton = `${this.reviewForm} button[type=submit]`;
     this.reviewSentConfirmationModal = '#product-comment-posted-modal';
     this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
@@ -120,7 +120,7 @@ class Product extends FOBasePage {
    * @returns {Promise<Array<string>>}
    */
   getProductsAttributesFromUl(page, ulSelector) {
-    return page.$$eval(`${ulSelector} li .attribute-name`, all => all.map(el => el.textContent));
+    return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
   }
 
   /**
@@ -235,24 +235,24 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Select product combination
+   * Select product attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param combination {{size: ?string, color: ?string}}  Product's combination data to select
+   * @param attributes {{size: ?string, color: ?string}}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectCombination(page, quantity, combination) {
-    if (combination.color !== null) {
+  async selectAttributes(page, quantity, attributes) {
+    if (attributes.color !== null) {
       await Promise.all([
-        this.waitForVisibleSelector(page, `${this.productColorInput(combination.color)}[checked]`),
-        page.click(this.productColorInput(combination.color)),
+        this.waitForVisibleSelector(page, `${this.productColorInput(attributes.color)}[checked]`),
+        page.click(this.productColorInput(attributes.color)),
       ]);
     }
 
-    if (combination.size !== null) {
+    if (attributes.size !== null) {
       await Promise.all([
-        this.waitForAttachedSelector(page, `${this.productSizeOption(combination.size)}[selected]`),
-        this.selectByVisibleText(page, this.productSizeSelect, combination.size),
+        this.waitForAttachedSelector(page, `${this.productSizeOption(attributes.size)}[selected]`),
+        this.selectByVisibleText(page, this.productSizeSelect, attributes.size),
       ]);
     }
   }
@@ -270,7 +270,7 @@ class Product extends FOBasePage {
     color: null,
     size: null,
   }, proceedToCheckout = true, customizedText = 'text') {
-    await this.selectCombination(page, quantity, combination);
+    await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
     }
@@ -301,6 +301,7 @@ class Product extends FOBasePage {
    */
   async getSocialSharingLink(page, socialSharing) {
     let selector;
+
     switch (socialSharing) {
       case 'Facebook':
         selector = this.facebookSocialSharing;
@@ -434,7 +435,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   getNumberOfComments(page) {
-    return page.$$eval(this.productReviewRows, rows => rows.length);
+    return page.$$eval(this.productReviewRows, (rows) => rows.length);
   }
 
   /**
@@ -464,7 +465,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   getReviewRating(page, row = 1) {
-    return page.$$eval(this.productRatingStar(row), divs => divs.length);
+    return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
   }
 }
 

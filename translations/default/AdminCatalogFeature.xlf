@@ -1135,22 +1135,22 @@
       <trans-unit id="c612bf4e7b59c1b364ead6752fe63ed3">
         <source>Minimum order quantity</source>
         <target>Minimum order quantity</target>
-        <note>Line: 668</note>
+        <note>Line: 672</note>
       </trans-unit>
       <trans-unit id="cdba184783a0253218efd734da81a9da">
         <source>Stock location</source>
         <target>Stock location</target>
-        <note>Line: 680</note>
+        <note>Line: 684</note>
       </trans-unit>
       <trans-unit id="2438bf77baed0680f816ca0f4a7d0321">
         <source>Availability date</source>
         <target>Availability date</target>
-        <note>Line: 663</note>
+        <note>Line: 667</note>
       </trans-unit>
       <trans-unit id="24eb41ae265b268c0ce14e1fef872399">
         <source>Low stock alert</source>
         <target>Low stock alert</target>
-        <note>Line: 658</note>
+        <note>Line: 662</note>
       </trans-unit>
     </body>
   </file>
@@ -1658,7 +1658,7 @@
       <trans-unit id="7828a35d153636336475fa0774877bde">
         <source>If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).</source>
         <target>If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).</target>
-        <note>Line: 118</note>
+        <note>Line: 132</note>
       </trans-unit>
     </body>
   </file>
@@ -1676,7 +1676,7 @@
       <trans-unit id="48a9e14d0d9d632219727607dbb81ecf">
         <source>You can bulk edit the selected combinations by enabling and filling each field that needs to be updated.</source>
         <target>You can bulk edit the selected combinations by enabling and filling each field that needs to be updated.</target>
-        <note>Line: 62</note>
+        <note>Line: 65</note>
       </trans-unit>
     </body>
   </file>
@@ -1879,6 +1879,11 @@
         <source>Apply a discount to the initial price or set a specific price.</source>
         <target>Apply a discount to the initial price or set a specific price.</target>
         <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="8b818fe110368cd2d5f68e0469d31d75">
+        <source>For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.</source>
+        <target>For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.</target>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -2691,22 +2696,22 @@ Comment: First tag [1] is number of combinations selected. Second tag [2] is the
       <trans-unit id="b9208b03bcc9eb4a336258dcdcb66207">
         <source>Combinations</source>
         <target>Combinations</target>
-        <note>Line: 328</note>
+        <note>Line: 327</note>
       </trans-unit>
       <trans-unit id="e6a4d0e7d64f63379da06c91a80e9c90">
         <source>Drop images here</source>
         <target>Drop images here</target>
-        <note>Line: 321</note>
+        <note>Line: 320</note>
       </trans-unit>
       <trans-unit id="aaa5309487aacf50e6413cf7a3074618">
         <source>or select files</source>
         <target>or select files</target>
-        <note>Line: 322</note>
+        <note>Line: 321</note>
       </trans-unit>
       <trans-unit id="b36c5a58c30cc53bab5e9b3fda84755c">
         <source>Recommended size 800 x 800px for default theme.</source>
         <target>Recommended size 800 x 800px for default theme.</target>
-        <note>Line: 323</note>
+        <note>Line: 322</note>
       </trans-unit>
       <trans-unit id="0d23de90e7f537b035eb79a464eb8ecf">
         <source>JPG, GIF or PNG format.</source>
@@ -2716,17 +2721,17 @@ Comment: First tag [1] is number of combinations selected. Second tag [2] is the
       <trans-unit id="c795dfff10a7c952f4c5438951e9ece9">
         <source>Cover</source>
         <target>Cover</target>
-        <note>Line: 325</note>
+        <note>Line: 324</note>
       </trans-unit>
       <trans-unit id="23470f2faa48c53e6fb5fad4e3de3cdd">
         <source>Virtual product</source>
         <target>Virtual product</target>
-        <note>Line: 329</note>
+        <note>Line: 328</note>
       </trans-unit>
       <trans-unit id="e2e79605fc9450ec17957cf0e910f5c6">
         <source>tax incl.</source>
         <target>tax incl.</target>
-        <note>Line: 330</note>
+        <note>Line: 329</note>
       </trans-unit>
       <trans-unit id="942e86be019b92367d4b1cb917a9ae9c">
         <source>Module to configure</source>
@@ -2751,12 +2756,17 @@ Comment: First tag [1] is number of combinations selected. Second tag [2] is the
       <trans-unit id="623a9a1f669b091dd76bead27c3252ed">
         <source>Quantities</source>
         <target>Quantities</target>
-        <note>Line: 327</note>
+        <note>Line: 326</note>
       </trans-unit>
       <trans-unit id="887ee91702c962a70b87cbef07bbcaec">
         <source>tax excl.</source>
         <target>tax excl.</target>
-        <note>Line: 331</note>
+        <note>Line: 330</note>
+      </trans-unit>
+      <trans-unit id="2b4cd53991b2b76ea7642457908e6dca">
+        <source>JPG, GIF, PNG or WebP format.</source>
+        <target>JPG, GIF, PNG or WebP format.</target>
+        <note>Line: 323</note>
       </trans-unit>
     </body>
   </file>
@@ -3014,47 +3024,47 @@ Comment: First tag [1] is number of combinations selected. Second tag [2] is the
       <trans-unit id="2365f9d6614b9f34f41e33f1f46329b2">
         <source>Error log</source>
         <target>Error log</target>
-        <note>Line: 49</note>
+        <note>Line: 50</note>
       </trans-unit>
       <trans-unit id="d3d2e617335f08df83599665eef8a418">
         <source>Close</source>
         <target>Close</target>
-        <note>Line: 43</note>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="6567238975275105f4e51e99ee3b4e17">
         <source>Stop processing</source>
         <target>Stop processing</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="5cf5bf2c9fc4975745fbad4e88fdf2c0">
         <source>%error_count% errors occurred. You can download the logs for future reference.</source>
         <target>%error_count% errors occurred. You can download the logs for future reference.</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="9c69fa21979cbe7490c20c19537cf08f">
         <source>Back to processing</source>
         <target>Back to processing</target>
-        <note>Line: 46</note>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="07176ccdd3cd24acb62ab4323fc68a51">
         <source>Download error log</source>
         <target>Download error log</target>
-        <note>Line: 47</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="2048fe880813217b00797eafa12e00a4">
         <source>View %error_count% error logs</source>
         <target>View %error_count% error logs</target>
-        <note>Line: 48</note>
+        <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="0abe25541b68ddd799f00d5ef4832b16">
         <source>Editing %total% combinations</source>
         <target>Editing %total% combinations</target>
-        <note>Line: 41</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="b3fd2866e13b72e30eab515f7ed93a87">
         <source>Editing %done%/%total% combinations</source>
         <target>Editing %done%/%total% combinations</target>
-        <note>Line: 42</note>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -3173,22 +3183,22 @@ Comment: First tag [1] is number of combinations selected. Second tag [2] is the
       <trans-unit id="a7a22a52c946c3b479a00edfb4eba7a5">
         <source>Loading specific prices</source>
         <target>Loading specific prices</target>
-        <note>Line: 27</note>
+        <note>Line: 28</note>
       </trans-unit>
       <trans-unit id="5457bfb10218265fa0d0e17085bb5e44">
         <source>Specific price (tax excl.)</source>
         <target>Specific price (tax excl.)</target>
-        <note>Line: 40</note>
+        <note>Line: 41</note>
       </trans-unit>
       <trans-unit id="433031ef7a062b4d9273d5a071fdc99e">
         <source>Discount (tax incl.)</source>
         <target>Discount (tax incl.)</target>
-        <note>Line: 41</note>
+        <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="e5771a362d88a71a657bfcd21ca54b3f">
         <source>Units</source>
         <target>Units</target>
-        <note>Line: 43</note>
+        <note>Line: 44</note>
       </trans-unit>
     </body>
   </file>

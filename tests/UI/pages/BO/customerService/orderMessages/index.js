@@ -24,20 +24,20 @@ class OrderMessages extends BOBasePage {
     this.gridTable = '#order_message_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
     // Filters
-    this.filterColumn = filterBy => `${this.gridTable} #order_message_${filterBy}`;
+    this.filterColumn = (filterBy) => `${this.gridTable} #order_message_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
     // Actions buttons in Row
-    this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = row => `${this.actionsColumn(row)} a.grid-edit-row-link`;
-    this.dropdownToggleButton = row => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = row => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = row => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = (row) => `${this.actionsColumn(row)} a.grid-edit-row-link`;
+    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
@@ -48,12 +48,12 @@ class OrderMessages extends BOBasePage {
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
-    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.gridPanel} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.gridPanel} [data-role='previous-page-link']`;
     // Sort Selectors
     this.tableHead = `${this.gridPanel} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Header Methods */
@@ -65,7 +65,6 @@ class OrderMessages extends BOBasePage {
   async goToAddNewOrderMessagePage(page) {
     await this.clickAndWaitForNavigation(page, this.newOrderMessageLink);
   }
-
 
   /* Reset Methods */
   /**
@@ -168,7 +167,7 @@ class OrderMessages extends BOBasePage {
   async deleteWithBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

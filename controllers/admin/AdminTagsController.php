@@ -126,6 +126,11 @@ class AdminTagsControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         /** @var Tag|null $obj */

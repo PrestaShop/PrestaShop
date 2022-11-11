@@ -57,22 +57,20 @@
   </tbody>
 </table>
 
-<div class="row">
-  <div class="col-sm-6 offset-sm-6">
-    {{ form_start(updateOrderStatusForm, {'action': path('admin_orders_update_status',  {'orderId': orderForViewing.id}), 'attr': {'class': 'card-details-form'}, }) }}
-      <div class="form-group card-details-actions">
-        {{ form_widget(updateOrderStatusForm.new_order_status_id) }}
+<div class="d-flex justify-content-end">
+  {{ form_start(updateOrderStatusForm, {'action': path('admin_orders_update_status',  {'orderId': orderForViewing.id}), 'attr': {'class': 'card-details-form'}, }) }}
+    <div class="form-group card-details-actions">
+      {{ form_widget(updateOrderStatusForm.new_order_status_id) }}
 
-        <button class="btn btn-primary update-status ml-3">
-          {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
-        </button>
-      </div>
+      <button class="btn btn-primary update-status mt-3 mt-md-0 ml-0 ml-md-3">
+        {{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
 
-      <div class="d-none">
-        {{ form_rest(updateOrderStatusForm) }}
-      </div>
-    {{ form_end(updateOrderStatusForm) }}
-  </div>
+    <div class="d-none">
+      {{ form_rest(updateOrderStatusForm) }}
+    </div>
+  {{ form_end(updateOrderStatusForm) }}
 </div>
 
 {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/internal_note.html.twig' %}

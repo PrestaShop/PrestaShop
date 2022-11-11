@@ -14,12 +14,12 @@
       <trans-unit id="30a367ba686890c829937e768d588b8f">
         <source>You cannot set 0 or a negative position, the minimum is 1.</source>
         <target>You cannot set 0 or a negative position, the minimum is 1.</target>
-        <note>Line: 7048</note>
+        <note>Line: 7056</note>
       </trans-unit>
       <trans-unit id="cf99dad7d7306d9ac01ba5a2e2d2c715">
         <source>You cannot set a position greater than the total number of products in the category, starting at 1.</source>
         <target>You cannot set a position greater than the total number of products in the category, starting at 1.</target>
-        <note>Line: 7069</note>
+        <note>Line: 7077</note>
       </trans-unit>
     </body>
   </file>
@@ -195,12 +195,12 @@
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2794</note>
+        <note>Line: 2797</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
-        <note>Line: 2823</note>
+        <note>Line: 2826</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
@@ -355,62 +355,62 @@
       <trans-unit id="0c58058923630a64ce3f415a07cbb00d">
         <source>An error occurred while adding tags.</source>
         <target>An error occurred while adding tags.</target>
-        <note>Line: 2354</note>
+        <note>Line: 2357</note>
       </trans-unit>
       <trans-unit id="32caa1cdf0ea26b2e1267d45a57beacf">
         <source>This %1$s field is required at least in %2$s</source>
         <target>This %1$s field is required at least in %2$s</target>
-        <note>Line: 2040</note>
+        <note>Line: 2043</note>
       </trans-unit>
       <trans-unit id="0e2338b37ab3dfeed544e8233b53d4e0">
         <source>The %1$s field is too long (%2$d chars max).</source>
         <target>The %1$s field is too long (%2$d chars max).</target>
-        <note>Line: 2108</note>
+        <note>Line: 2111</note>
       </trans-unit>
       <trans-unit id="95c0b24839f6e4ffe0e395d8d26ce4ee">
         <source>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</source>
         <target>This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).</target>
-        <note>Line: 2089</note>
+        <note>Line: 2092</note>
       </trans-unit>
       <trans-unit id="5e2457ed64286c209f67a9333ed52a17">
         <source>An error occurred while attempting to delete previous tags.</source>
         <target>An error occurred while attempting to delete previous tags.</target>
-        <note>Line: 2344</note>
+        <note>Line: 2347</note>
       </trans-unit>
       <trans-unit id="4177a725868ed37e7de5c8c65f4a8b0e">
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
-        <note>Line: 2535</note>
+        <note>Line: 2538</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
-        <note>Line: 2836</note>
+        <note>Line: 2839</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
-        <note>Line: 2841</note>
+        <note>Line: 2844</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
-        <note>Line: 2846</note>
+        <note>Line: 2849</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
-        <note>Line: 2851</note>
+        <note>Line: 2854</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
-        <note>Line: 3127</note>
+        <note>Line: 3130</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
-        <note>Line: 3129</note>
+        <note>Line: 3132</note>
       </trans-unit>
     </body>
   </file>
@@ -442,22 +442,22 @@
       <trans-unit id="3535b3934d0e2d6e7759649d78c7da58">
         <source>Missing id_hook</source>
         <target>Missing id_hook</target>
-        <note>Line: 256</note>
+        <note>Line: 248</note>
       </trans-unit>
       <trans-unit id="36ccadce9e530e36cf265145bdba5c1c">
         <source>Missing block_name</source>
         <target>Missing block_name</target>
-        <note>Line: 264</note>
+        <note>Line: 256</note>
       </trans-unit>
       <trans-unit id="12f4f6b7d1d17838950e3c6107144f2a">
         <source>Missing block_name value for language %s</source>
         <target>Missing block_name value for language %s</target>
-        <note>Line: 272</note>
+        <note>Line: 264</note>
       </trans-unit>
       <trans-unit id="504ca7ea96dde692360e88a97e98fc91">
         <source>Missing %s value in custom[%s] for language %s</source>
         <target>Missing %s value in custom[%s] for language %s</target>
-        <note>Line: 294</note>
+        <note>Line: 286</note>
       </trans-unit>
     </body>
   </file>
@@ -692,7 +692,7 @@
       <trans-unit id="9edb260e4183e5f1fa35c1702f0cffa1">
         <source>Error for combination %combination_id%: %error_message%</source>
         <target>Error for combination %combination_id%: %error_message%</target>
-        <note>Line: 428</note>
+        <note>Line: 432</note>
       </trans-unit>
     </body>
   </file>
@@ -1053,17 +1053,17 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
       <trans-unit id="1b89ef639dabfd2f6eb19886f7c9f8c8">
         <source>This will delete all the combinations. Do you wish to proceed?</source>
         <target>This will delete all the combinations. Do you wish to proceed?</target>
-        <note>Line: 313</note>
+        <note>Line: 312</note>
       </trans-unit>
       <trans-unit id="dfd19ad4f089996c7eabcd5935f75e98">
         <source>A pack of products can't have combinations.</source>
         <target>A pack of products can't have combinations.</target>
-        <note>Line: 332</note>
+        <note>Line: 331</note>
       </trans-unit>
       <trans-unit id="5b75fdc0df647e8ac5275e31554dd0f9">
         <source>A virtual product can't have combinations.</source>
         <target>A virtual product can't have combinations.</target>
-        <note>Line: 333</note>
+        <note>Line: 332</note>
       </trans-unit>
     </body>
   </file>
@@ -1109,6 +1109,15 @@ Comment: "It" refers to the option "Force update of friendly URL"</note>
         <source>No address has been found for this brand.</source>
         <target>No address has been found for this brand.</target>
         <note>Line: 77</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/not_found.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a8b62b581b171eef3a4d73f53a1a1804">
+        <source>This combination doesn't exist anymore</source>
+        <target>This combination doesn't exist anymore</target>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>

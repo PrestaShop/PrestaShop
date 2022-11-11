@@ -68,18 +68,6 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
     public function getExpectedMultiShopCommands(): Generator
     {
         $command = $this->getAllShopsCommand();
-        $command->setCarrierReferenceIds([1, 2, 3]);
-        yield [
-            [
-                'shipping' => [
-                    'carriers' => ['1', '2', '3'],
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'carriers' => true,
-                ],
-            ],
-            [$command],
-        ];
-
-        $command = $this->getAllShopsCommand();
         $localizedNotes = [
             '1' => 'test4',
             '3' => 'test5',
@@ -177,17 +165,6 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'shipping' => [
                     'additional_shipping_cost' => '-0.55',
-                ],
-            ],
-            [$command],
-        ];
-
-        $command = $this->getSingleShopCommand();
-        $command->setCarrierReferenceIds([1, 2, 3]);
-        yield [
-            [
-                'shipping' => [
-                    'carriers' => ['1', '2', '3'],
                 ],
             ],
             [$command],

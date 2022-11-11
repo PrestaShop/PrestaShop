@@ -32,6 +32,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
+use PrestaShopBundle\Routing\Converter\CacheCleanerInterface;
 
 /**
  * Passes data between the application layer in charge of the feature flags form
@@ -51,15 +52,26 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected $isMultiShopUsed;
 
     /**
+     * @var CacheCleanerInterface
+     */
+    private $cacheCleaner;
+
+    /**
      * @param EntityManagerInterface $doctrineEntityManager
      * @param string $stability
      * @param bool $isMultiShopUsed
+     * @param CacheCleanerInterface $cacheCleaner
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager, string $stability, bool $isMultiShopUsed)
-    {
+    public function __construct(
+        EntityManagerInterface $doctrineEntityManager,
+        string $stability,
+        bool $isMultiShopUsed,
+        CacheCleanerInterface $cacheCleaner
+    ) {
         $this->doctrineEntityManager = $doctrineEntityManager;
         $this->stability = $stability;
         $this->isMultiShopUsed = $isMultiShopUsed;
+        $this->cacheCleaner = $cacheCleaner;
     }
 
     public function getData()
@@ -110,6 +122,9 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
         }
 
         $this->doctrineEntityManager->flush();
+        // Clear cache of legacy routes since they can depend on an associated feature flag
+        // when the attribute _legacy_feature_flag is used
+        $this->cacheCleaner->clearCache();
 
         return [];
     }

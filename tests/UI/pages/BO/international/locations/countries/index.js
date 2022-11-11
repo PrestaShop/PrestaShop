@@ -29,27 +29,27 @@ class Countries extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='countryFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='countryFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncountry';
     this.filterResetButton = 'button[name=\'submitResetcountry\']';
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
 
     // Columns selectors
-    this.tableColumnId = row => this.tableColumn(row, 2);
-    this.tableColumnName = row => this.tableColumn(row, 3);
-    this.tableColumnIsoCode = row => this.tableColumn(row, 4);
-    this.tableColumnCallPrefix = row => this.tableColumn(row, 5);
-    this.tableColumnZone = row => this.tableColumn(row, 6);
-    this.tableColumnStatusLink = row => `${this.tableColumn(row, 7)} a`;
-    this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = row => `${this.tableColumn(row)}.action-disabled`;
+    this.tableColumnId = (row) => this.tableColumn(row, 2);
+    this.tableColumnName = (row) => this.tableColumn(row, 3);
+    this.tableColumnIsoCode = (row) => this.tableColumn(row, 4);
+    this.tableColumnCallPrefix = (row) => this.tableColumn(row, 5);
+    this.tableColumnZone = (row) => this.tableColumn(row, 6);
+    this.tableColumnStatusLink = (row) => `${this.tableColumn(row, 7)} a`;
+    this.tableColumnStatusEnableLink = (row) => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = (row) => `${this.tableColumn(row)}.action-disabled`;
 
     // Actions selectors
-    this.editRowLink = row => `${this.tableRow(row)} a.edit`;
+    this.editRowLink = (row) => `${this.tableRow(row)} a.edit`;
 
     // Bulk Actions
     this.bulkActionBlock = 'div.bulk-actions';
@@ -62,20 +62,20 @@ class Countries extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Country options selectors
     this.countryForm = '#country_form';
-    this.enableRestrictCountriesToggleLabel = toggle => `${this.countryForm} `
+    this.enableRestrictCountriesToggleLabel = (toggle) => `${this.countryForm} `
       + `#PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}`;
     this.saveButton = `${this.countryForm} button[name='submitOptionscountry']`;
   }

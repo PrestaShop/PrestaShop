@@ -2,8 +2,8 @@ const {faker} = require('@faker-js/faker');
 const {Zones} = require('@data/demo/zones');
 const {Currencies} = require('@data/demo/currencies');
 
-const zones = Object.values(Zones).map(zone => zone.name);
-const currencies = Object.values(Currencies).map(currency => currency.name);
+const zones = Object.values(Zones).map((zone) => zone.name);
+const currencies = Object.values(Currencies).map((currency) => currency.name);
 
 /**
  * Create new country to use on creation form on country page on BO

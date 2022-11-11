@@ -84,7 +84,7 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
             new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
         );
 
-        $seoData = $formData['seo'] ?? [];
+        $seoData = $formData['seo'];
         if (isset($seoData['tags'])) {
             if (!empty($seoData['tags'])) {
                 if (!is_array($seoData['tags'])) {

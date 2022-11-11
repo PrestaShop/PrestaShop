@@ -102,6 +102,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @return false|string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function renderView()
     {
         if (($id = (int) Tools::getValue('id_attribute_group'))) {
@@ -170,6 +176,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
      * AdminController::renderForm() override.
      *
      * @see AdminController::renderForm()
+     *
+     * @return string|void
+     *
+     * @throws SmartyException
      */
     public function renderForm()
     {

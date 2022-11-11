@@ -30,7 +30,7 @@ class OrderDetails extends FOBasePage {
     // Order products table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
 
     // Order product table content

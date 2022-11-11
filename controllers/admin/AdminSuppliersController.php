@@ -90,6 +90,12 @@ class AdminSuppliersControllerCore extends AdminController
         parent::initPageHeaderToolbar();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         // loads current warehouse

@@ -19,7 +19,6 @@ const cartPage = require('@pages/FO/cart');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
-const ProductData = require('@data/FO/product');
 const {Products} = require('@data/demo/products');
 
 // import test context
@@ -117,7 +116,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -133,7 +132,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await testContext.addContextItem(this, 'testIdentifier', 'verifyTotalAfterDiscount1', baseContext);
 
         const totalAfterDiscount = Products.demo_1.finalPrice
-          - (Products.demo_1.finalPrice * cartRuleWithoutCode.discountPercent / 100);
+          - ((Products.demo_1.finalPrice * cartRuleWithoutCode.discountPercent) / 100);
 
         const priceATI = await cartPage.getATIPrice(page);
         await expect(priceATI).to.equal(parseFloat(totalAfterDiscount.toFixed(2)));
@@ -203,7 +202,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await foHomePage.goToProductPage(page, 1);
 
         const pageTitle = await foProductPage.getPageTitle(page);
-        await expect(pageTitle.toUpperCase()).to.contains(ProductData.firstProductData.name);
+        await expect(pageTitle.toUpperCase()).to.contains(Products.demo_1.name.toUpperCase());
       });
 
       it('should add product to cart and proceed to checkout', async function () {
@@ -234,7 +233,7 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
         await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
 
         const totalAfterPromoCode = Products.demo_1.finalPrice
-          - (Products.demo_1.finalPrice * cartRuleWithCode.discountPercent / 100);
+          - ((Products.demo_1.finalPrice * cartRuleWithCode.discountPercent) / 100);
 
         const priceATI = await cartPage.getATIPrice(page);
         await expect(priceATI).to.equal(parseFloat(totalAfterPromoCode.toFixed(2)));

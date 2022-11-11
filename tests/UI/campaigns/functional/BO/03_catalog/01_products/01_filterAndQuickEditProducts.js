@@ -37,7 +37,6 @@ describe('BO - Catalog - Products : Filter and quick edit Products table', async
     await helper.closeBrowserContext(browserContext);
   });
 
-
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });

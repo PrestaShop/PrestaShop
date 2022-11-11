@@ -69,6 +69,11 @@ class PdfInvoiceControllerCore extends FrontController
         $this->order = $order;
     }
 
+    /**
+     * @return bool|void
+     *
+     * @throws PrestaShopException
+     */
     public function display()
     {
         $order_invoice_list = $this->order->getInvoicesCollection();

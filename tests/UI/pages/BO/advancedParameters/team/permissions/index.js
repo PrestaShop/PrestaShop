@@ -20,7 +20,7 @@ class Permissions extends BOBasePage {
     this.growlMessageBlock = `${this.growlDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDiv} .growl-close`;
     this.successfulUpdateMessage = 'Update successful';
-    this.profileSubTab = profileName => `a[id^="profile-"]:text("${profileName}")`;
+    this.profileSubTab = (profileName) => `a[id^="profile-"]:text("${profileName}")`;
     this.profileAccess = (className, access) => `input[data-type="${access}"][data-classname="${className}"]:visible`;
   }
 

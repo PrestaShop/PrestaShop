@@ -22,7 +22,7 @@ class AddState extends BOBasePage {
     this.isoCodeInput = '#iso_code';
     this.countrySelect = '#id_country';
     this.zoneSelect = '#id_zone';
-    this.statusToggle = toggle => `#active_${toggle}`;
+    this.statusToggle = (toggle) => `#active_${toggle}`;
     this.saveStateButton = '#state_form_submit_btn';
   }
 

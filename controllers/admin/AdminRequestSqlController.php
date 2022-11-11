@@ -213,6 +213,11 @@ class AdminRequestSqlControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public function renderView()
     {
         if (!($obj = $this->loadObject(true))) {

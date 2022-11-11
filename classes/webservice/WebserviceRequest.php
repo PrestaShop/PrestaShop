@@ -28,6 +28,7 @@ class WebserviceRequestCore
     public const HTTP_GET = 1;
     public const HTTP_POST = 2;
     public const HTTP_PUT = 4;
+    public const HTTP_PATCH = 8;
 
     protected $_available_languages = null;
     /**
@@ -1127,9 +1128,8 @@ class WebserviceRequestCore
         $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+                (!in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
+                if ((!isset($field['i18n']) || (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;

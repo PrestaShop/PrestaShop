@@ -28,18 +28,18 @@ class Employees extends BOBasePage {
     this.employeeGridPanel = '#employee_grid_panel';
     this.employeeGridTitle = `${this.employeeGridPanel} h3.card-header-title`;
     this.employeesListForm = '#employee_grid';
-    this.employeesListTableRow = row => `${this.employeesListForm} tbody tr:nth-child(${row})`;
+    this.employeesListTableRow = (row) => `${this.employeesListForm} tbody tr:nth-child(${row})`;
     this.employeesListTableColumn = (row, column) => `${this.employeesListTableRow(row)} td.column-${column}`;
-    this.employeesListTableStatusColumn = row => `${this.employeesListTableColumn(row, 'active')} .ps-switch`;
-    this.employeesListTableStatusColumnToggleInput = row => `${this.employeesListTableStatusColumn(row)} input`;
-    this.employeesListTableColumnAction = row => this.employeesListTableColumn(row, 'actions');
-    this.employeesListTableToggleDropDown = row => `${this.employeesListTableColumnAction(row)
+    this.employeesListTableStatusColumn = (row) => `${this.employeesListTableColumn(row, 'active')} .ps-switch`;
+    this.employeesListTableStatusColumnToggleInput = (row) => `${this.employeesListTableStatusColumn(row)} input`;
+    this.employeesListTableColumnAction = (row) => this.employeesListTableColumn(row, 'actions');
+    this.employeesListTableToggleDropDown = (row) => `${this.employeesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.employeesListTableDeleteLink = row => `${this.employeesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.employeesListTableEditLink = row => `${this.employeesListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.employeesListTableDeleteLink = (row) => `${this.employeesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.employeesListTableEditLink = (row) => `${this.employeesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.employeeFilterInput = filterBy => `${this.employeesListForm} #employee_${filterBy}`;
+    this.employeeFilterInput = (filterBy) => `${this.employeesListForm} #employee_${filterBy}`;
     this.filterSearchButton = `${this.employeesListForm} .grid-search-button`;
     this.filterResetButton = `${this.employeesListForm} .grid-reset-button`;
 
@@ -56,14 +56,14 @@ class Employees extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.employeeGridPanel} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pages selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.employeesListForm} .col-form-label`;
-    this.paginationNextLink = `${this.employeesListForm} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.employeesListForm} [aria-label='Previous']`;
+    this.paginationNextLink = `${this.employeesListForm} [data-role=next-page-link]`;
+    this.paginationPreviousLink = `${this.employeesListForm} [data-role='previous-page-link']`;
   }
 
   /*
@@ -75,7 +75,7 @@ class Employees extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async goToPermissionsTab(page) {
-    await page.click(this.permissionsTab);
+    await this.clickAndWaitForNavigation(page, this.permissionsTab);
     return this.elementVisible(page, `${this.permissionsTab}.current`, 1000);
   }
 
@@ -265,7 +265,7 @@ class Employees extends BOBasePage {
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -287,7 +287,7 @@ class Employees extends BOBasePage {
   async deleteBulkActions(page) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, el => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions

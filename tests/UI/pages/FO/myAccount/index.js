@@ -25,6 +25,7 @@ class MyAccount extends FOBasePage {
     this.accountFirstAddressLink = '#address-link';
     this.accountVouchersLink = '#discounts-link';
     this.merchandiseReturnsLink = '#returns-link';
+    this.orderSlipsLink = '#order-slips-link';
     this.successMessageAlert = '#notifications article.alert-success';
     this.logoutFooterLink = '#main footer a[href*="mylogout"]';
     this.psgdprLink = '#psgdpr-link';
@@ -49,6 +50,15 @@ class MyAccount extends FOBasePage {
    */
   async goToInformationPage(page) {
     await this.clickAndWaitForNavigation(page, this.accountInformationLink);
+  }
+
+  /**
+   * Go to account credit slips page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToCreditSlipsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.orderSlipsLink);
   }
 
   /**

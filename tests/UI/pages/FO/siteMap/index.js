@@ -17,10 +17,11 @@ class SiteMap extends FOBasePage {
     this.pageTitle = 'Sitemap';
 
     // Selectors
-    this.categoryNameSelect = id => `#category-page-${id}`;
-    this.categoryPageNameSelect = id => `#cms-category-${id}`;
+    this.categoryNameSelect = (id) => `#category-page-${id}`;
+    this.categoryPageNameSelect = (id) => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
     this.brandsPageLink = '#manufacturer-page';
+    this.categoryPageLink = (categoryID) => `#category-page-${categoryID}`;
   }
 
   /*
@@ -72,6 +73,16 @@ class SiteMap extends FOBasePage {
    */
   isBrandsLinkVisible(page) {
     return this.elementVisible(page, this.brandsPageLink, 2000);
+  }
+
+  /**
+   * Click on the created category
+   * @param page {Page} Browser tab
+   * @param page {categoryID} number
+   * @return {Promise<void>}
+   */
+  async viewCreatedCategory(page, categoryID) {
+    return this.clickAndWaitForNavigation(page, this.categoryPageLink(categoryID));
   }
 }
 

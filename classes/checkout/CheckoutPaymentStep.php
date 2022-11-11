@@ -40,6 +40,12 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
      */
     public $paymentOptionsFinder;
 
+    /**
+     * @param Context $context
+     * @param TranslatorInterface $translator
+     * @param PaymentOptionsFinder $paymentOptionsFinder
+     * @param ConditionsToApproveFinder $conditionsToApproveFinder
+     */
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

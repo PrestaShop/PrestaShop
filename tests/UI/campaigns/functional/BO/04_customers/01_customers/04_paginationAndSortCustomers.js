@@ -170,8 +170,8 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
         let sortedTable = await customersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isNumber) {
-          nonSortedTable = await nonSortedTable.map(text => parseInt(text, 10));
-          sortedTable = await sortedTable.map(text => parseInt(text, 10));
+          nonSortedTable = await nonSortedTable.map((text) => parseInt(text, 10));
+          sortedTable = await sortedTable.map((text) => parseInt(text, 10));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isNumber, test.args.isDate);

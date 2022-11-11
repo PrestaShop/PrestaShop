@@ -18,6 +18,9 @@ const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRu
 // Customer
 const {DefaultCustomer} = require('@data/demo/customer');
 
+// Payment Methods
+const {PaymentMethods} = require('@data/demo/paymentMethods');
+
 // Products
 const {Products} = require('@data/demo/products');
 
@@ -43,7 +46,7 @@ const orderToMake = {
     name: `${Carriers.default.name} - ${Carriers.default.delay}`,
     freeShipping: true,
   },
-  paymentMethod: 'Payments by check',
+  paymentMethod: PaymentMethods.checkPayment.moduleName,
   orderStatus: Statuses.paymentAccepted,
   totalPrice: (Products.demo_5.price * 4) * 1.2, // Price tax included
 };

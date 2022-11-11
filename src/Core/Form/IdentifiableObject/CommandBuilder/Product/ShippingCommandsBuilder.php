@@ -71,7 +71,6 @@ final class ShippingCommandsBuilder implements MultiShopProductCommandsBuilderIn
             ->addMultiShopField('[additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
             ->addMultiShopField('[delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
             ->addMultiShopField('[delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[carriers]', 'setCarrierReferenceIds', DataField::TYPE_ARRAY)
         ;
 
         $commandBuilder = new CommandBuilder($config);

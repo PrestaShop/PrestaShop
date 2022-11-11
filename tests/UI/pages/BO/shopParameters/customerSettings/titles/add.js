@@ -19,8 +19,8 @@ class AddTitle extends BOBasePage {
 
     // Form selectors
     this.genderForm = '#gender_form';
-    this.nameInput = idLang => `#name_${idLang}`;
-    this.genderInput = type => `#type_${type}`;
+    this.nameInput = (idLang) => `#name_${idLang}`;
+    this.genderInput = (type) => `#type_${type}`;
     this.imageInput = '#image-name';
     this.imageWidthInput = '#img_width';
     this.imageHeightInput = '#img_height';
@@ -30,7 +30,7 @@ class AddTitle extends BOBasePage {
     // Language selectors
     this.dropdownButton = `${this.genderForm} button.dropdown-toggle`;
     this.dropdownMenu = `${this.genderForm} ul.dropdown-menu`;
-    this.dropdownMenuItemLink = idLang => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
+    this.dropdownMenuItemLink = (idLang) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
   }
 
   /*

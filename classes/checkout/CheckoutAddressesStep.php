@@ -35,6 +35,11 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     private $show_invoice_address_form = false;
     private $form_has_continue_button = false;
 
+    /**
+     * @param Context $context
+     * @param TranslatorInterface $translator
+     * @param CustomerAddressForm $addressForm
+     */
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

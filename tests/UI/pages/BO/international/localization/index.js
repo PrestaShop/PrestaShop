@@ -26,12 +26,12 @@ class Localization extends LocalizationBasePage {
     this.importLanguagesCheckbox = '#import_localization_pack_content_to_import_3';
     this.importUnitsCheckbox = '#import_localization_pack_content_to_import_4';
     this.updatepriceDisplayForGroupsCHeckbox = '#import_localization_pack_content_to_import_5';
-    this.downloadPackDataToggleInput = toggle => `#import_localization_pack_download_pack_data_${toggle}`;
+    this.downloadPackDataToggleInput = (toggle) => `#import_localization_pack_download_pack_data_${toggle}`;
     this.importButton = '#form-import-localization-save-button';
 
     // Configuration form selectors
     this.defaultLanguageSelector = '#form_default_language';
-    this.languageFromBrowserToggleInput = toggle => `#form_detect_language_from_browser_${toggle}`;
+    this.languageFromBrowserToggleInput = (toggle) => `#form_detect_language_from_browser_${toggle}`;
     this.defaultCurrencySelect = '#form_default_currency';
     this.defaultCountrySelect = '#form_default_country';
     this.saveConfigurationFormButton = '#form-configuration-save-button';

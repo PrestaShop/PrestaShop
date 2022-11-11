@@ -1,7 +1,7 @@
 const {faker} = require('@faker-js/faker');
 const {countries} = require('@data/demo/countries');
 
-const countriesNames = Object.values(countries).map(country => country.name);
+const countriesNames = Object.values(countries).map((country) => country.name);
 
 /**
  * Create new supplier to use on supplier creation form on BO

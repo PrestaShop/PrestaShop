@@ -24,7 +24,6 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
-import zxcvbn from 'zxcvbn';
 
 export function psShowHide() {
   $('.ps-shown-by-js').show();
@@ -79,4 +78,8 @@ export function refreshCheckoutPage() {
  * Verify password score.
  * Estimate guesses needed to crack the password.
  */
-prestashop.checkPasswordScore = (password) => zxcvbn(password);
+prestashop.checkPasswordScore = async(password) => {
+  const zxcvbn = (await import('zxcvbn')).default;
+
+  return zxcvbn(password);
+};

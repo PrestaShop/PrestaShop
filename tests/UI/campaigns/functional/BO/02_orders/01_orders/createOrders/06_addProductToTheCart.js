@@ -206,12 +206,12 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
   // Pre-condition: Create 6 products
   describe('PRE-TEST: Create 6 products in BO', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
@@ -247,6 +247,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         let createProductMessage = '';
+
         if (product === productWithSpecificPrice) {
           await addProductPage.createEditBasicProduct(page, product);
           createProductMessage = await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);

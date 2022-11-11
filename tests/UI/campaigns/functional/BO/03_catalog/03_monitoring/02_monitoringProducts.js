@@ -149,7 +149,7 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         );
 
         if (test.args.hasCombinations) {
-          createProductMessage = await addProductPage.setCombinationsInProduct(
+          createProductMessage = await addProductPage.setAttributesInProduct(
             page,
             test.args.productToCreate,
           );

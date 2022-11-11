@@ -182,7 +182,7 @@ function smartyTranslate($params, $smarty)
     $basename = basename($filename, '.tpl');
 
     if (!isset($params['d'])) {
-        $params['d'] = $params['mod'] ? DomainHelper::buildModuleDomainFromLegacySource($params['mod'], $basename) : null;
+        $params['d'] = null;
     }
 
     if (!empty($params['d'])) {
