@@ -329,7 +329,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $command = new AddRootCategoryCommand(
                 $data['name'],
                 $data['link rewrite'],
-                PrimitiveUtils::castStringBooleanIntoBoolean($data['active']),
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['active'])
             );
         } else {
             $command = new AddCategoryCommand(

@@ -6,16 +6,23 @@ Feature: Update product position from BO (Back Office)
   As an employee I must be able to update product position
 
   Background: I add category and products
+    Given shop "shop1" with name "test_shop" exists
+    And single shop context is loaded
+    And language "en" with locale "en-US" exists
+    And language with iso code "en" is the default one
+    And category "home" in default language named "Home" exists
+    And category "home" is set as the home category for shop "shop1"
+    And category "home-accessories" in default language named "Home Accessories" exists
     Given I add new category "category_for_positions" with following details:
-      | Name            | Category for positions |
-      | Displayed       | true                   |
-      | Parent category | Home Accessories       |
-      | Friendly URL    | category-for-positions |
+      | name[en-US]         | Category for positions |
+      | active              | true                   |
+      | parent category     | home-accessories       |
+      | link rewrite[en-US] | category-for-positions |
     And I add new category "other_category_for_positions" with following details:
-      | Name            | Other category for positions |
-      | Displayed       | true                         |
-      | Parent category | Home Accessories             |
-      | Friendly URL    | category-for-positions       |
+      | name[en-US]         | Other category for positions |
+      | active              | true                         |
+      | parent category     | home-accessories             |
+      | link rewrite[en-US] | category-for-positions       |
     And category "home" in default language named "Home" exists
     And I add product "product1" with following information:
       | name[en-US] | Values list poster nr. 1 (paper) |
