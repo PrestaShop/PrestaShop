@@ -102,49 +102,6 @@ abstract class AbstractDeleteCategoryHandler
     }
 
     /**
-     * @todo: move to repository
-     *
-     * @return array
-     */
-    private function findProductsWithoutCategories(): array
-    {
-        $productsWithoutCategory = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
-
-        return $productsWithoutCategory ?? [];
-    }
-
-    /**
-     * @todo: move to repository sql part of the method - findProductsInDefaultCategories()?
-     *
-     * @param array<int, int[]> $deletedCategoryIdsByParent
-     *
-     * @return array
-     */
-    private function findProductsByDefaultCategories(array $deletedCategoryIdsByParent): array
-    {
-        $deletedCategoryIds = [];
-        foreach ($deletedCategoryIdsByParent as $deletedIds) {
-            $deletedCategoryIds = array_merge($deletedCategoryIds, array_map('intval', $deletedIds));
-        }
-
-        $affectedProducts = \Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE p.id_category_default IN (' . implode(',', $deletedCategoryIds) . ')
-		');
-
-        return $affectedProducts ?? [];
-    }
-
-    /**
      * @param int $categoryId
      * @param array<int, int[]> $deletedCategoryIdsByParent
      *
@@ -231,5 +188,48 @@ abstract class AbstractDeleteCategoryHandler
 
             $this->addProductDefaultCategory($product, (int) $product->id_category_default, $deletedCategoryIdsByParent);
         }
+    }
+
+    /**
+     * @todo: move to repository
+     *
+     * @return array
+     */
+    private function findProductsWithoutCategories(): array
+    {
+        $productsWithoutCategory = \Db::getInstance()->executeS('
+			SELECT p.`id_product`
+			FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE NOT EXISTS (
+			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
+			)
+		');
+
+        return $productsWithoutCategory ?? [];
+    }
+
+    /**
+     * @todo: move to repository sql part of the method - findProductsInDefaultCategories()?
+     *
+     * @param array<int, int[]> $deletedCategoryIdsByParent
+     *
+     * @return array
+     */
+    private function findProductsByDefaultCategories(array $deletedCategoryIdsByParent): array
+    {
+        $deletedCategoryIds = [];
+        foreach ($deletedCategoryIdsByParent as $deletedIds) {
+            $deletedCategoryIds = array_merge($deletedCategoryIds, array_map('intval', $deletedIds));
+        }
+
+        $affectedProducts = \Db::getInstance()->executeS('
+			SELECT p.`id_product`
+			FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE p.id_category_default IN (' . implode(',', $deletedCategoryIds) . ')
+		');
+
+        return $affectedProducts ?? [];
     }
 }

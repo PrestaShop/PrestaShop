@@ -18,6 +18,7 @@ Feature: Category Management
     And single shop context is loaded
     And category "home" is set as the home category for shop "shop1"
     And category "home-accessories" in default language named "Home Accessories" exists
+    And category "clothes" in default language named "Clothes" exists
     And group "visitorGroup" named "Visitor" exists
     And group "guestGroup" named "Guest" exists
     And group "customerGroup" named "Customer" exists
@@ -156,7 +157,7 @@ Feature: Category Management
     When I delete category "category5" choosing mode "remove_associated"
     Then category "category5" does not exist
 
-  Scenario: Delete category which is assigned to product and it is the only one left by using different deletion modes
+  Scenario: Delete a category which is the last category of that product
     Given I add new category "category6" with following details:
       | name[en-US]         | Mobile phones6    |
       | name[fr-FR]         | Mobile phones6 fr |
@@ -225,7 +226,166 @@ Feature: Category Management
     # product should be removed
     Then product "product1" should not exist anymore
 
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product
+  by using associate_only deletion mode
+    Given I add new category "category_b6" with following details:
+      | name[en-US]         | not important    |
+      | name[fr-FR]         | not important    |
+      | active              | true             |
+      | parent category     | home-accessories |
+      | link rewrite[en-US] | not-important    |
+      | link rewrite[en-US] | not-important    |
+    And I add new category "category_b7" with following details:
+      | name[en-US]         | not important    |
+      | name[fr-FR]         | not important    |
+      | active              | true             |
+      | parent category     | home-accessories |
+      | link rewrite[en-US] | not-important    |
+      | link rewrite[en-US] | not-important    |
+    And I add new category "category_b8" with following details:
+      | name[en-US]         | not important    |
+      | name[fr-FR]         | not important    |
+      | active              | true             |
+      | parent category     | home-accessories |
+      | link rewrite[en-US] | not-important    |
+      | link rewrite[en-US] | not-important    |
+    And I add product "product_b1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I add product "product_b2" with following information:
+      | name[en-US] | bottle of beer2 |
+      | type        | standard        |
+    And I enable product "product_b1"
+    And I enable product "product_b2"
+    And product "product_b1" should be enabled
+    And product "product_b2" should be enabled
+    And I assign product product_b1 to following categories:
+      | categories       | [category_b6,category_b7,category_b8] |
+      | default category | category_b7                           |
+    And I assign product product_b2 to following categories:
+      | categories       | [category_b6,category_b7,category_b8] |
+      | default category | category_b6                           |
+    Then product "product_b1" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b6  | not important | not important | false      |
+      | category_b7  | not important | not important | true       |
+      | category_b8  | not important | not important | false      |
+    Then product "product_b2" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b6  | not important | not important | true       |
+      | category_b7  | not important | not important | false      |
+      | category_b8  | not important | not important | false      |
+    When I bulk delete categories "category_b6,category_b7,category_b8" choosing mode "associate_only"
+    Then category "category_b6" does not exist
+    And category "category_b7" does not exist
+    And category "category_b8" does not exist
+    Then product "product_b1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    Then product "product_b2" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product_b1" should be enabled
+    And product "product_b2" should be enabled
+
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product
+  by using associate_and_disable deletion mode
+    Given I add new category "category_b9" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | clothes       |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And I add new category "category_b10" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | true          |
+      | parent category     | clothes       |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And I add product "product_b1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I add product "product_b2" with following information:
+      | name[en-US] | bottle of beer2 |
+      | type        | standard        |
+    And I enable product "product_b1"
+    And I enable product "product_b2"
+    And product "product_b1" should be enabled
+    And product "product_b2" should be enabled
+    And I assign product product_b1 to following categories:
+      | categories       | [category_b9,category_b10] |
+      | default category | category_b9                |
+    And I assign product product_b2 to following categories:
+      | categories       | [category_b9,category_b10] |
+      | default category | category_b10               |
+    And product "product_b1" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b9  | not important | not important | true       |
+      | category_b10 | not important | not important | false      |
+    And product "product_b2" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b9  | not important | not important | false      |
+      | category_b10 | not important | not important | true       |
+    When I bulk delete categories "category_b9,category_b10" choosing mode "associate_and_disable"
+    Then category "category_b9" does not exist
+    And category "category_b10" does not exist
+    And product "product_b1" should be assigned to following categories:
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | clothes      | Clothes     | Clothes     | true       |
+    And product "product_b2" should be assigned to following categories:
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | clothes      | Clothes     | Clothes     | true       |
+    And product "product_b1" should be disabled
+    And product "product_b2" should be disabled
+
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product
+  by using associate_and_remove deletion mode
+    Given I add new category "category_b11" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | clothes       |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And I add new category "category_b12" with following details:
+      | name[en-US]         | not important |
+      | name[fr-FR]         | not important |
+      | active              | false         |
+      | parent category     | clothes       |
+      | link rewrite[en-US] | not-important |
+      | link rewrite[en-US] | not-important |
+    And I add product "product_b1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I add product "product_b2" with following information:
+      | name[en-US] | bottle of beer2 |
+      | type        | standard        |
+    And I assign product product_b1 to following categories:
+      | categories       | [category_b11,category_b12] |
+      | default category | category_b12                |
+    And I assign product product_b2 to following categories:
+      | categories       | [category_b11,category_b12] |
+      | default category | category_b11                |
+    And product "product_b1" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b11 | not important | not important | false      |
+      | category_b12 | not important | not important | true       |
+    And product "product_b2" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | category_b11 | not important | not important | true       |
+      | category_b12 | not important | not important | false      |
+    # remove_associated mode case
+    When I bulk delete categories "category_b11,category_b12" choosing mode "remove_associated"
+    Then category "category_b11" does not exist
+    And category "category_b12" does not exist
+    And product "product_b1" should not exist anymore
+    And product "product_b2" should not exist anymore
+
   Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
+  by using associate_and_disable deletion mode
+    # deletion mode shouldn't have impact for this scenario
     Given I add new category "category9" with following details:
       | name[en-US]         | Mobile phones9    |
       | name[fr-FR]         | Mobile phones9 fr |
@@ -246,13 +406,16 @@ Feature: Category Management
       | category9    | Mobile phones9 | Mobile phones9 fr | true       |
     When I delete category "category9" choosing mode "associate_and_disable"
     Then category "category9" does not exist
-    # should assign the parent of the deleted category as the default one. Product status shouldn't be impacted.
     Then product "product2" should be assigned to following categories:
       | id reference     | name[en-US]      | name[fr-FR]      | is default |
       | home             | Home             | Home             | false      |
       | home-accessories | Home Accessories | Home Accessories | true       |
     And product "product2" should be enabled
-    # repeat the same with different modes to ensure that the modes doesn't have impact
+
+
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
+  by using associate_only deletion mode
+    # deletion mode shouldn't have impact for this scenario
     Given I add new category "category10" with following details:
       | name[en-US]         | Mobile phones10    |
       | name[fr-FR]         | Mobile phones10 fr |
@@ -263,7 +426,6 @@ Feature: Category Management
     And I assign product product2 to following categories:
       | categories       | [home,category10] |
       | default category | category10        |
-    # associate_only mode case
     When I delete category "category10" choosing mode "associate_only"
     Then category "category10" does not exist
     Then product "product2" should be assigned to following categories:
@@ -271,6 +433,10 @@ Feature: Category Management
       | home             | Home             | Home             | false      |
       | home-accessories | Home Accessories | Home Accessories | true       |
     And product "product2" should be enabled
+
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
+  by using remove_associated deletion mode
+    # deletion mode shouldn't have impact for this scenario
     Given I add new category "category11" with following details:
       | name[en-US]         | Mobile phones11    |
       | name[fr-FR]         | Mobile phones11 fr |
@@ -289,6 +455,60 @@ Feature: Category Management
       | home             | Home             | Home             | false      |
       | home-accessories | Home Accessories | Home Accessories | true       |
     And product "product2" should be enabled
+
+  Scenario: Bulk delete categories which are assigned as default for some product, but are not the last categories of that product
+    # deletion mode shouldn't have impact for this scenario
+    Given I add new category "category_b11" with following details:
+      | name[en-US]         | not important    |
+      | name[fr-FR]         | not important    |
+      | active              | false            |
+      | parent category     | home-accessories |
+      | link rewrite[en-US] | not-important    |
+      | link rewrite[en-US] | not-important    |
+    Given I add new category "category_b12" with following details:
+      | name[en-US]         | not important    |
+      | name[fr-FR]         | not important    |
+      | active              | false            |
+      | parent category     | home-accessories |
+      | link rewrite[en-US] | not-important    |
+      | link rewrite[en-US] | not-important    |
+    And I add product "product_b1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    And I add product "product_b2" with following information:
+      | name[en-US] | bottle of beer2 |
+      | type        | standard        |
+    And I enable product "product_b1"
+    And I enable product "product_b2"
+    And product "product_b1" should be enabled
+    And product "product_b2" should be enabled
+    And I assign product product_b1 to following categories:
+      | categories       | [home,category_b11,category_b12] |
+      | default category | category_b11                     |
+    And product "product_b1" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | home         | Home          | Home          | false      |
+      | category_b11 | not important | not important | true       |
+      | category_b12 | not important | not important | false      |
+    # product_b2 has "home" category as default, so it shouldn't be affected
+    And I assign product product_b2 to following categories:
+      | categories       | [home,category_b12] |
+      | default category | home              |
+    And product "product_b2" should be assigned to following categories:
+      | id reference | name[en-US]   | name[fr-FR]   | is default |
+      | home         | Home          | Home          | true       |
+      | category_b12 | not important | not important | false      |
+    When I bulk delete categories "category_b11,category_b12" choosing mode "remove_associated"
+    Then category "category_b11" does not exist
+    And category "category_b12" does not exist
+    And product "product_b1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home             | Home             | Home             | false      |
+      | home-accessories | Home Accessories | Home Accessories | true       |
+    And product "product_b1" should be assigned to following categories:
+      | id reference     | name[en-US]      | name[fr-FR]      | is default |
+      | home             | Home             | Home             | false      |
+      | home-accessories | Home Accessories | Home Accessories | true       |
 
   Scenario: Bulk delete categories
     Given I add new category "category12" with following details:
