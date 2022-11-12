@@ -540,7 +540,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 1 => 'Out of stock',
                 2 => 'Isparduota',
             ])
-            ->setCarrierReferenceIds([1, 3, 5])
         ;
 
         yield [
@@ -610,7 +609,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                             2 => 'Isparduota',
                         ],
                     ],
-                    'carriers' => [1, 3, 5],
                 ],
             ],
             [$command],
@@ -972,7 +970,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 1 => 'In stock',
                 2 => 'Yra sandelyje',
             ])
-            ->setCarrierReferenceIds([1, 3, 5])
         ;
 
         yield [
@@ -1031,8 +1028,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                             2 => 'Isparduota',
                         ],
                     ],
-                    'carriers' => [1, 3, 5],
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'carriers' => true,
                 ],
             ],
             [$singleShopCommand, $allShopsCommand],

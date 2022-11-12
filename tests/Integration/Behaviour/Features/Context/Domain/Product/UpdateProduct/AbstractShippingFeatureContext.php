@@ -29,7 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProd
 
 use Carrier;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
  * This abstract class was introduced during UpdateProductCommand unification process,

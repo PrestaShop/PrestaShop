@@ -192,7 +192,6 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[shipping][additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
             ->addMultiShopField('[shipping][delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
             ->addMultiShopField('[shipping][delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[shipping][carriers]', 'setCarrierReferenceIds', DataField::TYPE_ARRAY)
         ;
 
         return $this;

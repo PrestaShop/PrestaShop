@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProd
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
@@ -73,6 +74,40 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
     }
 
     /**
+     * @When I assign product :productReference with following carriers:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I assign product :productReference with following carriers for shop :shopReference:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+    }
+
+    /**
+     * @When I assign product :productReference with following carriers for all shops:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function setProductCarriersForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->setCarriers($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
      * @param string $productReference
      * @param TableNode $table
      * @param ShopConstraint $shopConstraint
@@ -95,6 +130,22 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function setCarriers(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $carrierReferences = $this->getCarrierReferenceIds(array_keys($table->getRowsHash()));
+
+        $this->getCommandBus()->handle(new SetCarriersCommand(
+            (int) $this->getSharedStorage()->get($productReference),
+            $carrierReferences,
+            $shopConstraint
+        ));
     }
 
     /**
@@ -145,11 +196,6 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
         if (isset($data['delivery time out of stock notes'])) {
             $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
             unset($unhandledValues['delivery time out of stock notes']);
-        }
-
-        if (isset($data['carriers'])) {
-            $command->setCarrierReferenceIds($this->getCarrierReferenceIds($data['carriers']));
-            unset($unhandledValues['carriers']);
         }
 
         return $unhandledValues;

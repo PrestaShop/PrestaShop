@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ShippingAssertionFeatureContext extends AbstractShippingFeatureContext
 {
@@ -126,7 +127,7 @@ class ShippingAssertionFeatureContext extends AbstractShippingFeatureContext
         )->getShippingInformation();
 
         if (isset($data['carriers'])) {
-            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
+            $expectedReferenceIds = $this->getCarrierReferenceIds(PrimitiveUtils::castStringArrayIntoArray($data['carriers']));
             $actualReferenceIds = $productShippingInformation->getCarrierReferences();
 
             Assert::assertEquals(
