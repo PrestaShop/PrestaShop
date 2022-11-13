@@ -67,10 +67,6 @@ $(() => {
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
   const productType = $productForm.data('productType');
-
-  // Responsive navigation tabs
-  initTabs();
-
   const {eventEmitter} = window.prestashop.instance;
 
   // Init product model along with input watching and syncing
@@ -82,7 +78,15 @@ $(() => {
     new CombinationsList(productId, productFormModel);
   }
 
-  new NavbarHandler($(ProductMap.navigationBar));
+  // Responsive navigation tabs
+  initTabs();
+  const navbar = new NavbarHandler($(ProductMap.navigationBar));
+
+  // When combination page is opened on quantity tab we automatically switch to the combination one which replaces it for product with combinations
+  if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS && navbar.getHashTarget() === ProductMap.stock.navigationTarget) {
+    navbar.switchToTarget(ProductMap.combinations.navigationTarget);
+  }
+
   new ProductSEOManager(eventEmitter);
   new ProductOptionsManager(productType, productFormModel);
   new ProductShippingManager();
