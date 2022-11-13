@@ -88,8 +88,12 @@ export default {
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
   },
+  stock: {
+    navigationTarget: '#product_stock-tab',
+  },
   combinations: {
     navigationTab: '#product_combinations-tab-nav',
+    navigationTarget: '#product_combinations-tab',
     combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',

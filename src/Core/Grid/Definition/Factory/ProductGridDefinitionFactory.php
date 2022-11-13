@@ -136,10 +136,14 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('reference'))
-                    ->setName($this->trans('Reference', [], 'Admin.Global'))
+                (new LinkColumn('reference'))
+                    ->setName($this->trans('Reference', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'reference',
+                        'route' => 'admin_products_v2_edit',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'route_fragment' => 'tab-product_specifications-tab',
                     ])
             )
             ->add(
@@ -237,6 +241,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route' => 'admin_products_v2_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
+                'clickable_row' => true,
             ])
             )
             ->add((new LinkRowAction('preview'))
