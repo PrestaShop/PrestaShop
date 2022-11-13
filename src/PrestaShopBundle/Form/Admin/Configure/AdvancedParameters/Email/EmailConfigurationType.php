@@ -88,6 +88,9 @@ class EmailConfigurationType extends TranslatorAwareType
                 'multiple' => false,
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
             ])
+            ->add('subject_prefix', SwitchType::class, [
+                'label' => $this->trans('Prefix subject with shop name', 'Admin.Advparameters.Feature'),
+            ])
             ->add('mail_type', ChoiceType::class, [
                 'expanded' => true,
                 'multiple' => false,
