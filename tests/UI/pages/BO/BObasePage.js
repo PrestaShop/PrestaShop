@@ -568,13 +568,17 @@ class BOBasePage extends CommonPage {
    */
   async setValueOnTinymceInput(page, iFrameSelector, value) {
     const args = {selector: iFrameSelector, vl: value};
-    await page.evaluate(async (args) => {
-      /* eslint-env browser */
-      const iFrameElement = await document.querySelector(args.selector);
-      const iFrameHtml = iFrameElement.contentDocument.documentElement;
-      const textElement = await iFrameHtml.querySelector('body p');
-      textElement.textContent = args.vl;
-    }, args);
+    // eslint-disable-next-line no-eval
+    const fn = eval(`({
+      async fnSetValueOnTinymceInput(args) {
+        /* eslint-env browser */
+        const iFrameElement = await document.querySelector(args.selector);
+        const iFrameHtml = iFrameElement.contentDocument.documentElement;
+        const textElement = await iFrameHtml.querySelector('body p');
+        textElement.textContent = args.vl;
+      }
+    })`);
+    await page.evaluate(fn.fnSetValueOnTinymceInput, args);
   }
 
   /**

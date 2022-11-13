@@ -170,14 +170,11 @@ export default {
 
   /**
    * Returns the number of tabs
-   * @param browser {Browser} Browser given
+   * @param browserContext {BrowserContext} Browser given
    * @returns {number}
    */
-  getNumberTabs(browser: Browser): number {
-    // Get contexts
-    const contexts = browser.contexts();
-
+  getNumberTabs(browserContext: BrowserContext): number {
     // Get pages from last created context
-    return contexts[contexts.length - 1].pages().length;
+    return browserContext.pages().length;
   },
 };
