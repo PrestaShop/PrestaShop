@@ -520,25 +520,19 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function getAssociatedShopIds(CombinationId $combinationId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        $qb = $this->connection->createQueryBuilder()
             ->select('id_shop')
             ->from($this->dbPrefix . 'product_attribute_shop')
             ->where('id_product_attribute = :combinationId')
             ->setParameter('combinationId', $combinationId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
-
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
-
-        return $shops;
+        return array_map(
+            static function (array $result): ShopId {
+                return new ShopId((int) $result['id_shop']);
+            },
+            $qb->execute()->fetchAll()
+        );
     }
 
     /**
