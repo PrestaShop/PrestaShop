@@ -242,16 +242,16 @@ services:
 
   form.type.payment.payment_module_carrier_restriction:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCarrierRestrictionsType'
-    parent: 'form.type.payment.module_preferences_parent'
+    parent: 'form.type.payment.payment_module_preferences_parent'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.carrier_by_reference_id").getChoices()'
     tags:
       - { name: form.type }
 
-  form.type.payment.module_country_restriction:
+  form.type.payment.payment_module_country_restriction:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType'
-    parent: 'form.type.payment.module_preferences_parent'
+    parent: 'form.type.payment.payment_module_preferences_parent'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
@@ -261,16 +261,16 @@ services:
 
   form.type.payment.payment_module_currency_restriction:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType'
-    parent: 'form.type.payment.module_preferences_parent'
+    parent: 'form.type.payment.payment_module_preferences_parent'
     public: true
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.currency_by_id_payment_form").getChoices()'
     tags:
       - { name: form.type }
 
   form.type.payment.payment_module_group_restriction:
     class: 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
-    parent: 'form.type.payment.module_preferences_parent'
+    parent: 'form.type.payment.payment_module_preferences_parent'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'

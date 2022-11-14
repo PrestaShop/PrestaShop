@@ -30,7 +30,6 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
-use PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType;
 
 class HookCore extends ObjectModel
 {
