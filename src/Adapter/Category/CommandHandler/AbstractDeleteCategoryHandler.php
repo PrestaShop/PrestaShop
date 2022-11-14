@@ -81,6 +81,11 @@ abstract class AbstractDeleteCategoryHandler
      */
     protected function handleProductsUpdate($parentCategoryId, CategoryDeleteMode $mode)
     {
+        @trigger_error(
+            __FUNCTION__ . 'is deprecated. Use AbstractDeleteCategoryHandler::updateProductCategories instead.',
+            E_USER_DEPRECATED
+        );
+
         $productsWithoutCategory = \Db::getInstance()->executeS('
 			SELECT p.`id_product`
 			FROM `' . _DB_PREFIX_ . 'product` p
