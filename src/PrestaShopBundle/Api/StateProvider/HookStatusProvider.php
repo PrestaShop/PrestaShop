@@ -6,11 +6,9 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShop\PrestaShop\Core\Domain\Hook\ValueObject\HookId;
 
 final class HookStatusProvider implements ProviderInterface
 {
-
     private $queryBus;
 
     public function __construct(CommandBusInterface $queryBus)
