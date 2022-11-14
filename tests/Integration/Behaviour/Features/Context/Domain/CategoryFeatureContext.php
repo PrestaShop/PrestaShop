@@ -99,11 +99,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
     {
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
-        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash(), $langId);
+        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash());
     }
 
     /**
@@ -115,15 +115,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
     {
+        Category::resetStaticCache();
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
         $parentCategoryId = $this->getSharedStorage()->get($parentReference);
         $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
 
-        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
+        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash());
     }
 
     /**
@@ -545,9 +546,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param CategoryForTree[] $actualCategories
      * @param array<int, array<string, string>> $expectedCategories
-     * @param int $langId
      */
-    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId): void
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories): void
     {
         Assert::assertEquals(
             count($actualCategories),
@@ -570,7 +570,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             );
 
             Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
-            Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
+            Assert::assertEquals($expectedCategory['category name'], $category->getName(), 'Unexpected category name');
+            Assert::assertEquals($expectedCategory['display name'], $category->getDisplayName(), 'Unexpected category display name');
 
             foreach ($actualCategoryChildren as $index => $childCategory) {
                 Assert::assertEquals($expectedChildrenCategoryIds[$index], $childCategory->getCategoryId());

@@ -127,7 +127,7 @@ Feature: Duplicate product from Back Office (BO).
       | description_short[fr-FR] | Lunettes de lecture transparentes |
     And I assign product product2 to following categories:
       | categories       | [home, women, clothes] |
-      | default category | women              |
+      | default category | women                  |
     And I update product "product2" options with following values:
       | visibility          | catalog      |
       | available_for_order | true         |
@@ -142,8 +142,8 @@ Feature: Duplicate product from Back Office (BO).
       | mpn       | mpn2              |
       | reference | ref2              |
     And I update product "product2" tags with following values:
-      | tags[en-US] | glasses,readingglasses,women      |
-      | tags[fr-FR] | lunettes,lunettespourlire,femmes  |
+      | tags[en-US] | glasses,readingglasses,women     |
+      | tags[fr-FR] | lunettes,lunettespourlire,femmes |
     And I update product "product2" prices with following information:
       | price           | 200.00          |
       | ecotax          | 0               |
@@ -153,13 +153,13 @@ Feature: Duplicate product from Back Office (BO).
       | unit_price      | 500             |
       | unity           | lots            |
     And I update product product2 SEO information with following values:
-      | meta_title[en-US]       | READINGGLASSES meta title   |
-      | meta_description[en-US] | You can read now            |
-      | meta_description[fr-FR] | You can read in french now  |
-      | link_rewrite[en-US]     | reading-glasses             |
-      | link_rewrite[fr-FR]     | lunettes-de-lecture         |
-      | redirect_type           | 301-product                 |
-      | redirect_target         | product1                    |
+      | meta_title[en-US]       | READINGGLASSES meta title  |
+      | meta_description[en-US] | You can read now           |
+      | meta_description[fr-FR] | You can read in french now |
+      | link_rewrite[en-US]     | reading-glasses            |
+      | link_rewrite[fr-FR]     | lunettes-de-lecture        |
+      | redirect_type           | 301-product                |
+      | redirect_target         | product1                   |
     And I update product product2 shipping information with following values:
       | width                                   | 12                   |
       | height                                  | 8                    |
@@ -214,10 +214,10 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | home         | Home        | Home        | false      |
-      | men          | Men         | Men         | false      |
-      | clothes      | Clothes     | Clothes     | true       |
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
@@ -290,22 +290,22 @@ Feature: Duplicate product from Back Office (BO).
     And product "copy_of_product2" should be disabled
     And product "copy_of_product2" type should be standard
     And product "copy_of_product2" localized "name" should be:
-      | locale | value                       |
-      | en-US  | copy of Reading glasses     |
-      | fr-FR  | copie de lunettes           |
+      | locale | value                   |
+      | en-US  | copy of Reading glasses |
+      | fr-FR  | copie de lunettes       |
     And product "copy_of_product2" localized "description" should be:
-      | locale | value                |
-      | en-US  | Reading glasses      |
-      | fr-FR  | lunettes de lecture  |
+      | locale | value               |
+      | en-US  | Reading glasses     |
+      | fr-FR  | lunettes de lecture |
     And product "copy_of_product2" localized "description_short" should be:
       | locale | value                             |
       | en-US  | Clear Reading glasses             |
       | fr-FR  | Lunettes de lecture transparentes |
     And product copy_of_product2 should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | home         | Home        | Home        | false      |
-      | women        | Women       | Women       | true       |
-      | clothes      | Clothes     | Clothes     | false      |
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | women        | Women   | true       |
+      | clothes      | Clothes | false      |
     And product "copy_of_product2" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
@@ -340,16 +340,16 @@ Feature: Duplicate product from Back Office (BO).
       | unity            | lots            |
       | unit_price_ratio | 0.4             |
     And product "copy_of_product2" localized "meta_title" should be:
-      | locale | value                 |
+      | locale | value                     |
       | en-US  | READINGGLASSES meta title |
     And product "copy_of_product2" localized "meta_description" should be:
-      | locale | value                          |
-      | en-US  | You can read now               |
-      | fr-FR  | You can read in french now     |
+      | locale | value                      |
+      | en-US  | You can read now           |
+      | fr-FR  | You can read in french now |
     And product "copy_of_product2" localized "link_rewrite" should be:
       | locale | value               |
       | en-US  | reading-glasses     |
-      | fr-FR  |lunettes-de-lecture  |
+      | fr-FR  | lunettes-de-lecture |
     And product copy_of_product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |

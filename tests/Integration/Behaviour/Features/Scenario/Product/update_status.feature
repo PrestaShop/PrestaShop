@@ -48,10 +48,10 @@ Feature: Update product status from BO (Back Office)
       | name[en-US] | T-Shirt with listed values |
       | type        | combinations               |
     When I generate combinations for product product3 using following attributes:
-      | Size  | [S,M]              |
+      | Size  | [S,M]         |
       | Color | [White,Black] |
     Then product "product3" should have following combinations:
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
       | product3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
@@ -82,22 +82,22 @@ Feature: Update product status from BO (Back Office)
 
   Scenario: I can not publish a product without a name
     When I add product "product4" with following information:
-      | type        | standard       |
+      | type | standard |
     Then product "product4" should be disabled
     And product "product4" type should be standard
     And product "product4" localized "name" should be:
       | locale | value |
       | en-US  |       |
     And product "product4" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I enable product "product4"
     Then I should get an error that product online data are invalid
     And product "product4" should be disabled
     When I update product "product4" basic information with following values:
       | name[en-US] | photo of funny mug |
     Then product "product4" localized "name" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     When I enable product "product4"
     And product "product4" should be enabled

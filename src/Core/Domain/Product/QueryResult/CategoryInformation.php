@@ -38,20 +38,28 @@ class CategoryInformation
     private $id;
 
     /**
-     * @var array<int, string>
+     * @var string
      */
-    private $localizedNames;
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $displayName;
 
     /**
      * @param int $id
-     * @param array<int, string> $localizedNames
+     * @param string $name
+     * @param string $displayName
      */
     public function __construct(
         int $id,
-        array $localizedNames
+        string $name,
+        string $displayName
     ) {
         $this->id = $id;
-        $this->localizedNames = $localizedNames;
+        $this->name = $name;
+        $this->displayName = $displayName;
     }
 
     /**
@@ -63,10 +71,18 @@ class CategoryInformation
     }
 
     /**
-     * @return array<int, string>
+     * @return string
      */
-    public function getLocalizedNames(): array
+    public function getName(): string
     {
-        return $this->localizedNames;
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName(): string
+    {
+        return $this->displayName;
     }
 }
