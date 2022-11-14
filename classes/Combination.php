@@ -124,11 +124,7 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
-        if (count($this->id_shop_list)) {
-            $shopIdsList = $this->id_shop_list;
-        } else {
-            $shopIdsList = Shop::getContextListShopID();
-        }
+        $shopIdsList = $this->getShopIdsList();
 
         // Removes the product from StockAvailable for the related shops
         if (!empty($shopIdsList)) {
@@ -210,12 +206,7 @@ class CombinationCore extends ObjectModel
         }
 
         $product = new Product((int) $this->id_product);
-
-        if (count($this->id_shop_list)) {
-            $shopIdsList = $this->id_shop_list;
-        } else {
-            $shopIdsList = Shop::getContextListShopID();
-        }
+        $shopIdsList = $this->getShopIdsList();
 
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
             $outOfStock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
@@ -542,5 +533,19 @@ class CombinationCore extends ObjectModel
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 			WHERE pa.`id_product_attribute` = ' . (int) $idProductAttribute
         );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getShopIdsList(): array
+    {
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
+        } else {
+            $shopIdsList = Shop::getContextListShopID();
+        }
+
+        return $shopIdsList;
     }
 }
