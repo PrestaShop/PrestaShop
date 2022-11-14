@@ -163,6 +163,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             } else {
                 $products[$i]['image'] = $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT, $this->getLanguageIsoCode());
             }
+            // If no legend is defined use the name as a fallback (used for alt property on image)
+            if (empty($product['legend'])) {
+                $products[$i]['legend'] = $products[$i]['name'];
+            }
 
             $productTaxRulesGroupId = new TaxRulesGroupId((int) ($products[$i]['id_tax_rules_group'] ?? 0));
             $priceTaxExcluded = new DecimalNumber((string) ($products[$i]['price_tax_excluded'] ?? 0));
