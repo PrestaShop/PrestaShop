@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler;
 
+use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\SetProductImagesForAllShopHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveAnImageWhichIsACoverException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -21,6 +22,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      * @var ProductImageRepository
      */
     private $productImageRepository;
+
     /**
      * @var ProductImageMultiShopRepository
      */
@@ -84,7 +86,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
         $productImageSettingsFiltered = array_filter(
             $productImageSettings,
             function (ProductImageSetting $productImageSetting) use ($imageId): bool {
-                return $productImageSetting->getProductImageId()->getValue() === $imageId;
+                return $productImageSetting->getImageId()->getValue() === $imageId;
             }
         );
 
@@ -116,11 +118,11 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
     /**
      * @param array $shopIdsAssociatedToProduct
      * @param array $shopsToAddImageTo
-     * @param \Image $image
+     * @param Image $image
      *
      * @return array
      */
-    private function getShopsToRemoveImageFrom(array $shopIdsAssociatedToProduct, array $shopsToAddImageTo, \Image $image): array
+    private function getShopsToRemoveImageFrom(array $shopIdsAssociatedToProduct, array $shopsToAddImageTo, Image $image): array
     {
         $shopsToRemoveImageFrom = array_diff($shopIdsAssociatedToProduct, $shopsToAddImageTo);
         $shopIdsAssociatedToImage = array_map(
@@ -144,7 +146,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
         );
         $coverToRemove = array_intersect($shopIdsCovered, $shopsToRemoveImageFrom);
         if (!empty($coverToRemove)) {
-            throw new CannotRemoveAnImageWhichIsACoverException();
+            throw new CannotRemoveCoverException();
         }
 
         return $shopsToRemoveImageFrom;
@@ -152,13 +154,14 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
 
     /**
      * @param int $productId
-     * @param \Image $image
+     * @param Image $image
      * @param array $shopsToAddImageTo
      *
      * @return void
      */
-    private function associateImageToShops(int $productId, \Image $image, array $shopsToAddImageTo): void
+    private function associateImageToShops(int $productId, Image $image, array $shopsToAddImageTo): void
     {
+        //We need to set id_product otherwise the association is done but product_id will be null in ps_image_shop
         $image->id_product = $productId;
         $image->associateTo($shopsToAddImageTo);
     }

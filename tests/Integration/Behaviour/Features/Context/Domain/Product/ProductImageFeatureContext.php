@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveAnImageWhichIsACoverException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -514,7 +514,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         }
         try {
             $this->getCommandBus()->handle($command);
-        } catch (CannotRemoveAnImageWhichIsACoverException $e) {
+        } catch (CannotRemoveCoverException $e) {
             $this->setLastException($e);
         }
     }
@@ -524,6 +524,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover()
     {
-        $this->assertLastErrorIs(CannotRemoveAnImageWhichIsACoverException::class);
+        $this->assertLastErrorIs(CannotRemoveCoverException::class);
     }
 }

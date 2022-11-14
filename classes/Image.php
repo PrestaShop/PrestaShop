@@ -120,6 +120,12 @@ class ImageCore extends ObjectModel
         return parent::add($autoDate, $nullValues);
     }
 
+    /**
+     * This override is needed because we need to set 'id_product' => (int) $this->id_product, in $data array which is
+     * a specific case for association between shop and image
+     *
+     * {@inheritDoc}
+     */
     public function associateTo($id_shops)
     {
         if (!$this->id) {

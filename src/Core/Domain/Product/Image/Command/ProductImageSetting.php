@@ -32,7 +32,7 @@ class ProductImageSetting
     /**
      * @return ImageId
      */
-    public function getProductImageId(): ImageId
+    public function getImageId(): ImageId
     {
         return $this->productImageId;
     }
