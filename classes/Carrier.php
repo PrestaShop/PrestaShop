@@ -213,7 +213,7 @@ class CarrierCore extends ObjectModel
      *
      * @return float
      */
-    public static function addPackingWeight($id_carrier, $total_weight): float
+    public static function addPackingWeight(int $id_carrier, float $total_weight): float
     {
         $cache_key = $id_carrier . '_package_weight_' . $total_weight;
 
@@ -222,8 +222,8 @@ class CarrierCore extends ObjectModel
             $sql = 'SELECT w.`package_weight`
                     FROM `' . _DB_PREFIX_ . 'delivery` d
                     LEFT JOIN `' . _DB_PREFIX_ . 'range_weight` w ON (d.`id_range_weight` = w.`id_range_weight`)
-                    WHERE ' . (float) $total_weight . ' >= w.`delimiter1`
-                        AND ' . (float) $total_weight . ' < w.`delimiter2`
+                    WHERE ' . $total_weight . ' >= w.`delimiter1`
+                        AND ' . $total_weight . ' < w.`delimiter2`
                         AND d.`id_carrier` = ' . $id_carrier . '
                         ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
                     ORDER BY w.`delimiter1` ASC';
@@ -424,14 +424,14 @@ class CarrierCore extends ObjectModel
      *
      * @return false|string|null Maximum package weight
      */
-    public static function getMaxPackageWeightByWeight($id_carrier)
+    public static function getMaxPackageWeightByWeight(int $id_carrier)
     {
-        $cache_id = 'Carrier::getMaxPackageWeightByWeight_' . (int) $id_carrier;
+        $cache_id = 'Carrier::getMaxPackageWeightByWeight_' . $id_carrier;
         if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT w.`package_weight`
                     FROM `' . _DB_PREFIX_ . 'delivery` d
                     INNER JOIN `' . _DB_PREFIX_ . 'range_weight` w ON d.`id_range_weight` = w.`id_range_weight`
-                    WHERE d.`id_carrier` = ' . (int) $id_carrier . '
+                    WHERE d.`id_carrier` = ' . $id_carrier . '
                         ' . Carrier::sqlDeliveryRangeShop('range_weight') . '
                     ORDER BY w.`delimiter2` DESC';
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);

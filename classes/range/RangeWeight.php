@@ -42,7 +42,7 @@ class RangeWeightCore extends ObjectModel
     /**
      * @var float
      */
-    public $package_weight = 0.1;
+    public $package_weight;
 
     /**
      * @see ObjectModel::$definition
