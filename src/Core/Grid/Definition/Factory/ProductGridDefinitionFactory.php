@@ -122,7 +122,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Image', [], 'Admin.Global'))
                     ->setOptions([
                         'src_field' => 'image',
-                        'alt_field' => 'name',
+                        'alt_field' => 'legend',
                     ])
             )
             ->add(

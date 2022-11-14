@@ -108,6 +108,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
+            ->addSelect('img_lang.legend')
             ->addSelect('p.`id_tax_rules_group`')
         ;
 
@@ -183,6 +184,12 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'image_shop',
                 'img_shop',
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
+            )
+            ->leftJoin(
+                'img_shop',
+                $this->dbPrefix . 'image_lang',
+                'img_lang',
+                'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :id_lang'
             )
             ->andWhere('p.`state`=1')
         ;
