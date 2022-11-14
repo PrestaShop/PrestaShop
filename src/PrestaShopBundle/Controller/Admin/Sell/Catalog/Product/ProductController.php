@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -42,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
@@ -50,17 +52,20 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -114,7 +119,9 @@ class ProductController extends FrameworkBundleAdminController
         if (isset($filters->getFilters()['id_category'])) {
             $filteredCategoryId = (int) $filters->getFilters()['id_category'];
         }
-        $categoriesForm = $this->createForm(CategoryFilterType::class, $filteredCategoryId);
+        $categoriesForm = $this->createForm(CategoryFilterType::class, $filteredCategoryId, [
+            'action' => $this->generateUrl('admin_products_grid_category_filter'),
+        ]);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
             'categoryFilterForm' => $categoriesForm->createView(),
@@ -123,6 +130,102 @@ class ProductController extends FrameworkBundleAdminController
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
         ]);
+    }
+
+    /**
+     * Process Grid search, but we need to add the category filter which is handled independently.
+     *
+     * @param Request $request
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function searchGridAction(Request $request)
+    {
+        /** @var GridDefinitionFactoryInterface $definitionFactory */
+        $definitionFactory = $this->get('prestashop.core.grid.definition.factory.product');
+
+        $filterId = ProductGridDefinitionFactory::GRID_ID;
+
+        $adminFilter = $this->getGridAdminFilter();
+        if (isset($adminFilter)) {
+            $currentFilters = json_decode($adminFilter->getFilter(), true);
+            if (!empty($currentFilters['filters']['id_category'])) {
+                $request->query->add([
+                    'product[filters][id_category]' => $currentFilters['filters']['id_category'],
+                ]);
+            }
+        }
+
+        /** @var ResponseBuilder $responseBuilder */
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $definitionFactory,
+            $request,
+            $filterId,
+            'admin_products_v2_index',
+            ['product[filters][id_category]']
+        );
+    }
+
+    /**
+     * Reset filters for the grid only (category is kept, it can be cleared via another dedicated action)
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
+     */
+    public function resetGridSearchAction(): JsonResponse
+    {
+        $adminFilter = $this->getGridAdminFilter();
+        if (isset($adminFilter)) {
+            $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+            $currentFilters = json_decode($adminFilter->getFilter(), true);
+
+            // This reset action only reset the filters from the Grid, we keep the filter by category if it was present (we still reset to page 1 though)
+            if (!empty($currentFilters['filters']['id_category'])) {
+                $adminFilter->setFilter(json_encode([
+                    'filters' => [
+                        'id_category' => $currentFilters['filters']['id_category'],
+                    ],
+                    'offset' => 0,
+                ]));
+                $adminFiltersRepository->updateFilter($adminFilter);
+            } else {
+                $adminFiltersRepository->unsetFilters($adminFilter);
+            }
+        }
+
+        return new JsonResponse();
+    }
+
+    /**
+     * Apply the category filter and redirect to list on first page.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return RedirectResponse
+     */
+    public function gridCategoryFilterAction(Request $request): RedirectResponse
+    {
+        $filteredCategoryId = $request->request->get('category_filter');
+        $adminFilter = $this->getGridAdminFilter();
+        if (isset($adminFilter)) {
+            $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+            $currentFilters = json_decode($adminFilter->getFilter(), true);
+            if (empty($filteredCategoryId)) {
+                unset($currentFilters['filters']['id_category']);
+            } else {
+                $currentFilters['filters']['id_category'] = $filteredCategoryId;
+            }
+            $currentFilters['offset'] = 0;
+            $adminFilter->setFilter(json_encode($currentFilters));
+            $adminFiltersRepository->updateFilter($adminFilter);
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
     }
 
     /**
@@ -139,6 +242,27 @@ class ProductController extends FrameworkBundleAdminController
             'lightDisplay' => $request->query->has('liteDisplaying'),
             'productLightGrid' => $this->presentGrid($grid),
         ]);
+    }
+
+    /**
+     * The redirection URL is generation thanks to the ProductPreviewProvider however it can't be used in the grid
+     * since the LinkRowAction expects a symfony route, so this action is merely used as a proxy for symfony routing
+     * and redirects to the appropriate product preview url.
+     *
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * @return RedirectResponse
+     */
+    public function previewAction(int $productId): RedirectResponse
+    {
+        /** @var bool $isEnabled */
+        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+
+        /** @var ProductPreviewProvider $previewUrlProvider */
+        $previewUrlProvider = $this->get('prestashop.adapter.shop.url.product_preview_provider');
+        $previewUrl = $previewUrlProvider->getUrl($productId, $isEnabled);
+
+        return $this->redirect($previewUrl);
     }
 
     /**
@@ -824,6 +948,19 @@ class ProductController extends FrameworkBundleAdminController
                 ]
             ),
         ]);
+    }
+
+    private function getGridAdminFilter(): ?AdminFilter
+    {
+        if (null === $this->getUser() || null === $this->getContext()->shop || empty($this->getContext()->shop->id)) {
+            return null;
+        }
+
+        $adminFiltersRepository = $this->get('prestashop.core.admin.admin_filter.repository');
+        $employeeId = $this->getUser()->getId();
+        $shopId = $this->getContext()->shop->id;
+
+        return $adminFiltersRepository->findByEmployeeAndFilterId($employeeId, $shopId, ProductGridDefinitionFactory::GRID_ID);
     }
 
     /**

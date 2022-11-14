@@ -25,6 +25,7 @@
 
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 
 const {$} = window;
 
@@ -41,6 +42,7 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
+  grid.addExtension(new LinkRowActionExtension());
 
   new CreateProductModal();
   grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
