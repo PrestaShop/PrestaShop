@@ -84,8 +84,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      */
     public function getImages(ProductId $productId, ShopConstraint $shopConstraint): array
     {
-        $imagesIds = $this->getImagesIds($productId, $shopConstraint);
-
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
         } elseif ($shopConstraint->forAllShops()) {
@@ -94,16 +92,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             $shopId = $shopConstraint->getShopId();
         }
 
-        if (empty($imagesIds)) {
-            return [];
-        }
-
-        $images = [];
-        foreach ($imagesIds as $imageId) {
-            $images[] = $this->get($imageId, $shopId);
-        }
-
-        return $images;
+        return array_map(
+            function (ImageId $imageId) use ($shopId): Image {
+                return $this->get($imageId, $shopId);
+            },
+            $this->getImagesIds($productId, $shopConstraint)
+        );
     }
 
     /**

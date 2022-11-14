@@ -49,6 +49,7 @@ final class AddProductImageHandler implements AddProductImageHandlerInterface
      * @var ImageValidator
      */
     private $imageValidator;
+
     /**
      * @var ProductImageMultiShopRepository
      */

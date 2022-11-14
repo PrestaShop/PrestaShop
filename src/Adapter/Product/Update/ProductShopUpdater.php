@@ -163,6 +163,7 @@ class ProductShopUpdater
     {
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         foreach ($imagesFromSourceShop as $image) {
+            //We need to set id_product otherwise the association is done but product_id will be null in ps_image_shop
             $image->id_product = $productId->getValue();
             $image->associateTo($targetShopId->getValue());
         }
