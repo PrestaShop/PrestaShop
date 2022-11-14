@@ -29,11 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Hook\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Hook\ValueObject\HookId;
-use ApiPlatform\Core\Annotation\ApiResource;
-//use ApiPlatform\Core\Annotation\ApiProperty;
-//use ApiPlatform\Metadata\ApiResource;
-//use ApiPlatform\Metadata\Get;
-//use PrestaShopBundle\Api\StateProvider\HookStatusProvider;
 
 /**
  * Get current status (enabled/disabled) for a given hook
