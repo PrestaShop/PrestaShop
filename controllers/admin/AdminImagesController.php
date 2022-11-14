@@ -72,27 +72,27 @@ class AdminImagesControllerCore extends AdminController
                 'required' => false,
                 'type' => 'bool',
                 'is_bool' => true,
-            ]
+            ],
         ];
 
         if (true === $this->generateAdditionalAvif) {
             $fields = array_merge($fields, [
-                    'PS_ADDITIONAL_IMAGE_AVIF' => [
-                        'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
-                        'show' => true,
-                        'required' => false,
-                        'type' => 'bool',
-                        'is_bool' => true,
-                    ],
-                    'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
-                        'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
-                        'validation' => 'isUnsignedId',
-                        'required' => true,
-                        'cast' => 'intval',
-                        'type' => 'text',
-                    ],
-                ]
+                'PS_ADDITIONAL_IMAGE_AVIF' => [
+                    'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                    'show' => true,
+                    'required' => false,
+                    'type' => 'bool',
+                    'is_bool' => true,
+                ],
+                'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
+                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
+                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                    'validation' => 'isUnsignedId',
+                    'required' => true,
+                    'cast' => 'intval',
+                    'type' => 'text',
+                ],
+            ]
             );
         }
 
@@ -628,7 +628,7 @@ class AdminImagesControllerCore extends AdminController
                             }
 
                             if ($this->generateAdditionalAvif) {
-                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['height'], 'avif', true);
+                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int) $imageType['width'], (int) $imageType['height'], 'avif', true);
                             }
 
                             if ($generate_hight_dpi_images) {
@@ -639,7 +639,7 @@ class AdminImagesControllerCore extends AdminController
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.webp', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'webp', true);
                                 }
                                 if ($this->generateAdditionalAvif) {
-                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int)$imageType['height'] * 2, 'avif', true);
+                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'avif', true);
                                 }
                             }
                         }
@@ -674,7 +674,7 @@ class AdminImagesControllerCore extends AdminController
                         }
 
                         if ($this->generateAdditionalAvif) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int)$imageType['width'], (int)$imageType['height'], 'avif', true);
+                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int) $imageType['width'], (int) $imageType['height'], 'avif', true);
                         }
 
                         if ($generate_hight_dpi_images) {
