@@ -10,6 +10,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\CommandHandler\SetProductImagesForAllShopHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveAnImageWhichIsACoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -51,7 +52,6 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
             $shopsToAddImageTo = $this->extractShopsToAddImageTo($command->getProductImageSettings(), $image->id);
             $shopsToRemoveImageFrom = $this->getShopsToRemoveImageFrom($shopIdsAssociatedToProduct, $shopsToAddImageTo, $image);
             $this->associateImageToShops($command->getProductId()->getValue(), $image, $shopsToAddImageTo);
-            //todo: check cover
             $this->productImageMultiShopRepository->deleteFromShops($image, $shopsToRemoveImageFrom);
         }
     }
@@ -135,6 +135,17 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
                 return in_array($shopToRemoveImageFrom, $shopIdsAssociatedToImage, true);
             }
         );
+
+        $shopIdsCovered = array_map(
+            function (ShopId $shopId): int {
+                return $shopId->getValue();
+            },
+            $this->productImageMultiShopRepository->getShopIdsCoveredBy(new ImageId($image->id))
+        );
+        $coverToRemove = array_intersect($shopIdsCovered, $shopsToRemoveImageFrom);
+        if (!empty($coverToRemove)) {
+            throw new CannotRemoveAnImageWhichIsACoverException();
+        }
 
         return $shopsToRemoveImageFrom;
     }

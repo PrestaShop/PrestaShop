@@ -46,6 +46,7 @@ Feature: Add product image from Back Office (BO)
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
     #todo: And product "product1" should have no images for shops "shop2" when GetProductImage is upgrade by ShopConstraint
+    #todo verify cover image 1 product 1 for shop 1
 
   Scenario: Add new product image for all shops
     Given following image types should be applicable to products:
