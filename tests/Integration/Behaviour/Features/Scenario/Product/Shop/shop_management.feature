@@ -336,3 +336,30 @@ Feature: Copy product from shop to shop.
       | locale | value       |
       | en-US  | too slow... |
       | fr-FR  |             |
+
+  Scenario: I copy product to another shop that was not associated, image associations are copied
+    Given I add product "product1" with following information:
+      | name[en-US] | funny mug |
+      | type        | standard  |
+    And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
+    And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
+    And I copy product product1 from shop shop1 to shop shop2
+    Then product "product1" should have following images for shop "shop1":
+      | image reference |  position | shops        |
+      | image1          |  1        | shop1, shop2 |
+      | image2          |  2        | shop1, shop2 |
+    And product "product1" should have following images for shop "shop2":
+      | image reference |  position | shops        |
+      | image1          |  1        | shop1, shop2 |
+      | image2          |  2        | shop1, shop2 |
+    And product "product1" should have following images for shop "shop3":
+      | image reference |  position | shops        |
+    And product "product1" should have following images for shop "shop4":
+      | image reference |  position | shops        |
+    And following image types should be applicable to products:
+      | reference     | name           | width | height |
+      | cartDefault   | cart_default   | 125   | 125    |
+      | homeDefault   | home_default   | 250   | 250    |
+      | largeDefault  | large_default  | 800   | 800    |
+      | mediumDefault | medium_default | 452   | 452    |
+      | smallDefault  | small_default  | 98    | 98     |

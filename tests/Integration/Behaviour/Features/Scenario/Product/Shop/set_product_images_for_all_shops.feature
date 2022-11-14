@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags set-set-multishop-images-for-all-shops
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags set-multishop-images-for-all-shops
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
@@ -19,13 +19,12 @@ Feature: Set product images for all shops from Back Office (BO)
       | type        | standard       |
     And product "product1" type should be standard
     And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    #todo verify cover image 1 product 1
     And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
     And I copy product product1 from shop shop1 to shop shop2
     And I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
     And I copy product product1 from shop shop2 to shop shop3
     Then product "product1" should have following images for shop "shop1":
-      | image reference |  position | shops                |
+      | image reference |  position | shops               |
       | image1          |  1        | shop1, shop2, shop3 |
       | image2          |  2        | shop1, shop2, shop3 |
     And product "product1" should have following images for shop "shop2":
@@ -90,10 +89,10 @@ Feature: Set product images for all shops from Back Office (BO)
       | large_default  |
       | medium_default |
       | small_default  |
-#todo
-#  Scenario: Remove an image which is a cover should raise an error
-#    When I apply the following matrix of images for product "product1":
-#      | imageReference        | shopReferences      |
-#      | image2                | shop1, shop2, shop3 |
-#      | image3                | shop2, shop3        |
-#    Then I should get an error that you cannot remove an image which is a cover
+
+  Scenario: Remove an image which is a cover should raise an error
+    When I apply the following matrix of images for product "product1":
+      | imageReference        | shopReferences      |
+      | image2                | shop1, shop2, shop3 |
+      | image3                | shop2, shop3        |
+    Then I should get an error that you cannot remove an image which is a cover

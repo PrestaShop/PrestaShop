@@ -33,7 +33,6 @@ use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -42,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
-use PrestaShopException;
 
 /**
  * Provides access to product Image data source with shop context
@@ -119,7 +117,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     {
         $qb = $this->connection->createQueryBuilder()->select('id_image');
 
-        //todo: manage position
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
         } elseif ($shopConstraint->forAllShops()) {
@@ -210,22 +207,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $this->addObjectModelToShops($image, $shopIds, CannotAddProductImageException::class);
 
-        //Todo: Maybe useless try test behat with this
-        try {
-            if (!$image->associateTo($shopIds)) {
-                throw new ProductImageException(sprintf(
-                    'Failed to associate product image #%d with shops',
-                    $image->id
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to associate image #%d with shops', $image->id),
-                0,
-                $e
-            );
-        }
-
         return $image;
     }
 
@@ -238,5 +219,29 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     public function deleteFromShops(Image $image, array $shopsToRemoveImageFrom)
     {
         $this->deleteObjectModelFromShops($image, $shopsToRemoveImageFrom, CannotDeleteProductImageException::class);
+    }
+
+    /**
+     * @param ImageId $imageId
+     *
+     * @return ShopId[]
+     */
+    public function getShopIdsCoveredBy(ImageId $imageId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'image_shop')
+            ->where('id_image = :imageId')
+            ->andWhere('cover = 1')
+            ->setParameter('imageId', $imageId->getValue())
+        ;
+
+        return array_map(
+            static function (array $shop): ShopId {
+                return new ShopId((int) $shop['id_shop']);
+            },
+            $qb->execute()->fetchAll()
+        );
     }
 }

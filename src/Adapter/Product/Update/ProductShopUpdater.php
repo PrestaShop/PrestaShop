@@ -161,7 +161,6 @@ class ProductShopUpdater
      */
     public function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
-        //todo: update test
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         foreach ($imagesFromSourceShop as $image) {
             $image->id_product = $productId->getValue();

@@ -512,7 +512,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 )
             );
         }
-        $this->getCommandBus()->handle($command);
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CannotRemoveAnImageWhichIsACoverException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
