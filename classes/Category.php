@@ -1311,6 +1311,10 @@ class CategoryCore extends ObjectModel
 			VALUES ' . implode(',', $row)
         );
 
+        if ($flag) {
+            Cache::clean('Product::getProductCategories_' . (int) $idNew);
+        }
+
         return $flag;
     }
 
