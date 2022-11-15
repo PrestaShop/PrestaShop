@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFou
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
@@ -62,12 +61,7 @@ class ImageController extends FrameworkBundleAdminController
     {
         /** @var ProductImage[] $images */
         $images = $this->getQueryBus()->handle(
-            new GetProductImages($productId,
-            ShopConstraint::shop(
-                $this->get('prestashop.adapter.shop.context')->getContextShopID()
-                ?? $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT')
-            )
-        ));
+            new GetProductImages($productId));
 
         return new JsonResponse(array_map([$this, 'formatImage'], $images));
     }

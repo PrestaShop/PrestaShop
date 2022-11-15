@@ -45,7 +45,7 @@ services:
   prestashop.adapter.product.image.query_handler.get_product_images_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler
     arguments:
-      - '@prestashop.adapter.product.image.repository.product_image_multishop_repository'
+      - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
     tags:
       - name: tactician.handler
