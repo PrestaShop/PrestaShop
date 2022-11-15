@@ -61,12 +61,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     public const EMPTY_VALUE = '';
     public const DEFAULT_ROOT_CATEGORY_ID = 1;
-    public const JPG_IMAGE_TYPE = '.jpg';
     public const THUMB0 = '0_thumb';
-    public const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
-        . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
-        . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
-        . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
     public const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
@@ -665,7 +660,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
         if (isset($testCaseData['Category cover image'])) {
-            $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
+            $coverImage = $this->pretendImageUploaded(
+                $this->psCatImgDir,
+                $testCaseData['Category cover image'],
+                $categoryId
+            );
         }
         $menuThumbNailsImages = [];
         if (isset($testCaseData['Menu thumbnails'])) {
@@ -718,31 +717,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $parentCategoryId;
-    }
-
-    /**
-     * @param array $testCaseData
-     * @param int $categoryId
-     *
-     * @return string
-     */
-    private function pretendImageUploaded(array $testCaseData, int $categoryId): string
-    {
-        //@todo: refactor CategoryCoverUploader. Move uploaded file in Form handler instead of Uploader and use the uploader here in tests
-        $categoryCoverImageName = $testCaseData['Category cover image'];
-        $data = base64_decode(self::JPG_IMAGE_STRING);
-        $im = imagecreatefromstring($data);
-        if ($im !== false) {
-            header('Content-Type: image/jpg');
-            imagejpeg(
-                $im,
-                $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE,
-                0
-            );
-            imagedestroy($im);
-        }
-
-        return $categoryCoverImageName;
     }
 
     /**
