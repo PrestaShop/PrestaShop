@@ -76,7 +76,7 @@ const checkUndefined = (jsonFile) => {
     .map((test) => test.fullTitle.trim());
 
   if (undefinedContextsSteps.length !== 0) {
-    throw new Error(
+    console.error(
       `Some steps are missing contexts on these scenarios: \n - ${undefinedContextsSteps.join('\n - ')}`,
     );
   }
@@ -96,7 +96,7 @@ const checkDoubles = (jsonFile) => {
   const contextDoubles = duplicates(count(reportContexts));
 
   if (contextDoubles.length !== 0) {
-    throw new Error(`Some test identifiers must be fixed:\n${contextDoubles}`);
+    console.error(`Some test identifiers must be fixed:\n - ${contextDoubles.join('\n - ')}`);
   } else {
     console.log('All good, no changes are required');
   }
