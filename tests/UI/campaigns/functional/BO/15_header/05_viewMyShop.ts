@@ -1,26 +1,20 @@
 // Import utils
 import helper from '@utils/helpers';
+import loginCommon from '@commonTests/BO/loginBO';
+import {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
+import foHomePage from '@pages/FO/home';
 
 const baseContext = 'functional_BO_header_viewMyShop';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 describe('BO - Header : View My Shop', async () => {
   // before and after functions
