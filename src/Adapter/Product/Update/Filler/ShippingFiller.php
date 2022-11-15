@@ -43,22 +43,22 @@ class ShippingFiller implements ProductFillerInterface
         $updatableProperties = [];
 
         if (null !== $command->getWidth()) {
-            $product->width = (string) $command->getWidth();
+            $product->width = (string) $command->getWidth()->getDecimalValue();
             $updatableProperties[] = 'width';
         }
 
         if (null !== $command->getHeight()) {
-            $product->height = (string) $command->getHeight();
+            $product->height = (string) $command->getHeight()->getDecimalValue();
             $updatableProperties[] = 'height';
         }
 
         if (null !== $command->getDepth()) {
-            $product->depth = (string) $command->getDepth();
+            $product->depth = (string) $command->getDepth()->getDecimalValue();
             $updatableProperties[] = 'depth';
         }
 
         if (null !== $command->getWeight()) {
-            $product->weight = (string) $command->getWeight();
+            $product->weight = (string) $command->getWeight()->getDecimalValue();
             $updatableProperties[] = 'weight';
         }
 
