@@ -86,7 +86,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      */
     public function assertCombinationAvailableQuantity(string $combinationReference, int $availableQuantity): void
     {
-        $actualStock = $this->getCombinationForEditing($combinationReference)->getStock();
+        $actualStock = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getStock();
         Assert::assertSame(
             $availableQuantity,
             $actualStock->getQuantity(),
