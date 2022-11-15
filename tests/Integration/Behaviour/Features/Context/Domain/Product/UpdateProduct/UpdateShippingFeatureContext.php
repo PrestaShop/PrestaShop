@@ -26,16 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractShippingFeatureContext;
 
 class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
 {
@@ -113,29 +112,13 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
      * @param TableNode $table
      * @param ShopConstraint $shopConstraint
      */
-    private function setCarriers(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
-    {
-        $carrierReferences = $this->getCarrierReferenceIds(array_keys($table->getRowsHash()));
-
-        $this->getCommandBus()->handle(new SetCarriersCommand(
-            (int) $this->getSharedStorage()->get($productReference),
-            $carrierReferences,
-            $shopConstraint
-        ));
-    }
-
-    /**
-     * @param string $productReference
-     * @param TableNode $table
-     * @param ShopConstraint $shopConstraint
-     */
     private function updateShipping(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductShippingCommand($productId, $shopConstraint);
+            $command = new UpdateProductCommand($productId, $shopConstraint);
             $unhandledData = $this->setUpdateShippingCommandData($data, $command);
 
             Assert::assertEmpty(
@@ -150,12 +133,28 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
     }
 
     /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function setCarriers(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $carrierReferences = $this->getCarrierReferenceIds(array_keys($table->getRowsHash()));
+
+        $this->getCommandBus()->handle(new SetCarriersCommand(
+            (int) $this->getSharedStorage()->get($productReference),
+            $carrierReferences,
+            $shopConstraint
+        ));
+    }
+
+    /**
      * @param array $data
-     * @param UpdateProductShippingCommand $command
+     * @param UpdateProductCommand $command
      *
      * @return array values that was provided, but wasn't handled
      */
-    private function setUpdateShippingCommandData(array $data, UpdateProductShippingCommand $command): array
+    private function setUpdateShippingCommandData(array $data, UpdateProductCommand $command): array
     {
         $unhandledValues = $data;
 

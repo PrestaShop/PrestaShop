@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -525,6 +526,20 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setUpc('1345')
             ->setMpn('mpn')
             ->setReference('0123456789')
+            ->setWidth('50.5')
+            ->setHeight('40.5')
+            ->setDepth('30.5')
+            ->setWeight('2.2')
+            ->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_SPECIFIC)
+            ->setAdditionalShippingCost('5.7')
+            ->setLocalizedDeliveryTimeInStockNotes([
+                1 => 'In stock',
+                2 => 'Yra sandelyje',
+            ])
+            ->setLocalizedDeliveryTimeOutOfStockNotes([
+                1 => 'Out of stock',
+                2 => 'Isparduota',
+            ])
         ;
 
         yield [
@@ -573,6 +588,26 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'upc' => '1345',
                         'mpn' => 'mpn',
                         'reference' => '0123456789',
+                    ],
+                ],
+                'shipping' => [
+                    'dimensions' => [
+                        'width' => '50.5',
+                        'height' => '40.5',
+                        'depth' => '30.5',
+                        'weight' => '2.2',
+                    ],
+                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+                    'additional_shipping_cost' => '5.7',
+                    'delivery_time_notes' => [
+                        'in_stock' => [
+                            1 => 'In stock',
+                            2 => 'Yra sandelyje',
+                        ],
+                        'out_of_stock' => [
+                            1 => 'Out of stock',
+                            2 => 'Isparduota',
+                        ],
                     ],
                 ],
             ],
@@ -912,7 +947,17 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
             ->setLocalizedMetaTitles($localizedMetaTitles)
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setWidth('50.5')
+            ->setHeight('40.5')
+            ->setDepth('30.5')
+            ->setWeight('2.2')
+            ->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_SPECIFIC)
+            ->setLocalizedDeliveryTimeOutOfStockNotes([
+                1 => 'Out of stock',
+                2 => 'Isparduota',
+            ])
         ;
+
         $allShopsCommand = $this->getAllShopsCommand();
         $allShopsCommand
             ->setAvailableForOrder(true)
@@ -920,6 +965,11 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedDescriptions($localizedDescriptions)
             ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+            ->setAdditionalShippingCost('5.7')
+            ->setLocalizedDeliveryTimeInStockNotes([
+                1 => 'In stock',
+                2 => 'Yra sandelyje',
+            ])
         ;
 
         yield [
@@ -954,6 +1004,28 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'target' => [
                             'id' => 42,
                             self::MODIFY_ALL_SHOPS_PREFIX . 'id' => true,
+                        ],
+                    ],
+                ],
+                'shipping' => [
+                    'dimensions' => [
+                        'width' => '50.5',
+                        'height' => '40.5',
+                        'depth' => '30.5',
+                        'weight' => '2.2',
+                    ],
+                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+                    'additional_shipping_cost' => '5.7',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'additional_shipping_cost' => true,
+                    'delivery_time_notes' => [
+                        'in_stock' => [
+                            1 => 'In stock',
+                            2 => 'Yra sandelyje',
+                        ],
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'in_stock' => true,
+                        'out_of_stock' => [
+                            1 => 'Out of stock',
+                            2 => 'Isparduota',
                         ],
                     ],
                 ],
