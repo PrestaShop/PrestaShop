@@ -19,7 +19,7 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
-const baseContext = 'functional_BO_orders_orders_pagination';
+const baseContext = 'functional_BO_Shopping_Carts_Delete_Abandoned_Carts';
 
 let browserContext;
 let page;
