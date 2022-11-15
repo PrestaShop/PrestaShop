@@ -367,7 +367,10 @@ class ContextCore
             $this->cart->secure_key = $customer->secure_key;
             $this->cookie->id_guest = (int) $this->cart->id_guest;
         } else {
-            Guest::setNewGuest($this->cookie);
+            if (!$this->cookie->id_guest) {
+                Guest::setNewGuest($this->cookie);
+            }
+
             if (Validate::isLoadedObject($this->cart)) {
                 $idCarrier = (int) $this->cart->id_carrier;
                 $this->cart->secure_key = $customer->secure_key;
