@@ -171,21 +171,21 @@ Feature: Category Management
     And I enable product "product1"
     And product "product1" should be enabled
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | home         | Home        | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     And I assign product product1 to following categories:
       | categories       | [category6] |
       | default category | category6   |
     Then product "product1" should be assigned to following categories:
-      | id reference | name[en-US]    | name[fr-FR]       | is default |
-      | category6    | Mobile phones6 | Mobile phones6 fr | true       |
+      | id reference | name           | is default |
+      | category6    | Mobile phones6 | true       |
     # associate_and_disable mode case
     When I delete category "category6" choosing mode "associate_and_disable"
     Then category "category6" does not exist
     # product should be disabled and associated with the deleted category parent
     Then product "product1" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home-accessories | Home Accessories | true       |
     And product "product1" should be disabled
     Given I add new category "category7" with following details:
       | name[en-US]         | Mobile phones7    |
@@ -199,14 +199,14 @@ Feature: Category Management
       | categories       | [category7] |
       | default category | category7   |
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US]    | name[fr-FR]       | is default |
-      | category7    | Mobile phones7 | Mobile phones7 fr | true       |
+      | id reference | name           | is default |
+      | category7    | Mobile phones7 | true       |
     # associate_only mode case
     When I delete category "category7" choosing mode "associate_only"
     # product should be still be enabled and associated with the deleted category parent
     Then product "product1" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home-accessories | Home Accessories | true       |
     And product "product1" should be enabled
     Given I add new category "category8" with following details:
       | name[en-US]         | Mobile phones8    |
@@ -219,8 +219,8 @@ Feature: Category Management
       | categories       | [category8] |
       | default category | category8   |
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US]    | name[fr-FR]       | is default |
-      | category8    | Mobile phones8 | Mobile phones8 fr | true       |
+      | id reference | name           | is default |
+      | category8    | Mobile phones8 | true       |
     # remove_associated mode case
     When I delete category "category8" choosing mode "remove_associated"
     # product should be removed
@@ -266,25 +266,25 @@ Feature: Category Management
       | categories       | [category_b6,category_b7,category_b8] |
       | default category | category_b6                           |
     Then product "product_b1" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b6  | not important | not important | false      |
-      | category_b7  | not important | not important | true       |
-      | category_b8  | not important | not important | false      |
+      | id reference | name          | is default |
+      | category_b6  | not important | false      |
+      | category_b7  | not important | true       |
+      | category_b8  | not important | false      |
     Then product "product_b2" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b6  | not important | not important | true       |
-      | category_b7  | not important | not important | false      |
-      | category_b8  | not important | not important | false      |
+      | id reference | name          | is default |
+      | category_b6  | not important | true       |
+      | category_b7  | not important | false      |
+      | category_b8  | not important | false      |
     When I bulk delete categories "category_b6,category_b7,category_b8" choosing mode "associate_only"
     Then category "category_b6" does not exist
     And category "category_b7" does not exist
     And category "category_b8" does not exist
     Then product "product_b1" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home-accessories | Home Accessories | true       |
     Then product "product_b2" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home-accessories | Home Accessories | true       |
     And product "product_b1" should be enabled
     And product "product_b2" should be enabled
 
@@ -321,22 +321,22 @@ Feature: Category Management
       | categories       | [category_b9,category_b10] |
       | default category | category_b10               |
     And product "product_b1" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b9  | not important | not important | true       |
-      | category_b10 | not important | not important | false      |
+      | id reference | name          | is default |
+      | category_b9  | not important | true       |
+      | category_b10 | not important | false      |
     And product "product_b2" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b9  | not important | not important | false      |
-      | category_b10 | not important | not important | true       |
+      | id reference | name          | is default |
+      | category_b9  | not important | false      |
+      | category_b10 | not important | true       |
     When I bulk delete categories "category_b9,category_b10" choosing mode "associate_and_disable"
     Then category "category_b9" does not exist
     And category "category_b10" does not exist
     And product "product_b1" should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | clothes      | Clothes     | Clothes     | true       |
+      | id reference | name    | is default |
+      | clothes      | Clothes | true       |
     And product "product_b2" should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | clothes      | Clothes     | Clothes     | true       |
+      | id reference | name    | is default |
+      | clothes      | Clothes | true       |
     And product "product_b1" should be disabled
     And product "product_b2" should be disabled
 
@@ -369,13 +369,13 @@ Feature: Category Management
       | categories       | [category_b11,category_b12] |
       | default category | category_b11                |
     And product "product_b1" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b11 | not important | not important | false      |
-      | category_b12 | not important | not important | true       |
+      | id reference | name          | is default |
+      | category_b11 | not important | false      |
+      | category_b12 | not important | true       |
     And product "product_b2" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | category_b11 | not important | not important | true       |
-      | category_b12 | not important | not important | false      |
+      | id reference | name          | is default |
+      | category_b11 | not important | true       |
+      | category_b12 | not important | false      |
     # remove_associated mode case
     When I bulk delete categories "category_b11,category_b12" choosing mode "remove_associated"
     Then category "category_b11" does not exist
@@ -401,15 +401,15 @@ Feature: Category Management
       | categories       | [home,category9] |
       | default category | category9        |
     Then product "product2" should be assigned to following categories:
-      | id reference | name[en-US]    | name[fr-FR]       | is default |
-      | home         | Home           | Home              | false      |
-      | category9    | Mobile phones9 | Mobile phones9 fr | true       |
+      | id reference | name           | is default |
+      | home         | Home           | false      |
+      | category9    | Mobile phones9 | true       |
     When I delete category "category9" choosing mode "associate_and_disable"
     Then category "category9" does not exist
     Then product "product2" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home             | Home             | Home             | false      |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home             | Home             | false      |
+      | home-accessories | Home Accessories | true       |
     And product "product2" should be enabled
 
 
@@ -429,9 +429,9 @@ Feature: Category Management
     When I delete category "category10" choosing mode "associate_only"
     Then category "category10" does not exist
     Then product "product2" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home             | Home             | Home             | false      |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home             | Home             | false      |
+      | home-accessories | Home Accessories | true       |
     And product "product2" should be enabled
 
   Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
@@ -451,9 +451,9 @@ Feature: Category Management
     When I delete category "category11" choosing mode "remove_associated"
     Then category "category11" does not exist
     Then product "product2" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home             | Home             | Home             | false      |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home             | Home             | false      |
+      | home-accessories | Home Accessories | true       |
     And product "product2" should be enabled
 
   Scenario: Bulk delete categories which are assigned as default for some product, but are not the last categories of that product
@@ -486,29 +486,29 @@ Feature: Category Management
       | categories       | [home,category_b11,category_b12] |
       | default category | category_b11                     |
     And product "product_b1" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | home         | Home          | Home          | false      |
-      | category_b11 | not important | not important | true       |
-      | category_b12 | not important | not important | false      |
+      | id reference | name          | is default |
+      | home         | Home          | false      |
+      | category_b11 | not important | true       |
+      | category_b12 | not important | false      |
     # product_b2 has "home" category as default, so it shouldn't be affected
     And I assign product product_b2 to following categories:
       | categories       | [home,category_b12] |
-      | default category | home              |
+      | default category | home                |
     And product "product_b2" should be assigned to following categories:
-      | id reference | name[en-US]   | name[fr-FR]   | is default |
-      | home         | Home          | Home          | true       |
-      | category_b12 | not important | not important | false      |
+      | id reference | name          | is default |
+      | home         | Home          | true       |
+      | category_b12 | not important | false      |
     When I bulk delete categories "category_b11,category_b12" choosing mode "remove_associated"
     Then category "category_b11" does not exist
     And category "category_b12" does not exist
     And product "product_b1" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home             | Home             | Home             | false      |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home             | Home             | false      |
+      | home-accessories | Home Accessories | true       |
     And product "product_b1" should be assigned to following categories:
-      | id reference     | name[en-US]      | name[fr-FR]      | is default |
-      | home             | Home             | Home             | false      |
-      | home-accessories | Home Accessories | Home Accessories | true       |
+      | id reference     | name             | is default |
+      | home             | Home             | false      |
+      | home-accessories | Home Accessories | true       |
 
   Scenario: Bulk delete categories
     Given I add new category "category12" with following details:
