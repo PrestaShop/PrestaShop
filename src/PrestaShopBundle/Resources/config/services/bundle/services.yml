@@ -94,8 +94,9 @@ services:
     public: false
     tags: [ 'container.env_var_processor' ]
 
-  prestashop.api.state_provider.hook_status_provider:
+  PrestaShopBundle\Api\StateProvider\HookStatusProvider:
     tags: [ 'api_platform.state_provider' ]
-    class: PrestaShopBundle\Api\StateProvider\HookStatusProvider
+    public: false
+    autowire: true
     arguments:
-      - "@prestashop.core.query_bus"
+      - '@prestashop.core.query_bus'

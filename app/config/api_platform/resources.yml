@@ -2,7 +2,7 @@ resources:
   PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus:
     operations:
       ApiPlatform\Metadata\Get:
-        provider: "prestashop.api.state_provider.hook_status_provider"
+        provider: PrestaShopBundle\Api\StateProvider\HookStatusProvider
         uriTemplate: '/hooks/{id}'
         requirements:
           id: '\d+'
