@@ -1,5 +1,6 @@
 // Import utils
 import helper from '@utils/helpers';
+import mailHelper from '@utils/mailHelper';
 
 // Import test context
 import testContext from '@utils/testContext';
@@ -7,9 +8,6 @@ import testContext from '@utils/testContext';
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const mailHelper = require('@utils/mailHelper');
 const {getDateFormat} = require('@utils/date');
 
 // Import BO common tests
