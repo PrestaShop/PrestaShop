@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * This abstract class is an extension of the AbstractObjectModelRepository that provides additional helper functions
@@ -70,23 +71,26 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
     /**
      * @param ObjectModel $objectModel
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
      * @return int
      */
-    protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
+    protected function addObjectModelToShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): int
     {
         // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
         // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = [$shopId];
+        $objectModel->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
         return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
     /**
      * @param ObjectModel $objectModel
-     * @param array $shopIds
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
@@ -100,15 +104,17 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     ): void {
         // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
         // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = $shopIds;
+        $objectModel->id_shop_list = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
 
         $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
     /**
      * @param ObjectModel $objectModel
-     * @param array $propertiesToUpdate
-     * @param array $shopIds
+     * @param array<int|string, string|int[]> $propertiesToUpdate
+     * @param ShopId[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
@@ -171,6 +177,43 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
                 $id,
                 $shopId->getValue()
             ));
+        }
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param ShopId[] $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
+    {
+        try {
+            // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
+            // this way we can control exactly which shop is deleted
+            $objectModel->id_shop_list = array_map(static function (ShopId $shopId): int {
+                return $shopId->getValue();
+            }, $shopIds);
+
+            if (!$objectModel->delete()) {
+                throw new $exceptionClass(
+                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
     }
 }

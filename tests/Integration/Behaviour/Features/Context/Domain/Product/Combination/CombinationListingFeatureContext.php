@@ -46,7 +46,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertCombinationsList(string $productReference, TableNode $tableNode): void
     {
-        $this->assertCombinations($productReference, $tableNode->getColumnsHash());
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash(), $this->getDefaultShopId());
     }
 
     /**
@@ -55,9 +55,29 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertWholeList(string $productReference, TableNode $tableNode): void
+    public function assertWholeListForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $this->assertCombinations($productReference, $tableNode->getColumnsHash(), true);
+        $this->assertCombinations($productReference, $tableNode->getColumnsHash(), $this->getDefaultShopId(), true);
+    }
+
+    /**
+     * @Then product ":productReference" should have the following combinations for shops ":shopReferences":
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param string $shopReferences
+     */
+    public function assertWholeListForShops(string $productReference, TableNode $tableNode, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $this->assertCombinations(
+                $productReference,
+                $tableNode->getColumnsHash(),
+                $this->getSharedStorage()->get($shopReference),
+                true
+            );
+        }
     }
 
     /**
@@ -67,7 +87,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertNoCombinationsInPage(string $productReference): void
     {
-        $this->assertCombinations($productReference, []);
+        $this->assertCombinations($productReference, [], $this->getDefaultShopId());
     }
 
     /**
@@ -77,7 +97,25 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function assertProductHasNoCombinations(string $productReference): void
     {
-        $this->assertCombinations($productReference, [], true);
+        $this->assertCombinations($productReference, [], $this->getDefaultShopId(), true);
+    }
+
+    /**
+     * @Then product :productReference should have no combinations for shops ":shopReferences"
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCombinationsInShops(string $productReference, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $this->assertCombinations(
+                $productReference,
+                [],
+                $this->getSharedStorage()->get($shopReference),
+                true
+            );
+        }
     }
 
     /**
@@ -85,9 +123,25 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      *
      * @param string $productReference
      */
-    public function cleanSearchCriteria(string $productReference): void
+    public function cleanSearchCriteriaForDefaultShop(string $productReference): void
     {
-        $this->getSharedStorage()->clear($this->getSearchCriteriaKey($productReference));
+        $this->getSharedStorage()->clear($this->getSearchCriteriaKey($productReference, $this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I search product ":productReference" combinations list by following search criteria:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function storeSearchCriteriaForDefaultShop(string $productReference, TableNode $tableNode): void
+    {
+        $combinationFilters = $this->buildProductCombinationFiltersForDefaultShop(
+            (int) $this->getSharedStorage()->get($productReference),
+            $tableNode
+        );
+
+        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference, $this->getDefaultShopId()), $combinationFilters);
     }
 
     /**
@@ -96,7 +150,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      *
      * @return ProductCombinationFilters
      */
-    private function buildProductCombinationFilters(int $productId, TableNode $tableNode): ProductCombinationFilters
+    private function buildProductCombinationFiltersForDefaultShop(int $productId, TableNode $tableNode): ProductCombinationFilters
     {
         $dataRows = $tableNode->getRowsHash();
         $defaults = ProductCombinationFilters::getDefaults();
@@ -109,6 +163,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
         $filters = $defaults['filters'];
         $filters['product_id'] = $productId;
+        $filters['shop_id'] = $this->getDefaultShopId();
+
         foreach ($dataRows as $criteriaField => $criteriaValue) {
             $attributeGroupMatch = preg_match('/attributes\[(.*?)\]/', $criteriaField, $matches) ? $matches[1] : null;
             if (null !== $attributeGroupMatch) {
@@ -134,18 +190,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @When I search product ":productReference" combinations list by following search criteria:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function storeSearchCriteria(string $productReference, TableNode $tableNode): void
-    {
-        $combinationFilters = $this->buildProductCombinationFilters((int) $this->getSharedStorage()->get($productReference), $tableNode);
-        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
-    }
-
-    /**
      * @param string $field
      *
      * @return string
@@ -167,11 +211,16 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     /**
      * @param string $productReference
      * @param array $dataRows
-     * @param bool $wholeList if true then search criteria wont be applied
+     * @param int $shopId
+     * @param bool $wholeList if true then search criteria won't be applied
      */
-    private function assertCombinations(string $productReference, array $dataRows, bool $wholeList = false): void
-    {
-        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
+    private function assertCombinations(
+        string $productReference,
+        array $dataRows,
+        int $shopId,
+        bool $wholeList = false
+    ): void {
+        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference, $shopId);
         if ($wholeList) {
             $combinationFilters = null;
         } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
@@ -180,12 +229,12 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $combinationFilters = ProductCombinationFilters::buildDefaults();
         }
 
-        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
+        $combinationsList = $this->getCombinationsList($productReference, $shopId, $combinationFilters);
 
         Assert::assertEquals(
             count($dataRows),
             count($combinationsList->getCombinations()),
-            'Unexpected combinations count'
+            sprintf('Unexpected combinations count for product %s and shop "%d', $productReference, $shopId)
         );
 
         $idsByIdReferences = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());
@@ -200,9 +249,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      *
      * @return string
      */
-    private function getSearchCriteriaKey(string $productReference): string
+    private function getSearchCriteriaKey(string $productReference, int $shopId): string
     {
-        return sprintf('combination_search_criteria_%s', $productReference);
+        return sprintf('combination_search_criteria_%s_%s', $productReference, $shopId);
     }
 
     /**
@@ -270,9 +319,22 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 );
             }
 
+            // similarly to id reference this also contains the string which references combination id
+            // but when we already have references saved into the shared storage, we can use combination id just to assert them
+            // without needing to reassign it to shared storage again
+            if (!empty($expectedCombination['combination id'])) {
+                Assert::assertSame(
+                    $editableCombinationForListing->getCombinationId(),
+                    $this->getSharedStorage()->get($expectedCombination['combination id']),
+                    'Combination ids doesn\'t match'
+                );
+            }
+
             $this->assertAttributesInfo($expectedAttributesInfo, $editableCombinationForListing->getAttributesInformation());
 
-            $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
+            if (!empty($expectedCombination['id reference'])) {
+                $idsByIdReferences[$expectedCombination['id reference']] = $editableCombinationForListing->getCombinationId();
+            }
         }
 
         return $idsByIdReferences;

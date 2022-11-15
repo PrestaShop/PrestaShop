@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -38,28 +39,83 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      *
      * @param string $combinationReference
      */
-    public function deleteCombination(string $combinationReference): void
+    public function deleteCombinationInDefaultShop(string $combinationReference): void
     {
-        $this->getCommandBus()->handle(new DeleteCombinationCommand(
-            (int) $this->getSharedStorage()->get($combinationReference)
-        ));
+        $this->deleteSingleCombination($combinationReference, $this->getDefaultShopId());
     }
 
     /**
      * @When I delete following combinations of product :productReference:
      *
-     * @param string $productRefeence
+     * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function bulkDeleteCombinations(string $productRefeence, TableNode $tableNode): void
+    public function bulkDeleteCombinationsInDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $productId = $this->getSharedStorage()->get($productRefeence);
+        $this->bulkDeleteCombinations($productReference, $tableNode);
+    }
+
+    /**
+     * @When I delete following combinations of product :productReference from shop :shopReference:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $tableNode
+     */
+    public function bulkDeleteCombinationsInShop(string $productReference, string $shopReference, TableNode $tableNode): void
+    {
+        $this->bulkDeleteCombinations($productReference, $tableNode, $shopReference);
+    }
+
+    /**
+     * @When I delete combination :combinationReference from shops ":shopReferences"
+     *
+     * @param string $combinationReference
+     * @param string $shopReferences
+     */
+    public function deleteCombinationInShops(string $combinationReference, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->deleteSingleCombination($combinationReference, $this->getSharedStorage()->get($shopReference));
+        }
+    }
+
+    /**
+     * @param string $combinationReference
+     * @param int $shopId
+     */
+    private function deleteSingleCombination(string $combinationReference, int $shopId): void
+    {
+        $this->getCommandBus()->handle(new DeleteCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($shopId)
+        ));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param string|null $shopReference
+     */
+    private function bulkDeleteCombinations(string $productReference, TableNode $tableNode, ?string $shopReference = null): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
         $combinationIds = [];
         foreach ($tableNode->getColumnsHash() as $column) {
             $combinationIdReference = $column['id reference'];
             $combinationIds[] = $this->getSharedStorage()->get($combinationIdReference);
         }
 
-        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, $combinationIds));
+        if ($shopReference) {
+            $shopId = $this->getSharedStorage()->get($shopReference);
+        } else {
+            $shopId = $this->getDefaultShopId();
+        }
+
+        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+                $productId,
+                $combinationIds,
+                ShopConstraint::shop($shopId))
+        );
     }
 }

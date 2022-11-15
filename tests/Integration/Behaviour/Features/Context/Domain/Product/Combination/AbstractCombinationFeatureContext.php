@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationFo
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
@@ -39,15 +40,17 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
 {
     /**
      * @param string $productReference
+     * @param int $shopId
      * @param ProductCombinationFilters|null $combinationFilters
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsList(string $productReference, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, int $shopId, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
     {
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
+            ShopConstraint::shop($shopId),
             $combinationFilters ? $combinationFilters->getLimit() : null,
             $combinationFilters ? $combinationFilters->getOffset() : null,
             $combinationFilters ? $combinationFilters->getOrderBy() : null,
@@ -61,10 +64,11 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return CombinationForEditing
      */
-    protected function getCombinationForEditing(string $combinationReference): CombinationForEditing
+    protected function getCombinationForEditing(string $combinationReference, int $shopId): CombinationForEditing
     {
         return $this->getQueryBus()->handle(new GetCombinationForEditing(
-            $this->getSharedStorage()->get($combinationReference)
+            $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($shopId)
         ));
     }
 }

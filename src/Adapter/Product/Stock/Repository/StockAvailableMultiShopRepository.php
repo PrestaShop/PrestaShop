@@ -139,6 +139,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
      */
     public function getForCombination(CombinationId $combinationId, ShopId $shopId): StockAvailable
     {
+        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
         $qb = $this->connection->createQueryBuilder();
         $qb->select('id_stock_available')
             ->from($this->dbPrefix . 'stock_available')
@@ -163,17 +164,18 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
 
     /**
      * @param ProductId $productId
+     * @param CombinationId|null $combinationId
      *
      * @return StockAvailable
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function createProductStock(ProductId $productId, ShopId $shopId): StockAvailable
+    public function createStockAvailable(ProductId $productId, ShopId $shopId, ?CombinationId $combinationId = null): StockAvailable
     {
         $stockAvailable = new StockAvailable();
         $stockAvailable->id_product = $productId->getValue();
-        $stockAvailable->id_product_attribute = NoCombinationId::NO_COMBINATION_ID;
+        $stockAvailable->id_product_attribute = $combinationId ? $combinationId->getValue() : NoCombinationId::NO_COMBINATION_ID;
 
         // Use legacy method, it checks if the shop belongs to a ShopGroup that shares stock, in which case the StockAvailable
         // must be assigned to the group not the shop

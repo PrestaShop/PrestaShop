@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -64,8 +65,10 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
         }
 
         $productId = $this->getProductId();
-        $filterId = ProductCombinationFilters::generateFilterId($productId);
+        $shopId = $this->getShopId();
+        $filterId = ProductCombinationFilters::generateFilterId($productId, $shopId);
         $filterParameters['filters']['product_id'] = $productId;
+        $filterParameters['filters']['shop_id'] = $shopId;
 
         return new ProductCombinationFilters($filterParameters, $filterId);
     }
@@ -78,7 +81,19 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
      */
     private function getProductId(): int
     {
-        return (int) $this->request->attributes->get('productId');
+        return $this->request->attributes->getInt('productId');
+    }
+
+    /**
+     * @return int
+     */
+    private function getShopId(): int
+    {
+        if (!$this->request->query->has('shopId')) {
+            throw new InvalidArgumentException('Missing "shopId" in request for combinations list filters');
+        }
+
+        return $this->request->query->getInt('shopId');
     }
 
     /**

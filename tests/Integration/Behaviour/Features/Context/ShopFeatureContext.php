@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -53,32 +54,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     public static function restoreShopTablesAfterFeature(): void
     {
         self::restoreShopTables();
-    }
-
-    private static function restoreShopTables(): void
-    {
-        DatabaseDump::restoreTables([
-            'shop',
-            'shop_group',
-            'shop_url',
-        ]);
-        DatabaseDump::restoreMatchingTables('/.*_shop$/');
-
-        // We need to restore lang tables that are also multi-shop
-        DatabaseDump::restoreTables([
-            'carrier_lang',
-            'category_lang',
-            'cms_category_lang',
-            'cms_lang',
-            'cms_role_lang',
-            'customization_field_lang',
-            'info_lang',
-            'linksmenutop_lang',
-            'meta_lang',
-            'product_lang',
-        ]);
-        Shop::setContext(Shop::CONTEXT_SHOP, 1);
-        Shop::resetStaticCache();
     }
 
     /**
@@ -99,6 +74,16 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             Shop::CONTEXT_SHOP,
             SharedStorage::getStorage()->get($shopReference)
         );
+    }
+
+    /**
+     * @Given /^I (enable|disable) multishop feature/
+     *
+     * @param bool $enable
+     */
+    public function toggleMultiShopFeature(bool $enable): void
+    {
+        self::toggleMultiShop($enable);
     }
 
     /**
@@ -441,5 +426,48 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         if (!$exceptionTriggered) {
             throw new RuntimeException('Expected SearchShopException did not happen');
         }
+    }
+
+    private static function restoreShopTables(): void
+    {
+        DatabaseDump::restoreTables([
+            'shop',
+            'shop_group',
+            'shop_url',
+        ]);
+        DatabaseDump::restoreMatchingTables('/.*_shop$/');
+
+        // We need to restore lang tables that are also multi-shop
+        DatabaseDump::restoreTables([
+            'carrier_lang',
+            'category_lang',
+            'cms_category_lang',
+            'cms_lang',
+            'cms_role_lang',
+            'customization_field_lang',
+            'info_lang',
+            'linksmenutop_lang',
+            'meta_lang',
+            'product_lang',
+        ]);
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        self::toggleMultiShop(false);
+        Shop::resetStaticCache();
+    }
+
+    /**
+     * @param bool $enable
+     */
+    private static function toggleMultiShop(bool $enable): void
+    {
+        $container = CommonFeatureContext::getContainer();
+        /** @var FeatureInterface $multistoreFeature */
+        $multistoreFeature = $container->get('prestashop.adapter.multistore_feature');
+        if ($enable) {
+            $multistoreFeature->enable();
+        } else {
+            $multistoreFeature->disable();
+        }
+        Shop::resetStaticCache();
     }
 }

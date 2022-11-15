@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProductCombinationBuilderTest extends TestCase
+class ProductCombinationFiltersBuilderTest extends TestCase
 {
     /**
      * @dataProvider getSupportsValues
@@ -54,11 +54,12 @@ class ProductCombinationBuilderTest extends TestCase
     public function testBuildFilters()
     {
         $productId = 42;
+        $shopId = 2;
         $builder = new ProductCombinationFiltersBuilder();
-        $builder->setConfig(['request' => $this->buildRequestMock($productId)]);
+        $builder->setConfig(['request' => $this->buildRequestMock($productId, $shopId)]);
 
         $builtFilters = $builder->buildFilters();
-        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId), $builtFilters->getFilterId());
+        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId, $shopId), $builtFilters->getFilterId());
         $filters = $builtFilters->getFilters();
         $this->assertEquals($productId, $filters['product_id']);
     }
@@ -66,8 +67,9 @@ class ProductCombinationBuilderTest extends TestCase
     public function testBuildFiltersWithInitialValues()
     {
         $productId = 42;
+        $shopId = 2;
         $builder = new ProductCombinationFiltersBuilder();
-        $builder->setConfig(['request' => $this->buildRequestMock($productId)]);
+        $builder->setConfig(['request' => $this->buildRequestMock($productId, $shopId)]);
 
         $initialFilters = new Filters([
             'filters' => [
@@ -77,7 +79,7 @@ class ProductCombinationBuilderTest extends TestCase
         ], 'product_id');
 
         $builtFilters = $builder->buildFilters($initialFilters);
-        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId), $builtFilters->getFilterId());
+        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId, $shopId), $builtFilters->getFilterId());
         $filters = $builtFilters->getFilters();
         $this->assertEquals($productId, $filters['product_id']);
         $this->assertEquals(45, $filters['category_id']);
@@ -104,9 +106,9 @@ class ProductCombinationBuilderTest extends TestCase
     /**
      * @param int $productId
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject|Request
+     * @return Request
      */
-    private function buildRequestMock(int $productId)
+    private function buildRequestMock(int $productId, int $shopId): Request
     {
         $requestMock = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
@@ -119,12 +121,24 @@ class ProductCombinationBuilderTest extends TestCase
         ;
 
         $parameterBagMock
-            ->expects($this->once())
-            ->method('get')
-            ->willReturn($productId)
+            ->method('has')
+            ->willReturnMap([
+                ['shopId', true],
+            ])
+        ;
+
+        $parameterBagMock
+            ->method('getInt')
+            ->willReturnMap(
+                [
+                    ['productId', 0, $productId],
+                    ['shopId', 0, $shopId],
+                ]
+            )
         ;
 
         $requestMock->attributes = $parameterBagMock;
+        $requestMock->query = $parameterBagMock;
 
         return $requestMock;
     }

@@ -33,8 +33,8 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditableCombinationsListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
@@ -49,11 +49,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
  */
 final class GetEditableCombinationsListHandler implements GetEditableCombinationsListHandlerInterface
 {
-    /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
-
     /**
      * @var DoctrineQueryBuilderInterface
      */
@@ -80,7 +75,6 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     private $combinationNameBuilder;
 
     /**
-     * @param StockAvailableRepository $stockAvailableRepository
      * @param DoctrineQueryBuilderInterface $combinationQueryBuilder
      * @param AttributeRepository $attributeRepository
      * @param ProductImageRepository $productImageRepository
@@ -88,14 +82,12 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
-        StockAvailableRepository $stockAvailableRepository,
         DoctrineQueryBuilderInterface $combinationQueryBuilder,
         AttributeRepository $attributeRepository,
         ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImagePathFactory,
         CombinationNameBuilderInterface $combinationNameBuilder
     ) {
-        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
         $this->attributeRepository = $attributeRepository;
         $this->productImageRepository = $productImageRepository;
@@ -108,8 +100,19 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
      */
     public function handle(GetEditableCombinationsList $query): CombinationListForEditing
     {
+        $shopId = $query->getShopConstraint()->getShopId();
+
+        if (!$shopId) {
+            throw new CombinationException(sprintf(
+                'Only single shop constraint is supported for query %s',
+                GetEditableCombinationsList::class
+            ));
+        }
+
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
+        $filters['shop_id'] = $shopId->getValue();
+
         $searchCriteria = new ProductCombinationFilters([
             'limit' => $query->getLimit(),
             'offset' => $query->getOffset(),
@@ -187,7 +190,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 $attributesInformationByCombinationId[$combinationId],
                 (bool) $combination['default_on'],
                 $impactOnPrice,
-                (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
+                (int) $combination['quantity'],
                 $imagePath
             );
         }

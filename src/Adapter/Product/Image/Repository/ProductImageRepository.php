@@ -124,7 +124,9 @@ class ProductImageRepository extends AbstractObjectModelRepository
 
         $this->addObjectModel($image, CannotAddProductImageException::class);
 
-        $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint));
 
         try {
             if (!$image->associateTo($shopIds)) {
