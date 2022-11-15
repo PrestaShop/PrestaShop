@@ -1,4 +1,4 @@
-const MailDev = require('maildev');
+import MailDev from 'maildev';
 
 /**
  * @module MailDevHelper
@@ -11,7 +11,7 @@ module.exports = {
    * @param config {{smtpPort: string, smtpServer: string, silent:boolean}} Maildev config to start listening
    * @returns {Object}
    */
-  createMailListener(config = global.maildevConfig) {
+  createMailListener(config = global.maildevConfig): MailDev {
     return new MailDev({
       smtp: config.smtpPort,
       silent: config.silent,
@@ -19,23 +19,23 @@ module.exports = {
   },
   /**
    * Start the maildev listener (listen on 1025 smtp port)
-   * @param mailListener {Object} Maildev server instance
+   * @param mailListener {MailDev} Maildev server instance
    */
-  startListener(mailListener) {
-    mailListener.listen((err) => {
+  startListener(mailListener: MailDev): void {
+    mailListener.listen((err: Error): void => {
       if (err) {
-        throw new Error(err);
+        throw err;
       }
     });
   },
   /**
    * Stop the maildev listener
-   * @param mailListener {Object} Maildev server instance
+   * @param mailListener {MailDev} Maildev server instance
    */
-  stopListener(mailListener) {
-    mailListener.close((err) => {
+  stopListener(mailListener: MailDev): void {
+    mailListener.close((err: Error): void => {
       if (err) {
-        throw new Error(err);
+        throw err;
       }
     });
   },
