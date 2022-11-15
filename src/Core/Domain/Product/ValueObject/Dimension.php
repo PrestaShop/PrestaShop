@@ -39,6 +39,8 @@ class Dimension
 
     /**
      * @param string $value
+     *
+     * @throws DomainConstraintException
      */
     public function __construct(
         string $value
