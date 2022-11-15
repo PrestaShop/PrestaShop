@@ -5,58 +5,45 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
-
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
-const AddressFaker = require('@data/faker/address');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
-const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const {createShoppingCart} = require('@commonTests/FO/createShoppingCart');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders');
 const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
-
 
 const baseContext = 'functional_BO_orders_orders_pagination';
 
 let browserContext;
 let page;
 let numberOfShoppingCarts;
-let numberOfOrders = 0;
-let sortedTable = [];
-let numberOfOrdersAfterFilter;
 
 const orderByCustomerData = {
-        customer: DefaultCustomer,
-        product: Products.demo_1,
-        productQuantity: 1,
-      };
+  customer: DefaultCustomer,
+  product: Products.demo_1,
+  productQuantity: 1,
+};
 
 /*
 Pre-condition:
--
+- creat shopping cart from FO
 Scenario:
--
--
+- Filter shopping carts by non ordered
+- delete them if exist
  */
 
 // Pre-condition: Create 1 order in FO
 createShoppingCart(orderByCustomerData, `${baseContext}_preTest_1`);
 
 describe('BO - Orders : delete abandoned carts', async () => {
-
-    // before and after functions
+  // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -82,7 +69,6 @@ describe('BO - Orders : delete abandoned carts', async () => {
     const pageTitle = await shoppingCartsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
   });
-
 
   it('should reset all filters and get number of shopping carts', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst', baseContext);
@@ -118,5 +104,4 @@ describe('BO - Orders : delete abandoned carts', async () => {
     const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
   });
-
 });
