@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
-use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,9 +63,10 @@ class PaymentModuleGroupRestrictionsType extends PaymentModuleRestrictionsParent
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
+            ->add('group_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
                 'table_label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
+                'table_icon' => 'group',
                 'help' => $this->trans(
                     'Please select available payment modules for each customer group.',
                     'Admin.Payment.Help'

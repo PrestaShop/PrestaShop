@@ -367,7 +367,7 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.admin.payment_preferences.form_data_provider'
       - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCountryRestrictionsType'
-      - 'PaymentPreferences'
+      - 'PaymentModuleCountryRestrictions'
 
   prestashop.admin.payment_currency_restrictions.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
@@ -376,7 +376,7 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.admin.payment_preferences.form_data_provider'
       - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleCurrencyRestrictionsType'
-      - 'PaymentPreferences'
+      - 'PaymentModuleCurrencyRestrictions'
 
   prestashop.admin.payment_group_restrictions.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
@@ -385,7 +385,7 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.admin.payment_preferences.form_data_provider'
       - 'PrestaShopBundle\Form\Admin\Improve\Payment\Preferences\PaymentModuleGroupRestrictionsType'
-      - 'PaymentPreferences'
+      - 'PaymentModuleGroupRestrictions'
 
   prestashop.admin.payment_preferences.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'

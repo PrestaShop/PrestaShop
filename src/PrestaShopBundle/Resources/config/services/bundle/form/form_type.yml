@@ -264,7 +264,7 @@ services:
     parent: 'form.type.payment.payment_module_preferences_parent'
     public: true
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.currency_by_id_payment_form").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoices()'
     tags:
       - { name: form.type }
 

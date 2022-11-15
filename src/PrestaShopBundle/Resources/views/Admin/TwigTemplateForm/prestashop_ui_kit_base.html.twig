@@ -894,6 +894,20 @@
   {% endapply %}
 {% endblock material_multiple_choice_table_widget %}
 
+{% block material_multiple_choice_table_card_row %}
+  <h3 class="card-header">
+    {% if table_icon %}
+      <i class="material-icons">{{ table_icon }}</i>
+    {% endif %}
+    {{ form_label(form) }}
+  </h3>
+  <div class="card-body">
+    <div class="form-group">
+      {{ block('material_multiple_choice_table_widget') }}
+    </div>
+  </div>
+{% endblock material_multiple_choice_table_card_row %}
+
 {# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
 {% block translatable_fields_with_tabs %}
   <div class="translations tabbable" id="{{ form.vars.id }}" tabindex="1">

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
+use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -74,9 +75,10 @@ class PaymentModuleCountryRestrictionsType extends PaymentModuleRestrictionsPare
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
+            ->add('country_restrictions', MaterialMultipleChoiceTableCardType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'table_label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
+                'table_icon' => 'public',
                 'help' => $this->trans(
                     'Please select available payment modules for each country.',
                     'Admin.Payment.Help'
