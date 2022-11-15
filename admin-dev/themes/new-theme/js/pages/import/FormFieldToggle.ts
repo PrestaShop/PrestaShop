@@ -82,6 +82,7 @@ export default class FormFieldToggle {
 
     if (entityStoreContacts === selectedEntity) {
       $truncateFormGroup.hide();
+      $truncateFormGroup.find('input[name="truncate"]').first().trigger('click');
     } else {
       $truncateFormGroup.show();
     }
