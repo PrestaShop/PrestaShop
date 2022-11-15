@@ -19,7 +19,7 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
-const baseContext = 'functional_BO_Shopping_Carts_Delete_Abandoned_Carts';
+const baseContext = 'functional_BO_orders_shoppingCarts_deleteAbandonedCarts';
 
 let browserContext;
 let page;
@@ -42,7 +42,7 @@ Scenario:
 // Pre-condition: Create 1 order in FO
 createShoppingCart(orderByCustomerData, `${baseContext}_preTest_1`);
 
-describe('BO - Orders : delete abandoned carts', async () => {
+describe('BO - Orders : Delete abandoned carts', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
