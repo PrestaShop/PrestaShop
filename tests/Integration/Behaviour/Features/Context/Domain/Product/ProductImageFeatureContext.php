@@ -284,7 +284,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoImages(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId())),
+            $this->getProductImages($productReference),
             sprintf('No images expected for product "%s"', $productReference)
         );
     }
@@ -319,7 +319,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductImagesForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $this->assertProductImagesByShopConstraint($productReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
+        $this->assertAllProductImages($productReference, $tableNode);
     }
 
     /**
@@ -341,7 +341,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         }
 
         foreach ($shopIds as $shopId) {
-            $this->assertProductImagesByShopConstraint($productReference, $table, ShopConstraint::shop($shopId));
+            $this->assertProductImagesByShopId($productReference, $table, $shopId);
         }
     }
 
@@ -362,11 +362,10 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return ProductImage[]
      */
-    private function getProductImages(string $productReference, ShopConstraint $shopConstraint): array
+    private function getProductImages(string $productReference): array
     {
         return $this->getQueryBus()->handle(new GetProductImages(
-            $this->getSharedStorage()->get($productReference),
-            $shopConstraint
+            $this->getSharedStorage()->get($productReference)
         ));
     }
 
@@ -405,13 +404,77 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     /**
      * @param string $productReference
      * @param TableNode $tableNode
-     * @param ShopConstraint $shopConstraint
      *
      * @return void
      */
-    private function assertProductImagesByShopConstraint(string $productReference, TableNode $tableNode, ShopConstraint $shopConstraint)
+    private function assertAllProductImages(string $productReference, TableNode $tableNode)
     {
-        $images = $this->getProductImages($productReference, $shopConstraint);
+        $images = $this->getProductImages($productReference);
+        $this->assertProductImages($tableNode, $images);
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param int $shopId
+     *
+     * @return void
+     */
+    private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId)
+    {
+        $images = array_filter(
+            $this->getProductImages($productReference),
+            static function (ProductImage $productImage) use ($shopId): bool {
+                return in_array($shopId, $productImage->getShopIds(), true);
+            }
+        );
+        $this->assertProductImages($tableNode, $images);
+    }
+
+    /**
+     * @When /^I apply the following matrix of images for product "([^"]*)":$/
+     */
+    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table)
+    {
+        $command = new SetProductImagesForAllShopCommand(
+            $this->getSharedStorage()->get(trim($productReference))
+        );
+        foreach ($table as $data) {
+            $command->addProductSetting(
+                new ProductImageSetting(
+                    $this->getSharedStorage()->get(trim($data['imageReference'])),
+                    array_map(
+                        function (string $shopReference): int {
+                            return $this->getSharedStorage()->get(trim($shopReference));
+                        },
+                        explode(',', $data['shopReferences'])
+                    )
+                )
+            );
+        }
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CannotRemoveCoverException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then /^I should get an error that you cannot remove an image which is a cover$/
+     */
+    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover()
+    {
+        $this->assertLastErrorIs(CannotRemoveCoverException::class);
+    }
+
+    /**
+     * @param TableNode $tableNode
+     * @param ProductImage[] $images
+     *
+     * @return void
+     */
+    private function assertProductImages(TableNode $tableNode, array $images): void
+    {
         $dataRows = $this->localizeByColumns($tableNode);
 
         Assert::assertEquals(
@@ -489,41 +552,5 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 );
             }
         }
-    }
-
-    /**
-     * @When /^I apply the following matrix of images for product "([^"]*)":$/
-     */
-    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table)
-    {
-        $command = new SetProductImagesForAllShopCommand(
-            $this->getSharedStorage()->get(trim($productReference))
-        );
-        foreach ($table as $data) {
-            $command->addProductSetting(
-                new ProductImageSetting(
-                    $this->getSharedStorage()->get(trim($data['imageReference'])),
-                    array_map(
-                        function (string $shopReference): int {
-                            return $this->getSharedStorage()->get(trim($shopReference));
-                        },
-                        explode(',', $data['shopReferences'])
-                    )
-                )
-            );
-        }
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (CannotRemoveCoverException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Then /^I should get an error that you cannot remove an image which is a cover$/
-     */
-    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover()
-    {
-        $this->assertLastErrorIs(CannotRemoveCoverException::class);
     }
 }

@@ -43,21 +43,12 @@ class ProductImagesChoiceProviderTest extends TestCase
             ->getMock()
         ;
 
-        $choiceProvider = new ProductImagesChoiceProvider($queryBus, 1, null);
+        $choiceProvider = new ProductImagesChoiceProvider($queryBus);
         $imageChoices = $choiceProvider->getChoices(['plop' => 45]);
         $this->assertEmpty($imageChoices);
     }
 
-    /**
-     * @dataProvider getChoicesProvider
-     *
-     * @param int $defaultShopId
-     * @param int $contextShopId
-     * @param int $expectedShopId
-     *
-     * @return void
-     */
-    public function testGetChoices(int $defaultShopId, ?int $contextShopId, int $expectedShopId): void
+    public function testGetChoices(): void
     {
         $productId = 42;
         $queryBus = $this->getMockBuilder(CommandBusInterface::class)
@@ -69,30 +60,21 @@ class ProductImagesChoiceProviderTest extends TestCase
         $queryBus
             ->expects($this->once())
             ->method('handle')
-            ->with($this->callback(function (GetProductImages $query) use ($productId, $expectedShopId) {
+            ->with($this->callback(function (GetProductImages $query) use ($productId) {
                 $this->assertEquals($productId, $query->getProductId()->getValue());
-                $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
 
                 return true;
             }))
             ->willReturn($productImages)
         ;
 
-        $choiceProvider = new ProductImagesChoiceProvider($queryBus, $defaultShopId, $contextShopId);
+        $choiceProvider = new ProductImagesChoiceProvider($queryBus);
         $imageChoices = $choiceProvider->getChoices(['product_id' => $productId]);
         $expectedChoices = [
             'thumbnail42.jpg' => 42,
             'thumbnail51.jpg' => 51,
         ];
         $this->assertEquals($expectedChoices, $imageChoices);
-    }
-
-    public function getChoicesProvider(): array
-    {
-        return [
-            'Get defaultshopId if contextShopId is null' => [1, null, 1],
-            'Get contextShopId over default defaultShopId if contextShopId is not null' => [1, 2, 2],
-        ];
     }
 
     /**

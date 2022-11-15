@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
@@ -43,9 +43,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 final class GetProductImagesHandler implements GetProductImagesHandlerInterface
 {
     /**
-     * @var ProductImageMultiShopRepository
+     * @var ProductImageRepository
      */
-    private $productImageMultiShopRepository;
+    private $productImageRepository;
 
     /**
      * @var ProductImagePathFactory
@@ -53,14 +53,14 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @param ProductImageMultiShopRepository $productImageMultiShopRepository
+     * @param ProductImageRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        ProductImageMultiShopRepository $productImageMultiShopRepository,
+        ProductImageRepository $productImageRepository,
         ProductImagePathFactory $productImageUrlFactory
     ) {
-        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
@@ -69,12 +69,12 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
      */
     public function handle(GetProductImages $query): array
     {
-        $images = $this->productImageMultiShopRepository->getImages($query->getProductId(), $query->getShopConstraint());
+        $images = $this->productImageRepository->getImages($query->getProductId());
         $productImages = [];
         foreach ($images as $image) {
             $productImages[] = $this->formatImage(
                 $image,
-                $this->productImageMultiShopRepository->getAssociatedShopIds(new ImageId($image->id))
+                $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
             );
         }
 
