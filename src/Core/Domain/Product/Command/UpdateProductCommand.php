@@ -29,12 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -196,22 +198,22 @@ class UpdateProductCommand
     private $reference;
 
     /**
-     * @var DecimalNumber|null
+     * @var Dimension|null
      */
     private $width;
 
     /**
-     * @var DecimalNumber|null
+     * @var Dimension|null
      */
     private $height;
 
     /**
-     * @var DecimalNumber|null
+     * @var Dimension|null
      */
     private $depth;
 
     /**
-     * @var DecimalNumber|null
+     * @var Dimension|null
      */
     private $weight;
 
@@ -788,9 +790,9 @@ class UpdateProductCommand
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return Dimension|null
      */
-    public function getWidth(): ?DecimalNumber
+    public function getWidth(): ?Dimension
     {
         return $this->width;
     }
@@ -802,17 +804,15 @@ class UpdateProductCommand
      */
     public function setWidth(string $width): self
     {
-        $width = new DecimalNumber($width);
-        $this->assertPackageDimensionIsPositiveOrZero($width, 'width');
-        $this->width = $width;
+        $this->setDimension($width, 'width');
 
         return $this;
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return Dimension|null
      */
-    public function getHeight(): ?DecimalNumber
+    public function getHeight(): ?Dimension
     {
         return $this->height;
     }
@@ -824,17 +824,15 @@ class UpdateProductCommand
      */
     public function setHeight(string $height): self
     {
-        $height = new DecimalNumber($height);
-        $this->assertPackageDimensionIsPositiveOrZero($height, 'height');
-        $this->height = $height;
+        $this->setDimension($height, 'height');
 
         return $this;
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return Dimension|null
      */
-    public function getDepth(): ?DecimalNumber
+    public function getDepth(): ?Dimension
     {
         return $this->depth;
     }
@@ -846,17 +844,15 @@ class UpdateProductCommand
      */
     public function setDepth(string $depth): self
     {
-        $depth = new DecimalNumber($depth);
-        $this->assertPackageDimensionIsPositiveOrZero($depth, 'depth');
-        $this->depth = $depth;
+        $this->setDimension($depth, 'depth');
 
         return $this;
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return Dimension|null
      */
-    public function getWeight(): ?DecimalNumber
+    public function getWeight(): ?Dimension
     {
         return $this->weight;
     }
@@ -868,9 +864,7 @@ class UpdateProductCommand
      */
     public function setWeight(string $weight): self
     {
-        $weight = new DecimalNumber($weight);
-        $this->assertPackageDimensionIsPositiveOrZero($weight, 'weight');
-        $this->weight = $weight;
+        $this->setDimension($weight, 'weight');
 
         return $this;
     }
@@ -956,21 +950,11 @@ class UpdateProductCommand
     }
 
     /**
-     * @todo: dimensions deserves dedicated VO and might be worth reusing in Carriers page.
-     *
-     * @todo Check https://github.com/PrestaShop/PrestaShop/issues/19666#issuecomment-756088706
-     *
-     * @param DecimalNumber $value
-     * @param string $dimensionName
-     *
-     * @throws ProductConstraintException
+     * @param string $value
+     * @param string $propertyName
      */
-    private function assertPackageDimensionIsPositiveOrZero(DecimalNumber $value, string $dimensionName): void
+    private function setDimension(string $value, string $propertyName): void
     {
-        if ($value->isGreaterOrEqualThanZero()) {
-            return;
-        }
-
         $codeByDimension = [
             'width' => ProductConstraintException::INVALID_WIDTH,
             'height' => ProductConstraintException::INVALID_HEIGHT,
@@ -978,9 +962,14 @@ class UpdateProductCommand
             'weight' => ProductConstraintException::INVALID_WEIGHT,
         ];
 
-        throw new ProductConstraintException(
-            sprintf('Invalid product %s, it must be positive number or zero', $dimensionName),
-            $codeByDimension[$dimensionName]
-        );
+        try {
+            $this->{$propertyName} = new Dimension($value);
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                sprintf('Invalid product %s.', $propertyName),
+                $codeByDimension[$propertyName],
+                $e
+            );
+        }
     }
 }
