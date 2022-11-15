@@ -1,9 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -15,9 +18,6 @@ const statesPage = require('@pages/BO/international/locations/states');
 
 // Import data
 const {states} = require('@data/demo/states');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_states_filterAndQuickEditStates';
 

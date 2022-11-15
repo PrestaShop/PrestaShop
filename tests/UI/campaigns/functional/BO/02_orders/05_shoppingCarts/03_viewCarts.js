@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Common tests BO
@@ -27,9 +32,6 @@ const {Statuses} = require('@data/demo/orderStatuses');
 // Import faker data
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_shoppingCarts_viewCarts';
 

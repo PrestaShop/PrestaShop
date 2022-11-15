@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

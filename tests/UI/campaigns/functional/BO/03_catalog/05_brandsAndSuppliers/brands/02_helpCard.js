@@ -1,10 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -12,9 +15,6 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_helperCard';
 

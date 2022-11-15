@@ -1,18 +1,26 @@
-require('./globals');
+import playwright, {
+  BrowserContext, Browser, BrowserType, Page,
+} from 'playwright';
 
-const playwright = require('playwright');
+require('./globals');
 
 /**
  * @module BrowserHelper
  * @description Helper used to wrap low level functions from playwright using global parameters.
  */
-module.exports = {
+export default {
   /**
    * Create playwright browser with options on global
    * @param attempt {number} Number of attempts to restart browser creation if function throw error
    * @return {Promise<Browser>}
    */
-  async createBrowser(attempt = 1) {
+  async createBrowser(attempt = 1): Promise<Browser> {
+    const browsers: Record<string, BrowserType> = {
+      chromium: playwright.chromium,
+      webkit: playwright.webkit,
+      firefox: playwright.firefox,
+    };
+
     try {
       const browserConfig = global.BROWSER.config;
 
@@ -26,8 +34,8 @@ module.exports = {
         browserConfig.args = await (browserConfig.args).concat(global.BROWSER.sandboxArgs);
       }
 
-      return (await playwright[global.BROWSER.name].launch(browserConfig));
-    } catch (e) {
+      return (await browsers[global.BROWSER.name].launch(browserConfig));
+    } catch (e: any) {
       if (attempt <= 3) {
         await (new Promise((resolve) => {
           setTimeout(resolve, 5000);
@@ -43,7 +51,7 @@ module.exports = {
    * @param browser {Browser} Created browser context with options on global
    * @return {Promise<BrowserContext>}
    */
-  createBrowserContext(browser) {
+  createBrowserContext(browser: Browser): Promise<BrowserContext> {
     return browser.newContext(
       {
         acceptDownloads: global.BROWSER.acceptDownloads,
@@ -62,7 +70,7 @@ module.exports = {
    * @param context {BrowserContext} Context created
    * @return {Promise<Page>}
    */
-  async newTab(context) {
+  async newTab(context: BrowserContext): Promise<Page> {
     const page = await context.newPage();
 
     if (global.BROWSER.interceptErrors) {
@@ -76,7 +84,7 @@ module.exports = {
    * @param browserContext {BrowserContext} Instance of the browser context to destroy
    * @return {Promise<void>}
    */
-  async closeBrowserContext(browserContext) {
+  async closeBrowserContext(browserContext: BrowserContext): Promise<void> {
     await browserContext.close();
   },
 
@@ -85,7 +93,7 @@ module.exports = {
    * @param browser {Browser} Instance of the browser to close
    * @return {Promise<void>}
    */
-  async closeBrowser(browser) {
+  async closeBrowser(browser: Browser): Promise<void> {
     await browser.close();
   },
 
@@ -93,7 +101,7 @@ module.exports = {
    * Intercept response errors
    * @param page {Page} Browser tab given
    */
-  interceptResponseErrors(page) {
+  interceptResponseErrors(page: Page): void {
     page.on('response', (response) => {
       const status = response.status().toString();
       const url = page.url();
@@ -109,7 +117,7 @@ module.exports = {
    * Intercept js errors
    * @param page {Page} Browser tab given
    */
-  interceptJsErrors(page) {
+  interceptJsErrors(page: Page): void {
     page.on('pageerror', (e) => {
       global.browserErrors.js.push(
         {
@@ -124,7 +132,7 @@ module.exports = {
    * Intercept console errors
    * @param page {Page} Browser tab given
    */
-  interceptConsoleErrors(page) {
+  interceptConsoleErrors(page: Page): void {
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
         global.browserErrors.console.push({
@@ -139,7 +147,7 @@ module.exports = {
    * Intercept all errors (response, js, console)
    * @param page {Page} Browser tab given
    */
-  interceptAllErrors(page) {
+  interceptAllErrors(page: Page): void {
     this.interceptResponseErrors(page);
     this.interceptJsErrors(page);
     this.interceptConsoleErrors(page);
@@ -150,22 +158,23 @@ module.exports = {
    * @param browser {Browser} Browser given
    * @returns {Promise<Page>}
    */
-  async getLastOpenedTab(browser) {
+  async getLastOpenedTab(browser: Browser): Promise<Page> {
     // Get contexts
-    const contexts = await browser.contexts();
+    const contexts = browser.contexts();
 
     // Get pages from last created context
-    const tabs = await contexts[contexts.length - 1].pages();
+    const tabs = contexts[contexts.length - 1].pages();
 
     return tabs[tabs.length - 1];
   },
 
   /**
    * Returns the number of tabs
-   * @param browser {Browser} Browser given
-   * @returns {int}
+   * @param browserContext {BrowserContext} Browser given
+   * @returns {number}
    */
-  getNumberTabs(browser) {
-    return browser.pages().length;
+  getNumberTabs(browserContext: BrowserContext): number {
+    // Get pages from last created context
+    return browserContext.pages().length;
   },
 };

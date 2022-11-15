@@ -1,9 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
 
 // Import common tests
 const {createProductTest, deleteProductTest} = require('@commonTests/BO/catalog/createDeleteProduct');
@@ -15,9 +18,6 @@ const categoryPage = require('@pages/FO/category');
 // Import Data
 const {Products} = require('@data/demo/products');
 const ProductFaker = require('@data/faker/product');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_homePage_productQuickView';
 

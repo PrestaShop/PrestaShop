@@ -1,25 +1,27 @@
-require('module-alias/register');
+import helper from '@utils/helpers';
+import {BrowserContext, Page} from 'playwright';
 // Using chai
-const {expect} = require('chai');
+import {expect} from 'chai';
 
 // Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
+import testContext from '@utils/testContext';
 
 // Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders');
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
 
 // Import data
-const {Orders} = require('@data/demo/orders');
+import {Orders} from '@data/demo/orders';
+
+require('module-alias/register');
 
 const baseContext = 'sanity_ordersBO_filterOrders';
-let numberOfOrders;
-let browserContext;
-let page;
+let numberOfOrders: number;
+let browserContext: BrowserContext;
+let page: Page;
 
 /*
   Connect to the BO

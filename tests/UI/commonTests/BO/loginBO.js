@@ -1,6 +1,7 @@
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 const {expect} = require('chai');
-const testContext = require('@utils/testContext');
 const loginPage = require('@pages/BO/login');
 const dashboardPage = require('@pages/BO/dashboard');
 

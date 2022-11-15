@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import common tests
@@ -23,9 +28,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 // FO
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_headerAndFooter_changeCurrency';
 

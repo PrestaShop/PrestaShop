@@ -1,9 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
@@ -17,9 +22,6 @@ const ordersPage = require('@pages/BO/orders');
 const quickAccessPage = require('@pages/BO/quickAccess');
 const addNewQuickAccessPage = require('@pages/BO/quickAccess/add');
 const newCustomerPage = require('@pages/BO/customers/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_header_quickAccess';
 

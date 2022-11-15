@@ -1,15 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
-
 // Import pages
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_search_searchNoResult';
 

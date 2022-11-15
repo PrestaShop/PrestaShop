@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import files helper
 const files = require('@utils/files');
@@ -15,9 +18,6 @@ const attributesPage = require('@pages/BO/catalog/attributes');
 const viewAttributePage = require('@pages/BO/catalog/attributes/view');
 const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 const addValuePage = require('@pages/BO/catalog/attributes/addValue');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUDAttributesAndValue';
 

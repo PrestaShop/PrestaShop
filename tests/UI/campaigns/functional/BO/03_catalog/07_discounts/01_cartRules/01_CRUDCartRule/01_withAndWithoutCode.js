@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Import login steps
@@ -20,9 +25,6 @@ const cartPage = require('@pages/FO/cart');
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
 const {Products} = require('@data/demo/products');
-
-// import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_withAndWithoutCode';
 

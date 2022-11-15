@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
@@ -11,9 +16,6 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_countries_sortAndPagination';
 

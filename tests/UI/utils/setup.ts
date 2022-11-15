@@ -1,7 +1,6 @@
-require('module-alias/register');
-
-const helper = require('@utils/helpers');
-const files = require('@utils/files');
+import 'module-alias/register';
+import helper from '@utils/helpers';
+import files from '@utils/files';
 
 let screenshotNumber = 1;
 
@@ -53,7 +52,7 @@ after(async function () {
  */
 afterEach(async function () {
   // Take screenshot if demanded after failed step
-  if (global.SCREENSHOT.AFTER_FAIL && this.currentTest.state === 'failed') {
+  if (global.SCREENSHOT.AFTER_FAIL && this.currentTest?.state === 'failed') {
     const currentTab = await helper.getLastOpenedTab(this.browser);
 
     // Take a screenshot
