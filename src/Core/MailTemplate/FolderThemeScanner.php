@@ -190,6 +190,15 @@ final class FolderThemeScanner
 
     private function getTemplatePath(SplFileInfo $fileInfo): string
     {
-        return '@MailThemes' . substr($fileInfo->getRealPath(), strlen($this->baseThemeFolder));
+        $realPath = $fileInfo->getRealPath();
+
+        // If the template comes from a module, we use the @Modules twig path instead of @MailThemes
+        if (str_contains($realPath, 'modules')) {
+            // We remove everything in the path until "modules" and we append @Modules before that. 7 is the length of the string "modules"
+            return '@Modules' . substr($realPath, strpos($realPath, 'modules')+7);
+        }
+        
+        return '@MailThemes' . substr($realPath, strlen($this->baseThemeFolder));
     }
 }
+
