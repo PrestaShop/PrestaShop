@@ -572,21 +572,26 @@ class ProductLazyArray extends AbstractLazyArray
         }
 
         $specificReferences = null;
-        $referenceTypes = ['isbn', 'upc', 'ean13', 'mpn'];
+
+        // Get data of this combination, it contains other stuff, we will extract only what we need
         $combinationData = $this->getCombinationSpecificData();
 
-        foreach ($referenceTypes as $key) {
+        // Keys we want to extract from the combination data
+        $referenceTypes = ['isbn', 'upc', 'ean13', 'mpn'];
+
+        foreach ($referenceTypes as $type) {
             // First, we try to get the references of combination.
-            if (isset($combinationData[$key]) && !empty($combinationData[$key])) {
-                $value = $combinationData[$key];
+            if (isset($combinationData[$type]) && !empty($combinationData[$type])) {
+                $specificReference = $combinationData[$type];
             // Otherwise, we check if something is set on the product itself
-            } elseif (!empty($this->product[$key])) {
-                $value = $this->product[$key];
+            } elseif (!empty($this->product[$type])) {
+                $specificReference = $this->product[$type];
             } else {
                 continue;
             }
 
-            $specificReferences[$this->getTranslatedKey($key)] = $value;
+            // Get a nice readable label for this reference and save it
+            $specificReferences[$this->getTranslatedKey($type)] = $specificReference;
         }
 
         return $specificReferences;
