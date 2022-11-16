@@ -105,7 +105,11 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated should be removed in next major version in favor of multiple separate actions
+     * @deprecated since 8.1.0 and will be removed in next major version. Use following separate actions instead:
+     * @see processPaymentCarrierRestrictionsFormAction
+     * @see processPaymentCountryRestrictionsFormAction
+     * @see processPaymentCurrencyRestrictionsFormAction
+     * @see processPaymentGroupRestrictionsFormAction
      * Process payment modules preferences form
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
