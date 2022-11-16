@@ -581,7 +581,7 @@ class ProductLazyArray extends AbstractLazyArray
 
         foreach ($referenceTypes as $type) {
             // First, we try to get the references of combination.
-            if (isset($combinationData[$type]) && !empty($combinationData[$type])) {
+            if (!empty($combinationData[$type])) {
                 $specificReference = $combinationData[$type];
             // Otherwise, we check if something is set on the product itself
             } elseif (!empty($this->product[$type])) {
