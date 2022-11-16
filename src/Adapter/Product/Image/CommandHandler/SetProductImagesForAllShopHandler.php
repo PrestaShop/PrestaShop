@@ -27,6 +27,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      * @var ProductImageMultiShopRepository
      */
     private $productImageMultiShopRepository;
+
     /**
      * @var ProductMultiShopRepository
      */
@@ -75,12 +76,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
      */
     private function getShopIdsAssociatedToProduct(ProductId $productId): array
     {
-        $shopIdsAssociatedToProduct = array_map(
-            static function (ShopId $shopId): int {
-                return $shopId->getValue();
-            },
-            $this->productMultiShopRepository->getAssociatedShopIds($productId)
-        );
+        $shopIdsAssociatedToProduct = $this->shopIdsToInt($this->productMultiShopRepository->getAssociatedShopIds($productId));
 
         return $shopIdsAssociatedToProduct;
     }
@@ -114,33 +110,23 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
         $productImageSetting = $this->getProductImageSettingByImage($productImageSettings, $imageId);
         $shopsToAddImageTo = [];
         if ($productImageSetting) {
-            $shopsToAddImageTo = array_map(
-                static function (ShopId $shopId): int {
-                    return $shopId->getValue();
-                },
-                $productImageSetting->getShopIds()
-            );
+            $shopsToAddImageTo = $this->shopIdsToInt($productImageSetting->getShopIds());
         }
 
         return $shopsToAddImageTo;
     }
 
     /**
-     * @param array $shopIdsAssociatedToProduct
-     * @param array $shopsToAddImageTo
+     * @param int[] $shopIdsAssociatedToProduct
+     * @param int[] $shopsToAddImageTo
      * @param Image $image
      *
-     * @return array
+     * @return int[]
      */
     private function getShopsToRemoveImageFrom(array $shopIdsAssociatedToProduct, array $shopsToAddImageTo, Image $image): array
     {
         $shopsToRemoveImageFrom = array_diff($shopIdsAssociatedToProduct, $shopsToAddImageTo);
-        $shopIdsAssociatedToImage = array_map(
-            function (ShopId $shopId): int {
-                return $shopId->getValue();
-            },
-            $this->productImageMultiShopRepository->getAssociatedShopIds(new ImageId($image->id))
-        );
+        $shopIdsAssociatedToImage = $this->shopIdsToInt($this->productImageMultiShopRepository->getAssociatedShopIds(new ImageId($image->id)));
         $shopsToRemoveImageFrom = array_filter(
             $shopsToRemoveImageFrom,
             function (int $shopToRemoveImageFrom) use ($shopIdsAssociatedToImage): bool {
@@ -148,17 +134,29 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
             }
         );
 
-        $shopIdsCovered = array_map(
-            function (ShopId $shopId): int {
-                return $shopId->getValue();
-            },
-            $this->productImageMultiShopRepository->getShopIdsCoveredBy(new ImageId($image->id))
-        );
+        $shopIdsCovered = $this->shopIdsToInt($this->productImageMultiShopRepository->getShopIdsByCoverId(new ImageId($image->id)));
         $coverToRemove = array_intersect($shopIdsCovered, $shopsToRemoveImageFrom);
         if (!empty($coverToRemove)) {
             throw new CannotRemoveCoverException();
         }
 
         return $shopsToRemoveImageFrom;
+    }
+
+    /**
+     * @param ShopId[] $shopIds
+     *
+     * @return int[]
+     */
+    private function shopIdsToInt(array $shopIds): array
+    {
+        $shopIdsAssociatedToImage = array_map(
+            function (ShopId $shopId): int {
+                return $shopId->getValue();
+            },
+            $shopIds
+        );
+
+        return $shopIdsAssociatedToImage;
     }
 }

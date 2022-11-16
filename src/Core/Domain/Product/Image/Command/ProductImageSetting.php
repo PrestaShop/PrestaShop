@@ -13,11 +13,16 @@ class ProductImageSetting
      * @var ImageId
      */
     private $productImageId;
+
     /**
-     * @var array<ShopId>
+     * @var ShopId[]
      */
     private $shopIds;
 
+    /**
+     * @param int $productImageId
+     * @param int[] $shopIds
+     */
     public function __construct(int $productImageId, array $shopIds)
     {
         $this->productImageId = new ImageId($productImageId);
@@ -38,7 +43,7 @@ class ProductImageSetting
     }
 
     /**
-     * @return array<ShopId>
+     * @return ShopId[]
      */
     public function getShopIds(): array
     {

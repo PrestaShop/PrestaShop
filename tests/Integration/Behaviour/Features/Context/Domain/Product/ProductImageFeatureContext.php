@@ -420,7 +420,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId)
+    private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId): void
     {
         $images = array_filter(
             $this->getProductImages($productReference),

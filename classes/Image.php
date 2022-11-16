@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+
 /**
  * Class ImageCore.
  */

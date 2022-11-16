@@ -1,4 +1,4 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags duplicate-product
 @restore-products-before-feature
 @restore-languages-after-feature
 @duplicate-product
