@@ -52,8 +52,7 @@ class SetDefaultCombinationHandler implements SetDefaultCombinationHandlerInterf
     {
         $this->defaultCombinationUpdater->setDefaultCombination(
             $command->getCombinationId(),
-            // @todo: temporary hardcoded shop constraint. Needs to be required in command constructor.
-            ShopConstraint::shop((int) \Context::getContext()->shop->id)
+            $command->getShopConstraint()
         );
     }
 }

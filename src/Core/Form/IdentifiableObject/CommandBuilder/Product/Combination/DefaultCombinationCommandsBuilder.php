@@ -29,18 +29,38 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class DefaultCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
+class DefaultCombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (empty($formData['header']['is_default'])) {
             return [];
         }
 
-        return [new SetDefaultCombinationCommand($combinationId->getValue())];
+        $commands = [new SetDefaultCombinationCommand($combinationId->getValue(), $singleShopConstraint)];
+
+        if (isset($formData['header'][$this->modifyAllNamePrefix . 'is_default'])) {
+            $commands[] = new SetDefaultCombinationCommand($combinationId->getValue(), ShopConstraint::allShops());
+        }
+
+        return $commands;
     }
 }

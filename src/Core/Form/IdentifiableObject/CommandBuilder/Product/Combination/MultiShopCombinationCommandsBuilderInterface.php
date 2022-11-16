@@ -24,49 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
+/**
+ * This interface is used by CombinationCommandsBuilder each object which implements must build
+ * a combination command based on the input form data.
+ *
+ * @todo: since not all builders are migrated yet we need two interfaces but in the this is the only
+ *        one that should remain, so it will be merged back or renamed as the initial one CombinationCommandsBuilderInterface
+ *        and the shop constraint parameter will always be mandatory (there might a few builders which won't need it
+ *        though, but it doesn't matter) So this interface is a temporary one just like @see CombinationMultiShopRepository
+ */
+interface MultiShopCombinationCommandsBuilderInterface
 {
-    /**
-     * @var CombinationCommandsBuilderInterface[]
-     */
-    private $commandBuilders;
-
-    /**
-     * @param CombinationCommandsBuilderInterface[] $commandBuilders
-     */
-    public function __construct(iterable $commandBuilders)
-    {
-        $this->commandBuilders = $commandBuilders;
-    }
-
     /**
      * @param CombinationId $combinationId
      * @param array $formData
      *
-     * @return array
+     * @return array Returns empty array if the required data for the command is absent
      */
-    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
-    {
-        $commandCollection = [];
-        foreach ($this->commandBuilders as $commandBuilder) {
-            if ($commandBuilder instanceof MultiShopCombinationCommandsBuilderInterface) {
-                $commands = $commandBuilder->buildCommands($combinationId, $formData, $singleShopConstraint);
-            } else {
-                $commands = $commandBuilder->buildCommands($combinationId, $formData);
-            }
-
-            if (!empty($commands)) {
-                $commandCollection = array_merge($commandCollection, $commands);
-            }
-        }
-
-        return $commandCollection;
-    }
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array;
 }

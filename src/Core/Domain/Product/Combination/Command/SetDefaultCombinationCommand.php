@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class SetDefaultCombinationCommand
 {
@@ -37,12 +38,20 @@ class SetDefaultCombinationCommand
     private $combinationId;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $combinationId
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
-        int $combinationId
+        int $combinationId,
+        ShopConstraint $shopConstraint
     ) {
         $this->combinationId = new CombinationId($combinationId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -51,5 +60,13 @@ class SetDefaultCombinationCommand
     public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

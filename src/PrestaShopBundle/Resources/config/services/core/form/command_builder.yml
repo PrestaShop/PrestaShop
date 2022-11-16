@@ -141,6 +141,8 @@ services:
 
   prestashop.core.form.command_builder.product.combination.default_combination_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.combination_command_builder' ]
 
   prestashop.core.form.command_builder.product.update_product_commands_builder:
