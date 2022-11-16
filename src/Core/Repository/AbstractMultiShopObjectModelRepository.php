@@ -33,11 +33,13 @@ use Db;
 use DbQuery;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopDefinitionNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use Shop;
 
 /**
  * This abstract class is an extension of the AbstractObjectModelRepository that provides additional helper functions
@@ -148,16 +150,30 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
         $primaryColumn = $modelDefinition['primary'];
 
         $query = new DbQuery();
-        $query
-            ->select('e.`' . bqSQL($primaryColumn) . '` as id')
-            ->from(bqSQL($objectTable) . '_shop', 'e')
-            ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
-            ->where('e.`id_shop` = ' . $shopId->getValue())
-        ;
+        if (Shop::isTableAssociated($objectTable)) {
+            $query
+                ->select('e.`' . bqSQL($primaryColumn) . '` as id')
+                ->from(bqSQL($objectTable) . '_shop', 'e')
+                ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
+                ->where('e.`id_shop` = ' . $shopId->getValue())
+            ;
+        } elseif (!empty($modelDefinition['multilang_shop'])) {
+            $query
+                ->select('e.`' . bqSQL($primaryColumn) . '` as id')
+                ->from(bqSQL($objectTable) . '_lang', 'e')
+                ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
+                ->where('e.`id_shop` = ' . $shopId->getValue())
+            ;
+        } else {
+            throw new ShopDefinitionNotFound(sprintf(
+                'Entity %s has no multishop feature',
+                $objectModelClassName
+            ));
+        }
 
         try {
             $row = Db::getInstance()->getRow($query, false);
-        } catch (PrestaShopDatabaseException $e) {
+        } catch (PrestaShopDatabaseException|PrestaShopException $e) {
             $row = false;
         }
 
