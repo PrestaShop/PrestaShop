@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -292,7 +293,8 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         try {
             $newCustomizationFieldIds = $this->getCommandBus()->handle(new SetProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
-                $fieldsForUpdate
+                $fieldsForUpdate,
+                ShopConstraint::shop($this->getDefaultShopId())
             ));
 
             Assert::assertSameSize(
