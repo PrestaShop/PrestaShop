@@ -63,7 +63,6 @@ class CombinationStockType extends TranslatorAwareType
                 'type' => TextType::class,
                 'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'modify_all_shops' => true,
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
@@ -85,7 +84,6 @@ class CombinationStockType extends TranslatorAwareType
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
-                'modify_all_shops' => true,
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
