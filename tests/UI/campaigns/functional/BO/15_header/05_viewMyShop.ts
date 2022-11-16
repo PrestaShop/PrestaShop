@@ -1,7 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import loginCommon from '@commonTests/BO/loginBO';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
 // Import test context
@@ -13,10 +13,10 @@ import foHomePage from '@pages/FO/home';
 
 const baseContext = 'functional_BO_header_viewMyShop';
 
-let browserContext: BrowserContext;
-let page: Page;
-
 describe('BO - Header : View My Shop', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
