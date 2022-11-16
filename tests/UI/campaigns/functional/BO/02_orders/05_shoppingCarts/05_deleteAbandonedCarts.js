@@ -4,8 +4,10 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
