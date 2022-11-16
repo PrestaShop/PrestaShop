@@ -62,15 +62,40 @@ class EmployeeOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $optionsLock = [];
+        if (!$this->canOptionsBeChanged) {
+            $optionsLock = [
+                'disabled' => true,
+                'alert_type' => 'warning',
+                'alert_message' => $this->trans(
+                    'You can\'t change the value of this configuration field in the context of this shop.',
+                    'Admin.Notifications.Warning'
+                ),
+                'block_prefix' => 'employee_options',
+                'form_theme' => '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/FormTheme/employee_options.html.twig',
+            ];
+        }
+
         $builder
             ->add('password_change_time', IntegerType::class, [
+                'label' => $this->trans('Password regeneration', 'Admin.Advparameters.Feature'),
                 'required' => false,
                 'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
-                'disabled' => !$this->canOptionsBeChanged,
-            ])
+                'help' => $this->trans(
+                    'Security: Minimum time to wait between two password changes.',
+                    'Admin.Advparameters.Feature'
+                ),
+            ] + $optionsLock)
             ->add('allow_employee_specific_language', SwitchType::class, [
+                'label' => $this->trans(
+                    'Memorize the language used in Admin panel forms',
+                    'Admin.Advparameters.Feature'
+                ),
                 'required' => false,
-                'disabled' => !$this->canOptionsBeChanged,
-            ]);
+                'help' => $this->trans(
+                    'Allow employees to select a specific language for the Admin panel form.',
+                    'Admin.Advparameters.Feature'
+                ),
+            ] + $optionsLock);
     }
 }
