@@ -206,7 +206,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
     /**
      * @param Image $image
-     * @param array<int> $shopsToRemoveImageFrom
+     * @param ShopId[] $shopsToRemoveImageFrom
      *
      * @return void
      */
