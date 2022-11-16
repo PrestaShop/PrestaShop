@@ -56,7 +56,7 @@ jobs:
       actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
       contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
-    name: Checking doubles in steps identifiers
+    name: Checking Steps identifiers
 
     steps:
       - name: Cancel Previous Runs

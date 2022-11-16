@@ -25,7 +25,7 @@ const homePage = require('@pages/FO/home');
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_displayDiscountedPrice';
+const baseContext = 'functional_BO_shopParameters_productSettings_productPage_displayDiscountedPrice';
 
 let browserContext;
 let page;

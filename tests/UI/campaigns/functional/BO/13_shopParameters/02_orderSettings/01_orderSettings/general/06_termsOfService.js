@@ -24,7 +24,7 @@ const checkoutPage = require('@pages/FO/checkout');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_termsOfService';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_termsOfService';
 
 let browserContext;
 let page;

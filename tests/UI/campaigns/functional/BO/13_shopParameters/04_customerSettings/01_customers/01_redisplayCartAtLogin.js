@@ -23,7 +23,7 @@ const loginFOPage = require('@pages/FO/login');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shopParameters_customerSettings_customer_redisplayCartAtLogin';
+const baseContext = 'functional_BO_shopParameters_customerSettings_customers_redisplayCartAtLogin';
 
 let browserContext;
 let page;

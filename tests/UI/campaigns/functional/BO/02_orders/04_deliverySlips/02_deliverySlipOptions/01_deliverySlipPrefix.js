@@ -19,7 +19,7 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 
-const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipPrefix';
+const baseContext = 'functional_BO_orders_deliverySlips_deliverySlipOptions_deliverySlipPrefix';
 
 // Import expect from chai
 const {expect} = require('chai');

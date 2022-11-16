@@ -34,7 +34,7 @@ const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_customers_outstanding_filterSortOutstanding';
+const baseContext = 'functional_BO_customers_outstanding_sortFilterOutstanding';
 
 let browserContext;
 let page;

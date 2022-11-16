@@ -24,7 +24,7 @@ const foCheckoutPage = require('@pages/FO/checkout');
 const {Carriers} = require('@data/demo/carriers');
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shipping_preferences_carriersOptions_defaultCarrier';
+const baseContext = 'functional_BO_shipping_preferences_carrierOptions_defaultCarrier';
 
 // Browser and tab
 let browserContext;

@@ -18,7 +18,7 @@ const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrl
 // Import data
 const {contact} = require('@data/demo/seoPages');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_filterSeoPages';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_filterSeoPages';
 
 let browserContext;
 let page;

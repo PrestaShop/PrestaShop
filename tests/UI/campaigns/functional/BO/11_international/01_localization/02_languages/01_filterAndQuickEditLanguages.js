@@ -18,7 +18,7 @@ const languagesPage = require('@pages/BO/international/languages');
 // Import data
 const {Languages} = require('@data/demo/languages');
 
-const baseContext = 'functional_BO_international_localization_languages_filterLanguages';
+const baseContext = 'functional_BO_international_localization_languages_filterAndQuickEditLanguages';
 
 let browserContext;
 let page;

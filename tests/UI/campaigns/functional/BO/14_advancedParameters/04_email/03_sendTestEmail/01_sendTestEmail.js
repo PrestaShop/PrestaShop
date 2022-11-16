@@ -15,7 +15,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
 
-const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail';
+const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail_sendTestEmail';
 
 let browserContext;
 let page;

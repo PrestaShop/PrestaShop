@@ -22,7 +22,7 @@ const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add')
 // Import data
 const WebserviceFaker = require('@data/faker/webservice');
 
-const baseContext = 'functional_BO_modules_advancedParameters_webservice_sortPaginationAndBulkActions';
+const baseContext = 'functional_BO_advancedParameters_webservice_sortPaginationAndBulkActions';
 
 let browserContext;
 let page;

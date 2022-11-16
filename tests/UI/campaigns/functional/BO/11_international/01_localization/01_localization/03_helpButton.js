@@ -14,7 +14,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 
-const baseContext = 'functional_BO_international_localization_helpCard';
+const baseContext = 'functional_BO_international_localization_localization_helpButton';
 
 let browserContext;
 let page;

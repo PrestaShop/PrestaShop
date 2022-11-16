@@ -17,7 +17,7 @@ const featuresPage = require('@pages/BO/catalog/features');
 // Import data
 const {Features} = require('@data/demo/features');
 
-const baseContext = 'functional_BO_shopParameters_catalog_attributesAndFeatures_features_filterFeatures';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_features_filterFeatures';
 
 // Import expect from chai
 const {expect} = require('chai');

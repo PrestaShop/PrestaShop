@@ -26,7 +26,7 @@ const {ProductsData} = require('@data/import/disabledProducts');
 const {CombinationsData} = require('@data/import/combinations');
 
 // Test context
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withCombinationsWithoutQuantities';
+const baseContext = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_withCombinationsWithoutQuantities';
 
 let browserContext;
 let page;

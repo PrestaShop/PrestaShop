@@ -23,7 +23,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const {Products} = require('@data/demo/products');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_separatorOfAttributeAnchor';
+const baseContext = 'functional_BO_shopParameters_productSettings_productPage_separatorOfAttributeAnchor';
 
 let browserContext;
 let page;

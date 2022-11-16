@@ -17,7 +17,7 @@ const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrl
 const searchEnginesPage = require('@pages/BO/shopParameters/trafficAndSeo/searchEngines');
 const addSearchEnginePage = require('@pages/BO/shopParameters/trafficAndSeo/searchEngines/add');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_searchEngines_CRUDSearchEngines';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_CRUDSearchEngines';
 
 let browserContext;
 let page;

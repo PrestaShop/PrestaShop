@@ -18,7 +18,7 @@ const homePage = require('@pages/FO/home');
 // Import Data
 const {Languages} = require('@data/demo/languages');
 
-const baseContext = 'functional_BO_international_localization_defaultLanguage';
+const baseContext = 'functional_BO_international_localization_localization_defaultLanguage';
 
 let browserContext;
 let page;

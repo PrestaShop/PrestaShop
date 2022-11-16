@@ -21,7 +21,7 @@ const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_enableGuestCheckout';
 
 let browserContext;
 let page;

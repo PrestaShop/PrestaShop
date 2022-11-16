@@ -22,7 +22,7 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_orders_deliverSlips_generateDeliverySlipByDate';
+const baseContext = 'functional_BO_orders_deliverySlips_generateDeliverySlipByDate';
 
 // Using chai
 const {expect} = require('chai');

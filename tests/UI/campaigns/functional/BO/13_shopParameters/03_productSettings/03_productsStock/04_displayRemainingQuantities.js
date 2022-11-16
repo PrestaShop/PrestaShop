@@ -25,7 +25,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_displayRemainingQuantities';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_displayRemainingQuantities';
 
 let browserContext;
 let page;

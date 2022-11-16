@@ -21,7 +21,7 @@ const foHomePage = require('@pages/FO/home');
 const StoreFaker = require('@data/faker/store');
 const {stores} = require('@data/demo/stores');
 
-const baseContext = 'functional_BO_shopParameters_contact_store_contactDetails';
+const baseContext = 'functional_BO_shopParameters_contact_stores_contactDetails';
 
 // Browser and tab
 let browserContext;

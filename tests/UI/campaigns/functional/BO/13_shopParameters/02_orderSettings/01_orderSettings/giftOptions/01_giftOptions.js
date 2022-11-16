@@ -31,7 +31,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultFrTax} = require('@data/demo/tax');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_giftOptions_giftOptions';
 
 let browserContext;
 let page;

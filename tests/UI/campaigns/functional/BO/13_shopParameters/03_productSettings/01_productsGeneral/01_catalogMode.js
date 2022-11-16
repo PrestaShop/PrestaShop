@@ -22,7 +22,7 @@ const productPage = require('@pages/FO/product');
 // Import data
 const {Products} = require('@data/demo/products');
 
-const baseContext = 'functional_BO_shopParameters_productSetting_productsGeneral_catalogMode';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_catalogMode';
 
 let browserContext;
 let page;

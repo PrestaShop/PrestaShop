@@ -20,7 +20,7 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 // Import data
 const AddressFaker = require('@data/faker/address');
 
-const baseContext = 'functional_BO_customers_addresses_CRUDAddressesInBO';
+const baseContext = 'functional_BO_customers_addresses_CRUDAddressInBO';
 
 let browserContext;
 let page;

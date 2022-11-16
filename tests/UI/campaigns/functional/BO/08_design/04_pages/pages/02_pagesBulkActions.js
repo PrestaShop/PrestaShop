@@ -21,7 +21,7 @@ const pagesPage = require('@pages/BO/design/pages/index');
 const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 const addPagePage = require('@pages/BO/design/pages/add');
 
-const baseContext = 'functional_BO_design_pages_pages_pagesBulkAction';
+const baseContext = 'functional_BO_design_pages_pages_pagesBulkActions';
 
 let browserContext;
 let page;

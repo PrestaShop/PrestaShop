@@ -31,7 +31,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_enableDisableProductImage';
+const baseContext = 'functional_BO_orders_deliverySlips_deliverySlipOptions_enableDisableProductImage';
 
 // Import expect from chai
 const {expect} = require('chai');

@@ -16,7 +16,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_helperCard';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_helpCard';
 
 let browserContext;
 let page;

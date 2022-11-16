@@ -15,7 +15,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 
-const baseContext = 'functional_BO_international_localization_currencies_helpCard';
+const baseContext = 'functional_BO_international_localization_currencies_helpButton';
 
 let browserContext;
 let page;

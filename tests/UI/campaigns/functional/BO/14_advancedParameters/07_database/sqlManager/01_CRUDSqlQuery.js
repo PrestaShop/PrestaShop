@@ -20,7 +20,7 @@ const viewQueryManagerPage = require('@pages/BO/advancedParameters/database/sqlM
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
 
-const baseContext = 'functional_BO_advancedParams_database_sqlManager_CRUDSqlQuery';
+const baseContext = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
 
 let browserContext;
 let page;

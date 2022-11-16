@@ -19,7 +19,7 @@ const {Products} = require('@data/demo/products');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products/index');
 
-const baseContext = 'functional_BO_catalog_products_filterAndQuickEitProducts';
+const baseContext = 'functional_BO_catalog_products_filterAndQuickEditProducts';
 
 let browserContext;
 let page;

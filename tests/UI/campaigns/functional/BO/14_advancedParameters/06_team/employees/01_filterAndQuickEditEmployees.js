@@ -20,7 +20,7 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
-const baseContext = 'functional_BO_advancedParams_team_employees_filterAndQuickEditEmployees';
+const baseContext = 'functional_BO_advancedParameters_team_employees_filterAndQuickEditEmployees';
 
 let browserContext;
 let page;

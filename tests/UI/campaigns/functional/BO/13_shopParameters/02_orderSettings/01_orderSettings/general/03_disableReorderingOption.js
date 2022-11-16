@@ -24,7 +24,7 @@ const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_disableReorderingOption';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_disableReorderingOption';
 
 let browserContext;
 let page;

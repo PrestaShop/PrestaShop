@@ -23,7 +23,7 @@ const foHomePage = require('@pages/FO/home');
 const {Currencies} = require('@data/demo/currencies');
 const {Languages} = require('@data/demo/languages');
 
-const baseContext = 'functional_BO_international_localization_importLocalizationPack';
+const baseContext = 'functional_BO_international_localization_localization_importLocalizationPack';
 
 let browserContext;
 let page;

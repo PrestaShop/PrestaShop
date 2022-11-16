@@ -24,7 +24,7 @@ const viewPage = require('@pages/BO/customerService/customerService/view');
 const homePage = require('@pages/FO/home');
 const contactUsPage = require('@pages/FO/contactUs');
 
-const baseContext = 'functional_BO_customerService_orderMessages_viewCustomerService';
+const baseContext = 'functional_BO_customerService_customerService_viewCustomerService';
 
 // Import data
 const ContactUsFakerData = require('@data/faker/contactUs');

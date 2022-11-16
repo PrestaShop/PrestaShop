@@ -23,7 +23,7 @@ const foHomePage = require('@pages/FO/home');
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_enableDisableAccentedUrl';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableAccentedURL';
 
 let browserContext;
 let page;

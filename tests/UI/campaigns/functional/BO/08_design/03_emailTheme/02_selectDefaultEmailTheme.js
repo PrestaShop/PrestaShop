@@ -16,7 +16,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const emailThemesPage = require('@pages/BO/design/emailThemes');
 
-const baseContext = 'functional_BO_design_emailThemes_selectDefaultEmailTheme';
+const baseContext = 'functional_BO_design_emailTheme_selectDefaultEmailTheme';
 
 let browserContext;
 let page;

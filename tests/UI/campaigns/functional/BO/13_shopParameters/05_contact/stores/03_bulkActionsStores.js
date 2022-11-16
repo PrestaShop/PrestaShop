@@ -23,7 +23,7 @@ const addStorePage = require('@pages/BO/shopParameters/stores/add');
 // Import data
 const StoreFaker = require('@data/faker/store');
 
-const baseContext = 'functional_BO_shopParameters_contact_store_bulkActionsStores';
+const baseContext = 'functional_BO_shopParameters_contact_stores_bulkActionsStores';
 
 // Browser and tab
 let browserContext;

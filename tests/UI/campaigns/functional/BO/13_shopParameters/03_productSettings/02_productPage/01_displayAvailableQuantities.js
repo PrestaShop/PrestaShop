@@ -19,7 +19,7 @@ const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_displayAvailableQuantities';
+const baseContext = 'functional_BO_shopParameters_productSettings_productPage_displayAvailableQuantities';
 
 let browserContext;
 let page;

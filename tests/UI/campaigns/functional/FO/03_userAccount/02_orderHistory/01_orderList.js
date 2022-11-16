@@ -17,7 +17,7 @@ const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 
-const baseContext = 'functional_FO_userAccount_orderList';
+const baseContext = 'functional_FO_userAccount_orderHistory_orderList';
 
 let browserContext;
 let page;

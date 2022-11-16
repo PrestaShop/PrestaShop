@@ -25,7 +25,7 @@ const addOrderStatusPage = require('@pages/BO/shopParameters/orderSettings/statu
 const {Statuses} = require('@data/demo/orderStatuses');
 const OrderStatusFaker = require('@data/faker/orderStatus');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_filterSortAndPagination';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_statuses_filterSortAndPagination';
 
 let browserContext;
 let page;

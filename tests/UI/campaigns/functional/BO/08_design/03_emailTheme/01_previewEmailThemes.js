@@ -17,7 +17,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const emailThemesPage = require('@pages/BO/design/emailThemes');
 const previewEmailThemesPage = require('@pages/BO/design/emailThemes/preview');
 
-const baseContext = 'functional_BO_design_emailThemes_previewEmailTheme';
+const baseContext = 'functional_BO_design_emailTheme_previewEmailThemes';
 
 let browserContext;
 let page;

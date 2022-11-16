@@ -19,7 +19,7 @@ const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_QuickEditOrderStatus';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_statuses_quickEdit';
 
 let browserContext;
 let page;

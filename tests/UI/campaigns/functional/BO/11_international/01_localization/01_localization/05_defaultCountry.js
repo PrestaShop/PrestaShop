@@ -21,7 +21,7 @@ const {countries} = require('@data/demo/countries');
 
 const countriesToTest = [countries.netherlands.name, countries.france.name];
 
-const baseContext = 'functional_BO_international_localization_defaultCountry';
+const baseContext = 'functional_BO_international_localization_localization_defaultCountry';
 
 let browserContext;
 let page;

@@ -17,7 +17,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const suppliersPage = require('@pages/BO/catalog/suppliers');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_helperCard';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_helpCard';
 
 let browserContext;
 let page;

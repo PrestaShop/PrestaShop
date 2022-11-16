@@ -25,7 +25,7 @@ const monitoringPage = require('@pages/BO/catalog/monitoring');
 const {ProductsData} = require('@data/import/productsWithoutQuantities');
 
 // Test context
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withoutCombinationsWithoutQuantities';
+const baseContext = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_withoutCombinationsWithoutQuantities';
 
 let browserContext;
 let page;
