@@ -265,7 +265,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ])
             ->add('meta_keyword', TranslatableType::class, [
                 'label' => $this->trans('Meta keywords', 'Admin.Global'),
-                'help' => $this->trans('To add tags, press the 'enter' key. You can also use the 'comma' key. Invalid characters: <>;=#{}', 'Admin.Shopparameters.Help')
+                'help' => $this->trans('To add tags, press the \'enter\' key. You can also use the \'comma\' key. Invalid characters: <>;=#{}', 'Admin.Shopparameters.Help')
                     . '<br>' . $genericCharactersHint,
                 'required' => false,
                 'options' => [
