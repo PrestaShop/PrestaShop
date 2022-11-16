@@ -52,7 +52,6 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use RuntimeException;
 use Shop;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
@@ -67,9 +66,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         'up' => 0,
         'down' => 1,
     ];
-
-    /** @var ContainerInterface */
-    private $container;
 
     /** @var int */
     private $defaultLanguageId;
@@ -87,7 +83,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function __construct()
     {
-        $this->container = $this->getContainer();
         $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
