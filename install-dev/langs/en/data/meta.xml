@@ -78,6 +78,12 @@
     <keywords/>
     <url_rewrite>login</url_rewrite>
   </meta>
+  <meta id="registration" id_shop="1">
+    <title>Registration</title>
+    <description/>
+    <keywords/>
+    <url_rewrite>registration</url_rewrite>
+  </meta>
   <meta id="cart" id_shop="1">
     <title>Cart</title>
     <description/>
