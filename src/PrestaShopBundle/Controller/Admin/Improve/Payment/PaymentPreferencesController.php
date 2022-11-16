@@ -66,7 +66,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
         }
 
-        /**
+        /*
          * @todo separation will always be enabled in next major version after 8.1 so this code will need to be changed accordingly
          */
         if ($separationEnabled) {
