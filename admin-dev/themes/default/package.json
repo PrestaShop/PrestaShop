@@ -30,7 +30,7 @@
     "eslint-plugin-import": "^2.20.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^5.5.0",
-    "material-design-icons-iconfont": "^6.1.0",
+    "material-design-icons-iconfont": "^6.7.0",
     "mini-css-extract-plugin": "^0.8.0",
     "sass-embedded": "^1.55.0",
     "optimize-css-assets-webpack-plugin": "^6.0.0",

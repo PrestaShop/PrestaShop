@@ -23,17 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', dirname(__DIR__, 2));
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
-define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', true);
-require_once dirname(__DIR__, 2) . '/admin-dev/bootstrap.php';
 
-/*
- * Following code makes tests run under phpstorm
- * Else we get error : Class 'PHPUnit_Util_Configuration' not found
- * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
- */
-if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
-    define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__, 2) . '/vendor/autoload.php');
+namespace PrestaShopBundle\DependencyInjection;
+
+use Closure;
+use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
+use Symfony\Component\DependencyInjection\Exception\EnvNotFoundException;
+
+final class RuntimeConstEnvVarProcessor implements EnvVarProcessorInterface
+{
+    public function getEnv($prefix, $name, Closure $getEnv)
+    {
+        $exploded = explode(':', $name);
+        if (count($exploded) !== 2 || $exploded[0] !== 'runtime' || !defined($exploded[1])) {
+            throw new EnvNotFoundException($name);
+        }
+
+        return constant($exploded[1]);
+    }
+
+    public static function getProvidedTypes()
+    {
+        return [
+            'const' => 'bool|int|float|string|array',
+        ];
+    }
 }
