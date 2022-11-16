@@ -66,6 +66,9 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
         }
 
+        /**
+         * @todo separation will always be enabled in next major version after 8.1 so this code will need to be changed accordingly
+         */
         if ($separationEnabled) {
             $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
             if ($isSingleShopContext) {
@@ -93,7 +96,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
             $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
-        /* In next major version for separate views should be passed one for each restriction group */
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
