@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
@@ -61,7 +60,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     /**
      * @Given following image types should be applicable to products:
      */
-    public function assertProductsImageTypesExists(TableNode $tableNode)
+    public function assertProductsImageTypesExists(TableNode $tableNode): void
     {
         $dataRows = $tableNode->getColumnsHash();
         $imageTypes = $this->productImageRepository->getProductImageTypes();
@@ -106,7 +105,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
-    public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference)
+    public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference): void
     {
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
         $shopConstraint = ShopConstraint::shop($shopId);
@@ -122,7 +121,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    public function uploadImageForAllShops(string $imageReference, string $fileName, string $productReference)
+    public function uploadImageForAllShops(string $imageReference, string $fileName, string $productReference): void
     {
         $this->uploadImageByShopConstraint($imageReference, $fileName, $productReference, ShopConstraint::allShops());
     }
@@ -133,7 +132,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string $imageReference
      * @param TableNode $tableNode
      */
-    public function updateImage(string $imageReference, TableNode $tableNode)
+    public function updateImage(string $imageReference, TableNode $tableNode): void
     {
         $dataRows = $this->localizeByRows($tableNode);
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
@@ -191,7 +190,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @param string[] $imageReferences
      * @param TableNode $tableNode
      */
-    public function assertProductImageTypesGenerated(array $imageReferences, TableNode $tableNode)
+    public function assertProductImageTypesGenerated(array $imageReferences, TableNode $tableNode): void
     {
         $dataRows = $tableNode->getColumnsHash();
 
@@ -290,14 +289,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given /^product "([^"]*)" should have no images for shops "([^"]*)"$/
-     */
-    public function productShouldHaveNoImagesForShops($arg1, $arg2)
-    {
-        throw new PendingException();
-    }
-
-    /**
      * @Then product :productReference should have following cover :coverUrl
      *
      * @param string $productReference
@@ -332,7 +323,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences)
+    public function assertProductImagesForAllShops(string $productReference, TableNode $table, string $shopReferences): void
     {
         $shopReferences = explode(',', $shopReferences);
         $shopIds = [];
@@ -342,6 +333,34 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         foreach ($shopIds as $shopId) {
             $this->assertProductImagesByShopId($productReference, $table, $shopId);
+        }
+    }
+
+    /**
+     * @When /^I apply the following matrix of images for product "([^"]*)":$/
+     */
+    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table): void
+    {
+        $command = new SetProductImagesForAllShopCommand(
+            $this->getSharedStorage()->get(trim($productReference))
+        );
+        foreach ($table as $data) {
+            $command->addProductSetting(
+                new ProductImageSetting(
+                    $this->getSharedStorage()->get(trim($data['imageReference'])),
+                    array_map(
+                        function (string $shopReference): int {
+                            return $this->getSharedStorage()->get(trim($shopReference));
+                        },
+                        explode(',', $data['shopReferences'])
+                    )
+                )
+            );
+        }
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CannotRemoveCoverException $e) {
+            $this->setLastException($e);
         }
     }
 
@@ -377,7 +396,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    private function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint)
+    private function uploadImageByShopConstraint(string $imageReference, string $fileName, string $productReference, ShopConstraint $shopConstraint): void
     {
         $pathName = DummyFileUploader::upload($fileName);
 
@@ -407,7 +426,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      */
-    private function assertAllProductImages(string $productReference, TableNode $tableNode)
+    private function assertAllProductImages(string $productReference, TableNode $tableNode): void
     {
         $images = $this->getProductImages($productReference);
         $this->assertProductImages($tableNode, $images);
@@ -432,37 +451,9 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When /^I apply the following matrix of images for product "([^"]*)":$/
-     */
-    public function iApplyTheFollowingMatrixOfImagesForProduct(string $productReference, TableNode $table)
-    {
-        $command = new SetProductImagesForAllShopCommand(
-            $this->getSharedStorage()->get(trim($productReference))
-        );
-        foreach ($table as $data) {
-            $command->addProductSetting(
-                new ProductImageSetting(
-                    $this->getSharedStorage()->get(trim($data['imageReference'])),
-                    array_map(
-                        function (string $shopReference): int {
-                            return $this->getSharedStorage()->get(trim($shopReference));
-                        },
-                        explode(',', $data['shopReferences'])
-                    )
-                )
-            );
-        }
-        try {
-            $this->getCommandBus()->handle($command);
-        } catch (CannotRemoveCoverException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
      * @Then /^I should get an error that you cannot remove an image which is a cover$/
      */
-    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover()
+    public function iShouldGetAnErrorThatYouCannotRemoveAnImageWhichIsACover(): void
     {
         $this->assertLastErrorIs(CannotRemoveCoverException::class);
     }
