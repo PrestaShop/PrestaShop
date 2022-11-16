@@ -25,7 +25,7 @@ const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
 // Import data
 const OrderStatusFaker = require('@data/faker/orderStatus');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_CRUDOrderStatus';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_statuses_CRUDOrderStatus';
 
 let browserContext;
 let page;

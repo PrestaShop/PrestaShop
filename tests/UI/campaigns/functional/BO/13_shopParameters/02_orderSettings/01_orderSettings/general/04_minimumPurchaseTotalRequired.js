@@ -20,7 +20,7 @@ const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_general_minimumPurchaseTotalRequired';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_minimumPurchaseTotalRequired';
 
 let browserContext;
 let page;

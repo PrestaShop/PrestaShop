@@ -16,7 +16,7 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_filterProfiles';
+const baseContext = 'functional_BO_advancedParameters_team_profiles_filterProfiles';
 
 let browserContext;
 let page;

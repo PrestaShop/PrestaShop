@@ -22,7 +22,7 @@ const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 const productsPage = require('@pages/BO/catalog/products/index');
 const ordersPage = require('@pages/BO/orders/index');
 
-const baseContext = 'functional_BO_advancedParams_team_employees_CRUDEmployee';
+const baseContext = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
 let browserContext;
 let page;

@@ -26,7 +26,7 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
+const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipsByDate';
 
 // Import expect from chai
 const {expect} = require('chai');

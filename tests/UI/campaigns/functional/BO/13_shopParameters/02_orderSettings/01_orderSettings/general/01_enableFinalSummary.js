@@ -25,7 +25,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_enableFinalSummary';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_enableFinalSummary';
 
 let browserContext;
 let page;

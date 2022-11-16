@@ -23,7 +23,7 @@ const shopURLPage = require('@pages/BO/advancedParameters/multistore/url/index')
 // Import data
 const ShopFaker = require('@data/faker/shop');
 
-const baseContext = 'functional_BO_modules_advancedParameters_multistore_CRUDShops';
+const baseContext = 'functional_BO_advancedParameters_multistore_CRUDShops';
 
 let browserContext;
 let page;

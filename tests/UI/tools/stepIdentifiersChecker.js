@@ -53,7 +53,14 @@ const getAllTests = (jsonFile) => {
  * @returns {*[]}
  */
 const getTestsFromSuite = (suite) => {
+  const {file} = suite;
   let tests = suite.tests || [];
+  tests.forEach((test) => {
+    const testReturned = test;
+    testReturned.file = file;
+
+    return testReturned;
+  });
 
   const nestedSuites = suite.suites;
 
@@ -77,9 +84,12 @@ const checkUndefined = (jsonFile) => {
 
   if (undefinedContextsSteps.length !== 0) {
     console.error(
-      `Some steps are missing contexts on these scenarios: \n - ${undefinedContextsSteps.join('\n - ')}`,
+      `Some steps (${undefinedContextsSteps.length}) are missing contexts on these scenarios: \n - ${
+        undefinedContextsSteps.join('\n - ')}`,
     );
+    return false;
   }
+  return true;
 };
 
 /**
@@ -96,13 +106,70 @@ const checkDoubles = (jsonFile) => {
   const contextDoubles = duplicates(count(reportContexts));
 
   if (contextDoubles.length !== 0) {
-    console.error(`Some test identifiers must be fixed:\n - ${contextDoubles.join('\n - ')}`);
-  } else {
-    console.log('All good, no changes are required');
+    console.error(`Some test identifiers (${contextDoubles.length}) must be fixed:\n - ${
+      contextDoubles.join('\n - ')}`);
+    return false;
   }
+  return true;
+};
+
+const checkBaseContext = (jsonFile) => {
+  const allTests = getAllTests(jsonFile);
+
+  const reportBaseContext = [];
+  const reportContexts = Object.values(allTests)
+    .filter((test) => test.context)
+    .map((test) => {
+      const value = JSON.parse(test.context).value.split('_');
+      // Extract the base context from the context
+      const baseContext = value.slice(0, value.length - 1).join('_');
+      const {file} = test;
+
+      if (!baseContext || reportBaseContext.includes(file)) {
+        return false;
+      }
+
+      reportBaseContext.push(file);
+      return {file, baseContext};
+    })
+    .filter((test) => test !== false);
+
+  const baseContextErrors = [];
+  reportContexts.forEach((context) => {
+    const contextFile = context.file.split('/');
+    // Try to rebuild the baseContext from the filename
+    const baseContextFile = contextFile
+      .slice(2, contextFile.length)
+      .map((part) => part
+        .replace(/[0-9]{2}_/, '')
+        .replace('.js', ''))
+      .join('_');
+
+    if (!context.baseContext.startsWith(baseContextFile)) {
+      baseContextErrors.push(
+        `File : ${context.file} - BaseContext : \`${context.baseContext}\` should start with \`${baseContextFile}\``,
+      );
+    }
+  });
+
+  if (baseContextErrors.length > 0) {
+    console.error(
+      `Some base contexts (${baseContextErrors.length}) must be fixed :\n - ${baseContextErrors.join('\n - ')}`,
+    );
+    return false;
+  }
+  return true;
 };
 
 // Run file
-checkUndefined(jsonFile);
+if (!checkUndefined(jsonFile)) {
+  process.exit(1);
+}
 
-checkDoubles(jsonFile);
+if (!checkDoubles(jsonFile)) {
+  process.exit(1);
+}
+
+if (!checkBaseContext(jsonFile)) {
+  process.exit(1);
+}
