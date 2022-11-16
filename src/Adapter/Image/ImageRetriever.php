@@ -207,7 +207,7 @@ class ImageRetriever
                         true
                     );
                 }
-
+                dump($this->link->$getImageURL($rewriteLink, $id_image, '', '.toto'));
                 $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
             }
 

@@ -3362,7 +3362,7 @@ abstract class ModuleCore implements ModuleInterface
 
     protected function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
-        $parameters['legacy'] = 'htmlspecialchars';
+            $parameters['legacy'] = 'htmlspecialchars';
 
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }

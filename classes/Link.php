@@ -1009,6 +1009,7 @@ class LinkCore
             }
         }
 
+        dump($uriPath);
         return $this->protocol_content . Tools::getMediaServer($uriPath) . $uriPath;
     }
 
