@@ -576,6 +576,7 @@ abstract class PaymentModuleCore extends Module
 
             // Switch to back order if needed
             if (Configuration::get('PS_STOCK_MANAGEMENT') &&
+                    Configuration::get('PS_ENABLE_BACKORDER_STATUS') &&
                     ($order_detail->getStockState() ||
                     $order_detail->product_quantity_in_stock < 0)) {
                 $history = new OrderHistory();
