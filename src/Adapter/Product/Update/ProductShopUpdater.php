@@ -59,6 +59,7 @@ class ProductShopUpdater
      * @var ShopRepository
      */
     private $shopRepository;
+
     /**
      * @var ProductImageMultiShopRepository
      */
@@ -159,7 +160,7 @@ class ProductShopUpdater
      * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
-    public function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
+    private function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         foreach ($imagesFromSourceShop as $image) {

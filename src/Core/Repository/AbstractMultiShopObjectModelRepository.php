@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Repository;
 
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use function bqSQL;
 use Db;
 use DbQuery;
@@ -36,6 +35,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 

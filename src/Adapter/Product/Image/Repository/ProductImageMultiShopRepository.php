@@ -56,6 +56,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      * @var string
      */
     private $dbPrefix;
+
     /**
      * @var ProductMultiShopRepository
      */
@@ -220,22 +221,23 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      *
      * @return ShopId[]
      */
-    public function getShopIdsCoveredBy(ImageId $imageId): array
+    public function getShopIdsByCoverId(ImageId $imageId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        $results = $this->connection->createQueryBuilder()
             ->select('id_shop')
             ->from($this->dbPrefix . 'image_shop')
             ->where('id_image = :imageId')
             ->andWhere('cover = 1')
             ->setParameter('imageId', $imageId->getValue())
+            ->execute()
+            ->fetchAll()
         ;
 
         return array_map(
             static function (array $shop): ShopId {
                 return new ShopId((int) $shop['id_shop']);
             },
-            $qb->execute()->fetchAll()
+            $results
         );
     }
 }
