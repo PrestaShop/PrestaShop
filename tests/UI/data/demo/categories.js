@@ -1,5 +1,13 @@
 module.exports = {
   Categories: {
+    home: {
+      id: 2,
+      name: 'Home',
+      description: null,
+      metaTitle: null,
+      metaDescription: null,
+      displayed: true,
+    },
     clothes: {
       id: 3,
       name: 'Clothes',
