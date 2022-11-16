@@ -170,7 +170,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
             ->add('active', SwitchType::class, [
                 'label' => $this->trans('Enabled', 'Admin.Global'),
                 'help' => $this->trans(
-                        'If you want a category to appear in your store's menu, configure your menu module in [1]Modules > Module Manager[/1].',
+                        'If you want a category to appear in your store\'s menu, configure your menu module in [1]Modules > Module Manager[/1].',
                         'Admin.Catalog.Help',
                         [
                             '[1]' => '<a href="' . $this->router->generate('admin_module_manage') . '" target="_blank" rel="noopener noreferrer nofollow">',
