@@ -43,10 +43,10 @@ Feature: Show category tree in product page (BO)
       | stationery       | Stationery       | Stationery       |                         |
       | home_accessories | Home Accessories | Home Accessories |                         |
     When I add new category "artWomen" with following details:
-      | Name            | Women     |
-      | Displayed       | true      |
-      | Parent category | Art       |
-      | Friendly URL    | art-women |
+      | name[en-US]         | Women     |
+      | active              | true      |
+      | parent category     | art       |
+      | link rewrite[en-US] | art-women |
     Then I should see following categories in "art" category in "en" language:
       | id reference | category name | display name | direct child categories |
       | artWomen     | Women         | Art > Women  |                         |
