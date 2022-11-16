@@ -2,7 +2,7 @@
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import test context
 import testContext from '@utils/testContext';
@@ -25,30 +25,30 @@ import EmployeeFaker from '@data/faker/employee';
 
 const baseContext = 'functional_BO_header_myProfile';
 
-const employeeData = new EmployeeFaker({
-  defaultPage: 'Products',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-});
-const permissionProfileData = [
-  {
-    className: 'AdminEmployees',
-    accesses: [
-      'all',
-    ],
-  },
-  {
-    className: 'AdminParentEmployees',
-    accesses: [
-      'all',
-    ],
-  },
-];
-
-let browserContext: BrowserContext;
-let page: Page;
-
 describe('BO - Header : My profile', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const employeeData = new EmployeeFaker({
+    defaultPage: 'Products',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+  });
+  const permissionProfileData = [
+    {
+      className: 'AdminEmployees',
+      accesses: [
+        'all',
+      ],
+    },
+    {
+      className: 'AdminParentEmployees',
+      accesses: [
+        'all',
+      ],
+    },
+  ];
+
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);
 

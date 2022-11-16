@@ -1,6 +1,8 @@
 // Import utils
 import helper from '@utils/helpers';
 import loginCommon from '@commonTests/BO/loginBO';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import test context
 import testContext from '@utils/testContext';
@@ -17,17 +19,14 @@ import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
 
-import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
-
 const baseContext = 'functional_BO_header_quickAccess';
 
-let browserContext: BrowserContext;
-let page: Page;
-
-const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
-
 describe('BO - Header : Quick access links', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -1,6 +1,8 @@
 // Import utils
 import helper from '@utils/helpers';
 import loginCommon from '@commonTests/BO/loginBO';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import test context
 import testContext from '@utils/testContext';
@@ -8,15 +10,12 @@ import testContext from '@utils/testContext';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 
-import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
-
 const baseContext = 'functional_BO_header_leftMenu';
 
-let browserContext: BrowserContext;
-let page: Page;
-
 describe('BO - Header : Left menu', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
