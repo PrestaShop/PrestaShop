@@ -182,14 +182,13 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 );
             }
 
-            $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
                 $this->combinationNameBuilder->buildName($attributesInformationByCombinationId[$combinationId]),
                 $combination['reference'],
                 $attributesInformationByCombinationId[$combinationId],
                 (bool) $combination['default_on'],
-                $impactOnPrice,
+                new DecimalNumber($combination['price']),
                 (int) $combination['quantity'],
                 $imagePath,
                 new DecimalNumber($combination['ecotax'])
