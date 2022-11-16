@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 /**
  * Class ImageCore.
  */
@@ -126,10 +127,15 @@ class ImageCore extends ObjectModel
      *
      * {@inheritDoc}
      */
-    public function associateTo($id_shops)
+    public function associateTo($id_shops, int $productId = null)
     {
         if (!$this->id) {
             return;
+        }
+
+        $productId = $productId ?? $this->id_product;
+        if (empty($productId)) {
+            throw new InvalidArgumentException('You cannot associate an image to shop without specifying product ID');
         }
 
         if (!is_array($id_shops)) {
@@ -142,7 +148,7 @@ class ImageCore extends ObjectModel
                 $data[] = [
                     $this->def['primary'] => (int) $this->id,
                     'id_shop' => (int) $id_shop,
-                    'id_product' => (int) $this->id_product,
+                    'id_product' => $productId,
                 ];
             }
         }
