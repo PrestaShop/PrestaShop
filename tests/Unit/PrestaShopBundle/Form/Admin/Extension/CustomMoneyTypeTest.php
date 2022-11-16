@@ -38,6 +38,7 @@ use Symfony\Component\Form\FormView;
 class CustomMoneyTypeTest extends TestCase
 {
     private const DEFAULT_CURRENCY_ID = 1;
+
     /**
      * @dataProvider getDataForTestBuildViewAssignsCorrectMoneyPatternVariable
      *
