@@ -15,7 +15,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_login_login';
+const baseContext = 'functional_BO_login_logout';
 
 let browserContext;
 let page;
