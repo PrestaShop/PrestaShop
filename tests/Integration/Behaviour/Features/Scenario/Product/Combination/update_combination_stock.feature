@@ -234,3 +234,16 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements
+
+  Scenario: I update product out of stock
+    And product "product1" should have following stock information:
+      | out_of_stock_type | default |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | available |
+    Then all combinations of product "product1" should have the stock policy to "available"
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | default |
+    Then all combinations of product "product1" should have the stock policy to "default"
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | not_available |
+    Then all combinations of product "product1" should have the stock policy to "not_available"
