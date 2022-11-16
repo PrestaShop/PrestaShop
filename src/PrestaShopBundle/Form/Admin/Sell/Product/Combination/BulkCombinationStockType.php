@@ -165,7 +165,6 @@ class BulkCombinationStockType extends TranslatorAwareType
                 'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'disabling_switch' => true,
-                'modify_all_shops' => true,
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
@@ -188,7 +187,6 @@ class BulkCombinationStockType extends TranslatorAwareType
                 ),
                 'required' => false,
                 'disabling_switch' => true,
-                'modify_all_shops' => true,
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
