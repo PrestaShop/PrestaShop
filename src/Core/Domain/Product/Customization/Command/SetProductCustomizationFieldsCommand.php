@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationShopConstraintTrait;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 
 /**
@@ -37,6 +39,8 @@ use RuntimeException;
  */
 class SetProductCustomizationFieldsCommand
 {
+    use CustomizationShopConstraintTrait;
+
     /**
      * @var ProductId
      */
@@ -48,13 +52,23 @@ class SetProductCustomizationFieldsCommand
     private $customizationFields = [];
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      * @param array $customizationFields
      */
-    public function __construct(int $productId, array $customizationFields)
-    {
+    public function __construct(
+        int $productId,
+        array $customizationFields,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
         $this->setCustomizationFields($customizationFields);
+        $this->checkShopConstraint($shopConstraint);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -71,6 +85,14 @@ class SetProductCustomizationFieldsCommand
     public function getCustomizationFields(): array
     {
         return $this->customizationFields;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**
