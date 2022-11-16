@@ -53,16 +53,18 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
         foreach ($imagesAssociatedToProduct as $image) {
             $shopsToAddImageTo = $this->extractShopsToAddImageTo($command->getProductImageSettings(), $image->id);
             $shopsToRemoveImageFrom = $this->getShopsToRemoveImageFrom($shopIdsAssociatedToProduct, $shopsToAddImageTo, $image);
-            $this->associateImageToShops($command->getProductId()->getValue(), $image, $shopsToAddImageTo);
-            $this->productImageMultiShopRepository->deleteFromShops(
-                $image,
-                array_map(
-                    static function (int $shopId): ShopId {
-                        return new ShopId($shopId);
-                    },
-                    $shopsToRemoveImageFrom
-                )
-            );
+            $image->associateTo($shopsToAddImageTo, $command->getProductId()->getValue());
+            if (!empty($shopsToRemoveImageFrom)) {
+                $this->productImageMultiShopRepository->deleteFromShops(
+                    $image,
+                    array_map(
+                        static function (int $shopId): ShopId {
+                            return new ShopId($shopId);
+                        },
+                        $shopsToRemoveImageFrom
+                    )
+                );
+            }
         }
     }
 
@@ -158,19 +160,5 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
         }
 
         return $shopsToRemoveImageFrom;
-    }
-
-    /**
-     * @param int $productId
-     * @param Image $image
-     * @param int[] $shopsToAddImageTo
-     *
-     * @return void
-     */
-    private function associateImageToShops(int $productId, Image $image, array $shopsToAddImageTo): void
-    {
-        //We need to set id_product otherwise the association is done but product_id will be null in ps_image_shop
-        $image->id_product = $productId;
-        $image->associateTo($shopsToAddImageTo);
     }
 }

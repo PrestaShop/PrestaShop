@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Repository;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use function bqSQL;
 use Db;
 use DbQuery;
@@ -191,7 +192,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
     protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
     {
         if (empty($shopIds)) {
-            return;
+            throw new InvalidArgumentException('The shopIds should not be empty');
         }
         try {
             // Force internal shop list which is used as an override of the one from Context when generating the SQL queries

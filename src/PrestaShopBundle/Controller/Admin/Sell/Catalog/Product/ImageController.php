@@ -60,8 +60,7 @@ class ImageController extends FrameworkBundleAdminController
     public function getImagesAction(int $productId): JsonResponse
     {
         /** @var ProductImage[] $images */
-        $images = $this->getQueryBus()->handle(
-            new GetProductImages($productId));
+        $images = $this->getQueryBus()->handle(new GetProductImages($productId));
 
         return new JsonResponse(array_map([$this, 'formatImage'], $images));
     }
