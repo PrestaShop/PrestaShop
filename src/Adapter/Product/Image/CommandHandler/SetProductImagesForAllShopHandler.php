@@ -54,7 +54,15 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
             $shopsToAddImageTo = $this->extractShopsToAddImageTo($command->getProductImageSettings(), $image->id);
             $shopsToRemoveImageFrom = $this->getShopsToRemoveImageFrom($shopIdsAssociatedToProduct, $shopsToAddImageTo, $image);
             $this->associateImageToShops($command->getProductId()->getValue(), $image, $shopsToAddImageTo);
-            $this->productImageMultiShopRepository->deleteFromShops($image, $shopsToRemoveImageFrom);
+            $this->productImageMultiShopRepository->deleteFromShops(
+                $image,
+                array_map(
+                    static function (int $shopId): ShopId {
+                        return new ShopId($shopId);
+                    },
+                    $shopsToRemoveImageFrom
+                )
+            );
         }
     }
 
@@ -155,7 +163,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
     /**
      * @param int $productId
      * @param Image $image
-     * @param array $shopsToAddImageTo
+     * @param int[] $shopsToAddImageTo
      *
      * @return void
      */
