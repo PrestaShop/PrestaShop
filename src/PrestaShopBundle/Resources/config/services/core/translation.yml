@@ -6,3 +6,9 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Translation\Locale\Converter'
     arguments:
       - '%kernel.project_dir%/app/Resources/legacy-to-standard-locales.json'
+
+  prestashop.core.translation.util.refresher:
+    class: 'PrestaShop\PrestaShop\Core\Translation\Util\Refresher'
+    arguments:
+      - '%kernel.cache_dir%/translations'
+      - '@prestashop.adapter.module.repository.module_repository'

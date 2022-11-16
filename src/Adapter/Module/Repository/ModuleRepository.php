@@ -117,9 +117,9 @@ class ModuleRepository extends AbstractObjectModelRepository
      *
      * @return array<string, string> File paths indexed by module name
      */
-    public function getActiveModulesPaths(): array
+    public function getActiveModulesPaths(?bool $useCache = true): array
     {
-        if (empty($this->activeModulesPaths)) {
+        if (!$useCache || empty($this->activeModulesPaths)) {
             $this->activeModulesPaths = [];
             $activeModules = $this->getActiveModules();
 
@@ -131,11 +131,6 @@ class ModuleRepository extends AbstractObjectModelRepository
         }
 
         return $this->activeModulesPaths;
-    }
-
-    public function clearActiveModulesPaths(): void
-    {
-        $this->activeModulesPaths = [];
     }
 
     /**
