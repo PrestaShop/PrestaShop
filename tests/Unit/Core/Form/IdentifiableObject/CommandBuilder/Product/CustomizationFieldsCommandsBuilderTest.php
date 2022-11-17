@@ -53,7 +53,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -120,7 +120,8 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
                     'id' => null,
                     'added_by_module' => false,
                 ],
-            ]
+            ],
+            $this->getSingleShopConstraint()
         );
 
         yield [

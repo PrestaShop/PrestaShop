@@ -117,7 +117,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
-            'specifications' => $this->extractSpecificationsData($productForEditing),
+            'specifications' => $this->extractSpecificationsData($productForEditing, $shopConstraint),
             'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -304,10 +304,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, mixed>
      */
-    private function extractSpecificationsData(ProductForEditing $productForEditing): array
+    private function extractSpecificationsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $details = $productForEditing->getDetails();
         $options = $productForEditing->getOptions();
@@ -324,7 +325,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'attachments' => $this->extractAttachmentsData($productForEditing),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing, $shopConstraint),
         ];
     }
 
@@ -594,14 +595,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, array<int, mixed>>
      */
-    private function extractCustomizationsData(ProductForEditing $productForEditing): array
+    private function extractCustomizationsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         /** @var CustomizationField[] $customizationFields */
         $customizationFields = $this->queryBus->handle(
-            new GetProductCustomizationFields($productForEditing->getProductId())
+            new GetProductCustomizationFields($productForEditing->getProductId(), $shopConstraint)
         );
 
         if (empty($customizationFields)) {
