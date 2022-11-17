@@ -31,7 +31,7 @@ jobs:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
@@ -52,7 +52,7 @@ jobs:
         if: env.PULL_REQUEST_BODY != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: cron-php-update-modules-${{ env.GH_BRANCH }}
+          branch: cron-php-update-m odules-${{ env.GH_BRANCH }}
           commit-message: Updated PrestaShop Packages
           committer: PrestonBot <noreply@github.com>
           author: prestonBot <prestonBot@users.noreply.github.com>

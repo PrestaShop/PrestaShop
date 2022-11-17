@@ -24,40 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Core\Repository;
 
-/**
- * Class ImageColumn renders column as image.
- */
-final class ImageColumn extends AbstractColumn
+use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+
+trait ShopConstraintTrait
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'image';
-    }
+    protected function applyShopConstraint(
+        QueryBuilder $queryBuilder,
+        ?ShopConstraint $shopConstraint = null
+    ): QueryBuilder {
+        if (null === $shopConstraint) {
+            return $queryBuilder;
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'src_field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'alt_field' => '',
-            ])
-            ->setAllowedTypes('src_field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('alt_field', 'string')
-        ;
+        if ($shopConstraint->getShopId() !== null) {
+            $queryBuilder
+                ->andWhere('id_shop = :shop')
+                ->setParameter('shop', $shopConstraint->getShopId()->getValue())
+            ;
+        }
+
+        if ($shopConstraint->getShopGroupId() !== null) {
+            $queryBuilder
+                ->andWhere('id_shop_group = :shop_group')
+                ->setParameter('shop_group', $shopConstraint->getShopGroupId()->getValue())
+            ;
+        }
+
+        return $queryBuilder;
     }
 }

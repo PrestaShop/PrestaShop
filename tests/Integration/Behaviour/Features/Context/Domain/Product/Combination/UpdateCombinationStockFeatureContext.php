@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use StockAvailable;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
@@ -171,6 +172,34 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         }
         if (isset($dataRows['available date'])) {
             $command->setAvailableDate(new DateTime($dataRows['available date']));
+        }
+    }
+
+    /**
+     * @Then /^all combinations of product "([^"]*)" should have the stock policy to "([^"]*)"$/
+     */
+    public function allCombinationsOfProductShouldHaveTheStockPolicyTo(string $reference, string $outOfStock)
+    {
+        $product = $this->getProductForEditing($reference);
+
+        $outOfStockInt = $this->convertOutOfStockToInt($outOfStock);
+        Assert::assertSame(
+            $product->getStockInformation()->getOutOfStockType(),
+            $outOfStockInt
+        );
+
+        $combinations = $this->getCombinationsList($reference);
+
+        foreach ($combinations->getCombinations() as $combination) {
+            $id = StockAvailable::getStockAvailableIdByProductId(
+                $this->getSharedStorage()->get($reference),
+                $combination->getCombinationId()
+            );
+
+            Assert::assertSame(
+                (int) (new StockAvailable($id))->out_of_stock,
+                $outOfStockInt
+            );
         }
     }
 }
