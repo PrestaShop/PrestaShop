@@ -55,6 +55,7 @@ abstract class AbstractColumn implements ColumnInterface
     public function __construct($id)
     {
         $this->id = $id;
+        $this->name = '';
     }
 
     /**
