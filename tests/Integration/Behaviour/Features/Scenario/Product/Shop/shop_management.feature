@@ -370,24 +370,46 @@ Feature: Copy product from shop to shop.
       | en-US  | too slow... |
       | fr-FR  |             |
 
+  Scenario: I copy product to another shop that was not associated, customization fields are copied
+    When I add product "customizable_product" with following information:
+      | name[en-US] | nice customizable t-shirt |
+      | type        | standard                  |
+    And product "customizable_product" type should be standard
+    When I update product customizable_product with following customization fields:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+    Then product "customizable_product" should require customization
+    And product customizable_product should have 2 customizable text fields
+    And product customizable_product should have 0 customizable file fields
+    And product customizable_product should have following customization fields:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+    And I copy product customizable_product from shop shop1 to shop shop2
+    And product customizable_product should have following customization fields for shops shop1,shop2:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+
   Scenario: I copy product to another shop that was not associated, image associations are copied
-    Given I add product "product1" with following information:
+    Given I add product "graphicProduct" with following information:
       | name[en-US] | funny mug |
       | type        | standard  |
-    And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop2
-    Then product "product1" should have following images for shop "shop1":
+    And I add new image "image1" named "app_icon.png" to product "graphicProduct" for shop "shop1"
+    And I add new image "image2" named "some_image.jpg" to product "graphicProduct" for shop "shop1"
+    And I copy product graphicProduct from shop shop1 to shop shop2
+    Then product "graphicProduct" should have following images for shop "shop1":
       | image reference |  position | shops        |
       | image1          |  1        | shop1, shop2 |
       | image2          |  2        | shop1, shop2 |
-    And product "product1" should have following images for shop "shop2":
+    And product "graphicProduct" should have following images for shop "shop2":
       | image reference |  position | shops        |
       | image1          |  1        | shop1, shop2 |
       | image2          |  2        | shop1, shop2 |
-    And product "product1" should have following images for shop "shop3":
+    And product "graphicProduct" should have following images for shop "shop3":
       | image reference |  position | shops        |
-    And product "product1" should have following images for shop "shop4":
+    And product "graphicProduct" should have following images for shop "shop4":
       | image reference |  position | shops        |
     And following image types should be applicable to products:
       | reference     | name           | width | height |
