@@ -20,16 +20,18 @@ services:
       - { name: security.voter }
     public: false
 
-  prestashop.security.authenticator.token:
-    class: PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
+  PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
+    public: false
     arguments:
       - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
-      - '@prestashop.api.factory.psrHttpFactory'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
 
-  prestashop.security.oauth.client:
-    class: PrestaShopBundle\Security\OAuth2\OAuth2Client
+  PrestaShopBundle\Security\OAuth2\ResourceServer:
+    public: false
     arguments:
-      - '@prestashop.api.resource_server'
+      - '@League\OAuth2\Server\ResourceServer'
       - '@security.user.provider.concrete.oauth2'
 
-  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface: '@prestashop.security.oauth.client'
+  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface:
+    alias: PrestaShopBundle\Security\OAuth2\ResourceServer
+    public: false

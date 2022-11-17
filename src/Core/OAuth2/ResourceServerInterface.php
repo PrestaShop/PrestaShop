@@ -29,7 +29,11 @@ namespace PrestaShop\PrestaShop\Core\OAuth2;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-interface OAuth2Interface
+/*
+ * Interface to implement when using/implementing an Authorization Server so the Resource Server
+ * can have a way to verify the access token
+ */
+interface ResourceServerInterface
 {
     public function isTokenValid(ServerRequestInterface $request): bool;
 

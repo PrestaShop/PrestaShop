@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Security;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface;
+use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
 use PrestaShop\PrestaShop\Core\Security\TokenAuthenticator;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
@@ -41,15 +41,15 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TokenAuthenticatorTest extends TestCase
 {
     protected $tokenAuthenticator;
-    protected $oauth2;
+    protected $resourceServer;
     protected $request;
 
     public function setUp(): void
     {
         $psr7 = new Psr17Factory();
-        $this->oauth2 = $this->createMock(OAuth2Interface::class);
+        $this->resourceServer = $this->createMock(ResourceServerInterface::class);
         $this->tokenAuthenticator = new TokenAuthenticator(
-            $this->oauth2,
+            $this->resourceServer,
             new PsrHttpFactory($psr7, $psr7, $psr7, $psr7)
         );
         $this->request = Request::create('/');
@@ -66,7 +66,7 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testOnAuthenticationFailure(): void
     {
-        $response = $this->tokenAuthenticator->start($this->request, new AuthenticationException());
+        $response = $this->tokenAuthenticator->onAuthenticationFailure($this->request, new AuthenticationException());
         $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
         $this->assertTrue($response->headers->has('WWW-Authenticate'));
         $this->assertSame('Bearer', $response->headers->get('WWW-Authenticate'));
@@ -80,7 +80,7 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testGetUser(): void
     {
-        $this->oauth2->expects($this->once())->method('getUser');
+        $this->resourceServer->expects($this->once())->method('getUser');
         $this->tokenAuthenticator->getUser(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(UserProviderInterface::class)
@@ -89,7 +89,7 @@ class TokenAuthenticatorTest extends TestCase
 
     public function testCheckCredentials(): void
     {
-        $this->oauth2->expects($this->once())->method('isTokenValid');
+        $this->resourceServer->expects($this->once())->method('isTokenValid');
         $this->tokenAuthenticator->checkCredentials(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(UserInterface::class)

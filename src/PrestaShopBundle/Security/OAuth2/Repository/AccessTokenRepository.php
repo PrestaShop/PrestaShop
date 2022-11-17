@@ -33,6 +33,9 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use PrestaShopBundle\Security\OAuth2\Entity\AccessToken;
 
+/*
+ * Repository class responsible for managing PrestaShop's Authorization Server AccessToken entity
+ */
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function getNewToken(
@@ -53,10 +56,12 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     public function revokeAccessToken($tokenId): void
     {
+        // @ToDo: revoke AccessToken
     }
 
     public function isAccessTokenRevoked($tokenId): bool
     {
+        // @ToDo: check if AccessToken is revoked
         return false;
     }
 }

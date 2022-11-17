@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface;
+use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,21 +39,24 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
+/*
+ * This class is responsible for authenticating api calls using the Authorization header
+ */
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var OAuth2Interface
+     * @var ResourceServerInterface
      */
-    private $oauth2;
+    private $authorizationServer;
 
     /**
      * @var HttpMessageFactoryInterface
      */
     private $httpMessageFactory;
 
-    public function __construct(OAuth2Interface $oauth2, HttpMessageFactoryInterface $httpMessageFactory)
+    public function __construct(ResourceServerInterface $authorizationServer, HttpMessageFactoryInterface $httpMessageFactory)
     {
-        $this->oauth2 = $oauth2;
+        $this->authorizationServer = $authorizationServer;
         $this->httpMessageFactory = $httpMessageFactory;
     }
 
@@ -64,6 +67,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function supports(Request $request): bool
     {
+        // Every request to the API should be handled by this Authenticator
         return true;
     }
 
@@ -74,12 +78,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider): ?UserInterface
     {
-        return $this->oauth2->getUser($credentials);
+        return $this->authorizationServer->getUser($credentials);
     }
 
     public function checkCredentials($credentials, UserInterface $user): bool
     {
-        return $this->oauth2->isTokenValid($credentials);
+        return $this->authorizationServer->isTokenValid($credentials);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
@@ -89,11 +93,13 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
     {
+        // No response returned here, the request should keep running
         return null;
     }
 
     public function supportsRememberMe(): bool
     {
+        // Stateless API, remember me feature doesn't apply here
         return false;
     }
 

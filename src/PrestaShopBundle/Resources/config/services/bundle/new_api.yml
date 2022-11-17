@@ -1,21 +1,17 @@
 services:
   _defaults:
-    public: true
+    public: false
 
-  prestashop.api.repository.client:
-    class: PrestaShopBundle\Security\OAuth2\Repository\ClientRepository
+  PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
     arguments:
       - '@security.user.provider.concrete.oauth2'
       - '@security.user_password_encoder.generic'
 
-  prestashop.api.repository.access_token:
-    class: PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository
+  PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
 
-  prestashop.api.repository.scope:
-    class: PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository
+  PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository:
 
-  prestashop.api.grant.client_credentials:
-    class: League\OAuth2\Server\Grant\ClientCredentialsGrant
+  League\OAuth2\Server\Grant\ClientCredentialsGrant:
 
   prestashop.api.private_key:
     class: League\OAuth2\Server\CryptKey
@@ -25,40 +21,36 @@ services:
     class: League\OAuth2\Server\CryptKey
     arguments: [ '%api_public_key%' ]
 
-  prestashop.api.authorization_server:
-    class: League\OAuth2\Server\AuthorizationServer
+  League\OAuth2\Server\AuthorizationServer:
     arguments:
-      - '@prestashop.api.repository.client'
-      - '@prestashop.api.repository.access_token'
-      - '@prestashop.api.repository.scope'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ClientRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository'
       - '@prestashop.api.private_key'
       - '%new_cookie_key%'
     calls:
-      - [ 'enableGrantType', [ '@prestashop.api.grant.client_credentials' ] ]
+      - [ 'enableGrantType', [ '@League\OAuth2\Server\Grant\ClientCredentialsGrant' ] ]
 
-  prestashop.api.resource_server:
-    class: League\OAuth2\Server\ResourceServer
+  League\OAuth2\Server\ResourceServer:
     arguments:
-      - '@prestashop.api.repository.access_token'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
       - '@prestashop.api.public_key'
 
-  prestashop.api.factory.psr17:
-    class: Nyholm\Psr7\Factory\Psr17Factory
+  Nyholm\Psr7\Factory\Psr17Factory:
 
-  prestashop.api.factory.psrHttpFactory:
-    class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+  Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory:
     arguments:
-      - '@prestashop.api.factory.psr17'
-      - '@prestashop.api.factory.psr17'
-      - '@prestashop.api.factory.psr17'
-      - '@prestashop.api.factory.psr17'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
 
-  prestashop.api.factory.foundationHttpFactory:
-    class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
+  Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory:
 
   PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
+    public: true
     arguments:
-      - '@prestashop.api.authorization_server'
-      - '@prestashop.api.factory.psrHttpFactory'
-      - '@prestashop.api.factory.foundationHttpFactory'
-      - '@prestashop.api.factory.psr17'
+      - '@League\OAuth2\Server\AuthorizationServer'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'

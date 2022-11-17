@@ -32,6 +32,10 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
+/*
+ * Repository class responsible for managing PrestaShop's Authorization Server scopes
+ * Empty implementation for now because scopes are not used yet
+ */
 class NullScopeRepository implements ScopeRepositoryInterface
 {
     public function getScopeEntityByIdentifier($identifier): ?ScopeEntityInterface

@@ -26,31 +26,33 @@
 
 namespace Tests\Unit\PrestaShopBundle\Security\OAuth2;
 
-use League\OAuth2\Server\ResourceServer;
+use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Security\OAuth2\OAuth2Client;
+use PrestaShopBundle\Security\OAuth2\ResourceServer;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class OAuth2ClientTest extends TestCase
 {
-    private $resourceServer;
+    private $leagueResourceServer;
     private $client;
 
     public function setUp(): void
     {
         $userProvider = new InMemoryUserProvider(['myclientid' => ['password' => 'myclientsecret2']]);
-        $this->resourceServer = $this->createMock(ResourceServer::class);
-        $this->resourceServer->method('validateAuthenticatedRequest')->willReturnCallback(function (ServerRequestInterface $request) {
+        $this->leagueResourceServer = $this->createMock(LeagueResourceServer::class);
+        $this->leagueResourceServer->method('validateAuthenticatedRequest')->willReturnCallback(function (ServerRequestInterface $request) {
             return $request->withAttribute('oauth_client_id', $request->getParsedBody()['client_id'] ?? null);
         });
-        $this->client = new OAuth2Client($this->resourceServer, $userProvider);
+        $this->client = new ResourceServer($this->leagueResourceServer, $userProvider);
         parent::setUp();
     }
 
     /**
+     * Only testing that the client_id exists here (password doesn't matter)
+     *
      * @dataProvider getUserDataProvider
      */
     public function testGetUser(ServerRequestInterface $request, bool $exists): void
@@ -64,11 +66,13 @@ class OAuth2ClientTest extends TestCase
     }
 
     /**
+     * only testing that validateAuthenticatedRequest is called here
+     *
      * @dataProvider getUserDataProvider
      */
     public function testIsTokenValid(ServerRequestInterface $request): void
     {
-        $this->resourceServer->expects($this->once())->method('validateAuthenticatedRequest');
+        $this->leagueResourceServer->expects($this->once())->method('validateAuthenticatedRequest');
         $this->client->isTokenValid($request);
     }
 
@@ -77,12 +81,12 @@ class OAuth2ClientTest extends TestCase
         yield [
             (new ServerRequest('POST', '/'))
                 ->withParsedBody(['client_id' => 'myclientid', 'client_secret' => 'myclientsecret']),
-            true,
+            true, // client_id exists
         ];
         yield [
             (new ServerRequest('POST', '/'))
                 ->withParsedBody(['client_id' => 'mywrongclientid', 'client_secret' => 'myclientsecret']),
-            false,
+            false, // client_id doesn't exists
         ];
         yield [
             (new ServerRequest('POST', '/'))

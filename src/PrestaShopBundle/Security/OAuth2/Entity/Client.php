@@ -32,28 +32,17 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
+/*
+ * This class is the Client entity managed by ClientRepository
+ */
 class Client implements ClientEntityInterface
 {
     use ClientTrait;
     use EntityTrait;
 
-    /**
-     * @var string
-     */
-    private $clientSecret;
-
-    public function setClientSecret(string $clientSecret): void
+    public function __construct()
     {
-        $this->clientSecret = $clientSecret;
-    }
-
-    public function getClientSecret(): ?string
-    {
-        return $this->clientSecret;
-    }
-
-    public function isConfidential(): bool
-    {
-        return true;
+        // Client Credential Grant allow only confidential clients (rfc6749 section 4.4)
+        $this->isConfidential = true;
     }
 }
