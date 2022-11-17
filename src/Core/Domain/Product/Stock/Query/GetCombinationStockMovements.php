@@ -28,17 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use LogicException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class GetEmployeesStockMovements
+/**
+ * This query returns a list of stock movements for a combination, each row is either
+ * an edition from the BO by an employee or a range of customer orders resume (all the
+ * combinations that were sold between each edition).
+ */
+class GetCombinationStockMovements
 {
     public const DEFAULT_LIMIT = 5;
-
-    /**
-     * @var ProductId
-     */
-    private $productId;
 
     /**
      * @var ShopId
@@ -56,51 +60,52 @@ class GetEmployeesStockMovements
     private $limit;
 
     /**
-     * @param int $productId
-     * @param int $offset
-     * @param int $limit
+     * @var CombinationId
+     */
+    private $combinationId;
+
+    /**
+     * @throws CombinationConstraintException
+     * @throws ShopException
+     * @throws LogicException
      */
     public function __construct(
-        int $productId,
+        int $combinationId,
         int $shopId,
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
     ) {
-        $this->productId = new ProductId($productId);
         $this->shopId = new ShopId($shopId);
+
+        if ($offset < 0) {
+            throw new InvalidArgumentException('Offset should be a positive integer');
+        }
         $this->offset = $offset;
+
+        if ($limit < 0) {
+            throw new InvalidArgumentException('Limit should be a positive integer');
+        }
         $this->limit = $limit;
+        $this->combinationId = new CombinationId($combinationId);
     }
 
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return ShopId
-     */
     public function getShopId(): ShopId
     {
         return $this->shopId;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;
+    }
+
+    public function getCombinationId(): CombinationId
+    {
+        return $this->combinationId;
     }
 }

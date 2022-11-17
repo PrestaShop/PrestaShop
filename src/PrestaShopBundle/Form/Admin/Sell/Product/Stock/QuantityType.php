@@ -96,6 +96,9 @@ class QuantityType extends TranslatorAwareType
                         'text' => $this->trans('[1]View all stock movements[/1]', 'Admin.Catalog.Feature'),
                         'href' => $stockMovementsUrl,
                     ],
+                    'attr' => [
+                        'class' => 'stock-movement-list',
+                    ],
                 ])
             ;
         }

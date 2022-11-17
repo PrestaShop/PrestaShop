@@ -33,9 +33,12 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -71,10 +74,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id): array
     {
         $combinationId = (int) $id;
+        $shopConstraint = $this->shopContext->getShopConstraint();
         /** @var CombinationForEditing $combinationForEditing */
         $combinationForEditing = $this->queryBus->handle(new GetCombinationForEditing(
             $combinationId,
-            $this->shopContext->getShopConstraint()
+            $shopConstraint
         ));
 
         $suppliersData = $this->extractSuppliersData($combinationForEditing);
@@ -87,7 +91,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                 'name' => $combinationForEditing->getName(),
                 'is_default' => $combinationForEditing->isDefault(),
             ],
-            'stock' => $this->extractStockData($combinationForEditing),
+            'stock' => $this->extractStockData($combinationForEditing, $shopConstraint),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
@@ -95,10 +99,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CombinationForEditing $combinationForEditing
+     * @param ShopConstraint $shopConstraint
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    private function extractStockData(CombinationForEditing $combinationForEditing): array
+    private function extractStockData(CombinationForEditing $combinationForEditing, ShopConstraint $shopConstraint): array
     {
         $stockInformation = $combinationForEditing->getStock();
         $availableDate = $stockInformation->getAvailableDate();
@@ -109,6 +114,10 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
+                'stock_movements' => $this->getStockMovementHistories(
+                    $combinationForEditing->getCombinationId(),
+                    $shopConstraint
+                ),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -118,6 +127,37 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             ],
             'available_date' => DateTime::isNull($availableDate) ? '' : $availableDate->format(DateTime::DEFAULT_DATE_FORMAT),
         ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getStockMovementHistories(int $combinationId, ShopConstraint $shopConstraint): array
+    {
+        return array_map(
+            function (StockMovement $stockMovement): array {
+                $date = null;
+                if ($stockMovement->isEdition()) {
+                    $date = $stockMovement
+                        ->getDate('add')
+                        ->format(DateTime::DEFAULT_DATETIME_FORMAT)
+                    ;
+                }
+
+                return [
+                    'type' => $stockMovement->getType(),
+                    'date' => $date,
+                    'employee_name' => $stockMovement->getEmployeeName(),
+                    'delta_quantity' => $stockMovement->getDeltaQuantity(),
+                ];
+            },
+            $this->queryBus->handle(
+                new GetCombinationStockMovements(
+                    $combinationId,
+                    $shopConstraint->getShopId()->getValue()
+                )
+            )
+        );
     }
 
     /**

@@ -26,18 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 
 /**
- * Defines contract for GetProductStockMovementsHandler
+ * Defines contract for GetStockMovementsHistoryHandler
  */
-interface GetEmployeesStockMovementsHandlerInterface
+interface GetProductStockMovementsHandlerInterface
 {
     /**
-     * @param GetEmployeesStockMovements $query
-     *
-     * @return EmployeeStockMovement[]
+     * @return StockMovement[]
      */
-    public function handle(GetEmployeesStockMovements $query): array;
+    public function handle(GetProductStockMovements $query): array;
 }
