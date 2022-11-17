@@ -26,16 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
-class FeatureFlagSettings
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Manages the "Configure > Advanced Parameters > Authorization Server" page.
+ */
+class AuthorizationServerController extends FrameworkBundleAdminController
 {
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
-
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
-
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
-
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
+    /**
+     * @return Response
+     */
+    public function indexAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig');
+    }
 }

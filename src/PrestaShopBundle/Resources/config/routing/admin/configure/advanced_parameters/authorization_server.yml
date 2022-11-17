@@ -1,0 +1,7 @@
+admin_authorization_server_index:
+  path: /
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::indexAction'
+    _legacy_controller: AdminAuthorizationServer
+    _legacy_link: AdminAuthorizationServer
