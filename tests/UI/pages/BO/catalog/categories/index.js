@@ -15,6 +15,7 @@ class Categories extends BOBasePage {
     super();
 
     this.pageTitle = 'Categories';
+    this.pageRootTitle = 'Root • PrestaShop';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
 
     // Selectors

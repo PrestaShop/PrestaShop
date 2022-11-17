@@ -79,7 +79,7 @@ class AddCategory extends BOBasePage {
     await this.selectAllGroups(page);
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
+    return this.getPageTitle(page);
   }
 }
 
