@@ -129,7 +129,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @param filterType {string} Input or select to choose method of filter
    * @param filterBy {string} Column to filter
-   * @param value {string} Value to put on filter
+   * @param value {string|boolean} Value to put on filter
    * @returns {Promise<void>}
    */
   async filterWebserviceTable(page, filterType, filterBy, value = '') {

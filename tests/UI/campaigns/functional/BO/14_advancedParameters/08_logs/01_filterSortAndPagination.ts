@@ -1,33 +1,23 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
+import {getDateFormat} from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const logsPage = require('@pages/BO/advancedParameters/logs');
-
-const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
+// Import common
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import data
-const {DefaultEmployee} = require('@data/demo/employees');
+import {DefaultEmployee} from '@data/demo/employees';
 
-let browserContext;
-let page;
-let numberOfLogs = 0;
-const today = getDateFormat('mm/dd/yyyy');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import logsPage from '@pages/BO/advancedParameters/logs';
+
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 /*
 Erase all logs
@@ -39,6 +29,11 @@ Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Er
  */
 
 describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfLogs: number = 0;
+  const today: string = getDateFormat('mm/dd/yyyy');
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -76,7 +71,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
   // Login and logout 11 times to have 11 logs
   describe('Logout then login 11 times to have 11 logs', async () => {
-    const tests = new Array(11).fill(0, 0, 11);
+    const tests: number[] = new Array(11).fill(0, 0, 11);
 
     tests.forEach((test, index) => {
       it(`should logout from BO n°${index + 1}`, async function () {
@@ -93,14 +88,14 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
       await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
-      const pageTitle = await logsPage.getPageTitle(page);
+      const pageTitle: string = await logsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(logsPage.pageTitle);
     });
 
     it('should check the number of logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLogsNumber', baseContext);
 
-      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+      const numberOfElements: number = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfElements).to.be.equal(11);
     });
   });
@@ -112,38 +107,38 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
       await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
-      const pageTitle = await logsPage.getPageTitle(page);
+      const pageTitle: string = await logsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(logsPage.pageTitle);
 
-      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+      const numberOfElements: number = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfElements).to.be.equal(numberOfLogs + 11);
     });
 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
+      const paginationNumber: string = await logsPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber = await logsPage.paginationNext(page);
+      const paginationNumber: string = await logsPage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber = await logsPage.paginationPrevious(page);
+      const paginationNumber: string = await logsPage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
+      const paginationNumber: string = await logsPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -157,7 +152,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_log',
-            filterValue: 50,
+            filterValue: '50',
           },
       },
       {
@@ -202,7 +197,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByObjectID',
             filterType: 'input',
             filterBy: 'object_id',
-            filterValue: 2,
+            filterValue: '2',
           },
       },
       {
@@ -211,7 +206,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByErrorCode',
             filterType: 'input',
             filterBy: 'error_code',
-            filterValue: 1,
+            filterValue: '1',
           },
       },
     ].forEach((test) => {
@@ -225,12 +220,12 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
           test.args.filterValue,
         );
 
-        const numberOfLogsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
+        const numberOfLogsAfterFilter: number = await logsPage.getNumberOfElementInGrid(page);
 
         await expect(numberOfLogsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
         for (let i = 1; i <= numberOfLogsAfterFilter; i++) {
-          const textColumn = await logsPage.getTextColumn(page, i, test.args.filterBy);
+          const textColumn: string = await logsPage.getTextColumn(page, i, test.args.filterBy);
 
           await expect(textColumn).to.contains(test.args.filterValue);
         }
@@ -239,7 +234,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       it('should reset all filters', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}Reset`, baseContext);
 
-        const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
+        const numberOfLogsAfterReset: number = await logsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
       });
     });
@@ -249,11 +244,11 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
       await logsPage.filterLogsByDate(page, today, today);
 
-      const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
+      const numberOfEmailsAfterFilter: number = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
-        const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
+        const textColumn: string = await logsPage.getTextColumn(page, row, 'date_add');
         await expect(textColumn).to.contains(today);
       }
     });
@@ -261,7 +256,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterFilterByDate', baseContext);
 
-      const numberOfLogsAfterReset = await logsPage.resetAndGetNumberOfLines(page);
+      const numberOfLogsAfterReset: number = await logsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLogsAfterReset).to.equal(numberOfLogs + 11);
     });
   });
@@ -369,14 +364,14 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        let nonSortedTable: string[]|number[] = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
         await logsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        let sortedTable: string[]|number[] = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
+          nonSortedTable = nonSortedTable.map((text: string): number => parseFloat(text));
+          sortedTable = sortedTable.map((text: string): number => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

@@ -1,35 +1,32 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const webservicePage = require('@pages/BO/advancedParameters/webservice');
-const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import webservicePage from '@pages/BO/advancedParameters/webservice';
+import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 // Import data
-const WebserviceFaker = require('@data/faker/webservice');
+import WebserviceFaker from '@data/faker/webservice';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_advancedParameters_webservice_filterAndQuickEditWebservice';
 
-let browserContext;
-let page;
-
-let numberOfWebserviceKeys = 0;
-
-const firstWebServiceData = new WebserviceFaker();
-const secondWebServiceData = new WebserviceFaker();
-
 describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservice', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfWebserviceKeys: number = 0;
+
+  const firstWebServiceData: WebserviceFaker = new WebserviceFaker();
+  const secondWebServiceData: WebserviceFaker = new WebserviceFaker();
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -55,7 +52,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
     await webservicePage.closeSfToolBar(page);
 
-    const pageTitle = await webservicePage.getPageTitle(page);
+    const pageTitle: string = await webservicePage.getPageTitle(page);
     await expect(pageTitle).to.contains(webservicePage.pageTitle);
   });
 
@@ -66,17 +63,18 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     if (numberOfWebserviceKeys !== 0) await expect(numberOfWebserviceKeys).to.be.above(0);
   });
 
-  let tests = [
+  const tests = [
     {args: {webserviceToCreate: firstWebServiceData}},
     {args: {webserviceToCreate: secondWebServiceData}},
   ];
 
-  tests.forEach((test, index) => {
+  tests.forEach((test: {args: {webserviceToCreate: WebserviceFaker}}, index) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 
       await webservicePage.goToAddNewWebserviceKeyPage(page);
-      const pageTitle = await addWebservicePage.getPageTitle(page);
+
+      const pageTitle: string = await addWebservicePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
     });
 
@@ -91,12 +89,12 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
       await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
-      const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
+      const numberOfWebserviceKeysAfterCreation: number = await webservicePage.getNumberOfElementInGrid(page);
       await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
     });
   });
   describe('Filter webservice table', async () => {
-    tests = [
+    const testsFilter = [
       {
         args: {
           identifier: 'filterByKey',
@@ -123,7 +121,10 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       },
     ];
 
-    tests.forEach((test, index) => {
+    testsFilter.forEach((
+      test: {args: {identifier: string, filterType: string, filterBy: string, filterValue: string|boolean, }},
+      index: number,
+    ) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
@@ -138,10 +139,10 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const wenServiceStatus = await webservicePage.getStatus(page, i);
+            const wenServiceStatus: boolean = await webservicePage.getStatus(page, i);
             await expect(wenServiceStatus).to.equal(test.args.filterValue);
           } else {
-            const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
+            const textColumn: string = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -150,7 +151,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
+        const numberOfElement: number = await webservicePage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
       });
     });
@@ -167,7 +168,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         firstWebServiceData.keyDescription,
       );
 
-      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key: string = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains(firstWebServiceData.keyDescription);
     });
 
@@ -176,45 +177,45 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       {args: {status: 'enable', enable: true}},
     ];
 
-    statuses.forEach((webservice) => {
+    statuses.forEach((webservice: {args: {status: string, enable: boolean}}) => {
       it(`should ${webservice.args.status} the webservice`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${webservice.args.status}Webservice`, baseContext);
 
-        const isActionPerformed = await webservicePage.setStatus(
+        const isActionPerformed: boolean = await webservicePage.setStatus(
           page,
           1,
           webservice.args.enable,
         );
 
         if (isActionPerformed) {
-          const resultMessage = await webservicePage.getValidationMessage(page);
+          const resultMessage: string = await webservicePage.getValidationMessage(page);
           await expect(resultMessage).to.contains(webservicePage.successfulUpdateStatusMessage);
         }
 
-        const webserviceStatus = await webservicePage.getStatus(page, 1);
+        const webserviceStatus: boolean = await webservicePage.getStatus(page, 1);
         await expect(webserviceStatus).to.be.equal(webservice.args.enable);
       });
     });
   });
 
   describe('Delete the created webservice keys', async () => {
-    tests = [
+    const testsDelete = [
       {args: {name: 'first'}},
       {args: {name: 'second'}},
     ];
 
-    tests.forEach((test, index) => {
+    testsDelete.forEach((test: { args: { name:string }}, index: number) => {
       it(`should delete the ${test.args.name} webservice key created`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteWebserviceKey_${index}`, baseContext);
 
-        const textResult = await webservicePage.deleteWebserviceKey(page, 1);
+        const textResult: string = await webservicePage.deleteWebserviceKey(page, 1);
         await expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
       });
 
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete_${index}`, baseContext);
 
-        const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
+        const numberOfElement: number = await webservicePage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys - index + 1);
       });
     });
