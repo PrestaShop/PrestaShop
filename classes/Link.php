@@ -1514,6 +1514,15 @@ class LinkCore
                 );
 
                 break;
+            case 'manufacturer':
+                $link = $context->link->getManufacturerLink(
+                    new Manufacturer($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
             case 'manufacturerImage':
                 $link = $context->link->getManufacturerImageLink(
                     (int) $params['id'],
