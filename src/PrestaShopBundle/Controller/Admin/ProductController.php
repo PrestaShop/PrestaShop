@@ -595,14 +595,14 @@ class ProductController extends FrameworkBundleAdminController
             // this controller can be called as an AJAX JSON route or a HTML page
             // so we need to return the right type of response if an exception it thrown
             if ($request->isXmlHttpRequest()) {
-                $errors = [];
+                $error = [];
 
                 if ($this->get('prestashop.adapter.environment')->isDebug()) {
-                    $errors[] = $e->getMessage();
+                    $error['error'] = $e->getMessage();
                 }
-                
+
                 return $this->returnErrorJsonResponse(
-                    $errors,
+                    $error,
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
             }
