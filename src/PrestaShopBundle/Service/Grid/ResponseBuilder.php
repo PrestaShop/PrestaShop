@@ -33,6 +33,7 @@ use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 
 class ResponseBuilder
@@ -52,6 +53,9 @@ class ResponseBuilder
     /** @var int */
     private $shopId;
 
+    /** @var Session */
+    private $session;
+
     /**
      * @param GridFilterFormFactoryInterface $filterFormFactory
      * @param Router $router
@@ -64,13 +68,15 @@ class ResponseBuilder
         Router $router,
         AdminFilterRepository $adminFilterRepository,
         ?int $employeeId,
-        int $shopId
+        int $shopId,
+        Session $session
     ) {
         $this->filterFormFactory = $filterFormFactory;
         $this->router = $router;
         $this->adminFilterRepository = $adminFilterRepository;
         $this->employeeId = $employeeId;
         $this->shopId = $shopId;
+        $this->session = $session;
     }
 
     /**
@@ -98,15 +104,22 @@ class ResponseBuilder
 
         $redirectParams = [];
         if ($filtersForm->isSubmitted()) {
-            if ($this->checkIsFormDataEmpty($filtersForm->getData())) {
-                $this->resetPersistedFilter($filterId);
-            }
+            if ($filtersForm->isValid()) {
+                if ($this->checkIsFormDataEmpty($filtersForm->getData())) {
+                    $this->resetPersistedFilter($filterId);
+                }
 
-            $redirectParams = [
-                $filterId => [
-                    'filters' => $filtersForm->getData(),
-                ],
-            ];
+                $redirectParams = [
+                    $filterId => [
+                        'filters' => $filtersForm->getData(),
+                    ],
+                ];
+            } else {
+                foreach ($filtersForm->getErrors(true) as $error) {
+                    $fieldLabel = $error->getOrigin()->getConfig()->getOption('label') ?: $error->getOrigin()->getName();
+                    $this->session->getFlashBag()->add('error', sprintf('%s: %s', $fieldLabel, $error->getMessage()));
+                }
+            }
         }
 
         foreach ($queryParamsToKeep as $paramName) {

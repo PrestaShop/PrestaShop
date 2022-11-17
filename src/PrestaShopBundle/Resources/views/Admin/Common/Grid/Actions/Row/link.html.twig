@@ -45,6 +45,7 @@
     data-original-title="{{ action.name }}"
   {% endif %}
   data-clickable-row="{{ action.options.clickable_row|default(false) }}"
+  {% if action.options.target is not empty %}target="{{ action.options.target }}"{% endif %}
 >
   {% if action.icon is not empty %}
     <i class="material-icons">{{ action.icon }}</i>

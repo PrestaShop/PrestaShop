@@ -88,8 +88,12 @@ export default {
     removeCustomizationBtn: '.remove-customization-btn',
     customizationFieldRow: '.customization-field-row',
   },
+  stock: {
+    navigationTarget: '#product_stock-tab',
+  },
   combinations: {
     navigationTab: '#product_combinations-tab-nav',
+    navigationTarget: '#product_combinations-tab',
     combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
@@ -293,7 +297,7 @@ export default {
       container: '.product_list_category_filter',
       categoryRadio: '.category-label input:radio',
       filterForm: '#product_filter_form',
-      categoryInput: 'input[name="product[id_category]"]',
+      positionInput: 'input[name="product[position]"]',
       expandedClass: 'less',
       collapsedClass: 'more',
       categoryChildren: '.category-children',

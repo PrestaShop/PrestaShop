@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -321,7 +322,24 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     }
 
     /**
-     * @return string[]
+     * @param string $outOfStock
+     *
+     * @return int
+     */
+    protected function convertOutOfStockToInt(string $outOfStock): int
+    {
+        $intValues = [
+            'default' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'available' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'not_available' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid stock type
+        ];
+
+        return $intValues[$outOfStock];
+    }
+
+    /**
+     * @return int
      */
     protected function resolveHistoryDateKeys(string $type): array
     {

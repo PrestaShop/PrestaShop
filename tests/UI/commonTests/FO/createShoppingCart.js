@@ -13,6 +13,9 @@ const searchResultsPage = require('@pages/FO/searchResults');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 // Import expect from chai
 const {expect} = require('chai');
 

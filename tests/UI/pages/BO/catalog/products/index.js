@@ -22,6 +22,7 @@ class Products extends BOBasePage {
     this.productActivatedSuccessfulMessage = 'Product successfully activated.';
     this.productMultiActivatedSuccessfulMessage = 'Product(s) successfully activated.';
     this.productMultiDeactivatedSuccessfulMessage = 'Product(s) successfully deactivated.';
+    this.productMultiDuplicatedSuccessfulMessage = 'Product(s) successfully duplicated.';
 
     // Selectors
     // List of products
@@ -43,6 +44,7 @@ class Products extends BOBasePage {
     this.productBulkDeleteLink = `${this.productBulkDropdownMenu} a[onclick*='delete_all']`;
     this.productBulkEnableLink = `${this.productBulkDropdownMenu} a[onclick*='activate_all']`;
     this.productBulkDisableLink = `${this.productBulkDropdownMenu} a[onclick*='deactivate_all']`;
+    this.productBulkDuplicateLink = `${this.productBulkDropdownMenu} a[onclick*='duplicate_all']`;
 
     // Filters input
     this.productFilterIDMinInput = `${this.productListForm} #filter_column_id_product_min`;
@@ -525,6 +527,23 @@ class Products extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.modalDialogDeleteNowButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Duplicate all products with Bulk Actions
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async duplicateAllProductsWithBulkActions(page) {
+    await this.selectAllProducts(page);
+
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
+      page.click(this.productBulkMenuButton),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.productBulkDuplicateLink);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

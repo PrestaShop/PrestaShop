@@ -8,10 +8,16 @@ jobs:
     name: SCSS Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
@@ -23,14 +29,21 @@ jobs:
 
       - name: BackOffice Theme `default`
         run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
+
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
@@ -48,23 +61,29 @@ jobs:
 
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
+
   yamllint_sf:
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -82,17 +101,24 @@ jobs:
 
       - name: Run Lint Yaml on `.t9n.yml`
         run: php bin/console lint:yaml .t9n.yml
+
   yamllint:
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
       - name: Install YAMLLint
         run: |
           pip install --user yamllint
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: yamllint on `.github`
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml .github
@@ -105,23 +131,29 @@ jobs:
 
       - name: yamllint on `.t9n.yml`
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml .t9n.yml
+
   twiglint:
     name: Twig Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer Directory
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}

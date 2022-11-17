@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMov
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -498,7 +499,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         return $data;
     }
 
-    private function convertOutOfStockToInt(string $outOfStock): int
+    protected function convertOutOfStockToInt(string $outOfStock): int
     {
         $intValues = [
             'default' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
@@ -510,6 +511,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         return $intValues[$outOfStock];
     }
 
+    /**
+     * @param string $outOfStock
+     *
+     * @return int
+     */
     private function convertPackStockTypeToInt(string $outOfStock): int
     {
         $intValues = [
