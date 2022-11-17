@@ -127,7 +127,7 @@ Feature: Set default combination for product in Back Office (BO) when using mult
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
     And product "product2" default combination for shop "shop1" should be "product1SWhite"
-    And product "product2" should not be associated to shops "shop2"
+    And product "product2" should not be associated to shop "shop2"
     When I set combination "product1MWhite" as default for shop "shop2"
     Then I should get error that shop is not associated to related entity
     And product "product2" default combination for shop "shop1" should be "product1SWhite"

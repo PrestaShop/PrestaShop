@@ -39,6 +39,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Then product :productReference is not associated to shop :shopReference
+     * @Then product ":productReference" should not be associated to shop ":shopReference"
      *
      * @param string $productReference
      * @param string $shopReference
