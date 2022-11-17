@@ -34,6 +34,7 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | type        | combinations      |
     And product product1 type should be combinations
     And I copy product product1 from shop shop1 to shop shop2
+    And product "product1" has no combinations generated at all
 
   Scenario: Generate combinations in default shop
     When I generate combinations in shop "shop1" for product product1 using following attributes:

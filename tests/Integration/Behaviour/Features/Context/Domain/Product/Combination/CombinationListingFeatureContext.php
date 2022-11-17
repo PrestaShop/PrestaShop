@@ -234,7 +234,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         Assert::assertEquals(
             count($dataRows),
             count($combinationsList->getCombinations()),
-            sprintf('Unexpected combinations count for product %s and shop "%d', $productReference, $shopId)
+            sprintf('Unexpected combinations count for product %s and shop "%d"', $productReference, $shopId)
         );
 
         $idsByIdReferences = $this->assertListedCombinationsProperties($dataRows, $combinationsList->getCombinations());

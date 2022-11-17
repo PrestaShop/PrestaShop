@@ -30,8 +30,10 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -87,102 +89,19 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     }
 
     /**
-     * @Then product :productReference default combination should be :combinationReference
+     * This step checks that the general product_attribute table is empty
      *
-     * @param string $productReference
-     * @param string $combinationReference
-     */
-    public function assertDefaultCombinationForDefaultShop(string $productReference, string $combinationReference): void
-    {
-        $this->assertDefaultCombination($productReference, $combinationReference, $this->getDefaultShopId());
-    }
-
-    /**
-     * @Then product :productReference default combination for shop :shopReference should be :combinationReference
-     *
-     * @param string $productReference
-     * @param string $shopReference
-     * @param string $combinationReference
-     */
-    public function assertDefaultCombinationForShop(
-        string $productReference,
-        string $shopReference,
-        string $combinationReference
-    ): void {
-        $this->assertDefaultCombination(
-            $productReference,
-            $combinationReference,
-            $this->getSharedStorage()->get($shopReference)
-        );
-    }
-
-    /**
-     * @param string $productReference
-     * @param string $combinationReference
-     * @param int $shopId
-     */
-    private function assertDefaultCombination(
-        string $productReference,
-        string $combinationReference,
-        int $shopId
-    ) {
-        $combinationId = $this->getSharedStorage()->get($combinationReference);
-
-        $this->assertCachedDefaultCombinationId(
-            $productReference,
-            $combinationId,
-            $shopId
-        );
-
-        Assert::assertTrue(
-            $this->getCombinationForEditing($combinationReference, $shopId)->isDefault(),
-            sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
-        );
-    }
-
-    /**
-     * @Given product :productReference should not have a default combination
-     * @Given product :productReference does not have a default combination
+     * @Given product ":productReference" has no combinations generated at all
      *
      * @param string $productReference
      */
-    public function assertProductHasNoCachedDefaultCombination(string $productReference): void
+    public function assertProductHasNoCombinations(string $productReference): void
     {
-        $this->assertCachedDefaultCombinationId($productReference, 0, $this->getDefaultShopId());
-    }
+        /** @var ProductMultiShopRepository $productRepository */
+        $productRepository = $this->getContainer()->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+        $productId = new ProductId($this->getSharedStorage()->get($productReference));
 
-    /**
-     * @Given product :productReference should not have a default combination for shop ":shopReference"
-     *
-     * @param string $productReference
-     */
-    public function assertProductHasNoCachedDefaultCombinationForShop(string $productReference, string $shopReference): void
-    {
-        $this->assertCachedDefaultCombinationId(
-            $productReference,
-            0,
-            $this->getSharedStorage()->get($shopReference)
-        );
-    }
-
-    /**
-     * @param string $productReference
-     * @param int $combinationId
-     */
-    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId, int $shopId): void
-    {
-        $product = new Product(
-            $this->getSharedStorage()->get($productReference),
-            false,
-            null,
-            $shopId
-        );
-
-        Assert::assertEquals(
-            $combinationId,
-            (int) $product->cache_default_attribute,
-            'Unexpected cached product default combination'
-        );
+        Assert::assertFalse($productRepository->hasCombinations($productId));
     }
 
     /**
