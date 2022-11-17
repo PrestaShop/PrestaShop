@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
- * Command to copy the content of a product from a shop to another.
+ * Remove product association with a Shop.
  */
-class CopyProductToShop
+class DeleteProductFromShopsCommand
 {
     /**
      * @var ProductId
@@ -42,28 +42,22 @@ class CopyProductToShop
     private $productId;
 
     /**
-     * @var ShopId
+     * @var ShopId[]
      */
-    private $sourceShopId;
-
-    /**
-     * @var ShopId
-     */
-    private $targetShopId;
+    private $shopIds;
 
     /**
      * @param int $productId
-     * @param int $sourceShopId
-     * @param int $targetShopId
+     * @param int[] $shopIds
      */
     public function __construct(
         int $productId,
-        int $sourceShopId,
-        int $targetShopId
+        array $shopIds
     ) {
         $this->productId = new ProductId($productId);
-        $this->sourceShopId = new ShopId($sourceShopId);
-        $this->targetShopId = new ShopId($targetShopId);
+        foreach ($shopIds as $shopId) {
+            $this->shopIds[] = new ShopId($shopId);
+        }
     }
 
     /**
@@ -75,18 +69,10 @@ class CopyProductToShop
     }
 
     /**
-     * @return ShopId
+     * @return ShopId[]
      */
-    public function getSourceShopId(): ShopId
+    public function getShopIds(): array
     {
-        return $this->sourceShopId;
-    }
-
-    /**
-     * @return ShopId
-     */
-    public function getTargetShopId(): ShopId
-    {
-        return $this->targetShopId;
+        return $this->shopIds;
     }
 }

@@ -24,19 +24,20 @@
  */
 import Router from '@components/router';
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 import {FormIframeModal} from '@components/modal';
+import IframeEvent from '@components/modal/iframe-event';
 
 /**
  * This component is bound to any Create product button (via a class selector). On button click
- * it opens an iframe modal, in the iframe the create product page is displayed, allowing you to
- * select the product type (and maybe initial shop) and then you can submit the form.
+ * it opens an iframe modal, in the iframe the shop selection page is displayed and allows you to
+ * add/remove some shops to the product and then submit the modification.
  *
- * Once the creation succeeds, the edition form is displayed, at this moment this component catches
- * the refresh event from the iframe and gets the product ID from the edit form data attributes.
- *
- * Finally, it opens the edition page of the created product in the current tab.
+ * When the shop selection form page is submitted this component catches the refresh event, and
+ * checks if the modification has succeeded based on the form data attributes. On success the page
+ * is refreshed to show the updated product form.
  */
-export default class CreateProductModal {
+export default class ProductShopsModal {
   private router: Router;
 
   constructor() {
@@ -45,37 +46,40 @@ export default class CreateProductModal {
   }
 
   private init(): void {
-    document.querySelectorAll<HTMLElement>(ProductMap.create.newProductButton).forEach((button: HTMLElement) => {
+    document.querySelectorAll<HTMLElement>(ProductMap.shops.modalButtons).forEach((button: HTMLElement) => {
       button.addEventListener('click', (event: MouseEvent) => {
         event.preventDefault();
         const formUrl = `${button.getAttribute('href')}&liteDisplaying=1`;
-        this.openCreationModal(formUrl);
+        this.openCreationModal(formUrl, button.innerText);
       });
     });
   }
 
-  private openCreationModal(formUrl: string): void {
+  private openCreationModal(formUrl: string, modalTitle: string): void {
     const iframeModal = new FormIframeModal({
-      id: ProductMap.create.modalId,
-      // We use the edit form selector because it's the one we need to get data attributes from
-      formSelector: ProductMap.productForm,
+      id: ProductMap.shops.modalId,
+      formSelector: ProductMap.shops.form,
       formUrl,
       closable: true,
+      modalTitle,
       // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
       // are not computed in the size)
-      autoSizeContainer: ProductMap.create.modalSizeContainer,
+      autoSizeContainer: ProductMap.shops.modalSizeContainer,
       onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes) {
-          if (dataAttributes.modalTitle) {
-            iframeModal.setTitle(dataAttributes.modalTitle);
-          }
+          const successAlertsCount = Number(dataAttributes.alertsSuccess);
 
-          if (dataAttributes.productId) {
+          if (successAlertsCount) {
             const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
             // Keep showing loading until the page is refreshed
             iframeModal.showLoading();
             window.location.href = editUrl;
           }
+        }
+      },
+      onIframeEvent: (event: IframeEvent) => {
+        if (event.name === ProductEventMap.cancelProductShops) {
+          iframeModal.hide();
         }
       },
     });

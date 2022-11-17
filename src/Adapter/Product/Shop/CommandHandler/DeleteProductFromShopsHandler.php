@@ -28,38 +28,33 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
 
 /**
- * Handles @see CopyProductToShopCommand using dedicated service
+ * Handles @see DeleteProductFromShopsCommand using dedicated service
  */
-class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
+class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInterface
 {
     /**
-     * @var ProductShopUpdater
+     * @var ProductMultiShopRepository
      */
-    private $productShopUpdater;
+    private $productRepository;
 
     /**
-     * @param ProductShopUpdater $productShopUpdater
+     * @param ProductMultiShopRepository $productRepository
      */
-    public function __construct(
-        ProductShopUpdater $productShopUpdater
-    ) {
-        $this->productShopUpdater = $productShopUpdater;
+    public function __construct(ProductMultiShopRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function handle(CopyProductToShopCommand $command): void
+    public function handle(DeleteProductFromShopsCommand $command): void
     {
-        $this->productShopUpdater->copyToShop(
-            $command->getProductId(),
-            $command->getSourceShopId(),
-            $command->getTargetShopId()
-        );
+        $this->productRepository->deleteFromShops($command->getProductId(), $command->getShopIds());
     }
 }

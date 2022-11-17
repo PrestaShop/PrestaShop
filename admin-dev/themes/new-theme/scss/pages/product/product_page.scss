@@ -1232,6 +1232,12 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  &.product-shops-form {
+    width: 100%;
+    padding: 0 1rem 0.1rem;
+    background-color: $white;
+  }
+
   .maxLength {
     float: none;
   }
@@ -1525,7 +1531,8 @@ $product-page-padding-bottom: 80px !default;
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
 // page there is no need to scope them inside the product-page-v2 class
-.create-product-form {
+.create-product-form,
+.product-shops-form {
   width: 100%;
   padding: 0 1rem 0.1rem;
   background-color: $white;
@@ -1533,7 +1540,6 @@ $product-page-padding-bottom: 80px !default;
 
 .product-type-selector {
   width: 100%;
-  margin-bottom: 1rem;
 
   select {
     display: none;
@@ -2391,6 +2397,12 @@ $product-page-padding-bottom: 80px !default;
         width: 50%;
       }
     }
+  }
+}
+
+#modal-product-shops {
+  .modal-dialog {
+    max-width: 810px;
   }
 }
 

@@ -26,40 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 
-/**
- * Handles @see CopyProductToShopCommand using dedicated service
- */
-class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
+interface DeleteProductFromShopsHandlerInterface
 {
     /**
-     * @var ProductShopUpdater
+     * @param DeleteProductFromShopsCommand $command
      */
-    private $productShopUpdater;
-
-    /**
-     * @param ProductShopUpdater $productShopUpdater
-     */
-    public function __construct(
-        ProductShopUpdater $productShopUpdater
-    ) {
-        $this->productShopUpdater = $productShopUpdater;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function handle(CopyProductToShopCommand $command): void
-    {
-        $this->productShopUpdater->copyToShop(
-            $command->getProductId(),
-            $command->getSourceShopId(),
-            $command->getTargetShopId()
-        );
-    }
+    public function handle(DeleteProductFromShopsCommand $command): void;
 }

@@ -26,40 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
-
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
 /**
- * Handles @see CopyProductToShopCommand using dedicated service
+ * Exception thrown when the deletion of a StockAvailable failed.
  */
-class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
+class CannotDeleteStockAvailableException extends ProductStockException
 {
-    /**
-     * @var ProductShopUpdater
-     */
-    private $productShopUpdater;
-
-    /**
-     * @param ProductShopUpdater $productShopUpdater
-     */
-    public function __construct(
-        ProductShopUpdater $productShopUpdater
-    ) {
-        $this->productShopUpdater = $productShopUpdater;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function handle(CopyProductToShopCommand $command): void
-    {
-        $this->productShopUpdater->copyToShop(
-            $command->getProductId(),
-            $command->getSourceShopId(),
-            $command->getTargetShopId()
-        );
-    }
 }

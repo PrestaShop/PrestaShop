@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,17 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler;
+import IframeClient from '@components/modal/iframe-client';
+import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
+$(() => {
+  window.prestashop.component.initComponents([
+    'ShopSelector',
+    'IframeClient',
+  ]);
 
-/**
- * Defines contract to handle @see CopyProductToShopCommand
- */
-interface CopyProductToShopHandlerInterface
-{
-    /**
-     * @param CopyProductToShopCommand $command
-     */
-    public function handle(CopyProductToShopCommand $command): void;
-}
+  // eslint-disable-next-line
+  const iframeClient: IframeClient = window.prestashop.instance.iframeClient;
+  document.querySelector<HTMLElement>(ProductMap.shops.cancelButton)?.addEventListener('click', () => {
+    iframeClient.dispatchEvent(ProductEventMap.cancelProductShops);
+  });
+});

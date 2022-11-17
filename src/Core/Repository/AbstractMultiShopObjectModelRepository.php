@@ -52,10 +52,12 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      * @param int $id
      * @param string $objectModelClass
      * @param string $exceptionClass
+     * @param ShopId $shopId
      *
      * @return ObjectModel
      *
      * @throws CoreException
+     * @throws ShopAssociationNotFound
      */
     protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
     {

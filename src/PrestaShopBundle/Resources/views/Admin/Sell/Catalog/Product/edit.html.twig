@@ -39,7 +39,7 @@
   {% set shopId = productForm.vars.shop_id %}
 
   <div class="header-toolbar d-print-none">
-    {{ multistoreHeader() }}
+    {{ multistoreProductHeader(productId) }}
   </div>
 
   {{ form_start(productForm, {'attr': {

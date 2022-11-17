@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 
 class DeleteProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -65,6 +66,29 @@ class DeleteProductFeatureContext extends AbstractProductFeatureContext
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand($productIds));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete product :reference from shops :shopReferences
+     *
+     * @param string $reference
+     */
+    public function deleteProductFromShops(string $reference, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        $shopIds = [];
+        foreach ($shopReferences as $shopReference) {
+            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+        }
+
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand(
+                $this->getSharedStorage()->get($reference),
+                $shopIds
+            ));
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
