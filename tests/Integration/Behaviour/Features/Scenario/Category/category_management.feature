@@ -226,8 +226,7 @@ Feature: Category Management
     # product should be removed
     Then product "product1" should not exist anymore
 
-  Scenario: Bulk delete categories which are the last remaining associated categories for some product
-  by using associate_only deletion mode
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product by using associate_only deletion mode
     Given I add new category "category_b6" with following details:
       | name[en-US]         | not important    |
       | name[fr-FR]         | not important    |
@@ -288,8 +287,7 @@ Feature: Category Management
     And product "product_b1" should be enabled
     And product "product_b2" should be enabled
 
-  Scenario: Bulk delete categories which are the last remaining associated categories for some product
-  by using associate_and_disable deletion mode
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product by using associate_and_disable deletion mode
     Given I add new category "category_b9" with following details:
       | name[en-US]         | not important |
       | name[fr-FR]         | not important |
@@ -340,8 +338,7 @@ Feature: Category Management
     And product "product_b1" should be disabled
     And product "product_b2" should be disabled
 
-  Scenario: Bulk delete categories which are the last remaining associated categories for some product
-  by using associate_and_remove deletion mode
+  Scenario: Bulk delete categories which are the last remaining associated categories for some product by using associate_and_remove deletion mode
     Given I add new category "category_b11" with following details:
       | name[en-US]         | not important |
       | name[fr-FR]         | not important |
@@ -383,8 +380,7 @@ Feature: Category Management
     And product "product_b1" should not exist anymore
     And product "product_b2" should not exist anymore
 
-  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
-  by using associate_and_disable deletion mode
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product by using associate_and_disable deletion mode
     # deletion mode shouldn't have impact for this scenario
     Given I add new category "category9" with following details:
       | name[en-US]         | Mobile phones9    |
@@ -413,8 +409,7 @@ Feature: Category Management
     And product "product2" should be enabled
 
 
-  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
-  by using associate_only deletion mode
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product by using associate_only deletion mode
     # deletion mode shouldn't have impact for this scenario
     Given I add new category "category10" with following details:
       | name[en-US]         | Mobile phones10    |
@@ -434,8 +429,7 @@ Feature: Category Management
       | home-accessories | Home Accessories | true       |
     And product "product2" should be enabled
 
-  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product
-  by using remove_associated deletion mode
+  Scenario: Delete category which is assigned as default for some product, but is not the last category of that product by using remove_associated deletion mode
     # deletion mode shouldn't have impact for this scenario
     Given I add new category "category11" with following details:
       | name[en-US]         | Mobile phones11    |
