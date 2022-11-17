@@ -146,14 +146,15 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
     /**
      * @param string $productReference
+     * @param ShopConstraint $shopConstraint
      *
      * @return CustomizationField[]
      */
-    protected function getProductCustomizationFields(string $productReference): array
+    protected function getProductCustomizationFields(string $productReference, ShopConstraint $shopConstraint): array
     {
         return $this->getQueryBus()->handle(new GetProductCustomizationFields(
             $this->getSharedStorage()->get($productReference),
-            ShopConstraint::shop($this->getDefaultShopId())
+            $shopConstraint
         ));
     }
 

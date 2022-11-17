@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -94,8 +95,8 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
      */
     public function assertDuplicatedCustomizationFields(string $newProductReference, string $oldProductReference): void
     {
-        $oldCustomizationFields = $this->getProductCustomizationFields($oldProductReference);
-        $newCustomizationFields = $this->getProductCustomizationFields($newProductReference);
+        $oldCustomizationFields = $this->getProductCustomizationFields($oldProductReference, ShopConstraint::shop($this->getDefaultShopId()));
+        $newCustomizationFields = $this->getProductCustomizationFields($newProductReference, ShopConstraint::shop($this->getDefaultShopId()));
 
         Assert::assertEquals(
             count($oldCustomizationFields),
