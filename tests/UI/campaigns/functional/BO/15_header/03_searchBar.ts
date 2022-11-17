@@ -1,26 +1,22 @@
 // Import utils
 import helper from '@utils/helpers';
+import loginCommon from '@commonTests/BO/loginBO';
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const loginCommon = require('@commonTests/BO/loginBO');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const searchResultsPage = require('@pages/BO/searchResults');
+import dashboardPage from '@pages/BO/dashboard';
+import searchResultsPage from '@pages/BO/searchResults';
 
 const baseContext = 'functional_BO_header_searchBar';
 
-let browserContext;
-let page;
-
 describe('BO - Header : Search bar', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -1,58 +1,54 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
-
 // Import BO commons tests
-const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/advancedParameters/createDeleteEmployee');
-const {setPermissions} = require('@commonTests/BO/advancedParameters/setPermissions');
-const loginCommon = require('@commonTests/BO/loginBO');
+import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/createDeleteEmployee';
+import {setPermissions} from '@commonTests/BO/advancedParameters/setPermissions';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const loginPage = require('@pages/BO/login/index');
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products/index');
-const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const myProfilePage = require('@pages/BO/advancedParameters/team/myProfile');
+import loginPage from '@pages/BO/login/index';
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/products/index';
+import creditSlipsPage from '@pages/BO/orders/creditSlips/index';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 // Import data
-const EmployeeFaker = require('@data/faker/employee');
+import EmployeeFaker from '@data/faker/employee';
 
 const baseContext = 'functional_BO_header_myProfile';
 
-const employeeData = new EmployeeFaker({
-  defaultPage: 'Products',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-});
-const permissionProfileData = [
-  {
-    className: 'AdminEmployees',
-    accesses: [
-      'all',
-    ],
-  },
-  {
-    className: 'AdminParentEmployees',
-    accesses: [
-      'all',
-    ],
-  },
-];
-
-let browserContext;
-let page;
-
 describe('BO - Header : My profile', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const employeeData = new EmployeeFaker({
+    defaultPage: 'Products',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+  });
+  const permissionProfileData = [
+    {
+      className: 'AdminEmployees',
+      accesses: [
+        'all',
+      ],
+    },
+    {
+      className: 'AdminParentEmployees',
+      accesses: [
+        'all',
+      ],
+    },
+  ];
+
   // Pre-condition: Create new employee
   createEmployeeTest(employeeData, `${baseContext}_preTest_1`);
 

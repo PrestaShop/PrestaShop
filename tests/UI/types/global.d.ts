@@ -54,7 +54,7 @@ type GlobalScreenshot = {
 }
 
 type GlobalMaildevConfig = {
-  smtpPort: string
+  smtpPort: number
   smtpServer: string
   silent: boolean
 }

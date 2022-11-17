@@ -82,6 +82,7 @@
     "playwright": "^1.16.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.0",
     "@types/mochawesome": "^6.2.1",
     "@typescript-eslint/eslint-plugin": "^5.41.0",

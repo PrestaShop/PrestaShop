@@ -1,36 +1,32 @@
 // Import utils
 import helper from '@utils/helpers';
+import loginCommon from '@commonTests/BO/loginBO';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const loginCommon = require('@commonTests/BO/loginBO');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const statsPage = require('@pages/BO/stats');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
-const newCategoryPage = require('@pages/BO/catalog/categories/add');
-const newProductPage = require('@pages/BO/catalog/products/add');
-const newVoucherPage = require('@pages/BO/catalog/discounts/add');
-const ordersPage = require('@pages/BO/orders');
-const quickAccessPage = require('@pages/BO/quickAccess');
-const addNewQuickAccessPage = require('@pages/BO/quickAccess/add');
-const newCustomerPage = require('@pages/BO/customers/add');
+import dashboardPage from '@pages/BO/dashboard';
+import statsPage from '@pages/BO/stats';
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import newCategoryPage from '@pages/BO/catalog/categories/add';
+import newProductPage from '@pages/BO/catalog/products/add';
+import newVoucherPage from '@pages/BO/catalog/discounts/add';
+import ordersPage from '@pages/BO/orders';
+import quickAccessPage from '@pages/BO/quickAccess';
+import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
+import newCustomerPage from '@pages/BO/customers/add';
 
 const baseContext = 'functional_BO_header_quickAccess';
 
-let browserContext;
-let page;
-
-const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
-
 describe('BO - Header : Quick access links', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
