@@ -1,6 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-customization-fields-multishop
 @restore-products-before-feature
 @restore-languages-after-feature
+@restore-shops-after-feature
+@restore-languages-after-feature
 @clear-cache-before-feature
 @update-customization-fields-multishop
 Feature: Set product images for all shops from Back Office (BO)
