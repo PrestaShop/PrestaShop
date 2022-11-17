@@ -4,6 +4,7 @@
 @duplicate-product
 @reset-downloads-after-feature
 @clear-cache-after-feature
+@clear-cache-before-feature
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
