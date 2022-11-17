@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
  * Class EditRootCategoryCommand edits given root category.
  *
  * @todo: "root" keyword should be replaced by "home" to avoid confusion between the actual "root" category and "home" category.
- *         This command is actually handling th Home category edition, as the actual "root" category doesn't exist from UX perspective
+ *         This command is actually handling the Home category edition, as the actual "root" category doesn't exist from UX perspective
  */
 class EditRootCategoryCommand
 {

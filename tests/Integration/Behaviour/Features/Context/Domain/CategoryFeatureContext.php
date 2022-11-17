@@ -374,8 +374,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      * Technically both commands should be filled separately,
      * but it happens to match almost all properties except $parentId, so we can reuse them here.
      *
-     * Probably these commands are implemented wrong and instead should have extended each other if they supposed to share the properties and the logic,
-     * but that would require some more refactoring and BC breaks, so for now, lets just avoid duplicating the code at least here in test.
      * If in future these commands evolves differently (which probably won't happen),
      * then don't hesitate to extract this method into 2 dedicated ones.
      */
