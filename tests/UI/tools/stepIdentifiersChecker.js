@@ -142,7 +142,8 @@ const checkBaseContext = (jsonFile) => {
       .slice(2, contextFile.length)
       .map((part) => part
         .replace(/[0-9]{2}_/, '')
-        .replace('.js', ''))
+        .replace('.js', '')
+        .replace('.ts', ''))
       .join('_');
 
     if (!context.baseContext.startsWith(baseContextFile)) {
