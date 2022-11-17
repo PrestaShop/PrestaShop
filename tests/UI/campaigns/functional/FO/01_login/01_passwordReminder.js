@@ -3,6 +3,7 @@ import helper from '@utils/helpers';
 
 // Import test context
 import testContext from '@utils/testContext';
+import mailHelper from '@utils/mailHelper';
 
 require('module-alias/register');
 
@@ -10,7 +11,6 @@ const {expect} = require('chai');
 
 // Import utils
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
-const mailHelper = require('@utils/mailHelper');
 
 // Importing pages
 // FO pages

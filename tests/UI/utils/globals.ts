@@ -55,7 +55,7 @@ global.SCREENSHOT = {
 };
 
 global.maildevConfig = {
-  smtpPort: process.env.SMTP_PORT || '1025',
+  smtpPort: parseInt(process.env.SMTP_PORT ?? '1025', 10),
   smtpServer: process.env.SMTP_SERVER || 'localhost',
   silent: true,
 };

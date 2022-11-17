@@ -43,6 +43,15 @@ export default {
       itemId: string,
     ): string => `${location}&setShopContext=${urlLetter}-${itemId}`,
   },
+  shopSelector: {
+    container: '.shop-selector',
+    selectInput: '.shop-selector-input',
+    searchInput: '.js-shop-selector-search',
+    shopItem: '.shop-selector-shop-item',
+    selectedClass: 'selected-shop',
+    currentClass: 'current-shop',
+    shopStatus: '.shop-selector-status',
+  },
   choiceTable: {
     selectAll: '.js-choice-table-select-all',
   },

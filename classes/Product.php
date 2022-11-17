@@ -1306,15 +1306,29 @@ class ProductCore extends ObjectModel
         $result = parent::delete();
 
         // Removes the product from StockAvailable, for the current shop
-        StockAvailable::removeProductFromStockAvailable($this->id);
-        $result &= ($this->deleteProductAttributes() && $this->deleteImages());
+        $id_shop_list = Shop::getContextListShopID();
+        if (count($this->id_shop_list)) {
+            $id_shop_list = $this->id_shop_list;
+        }
+        if (!empty($id_shop_list)) {
+            foreach ($id_shop_list as $shopId) {
+                StockAvailable::removeProductFromStockAvailable($this->id, null, $shopId);
+            }
+        } else {
+            StockAvailable::removeProductFromStockAvailable($this->id);
+        }
+
         // If there are still entries in product_shop, don't remove completely the product
         if ($this->hasMultishopEntries()) {
+            $this->updateDefaultShop();
+
             return true;
         }
 
         Hook::exec('actionProductDelete', ['id_product' => (int) $this->id, 'product' => $this]);
         if (!$result ||
+            !$this->deleteProductAttributes() ||
+            !$this->deleteImages() ||
             !GroupReduction::deleteProductReduction($this->id) ||
             !$this->deleteCategories(true) ||
             !$this->deleteProductFeatures() ||
@@ -8296,5 +8310,26 @@ class ProductCore extends ObjectModel
         }
 
         return ProductType::TYPE_STANDARD;
+    }
+
+    /**
+     * Checks if product is still associated to its default shop, if not update with the first association found.
+     */
+    protected function updateDefaultShop(): void
+    {
+        $hasDefaultShopAssociation = Db::getInstance()->getValue(
+            'SELECT COUNT(p.id_product) FROM `' . _DB_PREFIX_ . 'product_shop` ps
+                     LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product` AND ps.`id_shop` = p.`id_shop_default`
+                     WHERE p.`id_product` = ' . (int) $this->id
+        );
+
+        if (!$hasDefaultShopAssociation) {
+            // Update default shop if needed, use the first associated shop (based on its ID) as the default fallback
+            $firstAssociatedShop = (int) Db::getInstance()->getValue('SELECT ps.`id_shop` AS id_shop FROM `' . _DB_PREFIX_ . 'product_shop` ps WHERE ps.`id_product` = ' . (int) $this->id . ' ORDER BY ps.`id_shop` ASC');
+            Db::getInstance()->update('product', [
+                'id_shop_default' => $firstAssociatedShop,
+            ], 'id_product = ' . (int) $this->id);
+            $this->id_shop_default = $firstAssociatedShop;
+        }
     }
 }
