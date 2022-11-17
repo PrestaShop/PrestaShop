@@ -1,5 +1,6 @@
 imports:
   - { resource: config.yml }
+  - { resource: security_dev.yml }
 
 framework:
   router:

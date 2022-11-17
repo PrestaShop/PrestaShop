@@ -1,0 +1,10 @@
+security:
+
+  providers:
+    oauth2:
+      memory:
+        users:
+          my_client_id: { password: 'prestashop' }
+
+  encoders:
+    Symfony\Component\Security\Core\User\User: plaintext

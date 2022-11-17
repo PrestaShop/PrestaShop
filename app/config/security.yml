@@ -8,14 +8,6 @@ security:
       memory: ~
     admin:
       id: prestashop.security.admin.provider
-    oauth2:
-      memory:
-        users:
-          my_client_id: { password: 'prestashop' }
-
-  encoders:
-    Symfony\Component\Security\Core\User\User: plaintext
-
 
   firewalls:
     # disables authentication for assets and the profiler, adapt it according to your needs
@@ -29,7 +21,7 @@ security:
       provider: 'oauth2'
       guard:
         authenticator:
-          - 'prestashop.security.authenticator.token'
+          - PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
 
     main:
       anonymous: ~
