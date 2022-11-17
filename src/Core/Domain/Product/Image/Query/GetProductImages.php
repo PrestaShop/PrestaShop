@@ -29,9 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Get list of Images associated to a Product
+ * Get list of Images associated to a Product in terms of ShopConstraint
  */
 class GetProductImages
 {

@@ -35,6 +35,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
@@ -190,6 +191,9 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
      */
     protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
     {
+        if (empty($shopIds)) {
+            throw new InvalidArgumentException('The shopIds should not be empty');
+        }
         try {
             // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
             // this way we can control exactly which shop is deleted
