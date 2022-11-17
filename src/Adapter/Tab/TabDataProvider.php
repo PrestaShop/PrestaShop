@@ -131,4 +131,14 @@ class TabDataProvider
 
         return false;
     }
+
+    /**
+     * Reset static tab cache
+     *
+     * @return void
+     */
+    public static function resetTabCache(): void
+    {
+        Tab::resetTabCache();
+    }
 }
