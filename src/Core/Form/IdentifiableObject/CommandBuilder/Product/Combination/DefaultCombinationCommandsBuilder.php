@@ -55,12 +55,10 @@ class DefaultCombinationCommandsBuilder implements MultiShopCombinationCommandsB
             return [];
         }
 
-        $commands = [new SetDefaultCombinationCommand($combinationId->getValue(), $singleShopConstraint)];
-
-        if (isset($formData['header'][$this->modifyAllNamePrefix . 'is_default'])) {
-            $commands[] = new SetDefaultCombinationCommand($combinationId->getValue(), ShopConstraint::allShops());
+        if (empty($formData['header'][$this->modifyAllNamePrefix . 'is_default'])) {
+            return [new SetDefaultCombinationCommand($combinationId->getValue(), $singleShopConstraint)];
+        } else {
+            return [new SetDefaultCombinationCommand($combinationId->getValue(), ShopConstraint::allShops())];
         }
-
-        return $commands;
     }
 }
