@@ -890,7 +890,7 @@ Country</value>
       <value>3</value>
     </configuration>
     <configuration id="PS_ENABLE_BACKORDER_STATUS" name="PS_ENABLE_BACKORDER_STATUS">
-      <value>1</value>
+      <value>0</value>
     </configuration>
   </entities>
 </entity_configuration>
