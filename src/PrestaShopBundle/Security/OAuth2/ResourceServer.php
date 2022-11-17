@@ -28,41 +28,45 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Security\OAuth2;
 
-use Exception;
-use League\OAuth2\Server\ResourceServer;
-use PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
+use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class OAuth2Client implements OAuth2Interface
+/*
+ * Class responsible for validating token
+ * thanks to the PrestaShop's Authorization Server
+ */
+class ResourceServer implements ResourceServerInterface
 {
     /**
-     * @var ResourceServer
+     * @var LeagueResourceServer
      */
-    private $resourceServer;
+    private $leagueResourceServer;
 
     /**
      * @var UserProviderInterface
      */
     private $userProvider;
 
-    public function __construct(ResourceServer $resourceServer, UserProviderInterface $userProvider)
+    public function __construct(LeagueResourceServer $resourceServer, UserProviderInterface $userProvider)
     {
-        $this->resourceServer = $resourceServer;
+        $this->leagueResourceServer = $resourceServer;
         $this->userProvider = $userProvider;
     }
 
     public function isTokenValid(ServerRequestInterface $request): bool
     {
         try {
-            $this->resourceServer->validateAuthenticatedRequest($request);
-
-            return true;
-        } catch (Exception $e) {
+            $this->leagueResourceServer->validateAuthenticatedRequest($request);
+        } catch (OAuthServerException $e) {
             return false;
         }
+
+        return true;
     }
 
     public function getUser(ServerRequestInterface $request): ?UserInterface
@@ -82,8 +86,8 @@ class OAuth2Client implements OAuth2Interface
     private function getAudience(ServerRequestInterface $request): ?string
     {
         try {
-            return $this->resourceServer->validateAuthenticatedRequest($request)->getAttribute('oauth_client_id');
-        } catch (Exception $exception) {
+            return $this->leagueResourceServer->validateAuthenticatedRequest($request)->getAttribute('oauth_client_id');
+        } catch (OAuthServerException $exception) {
             return null;
         }
     }
