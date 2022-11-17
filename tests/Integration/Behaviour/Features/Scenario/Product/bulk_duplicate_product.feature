@@ -2,6 +2,7 @@
 @restore-products-before-feature
 @reset-downloads-after-feature
 @clear-cache-after-feature
+@restore-languages-after-feature
 @bulk-product
 @bulk-duplicate-product
 Feature: Duplicate product from Back Office (BO).

@@ -2,6 +2,7 @@
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
+@restore-languages-after-feature
 @clear-cache-after-feature
 @product-multi-shop
 @update-multi-shop-management
