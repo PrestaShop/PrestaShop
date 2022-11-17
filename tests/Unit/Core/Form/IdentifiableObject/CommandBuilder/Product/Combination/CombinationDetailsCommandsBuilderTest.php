@@ -32,7 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationDetailsCommandsBuilder;
 
-class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformat
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder;
 
-class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class BasicInformationCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

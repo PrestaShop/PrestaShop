@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
-class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class StockCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

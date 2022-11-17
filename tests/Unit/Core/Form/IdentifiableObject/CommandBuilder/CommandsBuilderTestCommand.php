@@ -32,7 +32,10 @@ use DateTimeImmutable;
 use OutOfBoundsException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CommandBuilderTestCommand
+/**
+ * This is a "dummy" command implementation purely for testing various cases of commands builder
+ */
+class CommandsBuilderTestCommand
 {
     /**
      * @var string

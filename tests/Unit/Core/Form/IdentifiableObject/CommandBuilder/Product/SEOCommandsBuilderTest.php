@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
-class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class SEOCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommandsForSingleShop

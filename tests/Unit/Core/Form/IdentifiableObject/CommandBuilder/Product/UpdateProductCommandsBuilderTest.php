@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder;
 
-class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class UpdateProductCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

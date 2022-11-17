@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilderInterface;
 
-class ProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

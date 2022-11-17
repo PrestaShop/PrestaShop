@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\AbstractMultiShopCommandsBuilderTest;
 
 /**
  * Base class to test a combination command builder
  */
-abstract class AbstractCombinationCommandBuilderTest extends TestCase
+abstract class AbstractCombinationCommandsBuilderTest extends AbstractMultiShopCommandsBuilderTest
 {
     /**
      * @var CombinationId

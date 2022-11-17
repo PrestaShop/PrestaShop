@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
-class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

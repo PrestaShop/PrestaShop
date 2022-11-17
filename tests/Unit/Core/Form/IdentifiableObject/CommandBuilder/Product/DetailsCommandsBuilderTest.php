@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\DetailsCommandsBuilder;
 
-class DetailsCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class DetailsCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands

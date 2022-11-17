@@ -32,7 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder;
 
-class DefaultCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class DefaultCombinationCommandsBuilderTest extends AbstractCombinationCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -42,8 +42,8 @@ class DefaultCombinationCommandsBuilderTest extends AbstractCombinationCommandBu
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new DefaultCombinationCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
+        $builder = new DefaultCombinationCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 

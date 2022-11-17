@@ -23,35 +23,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetDefaultCombinationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\AbstractMultiShopCommandsBuilderTest;
 
-class SetDefaultCombinationHandler implements SetDefaultCombinationHandlerInterface
+/**
+ * Base class to test a product command builder
+ */
+abstract class AbstractProductCommandsBuilderTest extends AbstractMultiShopCommandsBuilderTest
 {
     /**
-     * @var DefaultCombinationUpdater
+     * @var ProductId
      */
-    private $defaultCombinationUpdater;
+    private $productId;
 
     /**
-     * @param DefaultCombinationUpdater $defaultCombinationUpdater
+     * @return ProductId
      */
-    public function __construct(
-        DefaultCombinationUpdater $defaultCombinationUpdater
-    ) {
-        $this->defaultCombinationUpdater = $defaultCombinationUpdater;
-    }
-
-    public function handle(SetDefaultCombinationCommand $command): void
+    protected function getProductId(): ProductId
     {
-        $this->defaultCombinationUpdater->setDefaultCombination(
-            $command->getCombinationId(),
-            $command->getShopConstraint()
-        );
+        if (null === $this->productId) {
+            $this->productId = new ProductId(42);
+        }
+
+        return $this->productId;
     }
 }

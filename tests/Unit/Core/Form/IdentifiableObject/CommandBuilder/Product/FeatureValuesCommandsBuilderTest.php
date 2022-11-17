@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Command\SetProductFea
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidProductFeatureValuesFormatException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder;
 
-class FeatureValuesCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class FeatureValuesCommandsBuilderTest extends AbstractProductCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
