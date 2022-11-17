@@ -280,10 +280,6 @@ class UpdateProductShippingCommand
     }
 
     /**
-     * @todo: dimensions deserves dedicated VO and might be worth reusing in Carriers page.
-     *
-     * @todo Check https://github.com/PrestaShop/PrestaShop/issues/19666#issuecomment-756088706
-     *
      * @param DecimalNumber $value
      * @param string $dimensionName
      *
