@@ -32,11 +32,13 @@ use Customer;
 use GroupReduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use Product;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
-class ProductFeatureContext extends AbstractDomainFeatureContext
+class ProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Then I set tax rule group :taxRulesGroupReference to product :productReference
@@ -114,6 +116,29 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
         $this->getSharedStorage()->set($productReference, $productId);
+    }
+
+    /**
+     * @Then product ":productReference" should not be associated to shops ":shopReferences"
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductIsNotAssociatedToShops(string $productReference, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            try {
+                $this->getProductForEditing(
+                    $productReference,
+                    $this->getSharedStorage()->get($shopReference)
+                );
+            } catch (ShopAssociationNotFound $e) {
+                // this is expected
+                continue;
+            }
+
+            throw new RuntimeException(sprintf('Product %s exists in shop %s', $productReference, $shopReference));
+        }
     }
 
     /**

@@ -22,10 +22,8 @@ Feature: Set default combination for product in Back Office (BO) when using mult
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "test_default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
-    And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
-    And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
@@ -36,10 +34,10 @@ Feature: Set default combination for product in Back Office (BO) when using mult
     Given I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Given I generate combinations in shop "shop2" for product product1 using following attributes:
+    And I generate combinations in shop "shop2" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have the following combinations for shops "shop1,shop2":
+    And product "product1" should have the following combinations for shops "shop1,shop2":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -90,3 +88,46 @@ Feature: Set default combination for product in Back Office (BO) when using mult
     # assertion to make sure that it still works if we pass the combination which is already default
     When I set combination "product1MBlack" as default for shop "shop2"
     Then product "product1" default combination for shop "shop2" should be "product1MBlack"
+
+  Scenario: Set default combination for all shops
+    Given I generate combinations in shop "shop1" for product product1 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    And I generate combinations in shop "shop2" for product product1 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop1" should be "product1SWhite"
+    And product "product1" default combination for shop "shop2" should be "product1SWhite"
+    When I set combination "product1SBlack" as default for all shops
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop1" should be "product1SBlack"
+
+  Scenario: I should not be able to set combination for shop which is not associated to the product
+    Given I add product "product2" with following information:
+      | name[en-US] | universal pants |
+      | type        | combinations    |
+    And I generate combinations in shop "shop1" for product product2 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    And product "product2" should have the following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product "product2" default combination for shop "shop1" should be "product1SWhite"
+    And product "product2" should not be associated to shops "shop2"
+    When I set combination "product1MWhite" as default for shop "shop2"
+    Then I should get error that shop is not associated to related entity
+    And product "product2" default combination for shop "shop1" should be "product1SWhite"

@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 
@@ -52,6 +53,17 @@ class DefaultCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->setDefaultCombination(
             $combinationReference,
             ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I set combination ":combinationReference" as default for all shops
+     */
+    public function setDefaultCombinationForAllShops(string $combinationReference): void
+    {
+        $this->setDefaultCombination(
+            $combinationReference,
+            ShopConstraint::allShops()
         );
     }
 
@@ -160,9 +172,13 @@ class DefaultCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     private function setDefaultCombination(string $combinationReference, ShopConstraint $shopConstraint): void
     {
-        $this->getCommandBus()->handle(new SetDefaultCombinationCommand(
-            (int) $this->getSharedStorage()->get($combinationReference),
-            $shopConstraint
-        ));
+        try {
+            $this->getCommandBus()->handle(new SetDefaultCombinationCommand(
+                (int) $this->getSharedStorage()->get($combinationReference),
+                $shopConstraint
+            ));
+        } catch (ShopAssociationNotFound $e) {
+            $this->setLastException($e);
+        }
     }
 }
