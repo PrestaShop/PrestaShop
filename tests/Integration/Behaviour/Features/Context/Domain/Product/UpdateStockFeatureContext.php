@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMov
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
