@@ -193,11 +193,11 @@ final class FolderThemeScanner
         $realPath = $fileInfo->getRealPath();
 
         if ('8.0.0' >= _PS_VERSION_) {
+            dump(_PS_MODULE_DIR_);
             // If the template comes from a module, we use the @Modules twig path instead of @MailThemes
-            if (str_contains($realPath, 'modules') && !preg_match('//')) {
-                //dd($realPath);
+            if (str_contains($realPath, _PS_MODULE_DIR_)) {
                 // We remove everything in the path until "modules" and we append @Modules before that. 7 is the length of the string "modules"
-                return '@Modules' . substr($realPath, strpos($realPath, 'modules')+7);
+                return '@Modules' . substr($realPath, strpos($realPath, _PS_MODULE_DIR_) + strlen(_PS_MODULE_DIR_));
             }
         }
 
