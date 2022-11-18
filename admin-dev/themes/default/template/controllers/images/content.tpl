@@ -137,7 +137,7 @@
 
   <script type="text/javascript">
     $(function() {
-      $('#submitRegenerate{$table}').on('click', function() {
+      $('#display_regenerate_form button[type="submit"]').on('click', function() {
         $('#modalRegenerateThumbnails').modal('show');
         return false;
       });
