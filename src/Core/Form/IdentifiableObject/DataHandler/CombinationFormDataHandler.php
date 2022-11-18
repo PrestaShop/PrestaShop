@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
 
 /**
@@ -48,15 +49,31 @@ class CombinationFormDataHandler implements FormDataHandlerInterface
     private $commandsBuilder;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $bus
      * @param CombinationCommandsBuilder $commandsBuilder
+     * @param int $defaultShopId
+     * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $bus,
-        CombinationCommandsBuilder $commandsBuilder
+        CombinationCommandsBuilder $commandsBuilder,
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
+        $this->defaultShopId = $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -73,7 +90,12 @@ class CombinationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $data);
+        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
+        $commands = $this->commandsBuilder->buildCommands(
+            new CombinationId($id),
+            $data,
+            $shopConstraint
+        );
 
         foreach ($commands as $command) {
             $this->bus->handle($command);
