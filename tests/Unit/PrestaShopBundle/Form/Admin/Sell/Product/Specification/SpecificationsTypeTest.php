@@ -29,26 +29,32 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FeaturesTypeTest extends TestCase
+class SpecificationsTypeTest extends TestCase
 {
     /**
      * @dataProvider providerBuildForm
      *
+     * @param bool $isFeatureEnabled
      * @param array $expectedChildren
      *
      * @return void
      */
-    public function testBuildForm(array $expectedChildren): void
+    public function testBuildForm(bool $isFeatureEnabled, array $expectedChildren): void
     {
         $mockTranslatorInterface = $this
             ->getMockBuilder(TranslatorInterface::class)
             ->getMock();
         $mockFormBuilder = $this
             ->getMockBuilder(FormBuilderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockFormChoiceProviderInterface = $this
+            ->getMockBuilder(FormChoiceProviderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -63,7 +69,7 @@ class FeaturesTypeTest extends TestCase
             return $children;
         });
 
-        $formType = new FeaturesType($mockTranslatorInterface, []);
+        $formType = new SpecificationsType($mockTranslatorInterface, [], $mockFormChoiceProviderInterface, $isFeatureEnabled);
         $formType->buildForm($mockFormBuilder, []);
 
         $this->assertEquals($expectedChildren, $mockFormBuilder->all());
@@ -76,9 +82,24 @@ class FeaturesTypeTest extends TestCase
     {
         return [
             [
+                true,
                 [
-                    'feature_values',
-                    'add_feature',
+                    'references',
+                    'features',
+                    'attachments',
+                    'show_condition',
+                    'condition',
+                    'customizations',
+                ],
+            ],
+            [
+                false,
+                [
+                    'references',
+                    'attachments',
+                    'show_condition',
+                    'condition',
+                    'customizations',
                 ],
             ],
         ];

@@ -40,6 +40,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 class SpecificationsType extends TranslatorAwareType
 {
     /**
+     * @var bool
+     */
+    protected $isFeatureEnabled;
+
+    /**
      * @var FormChoiceProviderInterface
      */
     private $productConditionChoiceProvider;
@@ -48,14 +53,17 @@ class SpecificationsType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $productConditionChoiceProvider
+     * @param bool $isFeatureEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productConditionChoiceProvider
+        FormChoiceProviderInterface $productConditionChoiceProvider,
+        bool $isFeatureEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->productConditionChoiceProvider = $productConditionChoiceProvider;
+        $this->isFeatureEnabled = $isFeatureEnabled;
     }
 
     /**
@@ -63,9 +71,13 @@ class SpecificationsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('references', ReferencesType::class);
+
+        if ($this->isFeatureEnabled) {
+            $builder->add('features', FeaturesType::class);
+        }
+
         $builder
-            ->add('references', ReferencesType::class)
-            ->add('features', FeaturesType::class)
             ->add('attachments', ProductAttachmentsType::class)
             ->add('show_condition', SwitchType::class, [
                 'required' => false,
