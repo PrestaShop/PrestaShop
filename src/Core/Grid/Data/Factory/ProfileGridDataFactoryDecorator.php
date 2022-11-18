@@ -24,12 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Data\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShopBundle\Security\Admin\Employee;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -81,7 +84,9 @@ final class ProfileGridDataFactoryDecorator implements GridDataFactoryInterface
     {
         $modifiedProfiles = [];
 
-        $currentUserIdProfile = $this->security->getUser()->getData()->id_profile;
+        /** @var Employee $user */
+        $user = $this->security->getUser();
+        $currentUserIdProfile = $user->getData()->id_profile;
         foreach ($profiles as $profile) {
             if ($profile['id_profile'] === $currentUserIdProfile) {
                 $profile['disableBulkCheckbox'] = true;
