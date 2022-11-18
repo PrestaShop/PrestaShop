@@ -231,7 +231,6 @@ class CustomerThreadController extends FrameworkBundleAdminController
      * )
      *
      * @param Request $request
-     * @param int $customerThreadId
      *
      * @return RedirectResponse
      */

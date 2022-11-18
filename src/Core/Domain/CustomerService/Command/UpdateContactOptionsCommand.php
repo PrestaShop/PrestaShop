@@ -36,7 +36,7 @@ class UpdateContactOptionsCommand
     private $allowFileUploading;
 
     /**
-     * @var <int, string>
+     * @var array<int, string>
      */
     private $defaultMessage;
 
