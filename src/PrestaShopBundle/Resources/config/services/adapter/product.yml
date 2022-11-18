@@ -583,3 +583,7 @@ services:
   prestashop.adapter.product.update.filler.shipping_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ShippingFiller
     tags: [ 'core.product_filler' ]
+
+  prestashop.adapter.product.update.filler.stock_info_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInfoFiller
+    tags: [ 'core.product_filler' ]
