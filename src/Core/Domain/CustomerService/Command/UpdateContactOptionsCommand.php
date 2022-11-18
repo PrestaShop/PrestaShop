@@ -42,7 +42,7 @@ class UpdateContactOptionsCommand
 
     /**
      * @param $allowFileUploading
-     * @param <int, string> $defaultMessage
+     * @param array<int, string> $defaultMessage
      */
     public function __construct($allowFileUploading, array $defaultMessage)
     {
@@ -59,7 +59,7 @@ class UpdateContactOptionsCommand
     }
 
     /**
-     * @return <int, string>
+     * @return array<int, string>
      */
     public function getDefaultMessage(): array
     {
