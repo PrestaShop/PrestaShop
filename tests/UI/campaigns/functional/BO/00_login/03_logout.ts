@@ -3,24 +3,23 @@
 import helper from '@utils/helpers';
 
 // Import test context
-import testContext from '/var/www/html/PrestaShop/tests/UI/utils/testContext';
+import testContext from '@utils/testContext';
 
 // Import common tests
-import loginCommon from '/var/www/html/PrestaShop/tests/UI/commonTests/BO/loginBO';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '/var/www/html/PrestaShop/tests/UI/pages/BO/login/index';
+import loginPage from '@pages/BO/login/index';
 
 const baseContext: string = 'functional_BO_login_logout';
 
-// Import expect from chai
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import type {BrowserContext, Page} from 'playwright';
 
 /*
 Pre-condition
-- Lognn to BO
+- Login to BO
 Scenario:
 - Logout from BO
  */
@@ -40,5 +39,14 @@ describe('BO - logout : log out from BO', async () => {
 
     it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
+    });
+
+    it('should logout from BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'logoutFromBOPage', baseContext);
+    
+        await loginCommon.logoutBO(this, page);
+    
+        const pageTitle = await loginPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(loginPage.pageTitle);
     });
 });
