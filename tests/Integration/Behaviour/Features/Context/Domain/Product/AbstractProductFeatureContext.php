@@ -339,7 +339,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
     }
 
     /**
-     * @return int
+     * @return array
      */
     protected function resolveHistoryDateKeys(string $type): array
     {

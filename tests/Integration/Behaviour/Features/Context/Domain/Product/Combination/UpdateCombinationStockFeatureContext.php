@@ -204,7 +204,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $outOfStockInt
         );
 
-        $combinations = $this->getCombinationsList($reference);
+        $combinations = $this->getCombinationsList($reference, $this->getDefaultShopId());
 
         foreach ($combinations->getCombinations() as $combination) {
             $id = StockAvailable::getStockAvailableIdByProductId(

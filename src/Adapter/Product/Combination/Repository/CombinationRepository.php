@@ -44,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
+use PrestashopException;
+use Product;
 
 /**
  * Provides access to Combination data source
