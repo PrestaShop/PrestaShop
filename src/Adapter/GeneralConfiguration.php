@@ -24,33 +24,48 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Manages the configuration data about general options.
  */
-class GeneralConfiguration implements DataConfigurationInterface
+class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    protected const CONFIGURATION_FIELDS = [
+        GeneralType::FIELD_CHECK_MODULES_UPDATE,
+        GeneralType::FIELD_CHECK_IP_ADDRESS,
+        GeneralType::FIELD_FRONT_COOKIE_LIFETIME,
+        GeneralType::FIELD_BACK_COOKIE_LIFETIME,
+        GeneralType::FIELD_COOKIE_SAMESITE,
+    ];
 
     /**
      * @var Cookie
      */
-    private $cookie;
+    protected $cookie;
 
     /**
      * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      * @param Cookie $cookie
      */
-    public function __construct(Configuration $configuration, Cookie $cookie)
-    {
-        $this->configuration = $configuration;
+    public function __construct(
+        Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
+        Cookie $cookie
+    ) {
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
         $this->cookie = $cookie;
     }
 
@@ -59,12 +74,14 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
-            'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
-            'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
-            'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
-            'cookie_samesite' => $this->configuration->get('PS_COOKIE_SAMESITE'),
+            GeneralType::FIELD_CHECK_MODULES_UPDATE => (bool) $this->configuration->get('PRESTASTORE_LIVE', null, $shopConstraint),
+            GeneralType::FIELD_CHECK_IP_ADDRESS => (bool) $this->configuration->get('PS_COOKIE_CHECKIP', null, $shopConstraint),
+            GeneralType::FIELD_FRONT_COOKIE_LIFETIME => (int) $this->configuration->get('PS_COOKIE_LIFETIME_FO', null, $shopConstraint),
+            GeneralType::FIELD_BACK_COOKIE_LIFETIME => (int) $this->configuration->get('PS_COOKIE_LIFETIME_BO', null, $shopConstraint),
+            GeneralType::FIELD_COOKIE_SAMESITE => $this->configuration->get('PS_COOKIE_SAMESITE', null, $shopConstraint),
         ];
     }
 
@@ -76,18 +93,21 @@ class GeneralConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
-            if (!$this->validateSameSite($configuration['cookie_samesite'])) {
+            if (!$this->validateSameSite($configuration[GeneralType::FIELD_COOKIE_SAMESITE])) {
                 $errors[] = [
                     'key' => 'The SameSite=None is only available in secure mode.',
                     'domain' => 'Admin.Advparameters.Notification',
                     'parameters' => [],
                 ];
             } else {
-                $this->configuration->set('PRESTASTORE_LIVE', (bool) $configuration['check_modules_update']);
-                $this->configuration->set('PS_COOKIE_CHECKIP', (bool) $configuration['check_ip_address']);
-                $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
-                $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
-                $this->configuration->set('PS_COOKIE_SAMESITE', $configuration['cookie_samesite']);
+                $shopConstraint = $this->getShopConstraint();
+
+                $this->updateConfigurationValue('PRESTASTORE_LIVE', GeneralType::FIELD_CHECK_MODULES_UPDATE, $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_CHECKIP', GeneralType::FIELD_CHECK_IP_ADDRESS, $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_LIFETIME_FO', GeneralType::FIELD_FRONT_COOKIE_LIFETIME, $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_LIFETIME_BO', GeneralType::FIELD_BACK_COOKIE_LIFETIME, $configuration, $shopConstraint);
+                $this->updateConfigurationValue('PS_COOKIE_SAMESITE', GeneralType::FIELD_COOKIE_SAMESITE, $configuration, $shopConstraint);
+
                 // Clear checksum to force the refresh
                 $this->cookie->checksum = '';
                 $this->cookie->write();
@@ -98,21 +118,20 @@ class GeneralConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $isValid = isset(
-                $configuration['check_modules_update'],
-                $configuration['check_ip_address'],
-                $configuration['front_cookie_lifetime'],
-                $configuration['back_cookie_lifetime']
-            ) && in_array(
-                $configuration['cookie_samesite'],
-                Cookie::SAMESITE_AVAILABLE_VALUES
-            );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes(GeneralType::FIELD_CHECK_MODULES_UPDATE, 'bool')
+            ->setAllowedTypes(GeneralType::FIELD_CHECK_IP_ADDRESS, 'bool')
+            ->setAllowedTypes(GeneralType::FIELD_FRONT_COOKIE_LIFETIME, 'int')
+            ->setAllowedTypes(GeneralType::FIELD_BACK_COOKIE_LIFETIME, 'int')
+            ->setAllowedValues(GeneralType::FIELD_COOKIE_SAMESITE, Cookie::SAMESITE_AVAILABLE_VALUES)
+        ;
 
-        return (bool) $isValid;
+        return $resolver;
     }
 
     /**
