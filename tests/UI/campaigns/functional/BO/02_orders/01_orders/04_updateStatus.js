@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import common tests
@@ -22,9 +27,6 @@ const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_updateStatus';
 

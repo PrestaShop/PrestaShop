@@ -28,9 +28,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles @see GetCategoriesTree using legacy object model
@@ -38,17 +44,41 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
 final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterface
 {
     /**
-     * @var string
+     * @var CategoryDisplayNameBuilder
      */
-    private $contextLangId;
+    private $displayNameBuilder;
 
     /**
-     * @param string $contextLangId
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @var ShopRepository
+     */
+    private $shopRepository;
+
+    /**
+     * @var int
+     */
+    private $rootCategoryId;
+
+    /**
+     * @param CategoryDisplayNameBuilder $displayNameBuilder
+     * @param ContextStateManager $contextStateManager
+     * @param ShopRepository $shopRepository
+     * @param int $rootCategoryId
      */
     public function __construct(
-        string $contextLangId
+        CategoryDisplayNameBuilder $displayNameBuilder,
+        ContextStateManager $contextStateManager,
+        ShopRepository $shopRepository,
+        int $rootCategoryId
     ) {
-        $this->contextLangId = $contextLangId;
+        $this->displayNameBuilder = $displayNameBuilder;
+        $this->contextStateManager = $contextStateManager;
+        $this->shopRepository = $shopRepository;
+        $this->rootCategoryId = $rootCategoryId;
     }
 
     /**
@@ -56,36 +86,59 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      */
     public function handle(GetCategoriesTree $query): array
     {
-        $langId = $query->getLanguageId() ? $query->getLanguageId()->getValue() : (int) $this->contextLangId;
-        $nestedCategories = Category::getNestedCategories(null, $langId, false);
+        $langId = $query->getLanguageId();
+        $this->contextStateManager
+            ->saveCurrentContext()
+            ->setShop($this->shopRepository->get($query->getShopId()))
+        ;
 
-        return $this->buildCategoriesTree($nestedCategories, $langId);
+        try {
+            $nestedCategories = Category::getNestedCategories($this->rootCategoryId, $langId->getValue(), false);
+            $nestedCategories = $nestedCategories[$this->rootCategoryId]['children'] ?? [];
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+
+        return $this->buildCategoriesTree($nestedCategories, $query->getShopId(), $langId);
     }
 
     /**
      * @param array<string, array<string, mixed>> $categories
-     * @param int $langId
+     * @param ShopId $shopId
+     * @param LanguageId $langId
      *
      * @return CategoryForTree[]
      */
-    private function buildCategoriesTree(array $categories, int $langId): array
+    private function buildCategoriesTree(array $categories, ShopId $shopId, LanguageId $langId): array
     {
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
+
+            $categoryName = $category['name'];
             $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
 
             if (!empty($category['children'])) {
-                $categoryChildren = $this->buildCategoriesTree($category['children'], $langId);
+                $categoryChildren = $this->buildCategoriesTree(
+                    $category['children'],
+                    $shopId,
+                    $langId
+                );
             }
+
+            $displayName = $this->displayNameBuilder->build(
+                $categoryName,
+                $shopId,
+                $langId,
+                new CategoryId($categoryId)
+            );
 
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
                 $categoryActive,
-                // @todo: it is always only one language now,
-                //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
-                [$langId => $category['name']],
+                $categoryName,
+                $displayName,
                 $categoryChildren
             );
         }

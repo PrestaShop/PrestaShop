@@ -55,6 +55,6 @@ class DeleteCombinationHandler implements DeleteCombinationHandlerInterface
      */
     public function handle(DeleteCombinationCommand $command): void
     {
-        $this->combinationDeleter->deleteCombination($command->getCombinationId());
+        $this->combinationDeleter->deleteCombination($command->getCombinationId(), $command->getShopConstraint());
     }
 }

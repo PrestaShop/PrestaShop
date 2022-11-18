@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotDeleteStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -130,6 +132,54 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     }
 
     /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    public function delete(ProductId $productId, ShopId $shopId): void
+    {
+        $this->deleteObjectModel($this->getForProduct($productId, $shopId), CannotDeleteStockAvailableException::class);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return StockId
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getStockIdByCombination(CombinationId $combinationId, ShopId $shopId): StockId
+    {
+        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
+        $row = $this
+            ->connection
+            ->createQueryBuilder()
+            ->select('id_stock_available')
+            ->from($this->dbPrefix . 'stock_available')
+            ->where(
+                'id_product_attribute = :combinationId',
+                'id_shop = :shopId'
+            )
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->execute()
+            ->fetch()
+        ;
+        if (empty($row)) {
+            throw new StockAvailableNotFoundException(
+                sprintf(
+                    'Cannot find StockAvailable for combination #%d',
+                    $combinationId->getValue()
+                )
+            );
+        }
+
+        return new StockId((int) $row['id_stock_available']);
+    }
+
+    /**
      * @param CombinationId $combinationId
      *
      * @return StockAvailable
@@ -139,41 +189,25 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
      */
     public function getForCombination(CombinationId $combinationId, ShopId $shopId): StockAvailable
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('id_stock_available')
-            ->from($this->dbPrefix . 'stock_available')
-            ->where('id_product_attribute = :combinationId')
-            ->andWhere('id_shop = :shopId')
-            ->setParameter('combinationId', $combinationId->getValue())
-            ->setParameter('shopId', $shopId->getValue())
-        ;
+        $stockId = $this->getStockIdByCombination($combinationId, $shopId);
 
-        $result = $qb->execute()->fetch();
-
-        if (!$result) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for combination #%d',
-                    $combinationId->getValue()
-                )
-            );
-        }
-
-        return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
+        return $this->getStockAvailable($stockId);
     }
 
     /**
      * @param ProductId $productId
+     * @param CombinationId|null $combinationId
      *
      * @return StockAvailable
      *
      * @throws CoreException
      * @throws StockAvailableNotFoundException
      */
-    public function createProductStock(ProductId $productId, ShopId $shopId): StockAvailable
+    public function createStockAvailable(ProductId $productId, ShopId $shopId, ?CombinationId $combinationId = null): StockAvailable
     {
         $stockAvailable = new StockAvailable();
         $stockAvailable->id_product = $productId->getValue();
-        $stockAvailable->id_product_attribute = NoCombinationId::NO_COMBINATION_ID;
+        $stockAvailable->id_product_attribute = $combinationId ? $combinationId->getValue() : NoCombinationId::NO_COMBINATION_ID;
 
         // Use legacy method, it checks if the shop belongs to a ShopGroup that shares stock, in which case the StockAvailable
         // must be assigned to the group not the shop
@@ -231,6 +265,76 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
         }
 
         return $shops;
+    }
+
+    /**
+     * Updates the physical_quantity and reserved_quantity columns for the specified Stock. Most of this function logic comes from
+     * StockManager::updatePhysicalProductQuantity
+     *
+     * @param StockId $stockId
+     * @param OrderStateId $errorStateId
+     * @param OrderStateId $canceledStateId
+     */
+    public function updatePhysicalProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    {
+        $this->updateReservedProductQuantity($stockId, $errorStateId, $canceledStateId);
+
+        // Now update the physical_quantity
+        $updateQb = $this->connection->createQueryBuilder();
+        $updateQb
+            ->update($this->dbPrefix . 'stock_available', 'sa')
+            ->set('physical_quantity', 'sa.quantity + sa.reserved_quantity')
+            ->where('sa.id_stock_available = :stockId')
+            ->setParameter('stockId', $stockId->getValue())
+        ;
+        $updateQb->execute();
+    }
+
+    protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
+            ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')
+            ->innerJoin(
+                'od', $this->dbPrefix . 'stock_available', 'sa',
+                'od.product_id = sa.id_product AND od.product_attribute_id = sa.id_product_attribute AND od.id_shop = sa.id_shop'
+            )
+            ->where($qb->expr()->and(
+                $qb->expr()->eq('o.id_shop', 'sa.id_shop'),
+                $qb->expr()->neq('os.shipped', 1),
+                $qb->expr()->or(
+                    $qb->expr()->eq('o.valid', 1),
+                    $qb->expr()->and(
+                        $qb->expr()->neq('os.id_order_state', ':errorStateId'),
+                        $qb->expr()->neq('os.id_order_state', ':canceledStateId')
+                    )
+                ),
+                $qb->expr()->eq('sa.id_stock_available', ':stockId')
+            ))
+            ->groupBy('od.product_id', 'od.product_attribute_id')
+            ->setParameters([
+                'stockId' => $stockId->getValue(),
+                'errorStateId' => $errorStateId->getValue(),
+                'canceledStateId' => $canceledStateId->getValue(),
+            ])
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        $reservedQuantity = (int) ($result['reserved_quantity'] ?? 0);
+
+        if ($reservedQuantity > 0) {
+            $updateQb = $this->connection->createQueryBuilder();
+            $updateQb
+                ->update($this->dbPrefix . 'stock_available', 'sa')
+                ->set('reserved_quantity', (string) $reservedQuantity)
+                ->where('sa.id_stock_available = :stockId')
+                ->setParameter('stockId', $stockId->getValue())
+            ;
+            $updateQb->execute();
+        }
     }
 
     /**

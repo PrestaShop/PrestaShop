@@ -42,8 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -71,7 +71,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultShopId;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $contextShopId;
 
@@ -95,10 +95,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
         ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
+        $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -107,9 +107,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
     public function getData($id): array
     {
         $productId = (int) $id;
-        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
+        $shopConstraint = ShopConstraint::shop($this->contextShopId ?? $this->defaultShopId);
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
+        $productForEditing = $this->queryBus->handle(
+            new GetProductForEditing($productId, $shopConstraint, $this->contextLangId)
+        );
 
         $productData = [
             'id' => $productId,
@@ -154,21 +156,24 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractCategoriesData(ProductForEditing $productForEditing): array
     {
         $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = $categoriesInformation->getCategoriesInformation();
         $defaultCategoryId = $categoriesInformation->getDefaultCategoryId();
 
-        $categories = [];
-        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
-            $localizedNames = $categoryInformation->getLocalizedNames();
-            $categoryId = $categoryInformation->getId();
+        $categoriesData = [];
+        foreach ($categories as $category) {
+            $categoryId = $category->getId();
 
-            $categories[] = [
+            $categoriesData[] = [
                 'id' => $categoryId,
-                'name' => $localizedNames[$this->contextLangId],
+                'name' => $category->getName(),
+                'display_name' => $category->getDisplayName(),
+                // do not allow removing default category or if it is the last one
+                'removable' => $defaultCategoryId !== $category->getId() && 1 !== count($categories),
             ];
         }
 
         return [
-            'product_categories' => $categories,
+            'product_categories' => $categoriesData,
             'default_category_id' => $defaultCategoryId,
         ];
     }
@@ -370,7 +375,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
-                'stock_movements' => $this->getStockMovements($productForEditing->getProductId(), $shopConstraint),
+                'stock_movements' => $this->getStockMovementHistory(
+                    $productForEditing->getProductId(),
+                    $shopConstraint
+                ),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -391,25 +399,34 @@ class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @param int $productId
-     *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
-    private function getStockMovements(int $productId, ShopConstraint $shopConstraint): array
+    private function getStockMovementHistory(int $productId, ShopConstraint $shopConstraint): array
     {
-        /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId, $shopConstraint->getShopId()->getValue()));
+        return array_map(
+            function (StockMovement $stockMovement): array {
+                $date = null;
+                if ($stockMovement->isEdition()) {
+                    $date = $stockMovement
+                        ->getDate('add')
+                        ->format(DateTime::DEFAULT_DATETIME_FORMAT)
+                    ;
+                }
 
-        $movementData = [];
-        foreach ($stockMovements as $stockMovement) {
-            $movementData[] = [
-                'date_add' => $stockMovement->getDateAdd()->format(DateTime::DEFAULT_DATETIME_FORMAT),
-                'employee' => $stockMovement->getFirstName() . ' ' . $stockMovement->getLastName(),
-                'delta_quantity' => $stockMovement->getDeltaQuantity(),
-            ];
-        }
-
-        return $movementData;
+                return [
+                    'type' => $stockMovement->getType(),
+                    'date' => $date,
+                    'employee_name' => $stockMovement->getEmployeeName(),
+                    'delta_quantity' => $stockMovement->getDeltaQuantity(),
+                ];
+            },
+            $this->queryBus->handle(
+                new GetProductStockMovements(
+                    $productId,
+                    $shopConstraint->getShopId()->getValue()
+                )
+            )
+        );
     }
 
     /**

@@ -1,17 +1,18 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-const helper = require('@utils/helpers');
 
 // Import pages
 const homePage = require('@pages/FO/home');
 
 // Import data
 const {Categories} = require('@data/demo/categories');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
 

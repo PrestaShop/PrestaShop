@@ -57,7 +57,8 @@ class BulkDeleteCombinationHandler implements BulkDeleteCombinationHandlerInterf
     {
         $this->combinationDeleter->bulkDeleteProductCombinations(
             $command->getProductId(),
-            $command->getCombinationIds()
+            $command->getCombinationIds(),
+            $command->getShopConstraint()
         );
     }
 }

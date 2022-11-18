@@ -60,7 +60,7 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
     public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
     {
         $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getCombinationForEditing($combinationReference)->getDetails();
+        $actualDetails = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getDetails();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($scalarDetailNames as $propertyName) {

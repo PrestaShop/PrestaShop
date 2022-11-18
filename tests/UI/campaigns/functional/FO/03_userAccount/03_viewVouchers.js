@@ -1,11 +1,15 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
-const testContext = require('@utils/testContext');
 
 // Import common tests
 const {createAccountTest} = require('@commonTests/FO/createAccount');

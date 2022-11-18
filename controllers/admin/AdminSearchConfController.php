@@ -462,9 +462,23 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         if (!count($this->errors)) {
-            foreach ($aliases as $alias) {
+            // Search existing aliases
+            $alias = new Alias();
+            $alias->search = trim($search);
+            $existingAliases = explode(',', $alias->getAliases());
+
+            // New alias
+            $newAliases = array_diff($aliases, $existingAliases);
+            foreach ($newAliases as $alias) {
                 $obj = new Alias(null, trim($alias), trim($search));
                 $obj->save();
+            }
+
+            // Removed alias
+            $removedAliases = array_diff($existingAliases, $aliases);
+            foreach ($removedAliases as $alias) {
+                $obj = new Alias(null, trim($alias), trim($search));
+                $obj->delete();
             }
         }
 

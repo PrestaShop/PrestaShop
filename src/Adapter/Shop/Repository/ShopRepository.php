@@ -30,12 +30,32 @@ namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use Shop;
 
 /**
  * Provides methods to access data storage for shop
  */
 class ShopRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @param ShopId $shopId
+     *
+     * @return Shop
+     *
+     * @throws ShopNotFoundException
+     */
+    public function get(ShopId $shopId): Shop
+    {
+        /** @var Shop $shop */
+        $shop = $this->getObjectModel(
+            $shopId->getValue(),
+            Shop::class,
+            ShopNotFoundException::class
+        );
+
+        return $shop;
+    }
+
     /**
      * @param ShopId $shopId
      *

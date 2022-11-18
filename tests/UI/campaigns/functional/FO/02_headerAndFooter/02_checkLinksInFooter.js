@@ -1,9 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
 
 // Import common tests
 const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
@@ -38,9 +41,6 @@ const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import faker data
 const CustomerFaker = require('@data/faker/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_headerAndFooter_checkLinksInFooter';
 

@@ -1,8 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
@@ -17,9 +22,6 @@ const searchResultsPage = require('@pages/FO/searchResults');
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
 const boAddProductPage = require('@pages/BO/catalog/products/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_productPage_quickView';
 

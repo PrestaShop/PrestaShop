@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Helpers to open and close browser
-const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
@@ -13,9 +18,6 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 
 // Import data
 const {ShoppingCarts} = require('@data/demo/shoppingCarts');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
 

@@ -41,7 +41,7 @@ services:
   prestashop.adapter.product.combination.query_handler.get_combination_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
     arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
@@ -59,7 +59,6 @@ services:
   prestashop.adapter.product.combination.query_handler.get_editable_combinations_list_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.core.grid.query_builder.product_combination'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
@@ -88,9 +87,17 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.core.grid.query_builder.product_combination'
+
+  prestashop.adapter.product.combination.repository.combination_multi_shop_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.product.combination.validate.combination_validator'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
   prestashop.adapter.product.combination.update.combination_stock_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
@@ -98,24 +105,28 @@ services:
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.core.stock.stock_manager'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.combination.create.combination_creator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
     arguments:
       - '@prestashop.core.product.combination.generator.combination_generator'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   prestashop.adapter.product.combination.update.default_combination_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
     arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
   prestashop.adapter.product.combination.update.combination_deleter:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   prestashop.adapter.product.combination.update.combination_images_updater:

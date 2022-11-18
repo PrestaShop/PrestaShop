@@ -37,6 +37,7 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
+import ProductShopsModal from '@pages/product/components/product-shops-modal';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
@@ -65,6 +66,7 @@ $(() => {
 
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
+  const shopId = parseInt($productForm.data('shopId'), 10);
   const productType = $productForm.data('productType');
 
   // Responsive navigation tabs
@@ -78,7 +80,7 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
-    new CombinationsList(productId, productFormModel);
+    new CombinationsList(productId, productFormModel, shopId);
   }
 
   new NavbarHandler($(ProductMap.navigationBar));
@@ -88,7 +90,15 @@ $(() => {
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);
-  new CategoriesManager(eventEmitter);
+
+  // try-catch block prevents javascript termination when error is thrown.
+  // So only the related component won't work instead of breaking whole product page
+  try {
+    new CategoriesManager(eventEmitter);
+  } catch (e: any) {
+    console.error('Failed to initialize categories manager');
+  }
+
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
@@ -127,4 +137,6 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
+
+  new ProductShopsModal();
 });

@@ -85,6 +85,7 @@ class EditProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = $options['product_id'];
+
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
@@ -133,6 +134,7 @@ class EditProductFormType extends TranslatorAwareType
         $formVars = [
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
+            'shop_id' => $options['shop_id'],
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -157,10 +159,12 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->setRequired([
                 'product_id',
+                'shop_id',
                 'product_type',
                 'tax_rules_group_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])

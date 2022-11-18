@@ -34,7 +34,6 @@ services:
       - '@prestashop.core.query_bus'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
 
-
   prestashop.core.form.identifiable_object.data_provider.meta_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\MetaFormDataProvider'
     arguments:
@@ -159,10 +158,17 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
+  prestashop.core.form.identifiable_object.data_provider.product_shops_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductShopsFormDataProvider'
+    arguments:
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+
   prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+      - '@prestashop.adapter.shop.context'
 
   prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BulkCombinationFormDataProvider'

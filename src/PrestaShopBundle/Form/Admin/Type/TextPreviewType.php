@@ -69,13 +69,12 @@ class TextPreviewType extends HiddenType
         parent::configureOptions($resolver);
 
         $resolver
-            ->setRequired(['preview_class'])
-            ->setAllowedTypes('preview_class', 'string')
             ->setDefaults([
-                'preview_class' => 'text-preview',
+                'preview_class' => '',
                 'prefix' => null,
                 'suffix' => null,
             ])
+            ->setAllowedTypes('preview_class', 'string')
             ->setAllowedTypes('prefix', ['string', 'null'])
             ->setAllowedTypes('suffix', ['string', 'null'])
         ;

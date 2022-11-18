@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -145,16 +146,58 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function selectProductShopsAction(Request $request, int $productId): Response
+    {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->renderDisableMultistorePage($productId);
+        }
+
+        $productShopsForm = $this->getProductShopsFormBuilder()->getFormFor($productId);
+
+        try {
+            $productShopsForm->handleRequest($request);
+
+            $result = $this->getProductShopsFormHandler()->handleFor($productId, $productShopsForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                $redirectParams = ['productId' => $productId];
+                if ($request->query->has('liteDisplaying')) {
+                    $redirectParams['liteDisplaying'] = true;
+                }
+
+                return $this->redirectToRoute('admin_products_select_shops', $redirectParams);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->renderProductShopsForm($productShopsForm, $productId, $request->query->has('liteDisplaying'));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param Request $request
      *
      * @return Response
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
-            return $this->renderDisableMultistorePage();
-        }
+        if ($request->query->has('shopId')) {
+            $data['shop_id'] = $request->query->get('shopId');
+        } else {
+            /** @var Context $shopContext */
+            $shopContext = $this->get('prestashop.adapter.shop.context');
 
-        $productForm = $this->getCreateProductFormBuilder()->getForm();
+            $data['shop_id'] = $shopContext->getContextShopID();
+        }
+        $productForm = $this->getCreateProductFormBuilder()->getForm($data);
 
         try {
             $productForm->handleRequest($request);
@@ -164,7 +207,17 @@ class ProductController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
+                $redirectParams = ['productId' => $result->getIdentifiableObjectId()];
+
+                $createdData = $productForm->getData();
+                if (!empty($createdData['shop_id'])) {
+                    $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+
+                    // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
+                    $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
+                }
+
+                return $this->redirectToRoute('admin_products_v2_edit', $redirectParams);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -194,6 +247,7 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
                 'product_id' => $productId,
+                'shop_id' => (int) $this->getContextShopId(),
                 // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
                 // 'method' => Request::METHOD_PATCH,
                 'method' => Request::METHOD_POST,
@@ -517,11 +571,14 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_products_v2_create'),
+            'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product-button',
             'floating_class' => 'new-product-button',
+            'data_attributes' => [
+                'modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
+            ],
         ];
 
         return $toolbarButtons;
@@ -676,6 +733,22 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param FormInterface $productShopsForm
+     *
+     * @return Response
+     */
+    private function renderProductShopsForm(FormInterface $productShopsForm, int $productId, bool $lightDisplay): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/shops.html.twig', [
+            'productId' => $productId,
+            'lightDisplay' => $lightDisplay,
+            'showContentHeader' => false,
+            'productShopsForm' => $productShopsForm->createView(),
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    /**
      * Gets creation form builder.
      *
      * @return FormBuilderInterface
@@ -701,6 +774,24 @@ class ProductController extends FrameworkBundleAdminController
     private function getProductFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Gets shop association form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getProductShopsFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_shops_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductShopsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_shops_form_handler');
     }
 
     /**
@@ -838,5 +929,17 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+    }
+
+    /**
+     * @return int|null
+     */
+    private function getShopIdFromShopContext(): ?int
+    {
+        /** @var Context $shopContext */
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $shopId = $shopContext->getContextShopID();
+
+        return !empty($shopId) ? (int) $shopId : null;
     }
 }

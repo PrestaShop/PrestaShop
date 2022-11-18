@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+
 /**
  * Class CombinationCore.
  */
@@ -122,8 +124,16 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
-        // Removes the product from StockAvailable, for the current shop
-        StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        $shopIdsList = $this->getShopIdsList();
+
+        // Removes the product from StockAvailable for the related shops
+        if (!empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
+                StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $shopId);
+            }
+        } else {
+            StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        }
 
         if ($specificPrices = SpecificPrice::getByProductId((int) $this->id_product, (int) $this->id)) {
             foreach ($specificPrices as $specificPrice) {
@@ -196,10 +206,21 @@ class CombinationCore extends ObjectModel
         }
 
         $product = new Product((int) $this->id_product);
+        $shopIdsList = $this->getShopIdsList();
+
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, 1, null, (int) $this->id);
+            $outOfStock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         } else {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), null, $this->id);
+            $outOfStock = StockAvailable::outOfStock((int) $this->id_product);
+        }
+
+        if (!empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
+                StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $shopId, (int) $this->id);
+            }
+        } else {
+            // This creates stock_available for combination as a side effect
+            StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $this->id_shop, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
@@ -512,5 +533,19 @@ class CombinationCore extends ObjectModel
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 			WHERE pa.`id_product_attribute` = ' . (int) $idProductAttribute
         );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getShopIdsList(): array
+    {
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
+        } else {
+            $shopIdsList = Shop::getContextListShopID();
+        }
+
+        return $shopIdsList;
     }
 }

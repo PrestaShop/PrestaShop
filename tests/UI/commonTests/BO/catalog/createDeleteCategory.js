@@ -1,6 +1,10 @@
-require('module-alias/register');
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login test
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -8,9 +12,6 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // Import expect from chai
 const {expect} = require('chai');

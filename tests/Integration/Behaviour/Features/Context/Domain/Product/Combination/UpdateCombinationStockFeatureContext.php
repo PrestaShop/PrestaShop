@@ -79,6 +79,22 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
     }
 
     /**
+     * @Then combination :combinationReference should have :availableQuantity available items
+     *
+     * @param string $combinationReference
+     * @param int $availableQuantity
+     */
+    public function assertCombinationAvailableQuantity(string $combinationReference, int $availableQuantity): void
+    {
+        $actualStock = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getStock();
+        Assert::assertSame(
+            $availableQuantity,
+            $actualStock->getQuantity(),
+            sprintf('Unexpected combination "%s" quantity', $combinationReference)
+        );
+    }
+
+    /**
      * @Then combination :combinationReference should have following stock details:
      *
      * @param string $combinationReference
@@ -86,7 +102,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      */
     public function assertStockDetails(string $combinationReference, CombinationStock $expectedStock): void
     {
-        $actualStock = $this->getCombinationForEditing($combinationReference)->getStock();
+        $actualStock = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getStock();
 
         Assert::assertSame(
             $expectedStock->getQuantity(),

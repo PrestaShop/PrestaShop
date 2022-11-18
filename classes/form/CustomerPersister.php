@@ -176,7 +176,11 @@ class CustomerPersisterCore
 
     private function create(Customer $customer, $plainTextPassword)
     {
+        /*
+         * If there is no password provided, we are registering a guest
+         */
         if (!$plainTextPassword) {
+            // If ordering without registration is not enabled, we need to force it
             if (!$this->guest_allowed) {
                 $this->errors['password'][] = $this->translator->trans(
                     'Password is required',
@@ -200,11 +204,13 @@ class CustomerPersisterCore
             $customer->is_guest = true;
         }
 
-        $customer->passwd = $this->crypto->hash(
-            $plainTextPassword,
-            _COOKIE_KEY_
-        );
-
+        /*
+         * Check that there is not a customer registered with this email,
+         * we can't have two registered customers with the same email.
+         *
+         * Currently, it also checks for guests, because we don't allow guest checkout
+         * if there is a registered customer already, will be changed.
+         */
         if (Customer::customerExists($customer->email, false, true)) {
             $this->errors['email'][] = $this->translator->trans(
                 'An account was already registered with this email address',
@@ -215,11 +221,21 @@ class CustomerPersisterCore
             return false;
         }
 
+        /*
+         * Create a password hash and assign it to the customer
+         */
+        $customer->passwd = $this->crypto->hash(
+            $plainTextPassword,
+            _COOKIE_KEY_
+        );
+
         $ok = $customer->save();
 
+        // If the customer himself was saved properly, we need to update the global context and the cookie
         if ($ok) {
             $this->context->updateCustomer($customer);
             $this->context->cart->update();
+            // Send a welcome information email, only for registered customers
             $this->sendConfirmationMail($customer);
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
@@ -229,6 +245,13 @@ class CustomerPersisterCore
         return $ok;
     }
 
+    /**
+     * Send a welcome email after converting the customer, if configured.
+     *
+     * @param Customer $customer
+     *
+     * @return bool Indicates if mail was sent OK
+     */
     private function sendConfirmationMail(Customer $customer)
     {
         if ($customer->is_guest || !Configuration::get('PS_CUSTOMER_CREATION_EMAIL')) {

@@ -64,4 +64,5 @@ export default {
   specificPrice: {
     listUpdated: 'specificPricesListUpdated',
   },
+  cancelProductShops: 'cancelProductShops',
 };

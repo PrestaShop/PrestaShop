@@ -1,17 +1,13 @@
 type Category = {
   id: number,
   name: string,
-}
-
-type TypeaheadCategory = {
-  id: number,
-  name: string,
-  breadcrumb: string,
+  displayName: string,
 }
 
 type TreeCategory = {
   id: number,
   name: string,
+  displayName: string,
   active: boolean,
   children: Array<TreeCategory>,
 }

@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -18,9 +21,6 @@ const newAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import data
 const {countries} = require('@data/demo/countries');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_countries_countriesRestrictions';
 

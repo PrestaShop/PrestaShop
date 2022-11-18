@@ -827,6 +827,15 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.common.shop_selector:
+    class: 'PrestaShopBundle\Form\Admin\Type\ShopSelectorType'
+    arguments:
+      - '@prestashop.core.admin.shop.repository'
+      - "@=service('prestashop.core.admin.shop_group.repository').findActive()"
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
+    tags:
+      - { name: form.type }
+
   form.type.search_and_reset:
     class: 'PrestaShopBundle\Form\Admin\Type\SearchAndResetType'
     arguments:
@@ -1327,6 +1336,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.product_shops_form_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.edit_product_form_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType'
     parent: 'form.type.translatable.aware'
@@ -1495,12 +1511,10 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.stock.stock_movement:
+  form.type.sell.product.stock.stock_movement_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
@@ -1775,6 +1789,7 @@ services:
       - '@prestashop.adapter.shop.url.product_provider'
       - '@prestashop.adapter.shop.url.product_preview_provider'
       - '@router'
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
     tags:
       - { name: form.type }
 

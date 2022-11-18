@@ -120,6 +120,7 @@ services:
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.category.name_builder.category_display_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -479,7 +480,15 @@ services:
       - '@prestashop.adapter.product.update.product_shop_updater'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand
+
+  prestashop.adapter.product.shop.command_handler.delete_product_from_shops_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler
+    arguments:
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
 
   prestashop.adapter.product.product_duplicator:
     class: PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator
@@ -522,6 +531,7 @@ services:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'
+      - '@prestashop.adapter.product.image.repository.product_image_multishop_repository'
 
   prestashop.adapter.product.command_handler.update_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler
@@ -568,4 +578,8 @@ services:
 
   prestashop.adapter.product.update.filler.details_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller
+    tags: [ 'core.product_filler' ]
+
+  prestashop.adapter.product.update.filler.shipping_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ShippingFiller
     tags: [ 'core.product_filler' ]

@@ -137,7 +137,7 @@ class AliasCore extends ObjectModel
     }
 
     /**
-     * This method is allow to know if a feature is used or active.
+     * This method is allowed to know if a feature is used or active.
      *
      * @since 1.5.0.1
      *
@@ -149,7 +149,7 @@ class AliasCore extends ObjectModel
     }
 
     /**
-     * This method is allow to know if a alias exist for AdminImportController.
+     * This method is allowed to know if an alias exist for AdminImportController.
      *
      * @param int $idAlias Alias ID
      *

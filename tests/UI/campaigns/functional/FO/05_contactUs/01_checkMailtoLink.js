@@ -1,8 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-const helper = require('@utils/helpers');
 
 // Import pages
 const homePage = require('@pages/FO/home');
@@ -10,9 +14,6 @@ const contactUsPage = require('@pages/FO/contactUs');
 
 // Import data
 const {DefaultEmployee} = require('@data/demo/employees');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_contactUs_checkMailtoLink';
 

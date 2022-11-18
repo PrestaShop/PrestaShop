@@ -140,6 +140,12 @@ class GeneralType extends TranslatorAwareType
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
                 ],
+            ])
+            ->add('enable_backorder_status', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Set backorder status', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('The order status will be set to "On backorder" for new orders containing products that are out of stock.', 'Admin.Shopparameters.Help'),
+                'multistore_configuration_key' => 'PS_ENABLE_BACKORDER_STATUS',
             ]);
     }
 

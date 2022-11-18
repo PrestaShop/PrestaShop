@@ -29,10 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -192,6 +196,46 @@ class UpdateProductCommand
      * @var Reference|null
      */
     private $reference;
+
+    /**
+     * @var Dimension|null
+     */
+    private $width;
+
+    /**
+     * @var Dimension|null
+     */
+    private $height;
+
+    /**
+     * @var Dimension|null
+     */
+    private $depth;
+
+    /**
+     * @var Dimension|null
+     */
+    private $weight;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $additionalShippingCost;
+
+    /**
+     * @var DeliveryTimeNoteType
+     */
+    private $deliveryTimeNoteType;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeInStockNotes;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeOutOfStockNotes;
 
     /**
      * @param int $productId
@@ -743,5 +787,189 @@ class UpdateProductCommand
         $this->reference = new Reference($reference);
 
         return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getWidth(): ?Dimension
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param string $width
+     *
+     * @return self
+     */
+    public function setWidth(string $width): self
+    {
+        $this->setDimension($width, 'width');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getHeight(): ?Dimension
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param string $height
+     *
+     * @return self
+     */
+    public function setHeight(string $height): self
+    {
+        $this->setDimension($height, 'height');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getDepth(): ?Dimension
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @param string $depth
+     *
+     * @return self
+     */
+    public function setDepth(string $depth): self
+    {
+        $this->setDimension($depth, 'depth');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getWeight(): ?Dimension
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     *
+     * @return self
+     */
+    public function setWeight(string $weight): self
+    {
+        $this->setDimension($weight, 'weight');
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getAdditionalShippingCost(): ?DecimalNumber
+    {
+        return $this->additionalShippingCost;
+    }
+
+    /**
+     * @param string $additionalShippingCost
+     *
+     * @return self
+     */
+    public function setAdditionalShippingCost(string $additionalShippingCost): self
+    {
+        $this->additionalShippingCost = new DecimalNumber($additionalShippingCost);
+
+        return $this;
+    }
+
+    /**
+     * @return DeliveryTimeNoteType|null
+     */
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
+    {
+        return $this->deliveryTimeNoteType;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return self
+     */
+    public function setDeliveryTimeNoteType(int $type): self
+    {
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDeliveryTimeInStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeInStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeInStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeInStockNotes(array $localizedDeliveryTimeInStockNotes): self
+    {
+        $this->localizedDeliveryTimeInStockNotes = $localizedDeliveryTimeInStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedDeliveryTimeOutOfStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeOutOfStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeOutOfStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes): self
+    {
+        $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @param string $propertyName
+     */
+    private function setDimension(string $value, string $propertyName): void
+    {
+        $codeByDimension = [
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+        ];
+
+        try {
+            $this->{$propertyName} = new Dimension($value);
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                sprintf('Invalid product %s.', $propertyName),
+                $codeByDimension[$propertyName],
+                $e
+            );
+        }
     }
 }

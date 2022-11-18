@@ -24,5 +24,16 @@
  *#}
 <figure class="figure">
   <img src="{{ logoImage.path }}" class="figure-img img-fluid img-thumbnail">
-  <figcaption class="figure-caption">{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</figcaption>
+  <figcaption class="figure-caption">
+    <p>{{ 'File size'|trans({}, 'Admin.Advparameters.Feature') }} {{ logoImage.size }}</p>
+    <button class="btn btn-outline-danger btn-sm js-form-submit-btn"
+            data-form-submit-url="{{ path('admin_manufacturers_delete_logo_image', {'manufacturerId': app.request.get('manufacturerId')}) }}"
+            data-form-csrf-token="{{ csrf_token('delete-logo-thumbnail') }}"
+    >
+      <i class="material-icons">
+        delete_forever
+      </i>
+      {{ 'Delete'|trans({}, 'Admin.Actions') }}
+    </button>
+  </figcaption>
 </figure>
