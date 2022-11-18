@@ -29,8 +29,8 @@ class CreditSlips extends BOBasePage {
 
     // Sort Credit Slip Selectors
     this.tableHead = `${this.creditSlipGridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationBlock = '.pagination-block';
@@ -248,6 +248,7 @@ class CreditSlips extends BOBasePage {
     let rowContent;
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       rowContent = await this.getTextColumnFromTableCreditSlips(page, i, column);
       allRowsContentTable.push(rowContent);
