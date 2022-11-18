@@ -55,6 +55,11 @@ class ProductAssemblerCore
      */
     private function addMissingProductFields(array $rawProduct): array
     {
+        // If there is no ID product provided, return the original data
+        if (empty($rawProduct['id_product'])) {
+            return $rawProduct;
+        }
+
         $sql = $this->getSqlQueryProductFields([(int) $rawProduct['id_product']]);
         $rows = Db::getInstance()->executeS($sql);
         if (empty($rows)) {
@@ -77,6 +82,12 @@ class ProductAssemblerCore
     {
         // Get product IDs we want to retrieve from database
         $productIds = array_column($rawProducts, 'id_product');
+
+        // If there were no product IDs provided or somebody passed an empty array,
+        // return the original data
+        if (empty($productIds)) {
+            return $rawProducts;
+        }
 
         // Retrieve data and reassign them to new array by their key
         $productData = [];
