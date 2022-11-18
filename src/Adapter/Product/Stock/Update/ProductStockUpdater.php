@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
@@ -84,19 +85,24 @@ class ProductStockUpdater
      */
     private $advancedStockEnabled;
 
+    /** @var HookManager */
+    private $hookManager;
+
     /**
      * @param StockManager $stockManager
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
+     * @param HookManager $hookManager
      */
     public function __construct(
         StockManager $stockManager,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         MovementReasonRepository $movementReasonRepository,
-        Configuration $configuration
+        Configuration $configuration,
+        HookManager $hookManager
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
@@ -104,6 +110,7 @@ class ProductStockUpdater
         $this->movementReasonRepository = $movementReasonRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
+        $this->hookManager = $hookManager;
     }
 
     /**
@@ -321,6 +328,17 @@ class ProductStockUpdater
             $stockModification->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+                'id_shop' => (int) $stockAvailable->id_shop,
+            ]
+        );
+
+        $this->hookManager->exec(
+            'actionUpdateQuantity',
+            [
+                'id_product' => $stockAvailable->id_product,
+                'id_product_attribute' => $stockAvailable->id_product_attribute,
+                'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $stockModification->getDeltaQuantity(),
                 'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );
