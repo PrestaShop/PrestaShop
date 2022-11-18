@@ -271,6 +271,10 @@ class AddressCore extends ObjectModel
                     SET id_address_invoice = 0
                     WHERE id_address_invoice = ' . $this->id;
         Db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product
+                    SET id_address_delivery = 0
+                    WHERE id_address_delivery = ' . $this->id;
+        Db::getInstance()->execute($sql);
     }
 
     /**
