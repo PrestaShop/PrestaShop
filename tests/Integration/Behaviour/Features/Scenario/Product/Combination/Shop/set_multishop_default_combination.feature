@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags set-multi-shop-default-combination
 @restore-products-before-feature
+@restore-shops-after-feature
 @clear-cache-before-feature
 @product-combination
 @set-multi-shop-default-combination
