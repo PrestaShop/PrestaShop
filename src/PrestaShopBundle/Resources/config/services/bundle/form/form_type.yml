@@ -1448,6 +1448,7 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
     tags:
       - { name: form.type }
 
@@ -1455,8 +1456,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
     tags:
       - { name: form.type }
 
