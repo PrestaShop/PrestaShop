@@ -23,6 +23,7 @@ Pre-condition
 Scenario:
 - Logout from BO
  */
+
 describe('BO - logout : log out from BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
