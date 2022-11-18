@@ -26,34 +26,34 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class PaginationConfiguration is responsible for saving & loading pagination configuration for products.
  */
-class PaginationConfiguration implements DataConfigurationInterface
+class PaginationConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var ConfigurationInterface
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        'products_per_page',
+        'default_order_by',
+        'default_order_way',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'products_per_page' => $this->configuration->get('PS_PRODUCTS_PER_PAGE'),
-            'default_order_by' => $this->configuration->get('PS_PRODUCTS_ORDER_BY'),
-            'default_order_way' => $this->configuration->get('PS_PRODUCTS_ORDER_WAY'),
+            'products_per_page' => (int) $this->configuration->get('PS_PRODUCTS_PER_PAGE', 0, $shopConstraint),
+            'default_order_by' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_BY', 0, $shopConstraint),
+            'default_order_way' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_WAY', 0, $shopConstraint),
         ];
     }
 
@@ -65,28 +65,27 @@ class PaginationConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_PRODUCTS_PER_PAGE', (int) $config['products_per_page']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_BY', (int) $config['default_order_by']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_WAY', (int) $config['default_order_way']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_PRODUCTS_PER_PAGE', 'products_per_page', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCTS_ORDER_BY', 'default_order_by', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PRODUCTS_ORDER_WAY', 'default_order_way', $config, $shopConstraint);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'products_per_page',
-            'default_order_by',
-            'default_order_way',
-        ]);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('products_per_page', 'int')
+            ->setAllowedTypes('default_order_by', 'int')
+            ->setAllowedTypes('default_order_way', 'int');
 
-        $resolver->resolve($configuration);
-
-        return true;
+        return $resolver;
     }
 }

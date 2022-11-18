@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -50,6 +51,7 @@ class PageType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_DISPLAY_QTIES',
             ])
             ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
                 'label' => $this->trans(
@@ -73,6 +75,7 @@ class PageType extends TranslatorAwareType
                     ]
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_ATTRIBUTE_CATEGORY_DISPLAY',
             ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
                 'label' => $this->trans(
@@ -86,6 +89,7 @@ class PageType extends TranslatorAwareType
                 'placeholder' => false,
                 'required' => false,
                 'choice_translation_domain' => 'Admin.Global',
+                'multistore_configuration_key' => 'PS_ATTRIBUTE_ANCHOR_SEPARATOR',
             ])
             ->add('display_discount_price', SwitchType::class, [
                 'label' => $this->trans(
@@ -97,6 +101,7 @@ class PageType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
+                'multistore_configuration_key' => 'PS_DISPLAY_DISCOUNT_PRICE',
             ]);
     }
 
@@ -116,5 +121,15 @@ class PageType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'product_preferences_page_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

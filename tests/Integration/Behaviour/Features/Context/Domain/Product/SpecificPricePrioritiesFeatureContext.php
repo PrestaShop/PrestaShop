@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use SpecificPrice;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -102,7 +103,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
         ;
 
         try {
-            $priorityUpdater->updateDefaultPriorities($priorityList);
+            $priorityUpdater->updateDefaultPriorities($priorityList, ShopConstraint::allShops(), false);
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
