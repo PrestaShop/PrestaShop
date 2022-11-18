@@ -1,31 +1,22 @@
 // Import utils
+// import helper from '/var/www/html/PrestaShop/tests/UI/utils/helpers';
 import helper from '@utils/helpers';
-import mailHelper from '@utils/mailHelper';
 
 // Import test context
-import testContext from '@utils/testContext';
+import testContext from '/var/www/html/PrestaShop/tests/UI/utils/testContext';
 
-require('module-alias/register');
 // Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
+import loginCommon from '/var/www/html/PrestaShop/tests/UI/commonTests/BO/loginBO';
 
 // Import pages
-const loginPage = require('@pages/BO/login/index');
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import loginPage from '/var/www/html/PrestaShop/tests/UI/pages/BO/login/index';
 
-// Import data
-const EmployeeFaker = require('@data/faker/employee');
-
-const baseContext = 'functional_BO_login_passwordReminder';
+const baseContext: string = 'functional_BO_login_logout';
 
 // Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
 
-let browserContext: any;
-let page: any;
+import type {BrowserContext, Page} from 'playwright';
 
 /*
 Pre-condition
@@ -34,8 +25,11 @@ Scenario:
 - Logout from BO
  */
 describe('BO - logout : log out from BO', async () => {
-  // before and after functions
-  before(async function () {
+    let browserContext: BrowserContext;
+    let page: Page;
+
+    // before and after functions
+    before(async function () {
         browserContext = await helper.createBrowserContext(this.browser);
         page = await helper.newTab(browserContext);
     });
@@ -47,4 +41,4 @@ describe('BO - logout : log out from BO', async () => {
     it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
     });
-})
+});
