@@ -104,6 +104,11 @@
 			e.preventDefault();
 			var files = e.originalEvent.dataTransfer.files;
 			$('#{$id|escape:'html':'UTF-8'}')[0].files = files;
+        {if isset($accept) && !empty($accept)}
+        if(validType(files[0], "{$accept}")) {
+          console.log(files[0].type);
+        }
+        {/if}
 			$(this).val(files[0].name);
 		});
 
@@ -136,5 +141,29 @@
 			});
 		}
 	});
+
+  function validType(file, accept) {
+    var acceptedFiles = accept.split(",");
+    var mimeType = file.type;
+    var baseMimeType = mimeType.replace(/\/.*$/, "");
+    for(var iAcceptedFile in acceptedFiles) {
+      var validType = acceptedFiles[iAcceptedFile].trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        // This is something like a image/* mime type
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 </script>
 {/if}
