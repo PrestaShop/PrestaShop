@@ -100,7 +100,6 @@ export default class SpecificPricesManager {
 
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
     const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
-    let listRendered = false;
 
     if (showCatalogPriceRulesButton === null) {
       console.error(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`);
@@ -128,14 +127,11 @@ export default class SpecificPricesManager {
 
       if (!listShown) {
         showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility_off</i> ${hideLabel}`;
+        /** Rendering everytime in case catalog price rule was deleted while somebody was in product edit page */
+        catalogPriceRulePaginator.paginate(1);
       } else {
         showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility</i> ${showLabel}`;
       }
-
-      if (!listRendered) {
-        catalogPriceRulePaginator.paginate(1);
-      }
-      listRendered = true;
     });
   }
 
