@@ -1,49 +1,35 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const loginCommon = require('@commonTests/BO/loginBO');
-const files = require('@utils/files');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServiceMainPage = require('@pages/BO/customerService/customerService');
-const customerServiceMessageViewPage = require('@pages/BO/customerService/customerService/view');
+import dashboardPage from '@pages/BO/dashboard';
+import customerServiceMainPage from '@pages/BO/customerService/customerService';
+import customerServiceMessageViewPage from '@pages/BO/customerService/customerService/view';
 // FO pages
-const foHomePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const contactUsPage = require('@pages/FO/contactUs');
+import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import contactUsPage from '@pages/FO/contactUs';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Products} = require('@data/demo/products');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Products} from '@data/demo/products';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext = 'functional_FO_orderConfirmation_contactUs';
-
-let browserContext;
-let page;
-
-const filename = 'testfile.txt';
-
-const contactUsData = {
-  subject: 'Customer service',
-  message: 'Test message to customer service for order reference',
-  emailAddress: DefaultCustomer.email,
-};
+const baseContext: string = 'functional_FO_orderConfirmation_contactUs';
 
 /*
 1 GO to shop FO
@@ -57,6 +43,17 @@ const contactUsData = {
 12 check that the previously made message is visible and the infos are correct
 */
 describe('FO - Order confirmation : Contact us', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  const filename: string = 'testfile.txt';
+
+  const contactUsData = {
+    subject: 'Customer service',
+    message: 'Test message to customer service for order reference',
+    emailAddress: DefaultCustomer.email,
+    reference: '',
+  };
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -114,7 +111,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foHomePage.addProductToCartByQuickView(page, 1, '1');
+      await foHomePage.addProductToCartByQuickView(page, 1, 1);
       await foHomePage.proceedToCheckout(page);
       const pageTitle = await cartPage.getPageTitle(page);
       await expect(pageTitle).to.equal(cartPage.pageTitle);
