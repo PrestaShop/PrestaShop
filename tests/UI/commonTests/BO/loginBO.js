@@ -1,5 +1,3 @@
-
-
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
