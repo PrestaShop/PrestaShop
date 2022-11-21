@@ -35,6 +35,13 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBui
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
+/**
+ * Builds following command for single and all shops:
+ *
+ * @see UpdateStockCommand
+ *
+ * @todo: may be renamed to UpdateStockCommandsBuilder when UpdateProductCommand is fully implemented and previous UpdateStockCommandsBuilder is deleted.
+ */
 class StockAvailableCommandsBuilder
 {
     /**
@@ -50,9 +57,6 @@ class StockAvailableCommandsBuilder
         $this->modifyAllNamePrefix = $modifyAllNamePrefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['stock']) && !isset($formData['combinations'])) {
