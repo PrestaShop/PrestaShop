@@ -57,7 +57,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
 
     await webservicePage.closeSfToolBar(page);
 
-    const pageTitle: string = await webservicePage.getPageTitle(page);
+    const pageTitle = await webservicePage.getPageTitle(page);
     await expect(pageTitle).to.contains(webservicePage.pageTitle);
   });
 
@@ -81,17 +81,17 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
 
         await webservicePage.goToAddNewWebserviceKeyPage(page);
 
-        const pageTitle: string = await addWebservicePage.getPageTitle(page);
+        const pageTitle = await addWebservicePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
       });
 
       it(`should create webservice key n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createWebserviceKey_${index}`, baseContext);
 
-        const textResult: string = await addWebservicePage.createEditWebservice(page, webserviceData, true);
+        const textResult = await addWebservicePage.createEditWebservice(page, webserviceData, true);
         await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
-        const numberOfWebserviceKeysAfterCreation: number = await webservicePage.getNumberOfElementInGrid(page);
+        const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
         await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
       });
     });
@@ -102,28 +102,28 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber: string = await webservicePage.selectPaginationLimit(page, 10);
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
-      const paginationNumber: string = await webservicePage.paginationNext(page);
+      const paginationNumber = await webservicePage.paginationNext(page);
       expect(paginationNumber).to.contains('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
-      const paginationNumber: string = await webservicePage.paginationPrevious(page);
+      const paginationNumber = await webservicePage.paginationPrevious(page);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber: string = await webservicePage.selectPaginationLimit(page, 50);
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -141,11 +141,11 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        const nonSortedTable: string[] = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
         await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        const sortedTable: string[] = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
-        const expectedResult: (string|number)[] = await basicHelper.sortArray(nonSortedTable);
+        const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -163,7 +163,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
 
       await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
-      const key: string = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains('todelete');
     });
 
@@ -176,13 +176,13 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
       it(`should ${test.args.action} with bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}WebserviceKey`, baseContext);
 
-        const textResult: string = await webservicePage.bulkSetStatus(page, test.args.enabledValue);
+        const textResult = await webservicePage.bulkSetStatus(page, test.args.enabledValue);
         await expect(textResult).to.be.equal(webservicePage.successfulUpdateStatusMessage);
 
-        const numberOfWebserviceKeys: number = await webservicePage.getNumberOfElementInGrid(page);
+        const numberOfWebserviceKeys = await webservicePage.getNumberOfElementInGrid(page);
 
         for (let i = 1; i <= numberOfWebserviceKeys; i++) {
-          const webserviceStatus: boolean = await webservicePage.getStatus(page, i);
+          const webserviceStatus = await webservicePage.getStatus(page, i);
           await expect(webserviceStatus).to.equal(test.args.enabledValue);
         }
       });
@@ -196,21 +196,21 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
 
       await webservicePage.filterWebserviceTable(page, 'input', 'description', 'todelete');
 
-      const key: string = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains('todelete');
     });
 
     it('should delete webservice keys created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteWebserviceKey', baseContext);
 
-      const textResult: string = await webservicePage.deleteWithBulkActions(page);
+      const textResult = await webservicePage.deleteWithBulkActions(page);
       await expect(textResult).to.equal(webservicePage.successfulMultiDeleteMessage);
     });
 
     it('should reset filter and check the number of webservice keys', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
 
-      const numberOfElement: number = await webservicePage.resetAndGetNumberOfLines(page);
+      const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
       await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys);
     });
   });

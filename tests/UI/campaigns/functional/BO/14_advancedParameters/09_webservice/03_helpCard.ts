@@ -44,24 +44,24 @@ describe('BO - Advanced Parameters - Webservice : Help card in webservice page',
 
     await webservicePage.closeSfToolBar(page);
 
-    const pageTitle: string = await webservicePage.getPageTitle(page);
+    const pageTitle = await webservicePage.getPageTitle(page);
     await expect(pageTitle).to.contains(webservicePage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible: boolean = await webservicePage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await webservicePage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL: string = await webservicePage.getHelpDocumentURL(page);
+    const documentURL = await webservicePage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarNotVisible: boolean = await webservicePage.closeHelpSideBar(page);
+    const isHelpSidebarNotVisible = await webservicePage.closeHelpSideBar(page);
     await expect(isHelpSidebarNotVisible).to.be.true;
   });
 });
