@@ -34,7 +34,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
- * Context for product assertions related to Options related properties
+ * Context for product assertions related to Options properties
  */
 class OptionsAssertionFeatureContext extends AbstractUpdateOptionsFeatureContext
 {
