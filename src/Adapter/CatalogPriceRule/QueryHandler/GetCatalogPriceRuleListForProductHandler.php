@@ -89,12 +89,12 @@ class GetCatalogPriceRuleListForProductHandler implements GetCatalogPriceRuleLis
                 (int) $catalogPriceRule['id_specific_price_rule'],
                 $catalogPriceRule['specific_price_rule_name'],
                 (int) $catalogPriceRule['from_quantity'],
-                $catalogPriceRule['reduction_type'],
+                ucfirst($catalogPriceRule['reduction_type']),
                 new DecimalNumber($catalogPriceRule['reduction']),
                 DateTimeUtil::buildNullableDateTime($catalogPriceRule['from']),
                 DateTimeUtil::buildNullableDateTime($catalogPriceRule['to']),
                 $catalogPriceRule['shop_name'],
-                $catalogPriceRule['symbol'],
+                $catalogPriceRule['currency_name'],
                 $catalogPriceRule['lang_name'],
                 $catalogPriceRule['group_name']
             );

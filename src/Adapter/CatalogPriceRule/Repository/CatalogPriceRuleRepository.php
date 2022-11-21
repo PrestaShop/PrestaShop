@@ -70,7 +70,7 @@ class CatalogPriceRuleRepository
             ->select('
                 spr.id_specific_price_rule,
                 spr.name as specific_price_rule_name,
-                currency_lang.symbol,
+                currency_lang.name as currency_name,
                 country_lang.name as lang_name,
                 shop.name as shop_name,
                 group_lang.name as group_name,
