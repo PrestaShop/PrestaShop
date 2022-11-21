@@ -638,8 +638,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         if (!empty($this->def['multilang'])) {
             $fields = $this->getFieldsLang();
             if ($fields && is_array($fields)) {
-                $shops = Shop::getCompleteListOfShopsID();
                 $asso = Shop::getAssoTable($this->def['table'] . '_lang');
+                $shops = [];
+                if ($asso !== false && $asso['type'] == 'fk_shop') {
+                    // If a specific list is specified use it, if not use the list of shops from context
+                    $shops = count($this->id_shop_list) ? $this->id_shop_list : Shop::getContextListShopID();
+                }
+
                 foreach ($fields as $field) {
                     foreach (array_keys($field) as $key) {
                         if (!Validate::isTableOrIdentifier($key)) {
@@ -684,7 +689,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 					SELECT *
 					FROM `' . _DB_PREFIX_ . bqSQL($definition['table']) . '`
 					WHERE `' . bqSQL($definition['primary']) . '` = ' . (int) $this->id
-                );
+        );
         if (!$res) {
             return false;
         }
@@ -847,8 +852,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                         foreach ($id_shop_list as $id_shop) {
                             $field['id_shop'] = (int) $id_shop;
                             $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                        . ' AND id_lang = ' . (int) $field['id_lang']
-                                        . ' AND id_shop = ' . (int) $id_shop;
+                                . ' AND id_lang = ' . (int) $field['id_lang']
+                                . ' AND id_shop = ' . (int) $id_shop;
 
                             if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                                 $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
@@ -859,7 +864,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     } else {
                         // If this table is not linked to multishop system ...
                         $where = pSQL($this->def['primary']) . ' = ' . (int) $this->id
-                                    . ' AND id_lang = ' . (int) $field['id_lang'];
+                            . ' AND id_lang = ' . (int) $field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . pSQL(_DB_PREFIX_ . $this->def['table']) . '_lang WHERE ' . $where)) {
                             $result &= Db::getInstance()->update($this->def['table'] . '_lang', $field, $where);
                         } else {
@@ -901,7 +906,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
         $shopIdsList = array_map('intval', $shopIdsList);
 
-        if (Shop::isTableAssociated($this->def['table'])) {
+        $isShopTableAssociated = Shop::isTableAssociated($this->def['table']);
+        if ($isShopTableAssociated) {
             $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
                 (int) $this->id . ' AND id_shop IN (' . implode(', ', $shopIdsList) . ')');
         }
@@ -912,13 +918,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         // Database deletion
-        $has_multishop_entries = $this->hasMultishopEntries();
+        $has_multishop_entries = false;
+        if ($isShopTableAssociated) {
+            $has_multishop_entries = $this->hasMultishopEntries();
+        } elseif ($this->isLangMultishop()) {
+            $has_multishop_entries = $this->hasMultishopLangEntries();
+        }
 
-        // Database deletion for multilingual fields related to the object
+        // Database deletion for multilingual fields related to the object (only when entity is associated to shop and has no more associations to any shop)
         if (!empty($this->def['multilang']) && !$has_multishop_entries) {
             $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
         }
 
+        // Check if entity still has some multishop lang values
         if ($result && !$has_multishop_entries) {
             $result &= Db::getInstance()->delete($this->def['table'], '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
         }
@@ -1056,7 +1068,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             // Copy the field, or the default language field if it's both required and empty
             if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
-            || ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name))) {
+                || ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name))) {
                 $fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
             } elseif (in_array($field_name, $this->fieldsRequiredLang)) {
                 $fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
@@ -1287,7 +1299,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_ . $context->language->iso_code . '/fields.php')) {
             @trigger_error(
-                 'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
+                'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
                 E_USER_DEPRECATED
             );
 
@@ -1339,12 +1351,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0')) {
                 if (isset($data['validate']) && (!call_user_func('Validate::' . $data['validate'], $value) && (!empty($value) || $data['required']))) {
                     $errors[$field] = $this->trans(
-                            '%s is invalid.',
-                            [
-                                '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
-                            ],
-                            'Admin.Notifications.Error'
-                        );
+                        '%s is invalid.',
+                        [
+                            '<b>' . self::displayFieldName($field, get_class($this), $htmlentities) . '</b>',
+                        ],
+                        'Admin.Notifications.Error'
+                    );
                 } else {
                     if (isset($data['copy_post']) && !$data['copy_post']) {
                         continue;
@@ -1438,7 +1450,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
             if (isset($details['validate'])) {
                 $current_field['validateMethod'] = (
-                    array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
+                array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
                     array_merge($resource_parameters['fields'][$field_name]['validateMethod'], [$details['validate']]) :
                     [$details['validate']]
                 );
@@ -1820,6 +1832,15 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $this->def['table'] . '_shop` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id);
     }
 
+    public function hasMultishopLangEntries()
+    {
+        if (empty($this->def['multilang_shop'])) {
+            return true;
+        }
+
+        return (bool) Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . $this->def['table'] . '_lang` WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id);
+    }
+
     /**
      * Checks if object is multi-shop object.
      *
@@ -1892,7 +1913,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $sql = 'UPDATE ' . _DB_PREFIX_ . $def['table'] . ' a
 				' . Shop::addSqlAssociation($def['table'], 'a', true, null, true) . '
 				SET ' . implode(', ', $update_data) .
-                (!empty($where) ? ' WHERE ' . $where : '');
+            (!empty($where) ? ' WHERE ' . $where : '');
 
         return Db::getInstance()->execute($sql);
     }
@@ -1940,7 +1961,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $types = ImageType::getImagesTypes();
             foreach ($types as $image_type) {
                 if (file_exists($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)
-                && !unlink($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)) {
+                    && !unlink($this->image_dir . $this->id . '-' . stripslashes($image_type['name']) . '.' . $this->image_format)) {
                     return false;
                 }
             }
@@ -1977,12 +1998,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         $row = Db::getInstance()->getRow(
-                (new DbQuery())
-                    ->select('e.`' . $primary . '` as id')
-                    ->from($table, 'e')
-                    ->where('e.`' . $primary . '` = ' . (int) $id_entity),
-                false
-            );
+            (new DbQuery())
+                ->select('e.`' . $primary . '` as id')
+                ->from($table, 'e')
+                ->where('e.`' . $primary . '` = ' . (int) $id_entity),
+            false
+        );
 
         return isset($row['id']);
     }
