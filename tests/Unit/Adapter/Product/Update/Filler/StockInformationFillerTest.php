@@ -28,12 +28,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Update\Filler;
 
 use DateTime;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInfoFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInformationFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use Product;
 
-class StockInfoFillerTest extends ProductFillerTestCase
+class StockInformationFillerTest extends ProductFillerTestCase
 {
     /**
      * @dataProvider getDataToTestUpdatablePropertiesFilling
@@ -50,7 +50,7 @@ class StockInfoFillerTest extends ProductFillerTestCase
         Product $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
-            new StockInfoFiller(),
+            new StockInformationFiller(),
             $product,
             $command,
             $expectedUpdatableProperties,

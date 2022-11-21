@@ -27,12 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class UpdateStockCommand
+/**
+ * Updates product stock properties which are in a dedicated StockAvailable entity
+ *
+ * @see UpdateProductStockHandlerInterface
+ */
+class UpdateProductStockCommand
 {
     /**
      * @var ProductId

@@ -34,7 +34,7 @@ use DateTime;
 use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -88,7 +88,7 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
      */
     public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
-        $command = new UpdateStockCommand(
+        $command = new UpdateProductStockCommand(
             $this->getSharedStorage()->get($productReference),
             ShopConstraint::shop($this->getDefaultShopId())
         );
@@ -115,7 +115,7 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $updateStockCommand = new UpdateStockCommand($productId, $shopConstraint);
+            $updateStockCommand = new UpdateProductStockCommand($productId, $shopConstraint);
             $this->setUpdateStockCommandData($data, $updateStockCommand);
 
             $updateProductCommand = new UpdateProductCommand($productId, $shopConstraint);
@@ -170,9 +170,9 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
 
     /**
      * @param array<string, mixed> $data
-     * @param UpdateStockCommand $command
+     * @param UpdateProductStockCommand $command
      */
-    private function setUpdateStockCommandData(array $data, UpdateStockCommand $command): void
+    private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): void
     {
         if (isset($data['out_of_stock_type'])) {
             $command->setOutOfStockType($this->convertOutOfStockToInt($data['out_of_stock_type']));

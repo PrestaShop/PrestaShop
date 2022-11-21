@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -38,11 +38,9 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 /**
  * Builds following command for single and all shops:
  *
- * @see UpdateStockCommand
- *
- * @todo: may be renamed to StockCommandsBuilder when UpdateProductCommand is fully implemented and previous UpdateStockCommandsBuilder is deleted.
+ * @see UpdateProductStockCommand
  */
-class StockAvailableCommandsBuilder
+class ProductStockCommandsBuilder
 {
     /**
      * @var string
@@ -81,12 +79,22 @@ class StockAvailableCommandsBuilder
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateStockCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateStockCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateProductStockCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductStockCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 
+    /**
+     * For product with combinations we only handle one field out_of_stock_type which is common to all combinations,
+     * the delta stock and location are handled combination by combination in another dedicated command
+     *
+     * @param ProductId $productId
+     * @param array<string, mixed> $formData
+     * @param ShopConstraint $singleShopConstraint
+     *
+     * @return UpdateProductStockCommand[]
+     */
     private function buildCommandsForProductWithCombinations(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
@@ -95,8 +103,8 @@ class StockAvailableCommandsBuilder
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateStockCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateStockCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateProductStockCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductStockCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
