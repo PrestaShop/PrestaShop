@@ -71,7 +71,7 @@ class HookStatusProviderTest extends TestCase
     {
         $hookStatusProvider = new HookStatusProvider($this->queryBus);
         $get = new Get();
-        self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1]));
-        self::assertEquals(true, $hookStatusProvider->provide($get, ['id' => 2]));
+        self::assertEquals(false, $hookStatusProvider->provide($get, ['id' => 1])->isActive());
+        self::assertEquals(true, $hookStatusProvider->provide($get, ['id' => 2])->isActive());
     }
 }

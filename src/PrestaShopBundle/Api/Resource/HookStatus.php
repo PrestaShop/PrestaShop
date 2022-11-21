@@ -24,35 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Api\StateProvider;
+namespace PrestaShopBundle\Api\Resource;
 
-use ApiPlatform\Metadata\Operation;
-use ApiPlatform\State\ProviderInterface;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
-use PrestaShopBundle\Api\Resource\HookStatus;
-
-final class HookStatusProvider implements ProviderInterface
+class HookStatus
 {
-    private $queryBus;
+    /**
+     * @var int
+     */
+    private $id;
 
-    public function __construct(CommandBusInterface $queryBus)
+    /**
+     * @var bool
+     */
+    private $isActive;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
-        $this->queryBus = $queryBus;
+        return $this->id;
     }
 
     /**
-     * {@inheritDoc}
+     * @param int $id
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): HookStatus
+    public function setId(int $id): void
     {
-        /** @var bool $hookStatus */
-        $hookStatus = $this->queryBus->handle(new GetHookStatus($uriVariables['id']));
+        $this->id = $id;
+    }
 
-        $hookStatusResource = new HookStatus();
-        $hookStatusResource->setId($uriVariables['id']);
-        $hookStatusResource->setIsActive($hookStatus);
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
 
-        return $hookStatusResource;
+    /**
+     * @param bool $isActive
+     */
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
     }
 }

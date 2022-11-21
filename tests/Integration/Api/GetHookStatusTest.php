@@ -42,10 +42,16 @@ class GetHookStatusTest extends ApiTestCase
         $activeHook->active = true;
         $activeHook->add();
 
-        $response = static::createClient()->request('GET', '/new-api/hooks/' . $inactiveHook->id);
-        self::assertEquals($response->getContent(), 'false');
-        $response = static::createClient()->request('GET', '/new-api/hooks/' . $activeHook->id);
-        self::assertEquals($response->getContent(), 'true');
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $inactiveHook->id);
+        self::assertEquals(json_decode($response->getContent())->active, $inactiveHook->active);
+        self::assertResponseStatusCodeSame(200);
+
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $activeHook->id);
+        self::assertEquals(json_decode($response->getContent())->active, $activeHook->active);
+        self::assertResponseStatusCodeSame(200);
+
+        static::createClient()->request('GET', '/new-api/hook-status/' . 9999);
+        self::assertResponseStatusCodeSame(404);
 
         $inactiveHook->delete();
         $activeHook->delete();
