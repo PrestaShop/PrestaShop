@@ -1,5 +1,7 @@
 <?php
-
+/*
+* Important - this file MUST implement all strings defined in base en.php file
+*/
 define('lang_Select', 'Vybrať');
 define('lang_Erase', 'Odstrániť');
 define('lang_Open', 'Otvoriť');
