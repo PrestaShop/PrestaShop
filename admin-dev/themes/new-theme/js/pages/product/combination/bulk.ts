@@ -32,6 +32,8 @@ const {$} = window;
 
 $(() => {
   window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TranslatableInput',
     'EventEmitter',
     'DeltaQuantityInput',
     'DisablingSwitch',
