@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -35,15 +35,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBui
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
-/**
- * Builds commands from product stock form type
- *
- * @todo this class should be replaced with StockAvailableCommandsBuilder which will build StockAvailable related commands
- *       while other properties will be handled by unified UpdateProductCommand
- *
- * @see StockAvailableCommandsBuilder
- */
-final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class StockAvailableCommandsBuilder
 {
     /**
      * @var string
@@ -80,20 +72,13 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addMultiShopField('[stock][quantities][delta_quantity][delta]', 'setDeltaQuantity', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
             ->addMultiShopField('[stock][options][stock_location]', 'setLocation', DataField::TYPE_STRING)
-            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
-            ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
             ->addMultiShopField('[stock][availability][out_of_stock_type]', 'setOutOfStockType', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateProductStockInformationCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateProductStockInformationCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateStockCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateStockCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
@@ -103,13 +88,11 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addMultiShopField('[combinations][availability][out_of_stock_type]', 'setOutOfStockType', DataField::TYPE_INT)
-            ->addMultiShopField('[combinations][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[combinations][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateProductStockInformationCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateProductStockInformationCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateStockCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateStockCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
