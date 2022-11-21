@@ -292,7 +292,7 @@ class UpdateProductCommand
     private $availableDate;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     private $active;
 
@@ -1151,9 +1151,9 @@ class UpdateProductCommand
     }
 
     /**
-     * @return bool
+     * @return bool|null
      */
-    public function isActive(): bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }

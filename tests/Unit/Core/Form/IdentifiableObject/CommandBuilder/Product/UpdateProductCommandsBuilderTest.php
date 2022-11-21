@@ -494,10 +494,15 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getSingleShopCommand();
-        $command->setMpn('mpn');
+        $command = $this->getSingleShopCommand()
+            ->setMpn('mpn')
+            ->setActive(true)
+        ;
         yield [
             [
+                'header' => [
+                    'active' => true,
+                ],
                 'specifications' => [
                     'references' => [
                         'mpn' => 'mpn',
@@ -540,12 +545,14 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 1 => 'Out of stock',
                 2 => 'Isparduota',
             ])
+            ->setActive(false)
         ;
 
         yield [
             [
                 'header' => [
                     'name' => $localizedNames,
+                    'active' => false,
                 ],
                 'description' => [
                     'description_short' => $localizedShortDescriptions,
@@ -956,6 +963,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 1 => 'Out of stock',
                 2 => 'Isparduota',
             ])
+            ->setActive(true)
         ;
 
         $allShopsCommand = $this->getAllShopsCommand();
@@ -977,6 +985,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'header' => [
                     'name' => $localizedNames,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
+                    'active' => true,
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
