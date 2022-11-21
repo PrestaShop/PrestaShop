@@ -31,6 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
+/**
+ * @todo: remove this class when UpdateProductCommand is fully integrated
+ *        because status in a form will be handled by that command and built in UpdateProductCommandsBuilder
+ */
 class ProductStatusCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**

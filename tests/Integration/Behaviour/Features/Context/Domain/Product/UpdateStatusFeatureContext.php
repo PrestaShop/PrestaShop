@@ -31,10 +31,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
@@ -80,6 +82,39 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
                 $this->getSharedStorage()->get($productReference),
                 $status
             ));
+        } catch (ProductConstraintException $e) {
+            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
+                $this->setLastException($e);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * There are two commands which can change product status.
+     * One is dedicated for only the status change (e.g. used in product list as a toggle),
+     * while another one allows to update status together with other properties (e.g. used in product form).
+     *
+     * @see UpdateProductStatusCommand
+     * @see UpdateProductCommand
+     *
+     * @When /^I (enable|disable) product "(.*)" in a form$/
+     *
+     * status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param bool $status
+     * @param string $productReference
+     */
+    public function updateStatusUsingUpdateProductCommand(bool $status, string $productReference): void
+    {
+        try {
+            $command = new UpdateProductCommand(
+                $this->getSharedStorage()->get($productReference),
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
+            $command->setActive($status);
+            $this->getCommandBus()->handle($command);
         } catch (ProductConstraintException $e) {
             if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
                 $this->setLastException($e);

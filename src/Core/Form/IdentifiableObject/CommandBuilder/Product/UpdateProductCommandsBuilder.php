@@ -67,6 +67,8 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configureShipping($config)
         ;
 
+        $config->addField('[header][active]', 'setActive', DataField::TYPE_BOOL);
+
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductCommand($productId->getValue(), ShopConstraint::allShops());
