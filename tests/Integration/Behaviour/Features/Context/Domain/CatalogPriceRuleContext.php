@@ -350,7 +350,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 DateTimeUtil::buildNullableDateTime($dataRow['from']),
                 DateTimeUtil::buildNullableDateTime($dataRow['to']),
                 $shop->name,
-                $currency->symbol,
+                $currency->name,
                 $country->name,
                 $group->name
             );
