@@ -88,11 +88,17 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         $shopConstraint = $command->getShopConstraint();
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
         $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        $wasActive = (bool) $product->active;
 
         $updatableProperties = $this->productUpdatablePropertyFiller->fillUpdatableProperties(
             $product,
             $command
         );
+
+        if (null !== $command->isActive()) {
+            $product->active = $command->isActive();
+            $updatableProperties[] = 'active';
+        }
 
         if (empty($updatableProperties)) {
             return;
@@ -105,13 +111,16 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
             CannotUpdateProductException::FAILED_UPDATE_PRODUCT
         );
 
-        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
-        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
-            $this->productIndexationUpdater->updateIndexation($product);
-        }
-
         if (null !== $command->getWholesalePrice()) {
             $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
+        }
+
+        // Reindexing is costly operation, so we check if properties impacting indexation have changed and then reindex if needed.
+        if (
+            $wasVisibleOnSearch !== $this->productIndexationUpdater->isVisibleOnSearch($product)
+            || $wasActive !== (bool) $product->active
+        ) {
+            $this->productIndexationUpdater->updateIndexation($product);
         }
     }
 

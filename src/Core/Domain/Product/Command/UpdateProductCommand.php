@@ -292,6 +292,11 @@ class UpdateProductCommand
     private $availableDate;
 
     /**
+     * @var bool
+     */
+    private $active;
+
+    /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
      */
@@ -1141,6 +1146,26 @@ class UpdateProductCommand
     public function setAvailableDate(DateTimeInterface $availableDate): self
     {
         $this->availableDate = $availableDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return self
+     */
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
 
         return $this;
     }
