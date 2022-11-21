@@ -236,7 +236,7 @@ abstract class AbstractFormCore implements FormInterface
      */
     protected function checkFieldLength($field)
     {
-        $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
+        $error = $field->getMaxLength() != null && Tools::strlen($field->getValue()) > (int) $field->getMaxLength();
 
         return !$error;
     }
