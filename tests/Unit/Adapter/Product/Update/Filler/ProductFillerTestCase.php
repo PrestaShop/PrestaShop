@@ -30,9 +30,11 @@ namespace Tests\Unit\Adapter\Product\Update\Filler;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Product;
 
 abstract class ProductFillerTestCase extends TestCase
@@ -92,6 +94,10 @@ abstract class ProductFillerTestCase extends TestCase
         $product->weight = 0;
         $product->additional_shipping_cost = 0;
         $product->additional_delivery_times = 1;
+        $product->minimal_quantity = 1;
+        $product->low_stock_alert = false;
+        $product->pack_stock_type = PackStockType::STOCK_TYPE_DEFAULT;
+        $product->available_date = DateTimeUtil::NULL_DATE;
 
         return $product;
     }
