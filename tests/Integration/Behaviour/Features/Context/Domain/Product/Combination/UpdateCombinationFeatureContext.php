@@ -29,9 +29,14 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
-class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureContext
+/**
+ * This feature context is based on the unified command UpdateCombinationCommand, it will include all the other steps
+ * implemented in other contexts based on specified command until everything is unified. Once it's done the steps should
+ * be simplified into a single unified step usable in all the behat scenarios.
+ */
+class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
      * @When I update combination :combinationReference details with following values:
@@ -41,17 +46,17 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
      */
     public function updateDetails(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationDetailsCommand($this->getSharedStorage()->get($combinationReference));
+        $command = new UpdateCombinationCommand($this->getSharedStorage()->get($combinationReference));
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
     }
 
     /**
-     * @param UpdateCombinationDetailsCommand $command
+     * @param UpdateCombinationCommand $command
      * @param array $dataRows
      */
-    private function fillCommand(UpdateCombinationDetailsCommand $command, array $dataRows): void
+    private function fillCommand(UpdateCombinationCommand $command, array $dataRows): void
     {
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);
