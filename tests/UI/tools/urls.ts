@@ -1,12 +1,12 @@
-require('module-alias/register');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Page} from 'playwright';
 
 /**
  * Login into BO to access BO Urls
- * @param page
+ * @param {Page} page
  * @return {Promise<void>}
  */
-const loginBO = async function (page) {
+const loginBO = async function (page: Page): Promise<void> {
   await page.type('#email', global.BO.EMAIL);
   await page.type('#passwd', global.BO.PASSWD);
 
@@ -19,23 +19,25 @@ const loginBO = async function (page) {
 
   if (block !== null) {
     await page.click('button.onboarding-button-shut-down');
-    await page.waitForSelector('a.onboarding-button-stop', {visible: true});
+    await page.waitForSelector('a.onboarding-button-stop', {state: 'visible'});
     await page.click('a.onboarding-button-stop');
   }
 };
 
 /**
  * Login into FO to access user information pages
- * @param page
+ * @param {Page} page
  * @return {Promise<void>}
  */
-const loginFO = async function (page) {
+const loginFO = async function (page: Page): Promise<void> {
   await page.type('#login-form input[name=email]', DefaultCustomer.email);
   await page.type('#login-form input[name=password]', DefaultCustomer.password);
 
   await Promise.all([
     page.click('#submit-login'),
-    page.waitForNavigation('networkidle'),
+    page.waitForNavigation({
+      waitUntil: 'networkidle',
+    }),
   ]);
 };
 
@@ -43,17 +45,17 @@ const loginFO = async function (page) {
  * Waiting for tinyMCE to load in pages :
  * Add Product, Add Brand, Add supplier
  *
- * @param page
+ * @param {Page} page
  * @return {Promise<void>}
  */
-const waitForTinyMCEToLoad = async function (page) {
+const waitForTinyMCEToLoad = async function (page: Page): Promise<void> {
   await page.waitForFunction(
     'typeof(tinyMCE)!== \'undefined\' && tinyMCE.activeEditor!==undefined',
     {timeout: 10000},
   );
 };
 
-module.exports = [
+export default [
   {
     name: 'BO',
     urlPrefix: global.BO.URL,
@@ -62,7 +64,7 @@ module.exports = [
       {
         name: 'BO_login',
         url: 'index.php?controller=AdminLogin',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await loginBO(page);
         },
       },
@@ -77,7 +79,7 @@ module.exports = [
       {
         name: 'BO_add_product',
         url: 'index.php/sell/catalog/products/new',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await waitForTinyMCEToLoad(page);
         },
       },
@@ -85,7 +87,7 @@ module.exports = [
       {
         name: 'BO_add_category',
         url: 'index.php/sell/catalog/categories/new',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await waitForTinyMCEToLoad(page);
         },
       },
@@ -100,7 +102,7 @@ module.exports = [
       {
         name: 'BO_add_brand',
         url: 'index.php/sell/catalog/brands/new',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await waitForTinyMCEToLoad(page);
         },
       },
@@ -109,7 +111,7 @@ module.exports = [
       {
         name: 'BO_add_supplier',
         url: 'index.php/sell/catalog/suppliers/new',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await waitForTinyMCEToLoad(page);
         },
       },
@@ -145,7 +147,7 @@ module.exports = [
       {
         name: 'BO_add_page',
         url: 'index.php/improve/design/cms-pages/new',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await waitForTinyMCEToLoad(page);
         },
       },
@@ -227,7 +229,7 @@ module.exports = [
       {
         name: 'FO_my_account',
         url: 'index.php?controller=authentication&back=my-account',
-        async customAction(page) {
+        async customAction(page: Page): Promise<void> {
           await loginFO(page);
         },
       },
