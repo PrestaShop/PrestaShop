@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Updates product stock using legacy object model
  */
-class UpdateStockHandler implements UpdateStockHandlerInterface
+class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
 {
     /**
      * @var ProductStockUpdater
@@ -64,7 +64,7 @@ class UpdateStockHandler implements UpdateStockHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(UpdateStockCommand $command): void
+    public function handle(UpdateProductStockCommand $command): void
     {
         $stockModification = null;
         if ($command->getDeltaQuantity()) {

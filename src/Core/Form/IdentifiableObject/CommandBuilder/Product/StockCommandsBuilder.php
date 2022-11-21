@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  * @todo this class should be replaced with StockAvailableCommandsBuilder which will build StockAvailable related commands
  *       while other properties will be handled by unified UpdateProductCommand
  *
- * @see StockAvailableCommandsBuilder
+ * @see ProductStockCommandsBuilder
  */
 final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
@@ -98,6 +98,16 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 
+    /**
+     * For product with combinations we only handle one field out_of_stock_type which is common to all combinations,
+     * the delta stock and location are handled combination by combination in another dedicated command
+     *
+     * @param ProductId $productId
+     * @param array<string, mixed> $formData
+     * @param ShopConstraint $singleShopConstraint
+     *
+     * @return UpdateProductStockInformationCommand[]
+     */
     private function buildCommandsForProductWithCombinations(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);

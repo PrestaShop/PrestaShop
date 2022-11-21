@@ -544,14 +544,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
-  prestashop.adapter.product.stock.command_handler.update_stock_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateStockHandler
+  prestashop.adapter.product.stock.command_handler.update_product_stock_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockHandler
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand
 
   prestashop.adapter.product.update.filler.product_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller
@@ -593,6 +593,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ShippingFiller
     tags: [ 'core.product_filler' ]
 
-  prestashop.adapter.product.update.filler.stock_info_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInfoFiller
+  prestashop.adapter.product.update.filler.stock_information_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInformationFiller
     tags: [ 'core.product_filler' ]
