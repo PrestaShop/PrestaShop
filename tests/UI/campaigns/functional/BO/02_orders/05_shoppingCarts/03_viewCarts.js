@@ -1,13 +1,9 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Common tests BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -53,7 +49,7 @@ const addressData = new AddressFaker({
   email: customerData.email,
   country: 'France',
 });
-const todayCartFormat = getDateFormat('mm/dd/yyyy');
+const todayCartFormat = date.getDateFormat('mm/dd/yyyy');
 
 /*
   Pre-condition:

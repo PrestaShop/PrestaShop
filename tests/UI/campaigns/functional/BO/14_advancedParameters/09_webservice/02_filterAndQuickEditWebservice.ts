@@ -52,7 +52,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
     await webservicePage.closeSfToolBar(page);
 
-    const pageTitle: string = await webservicePage.getPageTitle(page);
+    const pageTitle = await webservicePage.getPageTitle(page);
     await expect(pageTitle).to.contains(webservicePage.pageTitle);
   });
 
@@ -74,7 +74,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
       await webservicePage.goToAddNewWebserviceKeyPage(page);
 
-      const pageTitle: string = await addWebservicePage.getPageTitle(page);
+      const pageTitle = await addWebservicePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
     });
 
@@ -89,7 +89,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
       await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
-      const numberOfWebserviceKeysAfterCreation: number = await webservicePage.getNumberOfElementInGrid(page);
+      const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);
       await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
     });
   });
@@ -139,10 +139,10 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
         for (let i = 1; i <= numberOfElementAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
-            const wenServiceStatus: boolean = await webservicePage.getStatus(page, i);
+            const wenServiceStatus = await webservicePage.getStatus(page, i);
             await expect(wenServiceStatus).to.equal(test.args.filterValue);
           } else {
-            const textColumn: string = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
+            const textColumn = await webservicePage.getTextColumnFromTable(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -151,7 +151,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilter_${index}`, baseContext);
 
-        const numberOfElement: number = await webservicePage.resetAndGetNumberOfLines(page);
+        const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys + 2);
       });
     });
@@ -168,7 +168,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         firstWebServiceData.keyDescription,
       );
 
-      const key: string = await webservicePage.getTextColumnFromTable(page, 1, 'description');
+      const key = await webservicePage.getTextColumnFromTable(page, 1, 'description');
       await expect(key).to.contains(firstWebServiceData.keyDescription);
     });
 
@@ -181,18 +181,18 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       it(`should ${webservice.args.status} the webservice`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${webservice.args.status}Webservice`, baseContext);
 
-        const isActionPerformed: boolean = await webservicePage.setStatus(
+        const isActionPerformed = await webservicePage.setStatus(
           page,
           1,
           webservice.args.enable,
         );
 
         if (isActionPerformed) {
-          const resultMessage: string = await webservicePage.getValidationMessage(page);
+          const resultMessage = await webservicePage.getValidationMessage(page);
           await expect(resultMessage).to.contains(webservicePage.successfulUpdateStatusMessage);
         }
 
-        const webserviceStatus: boolean = await webservicePage.getStatus(page, 1);
+        const webserviceStatus = await webservicePage.getStatus(page, 1);
         await expect(webserviceStatus).to.be.equal(webservice.args.enable);
       });
     });
@@ -208,14 +208,14 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       it(`should delete the ${test.args.name} webservice key created`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteWebserviceKey_${index}`, baseContext);
 
-        const textResult: string = await webservicePage.deleteWebserviceKey(page, 1);
+        const textResult = await webservicePage.deleteWebserviceKey(page, 1);
         await expect(textResult).to.equal(webservicePage.successfulDeleteMessage);
       });
 
       it('should reset filter and check the number of webservice keys', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete_${index}`, baseContext);
 
-        const numberOfElement: number = await webservicePage.resetAndGetNumberOfLines(page);
+        const numberOfElement = await webservicePage.resetAndGetNumberOfLines(page);
         await expect(numberOfElement).to.be.equal(numberOfWebserviceKeys - index + 1);
       });
     });

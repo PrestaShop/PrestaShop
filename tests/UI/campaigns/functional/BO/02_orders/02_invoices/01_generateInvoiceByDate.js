@@ -1,14 +1,12 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 // Import utils
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -30,8 +28,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
-const todayDate = getDateFormat('yyyy-mm-dd');
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
+const todayDate = date.getDateFormat('yyyy-mm-dd');
+const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {

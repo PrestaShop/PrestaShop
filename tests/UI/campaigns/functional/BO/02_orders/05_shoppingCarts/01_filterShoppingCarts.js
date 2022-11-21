@@ -1,13 +1,9 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
-
-// Helpers to open and close browser
-const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -27,7 +23,7 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-const todayDate = getDateFormat('mm/dd/yyyy');
+const todayDate = date.getDateFormat('mm/dd/yyyy');
 
 /*
 Delete the non ordered shopping carts

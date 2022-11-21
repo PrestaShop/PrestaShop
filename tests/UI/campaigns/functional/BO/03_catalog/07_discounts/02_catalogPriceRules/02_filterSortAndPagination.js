@@ -1,14 +1,12 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -30,8 +28,8 @@ const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 // Browser and tab
 let browserContext;
 let page;
-const today = getDateFormat('yyyy-mm-dd');
-const dateToCheck = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const dateToCheck = date.getDateFormat('mm/dd/yyyy');
 
 let numberOfCatalogPriceRules = 0;
 

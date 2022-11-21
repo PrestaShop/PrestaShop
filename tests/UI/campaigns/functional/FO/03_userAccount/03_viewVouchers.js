@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const {createAccountTest} = require('@commonTests/FO/createAccount');
@@ -32,9 +28,9 @@ let browserContext;
 let page;
 
 // Data to create a date format
-const pastDate = getDateFormat('yyyy-mm-dd', 'past');
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
-const expirationDate = getDateFormat('mm/dd/yyyy', 'future');
+const pastDate = date.getDateFormat('yyyy-mm-dd', 'past');
+const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
+const expirationDate = date.getDateFormat('mm/dd/yyyy', 'future');
 
 const customerData = new CustomerFaker({});
 

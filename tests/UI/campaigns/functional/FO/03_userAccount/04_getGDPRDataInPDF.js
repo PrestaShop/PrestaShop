@@ -1,7 +1,6 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
@@ -37,7 +36,6 @@ const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCust
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-const {getDateFormat} = require('@utils/date');
 const {Products} = require('@data/demo/products');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const AddressFaker = require('@data/faker/address');
@@ -63,8 +61,8 @@ let messageDate;
 let ipAddress;
 let connectionOrigin;
 
-const today = getDateFormat('mm/dd/yyyy');
-const date = new Date();
+const today = date.getDateFormat('mm/dd/yyyy');
+const dateNow = new Date();
 
 const addressData = new AddressFaker({
   firstName: 'Marc',
@@ -204,7 +202,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
 
         registrationDate = `${registration.substr(6, 4)}-${registration.substr(0, 2)}-`
           + `${registration.substr(3, 2)} ${registration.substr(11, 8)}`;
-        await expect(registrationDate).to.contains(date.getFullYear());
+        await expect(registrationDate).to.contains(dateNow.getFullYear());
       });
 
       it('should get last visit date', async function () {
@@ -213,7 +211,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         lastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
           + `${lastVisit.substr(3, 2)} ${lastVisit.substr(11, 8)}`;
-        await expect(lastVisitDate).to.contains(date.getFullYear());
+        await expect(lastVisitDate).to.contains(dateNow.getFullYear());
       });
 
       it('should click on view customer', async function () {
@@ -745,11 +743,12 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable1', baseContext);
 
-        const date = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
+        const dateString = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
           + `${messageDate.substr(3, 2)} ${messageDate.substr(11, 8)}`;
 
         const isVisible = await files.isTextInPDF(filePath, `Messages,,IP, ,Message, ,Date,,1 / 2 ${today},,`
-          + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${date}`);
+          + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${
+            dateString}`);
         await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
       });
     });
@@ -852,7 +851,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         const lastVisit = await customersPage.getTextColumnFromTableCustomers(page, 1, 'connect');
         secondLastVisitDate = `${lastVisit.substr(6, 4)}-${lastVisit.substr(0, 2)}-`
           + `${lastVisit.substr(3, 2)} ${lastVisit.substr(11, 8)}`;
-        await expect(lastVisitDate).to.contains(date.getFullYear());
+        await expect(lastVisitDate).to.contains(dateNow.getFullYear());
       });
 
       it('should click on view customer', async function () {
@@ -910,11 +909,12 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check Messages table', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkMessagesTable2', baseContext);
 
-        const date = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
+        const dateString = `${messageDate.substr(6, 4)}-${messageDate.substr(0, 2)}-`
           + `${messageDate.substr(3, 2)} ${messageDate.substr(11, 8)}`;
 
         const isVisible = await files.isTextInPDF(filePath, `Messages,,IP, ,Message, ,Date,,1 / 2 ${today},,`
-          + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${date}`);
+          + `${contactUsData.firstName} ${contactUsData.lastName},,${ipAddress}, ,${contactUsData.message}, ,${
+            dateString}`);
         await expect(isVisible, 'Data in Messages table is not correct!').to.be.true;
       });
 

@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -30,7 +26,7 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
 let browserContext;
 let page;
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 
 const shippingDetailsData = {
   trackingNumber: '0523698',
