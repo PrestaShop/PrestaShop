@@ -544,6 +544,15 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
+  prestashop.adapter.product.stock.command_handler.update_stock_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateStockHandler
+    arguments:
+      - '@prestashop.adapter.product.stock.update.product_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateStockCommand
+
   prestashop.adapter.product.update.filler.product_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller
     arguments:

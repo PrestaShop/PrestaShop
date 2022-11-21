@@ -151,6 +151,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         order_return_state:
           paths:
@@ -352,6 +353,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\ShippingAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
@@ -407,6 +409,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementsFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         shop:
             paths:
@@ -532,7 +535,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\ShippingAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext

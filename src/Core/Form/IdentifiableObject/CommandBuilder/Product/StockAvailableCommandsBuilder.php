@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  *
  * @see UpdateStockCommand
  *
- * @todo: may be renamed to UpdateStockCommandsBuilder when UpdateProductCommand is fully implemented and previous UpdateStockCommandsBuilder is deleted.
+ * @todo: may be renamed to StockCommandsBuilder when UpdateProductCommand is fully implemented and previous UpdateStockCommandsBuilder is deleted.
  */
 class StockAvailableCommandsBuilder
 {
