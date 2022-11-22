@@ -23,35 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace Tests\Unit\Adapter\Product\Update\Filler;
+namespace Tests\Unit\Adapter\Product\Combination\Update\Filler;
 
+use Combination;
 use DateTime;
-use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInformationFiller;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
-use Product;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\StockInformationFiller;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
-class StockInformationFillerTest extends ProductFillerTestCase
+class StockInformationFillerTest extends CombinationFillerTestCase
 {
     /**
      * @dataProvider getDataToTestUpdatablePropertiesFilling
      *
-     * @param Product $product
-     * @param UpdateProductCommand $command
+     * @param Combination $combination
+     * @param UpdateCombinationCommand $command
      * @param array $expectedUpdatableProperties
-     * @param Product $expectedProduct
+     * @param Combination $expectedProduct
      */
     public function testFillsUpdatableProperties(
-        Product $product,
-        UpdateProductCommand $command,
+        Combination $combination,
+        UpdateCombinationCommand $command,
         array $expectedUpdatableProperties,
-        Product $expectedProduct
+        Combination $expectedProduct
     ): void {
         $this->fillUpdatableProperties(
-            new StockInformationFiller(),
-            $product,
+            $this->getFiller(),
+            $combination,
             $command,
             $expectedUpdatableProperties,
             $expectedProduct
@@ -63,23 +63,20 @@ class StockInformationFillerTest extends ProductFillerTestCase
      */
     public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
-        $product = $this->mockDefaultProduct();
+        $combination = $this->mockDefaultCombination();
         $command = $this->getEmptyCommand()
             ->setMinimalQuantity(11)
-            ->setPackStockType(PackStockType::STOCK_TYPE_PRODUCTS_ONLY)
         ;
-        $expectedProduct = $this->mockDefaultProduct();
-        $expectedProduct->minimal_quantity = 11;
-        $expectedProduct->pack_stock_type = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
+        $expectedCombination = $this->mockDefaultCombination();
+        $expectedCombination->minimal_quantity = 11;
 
         yield [
-            $product,
+            $combination,
             $command,
             [
                 'minimal_quantity',
-                'pack_stock_type',
             ],
-            $expectedProduct,
+            $expectedCombination,
         ];
 
         $localizedAvailableNow = [
@@ -91,38 +88,43 @@ class StockInformationFillerTest extends ProductFillerTestCase
             2 => 'english available later',
         ];
 
-        $product = $this->mockDefaultProduct();
+        $combination = $this->mockDefaultCombination();
         $command = $this->getEmptyCommand()
             ->setLocalizedAvailableNowLabels($localizedAvailableNow)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
             ->setLowStockAlert(true)
             ->setLowStockThreshold(42)
             ->setMinimalQuantity(10)
-            ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
             ->setAvailableDate(new DateTime('2022-10-10'))
         ;
-        $expectedProduct = $this->mockDefaultProduct();
-        $expectedProduct->available_now = $localizedAvailableNow;
-        $expectedProduct->available_later = $localizedAvailableLater;
-        $expectedProduct->low_stock_alert = true;
-        $expectedProduct->low_stock_threshold = 42;
-        $expectedProduct->minimal_quantity = 10;
-        $expectedProduct->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
-        $expectedProduct->available_date = '2022-10-10';
+        $expectedCombination = $this->mockDefaultCombination();
+        $expectedCombination->available_now = $localizedAvailableNow;
+        $expectedCombination->available_later = $localizedAvailableLater;
+        $expectedCombination->low_stock_alert = true;
+        $expectedCombination->low_stock_threshold = 42;
+        $expectedCombination->minimal_quantity = 10;
+        $expectedCombination->available_date = '2022-10-10';
 
         yield [
-            $product,
+            $combination,
             $command,
             [
                 'available_later' => [1, 2],
                 'available_now' => [1, 2],
-                'low_stock_alert',
+                'available_date',
                 'low_stock_threshold',
                 'minimal_quantity',
-                'pack_stock_type',
-                'available_date',
+                'low_stock_alert',
             ],
-            $expectedProduct,
+            $expectedCombination,
         ];
+    }
+
+    /**
+     * @return StockInformationFiller
+     */
+    private function getFiller(): StockInformationFiller
+    {
+        return new StockInformationFiller();
     }
 }
