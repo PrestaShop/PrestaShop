@@ -90,7 +90,6 @@
       },
       onChange(val: number): void {
         if (val) {
-          console.log(val);
           this.value = val;
           this.isEnabled = !!val;
         }
