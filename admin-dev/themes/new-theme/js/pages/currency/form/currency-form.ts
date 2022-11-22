@@ -243,7 +243,6 @@ export default class CurrencyForm {
 
     if (currencyIsoCode) {
       try {
-        console.log(`${this.apiReferenceUrl.replace('{/id}', `/${currencyIsoCode}`)}`);
         const response = await fetch(`${this.apiReferenceUrl.replace('{/id}', `/${currencyIsoCode}`)}`);
         currencyData = await response.json();
 
