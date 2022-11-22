@@ -11,11 +11,8 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
 
-  prestashop.adapter.product.command.update_combination_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationHandler
-    arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
-      - '@prestashop.adapter.product.combination.update.filler.combination_filler'
+  PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationHandler:
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand
@@ -91,13 +88,17 @@ services:
   prestashop.adapter.product.combination.validate.combination_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator
 
-  prestashop.adapter.product.combination.repository.combination_repository:
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.core.grid.query_builder.product_combination'
+
+  prestashop.adapter.product.combination.repository.combination_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
+    deprecated: ~
 
   prestashop.adapter.product.combination.repository.combination_multi_shop_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository
@@ -203,11 +204,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand
 
-  prestashop.adapter.product.combination.update.filler.combination_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller:
     arguments:
       - !tagged core.combination_filler
 
-  prestashop.adapter.product.combination.update.filler.details_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\DetailsFiller
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFillerInterface: '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller'
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\DetailsFiller:
+    tags: [ 'core.combination_filler' ]
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\PricesFiller:
     tags: [ 'core.combination_filler' ]

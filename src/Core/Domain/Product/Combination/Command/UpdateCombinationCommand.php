@@ -82,6 +82,26 @@ class UpdateCombinationCommand
     private $weight;
 
     /**
+     * @var DecimalNumber|null
+     */
+    private $impactOnPrice;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $ecoTax;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $impactOnUnitPrice;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $wholesalePrice;
+
+    /**
      * @param int $combinationId
      *
      * @throws ProductConstraintException
@@ -216,6 +236,86 @@ class UpdateCombinationCommand
     public function setWeight(string $weight): self
     {
         $this->weight = new DecimalNumber($weight);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getImpactOnPrice(): ?DecimalNumber
+    {
+        return $this->impactOnPrice;
+    }
+
+    /**
+     * @param string $impactOnPrice
+     *
+     * @return $this
+     */
+    public function setImpactOnPrice(string $impactOnPrice): self
+    {
+        $this->impactOnPrice = new DecimalNumber($impactOnPrice);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getEcoTax(): ?DecimalNumber
+    {
+        return $this->ecoTax;
+    }
+
+    /**
+     * @param string $ecoTax
+     *
+     * @return $this
+     */
+    public function setEcoTax(string $ecoTax): self
+    {
+        $this->ecoTax = new DecimalNumber($ecoTax);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getImpactOnUnitPrice(): ?DecimalNumber
+    {
+        return $this->impactOnUnitPrice;
+    }
+
+    /**
+     * @param string $impactOnUnitPrice
+     *
+     * @return $this
+     */
+    public function setImpactOnUnitPrice(string $impactOnUnitPrice): self
+    {
+        $this->impactOnUnitPrice = new DecimalNumber($impactOnUnitPrice);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWholesalePrice(): ?DecimalNumber
+    {
+        return $this->wholesalePrice;
+    }
+
+    /**
+     * @param string $wholesalePrice
+     *
+     * @return $this
+     */
+    public function setWholesalePrice(string $wholesalePrice): self
+    {
+        $this->wholesalePrice = new DecimalNumber($wholesalePrice);
 
         return $this;
     }

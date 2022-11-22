@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 /**
  * Fills combination properties which can be considered as combination details
  */
-class DetailsFiller implements CombinationFillerInterface
+class PricesFiller implements CombinationFillerInterface
 {
     /**
      * {@inheritDoc}
@@ -43,34 +43,24 @@ class DetailsFiller implements CombinationFillerInterface
     {
         $updatableProperties = [];
 
-        if (null !== $command->getEan13()) {
-            $combination->ean13 = $command->getEan13()->getValue();
-            $updatableProperties[] = 'ean13';
+        if (null !== $command->getImpactOnPrice()) {
+            $combination->price = (float) (string) $command->getImpactOnPrice();
+            $updatableProperties[] = 'price';
         }
 
-        if (null !== $command->getIsbn()) {
-            $combination->isbn = $command->getIsbn()->getValue();
-            $updatableProperties[] = 'isbn';
+        if (null !== $command->getEcoTax()) {
+            $combination->ecotax = (float) (string) $command->getEcoTax();
+            $updatableProperties[] = 'ecotax';
         }
 
-        if (null !== $command->getMpn()) {
-            $combination->mpn = $command->getMpn();
-            $updatableProperties[] = 'mpn';
+        if (null !== $command->getImpactOnUnitPrice()) {
+            $combination->unit_price_impact = (float) (string) $command->getImpactOnUnitPrice();
+            $updatableProperties[] = 'unit_price_impact';
         }
 
-        if (null !== $command->getReference()) {
-            $combination->reference = $command->getReference()->getValue();
-            $updatableProperties[] = 'reference';
-        }
-
-        if (null !== $command->getUpc()) {
-            $combination->upc = $command->getUpc()->getValue();
-            $updatableProperties[] = 'upc';
-        }
-
-        if (null !== $command->getWeight()) {
-            $combination->weight = (float) (string) $command->getWeight();
-            $updatableProperties[] = 'weight';
+        if (null !== $command->getWholesalePrice()) {
+            $combination->wholesale_price = (float) (string) $command->getWholesalePrice();
+            $updatableProperties[] = 'wholesale_price';
         }
 
         return $updatableProperties;
