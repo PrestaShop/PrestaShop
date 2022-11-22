@@ -40,13 +40,13 @@ class ShoppingCarts extends BOBasePage {
     this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(1)`;
-    this.tableColumnOrderId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnCustomer = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnTotal = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCarrier = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnDate = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnOnline = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnOrderId = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnCustomer = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnTotal = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnCarrier = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnDate = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnOnline = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
     this.tableColumnActions = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
     this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a.btn-default`;
 
@@ -299,27 +299,27 @@ class ShoppingCarts extends BOBasePage {
 
     switch (sortBy) {
       case 'id_cart':
-        columnSelector = this.sortColumnDiv(1);
-        break;
-
-      case 'status':
         columnSelector = this.sortColumnDiv(2);
         break;
 
-      case 'c!lastname':
+      case 'status':
         columnSelector = this.sortColumnDiv(3);
         break;
 
-      case 'ca!name':
-        columnSelector = this.sortColumnDiv(5);
+      case 'c!lastname':
+        columnSelector = this.sortColumnDiv(4);
         break;
 
-      case 'date':
+      case 'ca!name':
         columnSelector = this.sortColumnDiv(6);
         break;
 
-      case 'id_guest':
+      case 'date':
         columnSelector = this.sortColumnDiv(7);
+        break;
+
+      case 'id_guest':
+        columnSelector = this.sortColumnDiv(8);
         break;
 
       default:

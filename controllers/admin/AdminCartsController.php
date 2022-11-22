@@ -980,6 +980,7 @@ class AdminCartsControllerCore extends AdminController
         } else {
             $helper->list_skip_actions['delete'] = (array) $skip_list;
         }
+        $helper->force_show_bulk_actions = true;
 
         return $helper->generateList($this->_list, $this->fields_list);
     }
