@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use DateTime;
+use DateTime as DateTimeNative;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -69,7 +70,7 @@ class DateRangeLocalType extends DateRangeType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $now = new DateTime();
+        $now = new DateTimeNative();
         $builder
             ->add('from', DatePickerType::class, [
                 'required' => false,
@@ -108,8 +109,8 @@ class DateRangeLocalType extends DateRangeType
 
         $builder->get('from')->addModelTransformer(new CallbackTransformer(
             function ($from) {
-                if ($from !== null && $from != '0000-00-00 00:00:00') {
-                    $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $from);
+                if (!DateTime::isNull($from)) {
+                    $dateTime = DateTimeNative::createFromFormat('Y-m-d h:i:s', $from);
 
                     return $dateTime->format($this->dateFormatFull);
                 }
@@ -117,8 +118,8 @@ class DateRangeLocalType extends DateRangeType
                 return $from;
             },
             function ($from) {
-                if ($from !== null) {
-                    $dateTime = DateTime::createFromFormat($this->dateFormatFull, $from);
+                if (!DateTime::isNull($from)) {
+                    $dateTime = DateTimeNative::createFromFormat($this->dateFormatFull, $from);
 
                     return $dateTime->format('Y-m-d h:i:s');
                 }
@@ -129,8 +130,8 @@ class DateRangeLocalType extends DateRangeType
 
         $builder->get('to')->addModelTransformer(new CallbackTransformer(
             function ($to) {
-                if ($to !== null) {
-                    $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $to);
+                if (!DateTime::isNull($to)) {
+                    $dateTime = DateTimeNative::createFromFormat('Y-m-d h:i:s', $to);
 
                     return $dateTime->format($this->dateFormatFull);
                 }
@@ -138,8 +139,8 @@ class DateRangeLocalType extends DateRangeType
                 return $to;
             },
             function ($to) {
-                if ($to !== null) {
-                    $dateTime = DateTime::createFromFormat($this->dateFormatFull, $to);
+                if (!DateTime::isNull($to)) {
+                    $dateTime = DateTimeNative::createFromFormat($this->dateFormatFull, $to);
 
                     return $dateTime->format('Y-m-d h:i:s');
                 }
