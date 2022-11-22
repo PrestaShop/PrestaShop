@@ -1,3 +1,7 @@
+// Import utils
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
@@ -69,7 +73,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
 
   for (let i = 0; i < numberOfOrderToCreate; i++) {
     // Pre-condition: Create order in FO
-    createOrderByCustomerTest(orderByCustomerData, `baseContext_${i}`);
+    createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
 
     // eslint-disable-next-line no-loop-func
     describe(`Create Credit slip n°${i + 1}`, async () => {
@@ -78,7 +82,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           this,
           'testIdentifier',
           `goToOrdersPage${i}`,
-          baseContext,
+          `${baseContext}_preTest_${i}`,
         );
 
         await dashboardPage.goToSubMenu(
@@ -96,7 +100,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           this,
           'testIdentifier',
           `goToCreatedOrderPage${i}`,
-          baseContext,
+          `${baseContext}_preTest_${i}`,
         );
 
         await ordersPage.goToOrder(page, 1);
@@ -110,7 +114,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           this,
           'testIdentifier',
           `updateCreatedOrderStatus${i}`,
-          baseContext,
+          `${baseContext}_preTest_${i}`,
         );
 
         const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
@@ -122,7 +126,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           this,
           'testIdentifier',
           `addPartialRefund${i}`,
-          baseContext,
+          `${baseContext}_preTest_${i}`,
         );
 
         await orderPageTabListBlock.clickOnPartialRefund(page);
@@ -136,7 +140,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           this,
           'testIdentifier',
           `checkCreditSlipDocumentName${i}`,
-          baseContext,
+          `${baseContext}_preTest_${i}`,
         );
 
         const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
