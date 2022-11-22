@@ -88,9 +88,10 @@
         }
         return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
-      onChange(val: Event): void {
+      onChange(val: number): void {
         if (val) {
-          this.value = (val.target as HTMLInputElement).value;
+          console.log(val);
+          this.value = val;
           this.isEnabled = !!val;
         }
       },
