@@ -6,8 +6,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\File\InvoiceModelFinder'
     arguments:
       - [
-        "@=service('prestashop.adapter.legacy.configuration').get('_PS_THEME_DIR_')~'pdf/'",
-        "@=service('prestashop.adapter.legacy.configuration').get('_PS_PDF_DIR_')"
+        "@=parameter('prestashop.theme_dir')~'pdf/'",
+        '%prestashop.pdf_dir%'
       ]
 
   prestashop.core.file.cached_finder.invoice_model:

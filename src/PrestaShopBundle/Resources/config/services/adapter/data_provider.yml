@@ -78,13 +78,13 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().employee.id_profile'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '%prestashop.admin_profile%'
 
   prestashop.adapter.data_provider.profile:
     class: PrestaShop\PrestaShop\Adapter\Profile\ProfileDataProvider
     arguments:
       - '@prestashop.adapter.data_provider.employee'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '%prestashop.admin_profile%'
 
   prestashop.adapter.data_provider.module:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider

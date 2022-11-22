@@ -996,7 +996,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - "@=service('prestashop.adapter.legacy.configuration')"
-      - !php/const _PS_ADMIN_PROFILE_
+      - '%prestashop.admin_profile%'
       - '@prestashop.router'
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }

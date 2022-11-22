@@ -41,7 +41,7 @@ services:
       - '@prestashop.core.mail_template.theme_catalog'
       - '@prestashop.core.mail_template.generator'
       - '%kernel.project_dir%/mails'
-      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+      - '%prestashop.module_dir%'
     public: true
     tags:
       - name: tactician.handler

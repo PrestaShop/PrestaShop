@@ -50,7 +50,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetLogosPathsHandler'
     arguments:
       - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
-      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
+      - '%prestashop.img_dir%'
     tags:
       - name: 'tactician.handler'
         command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths

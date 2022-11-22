@@ -1,6 +1,3 @@
-parameters:
-  ps_cache_dir: !php/const _PS_CACHE_DIR_
-
 services:
   _defaults:
     public: true
@@ -13,7 +10,7 @@ services:
     arguments:
       - 'CLDR'
       - 0
-      - '%ps_cache_dir%/localization'
+      - '%prestashop.cache_dir%/localization'
 
   prestashop.core.localization.locale.repository:
     class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository

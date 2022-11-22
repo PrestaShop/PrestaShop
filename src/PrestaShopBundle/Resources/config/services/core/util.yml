@@ -8,7 +8,7 @@ services:
   prestashop.core.util.url.url_file_checker:
     class: 'PrestaShop\PrestaShop\Core\Util\Url\UrlFileChecker'
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_ROOT_DIR_")'
+      - '%prestashop.root_dir%'
 
   prestashop.core.uti.back_url_provider:
     class: PrestaShop\PrestaShop\Core\Util\Url\BackUrlProvider

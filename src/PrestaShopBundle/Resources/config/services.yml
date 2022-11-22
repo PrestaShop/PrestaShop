@@ -1,9 +1,14 @@
-parameters:
-  multishop.settings.share_orders: !php/const Shop::SHARE_ORDER
-
 imports:
   - { resource: services/bundle/*.yml }
   - { resource: services/core/*.yml }
   - { resource: services/adapter/*.yml }
   - { resource: services/legacy.yml }
   - { resource: services/alias.yml }
+
+services:
+  PrestaShopBundle\Controller\:
+    resource: "../../Controller/*"
+    exclude: "../../Controller/Api"
+    public: true
+    tags:
+      - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
