@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCom
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
-use PrestaShopException;
 
 /**
  * Handles tax rules group edition
@@ -77,12 +76,6 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
             $shopIds[] = new ShopId($shopId);
         }
 
-        try {
-            $this->taxRulesGroupRepository->update($taxRulesGroup, $shopIds);
-        } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(
-                sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id)
-            );
-        }
+        $this->taxRulesGroupRepository->update($taxRulesGroup, $shopIds);
     }
 }

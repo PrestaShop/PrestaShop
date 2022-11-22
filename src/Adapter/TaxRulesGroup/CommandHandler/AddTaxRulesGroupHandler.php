@@ -33,9 +33,7 @@ use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupReposito
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
-use PrestaShopException;
 use TaxRulesGroup;
 
 /**
@@ -65,20 +63,11 @@ class AddTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements Ad
         $taxRulesGroup->name = $command->getName();
         $taxRulesGroup->active = $command->isEnabled();
 
-        try {
-            $shopIds = [];
-            foreach ($command->getShopAssociation() as $shopId) {
-                $shopIds[] = new ShopId($shopId);
-            }
-            $this->taxRulesGroupRepository->add($taxRulesGroup, $shopIds);
-        } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(
-                'An unexpected error occurred when adding tax rules group',
-                0,
-                $e
-            );
+        $shopIds = [];
+        foreach ($command->getShopAssociation() as $shopId) {
+            $shopIds[] = new ShopId($shopId);
         }
 
-        return new TaxRulesGroupId((int) $taxRulesGroup->id);
+        return $this->taxRulesGroupRepository->add($taxRulesGroup, $shopIds);
     }
 }

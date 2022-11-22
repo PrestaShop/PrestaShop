@@ -144,7 +144,10 @@ class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param TaxRulesGroup $taxRulesGroup
+     * @param ShopId[] $shopIds
      * @param int $errorCode
+     *
+     * @return TaxRulesGroupId
      */
     public function add(TaxRulesGroup $taxRulesGroup, array $shopIds, int $errorCode = 0): TaxRulesGroupId
     {
