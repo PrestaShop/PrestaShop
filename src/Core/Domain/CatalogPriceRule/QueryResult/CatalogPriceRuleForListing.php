@@ -92,6 +92,10 @@ class CatalogPriceRuleForListing
      * @var string|null
      */
     private $currencyIso;
+    /**
+     * @var bool
+     */
+    private $taxIncl;
 
     /**
      * CatalogPriceRuleForListing constructor.
@@ -115,6 +119,7 @@ class CatalogPriceRuleForListing
         int $fromQuantity,
         string $reductionType,
         DecimalNumber $reduction,
+        bool $taxIncl,
         DateTimeInterface $dateStart,
         DateTimeInterface $dateEnd,
         ?string $shopName,
@@ -128,6 +133,7 @@ class CatalogPriceRuleForListing
         $this->fromQuantity = $fromQuantity;
         $this->reductionType = $reductionType;
         $this->reduction = $reduction;
+        $this->taxIncl = $taxIncl;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
         $this->shopName = $shopName;
@@ -231,5 +237,13 @@ class CatalogPriceRuleForListing
     public function getCurrencyIso(): ?string
     {
         return $this->currencyIso;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTaxIncl(): bool
+    {
+        return $this->taxIncl;
     }
 }
