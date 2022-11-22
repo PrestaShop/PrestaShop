@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\BulkDeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\DeleteCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCatalogPriceRuleException;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRule
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
@@ -55,6 +57,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CatalogPriceRuleController extends FrameworkBundleAdminController
 {
+    private const UNSPECIFIED_VALUE_FORMAT = '--';
+
     /**
      * Displays catalog price rule listing page.
      *
@@ -339,13 +343,39 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                 'group' => $catalogPriceRule->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
                 'name' => $catalogPriceRule->getCatalogPriceRuleName(),
                 'fromQuantity' => $catalogPriceRule->getFromQuantity(),
-                'reductionType' => $catalogPriceRule->getReductionType(),
-                'reduction' => (string) $catalogPriceRule->getReduction(),
+                'impact' => $this->formatImpact(
+                    $catalogPriceRule->getReductionType(),
+                    $catalogPriceRule->getReduction(),
+                    $catalogPriceRule->getCurrencyIso() ?: $this->getContextCurrencyIso()
+                ),
                 'startDate' => $catalogPriceRule->getDateStart()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                 'endDate' => $catalogPriceRule->getDateEnd()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
             ];
         }
 
         return $list;
+    }
+
+    /**
+     * @param string $reductionType
+     * @param DecimalNumber $reductionValue
+     * @param string $currencyIsoCode
+     *
+     * @return string
+     */
+    private function formatImpact(string $reductionType, DecimalNumber $reductionValue, string $currencyIsoCode): string
+    {
+        if ($reductionValue->equalsZero()) {
+            return self::UNSPECIFIED_VALUE_FORMAT;
+        }
+
+        $reductionValue = $reductionValue->toNegative();
+
+        $locale = $this->getContextLocale();
+        if ($reductionType === Reduction::TYPE_AMOUNT) {
+            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $currencyIsoCode));
+        }
+
+        return sprintf('%s %%', (string) $reductionValue);
     }
 }
