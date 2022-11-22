@@ -24,12 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShopException;
@@ -41,6 +44,19 @@ use TaxRulesGroup;
 class AddTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements AddTaxRulesGroupHandlerInterface
 {
     /**
+     * @var TaxRulesGroupRepository
+     */
+    protected $taxRulesGroupRepository;
+
+    /**
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     */
+    public function __construct(TaxRulesGroupRepository $taxRulesGroupRepository)
+    {
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function handle(AddTaxRulesGroupCommand $command): TaxRulesGroupId
@@ -50,19 +66,17 @@ class AddTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements Ad
         $taxRulesGroup->active = $command->isEnabled();
 
         try {
-            if (
-                false === $taxRulesGroup->validateFields(false)
-                || false === $taxRulesGroup->validateFieldsLang(false)
-            ) {
-                throw new TaxRulesGroupException('Tax Rules Group contains invalid field values');
+            $shopIds = [];
+            foreach ($command->getShopAssociation() as $shopId) {
+                $shopIds[] = new ShopId($shopId);
             }
-
-            if (!$taxRulesGroup->add()) {
-                throw new CannotAddTaxRulesGroupException('Cannot create tax rules group');
-            }
-            $this->associateWithShops($taxRulesGroup, $command->getShopAssociation());
+            $this->taxRulesGroupRepository->add($taxRulesGroup, $shopIds);
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException('An unexpected error occurred when adding cms page', 0, $e);
+            throw new TaxRulesGroupException(
+                'An unexpected error occurred when adding tax rules group',
+                0,
+                $e
+            );
         }
 
         return new TaxRulesGroupId((int) $taxRulesGroup->id);

@@ -4,12 +4,16 @@ services:
 
   prestashop.adapter.tax_rules_group.command_handler.add_tax_rules_group_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandler'
+    arguments:
+      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesGroupCommand'
 
   prestashop.adapter.tax_rules_group.command_handler.edit_tax_rules_group_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandler'
+    arguments:
+      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand'
@@ -48,6 +52,10 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+      - '@prestashop.adapter.tax_rules_group.validate.tax_rules_group_validator'
+
+  prestashop.adapter.tax_rules_group.validate.tax_rules_group_validator:
+    class: PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator
 
   prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository:
     alias: PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository

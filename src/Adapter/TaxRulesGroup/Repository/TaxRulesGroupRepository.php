@@ -29,17 +29,21 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Validate\TaxRulesGroupValidator;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotAddTaxRulesGroupException;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use TaxRulesGroup;
 
 /**
  * Provides access to TaxRulesGroup data source
  */
-class TaxRulesGroupRepository extends AbstractObjectModelRepository
+class TaxRulesGroupRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var Connection
@@ -52,15 +56,23 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var TaxRulesGroupValidator
+     */
+    private $taxRulesGroupValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param TaxRulesGroupValidator $taxRulesGroupValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        TaxRulesGroupValidator $taxRulesGroupValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->taxRulesGroupValidator = $taxRulesGroupValidator;
     }
 
     /**
@@ -127,6 +139,32 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
             $taxRulesGroupId->getValue(),
             'tax_rules_group',
             TaxRulesGroupNotFoundException::class
+        );
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param int $errorCode
+     */
+    public function add(TaxRulesGroup $taxRulesGroup, array $shopIds, int $errorCode = 0): TaxRulesGroupId
+    {
+        $this->taxRulesGroupValidator->validate($taxRulesGroup);
+        $id = $this->addObjectModel($taxRulesGroup, CannotAddTaxRulesGroupException::class, $errorCode);
+
+        return new TaxRulesGroupId($id);
+    }
+
+    /**
+     * @param TaxRulesGroup $taxRulesGroup
+     * @param ShopId[] $shopIds
+     */
+    public function update(TaxRulesGroup $taxRulesGroup, array $shopIds): void
+    {
+        $this->taxRulesGroupValidator->validate($taxRulesGroup);
+        $this->updateObjectModelForShops(
+            $taxRulesGroup,
+            $shopIds,
+            CannotUpdateTaxRulesGroupException::class
         );
     }
 }

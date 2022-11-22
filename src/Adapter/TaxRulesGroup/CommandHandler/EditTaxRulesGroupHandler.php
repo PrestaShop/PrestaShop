@@ -24,9 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\CannotUpdateTaxRulesGroupException;
@@ -38,6 +42,19 @@ use PrestaShopException;
  */
 class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements EditTaxRulesGroupHandlerInterface
 {
+    /**
+     * @var TaxRulesGroupRepository
+     */
+    protected $taxRulesGroupRepository;
+
+    /**
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     */
+    public function __construct(TaxRulesGroupRepository $taxRulesGroupRepository)
+    {
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -55,29 +72,17 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
             $taxRulesGroup->active = $command->isEnabled();
         }
 
-        try {
-            if (false === $taxRulesGroup->validateFields(false)
-                || false === $taxRulesGroup->validateFieldsLang(false)) {
-                throw new TaxRulesGroupException('Tax Rules Group contains invalid field values');
-            }
-            if (false === $taxRulesGroup->update()) {
-                throw new CannotUpdateTaxRulesGroupException(
-                    sprintf(
-                        'Failed to update tax rules group with id %s',
-                        $command->getTaxRulesGroupId()->getValue()
-                    )
-                );
-            }
-            if (null !== $command->getShopAssociation()) {
-                $this->associateWithShops($taxRulesGroup, $command->getShopAssociation());
-            }
+        $shopIds = [];
+        foreach ($command->getShopAssociation() ?? [] as $shopId) {
+            $shopIds[] = new ShopId($shopId);
+        }
 
-            /* @phpstan-ignore-next-line */
-            if (!$taxRulesGroup->update()) {
-                throw new TaxRulesGroupException(sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id));
-            }
+        try {
+            $this->taxRulesGroupRepository->update($taxRulesGroup, $shopIds);
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id));
+            throw new TaxRulesGroupException(
+                sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id)
+            );
         }
     }
 }
