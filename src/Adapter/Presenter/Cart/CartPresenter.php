@@ -542,6 +542,7 @@ class CartPresenter implements PresenterInterface
 
     private function getTemplateVarVouchers(Cart $cart)
     {
+        CartRule::autoRemoveFromCart();
         $cartVouchers = $cart->getCartRules();
         $vouchers = [];
 
