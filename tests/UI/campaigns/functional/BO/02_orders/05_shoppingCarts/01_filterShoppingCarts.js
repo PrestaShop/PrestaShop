@@ -80,7 +80,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
       await expect(textColumn).to.contains('Non ordered');
     }
 
@@ -103,7 +103,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     let paginationNumber = 0;
 
     if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '300');
+      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
     }
 
     await expect(paginationNumber).to.equal('1');
