@@ -334,7 +334,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 (int) $dataRow['from quantity'],
                 $dataRow['reduction type'],
                 new DecimalNumber($dataRow['reduction value']),
-                (bool) $dataRow['tax included'],
+                (bool) $dataRow['includes tax'],
                 DateTimeUtil::buildNullableDateTime($dataRow['from']),
                 DateTimeUtil::buildNullableDateTime($dataRow['to']),
                 $shop->name,
