@@ -31,7 +31,7 @@ const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 export default class CatalogPriceRuleRenderer implements RendererType {
   private eventEmitter: EventEmitter;
 
-  private listContainer: HTMLElement
+  private listContainer: HTMLElement;
 
   private $loadingSpinner: JQuery;
 
