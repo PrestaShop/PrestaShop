@@ -386,7 +386,11 @@ class ProductLazyArray extends AbstractLazyArray
     public function getSeoAvailability()
     {
         $seoAvailability = 'https://schema.org/';
-        if ($this->product['quantity'] > 0) {
+
+        // Availability for displaying discontinued products, if enabled
+        if ($this->product['active'] != 1) {
+            $seoAvailability .= 'Discontinued';
+        } elseif ($this->product['quantity'] > 0) {
             $seoAvailability .= 'InStock';
         } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp']) {
             $seoAvailability .= 'PreOrder';
@@ -813,6 +817,11 @@ class ProductLazyArray extends AbstractLazyArray
      */
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
+        // If the product is disabled, we disable add to cart button
+        if ($product['active'] != 1) {
+            return false;
+        }
+
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldEnable = false;
 
@@ -924,6 +933,18 @@ class ProductLazyArray extends AbstractLazyArray
 
         // If we don't want to show availability, we return immediately
         if (!$show_availability) {
+            return;
+        }
+
+        // If the product is disabled, but still displayed, we display a proper message
+        if ($this->product['active'] != 1) {
+            $this->product['availability_message'] = $this->translator->trans(
+                'This product is no longer for sale',
+                [],
+                'Shop.Notifications.Error'
+            );
+            $this->product['availability'] = 'discontinued';
+
             return;
         }
 
