@@ -2,13 +2,11 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.form.command_builder.product_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder:
     arguments:
       - !tagged core.product_command_builder
 
-  prestashop.core.form.command_builder.product.update_product_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder:
     tags:
       - { name: 'core.product_command_builder', priority: 10 }
     arguments:
@@ -16,57 +14,46 @@ services:
 
   # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
   # that may not be compatible with the updated type, its priority musk be kept lower than others
-  prestashop.core.form.command_builder.product.type:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TypeCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TypeCommandsBuilder:
     tags:
       - { name: 'core.product_command_builder', priority: -42 }
 
-  prestashop.core.form.command_builder.tags.seo:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
-  prestashop.core.form.command_builder.product.carriers:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CarriersCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CarriersCommandsBuilder:
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.product_suppliers_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.feature_values_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\FeatureValuesCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.customization_fields_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.virtual_product_file_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\VirtualProductFileCommandsBuilder
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.categories:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.attachments:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductAttachmentsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductAttachmentsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.related_products_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop_core_form_command_builder_product_specific_price_priority_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SpecificPricePriorityCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SpecificPricePriorityCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  prestashop.core.form.command_builder.product.packed_products_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
   # Combination builders
