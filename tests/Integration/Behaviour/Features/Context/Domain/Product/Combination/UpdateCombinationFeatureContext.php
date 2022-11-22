@@ -75,7 +75,7 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
             $command->setUpc($dataRows['upc']);
         }
         if (isset($dataRows['impact on weight'])) {
-            $command->setWeight($dataRows['impact on weight']);
+            $command->setImpactOnWeight($dataRows['impact on weight']);
         }
         if (isset($dataRows['eco tax'])) {
             $command->setEcoTax($dataRows['eco tax']);

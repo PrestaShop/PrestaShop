@@ -61,7 +61,7 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
     private function configurePriceImpact(CommandBuilderConfig $config): self
     {
         $config
-            ->addField('[price_impact][weight]', 'setWeight', DataField::TYPE_STRING)
+            ->addField('[price_impact][weight]', 'setImpactOnWeight', DataField::TYPE_STRING)
         ;
 
         return $this;
