@@ -243,9 +243,18 @@ export default class CurrencyForm {
 
     if (currencyIsoCode) {
       try {
-        const response = await fetch(`${this.apiReferenceUrl}${new URLSearchParams({id: currencyIsoCode})}`);
+        console.log(`${this.apiReferenceUrl.replace('{/id}', `/${currencyIsoCode}`)}`);
+        const response = await fetch(`${this.apiReferenceUrl.replace('{/id}', `/${currencyIsoCode}`)}`);
         currencyData = await response.json();
+
+        if (currencyData && currencyData.transformations === undefined) {
+          currencyData.transformations = {};
+          Object.keys(currencyData.symbols).forEach((langId) => {
+            currencyData.transformations[langId] = '';
+          });
+        }
       } catch (errorResponse: any) {
+        console.log(errorResponse);
         if (errorResponse.body && errorResponse.body.error) {
           showGrowl('error', errorResponse.body.error, 3000);
         } else {
@@ -256,13 +265,6 @@ export default class CurrencyForm {
           );
         }
       }
-    }
-
-    if (currencyData && currencyData.transformations === undefined) {
-      currencyData.transformations = {};
-      Object.keys(currencyData.symbols).forEach((langId) => {
-        currencyData.transformations[langId] = '';
-      });
     }
 
     return currencyData;
