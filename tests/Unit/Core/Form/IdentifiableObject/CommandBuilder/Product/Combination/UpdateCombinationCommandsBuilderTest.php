@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -67,29 +69,13 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [],
         ];
 
+        // References
         $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
-        $command->setImpactOnWeight('12.00');
         $command->setReference('toto');
         yield [
             [
-                'price_impact' => [
-                    'not_handled' => 0,
-                    'weight' => 12.0,
-                ],
                 'references' => [
                     'reference' => 'toto',
-                ],
-            ],
-            [$command],
-        ];
-
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
-        $command->setImpactOnWeight('12.00');
-        yield [
-            [
-                'price_impact' => [
-                    'not_handled' => 0,
-                    'weight' => 12.0,
                 ],
             ],
             [$command],
@@ -116,6 +102,107 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
                 'references' => [
                     'isbn' => '0-8044-2957-X',
                     'ean_13' => '12345678910',
+                ],
+            ],
+            [$command],
+        ];
+
+        // Price impact
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setImpactOnWeight('12');
+        yield [
+            [
+                'price_impact' => [
+                    'not_handled' => 0,
+                    'weight' => 12.0,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setImpactOnUnitPrice('51.00');
+        $command->setWholesalePrice('12.00');
+        yield [
+            [
+                'price_impact' => [
+                    'unit_price_tax_excluded' => 51.00,
+                    'wholesale_price' => '12.00',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setEcoTax('42.00');
+        $command->setImpactOnPrice('49.00');
+        yield [
+            [
+                'price_impact' => [
+                    'ecotax_tax_excluded' => 42.00,
+                    'price_tax_excluded' => '49.00',
+                ],
+            ],
+            [$command],
+        ];
+
+        // Stock information
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setMinimalQuantity(1);
+        yield [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'minimal_quantity' => 1,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setLowStockThreshold(5);
+        yield [
+            [
+                'stock' => [
+                    'options' => [
+                        'low_stock_threshold' => '5',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setLowStockAlert(false);
+        yield [
+            [
+                'stock' => [
+                    'options' => [
+                        'disabling_switch_low_stock_threshold' => '0',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setAvailableDate(new DateTime('2022-10-10'));
+        yield [
+            [
+                'stock' => [
+                    'available_date' => '2022-10-10',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'available_date' => '',
                 ],
             ],
             [$command],
