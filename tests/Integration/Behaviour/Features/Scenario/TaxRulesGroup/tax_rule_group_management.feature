@@ -6,21 +6,21 @@ Feature: Manage tax
 
   Scenario: Adding new tax rules group
     When I add new tax rules group "sales-tax-rules-group" with following properties:
-      | name         | My Sales Tax Rules Group |
-      | is_enabled   | true                     |
+      | name       | My Sales Tax Rules Group |
+      | is_enabled | true                     |
     Then tax rules group "sales-tax-rules-group" name should be "My Sales Tax Rules Group"
     And tax rules group "sales-tax-rules-group" should be enabled
 
   Scenario: Editing tax rules group
     When I edit tax rules group "sales-tax-rules-group" with following properties:
-      | name         | The Sales Tax Rules Group |
-      | is_enabled   | false            |
+      | name       | The Sales Tax Rules Group |
+      | is_enabled | false                     |
     Then tax rules group "sales-tax-rules-group" name should be "The Sales Tax Rules Group"
     And tax rules group "sales-tax-rules-group" should be disabled
 
   Scenario: It is possible to modify only the name of a tax rules group, without modifying anything else
     When I edit tax rules group "sales-tax-rules-group" with following properties:
-      | name         | Funny Sales Tax Rules Group |
+      | name | Funny Sales Tax Rules Group |
     Then tax rules group "sales-tax-rules-group" name should be "Funny Sales Tax Rules Group"
     And tax rules group "sales-tax-rules-group" should be disabled
 
@@ -37,14 +37,14 @@ Feature: Manage tax
 
   Scenario: Disabling multiple taxes in bulk action
     When I add new tax rules group "beard-tax-rules-group" with following properties:
-      | name         | Beard Tax Rules Group |
-      | is_enabled   | true                  |
+      | name       | Beard Tax Rules Group |
+      | is_enabled | true                  |
     And I add new tax rules group "state-tax-rules-group" with following properties:
-      | name         | State Tax Rules Group |
-      | is_enabled   | true                  |
+      | name       | State Tax Rules Group |
+      | is_enabled | true                  |
     And I add new tax rules group "pvm-tax-rules-group" with following properties:
-      | name         | PVM Tax Rules Group   |
-      | is_enabled   | false                 |
+      | name       | PVM Tax Rules Group |
+      | is_enabled | false               |
     When I disable tax rules groups: "beard-tax-rules-group, state-tax-rules-group, pvm-tax-rules-group"
     Then tax rules groups: "beard-tax-rules-group, state-tax-rules-group" should be disabled
 

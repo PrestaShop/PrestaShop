@@ -63,7 +63,7 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
             if (false === $taxRulesGroup->update()) {
                 throw new CannotUpdateTaxRulesGroupException(
                     sprintf(
-                        'Failed to update cms page with id %s',
+                        'Failed to update tax rules group with id %s',
                         $command->getTaxRulesGroupId()->getValue()
                     )
                 );
@@ -74,10 +74,10 @@ class EditTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements E
 
             /* @phpstan-ignore-next-line */
             if (!$taxRulesGroup->update()) {
-                throw new TaxRulesGroupException(sprintf('Cannot update tax with id "%s"', $taxRulesGroup->id));
+                throw new TaxRulesGroupException(sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id));
             }
         } catch (PrestaShopException $e) {
-            throw new TaxRulesGroupException(sprintf('Cannot update tax with id "%s"', $taxRulesGroup->id));
+            throw new TaxRulesGroupException(sprintf('Cannot update tax rules group with id "%s"', $taxRulesGroup->id));
         }
     }
 }

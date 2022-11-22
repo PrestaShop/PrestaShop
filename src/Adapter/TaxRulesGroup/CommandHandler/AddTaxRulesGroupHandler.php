@@ -50,7 +50,8 @@ class AddTaxRulesGroupHandler extends AbstractTaxRulesGroupHandler implements Ad
         $taxRulesGroup->active = $command->isEnabled();
 
         try {
-            if (false === $taxRulesGroup->validateFields(false)
+            if (
+                false === $taxRulesGroup->validateFields(false)
                 || false === $taxRulesGroup->validateFieldsLang(false)
             ) {
                 throw new TaxRulesGroupException('Tax Rules Group contains invalid field values');

@@ -132,10 +132,8 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable)? tax rules group "(.*)"$/
      */
-    public function toggleStatusTaxRulesGroup(string $action, string $taxRulesGroupReference): void
+    public function toggleStatusTaxRulesGroup(bool $expectedStatus, string $taxRulesGroupReference): void
     {
-        $expectedStatus = 'enable' === $action;
-
         $taxRulesGroupId = SharedStorage::getStorage()->get($taxRulesGroupReference);
 
         $this->getCommandBus()->handle(new SetTaxRulesGroupStatusCommand($taxRulesGroupId, $expectedStatus));
@@ -154,10 +152,9 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable)? tax rules groups: "([^"]*)"$/
      */
-    public function bulkToggleStatusTaxRulesGroup(string $action, string $taxRulesGroupReference): void
+    public function bulkToggleStatusTaxRulesGroup(bool $expectedStatus, string $taxRulesGroupReference): void
     {
         $taxRulesGroupReferences = PrimitiveUtils::castStringArrayIntoArray($taxRulesGroupReference);
-        $expectedStatus = 'enable' === $action;
 
         $idsByReference = [];
         foreach ($taxRulesGroupReferences as $reference) {
@@ -206,18 +203,16 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
      * @Then /^tax rules group "(.*)" should be (enabled|disabled)?$/
      * @Given /^tax rules group "(.*)" is (enabled|disabled)?$/
      */
-    public function assertTaxRulesGroupStatus(string $taxRulesGroupReference, string $status): void
+    public function assertTaxRulesGroupStatus(string $taxRulesGroupReference, bool $isEnabled): void
     {
         $editableTaxRulesGroup = $this->getEditableTaxRulesGroup($taxRulesGroupReference);
-
-        $isEnabled = $status === 'enabled';
 
         if ($isEnabled !== $editableTaxRulesGroup->isActive()) {
             throw new RuntimeException(sprintf(
                 'Tax Rules Group "%s" is %s, but it was expected to be %s',
                 $taxRulesGroupReference,
                 $editableTaxRulesGroup->isActive() ? 'enabled' : 'disabled',
-                $status
+                $isEnabled ? 'enabled' : 'disabled'
             ));
         }
     }
@@ -225,7 +220,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then /^tax rules groups: "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertTaxRulesGroupsStatus(string $taxRulesGroupsReferences, string $status): void
+    public function assertTaxRulesGroupsStatus(string $taxRulesGroupsReferences, bool $status): void
     {
         $taxRulesGroupsReferences = PrimitiveUtils::castStringArrayIntoArray($taxRulesGroupsReferences);
 
