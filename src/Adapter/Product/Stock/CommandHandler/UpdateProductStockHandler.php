@@ -88,6 +88,7 @@ class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
         // For now this will also fill some of deprecated properties in product (quantity, location, out_of_stock),
         // but in future we will remove those fields from Product,
         // and then this handler will only persist StockAvailable related fields as it is designed for.
+        // @todo: once the unification is done this should be refacto as the ProductStockProperties contains too many fields now
         $this->productStockUpdater->update(
             $command->getProductId(),
             new ProductStockProperties(

@@ -5,12 +5,15 @@ services:
   prestashop.adapter.product.stock.validate.stock_available_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator
 
-  prestashop.adapter.product.stock.repository.stock_available_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.stock.validate.stock_available_validator'
+
+  prestashop.adapter.product.stock.repository.stock_available_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
+    deprecated: ~
 
   prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository
@@ -25,10 +28,13 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.adapter.product.stock.repository.movement_reason_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.product.stock.repository.movement_reason_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository
+    deprecated: ~
 
   prestashop.adapter.product.stock.command_handler.update_product_stock_information_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockInformationHandler
