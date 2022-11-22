@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class CombinationAssertionFeatureContext extends AbstractCombinationFeatureContext
@@ -84,6 +85,129 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
             $details['reference'],
             $details['upc'],
             new DecimalNumber($details['impact on weight'] ?? '0')
+        );
+    }
+
+    /**
+     * @Then combination :combinationReference should have following prices:
+     *
+     * @param string $combinationReference
+     * @param CombinationPrices $expectedPrices
+     */
+    public function assertCombinationPrices(string $combinationReference, CombinationPrices $expectedPrices): void
+    {
+        $actualPrices = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getPrices();
+
+        Assert::assertTrue(
+            $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
+            sprintf(
+                'Unexpected combination impact on price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPrice(),
+                (string) $actualPrices->getImpactOnPrice()
+            )
+        );
+        Assert::assertTrue(
+            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+            sprintf(
+                'Unexpected combination impact on price with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                (string) $actualPrices->getImpactOnPriceTaxIncluded()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
+            sprintf(
+                'Unexpected combination eco tax. Expected "%s", got "%s"',
+                (string) $expectedPrices->getEcotax(),
+                (string) $actualPrices->getEcotax()
+            )
+        );
+        Assert::assertTrue(
+            $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
+            sprintf(
+                'Unexpected combination eco tax with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getEcotaxTaxIncluded(),
+                (string) $actualPrices->getEcotaxTaxIncluded()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
+            sprintf(
+                'Unexpected combination impact on unit price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnUnitPrice(),
+                (string) $actualPrices->getImpactOnUnitPrice()
+            )
+        );
+        Assert::assertTrue(
+            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+            sprintf(
+                'Unexpected combination impact on unit price with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                (string) $actualPrices->getImpactOnPriceTaxIncluded()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
+            sprintf(
+                'Unexpected combination wholesale price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getWholesalePrice(),
+                (string) $actualPrices->getWholesalePrice()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
+            sprintf(
+                'Unexpected combination product tax rate. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductTaxRate(),
+                (string) $actualPrices->getProductTaxRate()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
+            sprintf(
+                'Unexpected combination product price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductPrice(),
+                (string) $actualPrices->getProductPrice()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
+            sprintf(
+                'Unexpected combination wholesale price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductEcotax(),
+                (string) $actualPrices->getProductEcotax()
+            )
+        );
+    }
+
+    /**
+     * @Transform table:combination price detail,value
+     *
+     * @param TableNode $tableNode
+     *
+     * @return CombinationPrices
+     */
+    public function transformCombinationPrices(TableNode $tableNode): CombinationPrices
+    {
+        $dataRows = $tableNode->getRowsHash();
+
+        return new CombinationPrices(
+            new DecimalNumber($dataRows['impact on price']),
+            new DecimalNumber($dataRows['impact on price with taxes']),
+            new DecimalNUmber($dataRows['impact on unit price']),
+            new DecimalNUmber($dataRows['impact on unit price with taxes']),
+            new DecimalNumber($dataRows['eco tax']),
+            new DecimalNumber($dataRows['eco tax with taxes']),
+            new DecimalNUmber($dataRows['wholesale price']),
+            new DecimalNUmber($dataRows['product tax rate']),
+            new DecimalNUmber($dataRows['product price']),
+            new DecimalNUmber($dataRows['product ecotax'])
         );
     }
 }
