@@ -29,7 +29,11 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
  * This feature context is based on the unified command UpdateCombinationCommand, it will include all the other steps
@@ -41,16 +45,45 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
     /**
      * @When I update combination :combinationReference details with following values:
      * @When I update combination :combinationReference prices with following details:
+     * @When I update combination :combinationReference stock with following details:
      *
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
     public function updateCombination(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationCommand($this->getSharedStorage()->get($combinationReference));
+        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
+
+        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
+    }
+
+    private function updateCombinationStockAvailable(string $combinationReference, array $dataRows): void
+    {
+        if (!isset($dataRows['delta quantity'])
+            && !isset($dataRows['fixed quantity'])
+            && !isset($dataRows['location'])) {
+            return;
+        }
+
+        try {
+            $command = new UpdateCombinationStockAvailableCommand((int) $this->getSharedStorage()->get($combinationReference));
+            if (isset($dataRows['delta quantity'])) {
+                $command->setDeltaQuantity((int) $dataRows['delta quantity']);
+            }
+            if (isset($dataRows['fixed quantity'])) {
+                $command->setFixedQuantity((int) $dataRows['fixed quantity']);
+            }
+            if (isset($dataRows['location'])) {
+                $command->setLocation($dataRows['location']);
+            }
+
+            $this->getCommandBus()->handle($command);
+        } catch (ProductStockConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -59,6 +92,7 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     private function fillCommand(UpdateCombinationCommand $command, array $dataRows): void
     {
+        // References
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);
         }
@@ -74,6 +108,7 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['upc'])) {
             $command->setUpc($dataRows['upc']);
         }
+        // Prices
         if (isset($dataRows['impact on weight'])) {
             $command->setImpactOnWeight($dataRows['impact on weight']);
         }
@@ -88,6 +123,27 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         }
         if (isset($dataRows['wholesale price'])) {
             $command->setWholesalePrice($dataRows['wholesale price']);
+        }
+        // Stock information
+        if (isset($dataRows['minimal quantity'])) {
+            $command->setMinimalQuantity((int) $dataRows['minimal quantity']);
+        }
+        if (isset($dataRows['low stock threshold'])) {
+            $command->setLowStockThreshold((int) $dataRows['low stock threshold']);
+        }
+        if (isset($dataRows['low stock alert is enabled'])) {
+            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']));
+        }
+        if (isset($dataRows['available date'])) {
+            $command->setAvailableDate(new DateTime($dataRows['available date']));
+        }
+        if (isset($dataRows['available now labels'])) {
+            $command->setLocalizedAvailableNowLabels($dataRows['available now labels']);
+            unset($dataRows['available now labels']);
+        }
+        if (isset($dataRows['available later labels'])) {
+            $command->setLocalizedAvailableLaterLabels($dataRows['available later labels']);
+            unset($dataRows['available later labels']);
         }
     }
 }
