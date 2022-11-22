@@ -16,3 +16,9 @@ services:
   PrestaShop\PrestaShop\Core\Security\EmployeePermissionProviderInterface:
     alias: 'PrestaShop\PrestaShop\Adapter\Security\Access'
     public: false
+
+  PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'

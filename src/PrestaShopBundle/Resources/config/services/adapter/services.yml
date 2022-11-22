@@ -55,12 +55,6 @@ services:
   prestashop.adapter.legacy.hook:
     class: PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider
 
-  # SSL middleware
-  prestashop.adapter.middleware.ssl:
-    class: PrestaShop\PrestaShop\Adapter\Security\SslMiddleware
-    tags:
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
   # Legacy Hooks registrator
   prestashop.adapter.legacy.hook.subscriber:
     class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
