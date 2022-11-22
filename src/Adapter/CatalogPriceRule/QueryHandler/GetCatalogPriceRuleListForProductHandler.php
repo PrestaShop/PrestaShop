@@ -91,6 +91,7 @@ class GetCatalogPriceRuleListForProductHandler implements GetCatalogPriceRuleLis
                 (int) $catalogPriceRule['from_quantity'],
                 $catalogPriceRule['reduction_type'],
                 new DecimalNumber($catalogPriceRule['reduction']),
+                (bool) $catalogPriceRule['reduction_tax'],
                 DateTimeUtil::buildNullableDateTime($catalogPriceRule['from']),
                 DateTimeUtil::buildNullableDateTime($catalogPriceRule['to']),
                 $catalogPriceRule['shop_name'],

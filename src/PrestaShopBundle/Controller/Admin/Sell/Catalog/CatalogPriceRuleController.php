@@ -346,7 +346,8 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                 'impact' => $this->formatImpact(
                     $catalogPriceRule->getReductionType(),
                     $catalogPriceRule->getReduction(),
-                    $catalogPriceRule->getCurrencyIso() ?: $this->getContextCurrencyIso()
+                    $catalogPriceRule->getCurrencyIso() ?: $this->getContextCurrencyIso(),
+                    $catalogPriceRule->getTaxIncl()
                 ),
                 'startDate' => $catalogPriceRule->getDateStart()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                 'endDate' => $catalogPriceRule->getDateEnd()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
@@ -363,8 +364,14 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return string
      */
-    private function formatImpact(string $reductionType, DecimalNumber $reductionValue, string $currencyIsoCode): string
+    private function formatImpact(
+        string $reductionType,
+        DecimalNumber $reductionValue,
+        string $currencyIsoCode,
+        bool $taxIncl
+    ): string
     {
+        $impact = '';
         if ($reductionValue->equalsZero()) {
             return self::UNSPECIFIED_VALUE_FORMAT;
         }
@@ -373,7 +380,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
         $locale = $this->getContextLocale();
         if ($reductionType === Reduction::TYPE_AMOUNT) {
-            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $currencyIsoCode));
+            $price = $locale->formatPrice((string) $reductionValue, $currencyIsoCode);
+            if ($taxIncl) {
+                return $this->trans('%price% (tax incl.)', 'Admin.Global', ['%price%' => $price]);
+            }
+            return $this->trans('%price% (tax excl.)', 'Admin.Global', ['%price%' => $price]);
         }
 
         return sprintf('%s %%', (string) $reductionValue);

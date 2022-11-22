@@ -78,6 +78,7 @@ class CatalogPriceRuleRepository
                 spr.from_quantity,
                 spr.reduction_type,
                 spr.reduction,
+                spr.reduction_tax,
                 spr.from,
                 spr.to
             ')
