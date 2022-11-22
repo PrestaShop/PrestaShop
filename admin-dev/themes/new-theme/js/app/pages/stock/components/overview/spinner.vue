@@ -58,6 +58,7 @@
 
 <script lang="ts">
   import PSNumber from '@app/widgets/ps-number.vue';
+  import isNumber from 'lodash/isNumber';
   import {defineComponent} from 'vue';
 
   const {$} = window;
@@ -89,7 +90,7 @@
         return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
       onChange(val: number): void {
-        if (val) {
+        if (val && isNumber(val)) {
           this.value = val;
           this.isEnabled = !!val;
         }
@@ -121,7 +122,7 @@
         this.isActive = true;
       },
       focusOut(event: Event): void {
-        const value = Math.round(<number> this.value);
+        const value = isNumber(this.value) ? Math.round(this.value) : 0;
 
         if (
           !$(<HTMLElement>event.target).hasClass('ps-number')
@@ -149,7 +150,7 @@
     },
     watch: {
       value(val: number): void {
-        if (val) {
+        if (isNumber(val)) {
           this.$emit('updateProductQty', {
             product: this.product,
             delta: val,
