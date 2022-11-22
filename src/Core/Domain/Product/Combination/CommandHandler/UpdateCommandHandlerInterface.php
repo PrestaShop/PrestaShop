@@ -24,47 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
 /**
- * Is thrown when combination update fails
+ * Defines contract to handle @see UpdateCombinationCommand
  */
-class CannotUpdateCombinationException extends CombinationException
+interface UpdateCommandHandlerInterface
 {
-    /**
-     * When generic product update fails
-     */
-    public const FAILED_UPDATE_COMBINATION = 1;
-
-    /**
-     * When fails to update options of single combination
-     */
-    public const FAILED_UPDATE_DETAILS = 10;
-
-    /**
-     * When fails to update prices information of single combination
-     */
-    public const FAILED_UPDATE_PRICES = 20;
-
-    /**
-     * When fails to update stock information of single combination
-     */
-    public const FAILED_UPDATE_STOCK = 30;
-
-    /**
-     * When fails to update combination in combinations list
-     */
-    public const FAILED_UPDATE_LISTED_COMBINATION = 40;
-
-    /**
-     * When fails to update default combination
-     */
-    public const FAILED_UPDATE_DEFAULT_COMBINATION = 50;
-
-    /**
-     * When fails to update default supplier data
-     */
-    public const FAILED_UPDATE_DEFAULT_SUPPLIER_DATA = 60;
+    public function handle(UpdateCombinationCommand $command): void;
 }

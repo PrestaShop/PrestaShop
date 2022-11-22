@@ -24,47 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
+use Combination;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
 /**
- * Is thrown when combination update fails
+ * Responsible for filling up the Combination with the properties which have to be updated
  */
-class CannotUpdateCombinationException extends CombinationException
+interface CombinationFillerInterface
 {
     /**
-     * When generic product update fails
+     * Fill combination properties from the command and return an array of the properties to update.
+     *
+     * Returns a list of properties that were filled.
+     * Simple (not multilingual) fields will be provided in a simple array as a values, while for
+     * multilingual ones the array key will be the field name and the value will be an array of language ids.
+     *
+     * @return array<int, string|array<string, int>>
+     *
+     * e.g.:
+     * [
+     *     'reference',
+     *     'visibility',
+     *     'name' => [1, 2],
+     * ]
      */
-    public const FAILED_UPDATE_COMBINATION = 1;
-
-    /**
-     * When fails to update options of single combination
-     */
-    public const FAILED_UPDATE_DETAILS = 10;
-
-    /**
-     * When fails to update prices information of single combination
-     */
-    public const FAILED_UPDATE_PRICES = 20;
-
-    /**
-     * When fails to update stock information of single combination
-     */
-    public const FAILED_UPDATE_STOCK = 30;
-
-    /**
-     * When fails to update combination in combinations list
-     */
-    public const FAILED_UPDATE_LISTED_COMBINATION = 40;
-
-    /**
-     * When fails to update default combination
-     */
-    public const FAILED_UPDATE_DEFAULT_COMBINATION = 50;
-
-    /**
-     * When fails to update default supplier data
-     */
-    public const FAILED_UPDATE_DEFAULT_SUPPLIER_DATA = 60;
+    public function fillUpdatableProperties(Combination $combination, UpdateCombinationCommand $command): array;
 }
