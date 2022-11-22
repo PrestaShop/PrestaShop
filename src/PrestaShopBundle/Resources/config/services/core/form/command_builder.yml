@@ -14,24 +14,6 @@ services:
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
-  # IMPORTANT these two builders update the product indexation, since the indexes are based on other product data
-  # like names, references and so on they should be executed last for more up-to-date indexes, this can be done
-  # before the product type though as it doesn't influence the indexes
-  prestashop.core.form.command_builder.product.options_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags:
-      # - { name: 'core.product_command_builder', priority: -15 }
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-
-  # Status update should be after the visibility as it is the final dependency on the product indexation
-  prestashop.core.form.command_builder.product.product_status_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStatusCommandsBuilder
-      # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-      # tags:
-      # - { name: 'core.product_command_builder', priority: -21 }
-
   # VERY IMPORTANT this builder must be the last one, it will avoid conflicts with previous commands
   # that may not be compatible with the updated type, its priority musk be kept lower than others
   prestashop.core.form.command_builder.product.type:
@@ -39,37 +21,9 @@ services:
     tags:
       - { name: 'core.product_command_builder', priority: -42 }
 
-  prestashop.core.form.command_builder.product.basic_information:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-
-  prestashop.core.form.command_builder.product.prices:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-
-  prestashop.core.form.command_builder.product.seo:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-
   prestashop.core.form.command_builder.tags.seo:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\TagsCommandsBuilder
     tags: [ 'core.product_command_builder' ]
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-
-  prestashop.core.form.command_builder.product.shipping:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
@@ -78,13 +32,6 @@ services:
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
-
-  prestashop.core.form.command_builder.product.stock_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
   prestashop.core.form.command_builder.product.product_suppliers_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder
@@ -105,11 +52,6 @@ services:
   prestashop.core.form.command_builder.product.categories:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCategoriesCommandsBuilder
     tags: [ 'core.product_command_builder' ]
-
-  prestashop.core.form.command_builder.product.details_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\DetailsCommandsBuilder
-    # todo: this and related php classes can be deleted once UpdateProductCommandsBuilder is fully integrated and tested manually
-    # tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.attachments:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductAttachmentsCommandsBuilder
