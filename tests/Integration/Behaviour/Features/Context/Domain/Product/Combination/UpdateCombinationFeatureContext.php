@@ -40,11 +40,12 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
      * @When I update combination :combinationReference details with following values:
+     * @When I update combination :combinationReference prices with following details:
      *
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
-    public function updateDetails(string $combinationReference, TableNode $tableNode): void
+    public function updateCombination(string $combinationReference, TableNode $tableNode): void
     {
         $command = new UpdateCombinationCommand($this->getSharedStorage()->get($combinationReference));
 
@@ -75,6 +76,18 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         }
         if (isset($dataRows['impact on weight'])) {
             $command->setWeight($dataRows['impact on weight']);
+        }
+        if (isset($dataRows['eco tax'])) {
+            $command->setEcoTax($dataRows['eco tax']);
+        }
+        if (isset($dataRows['impact on price'])) {
+            $command->setImpactOnPrice($dataRows['impact on price']);
+        }
+        if (isset($dataRows['impact on unit price'])) {
+            $command->setImpactOnUnitPrice($dataRows['impact on unit price']);
+        }
+        if (isset($dataRows['wholesale price'])) {
+            $command->setWholesalePrice($dataRows['wholesale price']);
         }
     }
 }
