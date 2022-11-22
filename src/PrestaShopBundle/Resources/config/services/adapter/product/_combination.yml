@@ -224,3 +224,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\PricesFiller:
     tags: [ 'core.combination_filler' ]
+
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\StockInformationFiller:
+    tags: [ 'core.combination_filler' ]

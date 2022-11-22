@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -100,6 +101,36 @@ class UpdateCombinationCommand
      * @var DecimalNumber|null
      */
     private $wholesalePrice;
+
+    /**
+     * @var int|null
+     */
+    private $minimalQuantity;
+
+    /**
+     * @var int|null
+     */
+    private $lowStockThreshold;
+
+    /**
+     * @var bool|null
+     */
+    private $lowStockAlertEnabled;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    private $availableDate;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
 
     /**
      * @param int $combinationId
@@ -316,6 +347,134 @@ class UpdateCombinationCommand
     public function setWholesalePrice(string $wholesalePrice): self
     {
         $this->wholesalePrice = new DecimalNumber($wholesalePrice);
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMinimalQuantity(): ?int
+    {
+        return $this->minimalQuantity;
+    }
+
+    /**
+     * @param int $minimalQuantity
+     *
+     * @return $this
+     */
+    public function setMinimalQuantity(int $minimalQuantity): self
+    {
+        $this->minimalQuantity = $minimalQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLowStockThreshold(): ?int
+    {
+        return $this->lowStockThreshold;
+    }
+
+    /**
+     * @param int $lowStockThreshold
+     *
+     * @return $this
+     */
+    public function setLowStockThreshold(int $lowStockThreshold): self
+    {
+        $this->lowStockThreshold = $lowStockThreshold;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isLowStockAlertEnabled(): ?bool
+    {
+        return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return $this
+     */
+    public function setLowStockAlert(bool $enabled): self
+    {
+        $this->lowStockAlertEnabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getAvailableDate(): ?DateTimeInterface
+    {
+        return $this->availableDate;
+    }
+
+    /**
+     * @param DateTimeInterface $availableDate
+     *
+     * @return $this
+     */
+    public function setAvailableDate(DateTimeInterface $availableDate): self
+    {
+        $this->availableDate = $availableDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getLowStockAlertEnabled(): ?bool
+    {
+        return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableNowLabels(): ?array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableNowLabels
+     *
+     * @return $this
+     */
+    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): self
+    {
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableLaterLabels(): ?array
+    {
+        return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableLaterLabels
+     *
+     * @return $this
+     */
+    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): self
+    {
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
 
         return $this;
     }
