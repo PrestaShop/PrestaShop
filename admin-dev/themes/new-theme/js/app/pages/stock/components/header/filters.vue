@@ -156,6 +156,7 @@
   import PSRadio from '@app/widgets/ps-radio.vue';
   import {defineComponent} from 'vue';
   import translate from '@app/pages/stock/mixins/translate';
+  import {Moment} from 'moment';
   import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
