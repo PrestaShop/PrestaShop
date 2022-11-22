@@ -95,8 +95,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
         const groupField = this.selectListField(trClone, listFields.group);
         const nameField = this.selectListField(trClone, listFields.name);
         const fromQuantityField = this.selectListField(trClone, listFields.fromQuantity);
-        const reductionTypeField = this.selectListField(trClone, listFields.reductionType);
-        const reductionField = this.selectListField(trClone, listFields.reduction);
+        const impactField = this.selectListField(trClone, listFields.impact);
         const startDateField = this.selectListField(trClone, listFields.from);
         const endDateField = this.selectListField(trClone, listFields.to);
 
@@ -108,8 +107,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
         groupField.textContent = catalogPriceRule.group;
         nameField.textContent = catalogPriceRule.name;
         fromQuantityField.textContent = catalogPriceRule.fromQuantity;
-        reductionTypeField.textContent = catalogPriceRule.reductionType;
-        reductionField.textContent = catalogPriceRule.reduction;
+        impactField.textContent = catalogPriceRule.impact;
         startDateField.textContent = catalogPriceRule.startDate;
         endDateField.textContent = catalogPriceRule.endDate;
         editBtn.href = editCatalogPriceRuleUrl.replace('%catalog_price_rule_id%', String(catalogPriceRule.id));

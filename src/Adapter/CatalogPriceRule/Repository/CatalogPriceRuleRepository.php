@@ -71,6 +71,7 @@ class CatalogPriceRuleRepository
                 spr.id_specific_price_rule,
                 spr.name as specific_price_rule_name,
                 currency_lang.name as currency_name,
+                currency.iso_code as currency_iso,
                 country_lang.name as lang_name,
                 shop.name as shop_name,
                 group_lang.name as group_name,
@@ -116,6 +117,12 @@ class CatalogPriceRuleRepository
                 $this->dbPrefix . 'currency_lang',
                 'currency_lang',
                 'spr.id_currency = currency_lang.id_currency AND currency_lang.id_lang = :langId'
+            )
+            ->leftJoin(
+                'spr',
+                $this->dbPrefix . 'currency',
+                'currency',
+                'spr.id_currency = currency.id_currency'
             )
             ->leftJoin(
                 'spr',

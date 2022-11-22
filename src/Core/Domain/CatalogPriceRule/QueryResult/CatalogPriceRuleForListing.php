@@ -89,6 +89,11 @@ class CatalogPriceRuleForListing
     private $dateEnd;
 
     /**
+     * @var string|null
+     */
+    private $currencyIso;
+
+    /**
      * CatalogPriceRuleForListing constructor.
      *
      * @param int $catalogPriceRuleId
@@ -102,6 +107,7 @@ class CatalogPriceRuleForListing
      * @param string|null $currencyName
      * @param string|null $countryName
      * @param string|null $groupName
+     * @param string|null $currencyIso
      */
     public function __construct(
         int $catalogPriceRuleId,
@@ -114,7 +120,8 @@ class CatalogPriceRuleForListing
         ?string $shopName,
         ?string $currencyName,
         ?string $countryName,
-        ?string $groupName
+        ?string $groupName,
+        ?string $currencyIso
     ) {
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->catalogPriceRuleName = $catalogPriceRuleName;
@@ -127,6 +134,7 @@ class CatalogPriceRuleForListing
         $this->currencyName = $currencyName;
         $this->countryName = $countryName;
         $this->groupName = $groupName;
+        $this->currencyIso = $currencyIso;
     }
 
     /**
@@ -215,5 +223,13 @@ class CatalogPriceRuleForListing
     public function getGroupName(): ?string
     {
         return $this->groupName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrencyIso(): ?string
+    {
+        return $this->currencyIso;
     }
 }
