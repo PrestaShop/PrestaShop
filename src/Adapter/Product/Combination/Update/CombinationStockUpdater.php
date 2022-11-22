@@ -142,11 +142,6 @@ class CombinationStockUpdater
             $updatableProperties[] = 'low_stock_alert';
         }
 
-        if (null !== $properties->getLocation()) {
-            $combination->location = $properties->getLocation();
-            $updatableProperties[] = 'location';
-        }
-
         return $updatableProperties;
     }
 

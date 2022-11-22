@@ -44,6 +44,12 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
 
+  PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand
+
   prestashop.adapter.product.combination.query_handler.get_combination_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
     arguments:
@@ -109,13 +115,16 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
-  prestashop.adapter.product.combination.update.combination_stock_updater:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.product.combination.update.combination_stock_updater:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
+    deprecated: ~
 
   prestashop.adapter.product.combination.create.combination_creator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
