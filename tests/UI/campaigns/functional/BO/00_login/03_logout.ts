@@ -1,8 +1,5 @@
 // Import utils
-// import helper from '/var/www/html/PrestaShop/tests/UI/utils/helpers';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -12,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 import loginPage from '@pages/BO/login/index';
 
 import {expect} from 'chai';
-
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_login_logout';
