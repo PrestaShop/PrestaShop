@@ -83,7 +83,7 @@ class DetailsFillerTest extends CombinationFillerTestCase
             ->setMpn('HUE222-7')
             ->setReference('ref-HUE222-7')
             ->setUpc('0123456789')
-            ->setWeight('3')
+            ->setImpactOnWeight('3')
         ;
         $expectedCombination = $this->mockDefaultCombination();
         $expectedCombination->ean13 = '1234567890111';

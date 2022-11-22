@@ -68,7 +68,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
-        $command->setWeight('12.00');
+        $command->setImpactOnWeight('12.00');
         $command->setReference('toto');
         yield [
             [
@@ -84,7 +84,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
-        $command->setWeight('12.00');
+        $command->setImpactOnWeight('12.00');
         yield [
             [
                 'price_impact' => [
