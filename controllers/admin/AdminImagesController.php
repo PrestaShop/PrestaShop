@@ -50,6 +50,7 @@ class AdminImagesControllerCore extends AdminController
 
         parent::init();
 
+        /* TODO fix this line */
         $this->generateAdditionalAvif = true; // $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
 
         $fields = [
@@ -57,142 +58,145 @@ class AdminImagesControllerCore extends AdminController
                 'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
                 'show' => true,
                 'required' => true,
-                'type' => 'radio',
+                'type' => 'checkbox',
                 'choices' => [
-                    'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
-                    'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
-                    'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
-                    'webp' => $this->trans('Use WebP only if the base image is in WebP format.', [], 'Admin.Design.Feature'),
-                    'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
+                    '0' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
+                    '1' => $this->trans('PNG', [], 'Admin.Design.Feature'),
+                    '2' => $this->trans('WebP', [], 'Admin.Design.Feature'),
+                    '3' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
                 ],
             ],
-            'PS_ADDITIONAL_IMAGE_WEBP' => [
-                'title' => $this->trans('WebP', [], 'Admin.Design.Feature'),
-                'show' => true,
+            'PS_IMAGE_FORMAT_FALLBACK' => [
+                'title' => $this->trans('Fallback', [], 'Admin.Design.Feature'),
+                'validation' => 'isUnsignedId',
                 'required' => false,
+                'cast' => 'intval',
+                'type' => 'select',
+                'list' => [
+                    [
+                        'id' => '0',
+                        'name' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
+                    ],
+                    [
+                        'id' => '1',
+                        'name' => $this->trans('PNG', [], 'Admin.Design.Feature'),
+                    ],
+                    [
+                        'id' => '2',
+                        'name' => $this->trans('WebP', [], 'Admin.Design.Feature'),
+                    ],
+                    [
+                        'id' => '3',
+                        'name' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                    ],
+                ],
+                'identifier' => 'id',
+                'visibility' => Shop::CONTEXT_ALL,
+            ],
+            'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
+                'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedId',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+                'disabled' => !$this->generateAdditionalAvif,
+            ],
+            'PS_JPEG_QUALITY' => [
+                'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedId',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+            ],
+            'PS_PNG_QUALITY' => [
+                'title' => $this->trans('PNG compression', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', [], 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedId',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+            ],
+            'PS_WEBP_QUALITY' => [
+                'title' => $this->trans('WebP compression', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans(
+                        'Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).',
+                        [],
+                        'Admin.Design.Help'
+                    ) .
+                    ' ' .
+                    $this->trans('Recommended: %d.', [80], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedId',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+            ],
+            'PS_IMAGE_GENERATION_METHOD' => [
+                'title' => $this->trans('Generate images based on one side of the source image', [], 'Admin.Design.Feature'),
+                'validation' => 'isUnsignedId',
+                'required' => false,
+                'cast' => 'intval',
+                'type' => 'select',
+                'list' => [
+                    [
+                        'id' => '0',
+                        'name' => $this->trans('Automatic (longest side)', [], 'Admin.Design.Feature'),
+                    ],
+                    [
+                        'id' => '1',
+                        'name' => $this->trans('Width', [], 'Admin.Global'),
+                    ],
+                    [
+                        'id' => '2',
+                        'name' => $this->trans('Height', [], 'Admin.Global'),
+                    ],
+                ],
+                'identifier' => 'id',
+                'visibility' => Shop::CONTEXT_ALL,
+            ],
+            'PS_PRODUCT_PICTURE_MAX_SIZE' => [
+                'title' => $this->trans('Maximum file size of product customization pictures', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('The maximum file size of pictures that customers can upload to customize a product (in bytes).', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedInt',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+                'suffix' => $this->trans('bytes', [], 'Admin.Design.Feature'),
+                'visibility' => Shop::CONTEXT_ALL,
+            ],
+            'PS_PRODUCT_PICTURE_WIDTH' => [
+                'title' => $this->trans('Product picture width', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('Width of product customization pictures that customers can upload (in pixels).', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedInt',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+                'width' => 'px',
+                'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
+                'visibility' => Shop::CONTEXT_ALL,
+            ],
+            'PS_PRODUCT_PICTURE_HEIGHT' => [
+                'title' => $this->trans('Product picture height', [], 'Admin.Design.Feature'),
+                'hint' => $this->trans('Height of product customization pictures that customers can upload (in pixels).', [], 'Admin.Design.Help'),
+                'validation' => 'isUnsignedInt',
+                'required' => true,
+                'cast' => 'intval',
+                'type' => 'text',
+                'height' => 'px',
+                'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
+                'visibility' => Shop::CONTEXT_ALL,
+            ],
+            'PS_HIGHT_DPI' => [
                 'type' => 'bool',
+                'title' => $this->trans('Generate high resolution images', [], 'Admin.Design.Feature'),
+                'required' => false,
                 'is_bool' => true,
+                'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', [], 'Admin.Design.Help'),
+                'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
+                'visibility' => Shop::CONTEXT_ALL,
             ],
         ];
-
-        if (true === $this->generateAdditionalAvif) {
-            $fields = array_merge($fields, [
-                'PS_ADDITIONAL_IMAGE_AVIF' => [
-                    'title' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
-                    'show' => true,
-                    'required' => false,
-                    'type' => 'bool',
-                    'is_bool' => true,
-                ],
-                'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
-                    'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                ],
-            ]
-            );
-        }
-
-        $fields = array_merge($fields,
-            [
-                'PS_JPEG_QUALITY' => [
-                    'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                ],
-                'PS_PNG_QUALITY' => [
-                    'title' => $this->trans('PNG compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', [], 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                ],
-                'PS_WEBP_QUALITY' => [
-                    'title' => $this->trans('WebP compression', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans(
-                            'Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).',
-                            [],
-                            'Admin.Design.Help'
-                        ) .
-                        ' ' .
-                        $this->trans('Recommended: %d.', [80], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedId',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                ],
-                'PS_IMAGE_GENERATION_METHOD' => [
-                    'title' => $this->trans('Generate images based on one side of the source image', [], 'Admin.Design.Feature'),
-                    'validation' => 'isUnsignedId',
-                    'required' => false,
-                    'cast' => 'intval',
-                    'type' => 'select',
-                    'list' => [
-                        [
-                            'id' => '0',
-                            'name' => $this->trans('Automatic (longest side)', [], 'Admin.Design.Feature'),
-                        ],
-                        [
-                            'id' => '1',
-                            'name' => $this->trans('Width', [], 'Admin.Global'),
-                        ],
-                        [
-                            'id' => '2',
-                            'name' => $this->trans('Height', [], 'Admin.Global'),
-                        ],
-                    ],
-                    'identifier' => 'id',
-                    'visibility' => Shop::CONTEXT_ALL,
-                ],
-                'PS_PRODUCT_PICTURE_MAX_SIZE' => [
-                    'title' => $this->trans('Maximum file size of product customization pictures', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('The maximum file size of pictures that customers can upload to customize a product (in bytes).', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedInt',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                    'suffix' => $this->trans('bytes', [], 'Admin.Design.Feature'),
-                    'visibility' => Shop::CONTEXT_ALL,
-                ],
-                'PS_PRODUCT_PICTURE_WIDTH' => [
-                    'title' => $this->trans('Product picture width', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Width of product customization pictures that customers can upload (in pixels).', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedInt',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                    'width' => 'px',
-                    'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
-                    'visibility' => Shop::CONTEXT_ALL,
-                ],
-                'PS_PRODUCT_PICTURE_HEIGHT' => [
-                    'title' => $this->trans('Product picture height', [], 'Admin.Design.Feature'),
-                    'hint' => $this->trans('Height of product customization pictures that customers can upload (in pixels).', [], 'Admin.Design.Help'),
-                    'validation' => 'isUnsignedInt',
-                    'required' => true,
-                    'cast' => 'intval',
-                    'type' => 'text',
-                    'height' => 'px',
-                    'suffix' => $this->trans('pixels', [], 'Admin.Design.Feature'),
-                    'visibility' => Shop::CONTEXT_ALL,
-                ],
-                'PS_HIGHT_DPI' => [
-                    'type' => 'bool',
-                    'title' => $this->trans('Generate high resolution images', [], 'Admin.Design.Feature'),
-                    'required' => false,
-                    'is_bool' => true,
-                    'hint' => $this->trans('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.', [], 'Admin.Design.Help'),
-                    'desc' => $this->trans('Enable to optimize the display of your images on high pixel density screens.', [], 'Admin.Design.Help'),
-                    'visibility' => Shop::CONTEXT_ALL,
-                ],
-            ]);
 
         $this->fields_options = [
             'images' => [
@@ -434,6 +438,17 @@ class AdminImagesControllerCore extends AdminController
         ];
     }
 
+    public function updateOptionPsImageQuality($value)
+    {
+        if ($this->access('edit') != '1') {
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
+        }
+
+        if (!$this->errors && $value) {
+            Configuration::updateValue('PS_IMAGE_QUALITY', implode('', $value));
+        }
+    }
+
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
@@ -468,12 +483,14 @@ class AdminImagesControllerCore extends AdminController
                 } elseif ((int) Tools::getValue('PS_WEBP_QUALITY') < 0
                     || (int) Tools::getValue('PS_WEBP_QUALITY') > 100) {
                     $this->errors[] = $this->trans('Incorrect value for the selected WebP image compression.', [], 'Admin.Design.Notification');
-                } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
+                }
+                /*elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
                     || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))
                     || !Configuration::updateValue('PS_WEBP_QUALITY', Tools::getValue('PS_WEBP_QUALITY'))) {
                     $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
-                } else {
+                } */
+                else {
                     $this->confirmations[] = $this->_conf[6];
                 }
 
