@@ -180,13 +180,26 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
             }
             $actualItem = $actualCatalogPriceRules[$key];
 
-            $scalarPropertyNames = ['catalogPriceRuleName', 'currencyName', 'countryName', 'groupName', 'fromQuantity', 'impact', 'shopName'];
+            $scalarPropertyNames = ['catalogPriceRuleName', 'currencyName', 'countryName', 'groupName', 'fromQuantity', 'reductionType', 'shopName'];
 
             foreach ($scalarPropertyNames as $propertyName) {
                 Assert::assertSame(
                     $propertyAccessor->getValue($expectedItem, $propertyName),
                     $propertyAccessor->getValue($actualItem, $propertyName),
                     sprintf('Unexpected catalogPriceRuleForListing "%s"', $propertyName)
+                );
+            }
+
+            $decimalProperties = ['reduction'];
+            foreach ($decimalProperties as $decimalPropertyName) {
+                /** @var DecimalNumber $expectedDecimal */
+                $expectedDecimal = $propertyAccessor->getValue($expectedItem, $decimalPropertyName);
+                /** @var DecimalNumber $actualDecimal */
+                $actualDecimal = $propertyAccessor->getValue($actualItem, $decimalPropertyName);
+
+                Assert::assertTrue(
+                    $expectedDecimal->equals($actualDecimal),
+                    sprintf('Unexpected catalogPriceRuleForListing "%s"', $decimalPropertyName)
                 );
             }
 
