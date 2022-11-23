@@ -55,8 +55,8 @@ export default class CategoriesManager {
     this.categoriesContainer = categoriesContainer;
 
     const addCategoriesBtn = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
-    const defaultCategoryInput = this.categoriesContainer?
-      .querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
+    const defaultCategoryInput = this.categoriesContainer
+      ?.querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
 
     if (!addCategoriesBtn || !defaultCategoryInput) {
       throw new Error('Failed to find some essential elements to run categories manager.');

@@ -231,10 +231,10 @@ export default class CategoryTreeSelector {
 
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.treeElementInputs);
-      const checkboxInput = inputsContainer?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
+      const childrenCheckboxInput = inputsContainer?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
 
-      if (checkboxInput !== null && checkboxInput !== undefined) {
-        checkboxInput.value = String(treeCategory.id);
+      if (childrenCheckboxInput !== null && childrenCheckboxInput !== undefined) {
+        childrenCheckboxInput.value = String(treeCategory.id);
       }
 
       inputsContainer?.addEventListener('click', (event) => {
