@@ -60,6 +60,18 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
     }
 
+    /**
+     * @When I set combination ":combinationReference" as default
+     *
+     * @param string $combinationReference
+     */
+    public function setDefaultCombination(string $combinationReference): void
+    {
+        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
+        $command->setIsDefault(true);
+        $this->getCommandBus()->handle($command);
+    }
+
     private function updateCombinationStockAvailable(string $combinationReference, array $dataRows): void
     {
         if (!isset($dataRows['delta quantity'])
@@ -92,6 +104,10 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     private function fillCommand(UpdateCombinationCommand $command, array $dataRows): void
     {
+        // Is default
+        if (isset($dataRows['is default'])) {
+            $command->setIsDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
+        }
         // References
         if (isset($dataRows['ean13'])) {
             $command->setEan13($dataRows['ean13']);

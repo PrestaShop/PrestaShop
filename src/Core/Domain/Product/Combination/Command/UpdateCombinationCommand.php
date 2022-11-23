@@ -53,6 +53,11 @@ class UpdateCombinationCommand
     private $combinationId;
 
     /**
+     * @var bool|null
+     */
+    private $isDefault;
+
+    /**
      * @var Ean13|null
      */
     private $ean13;
@@ -149,6 +154,26 @@ class UpdateCombinationCommand
     public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isDefault(): ?bool
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * @param bool|null $isDefault
+     *
+     * @return static
+     */
+    public function setIsDefault(?bool $isDefault): self
+    {
+        $this->isDefault = $isDefault;
+
+        return $this;
     }
 
     /**
