@@ -98,4 +98,3 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder: ~
   # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
   # tags: [ 'core.combination_command_builder' ]
-
