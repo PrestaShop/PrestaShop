@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Translation\Util;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
@@ -42,12 +43,19 @@ class Refresher
      */
     private $moduleRepository;
 
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
     public function __construct(
         string $translationsCacheDir,
-        ModuleRepository $moduleRepository
+        ModuleRepository $moduleRepository,
+        LegacyContext $context
     ) {
         $this->translationsCacheDir = $translationsCacheDir;
         $this->moduleRepository = $moduleRepository;
+        $this->context = $context;
     }
 
     /**
@@ -74,7 +82,7 @@ class Refresher
 
         $translators = [];
         // Reload translations for each shop language
-        foreach (\Language::getLanguages() as $lang) {
+        foreach ($this->context->getLanguages() as $lang) {
             $translators[$lang['id_lang']] = \Context::getContext()->getTranslatorFromLocale($lang['locale']);
         }
 

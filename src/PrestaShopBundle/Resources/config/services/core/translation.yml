@@ -12,3 +12,4 @@ services:
     arguments:
       - '%kernel.cache_dir%/translations'
       - '@prestashop.adapter.module.repository.module_repository'
+      - '@prestashop.adapter.legacy.context'
