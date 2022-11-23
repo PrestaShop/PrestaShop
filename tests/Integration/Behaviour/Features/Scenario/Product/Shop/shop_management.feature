@@ -206,6 +206,38 @@ Feature: Copy product from shop to shop.
     And product productWithBasic is not associated to shop shop3
     And product productWithBasic is not associated to shop shop4
 
+  Scenario: I copy a pack to another shop, the product associated are in sync
+    Given I add product "productPack" to shop shop1 with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | pack                 |
+    And product "productPack" type should be pack for shop shop1
+    And I add product "product5" to shop shop1 with following information:
+      | name[en-US] | work sunglasses |
+      | type        | standard        |
+    And I add product "product6" to shop shop1 with following information:
+      | name[en-US] | personal sunglasses |
+      | type        | standard            |
+    And I add product "product7" to shop shop1 with following information:
+      | name[en-US] | casual sunglasses |
+      | type        | standard          |
+    When I update pack productPack with following product quantities:
+      | product  | quantity |
+      | product5 | 10       |
+      | product6 | 11       |
+      | product7 | 15       |
+    Then pack "productPack" should contain products with following details for shops "shop1":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+    When I copy product productWithBasic from shop shop1 to shop shop2
+    Then pack "productPack" should contain products with following details for shops "shop1,shop2":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+
+
   Scenario: I copy product to another shop that was not associated, stock data are copied
     # By default the product is created for default shop
     Given I add product "productWithStock" with following information:
