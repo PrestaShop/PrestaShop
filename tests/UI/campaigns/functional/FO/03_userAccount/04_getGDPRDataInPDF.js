@@ -423,16 +423,16 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
         const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
         await expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'total');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
         await expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'id_guest');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
 
-        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         await expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
       });
     });

@@ -114,7 +114,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -228,7 +228,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -333,7 +333,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
 
       await shoppingCartsPage.reloadPage(page);
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
     });
   });
 

@@ -464,18 +464,18 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
         const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
         await expect(numberOfShoppingCartsAfterFilter).to.equal(1);
 
-        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'total');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
         await expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should get shopping cart ID and Date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getShoppingCartIDAndDate', baseContext);
 
-        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'id_guest');
+        shoppingCartDate = await shoppingCartsPage.getTextColumn(page, 1, 'date');
         shoppingCartDate = `${shoppingCartDate.substr(6, 4)}-${shoppingCartDate.substr(0, 2)}-`
           + `${shoppingCartDate.substr(3, 2)}${shoppingCartDate.substr(11, 8)}`;
 
-        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+        shoppingCartID = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
         await expect(parseInt(shoppingCartID, 10)).to.be.greaterThan(5);
       });
     });
