@@ -26,48 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Order\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Customer\Repository;
 
-use Order;
-use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Customer;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShopException;
 
-class OrderRepository extends AbstractObjectModelRepository
+/**
+ * Provides methods to access Customer data storage
+ */
+class CustomerRepository extends AbstractObjectModelRepository
 {
     /**
-     * Gets legacy Order
+     * @param CustomerId $customerId
      *
-     * @param OrderId $orderId
+     * @return Customer
      *
-     * @return Order
-     *
-     * @throws CoreException
-     * @throws OrderNotFoundException
+     * @throws CustomerNotFoundException
      */
-    public function get(OrderId $orderId): Order
+    public function get(CustomerId $customerId): Customer
     {
-        try {
-            $order = new Order($orderId->getValue());
+        /** @var Customer $customer */
+        $customer = $this->getObjectModel(
+            $customerId->getValue(),
+            Customer::class,
+            CustomerNotFoundException::class
+        );
 
-            if ($order->id !== $orderId->getValue()) {
-                throw new OrderNotFoundException($orderId, sprintf('%s #%d was not found', Order::class, $orderId->getValue()));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to get %s #%d [%s]',
-                    Order::class,
-                    $orderId->getValue(),
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
-        }
+        return $customer;
+    }
 
-        return $order;
+    /**
+     * @param CustomerId $customerId
+     *
+     * @throws CustomerNotFoundException
+     */
+    public function assertCustomerExists(CustomerId $customerId): void
+    {
+        $this->assertObjectModelExists(
+            $customerId->getValue(),
+            'customer',
+            CustomerNotFoundException::class
+        );
     }
 }
