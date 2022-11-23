@@ -20,10 +20,11 @@ services:
     arguments:
       - '@prestashop.adapter.order_return.repository.order_return_repository'
       - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
-      - '@prestashop.adapter.order_return.validator.order_return_validator'
 
   prestashop.adapter.order_return.repository.order_return_repository:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
+    arguments:
+      [ '@prestashop.adapter.order_return.validator.order_return_validator' ]
 
   prestashop.adapter.order_return.validator.order_return_validator:
     class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'
