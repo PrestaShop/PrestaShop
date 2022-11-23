@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  *
  * @see UpdateProductStockCommand
  */
-class ProductStockCommandsBuilder
+class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * @var string
@@ -55,6 +55,13 @@ class ProductStockCommandsBuilder
         $this->modifyAllNamePrefix = $modifyAllNamePrefix;
     }
 
+    /**
+     * @param ProductId $productId
+     * @param array $formData
+     * @param ShopConstraint $singleShopConstraint
+     *
+     * @return UpdateProductStockCommand[]
+     */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['stock']) && !isset($formData['combinations'])) {
