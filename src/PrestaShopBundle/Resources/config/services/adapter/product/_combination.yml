@@ -135,11 +135,14 @@ services:
       - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
-  prestashop.adapter.product.combination.update.default_combination_updater:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater:
     arguments:
       - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+
+  prestashop.adapter.product.combination.update.default_combination_updater:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater
+    deprecated: ~
 
   prestashop.adapter.product.combination.update.combination_deleter:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
