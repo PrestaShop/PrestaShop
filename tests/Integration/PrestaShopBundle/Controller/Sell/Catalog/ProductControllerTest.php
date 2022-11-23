@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
@@ -139,7 +140,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
         //        need to handle that in a future too. (inputs like: low_stock_threshold, unit_price etc..)
         // @todo: handle options like $isEcoTaxEnabled, $isTaxEnabled depending on them there are some fields that may exist or not.
-        // @todo: handle relation checks like specific price priorities, categories, related products, suppliers etc.
+        // @todo: handle relation checks like priorities, categories, related products, suppliers, attachments, features etc.
         // First update the product with a few data
         $formData = [
             'product[header][type]' => ProductType::TYPE_STANDARD,
@@ -150,6 +151,13 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[description][description][1]' => 'description 1',
             'product[description][description_short][1]' => 'description short 1',
             'product[description][manufacturer]' => 2,
+            'product[specifications][references][mpn]' => 'mpn',
+            'product[specifications][references][upc]' => '72527273070',
+            'product[specifications][references][ean_13]' => '978020137962',
+            'product[specifications][references][isbn]' => '9781234567897',
+            'product[specifications][references][reference]' => 'reference1',
+            'product[specifications][show_condition]' => true,
+            'product[specifications][condition]' => ProductCondition::NEW,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -183,6 +191,13 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[description][description][1]' => 'description 1',
             'product[description][description_short][1]' => 'description short 1',
             'product[description][manufacturer]' => 2,
+            'product[specifications][references][mpn]' => 'mpn',
+            'product[specifications][references][upc]' => '72527273070',
+            'product[specifications][references][ean_13]' => '978020137962',
+            'product[specifications][references][isbn]' => '9781234567897',
+            'product[specifications][references][reference]' => 'reference1',
+            'product[specifications][show_condition]' => true,
+            'product[specifications][condition]' => ProductCondition::NEW,
             'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
