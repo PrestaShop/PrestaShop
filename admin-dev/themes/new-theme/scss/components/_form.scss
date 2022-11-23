@@ -231,9 +231,10 @@
   justify-content: space-between;
   gap: 10px;
 }
-.text_preview-widget, .link_preview-widget {
-   .input-container{
+
+.text_preview-widget,
+.link_preview-widget {
+  .input-container{
     padding-top: calc(0.375rem + 1px);
   }
 }
-
