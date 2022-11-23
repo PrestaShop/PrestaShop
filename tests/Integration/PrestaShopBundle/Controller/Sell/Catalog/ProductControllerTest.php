@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -140,7 +141,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
         //        need to handle that in a future too. (inputs like: low_stock_threshold, unit_price etc..)
         // @todo: handle options like $isEcoTaxEnabled, $isTaxEnabled depending on them there are some fields that may exist or not.
-        // @todo: handle relation checks like priorities, categories, related products, suppliers, attachments, features etc.
+        // @todo: handle relation checks like priorities, categories, related products, suppliers, attachments, features, carriers etc.
         // First update the product with a few data
         $formData = [
             'product[header][type]' => ProductType::TYPE_STANDARD,
@@ -158,6 +159,14 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[specifications][references][reference]' => 'reference1',
             'product[specifications][show_condition]' => true,
             'product[specifications][condition]' => ProductCondition::NEW,
+            'product[shipping][dimensions][width]' => 10.4,
+            'product[shipping][dimensions][height]' => 10.2,
+            'product[shipping][dimensions][depth]' => 5.5,
+            'product[shipping][dimensions][weight]' => 2,
+            'product[shipping][additional_shipping_cost]' => 20.4,
+            'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
+            'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -198,6 +207,14 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[specifications][references][reference]' => 'reference1',
             'product[specifications][show_condition]' => true,
             'product[specifications][condition]' => ProductCondition::NEW,
+            'product[shipping][dimensions][width]' => 10.4,
+            'product[shipping][dimensions][height]' => 10.2,
+            'product[shipping][dimensions][depth]' => 5.5,
+            'product[shipping][dimensions][weight]' => 2,
+            'product[shipping][additional_shipping_cost]' => 20.4,
+            'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+            'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
+            'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
             'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
