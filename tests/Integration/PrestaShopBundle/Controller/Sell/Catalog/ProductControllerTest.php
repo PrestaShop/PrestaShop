@@ -142,7 +142,11 @@ class ProductControllerTest extends FormGridControllerTestCase
         // @todo: handle relation checks like specific price priorities
         // First update the product with a few data
         $formData = [
+            'product[header][type]' => ProductType::TYPE_STANDARD,
+            'product[header][initial_type]' => ProductType::TYPE_STANDARD,
             'product[header][name][1]' => self::TEST_NAME,
+            'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
+            'product[header][active]' => true,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -168,7 +172,11 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Then check that it was correctly updated
         // Price is reformatted with 6 digits
         $expectedFormData = [
+            'product[header][type]' => ProductType::TYPE_STANDARD,
+            'product[header][initial_type]' => ProductType::TYPE_STANDARD,
             'product[header][name][1]' => self::TEST_NAME,
+            'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
+            'product[header][active]' => true,
             'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
