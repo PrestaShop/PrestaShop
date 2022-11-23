@@ -46,7 +46,7 @@ export const getStock = async ({commit}: {commit: Commit}, payload: Record<strin
   }, isParamInvalid));
 
   try {
-    const response = await fetch(`${url}${params}`);
+    const response = await fetch(`${url}&${params.toString()}`);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);
@@ -93,6 +93,7 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     id_stock_mvt_reason: payload.id_stock_mvt_reason,
     id_employee: payload.id_employee,
   }, isParamInvalid));
+  console.log(params.toString());
 
   if (payload.date_add?.sup) {
     params.append('date_add[sup]', payload.date_add.sup);
@@ -103,7 +104,7 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
   }
 
   try {
-    const response = await fetch(`${url}${params}`);
+    const response = await fetch(`${url}&${params.toString()}`);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);
