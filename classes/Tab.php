@@ -304,7 +304,7 @@ class TabCore extends ObjectModel
      *
      * @return array tabs
      */
-    public static $_cache_tabs = [];
+    protected static $_cache_tabs = [];
 
     public static function getTabs($idLang, $idParent = null)
     {

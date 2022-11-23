@@ -64,9 +64,13 @@ services:
   # Legacy Hooks registrator
   prestashop.adapter.legacy.hook.subscriber:
     class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+    tags:
+      - { name: core.legacy.hook.subscriber }
 
   prestashop.adapter.legacy.block.helper.subscriber:
     class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+    tags:
+      - { name: core.legacy.hook.subscriber }
 
   prestashop.adapter.stock_manager:
     class: PrestaShop\PrestaShop\Adapter\StockManager
