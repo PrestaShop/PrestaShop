@@ -47,6 +47,10 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         $config = new CommandBuilderConfig();
+        $config
+            ->addField('[header][is_default]', 'setIsDefault', DataField::TYPE_BOOL)
+        ;
+
         $this
             ->configurePriceImpact($config)
             ->configureDetails($config)

@@ -207,5 +207,38 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             ],
             [$command],
         ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setIsDefault(true);
+        yield [
+            [
+                'header' => [
+                    'is_default' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setIsDefault(false);
+        yield [
+            [
+                'header' => [
+                    'is_default' => '0',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command->setIsDefault(false);
+        yield [
+            [
+                'header' => [
+                    'is_default' => null,
+                ],
+            ],
+            [$command],
+        ];
     }
 }
