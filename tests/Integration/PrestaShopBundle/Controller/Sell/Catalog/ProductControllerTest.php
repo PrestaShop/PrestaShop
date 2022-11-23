@@ -139,7 +139,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
         //        need to handle that in a future too. (inputs like: low_stock_threshold, unit_price etc..)
         // @todo: handle options like $isEcoTaxEnabled, $isTaxEnabled depending on them there are some fields that may exist or not.
-        // @todo: handle relation checks like specific price priorities
+        // @todo: handle relation checks like specific price priorities, categories, related products, suppliers etc.
         // First update the product with a few data
         $formData = [
             'product[header][type]' => ProductType::TYPE_STANDARD,
@@ -147,6 +147,9 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[header][name][1]' => self::TEST_NAME,
             'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
             'product[header][active]' => true,
+            'product[description][description][1]' => 'description 1',
+            'product[description][description_short][1]' => 'description short 1',
+            'product[description][manufacturer]' => 2,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -177,6 +180,9 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[header][name][1]' => self::TEST_NAME,
             'product[header][cover_thumbnail]' => 'http://myshop.com/img/p/en-default-cart_default.jpg',
             'product[header][active]' => true,
+            'product[description][description][1]' => 'description 1',
+            'product[description][description_short][1]' => 'description short 1',
+            'product[description][manufacturer]' => 2,
             'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
