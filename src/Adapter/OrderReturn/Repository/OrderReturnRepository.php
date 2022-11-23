@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
@@ -37,6 +38,19 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class OrderReturnRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var OrderReturnValidator
+     */
+    private $orderReturnValidator;
+
+    /**
+     * @param OrderReturnValidator $orderReturnValidator
+     */
+    public function __construct(OrderReturnValidator $orderReturnValidator)
+    {
+        $this->orderReturnValidator = $orderReturnValidator;
+    }
+
     /**
      * Gets legacy OrderReturn
      *
@@ -49,7 +63,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function get(OrderReturnId $orderReturnId): OrderReturn
     {
-        /** @var OrderReturn $orderReturn */
+        /* @var OrderReturn $orderReturn */
         $orderReturn = $this->getObjectModel(
             $orderReturnId->getValue(),
             OrderReturn::class,
@@ -66,6 +80,7 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function update(OrderReturn $orderReturn): void
     {
+        $this->orderReturnValidator->validate($orderReturn);
         $this->updateObjectModel(
             $orderReturn,
             OrderReturnException::class
