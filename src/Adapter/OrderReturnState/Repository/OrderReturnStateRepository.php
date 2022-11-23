@@ -32,11 +32,10 @@ use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\OrderReturnState\Repository\OrderReturnStateRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 
-class OrderReturnStateRepository extends AbstractObjectModelRepository implements OrderReturnStateRepositoryInterface
+class OrderReturnStateRepository extends AbstractObjectModelRepository
 {
     /**
      * Gets legacy OrderReturnState

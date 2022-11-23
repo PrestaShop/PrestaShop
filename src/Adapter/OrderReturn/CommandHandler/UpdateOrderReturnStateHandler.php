@@ -29,22 +29,22 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use OrderReturn;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
-use PrestaShop\PrestaShop\Core\OrderReturn\Repository\OrderReturnRepositoryInterface;
-use PrestaShop\PrestaShop\Core\OrderReturnState\Repository\OrderReturnStateRepositoryInterface;
 
 class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInterface
 {
     /**
-     * @var OrderReturnRepositoryInterface
+     * @var OrderReturnRepository
      */
     private $orderReturnRepository;
 
     /**
-     * @var OrderReturnStateRepositoryInterface
+     * @var OrderReturnStateRepository
      */
     private $orderReturnStateRepository;
 
@@ -56,12 +56,12 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     /**
      * UpdateOrderReturnStateHandler constructor.
      *
-     * @param OrderReturnRepositoryInterface $orderReturnRepository
-     * @param OrderReturnStateRepositoryInterface $orderReturnStateRepository
+     * @param OrderReturnRepository $orderReturnRepository
+     * @param OrderReturnStateRepository $orderReturnStateRepository
      */
     public function __construct(
-        OrderReturnRepositoryInterface $orderReturnRepository,
-        OrderReturnStateRepositoryInterface $orderReturnStateRepository,
+        OrderReturnRepository $orderReturnRepository,
+        OrderReturnStateRepository $orderReturnStateRepository,
         OrderReturnValidator $orderReturnValidator
     ) {
         $this->orderReturnRepository = $orderReturnRepository;

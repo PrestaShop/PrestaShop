@@ -33,10 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\OrderReturn\Repository\OrderReturnRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-class OrderReturnRepository extends AbstractObjectModelRepository implements OrderReturnRepositoryInterface
+class OrderReturnRepository extends AbstractObjectModelRepository
 {
     /**
      * Gets legacy OrderReturn
