@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
@@ -40,6 +41,7 @@ class ProductControllerTest extends FormGridControllerTestCase
 {
     private const TEST_NAME = 'testProductName';
     private const TEST_QUANTITY = 987;
+    private const TEST_MINIMAL_QUANTITY = 2;
     private const TEST_PRICE = 87.7;
 
     /**
@@ -131,10 +133,22 @@ class ProductControllerTest extends FormGridControllerTestCase
      */
     public function testEdit(int $productId): int
     {
+        // @todo: need to add dedicated tests for different product types, they all cannot be tested in one scenario,
+        //       because inputs existence depends on product type
+        // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
+        //        need to handle that in a future too. (inputs like:
+        //          'product[stock][options][disabling_switch_low_stock_threshold]' => true,
+        //          'product[stock][options][low_stock_threshold]' => 4)
         // First update the product with a few data
         $formData = [
             'product[header][name][1]' => self::TEST_NAME,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
+            'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
+            'product[stock][options][stock_location]' => 'test stock location',
+            'product[stock][availability][out_of_stock_type]' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'product[stock][availability][available_now_label][1]' => 'Available now',
+            'product[stock][availability][available_later_label][1]' => 'Available later',
+            'product[stock][availability][available_date]' => '2022-11-11',
             'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
         ];
 
@@ -144,7 +158,14 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Price is reformatted with 6 digits
         $expectedFormData = [
             'product[header][name][1]' => self::TEST_NAME,
+            'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => self::TEST_QUANTITY,
+            'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
+            'product[stock][options][stock_location]' => 'test stock location',
+            'product[stock][availability][out_of_stock_type]' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            'product[stock][availability][available_now_label][1]' => 'Available now',
+            'product[stock][availability][available_later_label][1]' => 'Available later',
+            'product[stock][availability][available_date]' => '2022-11-11',
             'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
         ];
         $this->assertFormValuesFromPage(
