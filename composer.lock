@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07eb940a744e1755a89916e002ea1903",
+    "content-hash": "7a1ba225ee35bce2d0a3c398494a2643",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -7854,16 +7854,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v4.2.1",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007"
+                "reference": "c02e9e135ea719b91f457a0072748ded0e852e7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
-                "reference": "ffa2b81a8e354a49fd8a2f24742dc9dc399e8007",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/c02e9e135ea719b91f457a0072748ded0e852e7d",
+                "reference": "c02e9e135ea719b91f457a0072748ded0e852e7d",
                 "shasum": ""
             },
             "require": {
@@ -7914,9 +7914,9 @@
             "support": {
                 "forum": "https://github.com/smarty-php/smarty/discussions",
                 "issues": "https://github.com/smarty-php/smarty/issues",
-                "source": "https://github.com/smarty-php/smarty/tree/v4.2.1"
+                "source": "https://github.com/smarty-php/smarty/tree/v4.3.0"
             },
-            "time": "2022-09-14T10:59:01+00:00"
+            "time": "2022-11-22T21:47:32+00:00"
         },
         {
             "name": "soundasleep/html2text",
