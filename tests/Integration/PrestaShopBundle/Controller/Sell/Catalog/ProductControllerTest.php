@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
@@ -167,6 +168,10 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
             'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
             'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
+            'product[options][visibility][visibility]' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'product[options][visibility][available_for_order]' => true,
+            'product[options][visibility][show_price]' => true,
+            'product[options][visibility][online_only]' => false,
             'product[stock][quantities][delta_quantity][delta]' => self::TEST_QUANTITY,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
@@ -215,6 +220,10 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[shipping][delivery_time_note_type]' => DeliveryTimeNoteType::TYPE_SPECIFIC,
             'product[shipping][delivery_time_notes][in_stock][1]' => 'in stock notes1',
             'product[shipping][delivery_time_notes][out_of_stock][1]' => 'out of stock notes1',
+            'product[options][visibility][visibility]' => ProductVisibility::VISIBLE_IN_CATALOG,
+            'product[options][visibility][available_for_order]' => true,
+            'product[options][visibility][show_price]' => true,
+            'product[options][visibility][online_only]' => false,
             'product[stock][quantities][delta_quantity][delta]' => 0,
             'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
