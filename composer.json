@@ -37,7 +37,6 @@
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
-        "egulias/email-validator": "^3.2",
         "ezyang/htmlpurifier": "dev-master as v4.14.0",
         "friendsofsymfony/jsrouting-bundle": "^3.2.1",
         "geoip2/geoip2": "~2.4.2",
