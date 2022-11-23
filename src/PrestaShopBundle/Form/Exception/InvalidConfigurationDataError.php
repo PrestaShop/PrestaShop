@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Exception;
 
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
+
 /** @deprecated and will be removed in 9.0 */
 class InvalidConfigurationDataError
 {
@@ -55,6 +57,14 @@ class InvalidConfigurationDataError
      */
     public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
     {
+        @trigger_error(
+            sprintf(
+                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
+                __CLASS__,
+                CommonConfigurationError::class
+            ),
+            E_USER_DEPRECATED
+        );
         $this->errorCode = $errorCode;
         $this->fieldName = $fieldName;
         $this->languageId = $languageId;

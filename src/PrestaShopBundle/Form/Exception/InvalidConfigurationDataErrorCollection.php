@@ -29,10 +29,24 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Exception;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 
 /** @deprecated and will be removed in 9.0 */
 class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
 {
+    public function __construct()
+    {
+        parent::__construct();
+        @trigger_error(
+            sprintf(
+                'The %s class is deprecated since version 8.1 and will be removed in 9. Use the %s class instead.',
+                __CLASS__,
+                ConfigurationErrorCollection::class
+            ),
+            E_USER_DEPRECATED
+        );
+    }
+
     protected function getType(): string
     {
         return InvalidConfigurationDataError::class;
