@@ -1308,6 +1308,14 @@
   </span>
 {% endblock %}
 
+{% block link_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <a href="{{ form.vars.value }}" class="{{ attr.class|default('') }}">
+    {{ form.vars.button_label }}
+  </a>
+{% endblock %}
+
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
