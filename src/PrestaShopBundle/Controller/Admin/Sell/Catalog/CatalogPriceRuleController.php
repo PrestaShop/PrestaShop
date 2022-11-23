@@ -369,9 +369,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         DecimalNumber $reductionValue,
         string $currencyIsoCode,
         bool $taxIncl
-    ): string
-    {
-        $impact = '';
+    ): string {
         if ($reductionValue->equalsZero()) {
             return self::UNSPECIFIED_VALUE_FORMAT;
         }
@@ -384,6 +382,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             if ($taxIncl) {
                 return $this->trans('%price% (tax incl.)', 'Admin.Global', ['%price%' => $price]);
             }
+
             return $this->trans('%price% (tax excl.)', 'Admin.Global', ['%price%' => $price]);
         }
 
