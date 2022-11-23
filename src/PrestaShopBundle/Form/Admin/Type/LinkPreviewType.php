@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * a data in a form.
  */
-class TextPreviewType extends HiddenType
+class LinkPreviewType extends HiddenType
 {
     /**
      * {@inheritDoc}
@@ -47,14 +47,7 @@ class TextPreviewType extends HiddenType
     {
         parent::buildView($view, $form, $options);
         $view->vars['type'] = 'hidden';
-        $view->vars['preview_class'] = $options['preview_class'];
-        $view->vars['allow_html'] = $options['allow_html'];
-        if (!empty($options['prefix'])) {
-            $view->vars['prefix'] = $options['prefix'];
-        }
-        if (!empty($options['suffix'])) {
-            $view->vars['suffix'] = $options['suffix'];
-        }
+        $view->vars['button_label'] =  $options['button_label'];
     }
 
     /**
@@ -62,7 +55,7 @@ class TextPreviewType extends HiddenType
      */
     public function getBlockPrefix()
     {
-        return 'text_preview';
+        return 'link_preview';
     }
 
     /**
@@ -70,20 +63,10 @@ class TextPreviewType extends HiddenType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
-
-        $resolver
-            ->setDefaults([
-                'preview_class' => '',
-                'prefix' => null,
-                'suffix' => null,
-                'required' => false,
-                'allow_html' => false,
-            ])
-            ->setAllowedTypes('preview_class', 'string')
-            ->setAllowedTypes('prefix', ['string', 'null'])
-            ->setAllowedTypes('suffix', ['string', 'null'])
-            ->setAllowedTypes('allow_html', 'bool');
-        ;
+        $resolver->setDefaults([
+            'required' => false,
+            'button_label' => '', // Start automatically TinyMCE
+        ]);
+        $resolver->setAllowedTypes('button_label', 'string');
     }
 }
