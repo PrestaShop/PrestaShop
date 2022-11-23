@@ -40,6 +40,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class OrderReturnType extends TranslatorAwareType
 {
+    private const CUSTOMER_NAME_PLACEHOLDER = '___customer_name___';
+    private const CUSTOMER_LINK_PLACEHOLDER = '___customer_link___';
+    private const ORDER_PLACEHOLDER = '___order___';
+    private const ORDER_LINK_PLACEHOLDER = '___order_link___';
+    private const QUESTION_PLACEHOLDER = '___question___';
+
     /**
      * @var array
      */
@@ -67,31 +73,29 @@ class OrderReturnType extends TranslatorAwareType
     {
         $builder
             ->add('customer_name', TextPreviewType::class, [
+                'default_empty_data' => static::CUSTOMER_NAME_PLACEHOLDER,
                 'label' => $this->trans('Customer', 'Admin.Global'),
-            ]
-            )
+            ])
             ->add('customer_link', LinkPreviewType::class, [
+                'default_empty_data' => static::CUSTOMER_LINK_PLACEHOLDER,
                 'button_label' => $this->trans('View customer details', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'btn btn-outline-secondary',
                 ],
             ])
             ->add('order', TextPreviewType::class, [
+                'default_empty_data' => static::ORDER_PLACEHOLDER,
                 'label' => $this->trans('Order', 'Admin.Global'),
-                'attr' => [
-                    'class' => 'form-control-value',
-                ],
-                'row_attr' => [
-                    'class' => 'form-control-value',
-                ],
             ])
             ->add('order_link', LinkPreviewType::class, [
+                'default_empty_data' => static::ORDER_LINK_PLACEHOLDER,
                 'button_label' => $this->trans('View order details', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'btn btn-outline-secondary',
                 ],
             ])
             ->add('question', TextPreviewType::class, [
+                'default_empty_data' => static::QUESTION_PLACEHOLDER,
                 'allow_html' => true,
                 'label' => $this->trans('Customer explanation', 'Admin.Orderscustomers.Feature'),
             ])

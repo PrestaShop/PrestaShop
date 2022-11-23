@@ -78,12 +78,14 @@ class TextPreviewType extends HiddenType
                 'prefix' => null,
                 'suffix' => null,
                 'required' => false,
-                'allow_html' => false,
-            ])
+                'error_bubbling' => true,
+                'compound' => false,
+                'allow_html' => false, // Start automatically TinyMCE
+                ]
+            )
             ->setAllowedTypes('preview_class', 'string')
             ->setAllowedTypes('prefix', ['string', 'null'])
             ->setAllowedTypes('suffix', ['string', 'null'])
             ->setAllowedTypes('allow_html', 'bool');
-        ;
     }
 }

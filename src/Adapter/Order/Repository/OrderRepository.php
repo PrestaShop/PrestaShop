@@ -26,15 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Order\Repository;
+namespace PrestaShop\PrestaShop\Adapter\Order\Repository;
 
 use Order;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
+
     /**
      * Gets legacy Order
      *
@@ -42,12 +45,28 @@ class OrderRepository extends AbstractObjectModelRepository
      *
      * @return Order
      *
-     * @throws OrderNotFoundException
+     * @throws CoreException
      */
     public function get(OrderId $orderId): Order
     {
-        /** @var Order $order */
-        $order = $this->getObjectModel($orderId->getValue(), Order::class, OrderNotFoundException::class);
+        try {
+            $order = new Order($orderId->getValue());
+
+            if ($order->id !== $orderId->getValue()) {
+                throw new OrderNotFoundException($orderId, sprintf('%s #%d was not found', Order::class, $orderId->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    Order::class,
+                    $orderId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
 
         return $order;
     }
