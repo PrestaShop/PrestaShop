@@ -34,7 +34,7 @@ use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AdministrationConfigurationErrorMessageProviderTest extends TestCase
 {
@@ -42,7 +42,7 @@ class AdministrationConfigurationErrorMessageProviderTest extends TestCase
 
     public function testGetErrorMessageForConfigurationError(): void
     {
-        $translatorMock = $this->getMockBuilder(Translator::class)
+        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)
             ->disableOriginalConstructor()
             ->setMethods(['trans'])
             ->getMock();
