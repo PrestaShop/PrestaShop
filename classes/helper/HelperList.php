@@ -401,7 +401,7 @@ class HelperListCore extends Helper
                     }
                 } elseif (isset($params['type']) && $params['type'] == 'float') {
                     $this->_list[$index][$key] = rtrim(rtrim($tr[$key], '0'), '.');
-                } elseif (isset($tr[$key])) {
+                } elseif (array_key_exists($key, $tr)) {
                     $echo = $tr[$key];
                     if (isset($params['callback'])) {
                         $callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
