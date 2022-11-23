@@ -50,6 +50,7 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
      * @var MovementReasonRepository
      */
     private $movementReasonRepository;
+
     /**
      * @var StockAvailableRepository
      */

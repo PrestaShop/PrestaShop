@@ -151,9 +151,9 @@ services:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder: ~
-    # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
-    # tags: [ 'core.combination_command_builder' ]
+  # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
+  # tags: [ 'core.combination_command_builder' ]
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockAvailableCommandsBuilder: ~
-    # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
-    # tags: [ 'core.combination_command_builder' ]
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder: ~
+  # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
+  # tags: [ 'core.combination_command_builder' ]

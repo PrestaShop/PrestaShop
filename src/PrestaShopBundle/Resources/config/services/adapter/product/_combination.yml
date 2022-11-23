@@ -95,7 +95,6 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
