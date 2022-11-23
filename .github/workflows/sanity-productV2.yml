@@ -16,7 +16,7 @@ jobs:
     name: Sanity Product V2
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2' ]
       fail-fast: false
     steps:
       - name: Cancel Previous Runs
