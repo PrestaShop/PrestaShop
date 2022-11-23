@@ -26,38 +26,43 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
+namespace PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository;
 
 use OrderReturnState;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
 class OrderReturnStateRepository extends AbstractObjectModelRepository
 {
     /**
-     * Gets legacy OrderReturnState
-     *
      * @param OrderReturnStateId $orderReturnStateId
      *
      * @return OrderReturnState
      *
-     * @throws OrderReturnException
-     * @throws OrderReturnConstraintException
+     * @throws CoreException
+     * @throws OrderReturnStateNotFoundException
      */
-    public function getOrderReturnState(OrderReturnStateId $orderReturnStateId): OrderReturnState
+    public function get(OrderReturnStateId $orderReturnStateId): OrderReturnState
     {
         try {
             $orderReturnState = new OrderReturnState($orderReturnStateId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new OrderReturnException('Failed to create new order return state', 0, $e);
-        }
 
-        if ($orderReturnState->id !== $orderReturnStateId->getValue()) {
-            throw new OrderReturnConstraintException(
-                sprintf('Merchandise return state with id "%d" was not found.', $orderReturnStateId->getValue())
+            if ((int) $orderReturnState->id !== $orderReturnStateId->getValue()) {
+                throw new OrderReturnStateNotFoundException($orderReturnStateId, sprintf('%s #%d was not found', OrderReturnState::class, $orderReturnStateId->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    OrderReturnState::class,
+                    $orderReturnStateId->getValue(),
+                    $e->getMessage()
+                ),
+                0,
+                $e
             );
         }
 

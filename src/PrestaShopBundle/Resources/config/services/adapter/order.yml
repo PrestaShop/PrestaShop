@@ -284,5 +284,5 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\SetInternalOrderNoteCommand
 
-  prestashop.core.domain.order.repository.order_repository:
-    class: PrestaShop\PrestaShop\Core\Domain\Order\Repository\OrderRepository
+  prestashop.adapter.order.repository.order_repository:
+    class: PrestaShop\PrestaShop\Adapter\Order\Repository\OrderRepository

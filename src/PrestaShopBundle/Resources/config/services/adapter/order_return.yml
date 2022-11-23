@@ -9,8 +9,8 @@ services:
               command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing'
         arguments:
            - '@prestashop.adapter.order_return.repository.order_return_repository'
-           - '@prestashop.core.domain.customer.repository.customer_repository'
-           - '@prestashop.core.domain.order.repository.order_repository'
+           - '@prestashop.adapter.customer.repository.customer_repository'
+           - '@prestashop.adapter.order.repository.order_repository'
 
     prestashop.adapter.order_return.command_handler.edit_order_return_state_handler:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
@@ -19,16 +19,13 @@ services:
               command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
         arguments:
           - '@prestashop.adapter.order_return.repository.order_return_repository'
-          - '@prestashop.adapter.order_return.repository.order_return_state_repository'
+          - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
           - '@prestashop.adapter.order_return.validator.order_return_validator'
 
     prestashop.adapter.order_return.repository.order_return_repository:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
         arguments:
           - '@prestashop.adapter.order_return.validator.order_return_validator'
-
-    prestashop.adapter.order_return.repository.order_return_state_repository:
-        class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnStateRepository'
 
     prestashop.adapter.order_return.validator.order_return_validator:
         class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'

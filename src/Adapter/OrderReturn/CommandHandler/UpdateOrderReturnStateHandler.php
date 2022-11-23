@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler;
 
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
-use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnStateRepository;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
+use PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository\OrderReturnStateRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\CommandHandler\UpdateOrderReturnStateHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
@@ -93,7 +93,7 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateOrderReturnStateCommand $command): OrderReturn
     {
-        $orderReturnState = $this->orderReturnStateRepository->getOrderReturnState($command->getOrderReturnStateId());
+        $orderReturnState = $this->orderReturnStateRepository->get($command->getOrderReturnStateId());
         $orderReturn->state = $orderReturnState->id;
 
         return $orderReturn;

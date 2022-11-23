@@ -105,13 +105,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
         try {
-            /** @var OrderReturnForEditing $orderReturnForEditing */
-            $orderReturnForEditing = $this->getQueryBus()->handle(
-                new GetOrderReturnForEditing(
-                    $orderReturnId
-                )
-            );
-
             $form = $formBuilder->getFormFor($orderReturnId);
             $form->handleRequest($request);
 
@@ -128,15 +121,11 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_merchandise_returns_index');
         }
 
-        $legacyContext = $this->get('prestashop.adapter.legacy.context');
-
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
+            'orderReturnForm' => $form->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature'),
-            'orderReturnForm' => $form->createView(),
-            'orderReturnForEditing' => $orderReturnForEditing,
-            'dateFormat' => $legacyContext->getLanguage()->date_format_lite,
         ]);
     }
 
