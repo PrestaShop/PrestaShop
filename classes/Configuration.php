@@ -650,16 +650,10 @@ class ConfigurationCore extends ObjectModel
      */
     public static function hasContext($key, $idLang, $context)
     {
-        if ($context != Shop::CONTEXT_SHOP && $context != Shop::CONTEXT_GROUP && $context != Shop::CONTEXT_ALL) {
-            return false;
-        }
+        $idShopGroup = $context == Shop::CONTEXT_GROUP && Shop::getContext() != Shop::CONTEXT_ALL ? Shop::getContextShopGroupID(true) : null;
+        $idShop = $context == Shop::CONTEXT_SHOP && Shop::getContext() == Shop::CONTEXT_SHOP ? Shop::getContextShopID(true) : null;
 
-        return Configuration::hasKey(
-            $key,
-            $idLang,
-            $context == Shop::CONTEXT_GROUP && Shop::getContext() != Shop::CONTEXT_ALL ? Shop::getContextShopGroupID(true) : null,
-            $context == Shop::CONTEXT_SHOP && Shop::getContext() == Shop::CONTEXT_SHOP ? Shop::getContextShopID(true) : null
-        );
+        return Configuration::hasKey($key, $idLang, $idShopGroup, $idShop);
     }
 
     /**
