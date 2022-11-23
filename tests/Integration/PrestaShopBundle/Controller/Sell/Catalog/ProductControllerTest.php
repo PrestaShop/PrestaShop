@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Sell\Catalog;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
@@ -155,6 +156,11 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[pricing][retail_price][tax_rules_group_id]' => 1,
             'product[pricing][on_sale]' => false,
             'product[pricing][wholesale_price]' => 30.5,
+            'product[seo][meta_title][1]' => 'meta title 1',
+            'product[seo][meta_description][1]' => 'meta description 1',
+            'product[seo][link_rewrite][1]' => 'link-rewrite-1',
+            'product[seo][redirect_option][type]' => RedirectType::TYPE_NOT_FOUND,
+            'product[seo][tags][1]' => 'tag 1, tag 2',
         ];
 
         $this->editEntityFromPage(['productId' => $productId], $formData);
@@ -177,6 +183,11 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[pricing][retail_price][price_tax_included]' => 91.208,
             'product[pricing][on_sale]' => false,
             'product[pricing][wholesale_price]' => 30.5,
+            'product[seo][meta_title][1]' => 'meta title 1',
+            'product[seo][meta_description][1]' => 'meta description 1',
+            'product[seo][link_rewrite][1]' => 'link-rewrite-1',
+            'product[seo][redirect_option][type]' => RedirectType::TYPE_NOT_FOUND,
+            'product[seo][tags][1]' => 'tag 1,tag 2',
         ];
         $this->assertFormValuesFromPage(
             ['productId' => $productId],
