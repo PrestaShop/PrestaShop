@@ -73,14 +73,12 @@ class TextPreviewType extends HiddenType
         parent::configureOptions($resolver);
 
         $resolver
-            ->setDefaults([
-                'preview_class' => '',
-                'prefix' => null,
-                'suffix' => null,
-                'required' => false,
-                'error_bubbling' => true,
-                'compound' => false,
-                'allow_html' => false, // Start automatically TinyMCE
+            ->setDefaults(
+                [
+                    'preview_class' => '',
+                    'prefix' => null,
+                    'suffix' => null,
+                    'allow_html' => false,
                 ]
             )
             ->setAllowedTypes('preview_class', 'string')
