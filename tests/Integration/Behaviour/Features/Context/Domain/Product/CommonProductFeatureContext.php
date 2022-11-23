@@ -178,25 +178,21 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $productTypeName
      */
-    public function assertProductType(string $productReference, string $productTypeName): void
+    public function assertProductTypeForDefaultShop(string $productReference, string $productTypeName): void
     {
-        $editableProduct = $this->getProductForEditing($productReference);
-        Assert::assertEquals(
-            $productTypeName,
-            $editableProduct->getType(),
-            sprintf(
-                'Product type is not as expected. Expected %s but got %s instead',
-                $productTypeName,
-                $editableProduct->getType()
-            )
-        );
-        $productId = $this->getSharedStorage()->get($productReference);
-        $product = new Product($productId);
-        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
-        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
-        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
-        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
-            Assert::assertEquals(0, $product->cache_default_attribute);
+        $this->assertProductType($productReference, $productTypeName, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference type should be :productType for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertProductTypeForShops(string $productReference, string $productTypeName, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->assertProductType($productReference, $productTypeName, $this->getSharedStorage()->get(trim($shopReference)));
         }
     }
 
@@ -364,5 +360,27 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
                 $shopReference ? sprintf(' in shop %s', $shopReference) : ''
             )
         );
+    }
+
+    private function assertProductType(string $productReference, string $productTypeName, int $shopId): void
+    {
+        $editableProduct = $this->getProductForEditing($productReference, $shopId);
+        Assert::assertEquals(
+            $productTypeName,
+            $editableProduct->getType(),
+            sprintf(
+                'Product type is not as expected. Expected %s but got %s instead',
+                $productTypeName,
+                $editableProduct->getType()
+            )
+        );
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
+        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
+        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
+            Assert::assertEquals(0, $product->cache_default_attribute);
+        }
     }
 }
