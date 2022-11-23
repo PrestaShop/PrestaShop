@@ -42,7 +42,7 @@ class ProductControllerTest extends FormGridControllerTestCase
     private const TEST_NAME = 'testProductName';
     private const TEST_QUANTITY = 987;
     private const TEST_MINIMAL_QUANTITY = 2;
-    private const TEST_PRICE = 87.7;
+    private const TEST_RETAIL_PRICE_TAX_EXCLUDED = 87.7;
 
     /**
      * @var bool
@@ -136,9 +136,9 @@ class ProductControllerTest extends FormGridControllerTestCase
         // @todo: need to add dedicated tests for different product types, they all cannot be tested in one scenario,
         //       because inputs existence depends on product type
         // @todo: also the fields with disabling input doesnt seem to work in tests. The data dissappears from request.
-        //        need to handle that in a future too. (inputs like:
-        //          'product[stock][options][disabling_switch_low_stock_threshold]' => true,
-        //          'product[stock][options][low_stock_threshold]' => 4)
+        //        need to handle that in a future too. (inputs like: low_stock_threshold, unit_price etc..)
+        // @todo: handle options like $isEcoTaxEnabled, $isTaxEnabled depending on them there are some fields that may exist or not.
+        // @todo: handle relation checks like specific price priorities
         // First update the product with a few data
         $formData = [
             'product[header][name][1]' => self::TEST_NAME,
@@ -149,7 +149,12 @@ class ProductControllerTest extends FormGridControllerTestCase
             'product[stock][availability][available_now_label][1]' => 'Available now',
             'product[stock][availability][available_later_label][1]' => 'Available later',
             'product[stock][availability][available_date]' => '2022-11-11',
-            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
+            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+            // tax included value should be calculated for viewing only, so it doesn't matter what its value is before submit
+            'product[pricing][retail_price][price_tax_included]' => 1992491249214,
+            'product[pricing][retail_price][tax_rules_group_id]' => 1,
+            'product[pricing][on_sale]' => false,
+            'product[pricing][wholesale_price]' => 30.5,
         ];
 
         $this->editEntityFromPage(['productId' => $productId], $formData);
@@ -159,14 +164,19 @@ class ProductControllerTest extends FormGridControllerTestCase
         $expectedFormData = [
             'product[header][name][1]' => self::TEST_NAME,
             'product[stock][quantities][delta_quantity][delta]' => 0,
-            'product[stock][quantities][delta_quantity][quantity]' => self::TEST_QUANTITY,
+            'product[stock][quantities][delta_quantity][quantity]' => 987,
             'product[stock][quantities][minimal_quantity]' => self::TEST_MINIMAL_QUANTITY,
             'product[stock][options][stock_location]' => 'test stock location',
             'product[stock][availability][out_of_stock_type]' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
             'product[stock][availability][available_now_label][1]' => 'Available now',
             'product[stock][availability][available_later_label][1]' => 'Available later',
             'product[stock][availability][available_date]' => '2022-11-11',
-            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_PRICE,
+            'product[pricing][retail_price][price_tax_excluded]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+            'product[pricing][retail_price][tax_rules_group_id]' => 1,
+            // tax rules group with id 1 value is 4%, so tax incl = retail_price_tax_excluded + (retail_price_tax_excluded*0.04)
+            'product[pricing][retail_price][price_tax_included]' => 91.208,
+            'product[pricing][on_sale]' => false,
+            'product[pricing][wholesale_price]' => 30.5,
         ];
         $this->assertFormValuesFromPage(
             ['productId' => $productId],
@@ -200,8 +210,8 @@ class ProductControllerTest extends FormGridControllerTestCase
                 'product[quantity][max_field]' => self::TEST_QUANTITY,
             ],
             [
-                'product[final_price_tax_excluded][min_field]' => self::TEST_PRICE,
-                'product[final_price_tax_excluded][max_field]' => self::TEST_PRICE,
+                'product[final_price_tax_excluded][min_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
+                'product[final_price_tax_excluded][max_field]' => self::TEST_RETAIL_PRICE_TAX_EXCLUDED,
             ],
         ];
 
