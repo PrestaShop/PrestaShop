@@ -35,6 +35,7 @@ use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -59,10 +60,17 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
 
     /**
      * @param RequestStack|null $requestStack (nullable to preserve backward compatibility)
+     * @param iterable|null $hookSubscribers
      */
-    public function __construct(RequestStack $requestStack = null)
+    public function __construct(RequestStack $requestStack = null, iterable $hookSubscribers = null)
     {
         $this->requestStack = $requestStack;
+
+        foreach ($hookSubscribers as $hookSubscriber) {
+            if ($hookSubscriber instanceof EventSubscriberInterface) {
+                $this->addSubscriber($hookSubscriber);
+            }
+        }
     }
 
     /**
