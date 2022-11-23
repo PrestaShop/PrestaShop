@@ -56,6 +56,12 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockCommandsBuilder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+    tags: [ 'core.product_command_builder' ]
+
   # Combination builders
   prestashop.core.form.command_builder.combination.combination_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder
