@@ -65,8 +65,6 @@ class LinkPreviewType extends HiddenType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'error_bubbling' => true,
-            'compound' => false,
             'required' => false,
             'button_label' => '',
         ]);
