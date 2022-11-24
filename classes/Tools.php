@@ -705,7 +705,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance(Currency::getDefaultCurrencyId());
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -850,7 +850,7 @@ class ToolsCore
      */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $default_currency = Currency::getDefaultCurrencyId();
 
         if (!$context) {
             $context = Context::getContext();
@@ -896,7 +896,7 @@ class ToolsCore
             $currency_to = Currency::getDefaultCurrency();
         }
 
-        if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
+        if ($currency_from->id == Currency::getDefaultCurrencyId()) {
             $amount *= $currency_to->conversion_rate;
         } else {
             $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);

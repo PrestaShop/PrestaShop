@@ -828,7 +828,7 @@ abstract class PaymentModuleCore extends Module
             if ($currency == -1) {
                 $id_currency = (int) $current_id_currency;
             } elseif ($currency == -2) {
-                $id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                $id_currency = Currency::getDefaultCurrencyId();
             } else {
                 $id_currency = $currency;
             }
