@@ -67,7 +67,7 @@ class AdminDashboardControllerCore extends AdminController
 
     protected function getOptionFields()
     {
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = Currency::getDefaultCurrency();
         $carriers = Carrier::getCarriers((int) $this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
         $modules = Module::getModulesOnDisk(true);
 

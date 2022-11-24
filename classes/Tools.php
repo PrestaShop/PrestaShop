@@ -889,11 +889,11 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = Currency::getDefaultCurrency();
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = Currency::getDefaultCurrency();
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {

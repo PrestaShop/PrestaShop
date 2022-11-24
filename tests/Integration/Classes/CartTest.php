@@ -311,7 +311,7 @@ class CartTest extends TestCase
         parent::setUp();
 
         // Context needs a currency but doesn't set it by itself, use default one.
-        Context::getContext()->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        Context::getContext()->currency = Currency::getDefaultCurrency();
 
         Group::clearCachedValues();
         self::setRoundingType('line');

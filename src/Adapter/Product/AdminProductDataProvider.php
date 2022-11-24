@@ -354,7 +354,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = Currency::getDefaultCurrency();
         $localeCldr = Tools::getContextLocale(Context::getContext());
 
         /**
