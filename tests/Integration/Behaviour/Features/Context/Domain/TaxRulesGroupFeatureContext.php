@@ -94,7 +94,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add new tax rules group :taxRulesGroupReference with following properties:
+     * @When I add a new tax rules group :taxRulesGroupReference with the following properties:
      */
     public function createTaxRulesGroup(string $taxRulesGroupReference, TableNode $table): void
     {
@@ -112,7 +112,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I edit tax rules group :taxRulesGroupReference with following properties:
+     * @When I edit the tax rules group :taxRulesGroupReference with the following properties:
      */
     public function editTaxRulesGroup(string $taxRulesGroupReference, TableNode $table): void
     {
@@ -200,8 +200,8 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^tax rules group "(.*)" should be (enabled|disabled)?$/
-     * @Given /^tax rules group "(.*)" is (enabled|disabled)?$/
+     * @Then /^tax rules group "(.*)" should be (enabled|disabled)$/
+     * @Given /^tax rules group "(.*)" is (enabled|disabled)$/
      */
     public function assertTaxRulesGroupStatus(string $taxRulesGroupReference, bool $isEnabled): void
     {
@@ -218,7 +218,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^tax rules groups: "(.*)" should be (enabled|disabled)?$/
+     * @Then /^tax rules groups: "(.*)" should be (enabled|disabled)$/
      */
     public function assertTaxRulesGroupsStatus(string $taxRulesGroupsReferences, bool $status): void
     {
@@ -230,7 +230,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then /^tax rules groups: "(.*)" should be deleted?$/
+     * @Then /^tax rules groups: "(.*)" should be deleted$/
      */
     public function assertTaxRulesGroupsExist(string $taxRulesGroupsReferences): void
     {

@@ -131,10 +131,10 @@ class EditTaxRulesGroupCommand
      */
     public function setShopAssociation(?array $shopAssociation): self
     {
-        if (!is_null($shopAssociation) && !$this->assertArrayContainsAllIntegerValues($shopAssociation)) {
+        if (!is_null($shopAssociation) && !$this->assertArrayContainsOnlyIntegerValues($shopAssociation)) {
             throw new TaxRulesGroupConstraintException(
                 sprintf(
-                    'Given shop association %s must contain all integer values',
+                    'Given shop association %s must contain only integer values',
                     var_export($shopAssociation, true)
                 ),
                 TaxRulesGroupConstraintException::INVALID_SHOP_ASSOCIATION
@@ -151,7 +151,7 @@ class EditTaxRulesGroupCommand
      *
      * @return bool
      */
-    protected function assertArrayContainsAllIntegerValues(array $values): bool
+    protected function assertArrayContainsOnlyIntegerValues(array $values): bool
     {
         $filterAllIntegers = function ($value) {
             return is_int($value);
