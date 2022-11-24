@@ -38,8 +38,9 @@ use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 use Tests\Resources\DatabaseDump;
-use Tests\Resources\LanguageResetter;
-use Tests\Resources\ProductResetter;
+use Tests\Resources\Resetter\ConfigurationResetter;
+use Tests\Resources\Resetter\LanguageResetter;
+use Tests\Resources\Resetter\ProductResetter;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -62,6 +63,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     {
         ProductResetter::resetProducts();
         LanguageResetter::resetLanguages();
+        ConfigurationResetter::resetConfiguration();
     }
 
     /**
