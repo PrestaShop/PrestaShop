@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
@@ -50,15 +51,23 @@ class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
     private $movementReasonRepository;
 
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
      * @param ProductStockUpdater $productStockUpdater
      * @param MovementReasonRepository $movementReasonRepository
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         ProductStockUpdater $productStockUpdater,
-        MovementReasonRepository $movementReasonRepository
+        MovementReasonRepository $movementReasonRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;
         $this->movementReasonRepository = $movementReasonRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -95,5 +104,9 @@ class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
             ),
             $command->getShopConstraint()
         );
+
+        if (null !== $command->getOutOfStockType()) {
+            $this->combinationRepository->updateCombinationStock($command->getProductId(), $command->getOutOfStockType(), $command->getShopConstraint());
+        }
     }
 }

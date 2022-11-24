@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandle
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -249,22 +248,7 @@ class UpdateProductCommand
     /**
      * @var int|null
      */
-    private $deltaQuantity;
-
-    /**
-     * @var OutOfStockType|null
-     */
-    private $outOfStockType;
-
-    /**
-     * @var int|null
-     */
     private $minimalQuantity;
-
-    /**
-     * @var string|null
-     */
-    private $location;
 
     /**
      * @var int|null
