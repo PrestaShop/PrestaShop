@@ -179,6 +179,10 @@ class CombinationCore extends ObjectModel
      */
     public function deleteFromSupplier($idProduct)
     {
+        if ($this->hasMultishopEntries()) {
+            return true;
+        }
+
         return Db::getInstance()->delete('product_supplier', 'id_product = ' . (int) $idProduct
             . ' AND id_product_attribute = ' . (int) $this->id);
     }
@@ -190,6 +194,10 @@ class CombinationCore extends ObjectModel
      */
     protected function deleteFromPack(): bool
     {
+        if ($this->hasMultishopEntries()) {
+            return true;
+        }
+
         return Db::getInstance()->delete('pack', 'id_product_item = ' . (int) $this->id_product
             . ' AND id_product_attribute_item = ' . (int) $this->id);
     }
@@ -301,6 +309,12 @@ class CombinationCore extends ObjectModel
     {
         if ((int) $this->id === 0) {
             return false;
+        }
+
+        if ($this->hasMultishopEntries()) {
+            $shopIdList = $this->getShopIdsList();
+
+            return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id . ' AND id_shop IN (' . implode(',', $shopIdList) . ')');
         }
 
         return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);
@@ -545,19 +559,5 @@ class CombinationCore extends ObjectModel
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 			WHERE pa.`id_product_attribute` = ' . (int) $idProductAttribute
         );
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getShopIdsList(): array
-    {
-        if (count($this->id_shop_list)) {
-            $shopIdsList = $this->id_shop_list;
-        } else {
-            $shopIdsList = Shop::getContextListShopID();
-        }
-
-        return $shopIdsList;
     }
 }

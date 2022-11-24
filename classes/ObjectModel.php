@@ -2305,4 +2305,18 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         return self::$htmlFields[$this->def['table']];
     }
+
+    /**
+     * @return int[]
+     */
+    protected function getShopIdsList(): array
+    {
+        if (count($this->id_shop_list)) {
+            $shopIdsList = $this->id_shop_list;
+        } else {
+            $shopIdsList = Shop::getContextListShopID();
+        }
+
+        return $shopIdsList;
+    }
 }
