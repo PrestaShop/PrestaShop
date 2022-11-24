@@ -98,7 +98,6 @@ class CombinationStockProperties
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
-        $this->stockModification = $stockModification;
         $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
     }

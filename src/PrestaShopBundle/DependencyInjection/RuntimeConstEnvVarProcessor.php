@@ -24,40 +24,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShopBundle\DependencyInjection;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Closure;
+use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
+use Symfony\Component\DependencyInjection\Exception\EnvNotFoundException;
 
-/**
- * Class ImageColumn renders column as image.
- */
-final class ImageColumn extends AbstractColumn
+final class RuntimeConstEnvVarProcessor implements EnvVarProcessorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function getEnv($prefix, $name, Closure $getEnv)
     {
-        return 'image';
+        $exploded = explode(':', $name);
+        if (count($exploded) !== 2 || $exploded[0] !== 'runtime' || !defined($exploded[1])) {
+            throw new EnvNotFoundException($name);
+        }
+
+        return constant($exploded[1]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public static function getProvidedTypes()
     {
-        $resolver
-            ->setRequired([
-                'src_field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'alt_field' => '',
-            ])
-            ->setAllowedTypes('src_field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('alt_field', 'string')
-        ;
+        return [
+            'const' => 'bool|int|float|string|array',
+        ];
     }
 }

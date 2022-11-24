@@ -158,9 +158,14 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 $products[$i]['name'] = $this->translator->trans('N/A', [], 'Admin.Global');
             }
 
-            $products[$i]['image'] = '';
             if ($product['id_image']) {
                 $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+            } else {
+                $products[$i]['image'] = $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT, $this->getLanguageIsoCode());
+            }
+            // If no legend is defined use the name as a fallback (used for alt property on image)
+            if (empty($product['legend'])) {
+                $products[$i]['legend'] = $products[$i]['name'];
             }
 
             $productTaxRulesGroupId = new TaxRulesGroupId((int) ($products[$i]['id_tax_rules_group'] ?? 0));
@@ -203,5 +208,15 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         }
 
         return $products;
+    }
+
+    /**
+     * Returns language iso code based on locale, en-US => en
+     *
+     * @return string
+     */
+    private function getLanguageIsoCode(): string
+    {
+        return explode('-', $this->locale->getCode())[0];
     }
 }

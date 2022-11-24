@@ -90,7 +90,10 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         } else {
             $selectedDeliveryOption = 0;
         }
-        unset($selectedDeliveryOption['product_list']);
+
+        if (true === is_array($selectedDeliveryOption) && isset($selectedDeliveryOption['product_list'])) {
+            unset($selectedDeliveryOption['product_list']);
+        }
 
         $assignedVars = [
             'is_free' => $isFree,

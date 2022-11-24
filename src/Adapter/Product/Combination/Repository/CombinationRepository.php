@@ -36,17 +36,24 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDelete
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
+use PrestaShopException;
+use Product;
 
 /**
  * Provides access to Combination data source
  */
 class CombinationRepository extends AbstractObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -258,5 +265,73 @@ class CombinationRepository extends AbstractObjectModelRepository
         }
 
         return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
+     *
+     * @param ProductId $productId
+     *
+     * @return Combination|null
+     *
+     * @throws CoreException
+     */
+    public function findDefaultCombination(ProductId $productId): ?Combination
+    {
+        try {
+            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+        } catch (PrestaShopException $e) {
+            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        }
+
+        return $id ? $this->get(new CombinationId($id)) : null;
+    }
+
+    /**
+     * @param int[] $attributeIds
+     *
+     * @return CombinationId[]
+     */
+    public function getCombinationIdsByAttributes(ProductId $productId, array $attributeIds): array
+    {
+        sort($attributeIds);
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('pa.id_product_attribute')
+            ->addSelect('GROUP_CONCAT(pac.id_attribute ORDER BY pac.id_attribute ASC SEPARATOR "-") AS attribute_ids')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->innerJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_combination',
+                'pac',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            )
+            ->andWhere('pa.id_product = :productId')
+            ->andHaving('attribute_ids = :attributeIds')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('attributeIds', implode('-', $attributeIds))
+            ->addGroupBy('pa.id_product_attribute')
+        ;
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        return array_map(function (array $combination) {
+            return new CombinationId((int) $combination['id_product_attribute']);
+        }, $result);
+    }
+
+    public function updateCombinationStock(ProductId $productId, OutOfStockType $outOfStockType, ShopConstraint $shopConstraint = null): void
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
+            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $this->applyShopConstraint($qb, $shopConstraint)->execute();
     }
 }
