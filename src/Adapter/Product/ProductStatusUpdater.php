@@ -73,17 +73,17 @@ class ProductStatusUpdater
             CannotUpdateProductException::FAILED_UPDATE_STATUS
         );
 
-//      We cannot easily check if status changed in multi-shop context, because product is loaded from a single shop
-//      (it would end up checking one shop product and leaving all other shops unhandled)
-//      So in multi-shop context we always reindex product
+        // We cannot easily check if status changed in multi-shop context, because product is loaded from a single shop
+        // (it would end up checking one shop product and leaving all other shops unhandled)
+        // So in multi-shop context we always reindex product
         if ($shopConstraint->forAllShops()) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
 
             return;
         }
 
-//      In single shop context we check if status changed to make sure we need to reindex product
-//      because reindexing is an expensive operation performance-wise
+        // In single shop context we check if status changed to make sure we need to reindex product
+        // because reindexing is an expensive operation performance-wise
         if ($initialStatus !== $newStatus) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
