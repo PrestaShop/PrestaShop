@@ -28,7 +28,6 @@ namespace PrestaShopBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Tools;
 
 class AddOnsConfiguration implements ConfigurationInterface
 {
@@ -36,8 +35,6 @@ class AddOnsConfiguration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('prestashop');
         $rootNode = $treeBuilder->getRootNode();
-
-        Tools::refreshCACertFile();
 
         $rootNode
             ->children()
