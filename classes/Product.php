@@ -3664,7 +3664,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $id_currency = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $id_currency = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : Currency::getDefaultCurrencyId();
 
         if (!$id_address && Validate::isLoadedObject($cur_cart)) {
             $id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
@@ -4539,7 +4539,7 @@ class ProductCore extends ObjectModel
                 ' . Product::sqlStock('pa', 'pa') . '
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_lang` pal
                     ON (
-                        pa.`id_product_attribute` = pal.`id_product_attribute` AND 
+                        pa.`id_product_attribute` = pal.`id_product_attribute` AND
                         pal.`id_lang` = ' . (int) Context::getContext()->language->id . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
@@ -5832,7 +5832,7 @@ class ProductCore extends ObjectModel
         }
 
         // Finally, we apply the currency rate
-        $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $defaultCurrencyId = Currency::getDefaultCurrencyId();
         $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : $defaultCurrencyId;
         if ($currencyId !== $defaultCurrencyId) {
             $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
@@ -7421,7 +7421,7 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, 
+            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`,
             pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`,
             pal.`available_now`, pal.`available_later`
             FROM `' . _DB_PREFIX_ . 'attribute` a

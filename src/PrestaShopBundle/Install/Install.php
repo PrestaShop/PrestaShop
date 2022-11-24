@@ -387,7 +387,7 @@ class Install extends AbstractInstall
             }
         }
         if (!isset($context->currency) || !Validate::isLoadedObject($context->currency)) {
-            if ($id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT')) {
+            if ($id_currency = Currency::getDefaultCurrencyId()) {
                 $context->currency = new Currency((int) $id_currency);
             }
         }

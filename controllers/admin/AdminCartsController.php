@@ -357,7 +357,7 @@ class AdminCartsControllerCore extends AdminController
                 $this->context->cart->id_lang = (($id_lang = (int) Tools::getValue('id_lang')) ? $id_lang : Configuration::get('PS_LANG_DEFAULT'));
             }
             if (!$this->context->cart->id_currency) {
-                $this->context->cart->id_currency = (($id_currency = (int) Tools::getValue('id_currency')) ? $id_currency : Configuration::get('PS_CURRENCY_DEFAULT'));
+                $this->context->cart->id_currency = (($id_currency = (int) Tools::getValue('id_currency')) ? $id_currency : Currency::getDefaultCurrencyId());
             }
 
             $addresses = $customer->getAddresses((int) $this->context->cart->id_lang);

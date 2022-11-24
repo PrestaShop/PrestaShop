@@ -202,7 +202,7 @@ class CartTest extends TestCase
     private static function makeCart(): Cart
     {
         $cart = new Cart(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $cart->id_currency = Currency::getDefaultCurrencyId();
         $cart->id_address_invoice = self::$id_address;
         self::assertTrue($cart->save());
         Context::getContext()->cart = $cart;

@@ -471,7 +471,7 @@ class CurrencyCore extends ObjectModel
      */
     public function delete()
     {
-        if ($this->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
+        if ($this->id == Currency::getDefaultCurrencyId()) {
             $result = Db::getInstance()->getRow('SELECT `id_currency` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` != ' . (int) $this->id . ' AND `deleted` = 0');
             if (empty($result['id_currency'])) {
                 return false;
@@ -1030,12 +1030,22 @@ class CurrencyCore extends ObjectModel
      */
     public static function getDefaultCurrency()
     {
-        $idCurrency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $idCurrency = Currency::getDefaultCurrencyId();
         if ($idCurrency == 0) {
             return false;
         }
 
         return new Currency($idCurrency);
+    }
+
+    /**
+     * Get default currency Id.
+     *
+     * @return int
+     */
+    public static function getDefaultCurrencyId(): int
+    {
+        return (int) Configuration::get('PS_CURRENCY_DEFAULT');
     }
 
     /**
@@ -1105,7 +1115,7 @@ class CurrencyCore extends ObjectModel
      */
     public function getConversionRate()
     {
-        return ($this->id != (int) Configuration::get('PS_CURRENCY_DEFAULT')) ? $this->conversion_rate : 1;
+        return ($this->id != static::getDefaultCurrencyId()) ? $this->conversion_rate : 1;
     }
 
     /**
