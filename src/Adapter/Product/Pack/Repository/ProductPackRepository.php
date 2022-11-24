@@ -92,14 +92,21 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 ->from($this->dbPrefix . 'pack', 'pack')
                 ->leftJoin('pack', $this->dbPrefix . 'product', 'product', 'pack.id_product_item = product.id_product')
                 ->leftJoin('pack', $this->dbPrefix . 'product_attribute', 'attribute', 'pack.id_product_attribute_item = attribute.id_product_attribute')
-                ->leftJoin('pack', $this->dbPrefix . 'product_lang', 'language', 'pack.id_product_item = language.id_product')
+                ->leftJoin(
+                    'pack',
+                    $this->dbPrefix . 'product_lang',
+                    'language',
+                    // We use product default shop as fallback in case the required shop is not associated to the product
+                    'product.id_product = language.id_product AND language.id_lang = :idLanguage AND (language.id_shop = :idShop OR language.id_shop = product.id_shop_default)'
+                )
                 ->where('pack.id_product_pack = :idProduct')
-                ->andWhere('language.id_lang = :idLanguage')
-                ->andWhere('language.id_shop = :idShop')
                 ->orderBy('pack.id_product_item', 'ASC')
                 ->setParameter('idProduct', $productId->getValue())
                 ->setParameter('idLanguage', $languageId->getValue())
-                ->setParameter('idShop', $shopConstraint->getShopId()->getValue());
+                ->setParameter('idShop', $shopConstraint->getShopId()->getValue())
+                ->addGroupBy('product.id_product')
+                ->addGroupBy('attribute.id_product_attribute')
+            ;
             $packedProducts = $qb->execute()->fetchAll();
         } catch (Throwable $exception) {
             throw new CoreException(

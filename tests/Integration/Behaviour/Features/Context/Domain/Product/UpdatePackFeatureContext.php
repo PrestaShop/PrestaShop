@@ -136,7 +136,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then I should get error that product for packing quantity is invalid
      */
-    public function assertPackProductQuantityError()
+    public function assertPackProductQuantityError(): void
     {
         $this->assertLastErrorIs(
             ProductPackConstraintException::class,
@@ -147,7 +147,7 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     /**
      * @Then I should get error that I cannot add pack into a pack
      */
-    public function assertAddingPackToPackError()
+    public function assertAddingPackToPackError(): void
     {
         $this->assertLastErrorIs(
             ProductPackConstraintException::class,
@@ -181,6 +181,15 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
                 $shopConstraint
             )
         );
+        if (count($data) !== count($packedProducts)) {
+            throw new RuntimeException(sprintf(
+                'Incorrect number of product for shop %d expected %d but got %d instead',
+                $shopConstraint->getShopId()->getValue(),
+                count($data),
+                count($packedProducts)
+            ));
+        }
+
         $notExistingProducts = [];
 
         foreach ($data as $expectedPackedProduct) {
