@@ -38,5 +38,5 @@ interface GetProductIsEnabledHandlerInterface
      *
      * @return bool
      */
-    public function handle(GetProductIsEnabled $query);
+    public function handle(GetProductIsEnabled $query): bool;
 }

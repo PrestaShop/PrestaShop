@@ -26,8 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductIsEnabledHandlerInterface;
 
@@ -37,16 +36,28 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductIsEnabledHa
 final class GetProductIsEnabledHandler implements GetProductIsEnabledHandlerInterface
 {
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
+     * @param ProductMultiShopRepository $productRepository
+     */
+    public function __construct(
+        ProductMultiShopRepository $productRepository
+    ) {
+        $this->productRepository = $productRepository;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function handle(GetProductIsEnabled $query)
+    public function handle(GetProductIsEnabled $query): bool
     {
-        $productId = $query->getProductId()->getValue();
-        $product = new Product($productId);
-
-        if ($product->id !== $productId) {
-            throw new ProductNotFoundException(sprintf('Product with id "%d" was not found.', $productId));
-        }
+        $product = $this->productRepository->getByShopConstraint(
+            $query->getProductId(),
+            $query->getShopConstraint()
+        );
 
         return (bool) $product->active;
     }

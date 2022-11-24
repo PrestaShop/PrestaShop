@@ -350,14 +350,16 @@ class ProductController extends FrameworkBundleAdminController
             ]);
         }
 
+        $shopConstraint = $this->getShopConstraint();
+
         /** @var bool $isEnabled */
-        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId, $shopConstraint));
 
         try {
             $this->getCommandBus()->handle(new UpdateProductStatusCommand(
                 (int) $productId,
                 !$isEnabled,
-                $this->getShopConstraint()
+                $shopConstraint
             ));
         } catch (ProductException $e) {
             return $this->json([
