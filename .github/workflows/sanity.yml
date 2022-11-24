@@ -8,7 +8,7 @@ jobs:
     permissions:
       actions: write   #   to cancel/stop running workflows (styfle/cancel-workflow-action)
       contents: read   #   to fetch code (actions/checkout)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Sanity
     strategy:
       matrix:
