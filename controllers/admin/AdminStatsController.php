@@ -575,7 +575,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return die(json_encode(['error' => 'You do not have the right permission']));
         }
 
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = Currency::getDefaultCurrency();
         $tooltip = null;
         $value = false;
         switch (Tools::getValue('kpi')) {

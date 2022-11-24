@@ -125,7 +125,7 @@ class ContextMocker
         // Use super admin employee by default
         $context->employee = new Employee(1);
         $context->employee->id_lang = $context->language->id;
-        $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $context->currency = Currency::getDefaultCurrency();
         $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
         $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
