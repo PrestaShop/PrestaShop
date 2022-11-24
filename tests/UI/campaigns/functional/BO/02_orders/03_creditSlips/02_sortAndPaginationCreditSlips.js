@@ -4,7 +4,6 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 
-
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
@@ -240,8 +239,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         let sortedTable = await creditSlipsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
+          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
+          sortedTable = await sortedTable.map((text) => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

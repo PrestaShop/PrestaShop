@@ -149,7 +149,6 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
       const duplicateTextResult = await productsPage.duplicateAllProductsWithBulkActions(page);
       await expect(duplicateTextResult).to.equal(productsPage.productMultiDuplicatedSuccessfulMessage);
 
-
       numberOfFilteredProductsAfterDuplicate = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfFilteredProductsAfterDuplicate).to.be.below(numberOfProducts);
     });
