@@ -42,7 +42,8 @@ jobs:
       - name: Use .env.ci
         run: mv .env.ci .env
         working-directory: ./tests/UI
-
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
       - name: Run tests
         run: npm install && npm run test:sanity:fast-fail
         working-directory: ./tests/UI
