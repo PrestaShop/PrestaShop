@@ -149,7 +149,7 @@ export default class CategoriesManager {
 
     const defaultCategoryId = this.getDefaultCategoryId();
 
-    if (selectElement !== null && selectElement !== undefined) {
+    if (selectElement) {
       selectElement.innerHTML = '';
     }
 
@@ -164,8 +164,8 @@ export default class CategoriesManager {
   }
 
   private listenDefaultCategorySelect(): void {
-    this.defaultCategoryInput?.addEventListener('change', (e) => {
-      const currentTarget = e.currentTarget as HTMLInputElement;
+    this.defaultCategoryInput?.addEventListener('change', (e: {currentTarget: HTMLInputElement}) => {
+      const {currentTarget} = e;
 
       if (!(currentTarget instanceof HTMLSelectElement)) {
         console.error('currentTarget expected to be HTMLSelectElement');

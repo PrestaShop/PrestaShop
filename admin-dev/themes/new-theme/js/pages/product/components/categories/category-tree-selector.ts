@@ -233,7 +233,7 @@ export default class CategoryTreeSelector {
       const inputsContainer = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.treeElementInputs);
       const childrenCheckboxInput = inputsContainer?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
 
-      if (childrenCheckboxInput !== null && childrenCheckboxInput !== undefined) {
+      if (childrenCheckboxInput) {
         childrenCheckboxInput.value = String(treeCategory.id);
       }
 

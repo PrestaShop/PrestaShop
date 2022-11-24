@@ -64,7 +64,7 @@ export default class SpecificPriceListRenderer implements RendererType {
     const trTemplateContainer = this.listContainer?.querySelector<HTMLScriptElement>(SpecificPriceMap.listRowTemplate);
     const trTemplate = trTemplateContainer?.innerHTML as string;
 
-    if (tbody !== null && tbody !== undefined) {
+    if (tbody) {
       tbody.innerHTML = '';
     }
 

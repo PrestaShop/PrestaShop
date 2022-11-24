@@ -121,7 +121,7 @@ export default class TagsRenderer {
         const tagItem = clickedBtn.closest<HTMLElement>(ProductCategoryMap.tagItem);
 
         if (tagItem) {
-          const idInput = tagItem?.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+          const idInput = tagItem?.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput);
           tagItem.remove();
           this.eventEmitter.emit(this.tagRemovedEventName, Number(idInput.value));
         }
