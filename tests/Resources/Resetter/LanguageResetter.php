@@ -26,11 +26,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources;
+namespace Tests\Resources\Resetter;
 
 use Configuration;
 use Db;
 use Language;
+use Tests\Resources\DatabaseDump;
 
 class LanguageResetter
 {
@@ -50,8 +51,5 @@ class LanguageResetter
 
         // Reset default language
         Configuration::updateValue('PS_LANG_DEFAULT', 1);
-
-        // Restore static cache
-        Language::resetStaticCache();
     }
 }

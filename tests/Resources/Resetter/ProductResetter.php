@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources;
+namespace Tests\Resources\Resetter;
 
-use Product;
+use Tests\Resources\DatabaseDump;
 
 class ProductResetter
 {
@@ -75,6 +75,5 @@ class ProductResetter
             'feature_product',
             'warehouse_product_location',
         ]);
-        Product::resetStaticCache();
     }
 }

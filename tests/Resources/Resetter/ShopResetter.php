@@ -26,33 +26,37 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources;
+namespace Tests\Resources\Resetter;
 
-use Currency;
+use Shop;
+use Tests\Resources\DatabaseDump;
 
-class LocalizationPackResetter
+class ShopResetter
 {
-    public static function resetLocalizationPacks(): void
+    public static function resetShops(): void
     {
         DatabaseDump::restoreTables([
-            'country',
-            'country_lang',
-            'country_shop',
-            'state',
-            'zone',
-            'zone_shop',
-            'tax',
-            'tax_lang',
-            'tax_rule',
-            'tax_rules_group',
-            'tax_rules_group_shop',
-            'currency',
-            'currency_lang',
-            'currency_shop',
-            'module_currency',
+            // Configuration also needs to be restored since it contains the multishop configuration
+            'configuration',
+            'shop',
+            'shop_group',
+            'shop_url',
         ]);
-        Currency::resetStaticCache();
-        LanguageResetter::resetLanguages();
-        ConfigurationResetter::resetConfiguration();
+        DatabaseDump::restoreMatchingTables('/.*_shop$/');
+
+        // We need to restore lang tables that are also multi-shop
+        DatabaseDump::restoreTables([
+            'carrier_lang',
+            'category_lang',
+            'cms_category_lang',
+            'cms_lang',
+            'cms_role_lang',
+            'customization_field_lang',
+            'info_lang',
+            'linksmenutop_lang',
+            'meta_lang',
+            'product_lang',
+        ]);
+        Shop::resetContext();
     }
 }
