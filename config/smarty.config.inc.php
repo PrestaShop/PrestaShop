@@ -93,6 +93,7 @@ smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
 
 // Native PHP Functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');

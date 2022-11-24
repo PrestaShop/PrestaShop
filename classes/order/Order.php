@@ -175,6 +175,11 @@ class OrderCore extends ObjectModel
     public $note = '';
 
     /**
+     * @var array
+     */
+    public $product_list = [];
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
