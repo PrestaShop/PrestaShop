@@ -63,6 +63,16 @@ class CombinationStock
     private $availableDate;
 
     /**
+     * @var string[] key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[] key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
+
+    /**
      * @param int $quantity
      * @param int $minimalQuantity
      * @param int $lowStockThreshold
@@ -76,7 +86,9 @@ class CombinationStock
         int $lowStockThreshold,
         bool $lowStockAlertEnabled,
         string $location,
-        ?DateTimeInterface $availableDate
+        ?DateTimeInterface $availableDate,
+        array $localizedAvailableNowLabels,
+        array $localizedAvailableLaterLabels
     ) {
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
@@ -84,6 +96,8 @@ class CombinationStock
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
     }
 
     /**
@@ -132,5 +146,21 @@ class CombinationStock
     public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedAvailableNowLabels(): array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedAvailableLaterLabels(): array
+    {
+        return $this->localizedAvailableLaterLabels;
     }
 }

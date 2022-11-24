@@ -320,6 +320,7 @@ class ToolsTest extends TestCase
             ['product_attribute', 'productAttribute', false],
             ['product_attribute_combination', 'productAttributeCombination', false],
             ['product_attribute_image', 'productAttributeImage', false],
+            ['product_attribute_lang', 'productAttributeLang', false],
             ['product_lang', 'productLang', false],
             ['product_supplier', 'productSupplier', false],
             ['profile_lang', 'profileLang', false],

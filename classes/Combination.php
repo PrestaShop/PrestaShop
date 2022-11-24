@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Combination\CombinationSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 /**
@@ -70,12 +71,19 @@ class CombinationCore extends ObjectModel
 
     public $available_date = '0000-00-00';
 
+    /** @var string|array Text when in stock or array of text by id_lang */
+    public $available_now;
+
+    /** @var string|array Text when not in stock but available to order or array of text by id_lang */
+    public $available_later;
+
     /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
         'table' => 'product_attribute',
         'primary' => 'id_product_attribute',
+        'multilang' => true,
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
             'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
@@ -96,6 +104,10 @@ class CombinationCore extends ObjectModel
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'default_on' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'],
             'available_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'],
+
+            /* Lang fields */
+            'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => CombinationSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH],
+            'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => CombinationSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH],
         ],
     ];
 

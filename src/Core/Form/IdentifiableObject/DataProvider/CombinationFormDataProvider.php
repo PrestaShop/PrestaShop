@@ -126,6 +126,8 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                 'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             ],
             'available_date' => DateTime::isNull($availableDate) ? '' : $availableDate->format(DateTime::DEFAULT_DATE_FORMAT),
+            'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),
+            'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
         ];
     }
 

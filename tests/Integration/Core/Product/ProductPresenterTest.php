@@ -82,6 +82,7 @@ class ProductPresenterTest extends TestCase
             'new' => false,
             'pack' => false,
             'show_price' => true,
+            'active' => true,
         ];
     }
 

@@ -29,11 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationDetailsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -49,57 +45,6 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
-    }
-
-    /**
-     * @Then combination :combinationReference should have following details:
-     *
-     * @param string $combinationReference
-     * @param CombinationDetails $expectedDetails
-     */
-    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
-    {
-        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getDetails();
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-        foreach ($scalarDetailNames as $propertyName) {
-            Assert::assertSame(
-                $propertyAccessor->getValue($expectedDetails, $propertyName),
-                $propertyAccessor->getValue($actualDetails, $propertyName),
-                sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
-            );
-        }
-
-        Assert::assertTrue(
-            $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
-            sprintf(
-                'Unexpected combination impact on weight. Expected "%s" got "%s"',
-                var_export($expectedDetails->getImpactOnWeight(), true),
-                var_export($actualDetails->getImpactOnWeight(), true)
-            )
-        );
-    }
-
-    /**
-     * @Transform table:combination detail,value
-     *
-     * @param TableNode $tableNode
-     *
-     * @return CombinationDetails
-     */
-    public function transformDetails(TableNode $tableNode): CombinationDetails
-    {
-        $details = $tableNode->getRowsHash();
-
-        return new CombinationDetails(
-            $details['ean13'],
-            $details['isbn'],
-            $details['mpn'],
-            $details['reference'],
-            $details['upc'],
-            new DecimalNumber($details['impact on weight'] ?? '0')
-        );
     }
 
     /**

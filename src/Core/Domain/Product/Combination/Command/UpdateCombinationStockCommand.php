@@ -78,6 +78,16 @@ class UpdateCombinationStockCommand
     private $availableDate;
 
     /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(
@@ -248,5 +258,45 @@ class UpdateCombinationStockCommand
     public function getLowStockAlertEnabled(): ?bool
     {
         return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableNowLabels(): ?array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableNowLabels
+     *
+     * @return UpdateCombinationStockCommand
+     */
+    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): UpdateCombinationStockCommand
+    {
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableLaterLabels(): ?array
+    {
+        return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableLaterLabels
+     *
+     * @return UpdateCombinationStockCommand
+     */
+    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): UpdateCombinationStockCommand
+    {
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
+
+        return $this;
     }
 }

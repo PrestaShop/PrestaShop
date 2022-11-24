@@ -11,6 +11,15 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
 
+  prestashop.adapter.product.command.update_combination_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationHandler
+    arguments:
+      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.combination.update.filler.combination_filler'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand
+
   prestashop.adapter.product.command.update_combination_details_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationDetailsHandler
     arguments:
@@ -193,3 +202,12 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand
+
+  prestashop.adapter.product.combination.update.filler.combination_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller
+    arguments:
+      - !tagged core.combination_filler
+
+  prestashop.adapter.product.combination.update.filler.details_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\DetailsFiller
+    tags: [ 'core.combination_filler' ]
