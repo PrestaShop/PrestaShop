@@ -282,8 +282,8 @@ class AddressCore extends ObjectModel
             }
             if (
                 !isset($cart) ||
-                (!Validate::isLoadedObject($cart) ||
-                $cart->orderExists())
+                !Validate::isLoadedObject($cart) ||
+                $cart->orderExists()
             ) {
                 continue;
             }
