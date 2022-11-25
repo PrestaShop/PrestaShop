@@ -379,8 +379,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
         $product = new Product($productId);
         Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
-        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
-        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
         if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
             Assert::assertEquals(0, $product->cache_default_attribute);
         }
