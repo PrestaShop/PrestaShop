@@ -83,10 +83,10 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerMessage->id_customer_thread = $customerThread->id;
         $customerMessage->id_employee = 0;
         $customerMessage->message = $data['message'];
-        $customerMessage->file_name = null;
-        $customerMessage->ip_address = 0;
-        $customerMessage->private = 0;
-        $customerMessage->read = 0;
+        $customerMessage->file_name = '';
+        $customerMessage->ip_address = '';
+        $customerMessage->private = false;
+        $customerMessage->read = false;
         $customerMessage->add();
     }
 
