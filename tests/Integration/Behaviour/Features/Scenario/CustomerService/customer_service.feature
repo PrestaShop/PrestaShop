@@ -5,12 +5,13 @@ Feature: Customer service
 
   Scenario: Add customer thread
     When I add new customer thread "thread1" with following properties:
-      | message    | test message |
+      | message   | test message |
+      | contactId | 2            |
     Then customer thread "thread1" should have the latest message "test message"
 
   Scenario: Response to thread
     When I respond to customer thread "thread1" with following properties:
-      | reply_message    | test message2 |
+      | reply_message | test message2 |
     Then customer thread "thread1" should have the latest message "test message2"
 
   Scenario: Update thread status to handled

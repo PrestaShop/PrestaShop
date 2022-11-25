@@ -24,15 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
-
-interface GetCustomerServicesSummaryHandlerInterface
+/**
+ * Gets signature for replying in customer thread
+ */
+class GetCustomerServiceSummary
 {
-    /**
-     * @return CustomerServiceSummary[]
-     */
-    public function handle(GetCustomerServiceSummary $query): array;
 }

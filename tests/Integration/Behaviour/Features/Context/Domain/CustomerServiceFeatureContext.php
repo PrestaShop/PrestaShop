@@ -33,7 +33,9 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThre
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
@@ -67,7 +69,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 
         // Add this message in the customer thread
         $customerThread = new CustomerThread();
-        $customerThread->id_contact = 2;
+        $customerThread->id_contact = $data['contactId'];
         $customerThread->id_customer = 1;
         $customerThread->id_shop = $this->defaultShopId;
         $customerThread->id_order = 0;
@@ -182,6 +184,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         if (!array_key_exists(CustomerThreadStatus::PENDING_2, $actions)) {
             throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::PENDING_2));
         }
+
         if (array_key_exists(CustomerThreadStatus::CLOSED, $actions)) {
             throw new RuntimeException(sprintf('thread "%s" should not have action "%s" possible.', $threadReference, CustomerThreadStatus::CLOSED));
         }
@@ -217,6 +220,46 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             throw new NoExceptionAlthoughExpectedException(sprintf('Thread %s exists, but it was expected to be deleted', $threadReference));
         } catch (CustomerThreadNotFoundException $e) {
             SharedStorage::getStorage()->clear($threadReference);
+        }
+    }
+
+    /**
+     * @Then customer service should fine two services
+     */
+    public function assertCustomerServiceSummary(): void
+    {
+        /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
+        $getCustomerServiceSummary = $this->getQueryBus()->handle(
+            new GetCustomerServiceSummary()
+        );
+
+        $countCustomerServiceSummary = count($getCustomerServiceSummary);
+        if ($countCustomerServiceSummary !== 2) {
+            throw new NoExceptionAlthoughExpectedException(sprintf('%s customer services where found, but only 2 where expected', $countCustomerServiceSummary));
+        }
+    }
+
+    /**
+     * @Then contact :contactId should have :expectedThreads threads
+     *
+     * @param int $contactId
+     * @param int $expectedThreads
+     */
+    public function assertContactHasThreads(int $contactId, int $expectedThreads): void
+    {
+        /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
+        $getCustomerServiceSummary = $this->getQueryBus()->handle(
+            new GetCustomerServiceSummary()
+        );
+
+        foreach ($getCustomerServiceSummary as $customerServiceSummary) {
+            if ($customerServiceSummary->getContactId() !== $contactId) {
+                continue;
+            }
+
+            if ($customerServiceSummary->getTotalThreads() !== $expectedThreads) {
+                throw new NoExceptionAlthoughExpectedException(sprintf('Contact expected to have %s threads, but it had %s', $expectedThreads, $customerServiceSummary->getTotalThreads()));
+            }
         }
     }
 }

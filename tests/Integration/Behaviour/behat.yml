@@ -548,3 +548,4 @@ default:
           contexts:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CustomerServiceFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext

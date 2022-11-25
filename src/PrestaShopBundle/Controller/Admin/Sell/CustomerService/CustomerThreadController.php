@@ -39,7 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CannotDeleteCust
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSignature;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadForViewing;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
@@ -69,7 +71,6 @@ class CustomerThreadController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, CustomerThreadFilter $filters): Response
     {
-        $customerServicesSummaryQueryHandler = $this->get('prestashop.core.domain.customer_service.query_handler.GetCustomerServicesSummaryHandler');
         $customerThreadKpiFactory = $this->get('prestashop.core.kpi_row.factory.customer_thread');
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
@@ -83,6 +84,11 @@ class CustomerThreadController extends FrameworkBundleAdminController
             $this->trans('Closed threads', 'Admin.Catalog.Feature') => $all - ($unread + $pending),
         ];
 
+        /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
+        $getCustomerServiceSummary = $this->getQueryBus()->handle(
+            new GetCustomerServiceSummary()
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/CustomerThread/index.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
@@ -91,7 +97,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'contacts' => CustomerThread::getContacts(),
             'params' => $params,
             'customerThreadKpi' => $customerThreadKpiFactory->build(),
-            'servicesSummary' => $customerServicesSummaryQueryHandler->handle(),
+            'servicesSummary' => $getCustomerServiceSummary,
         ]);
     }
 

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
 use Contact;
 use CustomerThread;
+use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -48,7 +49,7 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
     /**
      * @return CustomerServiceSummary[]
      */
-    public function handle(): array
+    public function handle(GetCustomerServiceSummary $query): array
     {
         $customerServicesSummary = [];
         foreach (Contact::getCategoriesContacts() as $categoriesContact) {
