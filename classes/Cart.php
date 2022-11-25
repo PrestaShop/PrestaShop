@@ -4607,6 +4607,7 @@ class CartCore extends ObjectModel
 
     /**
      * Set delivery Address of a Product in the Cart to 0.
+     * Works only for pending carts whithout existing order for them.
      *
      * @param int $id_product Product ID
      * @param int $id_product_attribute Product Attribute ID
@@ -4616,6 +4617,9 @@ class CartCore extends ObjectModel
      */
     public function nullifyProductAddressDelivery($id_product, $id_product_attribute, $old_id_address_delivery)
     {
+        if ($this->orderExists()) {
+            return false;
+        }
         return $this->setProductAnyAddressDelivery(
             $id_product,
             $id_product_attribute,

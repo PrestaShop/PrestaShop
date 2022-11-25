@@ -263,13 +263,15 @@ class AddressCore extends ObjectModel
     protected function deleteCartAddress()
     {
         // keep pending carts, but unlink it from current address
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+                    SET c.id_address_delivery = 0
+                    WHERE c.id_address_delivery = ' . $this->id .
+                    ' AND NOT EXISTS(SELECT * FROM ' . _DB_PREFIX_ . 'orders o WHERE o.id_cart = c.id_cart)';
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
-                    SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
+                    SET c.id_address_invoice = 0
+                    WHERE c.id_address_invoice = ' . $this->id .
+                    ' AND NOT EXISTS(SELECT * FROM ' . _DB_PREFIX_ . 'orders o WHERE o.id_cart = c.id_cart)';
         Db::getInstance()->execute($sql);
         $cartProductsForAddress = $this->getCartProductsForAddress();
         $prevIdCart = 0;
@@ -277,6 +279,12 @@ class AddressCore extends ObjectModel
             if ($prevIdCart !== $cartProduct['id_cart']) {
                 $prevIdCart = $cartProduct['id_cart'];
                 $cart = new Cart($prevIdCart);
+            }
+            if (
+                !Validate::isLoadedObject($cart) ||
+                $cart->orderExists()
+            ) {
+                continue;
             }
             $cart->nullifyProductAddressDelivery(
                 $cartProduct['id_product'],
