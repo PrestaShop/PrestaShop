@@ -302,6 +302,7 @@ class AddressCore extends ObjectModel
         $sql->from('cart_product');
         $sql->where('id_address_delivery = ' . $this->id);
         $sql->orderBy('id_cart');
+
         return Db::getInstance()->executeS($sql);
     }
 

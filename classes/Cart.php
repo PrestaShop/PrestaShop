@@ -1248,6 +1248,7 @@ class CartCore extends ObjectModel
         if ($needUpdate && $this->id) {
             return $this->update();
         }
+
         return true;
     }
 
@@ -4598,6 +4599,7 @@ class CartCore extends ObjectModel
         if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
             return false;
         }
+
         return $this->setProductAnyAddressDelivery(
             $id_product,
             $id_product_attribute,
@@ -4621,6 +4623,7 @@ class CartCore extends ObjectModel
         if ($this->orderExists()) {
             return false;
         }
+
         return $this->setProductAnyAddressDelivery(
             $id_product,
             $id_product_attribute,
@@ -4663,6 +4666,7 @@ class CartCore extends ObjectModel
         $sql->where('id_cart = ' . $this->id);
         $sql->where('id_address_delivery = ' . $old_id_address_delivery);
         $sql->orderBy('id_cart');
+
         return Db::getInstance()->executeS($sql);
     }
 
