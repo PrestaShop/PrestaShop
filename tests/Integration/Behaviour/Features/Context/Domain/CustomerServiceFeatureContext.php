@@ -157,7 +157,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then customer thread :threadReference should have closed as status
+     * @Then customer thread :threadReference should be closed
      *
      * @param string $threadReference
      */
