@@ -53,7 +53,7 @@ class EditTaxRulesGroupCommandTest extends TestCase
   0 => 1,
   1 => \'3\',
   2 => 5,
-) must contain all integer values');
+) must contain only integer values');
 
         /* @phpstan-ignore-next-line */
         $command->setShopAssociation([1, '3', 5]);
