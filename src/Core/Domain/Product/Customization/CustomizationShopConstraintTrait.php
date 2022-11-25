@@ -46,7 +46,7 @@ trait CustomizationShopConstraintTrait
      *
      * @throws InvalidShopConstraintException
      */
-    protected function checkShopConstraint(ShopCOnstraint $shopConstraint): void
+    protected function checkShopConstraint(ShopConstraint $shopConstraint): void
     {
         if ($shopConstraint->forAllShops() || $shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException(sprintf(

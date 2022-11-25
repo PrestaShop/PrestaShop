@@ -50,7 +50,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateCustomizationFieldsForDefaultShop(string $productReference, TableNode $table)
+    public function updateCustomizationFieldsForDefaultShop(string $productReference, TableNode $table): void
     {
         $this->updateCustomizationFields($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
     }
@@ -61,7 +61,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateCustomizationFieldsForShop(string $productReference, TableNode $table, string $shopReference)
+    public function updateCustomizationFieldsForShop(string $productReference, TableNode $table, string $shopReference): void
     {
         $this->updateCustomizationFields($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
     }
@@ -72,7 +72,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param int $nameLength
      */
-    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength)
+    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength): void
     {
         $fieldsForUpdate = [];
         foreach (Language::getIDs() as $langId) {
@@ -100,7 +100,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      *
      * @param string $productReference
      */
-    public function updateCustomizationFieldsWithEmptyArray(string $productReference)
+    public function updateCustomizationFieldsWithEmptyArray(string $productReference): void
     {
         try {
             $this->getCommandBus()->handle(new RemoveAllCustomizationFieldsFromProductCommand(
@@ -117,7 +117,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param string $customizability
      */
-    public function assertCustomizabilityForDefaultShop(string $productReference, string $customizability)
+    public function assertCustomizabilityForDefaultShop(string $productReference, string $customizability): void
     {
         $this->assertCustomizability($productReference, $customizability, $this->getDefaultShopId());
     }
@@ -128,7 +128,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param string $customizability
      */
-    public function assertCustomizabilityForShops(string $productReference, string $customizability, string $shopReferences)
+    public function assertCustomizabilityForShops(string $productReference, string $customizability, string $shopReferences): void
     {
         foreach (explode(',', $shopReferences) as $shopReference) {
             $this->assertCustomizability($productReference, $customizability, (int) $this->getSharedStorage()->get(trim($shopReference)));
@@ -141,7 +141,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertCustomizationFieldsForDefaultShop(string $productReference, TableNode $table)
+    public function assertCustomizationFieldsForDefaultShop(string $productReference, TableNode $table): void
     {
         $this->assertCustomizationFields($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
     }
@@ -152,7 +152,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertCustomizationFieldsForShops(string $productReference, TableNode $table, string $shopReferences)
+    public function assertCustomizationFieldsForShops(string $productReference, TableNode $table, string $shopReferences): void
     {
         foreach (explode(',', $shopReferences) as $shopReference) {
             $this->assertCustomizationFields($productReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get(trim($shopReference))));
@@ -166,7 +166,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param int $expectedCount
      * @param string $customizationType
      */
-    public function assertCustomizationOptionsForDefaultShop(string $productReference, int $expectedCount, string $customizationType)
+    public function assertCustomizationOptionsForDefaultShop(string $productReference, int $expectedCount, string $customizationType): void
     {
         $this->assertCustomizationOptions($productReference, $expectedCount, $customizationType, $this->getDefaultShopId());
     }
@@ -178,7 +178,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param int $expectedCount
      * @param string $customizationType
      */
-    public function assertCustomizationOptionsForShops(string $productReference, int $expectedCount, string $customizationType, string $shopReferences)
+    public function assertCustomizationOptionsForShops(string $productReference, int $expectedCount, string $customizationType, string $shopReferences): void
     {
         foreach (explode(',', $shopReferences) as $shopReference) {
             $this->assertCustomizationOptions($productReference, $expectedCount, $customizationType, (int) $this->getSharedStorage()->get(trim($shopReference)));
@@ -328,7 +328,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         }
     }
 
-    private function assertCustomizability(string $productReference, string $customizability, int $shopId)
+    private function assertCustomizability(string $productReference, string $customizability, int $shopId): void
     {
         $customizationOptions = $this->getProductForEditing($productReference, $shopId)->getCustomizationOptions();
 
@@ -359,7 +359,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         }
     }
 
-    private function assertCustomizationOptions(string $productReference, int $expectedCount, string $customizationType, int $shopId)
+    private function assertCustomizationOptions(string $productReference, int $expectedCount, string $customizationType, int $shopId): void
     {
         if (!in_array($customizationType, array_keys(CustomizationFieldType::AVAILABLE_TYPES))) {
             throw new RuntimeException(sprintf('Invalid customization type "%s" provided in test scenario', $customizationType));

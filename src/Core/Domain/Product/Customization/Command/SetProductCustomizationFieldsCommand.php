@@ -58,7 +58,7 @@ class SetProductCustomizationFieldsCommand
 
     /**
      * @param int $productId
-     * @param array $customizationFields
+     * @param array{'type': int, "localized_names": array<int, string>, "is_required": bool, "added_by_module": bool, "id"?: int|null}[] $customizationFields
      */
     public function __construct(
         int $productId,
@@ -96,7 +96,7 @@ class SetProductCustomizationFieldsCommand
     }
 
     /**
-     * @param array $customizationFields
+     * @param array{'type': int, "localized_names": array<int, string>, "is_required": bool, "added_by_module": bool, "id"?: int|null}[] $customizationFields $customizationFields
      */
     private function setCustomizationFields(array $customizationFields): void
     {
