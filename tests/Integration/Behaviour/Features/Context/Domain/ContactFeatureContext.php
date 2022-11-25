@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Contact;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
@@ -34,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ContactFeatureContext extends AbstractDomainFeatureContext
@@ -111,6 +113,19 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
         $editContactCommand->setIsMessagesSavingEnabled($editableContact->isMessagesSavingEnabled());
 
         $this->getCommandBus()->handle($editContactCommand);
+    }
+
+    /**
+     * @Given that default contacts exists
+     */
+    public function checkIfDefaultContactsExist()
+    {
+        $contacts = Contact::getCategoriesContacts();
+        foreach ($contacts as $contact) {
+            if ($contact['name'] !== 'Webmaster' && $contact['name'] !== 'Customer service') {
+                throw new NoExceptionAlthoughExpectedException('Default contacts are missing');
+            }
+        }
     }
 
     /**
