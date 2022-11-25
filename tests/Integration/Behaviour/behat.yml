@@ -548,3 +548,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        customer_service:
+          paths:
+            - "%paths.base%/Features/Scenario/CustomerService"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\CustomerServiceFeatureContext
