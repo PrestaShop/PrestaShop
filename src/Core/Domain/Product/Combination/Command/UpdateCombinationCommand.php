@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -50,6 +51,11 @@ class UpdateCombinationCommand
      * @var CombinationId
      */
     private $combinationId;
+
+    /**
+     * @var bool|null
+     */
+    private $isDefault;
 
     /**
      * @var Ean13|null
@@ -79,7 +85,57 @@ class UpdateCombinationCommand
     /**
      * @var DecimalNumber|null
      */
-    private $weight;
+    private $impactOnWeight;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $impactOnPrice;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $ecoTax;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $impactOnUnitPrice;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $wholesalePrice;
+
+    /**
+     * @var int|null
+     */
+    private $minimalQuantity;
+
+    /**
+     * @var int|null
+     */
+    private $lowStockThreshold;
+
+    /**
+     * @var bool|null
+     */
+    private $lowStockAlertEnabled;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    private $availableDate;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
 
     /**
      * @param int $combinationId
@@ -98,6 +154,26 @@ class UpdateCombinationCommand
     public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isDefault(): ?bool
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * @param bool|null $isDefault
+     *
+     * @return static
+     */
+    public function setIsDefault(?bool $isDefault): self
+    {
+        $this->isDefault = $isDefault;
+
+        return $this;
     }
 
     /**
@@ -203,19 +279,227 @@ class UpdateCombinationCommand
     /**
      * @return DecimalNumber|null
      */
-    public function getWeight(): ?DecimalNumber
+    public function getImpactOnWeight(): ?DecimalNumber
     {
-        return $this->weight;
+        return $this->impactOnWeight;
     }
 
     /**
-     * @param string $weight
+     * @param string $impactOnWeight
      *
      * @return $this
      */
-    public function setWeight(string $weight): self
+    public function setImpactOnWeight(string $impactOnWeight): self
     {
-        $this->weight = new DecimalNumber($weight);
+        $this->impactOnWeight = new DecimalNumber($impactOnWeight);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getImpactOnPrice(): ?DecimalNumber
+    {
+        return $this->impactOnPrice;
+    }
+
+    /**
+     * @param string $impactOnPrice
+     *
+     * @return $this
+     */
+    public function setImpactOnPrice(string $impactOnPrice): self
+    {
+        $this->impactOnPrice = new DecimalNumber($impactOnPrice);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getEcoTax(): ?DecimalNumber
+    {
+        return $this->ecoTax;
+    }
+
+    /**
+     * @param string $ecoTax
+     *
+     * @return $this
+     */
+    public function setEcoTax(string $ecoTax): self
+    {
+        $this->ecoTax = new DecimalNumber($ecoTax);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getImpactOnUnitPrice(): ?DecimalNumber
+    {
+        return $this->impactOnUnitPrice;
+    }
+
+    /**
+     * @param string $impactOnUnitPrice
+     *
+     * @return $this
+     */
+    public function setImpactOnUnitPrice(string $impactOnUnitPrice): self
+    {
+        $this->impactOnUnitPrice = new DecimalNumber($impactOnUnitPrice);
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getWholesalePrice(): ?DecimalNumber
+    {
+        return $this->wholesalePrice;
+    }
+
+    /**
+     * @param string $wholesalePrice
+     *
+     * @return $this
+     */
+    public function setWholesalePrice(string $wholesalePrice): self
+    {
+        $this->wholesalePrice = new DecimalNumber($wholesalePrice);
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMinimalQuantity(): ?int
+    {
+        return $this->minimalQuantity;
+    }
+
+    /**
+     * @param int $minimalQuantity
+     *
+     * @return $this
+     */
+    public function setMinimalQuantity(int $minimalQuantity): self
+    {
+        $this->minimalQuantity = $minimalQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLowStockThreshold(): ?int
+    {
+        return $this->lowStockThreshold;
+    }
+
+    /**
+     * @param int $lowStockThreshold
+     *
+     * @return $this
+     */
+    public function setLowStockThreshold(int $lowStockThreshold): self
+    {
+        $this->lowStockThreshold = $lowStockThreshold;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isLowStockAlertEnabled(): ?bool
+    {
+        return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return $this
+     */
+    public function setLowStockAlert(bool $enabled): self
+    {
+        $this->lowStockAlertEnabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getAvailableDate(): ?DateTimeInterface
+    {
+        return $this->availableDate;
+    }
+
+    /**
+     * @param DateTimeInterface $availableDate
+     *
+     * @return $this
+     */
+    public function setAvailableDate(DateTimeInterface $availableDate): self
+    {
+        $this->availableDate = $availableDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getLowStockAlertEnabled(): ?bool
+    {
+        return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableNowLabels(): ?array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableNowLabels
+     *
+     * @return $this
+     */
+    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): self
+    {
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableLaterLabels(): ?array
+    {
+        return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableLaterLabels
+     *
+     * @return $this
+     */
+    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): self
+    {
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
 
         return $this;
     }

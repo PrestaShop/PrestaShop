@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Combination\Update\Filler;
 
 use Combination;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\DetailsFiller;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\PricesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
-class DetailsFillerTest extends CombinationFillerTestCase
+class PricesFillerTest extends CombinationFillerTestCase
 {
     /**
      * @dataProvider getDataToTestUpdatablePropertiesFilling
@@ -63,56 +63,46 @@ class DetailsFillerTest extends CombinationFillerTestCase
     public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
         $command = $this->getEmptyCommand()
-            ->setUpc('3456789')
-            ->setIsbn('978-3-16-148410-1')
+            ->setWholesalePrice('4.99')
+            ->setImpactOnPrice('45.99')
         ;
         $expectedCombination = $this->mockDefaultCombination();
-        $expectedCombination->upc = '3456789';
-        $expectedCombination->isbn = '978-3-16-148410-1';
-
-        yield [
-            $this->mockDefaultCombination(),
-            $command,
-            ['isbn', 'upc'],
-            $expectedCombination,
-        ];
-
-        $command = $this->getEmptyCommand()
-            ->setEan13('1234567890111')
-            ->setIsbn('978-3-16-148410-0')
-            ->setMpn('HUE222-7')
-            ->setReference('ref-HUE222-7')
-            ->setUpc('0123456789')
-            ->setImpactOnWeight('3')
-        ;
-        $expectedCombination = $this->mockDefaultCombination();
-        $expectedCombination->ean13 = '1234567890111';
-        $expectedCombination->isbn = '978-3-16-148410-0';
-        $expectedCombination->mpn = 'HUE222-7';
-        $expectedCombination->reference = 'ref-HUE222-7';
-        $expectedCombination->upc = '0123456789';
-        $expectedCombination->weight = '3';
+        $expectedCombination->wholesale_price = 4.99;
+        $expectedCombination->price = 45.99;
 
         yield [
             $this->mockDefaultCombination(),
             $command,
             [
-                'ean13',
-                'isbn',
-                'mpn',
-                'reference',
-                'upc',
-                'weight',
+                'price',
+                'wholesale_price',
+            ],
+            $expectedCombination,
+        ];
+
+        $command = $this->getEmptyCommand()
+            ->setEcotax('0.3')
+            ->setImpactOnUnitPrice('10')
+        ;
+        $expectedCombination = $this->mockDefaultCombination();
+        $expectedCombination->ecotax = 0.3;
+        $expectedCombination->unit_price_impact = 10.0;
+        yield [
+            $this->mockDefaultCombination(),
+            $command,
+            [
+                'ecotax',
+                'unit_price_impact',
             ],
             $expectedCombination,
         ];
     }
 
     /**
-     * @return DetailsFiller
+     * @return PricesFiller
      */
-    private function getFiller(): DetailsFiller
+    private function getFiller(): PricesFiller
     {
-        return new DetailsFiller();
+        return new PricesFiller();
     }
 }

@@ -96,6 +96,7 @@ class StockInformationFillerTest extends ProductFillerTestCase
             ->setLocalizedAvailableNowLabels($localizedAvailableNow)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
             ->setLowStockAlert(true)
+            ->setLowStockThreshold(42)
             ->setMinimalQuantity(10)
             ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
             ->setAvailableDate(new DateTime('2022-10-10'))
@@ -104,6 +105,7 @@ class StockInformationFillerTest extends ProductFillerTestCase
         $expectedProduct->available_now = $localizedAvailableNow;
         $expectedProduct->available_later = $localizedAvailableLater;
         $expectedProduct->low_stock_alert = true;
+        $expectedProduct->low_stock_threshold = 42;
         $expectedProduct->minimal_quantity = 10;
         $expectedProduct->pack_stock_type = PackStockType::STOCK_TYPE_BOTH;
         $expectedProduct->available_date = '2022-10-10';
@@ -115,6 +117,7 @@ class StockInformationFillerTest extends ProductFillerTestCase
                 'available_later' => [1, 2],
                 'available_now' => [1, 2],
                 'low_stock_alert',
+                'low_stock_threshold',
                 'minimal_quantity',
                 'pack_stock_type',
                 'available_date',

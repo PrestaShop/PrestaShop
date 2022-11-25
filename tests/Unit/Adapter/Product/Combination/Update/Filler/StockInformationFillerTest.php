@@ -29,10 +29,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Product\Combination\Update\Filler;
 
 use Combination;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\DetailsFiller;
+use DateTime;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\StockInformationFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
-class DetailsFillerTest extends CombinationFillerTestCase
+class StockInformationFillerTest extends CombinationFillerTestCase
 {
     /**
      * @dataProvider getDataToTestUpdatablePropertiesFilling
@@ -62,57 +63,68 @@ class DetailsFillerTest extends CombinationFillerTestCase
      */
     public function getDataToTestUpdatablePropertiesFilling(): iterable
     {
+        $combination = $this->mockDefaultCombination();
         $command = $this->getEmptyCommand()
-            ->setUpc('3456789')
-            ->setIsbn('978-3-16-148410-1')
+            ->setMinimalQuantity(11)
         ;
         $expectedCombination = $this->mockDefaultCombination();
-        $expectedCombination->upc = '3456789';
-        $expectedCombination->isbn = '978-3-16-148410-1';
+        $expectedCombination->minimal_quantity = 11;
 
         yield [
-            $this->mockDefaultCombination(),
+            $combination,
             $command,
-            ['isbn', 'upc'],
+            [
+                'minimal_quantity',
+            ],
             $expectedCombination,
         ];
 
+        $localizedAvailableNow = [
+            1 => 'français available now',
+            2 => 'english available now',
+        ];
+        $localizedAvailableLater = [
+            1 => 'français available later',
+            2 => 'english available later',
+        ];
+
+        $combination = $this->mockDefaultCombination();
         $command = $this->getEmptyCommand()
-            ->setEan13('1234567890111')
-            ->setIsbn('978-3-16-148410-0')
-            ->setMpn('HUE222-7')
-            ->setReference('ref-HUE222-7')
-            ->setUpc('0123456789')
-            ->setImpactOnWeight('3')
+            ->setLocalizedAvailableNowLabels($localizedAvailableNow)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
+            ->setLowStockAlert(true)
+            ->setLowStockThreshold(42)
+            ->setMinimalQuantity(10)
+            ->setAvailableDate(new DateTime('2022-10-10'))
         ;
         $expectedCombination = $this->mockDefaultCombination();
-        $expectedCombination->ean13 = '1234567890111';
-        $expectedCombination->isbn = '978-3-16-148410-0';
-        $expectedCombination->mpn = 'HUE222-7';
-        $expectedCombination->reference = 'ref-HUE222-7';
-        $expectedCombination->upc = '0123456789';
-        $expectedCombination->weight = '3';
+        $expectedCombination->available_now = $localizedAvailableNow;
+        $expectedCombination->available_later = $localizedAvailableLater;
+        $expectedCombination->low_stock_alert = true;
+        $expectedCombination->low_stock_threshold = 42;
+        $expectedCombination->minimal_quantity = 10;
+        $expectedCombination->available_date = '2022-10-10';
 
         yield [
-            $this->mockDefaultCombination(),
+            $combination,
             $command,
             [
-                'ean13',
-                'isbn',
-                'mpn',
-                'reference',
-                'upc',
-                'weight',
+                'available_later' => [1, 2],
+                'available_now' => [1, 2],
+                'available_date',
+                'low_stock_threshold',
+                'minimal_quantity',
+                'low_stock_alert',
             ],
             $expectedCombination,
         ];
     }
 
     /**
-     * @return DetailsFiller
+     * @return StockInformationFiller
      */
-    private function getFiller(): DetailsFiller
+    private function getFiller(): StockInformationFiller
     {
-        return new DetailsFiller();
+        return new StockInformationFiller();
     }
 }

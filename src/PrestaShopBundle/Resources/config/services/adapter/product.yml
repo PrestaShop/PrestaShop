@@ -402,12 +402,15 @@ services:
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.currency.repository.currency_repository'
 
-  prestashop.adapter.product.repository.product_supplier_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
+  PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.validate.product_supplier_validator'
+
+  prestashop.adapter.product.repository.product_supplier_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
+    deprecated: ~
 
   prestashop.adapter.product.update.product_supplier_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater

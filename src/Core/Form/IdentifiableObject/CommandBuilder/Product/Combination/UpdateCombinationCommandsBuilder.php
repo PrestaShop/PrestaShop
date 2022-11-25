@@ -47,9 +47,14 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
         $config = new CommandBuilderConfig();
+        $config
+            ->addField('[header][is_default]', 'setIsDefault', DataField::TYPE_BOOL)
+        ;
+
         $this
             ->configurePriceImpact($config)
             ->configureDetails($config)
+            ->configureStock($config)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -61,7 +66,11 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
     private function configurePriceImpact(CommandBuilderConfig $config): self
     {
         $config
-            ->addField('[price_impact][weight]', 'setWeight', DataField::TYPE_STRING)
+            ->addField('[price_impact][price_tax_excluded]', 'setImpactOnPrice', DataField::TYPE_STRING)
+            ->addField('[price_impact][ecotax_tax_excluded]', 'setEcoTax', DataField::TYPE_STRING)
+            ->addField('[price_impact][unit_price_tax_excluded]', 'setImpactOnUnitPrice', DataField::TYPE_STRING)
+            ->addField('[price_impact][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addField('[price_impact][weight]', 'setImpactOnWeight', DataField::TYPE_STRING)
         ;
 
         return $this;
@@ -75,6 +84,21 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
             ->addField('[references][upc]', 'setUpc', DataField::TYPE_STRING)
             ->addField('[references][ean_13]', 'setEan13', DataField::TYPE_STRING)
             ->addField('[references][isbn]', 'setIsbn', DataField::TYPE_STRING)
+        ;
+
+        return $this;
+    }
+
+    private function configureStock(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
+            ->addField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
+            ->addField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
+            ->addField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
+            ->addField('[stock][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+            ->addField('[stock][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
 
         return $this;
