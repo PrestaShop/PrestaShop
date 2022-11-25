@@ -168,7 +168,8 @@ class ProductPackRepository extends AbstractObjectModelRepository
         $packIdValue = $packId->getValue();
 
         try {
-            if (!Pack::deleteItems($packIdValue)) {
+            // We don't reset cache_is_pack for product we want to keep it tru as long as product type doesn't change
+            if (!Pack::deleteItems($packIdValue, false)) {
                 throw new ProductPackException(
                     sprintf('Failed to remove products from pack #%d', $packIdValue),
                     ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK
