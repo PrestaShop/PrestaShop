@@ -241,9 +241,9 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
-        if (!$this->isUsed()) {
-            $this->deleteCartAddress();
+        $this->deleteCartAddress();
 
+        if (!$this->isUsed()) {
             // Update the cache
             if (isset(static::$addressExists[$this->id])) {
                 static::$addressExists[$this->id] = false;
