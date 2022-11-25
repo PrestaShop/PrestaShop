@@ -1234,19 +1234,20 @@ class CartCore extends ObjectModel
     public function checkAndUpdateAddresses()
     {
         $needUpdate = false;
-        foreach (['invoice', 'delivery'] as $type) {
-            $addr = 'id_address_' . $type;
-            if ($this->{$addr} != 0
-                && !Address::isValid($this->{$addr})) {
-                $this->{$addr} = 0;
-                $needUpdate = true;
-            }
+        if ($this->id_address_invoice != 0
+            && !Address::isValid($this->id_address_invoice)) {
+            $this->id_address_invoice = 0;
+            $needUpdate = true;
         }
-
+        if ($this->id_address_delivery != 0
+            && !Address::isValid($this->id_address_delivery)) {
+            $this->nullifyAllProductsAddressDelivery($this->id_address_delivery);
+            $this->id_address_delivery = 0;
+            $needUpdate = true;
+        }
         if ($needUpdate && $this->id) {
             return $this->update();
         }
-
         return true;
     }
 
@@ -4626,6 +4627,43 @@ class CartCore extends ObjectModel
             $old_id_address_delivery,
             0
         );
+    }
+
+    /**
+     * Set delivery address to 0 for all products in the cart and their customizations,
+     * which have the specified old delivery address.
+     *
+     * @param int $old_id_address_delivery Old delivery Address ID
+     */
+    private function nullifyAllProductsAddressDelivery($old_id_address_delivery)
+    {
+        if ($this->orderExists()) {
+            return;
+        }
+        $cartProducts = $this->getCartProducts($old_id_address_delivery);
+        foreach ($cartProducts as $cartProduct) {
+            $this->nullifyProductAddressDelivery(
+                $cartProduct['id_product'],
+                $cartProduct['id_product_attribute'],
+                $old_id_address_delivery
+            );
+        }
+    }
+
+    /**
+     * @param int $old_id_address_delivery Old delivery Address ID
+     *
+     * @return array cart products of this cart, which have the requested delivery address
+     */
+    private function getCartProducts($old_id_address_delivery)
+    {
+        $sql = new DbQuery();
+        $sql->select('id_product, id_product_attribute');
+        $sql->from('cart_product');
+        $sql->where('id_cart = ' . $this->id);
+        $sql->where('id_address_delivery = ' . $old_id_address_delivery);
+        $sql->orderBy('id_cart');
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
