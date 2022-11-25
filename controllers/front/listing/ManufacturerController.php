@@ -32,6 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var string */
     public $php_self = 'manufacturer';
 
+    /** @var Manufacturer */
     protected $manufacturer;
     protected $label;
 
@@ -242,5 +243,13 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $page['body_classes']['manufacturer-' . $this->manufacturer->name] = true;
 
         return $page;
+    }
+
+    /**
+     * @return Manufacturer
+     */
+    public function getManufacturer()
+    {
+        return $this->manufacturer;
     }
 }

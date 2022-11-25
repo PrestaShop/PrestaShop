@@ -247,4 +247,12 @@ class SupplierControllerCore extends ProductListingFrontController
 
         return $page;
     }
+
+    /**
+     * @return Supplier
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
+    }
 }

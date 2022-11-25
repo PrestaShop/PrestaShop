@@ -31,10 +31,21 @@ class CmsControllerCore extends FrontController
     /** @var string */
     public $php_self = 'cms';
     public $assignCase;
+
+    /**
+     * @deprecated Since 8.1, it will be protected on next major.
+     *
+     * @var CMS|null
+     */
     public $cms;
 
-    /** @var CMSCategory */
+    /**
+     * @deprecated Since 8.1, it will be protected on next major.
+     *
+     * @var CMSCategory|null
+     */
     public $cms_category;
+
     /** @var bool */
     public $ssl = false;
 
@@ -223,5 +234,21 @@ class CmsControllerCore extends FrontController
         }
 
         return $categoryCms;
+    }
+
+    /**
+     * @return CMS|null
+     */
+    public function getCms()
+    {
+        return $this->cms;
+    }
+
+    /**
+     * @return CMSCategory|null
+     */
+    public function getCmsCategory()
+    {
+        return $this->cms_category;
     }
 }

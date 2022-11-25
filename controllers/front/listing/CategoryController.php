@@ -256,6 +256,9 @@ class CategoryControllerCore extends ProductListingFrontController
         return $breadcrumb;
     }
 
+    /**
+     * @return Category
+     */
     public function getCategory()
     {
         return $this->category;

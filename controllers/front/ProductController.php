@@ -1016,11 +1016,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $specific_prices;
     }
 
+    /**
+     * @return Product
+     */
     public function getProduct()
     {
         return $this->product;
     }
 
+    /**
+     * @return Category|null
+     */
     public function getCategory()
     {
         return $this->category;
