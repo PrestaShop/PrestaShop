@@ -174,7 +174,7 @@ class StoresControllerCore extends FrontController
             // Prepare $store.address
             $address = new Address();
             $store['address'] = [];
-            
+
             foreach ($attr as $a) {
                 $address->{$a} = $store[$a];
                 $store['address'][$a] = $store[$a];
