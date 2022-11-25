@@ -4606,6 +4606,25 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Set delivery Address of a Product in the Cart to 0.
+     *
+     * @param int $id_product Product ID
+     * @param int $id_product_attribute Product Attribute ID
+     * @param int $old_id_address_delivery Old delivery Address ID
+     *
+     * @return bool Whether the delivery Address of the product in the Cart has been successfully updated
+     */
+    public function nullifyProductAddressDelivery($id_product, $id_product_attribute, $old_id_address_delivery)
+    {
+        return $this->setProductAnyAddressDelivery(
+            $id_product,
+            $id_product_attribute,
+            $old_id_address_delivery,
+            0
+        );
+    }
+
+    /**
      * Set delivery Address of a Product in the Cart.
      *
      * @param int $id_product Product ID
