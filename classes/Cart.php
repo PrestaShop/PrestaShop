@@ -4587,7 +4587,7 @@ class CartCore extends ObjectModel
      * @param int $id_product Product ID
      * @param int $id_product_attribute Product Attribute ID
      * @param int $old_id_address_delivery Old delivery Address ID
-     * @param int $new_id_address_delivery New delivery Address ID
+     * @param int $new_id_address_delivery New delivery Address ID, valid for the current customer
      *
      * @return bool Whether the delivery Address of the product in the Cart has been successfully updated
      */
@@ -4597,7 +4597,26 @@ class CartCore extends ObjectModel
         if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
             return false;
         }
+        return $this->setProductAnyAddressDelivery(
+            $id_product,
+            $id_product_attribute,
+            $old_id_address_delivery,
+            $new_id_address_delivery
+        );
+    }
 
+    /**
+     * Set delivery Address of a Product in the Cart.
+     *
+     * @param int $id_product Product ID
+     * @param int $id_product_attribute Product Attribute ID
+     * @param int $old_id_address_delivery Old delivery Address ID
+     * @param int $new_id_address_delivery New delivery Address ID, will not be validated
+     *
+     * @return bool Whether the delivery Address of the product in the Cart has been successfully updated
+     */
+    private function setProductAnyAddressDelivery($id_product, $id_product_attribute, $old_id_address_delivery, $new_id_address_delivery)
+    {
         if ($new_id_address_delivery == $old_id_address_delivery) {
             return false;
         }
