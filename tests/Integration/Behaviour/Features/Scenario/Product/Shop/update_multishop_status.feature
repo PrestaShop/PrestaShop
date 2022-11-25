@@ -33,9 +33,25 @@ Feature: Update product status from Back Office (BO) for multiple shops.
     But product "product1" should be disabled for shops "shop2"
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
+    # same scenario using UpdateProductCommand
+    When I disable product "product1" in a form for shop "shop1"
+    Then product "product1" should be disabled for shops "shop1"
+    And product "product1" should be disabled for shops "shop2"
+    When I enable product "product1" in a form for shop "shop2"
+    Then product "product1" should be enabled for shops "shop2"
+    And product "product1" should be disabled for shops "shop1"
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
 
   Scenario: I update product status in all shops
     When I enable product "product1" for all shops
+    Then product "product1" should be enabled for shops "shop1,shop2"
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+    # same scenario using UpdateProductCommand
+    When I disable product "product1" in a form for all shops
+    Then product "product1" should be disabled for shops "shop1,shop2"
+    When I enable product "product1" in a form for all shops
     Then product "product1" should be enabled for shops "shop1,shop2"
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
@@ -60,6 +76,34 @@ Feature: Update product status from Back Office (BO) for multiple shops.
     When I enable product "product1" for shop "shop2"
     Then product "product1" should be enabled for shops "shop1,shop2"
     And product "product1" should be indexed for shops "shop1,shop2"
+    # same scenario using UpdateProductCommand
+    Given I add product "product10" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And I copy product product10 from shop shop1 to shop shop2
+    And product "product10" should be disabled for shops "shop1,shop2"
+    And product "product10" should not be indexed for shops "shop1,shop2"
+    And product product10 is not associated to shop shop3
+    And product product10 is not associated to shop shop4
+    And product "product10" should have following options for shops "shop1,shop2":
+      | product option      | value |
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |
+      | show_condition      | false |
+      | manufacturer        |       |
+    And product "product10" should be disabled for shops "shop1,shop2"
+    And product "product10" should not be indexed for shops "shop1,shop2"
+    When I enable product "product10" in a form for shop "shop1"
+    Then product "product10" should be enabled for shops "shop1"
+    And product "product10" should be indexed for shops "shop1"
+    But product "product10" should be disabled for shops "shop2"
+    And product "product10" should not be indexed for shops "shop2"
+    When I enable product "product10" in a form for shop "shop2"
+    Then product "product10" should be enabled for shops "shop1,shop2"
+    And product "product10" should be indexed for shops "shop1,shop2"
 
   Scenario: I expect product indexation to change when updating product status for all shops
     Given product "product1" should have following options for shops "shop1,shop2":
@@ -93,3 +137,39 @@ Feature: Update product status from Back Office (BO) for multiple shops.
     When I disable product "product1" for all shops
     Then product "product1" should be disabled for shops "shop1,shop2"
     And product "product1" should be disabled for shops "shop1,shop2"
+    # same scenario using UpdateProductCommand
+    Given I add product "product100" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And I copy product product100 from shop shop1 to shop shop2
+    And product "product100" should be disabled for shops "shop1,shop2"
+    And product "product100" should not be indexed for shops "shop1,shop2"
+    And product product100 is not associated to shop shop3
+    And product product100 is not associated to shop shop4
+    And product "product100" should have following options for shops "shop1,shop2":
+      | product option      | value |
+      | visibility          | both  |
+      | available_for_order | true  |
+      | online_only         | false |
+      | show_price          | true  |
+      | condition           | new   |
+      | show_condition      | false |
+      | manufacturer        |       |
+    And product "product100" should be disabled for shops "shop1,shop2"
+    And product "product100" should not be indexed for shops "shop1,shop2"
+    When I enable product "product100" in a form for shop "shop1"
+    Then product "product100" should be enabled for shops "shop1"
+    And product "product100" should be indexed for shops "shop1"
+    But product "product100" should be disabled for shops "shop2"
+    And product "product100" should not be indexed for shops "shop2"
+    When I enable product "product100" for all shops
+    Then product "product100" should be enabled for shops "shop1,shop2"
+    And product "product100" should be indexed for shops "shop1,shop2"
+    When I disable product "product100" in a form for shop "shop1"
+    Then product "product100" should be disabled for shops "shop1"
+    And product "product100" should not be indexed for shops "shop1"
+    But product "product100" should be enabled for shops "shop2"
+    And product "product100" should be indexed for shops "shop2"
+    When I disable product "product100" in a form for all shops
+    Then product "product100" should be disabled for shops "shop1,shop2"
+    And product "product100" should be disabled for shops "shop1,shop2"
