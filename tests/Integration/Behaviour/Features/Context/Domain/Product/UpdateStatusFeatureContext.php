@@ -43,7 +43,7 @@ use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When /^I bulk (enable|disable) following products in default shop:$/
+     * @When /^I bulk (enable|disable) following products:$/
      *
      * status transformation handled by @see StringToBoolTransformContext
      *
@@ -119,13 +119,6 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * There are two commands which can change product status.
-     * One is dedicated for only the status change (e.g. used in product list as a toggle),
-     * while another one allows to update status together with other properties (e.g. used in product form).
-     *
-     * @see UpdateProductStatusCommand
-     * @see UpdateProductCommand
-     *
      * @When /^I (enable|disable) product "(.*)" in a form$/
      *
      * status transformation handled by @see StringToBoolTransformContext
@@ -133,15 +126,39 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      * @param bool $status
      * @param string $productReference
      */
-    public function updateStatusUsingUpdateProductCommand(bool $status, string $productReference): void
+    public function updateStatusUsingUpdateProductCommandForDefaultShop(bool $status, string $productReference): void
     {
         try {
-            $command = new UpdateProductCommand(
-                $this->getSharedStorage()->get($productReference),
+            $this->updateStatusUsingUpdateProductCommand(
+                $status,
+                $productReference,
                 ShopConstraint::shop($this->getDefaultShopId())
             );
-            $command->setActive($status);
-            $this->getCommandBus()->handle($command);
+        } catch (ProductConstraintException $e) {
+            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
+                $this->setLastException($e);
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @When /^I (enable|disable) product "(.*)" in a form for shop "(.*)"$/
+     *
+     * status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param bool $status
+     * @param string $productReference
+     */
+    public function updateStatusUsingUpdateProductCommandForShop(bool $status, string $productReference, string $shopReference): void
+    {
+        try {
+            $this->updateStatusUsingUpdateProductCommand(
+                $status,
+                $productReference,
+                ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+            );
         } catch (ProductConstraintException $e) {
             if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
                 $this->setLastException($e);
@@ -247,5 +264,26 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
                 throw $e;
             }
         }
+    }
+
+    /**
+     * There are two commands which can change product status.
+     * One is dedicated for only the status change (e.g. used in product list as a toggle),
+     * while another one allows to update status together with other properties (e.g. used in product form).
+     *
+     * @see UpdateProductStatusCommand
+     * @see UpdateProductCommand
+     *
+     * @param bool $status
+     * @param string $productReference
+     */
+    private function updateStatusUsingUpdateProductCommand(bool $status, string $productReference, ShopConstraint $shopConstraint): void
+    {
+        $command = new UpdateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            $shopConstraint
+        );
+        $command->setActive($status);
+        $this->getCommandBus()->handle($command);
     }
 }

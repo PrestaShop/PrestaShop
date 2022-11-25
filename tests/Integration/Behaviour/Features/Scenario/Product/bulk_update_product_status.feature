@@ -48,7 +48,7 @@ Feature: Bulk update product status from BO (Back Office)
     And product "product3" should be disabled
 
   Scenario: I update product statuses
-    When I bulk enable following products in default shop:
+    When I bulk enable following products:
       | reference |
       | product1  |
       | product2  |
@@ -67,7 +67,7 @@ Feature: Bulk update product status from BO (Back Office)
     Then product "product1" should be enabled
     And product "product2" should be enabled
     And product "product3" should be enabled
-    And I bulk disable following products in default shop:
+    And I bulk disable following products:
       | reference |
       | product1  |
       | product2  |
@@ -83,7 +83,7 @@ Feature: Bulk update product status from BO (Back Office)
     Given product "product1" should be disabled
     And product "product2" should be disabled
     And product "product3" should be disabled
-    And I bulk disable following products in default shop:
+    And I bulk disable following products:
       | reference |
       | product1  |
       | product2  |
@@ -108,7 +108,7 @@ Feature: Bulk update product status from BO (Back Office)
     And product "product2" should be disabled
     And product "product3" should be disabled
     # NoNameProduct is in the middle of the list it doesn't mean the following products are ignored
-    And I bulk enable following products in default shop:
+    And I bulk enable following products:
       | reference     |
       | product1      |
       | noNameProduct |

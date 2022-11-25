@@ -120,7 +120,7 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
             $wasVisibleOnSearch !== $this->productIndexationUpdater->isVisibleOnSearch($product)
             || $wasActive !== (bool) $product->active
         ) {
-            $this->productIndexationUpdater->updateIndexation($product);
+            $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
     }
 
