@@ -15,7 +15,7 @@ Feature: Customer service
 
   Scenario: Update thread status to handled
     When I update thread "thread1" status to handled
-    Then customer thread "thread1" should have closed as status
+    Then customer thread "thread1" should be closed
 
   Scenario: I delete thread
     When I delete thread "thread1"
