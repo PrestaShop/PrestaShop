@@ -24,40 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace Tests\Unit\Core\Grid\Column;
 
-/**
- * Class ImageColumn renders column as image.
- */
-final class ImageColumn extends AbstractColumn
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+
+class ActionColumnTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function testConstructor(): void
     {
-        return 'image';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'src_field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'alt_field' => '',
-            ])
-            ->setAllowedTypes('src_field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('alt_field', 'string')
-        ;
+        $column = new ActionColumn('actions');
+        $this->assertEquals('actions', $column->getId());
+        $this->assertEquals('', $column->getName());
+        // The resolver doesn't call the parent resolver method so only actions option is available by default, not sure
+        // if it's relevant maybe this should be improved one day, but it seems to work as is
+        $this->assertEquals([
+            'actions' => null,
+        ], $column->getOptions());
     }
 }

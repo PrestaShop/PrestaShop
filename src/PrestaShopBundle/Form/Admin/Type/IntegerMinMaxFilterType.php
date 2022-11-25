@@ -31,6 +31,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Defines the integer type two inputs of min and max value - designed to fit grid in grid filter.
@@ -47,6 +49,22 @@ final class IntegerMinMaxFilterType extends AbstractType
         $resolver->setDefaults([
             'min_field_options' => [],
             'max_field_options' => [],
+            'constraints' => [
+                new Callback([
+                    'callback' => function (?array $impactData, ExecutionContextInterface $context) {
+                        if (!isset($impactData['min_field']) || !isset($impactData['max_field'])) {
+                            return;
+                        }
+
+                        if ((int) $impactData['min_field'] > (int) $impactData['max_field']) {
+                            $context
+                                ->buildViolation($this->trans('Maximum value must be higher than minimum value.', [], 'Admin.Notifications.Warning'))
+                                ->addViolation()
+                            ;
+                        }
+                    },
+                ]),
+            ],
         ]);
 
         $resolver->setAllowedTypes('min_field_options', 'array');

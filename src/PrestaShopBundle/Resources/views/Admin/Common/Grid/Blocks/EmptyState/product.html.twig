@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,42 +21,20 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+<div class="text-center showcase-list-card">
+  <img class="img-responsive mt-3 img-rtl" src="{{ asset('themes/new-theme/img/empty_state/catalog.png') }}">
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+  <p class="mt-4 showcase-list-card__header">{{ 'Manage your products'|trans({}, 'Admin.Catalog.Feature') }}</p>
 
-/**
- * Class ImageColumn renders column as image.
- */
-final class ImageColumn extends AbstractColumn
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'image';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'src_field',
-            ])
-            ->setDefaults([
-                'clickable' => true,
-                'alt_field' => '',
-            ])
-            ->setAllowedTypes('src_field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedTypes('alt_field', 'string')
-        ;
-    }
-}
+  <div class="mt-4">
+    <a href="{{ path('admin_products_v2_create') }}" class="btn btn-primary ml-1 new-product-button">
+      {{ 'Create new product'|trans({}, 'Admin.Catalog.Feature') }}
+    </a>
+    {{ 'or'|trans({}, 'Admin.Global') }}
+    <a href="{{ path('admin_import') }}" target="_blank" class="btn btn-outline-secondary mr-1">
+      {{ 'Import a list of products.'|trans({}, 'Admin.Catalog.Feature') }}
+    </a>
+  </div>
+</div>

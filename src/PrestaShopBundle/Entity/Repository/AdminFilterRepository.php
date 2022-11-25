@@ -117,6 +117,17 @@ class AdminFilterRepository extends EntityRepository
     }
 
     /**
+     * Updates and persists modification to a filter (that was previously modified).
+     *
+     * @param AdminFilter $adminFilter
+     */
+    public function updateFilter(AdminFilter $adminFilter): void
+    {
+        $this->getEntityManager()->persist($adminFilter);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Persist (create or update) filters into database using employee and uuid
      *
      * @param int $employeeId

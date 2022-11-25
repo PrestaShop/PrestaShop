@@ -49,7 +49,13 @@ export default class NavbarHandler {
     this.switchOnPageLoad();
   }
 
-  private switchToTarget(target: string): void {
+  public getHashTarget(): string {
+    const {hash} = document.location;
+
+    return hash.replace(`#${this.tabPrefix}`, '#');
+  }
+
+  public switchToTarget(target: string): void {
     if (!target) {
       return;
     }

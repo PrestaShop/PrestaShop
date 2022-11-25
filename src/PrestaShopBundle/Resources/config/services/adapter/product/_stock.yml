@@ -35,6 +35,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand

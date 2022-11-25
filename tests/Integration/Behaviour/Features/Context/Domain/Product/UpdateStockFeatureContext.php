@@ -34,6 +34,7 @@ use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -185,5 +186,23 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $outOfStock
+     *
+     * @return int
+     */
+    protected function convertPackStockTypeToInt(string $outOfStock): int
+    {
+        $intValues = [
+            'default' => PackStockType::STOCK_TYPE_DEFAULT,
+            'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+            'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
+            'both' => PackStockType::STOCK_TYPE_BOTH,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid pack stock type
+        ];
+
+        return $intValues[$outOfStock];
     }
 }
