@@ -271,14 +271,29 @@ class AddressCore extends ObjectModel
                     SET id_address_invoice = 0
                     WHERE id_address_invoice = ' . $this->id;
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
-        Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'customization
-                    SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
-        Db::getInstance()->execute($sql);
+        $cartProductsForAddress = $this->getCartProductsForAddress();
+        $prevIdCart = 0;
+        foreach ($cartProductsForAddress as $cartProduct) {
+            if ($prevIdCart !== $cartProduct['id_cart']) {
+                $prevIdCart = $cartProduct['id_cart'];
+                $cart = new Cart($prevIdCart);
+            }
+            $cart->nullifyProductAddressDelivery(
+                $cartProduct['id_product'],
+                $cartProduct['id_product_attribute'],
+                $this->id
+            );
+        }
+    }
+
+    private function getCartProductsForAddress()
+    {
+        $sql = new DbQuery();
+        $sql->select('id_cart, id_product, id_product_attribute');
+        $sql->from('cart_product');
+        $sql->where('id_address_delivery = ' . $this->id);
+        $sql->orderBy('id_cart');
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
