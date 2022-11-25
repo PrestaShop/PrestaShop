@@ -98,30 +98,6 @@ class DefaultCombinationFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @param string $productReference
-     * @param string $combinationReference
-     * @param int $shopId
-     */
-    private function assertDefaultCombination(
-        string $productReference,
-        string $combinationReference,
-        int $shopId
-    ) {
-        $combinationId = $this->getSharedStorage()->get($combinationReference);
-
-        $this->assertCachedDefaultCombinationId(
-            $productReference,
-            $combinationId,
-            $shopId
-        );
-
-        Assert::assertTrue(
-            $this->getCombinationForEditing($combinationReference, $shopId)->isDefault(),
-            sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
-        );
-    }
-
-    /**
      * @Given product :productReference should not have a default combination
      * @Given product :productReference does not have a default combination
      *
@@ -163,6 +139,30 @@ class DefaultCombinationFeatureContext extends AbstractCombinationFeatureContext
             $combinationId,
             (int) $product->cache_default_attribute,
             'Unexpected cached product default combination'
+        );
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $combinationReference
+     * @param int $shopId
+     */
+    private function assertDefaultCombination(
+        string $productReference,
+        string $combinationReference,
+        int $shopId
+    ) {
+        $combinationId = $this->getSharedStorage()->get($combinationReference);
+
+        $this->assertCachedDefaultCombinationId(
+            $productReference,
+            $combinationId,
+            $shopId
+        );
+
+        Assert::assertTrue(
+            $this->getCombinationForEditing($combinationReference, $shopId)->isDefault(),
+            sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
         );
     }
 
