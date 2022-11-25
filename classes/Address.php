@@ -281,15 +281,16 @@ class AddressCore extends ObjectModel
                 $cart = new Cart($prevIdCart);
             }
             if (
-                !Validate::isLoadedObject($cart) ||
-                $cart->orderExists()
+                !isset($cart) ||
+                (!Validate::isLoadedObject($cart) ||
+                $cart->orderExists())
             ) {
                 continue;
             }
             $cart->nullifyProductAddressDelivery(
                 $cartProduct['id_product'],
                 $cartProduct['id_product_attribute'],
-                $this->id
+                (int) $this->id
             );
         }
     }
