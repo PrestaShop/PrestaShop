@@ -112,6 +112,28 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+
+        $command = $this->getSingleShopCommand(true);
+        yield [
+            [
+                'header' => [
+                    'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => false,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand(false);
+        yield [
+            [
+                'header' => [
+                    'active' => false,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => false,
+                ],
+            ],
+            [$command],
+        ];
     }
 
     /**
