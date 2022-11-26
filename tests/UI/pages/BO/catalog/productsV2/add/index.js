@@ -26,6 +26,11 @@ class Products extends BOBasePage {
     // Header selectors
     this.productNameInput = '#product_header_name_1';
     this.productActiveSwitchButton = '#product_header_active_1';
+    this.productHeaderSummary = '.product-header-summary';
+    this.productHeaderTaxExcluded = `${this.productHeaderSummary} div[data-role=price-tax-excluded]`;
+    this.productHeaderTaxIncluded = `${this.productHeaderSummary} div[data-role=price-tax-included]`;
+    this.productHeaderQuantity = `${this.productHeaderSummary} div[data-role=quantity]`;
+    this.productHeaderReference = '.product-header-references';
 
     // Footer selectors
     this.previewProductButton = '#product_footer_preview';
@@ -42,25 +47,18 @@ class Products extends BOBasePage {
   /*
   Methods
    */
-
   /**
-   * Save product
+   * Get product header summary
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<{reference: string, quantity: string, priceTaxIncl: string, priceTaxExc: string}>}
    */
-  async saveProduct(page) {
-    await this.clickAndWaitForNavigation(page, this.saveProductButton);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
-   * Get save button name
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getSaveButtonName(page) {
-    return this.getTextContent(page, this.saveProductButton);
+  async getProductHeaderSummary(page) {
+    return {
+      priceTaxExc: await this.getTextContent(page, this.productHeaderTaxExcluded),
+      priceTaxIncl: await this.getTextContent(page, this.productHeaderTaxIncluded),
+      quantity: await this.getTextContent(page, this.productHeaderQuantity, false),
+      reference: await this.getTextContent(page, this.productHeaderReference),
+    };
   }
 
   /**
@@ -87,6 +85,26 @@ class Products extends BOBasePage {
     await this.setChecked(page, this.productActiveSwitchButton, productData.status);
 
     return this.saveProduct(page);
+  }
+
+  /**
+   * Save product
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async saveProduct(page) {
+    await this.clickAndWaitForNavigation(page, this.saveProductButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get save button name
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getSaveButtonName(page) {
+    return this.getTextContent(page, this.saveProductButton);
   }
 
   /**

@@ -26,9 +26,9 @@ module.exports = {
 
   /**
    * Calculate percentage
-   * @param num {number} Number to do the percentage
+   * @param num {number|float} Number to do the percentage
    * @param percentage {number} Percentage value
-   * @returns {Promise<number>}
+   * @returns {Promise<number|float>}
    */
   async percentage(num, percentage) {
     return (num / 100) * percentage;

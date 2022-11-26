@@ -16,7 +16,7 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
-
+    this.standardProductDescription = 'A physical product that needs to be shipped.';
     // Header selectors
     this.newProductButton = '#page-header-desc-configuration-add';
 
@@ -72,6 +72,7 @@ class Products extends BOBasePage {
     this.modalCreateProduct = '#modal-create-product';
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.productTypeChoices = '#create_product div.product-type-choices';
+    this.productTypedescription = '#create_product div.product-type-description';
     this.productType = (type) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
 
     // Modal dialog
@@ -111,6 +112,20 @@ class Products extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
     return this.elementVisible(page, this.modalCreateProduct, 1000);
+  }
+
+  /**
+   * Get product type description
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getProductDescription(page) {
+    await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
+    await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
+
+    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+
+    return this.getTextContent(createProductFrame, this.productTypedescription);
   }
 
   /**
