@@ -1,5 +1,7 @@
 # Cache, temp and personal files
 
+.env
+.idea
 /.htaccess
 /.htpasswd
 *.log

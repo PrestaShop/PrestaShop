@@ -9,12 +9,12 @@ services:
   mysql:
     image: mysql:5
     ports:
-      - "3306"
+      - ${DB_PORT:-3306}:3306
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: prestashop
-      MYSQL_DATABASE: prestashop
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWD:-prestashop}
+      MYSQL_DATABASE: ${DB_NAME:-prestashop}
     restart: always
   prestashop-git:
     build:
@@ -27,8 +27,8 @@ services:
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
-      DB_PASSWD: ${DB_PASSWD:-prestashop}
       DB_NAME: ${DB_NAME:-prestashop}
+      DB_PASSWD: ${DB_PASSWD:-prestashop}
       DB_SERVER: ${DB_SERVER:-mysql}
       DB_PREFIX: ${DB_PREFIX:-ps_}
       PS_DOMAIN: ${PS_DOMAIN:-localhost:8001}
@@ -39,8 +39,10 @@ services:
       PS_DEV_MODE: ${PS_DEV_MODE:-0}
       ADMIN_MAIL: ${ADMIN_MAIL:-demo@prestashop.com}
       ADMIN_PASSWD: ${ADMIN_PASSWD:-Correct Horse Battery Staple}
+      XDEBUG_MODE: ${PS_XDEBUG_MODE:-off}
+      XDEBUG_CONFIG: ${PS_XDEBUG_CONFIG:-client_host=host.docker.internal}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
-      - "8001:80"
+      - ${PS_PORT:-8001}:80
     volumes:
-      - ./:/var/www/html:delegated
+      - ./:/var/www/html
