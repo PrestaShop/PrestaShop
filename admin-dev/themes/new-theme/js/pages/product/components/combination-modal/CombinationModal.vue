@@ -28,9 +28,6 @@
       class="combination-modal"
       v-if="selectedCombinationId !== null"
       @close="closeModal"
-      :close-label="$t('modal.close')"
-      :confirm-label="$t('modal.apply')"
-      :cancel-label="$t('modal.cancel')"
     >
       <template #body>
         <div
@@ -118,9 +115,7 @@
     >
       <modal
         :modal-title="$t('modal.history.confirmTitle')"
-        :cancel-label="$t('modal.cancel')"
         :confirm-label="$t('modal.confirm')"
-        :close-label="$t('modal.close')"
         :confirmation="true"
         v-if="showConfirm"
         @close="hideConfirmModal"

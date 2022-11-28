@@ -70,7 +70,7 @@
                   @click.prevent.stop="close"
                   aria-label="Close modal"
                 >
-                  {{ closeLabel }}
+                  {{ $t(closeLabel) }}
                 </button>
               </slot>
 
@@ -84,7 +84,7 @@
                   @click.prevent.stop="close"
                   aria-label="Close modal"
                 >
-                  {{ cancelLabel }}
+                  {{ $t(cancelLabel) }}
                 </button>
 
                 <button
@@ -92,7 +92,7 @@
                   class="btn btn-primary"
                   @click.prevent.stop="confirm"
                 >
-                  {{ confirmLabel }}
+                  {{ $t(confirmLabel) }}
                 </button>
               </slot>
             </footer>
@@ -125,15 +125,24 @@
       },
       cancelLabel: {
         type: String,
-        required: true,
+        required: false,
+        default() {
+          return 'modal.cancel';
+        },
       },
       confirmLabel: {
         type: String,
-        required: true,
+        required: false,
+        default() {
+          return 'modal.apply';
+        },
       },
       closeLabel: {
         type: String,
-        required: true,
+        required: false,
+        default() {
+          return 'modal.close';
+        },
       },
       modalTitle: {
         type: String,

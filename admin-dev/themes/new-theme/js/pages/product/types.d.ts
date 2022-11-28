@@ -22,6 +22,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import {AutoCompleteSearchConfig} from '@js/components/auto-complete-search';
+import PerfectScrollbar from 'perfect-scrollbar';
+
+export interface AttributesSelectorStates {
+  dataSetConfig: AutoCompleteSearchConfig | Record<string, any>;
+  searchSource: Record<string, any>;
+  scrollbar: PerfectScrollbar | null;
+  hasGeneratedCombinations: boolean;
+  checkboxList: Array<Record<string, any>>;
+}
 
 export interface AttributeGroup {
   id: number;

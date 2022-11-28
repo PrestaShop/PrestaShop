@@ -90,7 +90,6 @@
           '{filesNb}': this.selectedFiles.length,
         })
       "
-      :close-label="$t('modal.close')"
       :confirm-label="$t('modal.accept')"
       :cancel-label="$t('modal.close')"
       @confirm="removeSelection"
