@@ -26,9 +26,6 @@
   <modal
     confirmation
     :modal-title="modalTitle"
-    :close-label="$t('modal.close')"
-    :confirm-label="$t('modal.apply')"
-    :cancel-label="$t('modal.cancel')"
     @close="$emit('close')"
     @confirm="$emit('applyCustomization', customData)"
     v-if="language !== null"

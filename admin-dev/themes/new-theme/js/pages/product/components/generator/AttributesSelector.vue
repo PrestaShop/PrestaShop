@@ -128,7 +128,7 @@
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
-  import {Attribute, AttributeGroup, AttributesSelectorStates} from '.';
+  import {Attribute, AttributeGroup, AttributesSelectorStates} from '@pages/product/types';
 
   const {$} = window;
 

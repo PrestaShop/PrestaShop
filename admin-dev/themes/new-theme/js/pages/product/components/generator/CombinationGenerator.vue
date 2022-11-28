@@ -28,9 +28,6 @@
       v-if="isModalShown"
       :modal-title="$t('modal.title')"
       :confirmation="true"
-      :close-label="$t('modal.close')"
-      :confirm-label="$t('modal.apply')"
-      :cancel-label="$t('modal.cancel')"
       @close="closeModal"
     >
       <template #body>
@@ -88,7 +85,7 @@
   import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
-  import {Attribute, AttributeGroup} from '.';
+  import {Attribute, AttributeGroup} from '@pages/product/types';
 
   const {$} = window;
 
