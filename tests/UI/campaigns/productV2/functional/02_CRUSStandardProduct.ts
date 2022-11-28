@@ -186,7 +186,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     });
 
     it('should check the product header details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
       const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
