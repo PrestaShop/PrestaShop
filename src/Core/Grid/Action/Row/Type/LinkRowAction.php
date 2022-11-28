@@ -52,6 +52,7 @@ final class LinkRowAction extends AbstractRowAction
                 'route',
                 'route_param_name',
                 'route_param_field',
+                'disabled',
             ])
             ->setDefaults([
                 'confirm_message' => '',
@@ -60,6 +61,7 @@ final class LinkRowAction extends AbstractRowAction
                 //route_param_name and route_param_field becomes redundant, but it cannot be removed due to BC break
                 'extra_route_params' => [],
                 'clickable_row' => false,
+                'disabled' => true,
                 'target' => '',
             ])
             ->setAllowedTypes('route', 'string')
@@ -70,6 +72,8 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
             ->setAllowedTypes('clickable_row', 'boolean')
             ->setAllowedTypes('target', 'string')
+            ->setAllowedTypes('disabled', 'boolean')
+
         ;
     }
 
@@ -80,6 +84,9 @@ final class LinkRowAction extends AbstractRowAction
     {
         $accessibilityChecker = $this->getOptions()['accessibility_checker'];
 
+        $options = $this->getOptions();
+        $options['disabled'] = true;
+        $this->setOptions($options);
         if ($accessibilityChecker instanceof AccessibilityCheckerInterface) {
             return $accessibilityChecker->isGranted($record);
         }

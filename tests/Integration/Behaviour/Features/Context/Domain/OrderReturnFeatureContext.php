@@ -72,9 +72,7 @@ class OrderReturnFeatureContext extends AbstractDomainFeatureContext
     public function checkOrderReturnState(string $orderReturnReference, string $orderReturnStateReference): void
     {
         $orderReturnId = SharedStorage::getStorage()->get($orderReturnReference);
-        /**
-         * @var $orderReturn OrderReturnForEditing
-         */
+
         $orderReturn = $this->getCommandBus()->handle(new GetOrderReturnForEditing((int) $orderReturnId));
         $orderReturnStateId = SharedStorage::getStorage()->get($orderReturnStateReference);
         if ($orderReturn->getOrderReturnStateId() !== $orderReturnStateId) {

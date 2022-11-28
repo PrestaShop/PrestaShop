@@ -61,7 +61,7 @@ class OrderReturnFormDataProviderTest extends TestCase
     /**
      * @param OrderReturnForEditing $orderReturnForEditing
      *
-     * @return MockObject|CommandBusInterface
+     * @return CommandBusInterface
      */
     private function createQueryBusMock(OrderReturnForEditing $orderReturnForEditing): CommandBusInterface
     {
