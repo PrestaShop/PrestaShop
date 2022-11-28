@@ -64,7 +64,7 @@
           <span v-if="!loading">
             {{
               $tc('generator.action', generatedCombinationsNb, {
-                'combinationsNb': generatedCombinationsNb,
+                '{combinationsNb}': generatedCombinationsNb,
               })
             }}
           </span>
