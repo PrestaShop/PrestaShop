@@ -174,7 +174,6 @@ default:
             - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
             - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\OrderStateFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\CommonDomainFeatureContext
         currency:
             paths:
                 - "%paths.base%/Features/Scenario/Currency"
@@ -512,16 +511,17 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\EmployeeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderReturnFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\OrderReturnFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CurrencyFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
         customer_service:
           paths:
             - "%paths.base%/Features/Scenario/CustomerService"
