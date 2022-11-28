@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server" page.
@@ -37,6 +38,8 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthorizationServerController extends FrameworkBundleAdminController
 {
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     *
      * @return Response
      */
     public function indexAction(): Response
