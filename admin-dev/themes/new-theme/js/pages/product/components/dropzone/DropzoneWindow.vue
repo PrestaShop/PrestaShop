@@ -29,7 +29,7 @@
         <p
           class="dropzone-window-number"
           v-html="
-            $t('window.selectedFiles', { 'filesNb': selectedFiles.length })
+            $t('window.selectedFiles', { '{filesNb}': selectedFiles.length })
           "
         />
       </div>

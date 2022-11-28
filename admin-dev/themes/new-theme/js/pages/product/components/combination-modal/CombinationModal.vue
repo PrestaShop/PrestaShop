@@ -107,7 +107,7 @@
         <history
           :combinations-list="combinationsHistory"
           @selectCombination="selectCombination"
-          :selected-combination="selectedCombinationId"
+          :selected-combination-id="selectedCombinationId"
           :empty-image-url="emptyImageUrl"
         />
       </template>
@@ -146,7 +146,6 @@
   import Modal from '@PSVue/components/Modal.vue';
   import Router from '@components/router';
   import {defineComponent} from 'vue';
-  import EventEmitter from '@components/event-emitter';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import PsModal from '@components/modal/modal';
   import History from './History.vue';
@@ -340,7 +339,6 @@
       },
       selectCombination(combination: Combination): void {
         this.navigateToCombination(combination.id);
-        EventEmitter.emit(CombinationEvents.selectCombination, combination.id);
       },
       confirmSelection(): void {
         if (this.isClosing) {
