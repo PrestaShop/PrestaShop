@@ -46,7 +46,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function generateCombinationsForDefaultShop(string $productReference, TableNode $table): void
     {
-        $this->generateCombinations($productReference, $table, $this->getDefaultShopId());
+        $this->generateCombinations($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -61,7 +61,22 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $this->generateCombinations(
             $productReference,
             $table,
-            $this->getSharedStorage()->get($shopReference)
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I generate combinations for product ":productReference" in all shops using following attributes:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinationsForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->generateCombinations(
+            $productReference,
+            $table,
+            ShopConstraint::allShops()
         );
     }
 
@@ -208,9 +223,9 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     /**
      * @param string $productReference
      * @param TableNode $table
-     * @param int $shopId
+     * @param ShopConstraint $shopConstraint
      */
-    private function generateCombinations(string $productReference, TableNode $table, int $shopId): void
+    private function generateCombinations(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $tableData = $table->getRowsHash();
         $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
@@ -219,8 +234,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
             $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $this->getSharedStorage()->get($productReference),
                 $groupedAttributeIds,
-                //@todo: not yet handled for all shops
-                ShopConstraint::shop($shopId)
+                $shopConstraint
             ));
         } catch (InvalidProductTypeException $e) {
             $this->setLastException($e);
