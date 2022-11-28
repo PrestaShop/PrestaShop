@@ -60,18 +60,6 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
     }
 
-    /**
-     * @When I set combination ":combinationReference" as default
-     *
-     * @param string $combinationReference
-     */
-    public function setDefaultCombination(string $combinationReference): void
-    {
-        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
-        $command->setIsDefault(true);
-        $this->getCommandBus()->handle($command);
-    }
-
     private function updateCombinationStockAvailable(string $combinationReference, array $dataRows): void
     {
         if (!isset($dataRows['delta quantity'])
