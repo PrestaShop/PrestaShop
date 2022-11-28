@@ -24,8 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Api\Resource;
 
+/**
+ * DTO used to get necessary informations when request the API about hook status
+ */
 class HookStatus
 {
     /**
@@ -65,7 +70,7 @@ class HookStatus
     /**
      * @param bool $isActive
      */
-    public function setIsActive(bool $isActive): void
+    public function setActive(bool $isActive): void
     {
         $this->isActive = $isActive;
     }

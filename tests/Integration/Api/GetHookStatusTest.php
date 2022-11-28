@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
@@ -42,18 +44,35 @@ class GetHookStatusTest extends ApiTestCase
         $activeHook->active = true;
         $activeHook->add();
 
-        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $inactiveHook->id);
+        $bearerToken = $this->getBearerToken();
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $inactiveHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $inactiveHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $activeHook->id);
+        $response = static::createClient()->request('GET', '/new-api/hook-status/' . $activeHook->id, ['auth_bearer' => $bearerToken]);
         self::assertEquals(json_decode($response->getContent())->active, $activeHook->active);
         self::assertResponseStatusCodeSame(200);
 
-        static::createClient()->request('GET', '/new-api/hook-status/' . 9999);
+        static::createClient()->request('GET', '/new-api/hook-status/' . 9999, ['auth_bearer' => $bearerToken]);
         self::assertResponseStatusCodeSame(404);
+
+        static::createClient()->request('GET', '/new-api/hook-status/' . $activeHook->id);
+        self::assertResponseStatusCodeSame(401);
 
         $inactiveHook->delete();
         $activeHook->delete();
+    }
+
+    private function getBearerToken(): string
+    {
+        $parameters = ['parameters' => [
+            'client_id' => 'my_client_id',
+            'client_secret' => 'prestashop',
+            'grant_type' => 'client_credentials',
+        ]];
+        $options = ['extra' => $parameters];
+        $response = static::createClient()->request('POST', '/api/oauth2/token', $options);
+
+        return json_decode($response->getContent())->access_token;
     }
 }

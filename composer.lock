@@ -164,7 +164,7 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v2.7.0"
+                "source": "https://github.com/api-platform/core/tree/v2.7.2"
             },
             "funding": [
                 {
@@ -172,7 +172,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-13T07:22:50+00:00"
+            "time": "2022-10-07T09:12:23+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
