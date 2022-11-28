@@ -50,7 +50,7 @@
         @click="clearAll"
       >
         <i class="material-icons">close</i>
-        {{ $tc('filters.clear', selectedFiltersNumber, { 'filtersNb': selectedFiltersNumber }) }}
+        {{ $tc('filters.clear', selectedFiltersNumber, { '{filtersNb}': selectedFiltersNumber }) }}
       </button>
     </div>
   </div>
