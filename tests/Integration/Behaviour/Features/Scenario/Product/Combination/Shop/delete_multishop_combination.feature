@@ -36,7 +36,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have the following combinations for shops "shop1":
+    And product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -46,10 +46,10 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
     And product "product1" should have no combinations for shops "shop2"
-    When I generate combinations in shop "shop2" for product product1 using following attributes:
+    And I generate combinations in shop "shop2" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have the following combinations for shops "shop2":
+    And product "product1" should have the following combinations for shops "shop2":
       | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -176,7 +176,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And product "product1" should not have a default combination for shop "shop1"
     And product "product1" should not have a default combination for shop "shop2"
 
-  Scenario: Delete bulk delete combinations from specified shop
+  Scenario: Bulk delete combinations from specified shop
     When I delete following combinations of product product1 from shop "shop1":
       | id reference   |
       | product1SWhite |
@@ -229,7 +229,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     Then product "product1" should have no combinations for shops "shop2"
     And product "product1" should not have a default combination for shop "shop2"
 
-  Scenario: Remove all the combinations for a specific shop and generate the same combinations again for the same shop
+  Scenario: Delete all the combinations for a specific shop and generate the same combinations again for the same shop
     When I delete following combinations of product product1 from shop "shop1":
       | id reference   |
       | product1SWhite |
@@ -261,3 +261,29 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" default combination for shop "shop2" should be "product1SWhite"
+
+  Scenario: Delete combination for all shops
+    When I delete combination "product1SBlack" from all shops
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop1" should be "product1SWhite"
+    And product "product1" default combination for shop "shop2" should be "product1SWhite"
+
+  Scenario: Bulk delete combinations for all shops
+    When I delete following combinations of product "product1" from all shops:
+      | id reference   |
+      | product1SWhite |
+      | product1MBlue  |
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product "product1" default combination for shop "shop1" should be "product1SBlack"
+    And product "product1" default combination for shop "shop2" should be "product1SBlack"
