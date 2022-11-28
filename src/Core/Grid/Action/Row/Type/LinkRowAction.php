@@ -52,7 +52,6 @@ final class LinkRowAction extends AbstractRowAction
                 'route',
                 'route_param_name',
                 'route_param_field',
-                'disabled',
             ])
             ->setDefaults([
                 'confirm_message' => '',
@@ -83,9 +82,6 @@ final class LinkRowAction extends AbstractRowAction
     {
         $accessibilityChecker = $this->getOptions()['accessibility_checker'];
 
-        $options = $this->getOptions();
-        $options['disabled'] = true;
-        $this->setOptions($options);
         if ($accessibilityChecker instanceof AccessibilityCheckerInterface) {
             return $accessibilityChecker->isGranted($record);
         }
