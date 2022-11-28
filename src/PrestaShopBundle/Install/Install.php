@@ -63,6 +63,7 @@ use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestaShopException;
 use PrestashopInstallerException;
 use PrestaShopLoggerInterface;
+use PSRLoggerAdapter;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -1165,12 +1166,16 @@ class Install extends AbstractInstall
         $themeName = $themeName ?: _THEME_NAME_;
         $builder = new ThemeManagerBuilder(
             Context::getContext(),
-            Db::getInstance()
+            Db::getInstance(),
+            null,
+            new PSRLoggerAdapter($this->getLogger())
         );
 
         $theme_manager = $builder->build();
 
         if (!($theme_manager->install($themeName) && $theme_manager->enable($themeName))) {
+            $this->getLogger()->log('Could not install theme');
+
             return false;
         }
 
