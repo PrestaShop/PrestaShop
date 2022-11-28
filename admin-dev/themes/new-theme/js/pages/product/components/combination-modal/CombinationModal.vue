@@ -155,7 +155,7 @@
     selectedCombinationName: string | null,
     previousCombinationId: number | null,
     nextCombinationId: number | null,
-    editCombinationUrl: string | null,
+    editCombinationUrl?: string,
     loadingCombinationForm: boolean,
     submittingCombinationForm: boolean,
     combinationList: JQuery,
@@ -392,7 +392,7 @@
         if (combinationId === null) {
           this.previousCombinationId = null;
           this.nextCombinationId = null;
-          this.editCombinationUrl = null;
+          this.editCombinationUrl = undefined;
 
           return;
         }

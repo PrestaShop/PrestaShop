@@ -39,7 +39,7 @@
         :checked="checked"
         :class="classes"
         :disabled="disabled"
-        @change="$emit('input', $event.target.checked)"
+        @change="$emit('input', ($event?.target as HTMLInputElement).checked)"
       >
 
       <slot>
@@ -66,8 +66,9 @@
         ]),
       },
       checked: {
-        required: true,
-        type: [Array, Number, String],
+        required: false,
+        type: [Array, Boolean],
+        default: false,
       },
       disabled: {
         type: Boolean,

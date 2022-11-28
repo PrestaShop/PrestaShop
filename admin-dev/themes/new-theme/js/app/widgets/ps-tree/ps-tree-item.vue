@@ -39,11 +39,11 @@
         <span
           v-if="translations"
           class="sr-only"
-        >{{ this.model.open ? translations.reduce : translations.expand }}</span>
+        >{{ model.open ? translations.reduce : translations.expand }}</span>
       </button>
       <PSCheckbox
         :ref="model.name"
-        :id="id"
+        :id="id.toString()"
         :model="model"
         @checked="onCheck"
         v-if="hasCheckbox"
@@ -59,7 +59,7 @@
       <span
         class="tree-extra-label-mini d-xl-none"
         v-if="displayExtraLabel"
-      >{{ this.model.extraLabel }}</span>
+      >{{ model.extraLabel }}</span>
     </div>
     <ul
       v-show="open"

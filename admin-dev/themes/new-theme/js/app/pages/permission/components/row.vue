@@ -63,7 +63,7 @@
         :key="p.id"
         :can-edit="canEdit"
         :permission="p"
-        :permission-id="pId"
+        :permission-id="pId.toString()"
         :permission-key="permissionKey"
         :level-depth="levelDepth + 1"
         :profile-permissions.sync="profilePermissions"
@@ -79,7 +79,7 @@
 <script lang="ts">
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
-  import {defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
 
   export default defineComponent({
     name: 'Row',
@@ -126,7 +126,7 @@
         default: false,
       },
       types: {
-        type: Array,
+        type: Array as PropType<Array<string>>,
         required: true,
       },
     },

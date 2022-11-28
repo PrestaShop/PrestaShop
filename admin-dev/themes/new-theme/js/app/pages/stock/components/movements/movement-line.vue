@@ -77,12 +77,13 @@
 <script lang="ts">
   import PSMedia from '@app/widgets/ps-media.vue';
   import productDesc from '@app/pages/stock/mixins/product-desc';
-  import {defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
+  import {StockMovement} from './index.vue';
 
   export default defineComponent({
     props: {
       product: {
-        type: Object,
+        type: Object as PropType<StockMovement>,
         required: true,
       },
     },

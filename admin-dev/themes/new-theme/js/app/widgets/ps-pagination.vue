@@ -38,7 +38,7 @@
         <a
           v-show="activeLeftArrow"
           class="float-left page-link"
-          @click="prev($event)"
+          @click="prev()"
           href="#"
         >
           <span class="sr-only">Previous</span>
@@ -78,7 +78,7 @@
         <a
           v-show="activeRightArrow"
           class="float-left page-link"
-          @click="next($event)"
+          @click="next()"
           href="#"
         >
           <span class="sr-only">Next</span>
