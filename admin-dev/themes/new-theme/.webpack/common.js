@@ -157,7 +157,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
-      vue: 'vue/dist/vue.esm-bundler.js',
+      vue: 'vue',
       '@app': path.resolve(__dirname, '../js/app'),
       '@js': path.resolve(__dirname, '../js'),
       '@pages': path.resolve(__dirname, '../js/pages'),

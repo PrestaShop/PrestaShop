@@ -89,7 +89,7 @@
     watch: {
       selectedProductsLng(value: number): void {
         if (value === 0 && this.$refs['bulk-action']) {
-          (<any> this.$refs['bulk-action']).checked = false;
+          (<HTMLInputElement> this.$refs['bulk-action']).checked = false;
           this.isFocused = false;
         }
         if (value === 1 && this.$refs['bulk-action']) {
@@ -104,7 +104,7 @@
         const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
 
         if (isIndeterminate) {
-          (<any> this.$refs['bulk-action']).checked = true;
+          (<HTMLInputElement> this.$refs['bulk-action']).checked = true;
         }
         return isIndeterminate;
       },

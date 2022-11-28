@@ -33,7 +33,6 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 /**
  * @param {string} combinationModalSelector
  * @param {PaginatedCombinationsService} paginatedCombinationsService
- * @param {int} productId
  * @param {Object} eventEmitter
  *
  * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
@@ -41,7 +40,6 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 export default function initCombinationModal(
   combinationModalSelector: string,
   paginatedCombinationsService: PaginatedCombinationsService,
-  productId: number,
   eventEmitter: typeof EventEmitter,
 ): App | null {
   const container = <HTMLElement> document.querySelector(combinationModalSelector);
@@ -56,7 +54,6 @@ export default function initCombinationModal(
 
   const vueApp = createApp(CombinationModal, {
     i18n,
-    productId,
     eventEmitter,
     emptyImage,
     paginatedCombinationsService,

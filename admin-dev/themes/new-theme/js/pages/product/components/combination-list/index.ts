@@ -185,7 +185,6 @@ export default class CombinationsList {
     this.combinationModalApp = initCombinationModal(
       CombinationsMap.editModal,
       this.paginatedCombinationsService,
-      this.productId,
       this.eventEmitter,
     );
     this.filtersApp = initFilters(

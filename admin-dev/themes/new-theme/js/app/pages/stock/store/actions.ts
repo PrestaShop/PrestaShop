@@ -93,7 +93,6 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     id_stock_mvt_reason: payload.id_stock_mvt_reason,
     id_employee: payload.id_employee,
   }, isParamInvalid));
-  console.log(params.toString());
 
   if (payload.date_add?.sup) {
     params.append('date_add[sup]', payload.date_add.sup);

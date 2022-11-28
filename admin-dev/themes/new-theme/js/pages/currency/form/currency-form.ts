@@ -253,7 +253,6 @@ export default class CurrencyForm {
           });
         }
       } catch (errorResponse: any) {
-        console.log(errorResponse);
         if (errorResponse.body && errorResponse.body.error) {
           showGrowl('error', errorResponse.body.error, 3000);
         } else {
