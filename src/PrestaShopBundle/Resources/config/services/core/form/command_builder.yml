@@ -62,39 +62,20 @@ services:
     tags: [ 'core.product_command_builder' ]
 
   # Combination builders
-  prestashop.core.form.command_builder.combination.combination_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder:
     arguments:
       - !tagged core.combination_command_builder
 
-  prestashop.core.form.command_builder.product.combination.stock_command_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
+
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
 
-  prestashop.core.form.command_builder.product.combination.price_command_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationPriceCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationImagesCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
 
-  prestashop.core.form.command_builder.product.combination.details_command_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationDetailsCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
 
-  prestashop.core.form.command_builder.product.combination.suppliers_command_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
-
-  prestashop.core.form.command_builder.product.combination.images_command_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationImagesCommandsBuilder
-    tags: [ 'core.combination_command_builder' ]
-
-  prestashop.core.form.command_builder.product.combination.default_combination_commands_builder:
-    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder
-    tags: [ 'core.combination_command_builder' ]
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder: ~
-  # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
-  # tags: [ 'core.combination_command_builder' ]
-
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder: ~
-  # @todo: tags commented bellow, to avoid affecting combination page until all the related commands are refactored.
-  # tags: [ 'core.combination_command_builder' ]
