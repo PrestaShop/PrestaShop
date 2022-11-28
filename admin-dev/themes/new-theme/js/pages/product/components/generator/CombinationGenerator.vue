@@ -213,7 +213,7 @@
           const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
-              combinationsNb: response.combination_ids.length,
+              '{combinationsNb}': response.combination_ids.length,
             }),
           });
           this.selectedAttributeGroups = {};

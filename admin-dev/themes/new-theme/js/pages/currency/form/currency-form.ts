@@ -29,6 +29,7 @@ import ConfirmModal from '@components/modal';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import {EventEmitter} from '@components/event-emitter';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
+import CurrencyFormEventMap from './currency-form-event-map';
 
 export default class CurrencyForm {
   map: Record<string, any>;
@@ -99,7 +100,7 @@ export default class CurrencyForm {
     this.initState();
     this.initCurrencyFormatter();
 
-    EventEmitter.on('refreshCurrencyApp', (currencyData) => {
+    EventEmitter.on(CurrencyFormEventMap.refreshCurrencyApp, (currencyData) => {
       this.state.currencyData = currencyData;
       this.fillCurrencyCustomData(currencyData);
       this.initCurrencyFormatter();

@@ -55,6 +55,7 @@ export default {
     combinationDeleted: 'combinationDeleted',
     combinationSwitchDeltaQuantity: 'combinationSwitchDeltaQuantity',
     combinationSwitchFixedQuantity: 'combinationSwitchFixedQuantity',
+    clearAllCombinationFilters: 'clearAllCombinationFilters',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',

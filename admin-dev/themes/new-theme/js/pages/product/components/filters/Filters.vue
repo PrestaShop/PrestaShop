@@ -127,7 +127,7 @@
       clearAll(): void {
         this.selectedFilters = [];
         this.$emit('clearAll');
-        this.eventEmitter.emit('clearAll');
+        this.eventEmitter.emit(CombinationEvents.clearAllCombinationFilters);
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {

@@ -70,6 +70,9 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
+  import ProductEventMap from '@pages/product/product-event-map';
+
+  const CombinationEvents = ProductEventMap.combinations;
 
   export default defineComponent({
     name: 'FilterDropdown',
@@ -97,7 +100,7 @@
       },
     },
     mounted() {
-      this.eventEmitter.on('clearAll', this.clear);
+      this.eventEmitter.on(CombinationEvents.clearAllCombinationFilters, this.clear);
     },
     computed: {
       nbFiles(): string | null {
