@@ -1,3 +1,9 @@
+// Import data
+import type {
+  PageWaitForSelectorOptionsState,
+  WaitForNavigationWaitUntil,
+} from '@data/types/playwright';
+
 import {
   BrowserContext, ElementHandle, FileChooser, Page,
 } from 'playwright';
@@ -58,14 +64,14 @@ class CommonPage {
    * Wait for selector to have a state
    * @param page {Page} Browser tab
    * @param selector {string} selector to wait
-   * @param state {string} Selector state between 'visible'|'hidden'|'attached'|'detached'
+   * @param state {PageWaitForSelectorOptionsState} Selector state between 'visible'|'hidden'|'attached'|'detached'
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<void>}
    */
   async waitForSelector(
     page: Page,
     selector: string,
-    state: 'attached' | 'detached' | 'visible' | 'hidden',
+    state: PageWaitForSelectorOptionsState,
     timeout: number = 10000,
   ): Promise<void> {
     await page.waitForSelector(selector, {state, timeout});
@@ -319,14 +325,14 @@ class CommonPage {
    * Go to Page and wait for navigation
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element
-   * @param waitUntil {'load'|'domcontentloaded'|'networkidle'|'commit'} The event to wait after click
+   * @param waitUntil {WaitForNavigationWaitUntil} The event to wait after click
    * @param timeout {number} Time to wait for navigation
    * @return {Promise<void>}
    */
   async clickAndWaitForNavigation(
     page: Page,
     selector: string,
-    waitUntil: 'load'|'domcontentloaded'|'networkidle'|'commit' = 'networkidle',
+    waitUntil: WaitForNavigationWaitUntil = 'networkidle',
     timeout: number = 30000,
   ): Promise<void> {
     await Promise.all([
@@ -338,10 +344,10 @@ class CommonPage {
   /**
    * Navigate to the previous page in history
    * @param page {Page} Browser tab
-   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
+   * @param waitUntil {WaitForNavigationWaitUntil} The event to wait after click (load/networkidle/domcontentloaded)
    * @return {Promise<void>}
    */
-  async goToPreviousPage(page: Page, waitUntil: 'load'|'domcontentloaded'|'networkidle'|'commit' = 'load'): Promise<void> {
+  async goToPreviousPage(page: Page, waitUntil: WaitForNavigationWaitUntil = 'load'): Promise<void> {
     await page.goBack({waitUntil});
   }
 
