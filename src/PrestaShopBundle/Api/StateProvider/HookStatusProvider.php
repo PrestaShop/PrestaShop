@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Api\StateProvider;
 
 use ApiPlatform\Metadata\Operation;
@@ -32,6 +34,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus;
 use PrestaShopBundle\Api\Resource\HookStatus;
 
+/**
+ * Provide a HookStatus DTO when request the api about hook status
+ */
 final class HookStatusProvider implements ProviderInterface
 {
     private $queryBus;
@@ -51,7 +56,7 @@ final class HookStatusProvider implements ProviderInterface
 
         $hookStatusResource = new HookStatus();
         $hookStatusResource->setId($uriVariables['id']);
-        $hookStatusResource->setIsActive($hookStatus);
+        $hookStatusResource->setActive($hookStatus);
 
         return $hookStatusResource;
     }

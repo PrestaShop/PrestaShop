@@ -107,5 +107,8 @@ swiftmailer:
 api_platform:
   title: PrestaShop API
   version: 1.0.0
+  mapping:
+    paths:
+      - '%kernel.project_dir%/app/config/api_platform'
 
   metadata_backward_compatibility_layer: false
