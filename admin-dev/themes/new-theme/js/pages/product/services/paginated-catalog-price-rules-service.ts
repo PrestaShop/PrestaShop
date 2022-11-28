@@ -24,14 +24,27 @@
  */
 
 import Router from '@components/router';
+import PaginationServiceType from '@PSTypes/services';
 
-const router = new Router();
 const {$} = window;
 
-export const getCatalogRules = async (): Promise<Record<string, number | CatalogPriceRuleForListing[]>> => $.get(
-  router.generate('admin_catalog_price_rules_product_form_list'),
-);
+export default class PaginatedCatalogPriceRulesService implements PaginationServiceType {
+  router: Router;
 
-export default {
-  getCatalogRules,
-};
+  offset: number;
+
+  limit: number;
+
+  constructor() {
+    this.router = new Router();
+    this.offset = 0;
+    this.limit = 0;
+  }
+
+  fetch(offset: number, limit: number): JQuery.jqXHR<any> {
+    return $.get(this.router.generate('admin_catalog_price_rules_product_form_list', {
+      limit,
+      offset,
+    }));
+  }
+}

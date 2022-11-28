@@ -153,7 +153,11 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         $langId = (int) Language::getIdByIso($langIso);
 
         /** @var CatalogPriceRuleList $actualList */
-        $actualList = $this->getQueryBus()->handle(new GetCatalogPriceRuleList($langId));
+        $actualList = $this->getQueryBus()->handle(
+            new GetCatalogPriceRuleList(
+                $langId
+            )
+        );
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $transformedList = $this->transformCatalogPriceRuleList($expectedList, $langId);

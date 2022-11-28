@@ -31,12 +31,13 @@ import SpecificPriceListRenderer from '@pages/product/components/specific-price/
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
 import FormFieldDisabler from '@components/form/form-field-disabler';
-import CatalogPriceRuleList from '@pages/product/components/catalog-price-rule/catalog-price-rule-list';
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 import ClickEvent = JQuery.ClickEvent;
+import PaginatedCatalogPriceRulesService from "@pages/product/services/paginated-catalog-price-rules-service";
+import CatalogPriceRuleRenderer from "@pages/product/components/catalog-price-rule/catalog-price-rule-renderer";
 
 const SpecificPriceMap = ProductMap.specificPrice;
 const CatalogPriceRulesMap = ProductMap.catalogPriceRule;
@@ -50,8 +51,6 @@ export default class SpecificPricesManager {
   listContainer: HTMLElement;
 
   router: Router;
-
-  catalogPriceRuleList: CatalogPriceRuleList;
 
   paginator!: DynamicPaginator;
 
@@ -92,7 +91,13 @@ export default class SpecificPricesManager {
   }
 
   private initCatalogPriceRules() {
-    const catalogPriceRuleList = new CatalogPriceRuleList();
+    const priceRuleRenderer = new CatalogPriceRuleRenderer();
+    const catalogPriceRulePaginator = new DynamicPaginator(
+      CatalogPriceRulesMap.paginationContainer,
+      new PaginatedCatalogPriceRulesService(),
+      priceRuleRenderer,
+      1,
+    );
 
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
     const hideCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.hideCatalogPriceRules);
@@ -116,15 +121,15 @@ export default class SpecificPricesManager {
       hideCatalogPriceRulesButton.classList.remove('d-none');
       showCatalogPriceRulesButton.classList.add('d-none');
       if (!listRendered) {
-        catalogPriceRuleList.renderList();
+        catalogPriceRulePaginator.paginate(1);
       } else {
-        catalogPriceRuleList.toggleListVisibility(true);
+        priceRuleRenderer.toggleListVisibility(true);
       }
       listRendered = true;
     });
 
     hideCatalogPriceRulesButton.addEventListener('click', () => {
-      catalogPriceRuleList.toggleListVisibility(false);
+      priceRuleRenderer.toggleListVisibility(false);
       formContainer.classList.add('d-none');
       hideCatalogPriceRulesButton.classList.add('d-none');
       showCatalogPriceRulesButton.classList.remove('d-none');

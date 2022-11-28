@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class CatalogPriceRuleRepository
 {
@@ -58,10 +60,40 @@ class CatalogPriceRuleRepository
     /**
      * @return array<int, array<string, string|null>>
      */
-    public function getAll(LanguageId $langId): array
+    public function getAll(
+        LanguageId $langId,
+        ?int $limit = null,
+        ?int $offset = null
+    ): array
     {
-        $qb = $this->connection->createQueryBuilder()
+        $qb = $this->getSpecificPricesQueryBuilder($langId)
             ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $langId
+     * @param array<string, mixed> $filters
+     *
+     * @return int
+     */
+    public function countCatalogPriceRules(LanguageId $langId): int
+    {
+        $qb = $this->getSpecificPricesQueryBuilder($langId)
+            ->select('COUNT(spr.id_specific_price_rule) AS total_catalog_price_rules')
+        ;
+
+        return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
+    }
+
+    private function getSpecificPricesQueryBuilder(LanguageId $langId): QueryBuilder
+    {
+        return $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')
             ->leftJoin(
                 'spr',
@@ -88,9 +120,6 @@ class CatalogPriceRuleRepository
                 'spr.id_group = group_lang.id_group AND group_lang.id_lang = :langId'
             )
             ->orderBy('id_specific_price_rule', 'asc')
-            ->setParameter('langId', $langId->getValue())
-        ;
-
-        return $qb->execute()->fetchAllAssociative();
+            ->setParameter('langId', $langId->getValue());
     }
 }

@@ -37,9 +37,21 @@ class GetCatalogPriceRuleList
      */
     private $langId;
 
-    public function __construct(int $langId)
+    /**
+     * @var int|null
+     */
+    private $limit;
+
+    /**
+     * @var int|null
+     */
+    private $offset;
+
+    public function __construct(int $langId, ?int $limit = null, ?int $offset = null)
     {
         $this->langId = new LanguageId($langId);
+        $this->limit = $limit;
+        $this->offset = $offset;
     }
 
     /**
@@ -48,5 +60,21 @@ class GetCatalogPriceRuleList
     public function getLangId(): LanguageId
     {
         return $this->langId;
+    }
+
+    /**
+     * @param int|null $limit
+     */
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int|null $offset
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
     }
 }
