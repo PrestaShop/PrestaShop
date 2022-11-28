@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Category\CommandHandler;
 
+use Db;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
@@ -176,7 +177,7 @@ abstract class AbstractDeleteCategoryHandler
      */
     private function updateProductsWithoutCategories(array $deletedCategoryIdsByParent, CategoryDeleteMode $mode): void
     {
-        $productIdsWithoutCategories = $this->productRepository->findProductIdsWithoutCategories();
+        $productIdsWithoutCategories = $this->findProductIdsWithoutCategories();
 
         foreach ($productIdsWithoutCategories as $productId) {
             $product = $this->productRepository->get($productId);
@@ -209,8 +210,6 @@ abstract class AbstractDeleteCategoryHandler
     }
 
     /**
-     * @todo: move to repository sql part of the method - findProductsInDefaultCategories()?
-     *
      * @param array<int, int[]> $deletedCategoryIdsByParent
      *
      * @return ProductId[]
@@ -222,6 +221,56 @@ abstract class AbstractDeleteCategoryHandler
             $deletedCategoryIds = array_merge($deletedCategoryIds, $deletedIds);
         }
 
-        return $this->productRepository->findProductIdsByDefaultCategories($deletedCategoryIds);
+        return $this->findProductIdsByDefaultCategories($deletedCategoryIds);
+    }
+
+    /**
+     * @return ProductId[]
+     */
+    private function findProductIdsWithoutCategories(): array
+    {
+        $results = Db::getInstance()->executeS('
+			SELECT p.`id_product`
+			FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE NOT EXISTS (
+			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
+			)
+		');
+
+        return $this->buildProductIdsFromResults($results);
+    }
+
+    /**
+     * @param int[] $defaultCategoryIds
+     *
+     * @return ProductId[]
+     */
+    private function findProductIdsByDefaultCategories(array $defaultCategoryIds): array
+    {
+        $results = Db::getInstance()->executeS('
+			SELECT p.`id_product`
+			FROM `' . _DB_PREFIX_ . 'product` p
+			' . Shop::addSqlAssociation('product', 'p') . '
+			WHERE p.id_category_default IN (' . implode(',', array_map('intval', $defaultCategoryIds)) . ')
+		');
+
+        return $this->buildProductIdsFromResults($results);
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $results
+     *
+     * @return ProductId[]
+     */
+    private function buildProductIdsFromResults(array $results): array
+    {
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(static function (array $result): ProductId {
+            return new ProductId((int) $result['id_product']);
+        }, $results);
     }
 }

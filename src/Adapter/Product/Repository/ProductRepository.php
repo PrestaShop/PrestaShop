@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use Db;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception;
 use Doctrine\DBAL\Exception as ExceptionAlias;
@@ -61,7 +60,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 use Product;
-use Shop;
 
 /**
  * Methods to access data storage for Product
@@ -561,55 +559,5 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $product;
-    }
-
-    /**
-     * @return ProductId[]
-     */
-    public function findProductIdsWithoutCategories(): array
-    {
-        $results = Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE NOT EXISTS (
-			    SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp WHERE cp.`id_product` = p.`id_product`
-			)
-		');
-
-        return $this->buildProductIdsFromResults($results);
-    }
-
-    /**
-     * @param int[] $defaultCategoryIds
-     *
-     * @return ProductId[]
-     */
-    public function findProductIdsByDefaultCategories(array $defaultCategoryIds): array
-    {
-        $results = Db::getInstance()->executeS('
-			SELECT p.`id_product`
-			FROM `' . _DB_PREFIX_ . 'product` p
-			' . Shop::addSqlAssociation('product', 'p') . '
-			WHERE p.id_category_default IN (' . implode(',', array_map('intval', $defaultCategoryIds)) . ')
-		');
-
-        return $this->buildProductIdsFromResults($results);
-    }
-
-    /**
-     * @param array<int, array<string, mixed>> $results
-     *
-     * @return ProductId[]
-     */
-    private function buildProductIdsFromResults(array $results): array
-    {
-        if (empty($results)) {
-            return [];
-        }
-
-        return array_map(static function (array $result): ProductId {
-            return new ProductId((int) $result['id_product']);
-        }, $results);
     }
 }
