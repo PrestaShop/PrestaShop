@@ -217,7 +217,9 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
       await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
     });
+  });
 
+  describe('Filter products table by : Category and Position', async () => {
     it('should filter by category \'Home\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCategories', baseContext);
 
