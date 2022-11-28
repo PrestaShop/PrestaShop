@@ -313,7 +313,7 @@ class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
-  async getNumberFromText(page: Page, selector: string, timeout: number = 0) {
+  async getNumberFromText(page: Page, selector: string, timeout: number = 0): Promise<number> {
     await page.waitForTimeout(timeout);
     const text = await this.getTextContent(page, selector);
     const number = (/\d+/g.exec(text) ?? '').toString();
