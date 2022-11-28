@@ -61,7 +61,22 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
      */
     public function handle(GetCatalogPriceRuleList $query): CatalogPriceRuleList
     {
-        $catalogPriceRules = $this->catalogPriceRuleRepository->getAll($query->getLangId());
+        $catalogPriceRules = $this->catalogPriceRuleRepository->getAll(
+            $query->getLangId(),
+            $query->getLimit(),
+            $query->getOffset()
+        );
+
+        return new CatalogPriceRuleList($this->formatCatalogPriceRuleList($catalogPriceRules), $this->catalogPriceRuleRepository->countCatalogPriceRules($query->getLangId()));
+    }
+
+    /**
+     * @param array<int, array<string, string|null>> $catalogPriceRules
+     *
+     * @return CatalogPriceRuleForListing[]
+     */
+    private function formatCatalogPriceRuleList(array $catalogPriceRules): array
+    {
         $return = [];
         foreach ($catalogPriceRules as $catalogPriceRule) {
             $return[] = new CatalogPriceRuleForListing(
@@ -79,6 +94,6 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
             );
         }
 
-        return new CatalogPriceRuleList($return, count($return));
+        return $return;
     }
 }

@@ -86,13 +86,22 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function productFormListAction(): JsonResponse
+    public function productFormListAction(Request $request): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(
-            new GetCatalogPriceRuleList($this->getContextLangId())
+            new GetCatalogPriceRuleList(
+                $this->getContextLangId(),
+                $request->query->getInt('limit') ?: null,
+                $request->query->getInt('offset') ?: null
+            )
         );
 
-        return $this->json(['catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList)]);
+        return $this->json(
+            [
+                'catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList),
+                'total' => $catalogPriceRuleList->getTotalCatalogPriceRulesCount(),
+            ]
+        );
     }
 
     /**

@@ -384,6 +384,9 @@ export default {
   catalogPriceRule: {
     blockContainer: '#catalog-price-rules-container',
     listContainer: '#catalog-price-rule-list-container',
+    paginationContainer: '#catalog-price-rules-pagination',
+    loadingSpinner: '#catalog-price-rules-loading',
+    listTable: '#catalog-price-rules-list-table',
     listRowTemplate: '#catalog-price-rule-tr-template',
     showCatalogPriceRules: '#product_pricing_show_catalog_price_rules',
     hideCatalogPriceRules: '#product_pricing_hide_catalog_price_rules',
