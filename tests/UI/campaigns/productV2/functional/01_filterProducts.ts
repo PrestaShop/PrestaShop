@@ -100,7 +100,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       },
     ].forEach((test) => {
       it(`should filter list by '${test.args.filterBy}' min upper than max and check error message`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterByIDMinMax', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
         await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
 
@@ -211,24 +211,80 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       await expect(textColumn).to.equal('warning No records found');
     });
 
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterByStatus', baseContext);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+    });
+
     it('should filter by category \'Home\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCategories', baseContext);
 
       await productsPage.filterProductsByCategory(page, 'Home');
 
       const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
-      await expect(numberOfProductsAfterFilter).to.be.below(numberOfProducts);
+      await expect(numberOfProductsAfterFilter).to.equal(numberOfProducts);
     });
 
-    it('should check if the \'Clear filter\' link is visible', async function(){
+    it('should check the filter by category button name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFilterButtonName', baseContext);
+
+      const filterButtonName = await productsPage.getFilterByCategoryButtonName(page);
+      await expect(filterButtonName).to.equal('Filter by categories (Home)');
+    });
+
+    it('should check that the \'Clear filter\' link is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkClearFilterLink', baseContext);
 
       const isVisible = await productsPage.isClearFilterLinkVisible(page);
       await expect(isVisible).to.be.true;
     });
 
-    it('should check if the new column \'Position\' is visible', async function(){
+    it('should check that the new column \'Position\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPositionColumn', baseContext);
+
+      const isVisible = await productsPage.isPositionColumnVisible(page);
+      await expect(isVisible).to.be.true;
+    });
+
+    it('should filter list by \'Position\' and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByPosition', baseContext);
+
+      await productsPage.filterProducts(page, 'position', 1, 'input');
+
+      const textColumn = await productsPage.getTextColumn(page, 'position');
+      await expect(textColumn).to.equal(1);
+    });
+
+    it('should reset filter', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterByPosition', baseContext);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+    });
+
+    it('should click on \'Clear filter\' button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnClearFilterButton', baseContext);
+
+      await productsPage.clickOnClearFilterLink(page);
+
+      const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
+    });
+
+    it('should check that the \'Clear filter\' link is not visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkClearFilterLinkNotVisible', baseContext);
+
+      const isVisible = await productsPage.isClearFilterLinkVisible(page);
+      await expect(isVisible).to.be.false;
+    });
+
+    it('should check that the new column \'Position\' is not visible', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPositionColumnNotVisible', baseContext);
+
+      const isVisible = await productsPage.isPositionColumnVisible(page);
+      await expect(isVisible).to.be.false;
     });
   });
 
