@@ -27,7 +27,6 @@
 
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use SymfonyConsoleLogger;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
 
@@ -43,17 +42,25 @@ $logger = new SymfonyConsoleLogger($output, PrestaShopLoggerInterface::DEBUG);
 
 $install = new Install(null, null, $logger);
 $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
+$logger->log(sprintf('Creating database %s', _DB_NAME_));
 DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
+$logger->log('Clearing database');
 $install->clearDatabase(false);
+$logger->log('Installing database');
 if (!$install->installDatabase(true)) {
     // Something went wrong during installation
+    $logger->logError('Database installation failed');
     exit(1);
 }
 
+$logger->log('Initializing test context');
 $install->initializeTestContext();
+$logger->log('Installing default data');
 $install->installDefaultData('test_shop', false, false, false);
+$logger->log('Populating database');
 $install->populateDatabase();
 
+$logger->log('Configuring shop');
 $install->configureShop([
     'admin_firstname' => 'puff',
     'admin_lastname' => 'daddy',
@@ -62,6 +69,7 @@ $install->configureShop([
     'configuration_agrement' => true,
 ]);
 
+$logger->log('Installing language');
 // Default language is forced as en, we need french translation package as well, we only need the catalog to
 // be available for the Translator component but we do not want the Language in the DB
 if (!Language::translationPackIsInCache('fr-FR')) {
@@ -69,16 +77,25 @@ if (!Language::translationPackIsInCache('fr-FR')) {
 }
 Language::installSfLanguagePack('fr-FR');
 
+$logger->log('Installing fixtures');
 $install->installFixtures();
 
 Category::regenerateEntireNtree();
 Tab::resetStaticCache();
+
+$logger->log('Installing default theme');
 $install->installTheme();
+
+$logger->log('Installing modules on disk');
 $install->installModules(array_keys($install->getModulesOnDisk()));
 
+$logger->log('Creating database dump');
 DatabaseDump::create();
 
+$logger->log('Backup resources');
 $resourceResetter = new ResourceResetter();
 $resourceResetter->backupImages();
 $resourceResetter->backupDownloads();
 $resourceResetter->backupTestModules();
+
+$logger->log('Test DB was successfully created');
