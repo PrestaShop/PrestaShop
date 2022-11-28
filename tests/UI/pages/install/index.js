@@ -1,6 +1,7 @@
+// Import pages
+import CommonPage from '@pages/commonPage';
+
 require('module-alias/register');
-// Using CommonPage
-const CommonPage = require('@pages/commonPage');
 
 /**
  * Install page, contains functions used in different steps of the install
