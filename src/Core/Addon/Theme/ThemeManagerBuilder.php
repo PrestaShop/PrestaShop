@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -43,12 +45,14 @@ class ThemeManagerBuilder
     private $context;
     private $db;
     private $themeValidator;
+    private $logger;
 
-    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null)
+    public function __construct(Context $context, Db $db, ThemeValidator $themeValidator = null, LoggerInterface $logger = null)
     {
         $this->context = $context;
         $this->db = $db;
         $this->themeValidator = $themeValidator;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public function build()
@@ -78,7 +82,8 @@ class ThemeManagerBuilder
                 )
             ),
             $this->buildRepository($this->context->shop),
-            new ImageTypeRepository($this->db)
+            new ImageTypeRepository($this->db),
+            $this->logger
         );
     }
 

@@ -30,6 +30,7 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext()'
       - '@prestashop.adapter.legacy_db'
       - '@prestashop.core.addon.theme.theme_validator'
+      - '@logger'
 
   prestashop.core.addon.theme.theme_manager:
     class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
