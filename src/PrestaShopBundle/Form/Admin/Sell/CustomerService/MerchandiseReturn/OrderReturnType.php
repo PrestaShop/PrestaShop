@@ -74,29 +74,29 @@ class OrderReturnType extends TranslatorAwareType
     {
         $builder
             ->add('customer_name', TextPreviewType::class, [
-                'default_empty_data' => static::CUSTOMER_NAME_PLACEHOLDER,
+                'default_empty_data' => self::CUSTOMER_NAME_PLACEHOLDER,
                 'label' => $this->trans('Customer', 'Admin.Global'),
             ])
             ->add('customer_link', LinkPreviewType::class, [
-                'default_empty_data' => static::CUSTOMER_LINK_PLACEHOLDER,
+                'default_empty_data' => self::CUSTOMER_LINK_PLACEHOLDER,
                 'button_label' => $this->trans('View customer details', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'btn btn-outline-secondary',
                 ],
             ])
             ->add('order', TextPreviewType::class, [
-                'default_empty_data' => static::ORDER_PLACEHOLDER,
+                'default_empty_data' => self::ORDER_PLACEHOLDER,
                 'label' => $this->trans('Order', 'Admin.Global'),
             ])
             ->add('order_link', LinkPreviewType::class, [
-                'default_empty_data' => static::ORDER_LINK_PLACEHOLDER,
+                'default_empty_data' => self::ORDER_LINK_PLACEHOLDER,
                 'button_label' => $this->trans('View order details', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'btn btn-outline-secondary',
                 ],
             ])
             ->add('question', TextPreviewType::class, [
-                'default_empty_data' => static::QUESTION_PLACEHOLDER,
+                'default_empty_data' => self::QUESTION_PLACEHOLDER,
                 'allow_html' => true,
                 'label' => $this->trans('Customer explanation', 'Admin.Orderscustomers.Feature'),
             ])
