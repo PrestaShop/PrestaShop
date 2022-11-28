@@ -26,6 +26,8 @@
  */
 
 use PrestaShopBundle\Install\Install;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use SymfonyConsoleLogger;
 use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
 
@@ -36,7 +38,10 @@ const _PS_MODULE_DIR_ = _PS_ROOT_DIR_ . '/modules/';
 
 require_once _PS_ROOT_DIR_ . '/install-dev/init.php';
 
-$install = new Install();
+$output = new ConsoleOutput();
+$logger = new SymfonyConsoleLogger($output, PrestaShopLoggerInterface::DEBUG);
+
+$install = new Install(null, null, $logger);
 $install->setTranslator(Context::getContext()->getTranslatorFromLocale('en'));
 DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_);
 $install->clearDatabase(false);
