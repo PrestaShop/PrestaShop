@@ -42,11 +42,11 @@
 
       <div class="row">
         <Sidebar
-          :modal="this.$refs.transModal"
-          :principal="this.$refs.principal"
+          :modal="$refs.transModal"
+          :principal="$refs.principal"
         />
         <Principal
-          :modal="this.$refs.transModal"
+          :modal="$refs.transModal"
           ref="principal"
         />
       </div>

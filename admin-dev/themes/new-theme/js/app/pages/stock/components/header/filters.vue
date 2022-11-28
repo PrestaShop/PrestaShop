@@ -48,7 +48,7 @@
             <FilterComponent
               ref="suppliers"
               :placeholder="trans('filter_search_suppliers')"
-              :list="this.$store.getters.suppliers"
+              :list="$store.getters.suppliers"
               class="filter-suppliers"
               item-id="supplier_id"
               label="name"
@@ -140,7 +140,7 @@
               :label="trans('filter_status_all')"
               :checked="true"
               value="null"
-              @change="onRadioChange()"
+              @change="onRadioChange(undefined)"
             />
           </div>
         </div>

@@ -59,7 +59,7 @@
 <script lang="ts">
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
-  import {defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
 
   const CombinationEvents = ProductEventMap.combinations;
 
@@ -72,7 +72,7 @@
     },
     props: {
       filters: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       eventEmitter: {
@@ -84,12 +84,12 @@
       FilterDropdown,
     },
     computed: {
-      selectedFiltersNumber(): Record<string, any> | number {
+      selectedFiltersNumber(): number {
         if (!this.selectedFilters) {
           return 0;
         }
 
-        return Object.values(this.selectedFilters).reduce((total, attributes) => total + attributes.length, 0);
+        return Object.values(this.selectedFilters).reduce<number>((total, attributes) => total + attributes.length, 0);
       },
     },
     mounted() {

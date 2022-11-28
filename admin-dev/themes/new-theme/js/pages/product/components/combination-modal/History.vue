@@ -78,7 +78,7 @@
   import ProductEventMap from '@pages/product/product-event-map';
   import {Combination} from '@pages/product/components/combination-modal/CombinationModal.vue';
   import Pagination from '@PSVue/components/Pagination.vue';
-  import {defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
 
   interface HistoryStates {
     paginatedDatas: Array<Record<string, any>>;
@@ -100,7 +100,7 @@
     },
     props: {
       combinationsList: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         default: () => [],
       },
       selectedCombinationId: {

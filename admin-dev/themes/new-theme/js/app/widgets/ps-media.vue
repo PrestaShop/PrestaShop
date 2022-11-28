@@ -46,12 +46,13 @@
     props: {
       thumbnail: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
     },
     computed: {
       displayThumb(): boolean {
-        return !!this.thumbnail;
+        return this.thumbnail === '' ? false : !!this.thumbnail;
       },
     },
   });

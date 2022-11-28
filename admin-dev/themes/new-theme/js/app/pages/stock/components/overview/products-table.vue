@@ -99,7 +99,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-if="this.isLoading">
+      <tr v-if="isLoading">
         <td colspan="9">
           <PSLoader
             v-for="(n, index) in 3"

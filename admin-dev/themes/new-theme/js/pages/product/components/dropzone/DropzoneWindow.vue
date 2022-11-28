@@ -193,7 +193,7 @@
         default: () => [],
       },
       locales: {
-        type: Array as PropType<Array<string>>,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       selectedLocale: {
@@ -220,8 +220,8 @@
       selectedFiles(value: Array<PSDropzoneFile>): void {
         if (value.length > 1) {
           this.captionValue = {};
-          this.locales.forEach((locale: string) => {
-            this.captionValue[locale] = '';
+          this.locales.forEach((locale) => {
+            this.captionValue[locale.id_lang] = '';
           });
         } else if (this.selectedFile) {
           this.captionValue = this.selectedFile.legends;

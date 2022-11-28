@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent} from 'vue';
+  import {defineComponent, PropType} from 'vue';
   import {EventEmitter} from '@components/event-emitter';
   import PSTreeItem from './ps-tree-item.vue';
 
@@ -72,7 +72,7 @@
     name: 'PSTree',
     props: {
       model: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         default: () => ([]),
       },
       className: {

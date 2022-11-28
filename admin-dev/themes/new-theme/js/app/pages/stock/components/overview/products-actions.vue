@@ -41,7 +41,7 @@
           class="bulk-qty"
           :danger="danger"
           :value="bulkEditQty"
-          :buttons="this.isFocused"
+          :buttons="isFocused"
           @focus="focusIn"
           @blur="focusOut($event)"
           @change="onChange"

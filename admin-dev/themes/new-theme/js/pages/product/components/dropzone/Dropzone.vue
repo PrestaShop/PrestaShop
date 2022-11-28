@@ -86,8 +86,8 @@
       v-if="isModalShown"
       :confirmation="true"
       :modal-title="
-        $tc('modal.title', this.selectedFiles.length, {
-          '{filesNb}': this.selectedFiles.length,
+        $tc('modal.title', selectedFiles.length, {
+          '{filesNb}': selectedFiles.length,
         })
       "
       :confirm-label="$t('modal.accept')"
@@ -176,7 +176,7 @@
     selectedFiles: Array<PSDropzoneFile>,
     translations: Array<PSDropzoneFile>,
     loading: boolean,
-    selectedLocale: string | null | Record<string, any>,
+    selectedLocale?: Record<string, any>,
     buttonLoading: boolean,
     isModalShown: boolean,
     galleryOpened: boolean,
@@ -203,7 +203,7 @@
         selectedFiles: [],
         translations: [],
         loading: true,
-        selectedLocale: null,
+        selectedLocale: undefined,
         buttonLoading: false,
         isModalShown: false,
         galleryOpened: false,
