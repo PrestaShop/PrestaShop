@@ -16,6 +16,10 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
+    this.alertDangerIDFilterValue = 'ID: Maximum value must be higher than minimum value.';
+    this.alertDangerPriceFilterValue = 'Price (tax excl.): Maximum value must be higher than minimum value.';
+    this.alertDangerQuantityFilterValue = 'Quantity: Maximum value must be higher than minimum value.';
+
     this.standardProductDescription = 'A physical product that needs to be shipped.';
     this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
       + 'customers can choose.';
@@ -28,6 +32,13 @@ class Products extends BOBasePage {
     this.productGridPanel = '#product_grid_panel';
     this.productGridHeader = `${this.productGridPanel} div.js-grid-header`;
     this.headerTitle = `${this.productGridHeader} .card-header-title`;
+
+    // Filter by categories
+    this.treeCategoriesBloc = '#tree-categories';
+    this.filterByCategoriesButton = '#product_catalog_category_tree_filter button';
+    this.filterByCategoriesExpandButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_expand`;
+    this.filterByCategoriesUnselectButton = `${this.treeCategoriesBloc} a#product_catalog_category_tree_filter_reset`;
+    this.filterByCategoriesCategoryLabel = `${this.treeCategoriesBloc} label.category-label`;
 
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
@@ -52,9 +63,11 @@ class Products extends BOBasePage {
     this.productFilterQuantityMinInput = '#product_quantity_min_field';
     this.productFilterQuantityMaxInput = '#product_quantity_max_field';
     this.productFilterSelectStatus = '#product_active';
+    this.productFilterSelectStatus = '#product_active';
 
     // Products list
     this.productRow = `${this.productGridTable} tbody tr`;
+    this.productEmptyRow = `${this.productRow}.empty_row`;
     this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
     this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)} td.column-id_product`;
     this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td.column-name a`;
@@ -129,6 +142,15 @@ class Products extends BOBasePage {
     const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
 
     return this.getTextContent(createProductFrame, this.productTypedescription);
+  }
+
+  /**
+   * Get alert danger block content
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAlertDangerBlockContent(page) {
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -228,6 +250,72 @@ class Products extends BOBasePage {
 
   // Filter products table methods
   /**
+   * Reset filter by category
+   * @param page {Page} Browser tab
+   * @param categoryName {string} Category name to filter by
+   * @returns {Promise<void>}
+   */
+  async filterProductsByCategory(page, categoryName = 'Home') {
+    // Click and wait to be open
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
+
+    // Click on expand button
+    await page.click(this.filterByCategoriesExpandButton);
+
+    // Choose category to filter with
+    const args = {allCategoriesSelector: this.filterByCategoriesCategoryLabel, val: categoryName};
+    // eslint-disable-next-line no-eval
+    const fn = eval(`({
+      async categoryClick(args) {
+        /* eslint-env browser */
+        const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
+        const category = await allCategories.find((el) => el.textContent.includes(args.val));
+
+        if (category === undefined) {
+          return false;
+        }
+        await category.querySelector('input').click();
+        return true;
+      }
+    })`);
+    const found = await page.evaluate(fn.categoryClick, args);
+
+    if (!found) {
+      throw new Error(`${categoryName} not found as a category`);
+    }
+    await page.waitForNavigation();
+  }
+
+  /**
+   * Reset filter by category
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async resetFilterCategory(page) {
+    // Click and wait to be open
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
+
+    // Unselect all categories
+    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
+  }
+
+  /**
+   * Is clear filter link visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isClearFilterLinkVisible(page) {
+    return this.elementVisible(page, '#product_catalog_category_tree_filter > button.btn.btn-link');
+  }
+
+  isPositionColumnVisible(page){
+    return this.elementVisible(page, '#product_catalog_category_tree_filter > button.btn.btn-link');
+  }
+
+  /**
    * Filter products Min - Max
    * @param page {Page} Browser tab
    * @param idMin {number} Value of id min to set on filter input
@@ -267,7 +355,7 @@ class Products extends BOBasePage {
    * Filter products
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter
-   * @param value {{min: number, max:number}|string} Value to put on filter
+   * @param value {{min: number, max:number}|string|boolean} Value to put on filter
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
@@ -405,6 +493,15 @@ class Products extends BOBasePage {
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Get text for empty table
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getTextForEmptyTable(page) {
+    return this.getTextContent(page, this.productEmptyRow);
   }
 
   /**

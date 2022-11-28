@@ -910,7 +910,7 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
-   * Get text content of alert success block paragraph
+   * Get text content of alert block paragraph
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
