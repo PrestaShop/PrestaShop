@@ -167,13 +167,14 @@ class StoresControllerCore extends FrontController
         $stores = Store::getStores($this->context->language->id);
 
         $imageRetriever = new \PrestaShop\PrestaShop\Adapter\Image\ImageRetriever($this->context->link);
+        $attr = ['address1', 'address2', 'postcode', 'city', 'id_state', 'id_country'];
 
         foreach ($stores as &$store) {
             unset($store['active']);
             // Prepare $store.address
             $address = new Address();
             $store['address'] = [];
-            $attr = ['address1', 'address2', 'postcode', 'city', 'id_state', 'id_country'];
+
             foreach ($attr as $a) {
                 $address->{$a} = $store[$a];
                 $store['address'][$a] = $store[$a];
