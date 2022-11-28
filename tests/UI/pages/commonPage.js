@@ -255,7 +255,7 @@ class CommonPage {
    * @param browserContext {BrowserContext} Context of the page
    * @param page {Page} Browser tab
    * @param tabId {number} Tab to get focus on after closing the other tab
-   * @return {Promise<page>}
+   * @return {Promise<Page>}
    */
   async closePage(browserContext, page, tabId = -1) {
     await page.close();
