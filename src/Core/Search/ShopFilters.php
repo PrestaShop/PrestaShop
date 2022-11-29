@@ -24,54 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Search\Builder;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Search;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
 /**
- * Basic abstract class for FiltersBuilder classes, able to store the filters_id
- * from the config.
+ * ShopFilters contains a ShopConstraint to handle multishop feature, the shop constraint is mandatory and immutable.
+ * The class can't be used as is and needs to be used as a parent, you should respect the parameters orders in your
+ * implementation (if you don't you'll have to handle the specific build via a TypedBuilderInterface dedicated service).
  */
-abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
+abstract class ShopFilters extends Filters implements ShopSearchCriteriaInterface
 {
-    /** @var string */
-    protected $filterId;
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
 
     /**
-     * @var ShopConstraint|null
+     * @param ShopConstraint $shopConstraint
+     * @param array $filters
+     * @param string $filterId
      */
-    protected $shopConstraint;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setConfig(array $config)
+    public function __construct(ShopConstraint $shopConstraint, array $filters = [], $filterId = '')
     {
-        $this->filterId = $config['filter_id'] ?? '';
-        if (isset($config['shop_constraint']) && $config['shop_constraint'] instanceof ShopConstraint) {
-            $this->shopConstraint = $config['shop_constraint'];
-        }
-
-        return $this;
+        parent::__construct($filters, $filterId);
+        $this->shopConstraint = $shopConstraint;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    abstract public function buildFilters(Filters $filters = null);
-
-    /**
-     * @param Filters|null $filters
-     *
-     * @return string
-     */
-    protected function getFilterId(Filters $filters = null)
+    public function getShopConstraint(): ShopConstraint
     {
-        if (null === $filters) {
-            return $this->filterId;
-        }
-
-        return $filters->getFilterId();
+        return $this->shopConstraint;
     }
 }
