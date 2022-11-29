@@ -44,9 +44,10 @@ export const getStock = async ({commit}: {commit: Commit}, payload: Record<strin
     active: payload.active,
     low_stock: payload.low_stock,
   }, isParamInvalid));
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
 
   try {
-    const response = await fetch(`${url}&${params.toString()}`);
+    const response = await fetch(fetchUrl);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);
@@ -102,8 +103,10 @@ export const getMovements = async ({commit}: {commit: Commit}, payload: Record<s
     params.append('date_add[inf]', payload.date_add.inf);
   }
 
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
+
   try {
-    const response = await fetch(`${url}&${params.toString()}`);
+    const response = await fetch(fetchUrl);
     const datas = await response.json();
 
     commit(types.LOADING_STATE, false);

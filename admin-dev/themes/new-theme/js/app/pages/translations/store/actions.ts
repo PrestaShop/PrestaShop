@@ -75,8 +75,10 @@ export const getDomainsTree = async ({commit}: {commit: Commit}, payload: Record
     });
   }
 
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
+
   try {
-    const response = await fetch(`${url}&${params}`);
+    const response = await fetch(fetchUrl);
     const datas = await response.json();
 
     commit(types.SET_DOMAINS_TREE, datas);
@@ -96,9 +98,10 @@ export const refreshCounts = async ({commit}: {commit: Commit}, payload: Record<
       params.append('search[]', searchTag);
     });
   }
+  const fetchUrl = `${url}${url.includes('?') ? '&' : '?'}${params.toString()}`;
 
   try {
-    const response = await fetch(`${url}&${new URLSearchParams(params)}`);
+    const response = await fetch(fetchUrl);
     const datas = await response.json();
 
     commit(types.DECREASE_CURRENT_DOMAIN_TOTAL_MISSING_TRANSLATIONS, payload.successfullySaved);

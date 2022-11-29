@@ -89,7 +89,7 @@
         }
         return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
-      onChange(val: number): void {
+      onChange(val: any): void {
         if (val && isNumber(val)) {
           this.value = val;
           this.isEnabled = !!val;
