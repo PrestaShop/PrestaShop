@@ -140,6 +140,20 @@ class CategoryControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * overrides layout if category is not visible.
+     *
+     * @return bool|string
+     */
+    public function getLayout()
+    {
+        if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
+            return $this->context->shop->theme->getLayoutRelativePathForPage('error');
+        }
+
+        return parent::getLayout();
+    }
+
     protected function getAjaxProductSearchVariables()
     {
         $data = parent::getAjaxProductSearchVariables();
