@@ -91,7 +91,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $command = new UpdateProductPricesCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
+        $command = new UpdateProductCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
         // this id value does not exist, it is used on purpose.
         $command->setTaxRulesGroupId(50000000);
 
