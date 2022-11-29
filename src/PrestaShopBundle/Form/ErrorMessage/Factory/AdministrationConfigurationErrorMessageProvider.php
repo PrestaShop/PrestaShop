@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorMessageProviderInterface;
-use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -43,17 +42,10 @@ class AdministrationConfigurationErrorMessageProvider implements ConfigurationEr
      */
     protected $translator;
 
-    /**
-     * @var LangRepository
-     */
-    protected $langRepository;
-
     public function __construct(
-        TranslatorInterface $translator,
-        LangRepository $langRepository
+        TranslatorInterface $translator
     ) {
         $this->translator = $translator;
-        $this->langRepository = $langRepository;
     }
 
     /**

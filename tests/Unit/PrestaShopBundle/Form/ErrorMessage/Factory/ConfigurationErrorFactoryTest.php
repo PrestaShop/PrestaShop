@@ -98,7 +98,7 @@ class ConfigurationErrorFactoryTest extends TestCase
             ->getMock();
         $labelProviderMock->method('getLabel')->willReturn('Field');
         $errorFactoryCollection = [];
-        $errorFactoryCollection[] = new AdministrationConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
+        $errorFactoryCollection[] = new AdministrationConfigurationErrorMessageProvider($translatorMock);
         $errorFactoryCollection[] = new CommonConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
         $configurationErrorFactory = new ConfigurationErrorFactory($errorFactoryCollection, $labelProviderMock, $translatorMock);
 

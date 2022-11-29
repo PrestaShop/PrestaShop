@@ -23,5 +23,4 @@ services:
     class: PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider
     arguments:
       - '@translator'
-      - '@prestashop.core.admin.lang.repository'
     tags: [ 'core.configuration_error_factory' ]

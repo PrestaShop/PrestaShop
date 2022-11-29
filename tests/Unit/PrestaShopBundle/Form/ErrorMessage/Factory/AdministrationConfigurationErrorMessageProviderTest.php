@@ -30,8 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
-use PrestaShopBundle\Entity\Lang;
-use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -63,17 +61,9 @@ class AdministrationConfigurationErrorMessageProviderTest extends TestCase
             ]
         );
 
-        $languageRepositoryMock = $this->getMockBuilder(LangRepository::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['findOneBy'])
-            ->getMock();
+        $administrationConfigurationErrorFactory = new AdministrationConfigurationErrorMessageProvider($translatorMock);
 
-        $language = new Lang();
-        $language->setName('English');
-        $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $administrationConfigurationErrorFactory = new AdministrationConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
-
-        $error = new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, 'field', 1);
+        $error = new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, 'field');
         $result = $administrationConfigurationErrorFactory->getErrorMessageForConfigurationError($error, self::COOKIE_FIELD_NAME);
         self::assertEquals(
             $expectedTranslation,

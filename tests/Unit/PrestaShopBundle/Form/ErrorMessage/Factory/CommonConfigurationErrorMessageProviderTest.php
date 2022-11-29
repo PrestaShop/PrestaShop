@@ -70,7 +70,7 @@ class CommonConfigurationErrorMessageProviderTest extends TestCase
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
         $commonConfigurationErrorFactory = new CommonConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
 
-        $error = new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, 'field', 1);
+        $error = new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, 'field');
         $result = $commonConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');
         self::assertEquals(
             'Field is invalid. Please enter an integer greater than or equal to 0.',
