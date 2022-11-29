@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Security;
 
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use PrestaShop\PrestaShop\Core\Security\TokenAuthenticator;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;

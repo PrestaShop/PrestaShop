@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Security;
 
-use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;

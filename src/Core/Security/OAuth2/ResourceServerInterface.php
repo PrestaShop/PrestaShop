@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\OAuth2;
+namespace PrestaShop\PrestaShop\Core\Security\OAuth2;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
