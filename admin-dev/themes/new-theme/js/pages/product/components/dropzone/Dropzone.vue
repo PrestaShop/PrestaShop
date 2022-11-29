@@ -87,7 +87,7 @@
       :confirmation="true"
       :modal-title="
         $tc('modal.title', selectedFiles.length, {
-          '{filesNb}': selectedFiles.length,
+          'filesNb': selectedFiles.length,
         })
       "
       :confirm-label="$t('modal.accept')"
@@ -415,7 +415,7 @@
         } else {
           $.growl({
             message: this.$t('delete.success', {
-              '{filesNb}': nbFiles,
+              filesNb: nbFiles,
             }),
           });
         }
