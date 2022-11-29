@@ -42,7 +42,6 @@ class AdministrationConfigurationErrorMessageProviderTest extends TestCase
     {
         $translatorMock = $this->getMockBuilder(TranslatorInterface::class)
             ->disableOriginalConstructor()
-            ->setMethods(['trans'])
             ->getMock();
 
         $expectedTranslation = 'Expected translation';

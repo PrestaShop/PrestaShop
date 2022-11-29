@@ -48,7 +48,6 @@ class ConfigurationErrorFactoryTest extends TestCase
     {
         $translatorMock = $this->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
-            ->setMethods(['trans'])
             ->getMock();
 
         $translatorMock->method('trans')->willReturnMap(
