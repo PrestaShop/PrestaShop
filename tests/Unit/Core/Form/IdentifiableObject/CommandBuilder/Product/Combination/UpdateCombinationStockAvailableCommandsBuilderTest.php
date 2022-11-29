@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationStockAvailableCommandsBuilder;
 
-class UpdateCombinationStockAvailableCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
+class UpdateCombinationStockAvailableCommandsBuilderTest extends AbstractCombinationCommandsBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
