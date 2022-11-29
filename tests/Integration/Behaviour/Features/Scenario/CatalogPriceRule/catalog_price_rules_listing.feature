@@ -157,7 +157,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 5 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
 
   Scenario: I can see correctly with supplier condition
-    When I add new supplier supplier1 with following properties:
+    When I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
