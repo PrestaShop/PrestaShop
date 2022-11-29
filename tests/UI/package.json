@@ -27,7 +27,13 @@
     "// Functional BO": "Scripts to run functional BO tests",
     "test:functional:BO": "TEST_PATH='functional/BO/**/*.{ts,js}' npm run test:specific",
     "test:functional:BO:login": "TEST_PATH='functional/BO/00_login/**/*.{ts,js}' npm run test:specific",
-    "test:functional:BO:orders": "TEST_PATH='functional/BO/02_orders/**/*.{ts,js}' npm run test:specific",
+
+    "test:functional:BO:orders:orders": "TEST_PATH='functional/BO/02_orders/01*/*.{ts,js}' npm run test:specific",
+    "test:functional:BO:orders:invoices": "TEST_PATH='functional/BO/02_orders/02*/*.{ts,js}' npm run test:specific",
+    "test:functional:BO:orders:credit-slips": "TEST_PATH='functional/BO/02_orders/03*/*.{ts,js}' npm run test:specific",
+    "test:functional:BO:orders:delivery-slips": "TEST_PATH='functional/BO/02_orders/04*/*.{ts,js}' npm run test:specific",
+    "test:functional:BO:orders:shopping-carts": "TEST_PATH='functional/BO/02_orders/05*/*.{ts,js}' npm run test:specific",
+
     "test:functional:BO:catalog": "TEST_PATH='functional/BO/03_catalog/**/*.{ts,js}' npm run test:specific",
     "test:functional:productV2:functional": "TEST_PATH='productV2/functional/**/*.ts' npm run test:specific",
     "test:functional:BO:customer": "TEST_PATH='functional/BO/04_customers/**/*.{ts,js}' npm run test:specific",
