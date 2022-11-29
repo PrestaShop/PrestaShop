@@ -21,6 +21,7 @@ class Home extends FOBasePage {
     this.carouselControlDirectionLink = (direction) => `${this.carouselSliderId} a.${direction}.carousel-control`;
     this.carouselSliderInnerList = `${this.carouselSliderId} ul.carousel-inner`;
     this.carouselSliderInnerListItems = `${this.carouselSliderInnerList} li`;
+    this.carouselSliderURL = `${this.carouselSliderInnerListItems} a`;
     this.carouselSliderInnerListItem = (position) => `${this.carouselSliderInnerListItems}:nth-child(${position})`;
 
     // Selectors for home page
@@ -118,13 +119,10 @@ class Home extends FOBasePage {
   /**
    * Click on slider number
    * @param page {Page} Browser tab
-   * @param position {number} The slider position
    * @returns {Promise<string>}
    */
-  async clickOnSlider(page, position) {
-    await this.clickAndWaitForNavigation(page, this.carouselSliderInnerListItem(position));
-
-    return this.getCurrentURL(page);
+  async getSliderURL(page) {
+    return this.getAttributeContent(page, this.carouselSliderURL, 'href');
   }
 
   /**
