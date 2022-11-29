@@ -145,8 +145,8 @@ function validateImportation(mandatory)
 	toggle(getE('required_column'), false);
     for (i = 0; elem = getE('type_value['+i+']'); i++)
     {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
+    if ($.inArray(elem.options[elem.selectedIndex].value, seted_value) !== -1)
+    {
 			scroll(0,0);
 			toggle(getE('error_duplicate_type'), true);
 			return false;
