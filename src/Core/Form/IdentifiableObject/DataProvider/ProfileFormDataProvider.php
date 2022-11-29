@@ -36,16 +36,24 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 final class ProfileFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var string
+     */
+    private $defaultAvatarUrl;
+    /**
      * @var CommandBusInterface
      */
     private $queryBus;
 
     /**
      * @param CommandBusInterface $queryBus
+     * @param string $defaultAvatarUrl
      */
-    public function __construct(CommandBusInterface $queryBus)
-    {
+    public function __construct(
+        CommandBusInterface $queryBus,
+        string $defaultAvatarUrl
+    ) {
         $this->queryBus = $queryBus;
+        $this->defaultAvatarUrl = $defaultAvatarUrl;
     }
 
     /**
@@ -58,6 +66,7 @@ final class ProfileFormDataProvider implements FormDataProviderInterface
 
         return [
             'name' => $editableProfile->getLocalizedNames(),
+            'avatar_url' => $editableProfile->getAvatarUrl(),
         ];
     }
 
@@ -66,6 +75,8 @@ final class ProfileFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        return [];
+        return [
+            'avatar_url' => $this->defaultAvatarUrl,
+        ];
     }
 }
