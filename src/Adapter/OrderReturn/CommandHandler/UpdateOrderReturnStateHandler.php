@@ -55,7 +55,7 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      */
     public function __construct(
         OrderReturnRepository $orderReturnRepository,
-        OrderReturnStateRepository $orderReturnStateRepository,
+        OrderReturnStateRepository $orderReturnStateRepository
     ) {
         $this->orderReturnRepository = $orderReturnRepository;
         $this->orderReturnStateRepository = $orderReturnStateRepository;
