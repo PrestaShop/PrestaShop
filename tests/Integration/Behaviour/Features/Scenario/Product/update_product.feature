@@ -1,9 +1,16 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-basic-information
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-product
 @restore-products-before-feature
-@update-basic-information
-Feature: Update product properties from Back Office (BO)
+@update-product
+# @todo: this feature could be used to update more properties together, but I think its not worth putting extracting all the existing features into this one,
+#         because it will be too hard to manage, there are too many of them
+Feature: Update product properties from Back Office (BO) in a single shop context
   As a BO user
   I need to be able to update product properties from BO
+
+  Background:
+    Given I disable multishop feature
+    And shop "shop1" with name "test_shop" exists
+    And language "language1" with locale "en-US" exists
 
   Scenario: I update product basic information
     Given I add product "product1" with following information:
@@ -27,28 +34,18 @@ Feature: Update product properties from Back Office (BO)
     And product "product1" localized "description_short" should be:
       | locale | value           |
       | en-US  | Just a nice mug |
-
-  Scenario: I update product basic information providing invalid product name
-    Given product "product1" localized "name" is:
-      | locale | value              |
-      | en-US  | photo of funny mug |
     When I update product "product1" basic information with following values:
       | name[en-US] | #hashtagmug |
     Then I should get error that product name is invalid
     And product "product1" localized "name" should be:
       | locale | value              |
       | en-US  | photo of funny mug |
-
-  Scenario: Partially update product basic information
-    Given product "product1" localized "name" is:
-      | locale | value              |
-      | en-US  | photo of funny mug |
-    And product "product1" localized "description" is:
-      | locale | value    |
-      | en-US  | nice mug |
-    And product "product1" localized "description_short" is:
-      | locale | value           |
-      | en-US  | Just a nice mug |
+    When I update product "product1" basic information with following values:
+      | description_short[en-US] | <div onmousedown=hack()> |
+    Then I should get error that product "description_short" is invalid
+    When I update product "product1" basic information with following values:
+      | description[en-US] | <script> |
+    Then I should get error that product description is invalid
     When I update product "product1" basic information with following values:
       | is_virtual | false |
     Then product "product1" type should be standard
@@ -61,31 +58,6 @@ Feature: Update product properties from Back Office (BO)
     And product "product1" localized "description_short" should be:
       | locale | value           |
       | en-US  | Just a nice mug |
-
-  Scenario: Update product basic information providing invalid characters in description
-    Given product "product1" localized "description" is:
-      | locale | value    |
-      | en-US  | nice mug |
-    And product "product1" localized "description_short" is:
-      | locale | value           |
-      | en-US  | Just a nice mug |
-    When I update product "product1" basic information with following values:
-      | description[en-US] | <script> |
-    Then I should get error that product description is invalid
-    And product "product1" localized "description" should be:
-      | locale | value    |
-      | en-US  | nice mug |
-    When I update product "product1" basic information with following values:
-      | description_short[en-US] | <div onmousedown=hack()> |
-    Then I should get error that product "description_short" is invalid
-    And product "product1" localized "description_short" should be:
-      | locale | value           |
-      | en-US  | Just a nice mug |
-
-  Scenario: Update product basic information providing allowed symbols in description
-    Given product "product1" localized "description" is:
-      | locale | value    |
-      | en-US  | nice mug |
     When I update product "product1" basic information with following values:
       | description[en-US] | it's mug & it's nice |
     Then product "product1" localized "description" should be:
