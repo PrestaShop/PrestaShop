@@ -61,8 +61,8 @@ describe('FO - Home Page : Check slider', async () => {
     await expect(isVisible).to.be.true;
   });
 
-  it('should click on the slider and check the URL', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnSlider', baseContext);
+  it('should check the slider URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
     const currentURL = await homePage.getSliderURL(page);
     await expect(currentURL)
