@@ -39,12 +39,12 @@ class OverrideTranslatorServiceCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $definition = $container->getDefinition('translator.default');
-        $definition->setClass($container->getParameter('translator.class'));
+        $definition->setClass($container->getParameter('prestashop.translator.class'));
 
         if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
             return;
         }
         $definition = $container->getDefinition('translator.data_collector');
-        $definition->setClass($container->getParameter('translator.data_collector'));
+        $definition->setClass($container->getParameter('prestashop.translator.data_collector'));
     }
 }

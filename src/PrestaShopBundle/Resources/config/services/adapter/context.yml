@@ -5,7 +5,7 @@ services:
   # SECURITY
   # @todo: is this service used?
   prestashop.adapter.security.admin:
-    class: "%AdapterSecurityAdminClass%"
+    class: PrestaShop\PrestaShop\Adapter\Security\Admin
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@security.token_storage"

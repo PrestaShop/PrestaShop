@@ -1,5 +1,20 @@
 parameters:
     mail_themes_uri: "/mails/themes"
+    # compatibility layer for the front-end as there is no bundle nor config.
+    prestashop.mode_dev: !php/const _PS_MODE_DEV_
+    prestashop.employee_img_dir: !php/const _PS_EMPLOYEE_IMG_DIR_
+    prestashop.profile_img_dir: !php/const _PS_PROFILE_IMG_DIR_
+    prestashop.product_img_dir: !php/const _PS_PRODUCT_IMG_DIR_
+    prestashop.img_dir: !php/const _PS_IMG_DIR_
+    prestashop.tmp_img_dir: !php/const _PS_TMP_IMG_DIR_
+    prestashop.module_dir: !php/const _PS_MODULE_DIR_
+    prestashop.download_dir: !php/const _PS_DOWNLOAD_DIR_
+    prestashop.genders_dir: !php/const _PS_GENDERS_DIR_
+    prestashop.root_dir: !php/const _PS_ROOT_DIR_
+    prestashop.pdf_dir: !php/const _PS_PDF_DIR_
+    prestashop.cache_dir: !php/const _PS_CACHE_DIR_
+    prestashop.admin_profile: !php/const _PS_ADMIN_PROFILE_
+  # end compatibility layer for the front-end, will be removed once all kernels have been unified.
 
 imports:
     - { resource: ../../src/PrestaShopBundle/Resources/config/services/core/cldr.yml }

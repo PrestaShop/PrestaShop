@@ -30,6 +30,9 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Tools;
 
+/**
+ * @deprecated since 8.1, will be removed in 9.0
+ */
 class AddOnsConfiguration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()

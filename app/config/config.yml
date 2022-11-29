@@ -10,8 +10,6 @@ imports:
 parameters:
   env(PS_THEME_NAME): "classic"
   AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
-  translator.class: PrestaShopBundle\Translation\Translator
-  translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
   prestashop_views: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
@@ -19,24 +17,27 @@ parameters:
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
-
-  prestashop.mode_dev: !php/const _PS_MODE_DEV_
-  prestashop.employee_img_dir: !php/const _PS_EMPLOYEE_IMG_DIR_
-  prestashop.profile_img_dir: !php/const _PS_PROFILE_IMG_DIR_
-  prestashop.product_img_dir: !php/const _PS_PRODUCT_IMG_DIR_
-  prestashop.img_dir: !php/const _PS_IMG_DIR_
-  prestashop.tmp_img_dir: !php/const _PS_TMP_IMG_DIR_
-  prestashop.module_dir: !php/const _PS_MODULE_DIR_
-  prestashop.download_dir: !php/const _PS_DOWNLOAD_DIR_
-  prestashop.genders_dir: !php/const _PS_GENDERS_DIR_
-  prestashop.root_dir: !php/const _PS_ROOT_DIR_
-  prestashop.pdf_dir: !php/const _PS_PDF_DIR_
-  prestashop.cache_dir: !php/const _PS_CACHE_DIR_
-  prestashop.admin_profile: !php/const _PS_ADMIN_PROFILE_
-
   # legacy deprecated parameter
-  ps_cache_dir: !php/const _PS_CACHE_DIR_
   multishop.settings.share_orders: 'share_order'
+
+prestashop:
+  translator:
+    class: PrestaShopBundle\Translation\Translator
+    data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
+  directories:
+    mode_dev: !php/const _PS_MODE_DEV_
+    employee_img_dir: !php/const _PS_EMPLOYEE_IMG_DIR_
+    profile_img_dir: !php/const _PS_PROFILE_IMG_DIR_
+    product_img_dir: !php/const _PS_PRODUCT_IMG_DIR_
+    img_dir: !php/const _PS_IMG_DIR_
+    tmp_img_dir: !php/const _PS_TMP_IMG_DIR_
+    module_dir: !php/const _PS_MODULE_DIR_
+    download_dir: !php/const _PS_DOWNLOAD_DIR_
+    genders_dir: !php/const _PS_GENDERS_DIR_
+    root_dir: !php/const _PS_ROOT_DIR_
+    pdf_dir: !php/const _PS_PDF_DIR_
+    cache_dir: !php/const _PS_CACHE_DIR_
+    admin_profile: !php/const _PS_ADMIN_PROFILE_
 
 # Autowires Core controllers
 services:

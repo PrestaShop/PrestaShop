@@ -41,28 +41,39 @@ class PrestaShopExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new AddOnsConfiguration();
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . '/Resources/config'));
         $env = $container->getParameter('kernel.environment');
         $loader->load('services_' . $env . '.yml');
 
+        $container->setParameter('prestashop.translator.class', $config['translator']['class']);
+        $container->setParameter('prestashop.translator.data_collector', $config['translator']['data_collector']);
+
+        $container->setParameter('prestashop.cache_dir', $config['directories']['cache_dir']);
+        $container->setParameter('prestashop.mode_dev', $config['directories']['mode_dev']);
+        $container->setParameter('prestashop.employee_img_dir', $config['directories']['employee_img_dir']);
+        $container->setParameter('prestashop.profile_img_dir', $config['directories']['profile_img_dir']);
+        $container->setParameter('prestashop.product_img_dir', $config['directories']['product_img_dir']);
+        $container->setParameter('prestashop.img_dir', $config['directories']['img_dir']);
+        $container->setParameter('prestashop.tmp_img_dir', $config['directories']['tmp_img_dir']);
+        $container->setParameter('prestashop.module_dir', $config['directories']['module_dir']);
+        $container->setParameter('prestashop.download_dir', $config['directories']['download_dir']);
+        $container->setParameter('prestashop.genders_dir', $config['directories']['genders_dir']);
+        $container->setParameter('prestashop.root_dir', $config['directories']['root_dir']);
+        $container->setParameter('prestashop.pdf_dir', $config['directories']['pdf_dir']);
+        $container->setParameter('prestashop.admin_profile', $config['directories']['admin_profile']);
+
+        // @deprecated since 8.1, will be removed in 9.0
+        $container->setParameter('ps_cache_dir', $config['directories']['cache_dir']);
         $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration(array $config, ContainerBuilder $container)
-    {
-        return new AddOnsConfiguration();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'prestashop';
     }
