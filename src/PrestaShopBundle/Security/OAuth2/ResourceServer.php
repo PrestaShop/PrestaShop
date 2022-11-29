@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Security\OAuth2;
 
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer as LeagueResourceServer;
-use PrestaShop\PrestaShop\Core\OAuth2\ResourceServerInterface;
+use PrestaShop\PrestaShop\Core\Security\OAuth2\ResourceServerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
