@@ -1469,6 +1469,7 @@ class FrontControllerCore extends Controller
                 'js_url' => _THEME_JS_DIR_,
                 'pic_url' => _THEME_PROD_PIC_DIR_,
                 'theme_assets' => _THEME_DIR_ . 'assets/',
+                'theme_dir' => $this->getThemeDir(),
             ];
 
             $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
