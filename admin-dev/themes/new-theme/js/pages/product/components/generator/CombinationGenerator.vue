@@ -61,7 +61,7 @@
           <span v-if="!loading">
             {{
               $tc('generator.action', generatedCombinationsNb, {
-                '{combinationsNb}': generatedCombinationsNb,
+                'combinationsNb': generatedCombinationsNb,
               })
             }}
           </span>
@@ -145,8 +145,7 @@
           if (combinationsNumber === 0) {
             combinationsNumber = 1;
           }
-          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
-            .attributes.length;
+          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId].attributes.length;
         });
 
         return combinationsNumber;
@@ -213,7 +212,7 @@
           const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
-              '{combinationsNb}': response.combination_ids.length,
+              combinationsNb: response.combination_ids.length,
             }),
           });
           this.selectedAttributeGroups = {};
