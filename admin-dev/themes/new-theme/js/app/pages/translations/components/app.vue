@@ -97,6 +97,9 @@
         };
       },
     },
+    beforeMount() {
+      this.$store.dispatch('getTranslations');
+    },
     mounted() {
       $('a').on('click', (e: JQueryEventObject): void => {
         if ($(e.currentTarget).attr('href')) {
