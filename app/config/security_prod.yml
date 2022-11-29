@@ -9,19 +9,16 @@ security:
     admin:
       id: prestashop.security.admin.provider
 
+    # Empty provider until a real provider is developed
+    oauth2:
+      memory:
+        users:
+
   firewalls:
     # disables authentication for assets and the profiler, adapt it according to your needs
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-
-    api:
-      pattern: ^/new-api
-      stateless: true
-      provider: 'oauth2'
-      guard:
-        authenticator:
-          - PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
 
     main:
       anonymous: ~

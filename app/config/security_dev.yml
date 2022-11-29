@@ -1,6 +1,15 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
 security:
 
+  # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
   providers:
+    in_memory:
+      memory: ~
+    admin:
+      id: prestashop.security.admin.provider
+
+    # Temporary provider & encoder to be able to use the new BO API in dev mode
     oauth2:
       memory:
         users:
@@ -8,3 +17,20 @@ security:
 
   encoders:
     Symfony\Component\Security\Core\User\User: plaintext
+
+  firewalls:
+    # disables authentication for assets and the profiler, adapt it according to your needs
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    api:
+      pattern: ^/new-api
+      stateless: true
+      provider: 'oauth2'
+      guard:
+        authenticator:
+          - PrestaShop\PrestaShop\Core\Security\TokenAuthenticator
+
+    main:
+      anonymous: ~
