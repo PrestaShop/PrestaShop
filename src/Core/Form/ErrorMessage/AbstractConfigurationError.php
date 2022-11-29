@@ -46,8 +46,6 @@ class AbstractConfigurationError implements ConfigurationErrorInterface
     private $fieldName;
 
     /**
-     * AdministrationConfigurationError constructor.
-     *
      * @param int $errorCode
      * @param string $fieldName
      */
