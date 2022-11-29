@@ -17,6 +17,7 @@ class CombinationsTab extends BOBasePage {
 
     // Selectors in combinations tab
     this.combinationsTabLink = '#product_combinations-tab-nav';
+    this.attributesAndFeaturesLink = '#combinations-empty-state p.mx-auto.showcase-list-card__message a.alert-link';
     this.generateFirstCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
     this.generateCombinationButton = '#combination-list-actions button.generate-combinations-button';
     this.generateCombinationsModal = '#product-combinations-generate div.modal.show';
@@ -28,6 +29,17 @@ class CombinationsTab extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Click on attributes & features link
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickOnAttributesAndFeaturesLink(page) {
+    await this.waitForSelectorAndClick(page, this.combinationsTabLink);
+
+    return this.openLinkWithTargetBlank(page, this.attributesAndFeaturesLink, 'body');
+  }
 
   /**
    * Add combination
@@ -88,6 +100,10 @@ class CombinationsTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.generateCombinationsCloseButton);
 
     return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
+  }
+
+  async editCombination(page, combinationData, column, row=1){
+    await this
   }
 }
 

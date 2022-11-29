@@ -17,6 +17,9 @@ class Products extends BOBasePage {
 
     this.pageTitle = 'Products';
     this.standardProductDescription = 'A physical product that needs to be shipped.';
+    this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
+      + 'customers can choose.';
+
     // Header selectors
     this.newProductButton = '#page-header-desc-configuration-add';
 
@@ -134,12 +137,21 @@ class Products extends BOBasePage {
    * @param productType {string} Product type to select
    * @returns {Promise<void>}
    */
-  async chooseProductType(page, productType) {
+  async selectProductType(page, productType) {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
     const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
+  }
+
+  /**
+   * Choose product type
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnAddNewProduct(page) {
+    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
 
     await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);
   }
