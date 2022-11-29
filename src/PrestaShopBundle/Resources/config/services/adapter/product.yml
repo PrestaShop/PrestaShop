@@ -134,26 +134,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
 
-  prestashop.adapter.product.command_handler.update_product_basic_information_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
-      - '@prestashop.adapter.tools'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
-
-  prestashop.adapter.product.command_handler.update_product_prices_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.update.product_price_properties_filler'
-      - '@prestashop.adapter.product.repository.product_supplier_repository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand
-
   prestashop.adapter.product.command_handler.set_product_tags_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetProductTagsHandler
     arguments:
@@ -182,23 +162,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand
 
-  prestashop.adapter.product.command_handler.update_product_options_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductOptionsHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.update.product_indexation_updater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand
-
-  prestashop.adapter.product.command_handler.update_product_details_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductDetailsHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductDetailsCommand
-
   prestashop.adapter.product.command_handler.set_associated_product_categories_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler
     arguments:
@@ -217,14 +180,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
-
-  prestashop.adapter.product.command_handler.update_product_shipping_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductShippingHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand
 
   prestashop.adapter.product.command_handler.set_carriers_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetCarriersHandler
@@ -284,27 +239,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand
 
-  prestashop.adapter.product.command_handler.update_product_seo_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductSeoHandler
-    arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.update.product_seo_properties_filler'
-      - '@prestashop.adapter.tools'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
-
   prestashop.adapter.product.update.product_attachment_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.attachment.attachment_repository'
-
-  prestashop.adapter.product.update.product_seo_properties_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller
-    arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.category.repository.category_repository'
 
   prestashop.adapter.product.validate.product_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator
@@ -330,12 +269,6 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
-
-  prestashop.adapter.product.update.product_price_properties_filler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
-    arguments:
-      - '@prestashop.core.util.number.number_extractor'
-      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.update.product_type_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater
