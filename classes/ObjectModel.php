@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
+#[AllowDynamicProperties]
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
 {
     /**
