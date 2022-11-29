@@ -31,12 +31,37 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Product;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 class UpdateProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product :productReference for shop :shopReference with following values:
+     * @When I update product ":productReference" for all shops with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductForAllShops(string $productReference, TableNode $table): void
+    {
+        $shopConstraint = ShopConstraint::allShops();
+        $this->updateProduct($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product ":productReference" with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductForDefaultShop(string $productReference, TableNode $table): void
+    {
+        $shopConstraint = ShopConstraint::shop($this->getDefaultShopId());
+        $this->updateProduct($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product ":productReference" for shop :shopReference with following values:
      *
      * @param string $productReference
      * @param TableNode $table
@@ -46,6 +71,19 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
         $shopConstraint = ShopConstraint::shop($shopId);
         $this->updateProduct($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When /^I update product "([^"]*)" name \(not using commands\) with following localized values:$/
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     *
+     * @return void
+     */
+    public function updateProductName(string $productReference, TableNode $table): void
+    {
+        $this->updateProductNameManually($productReference, $table);
     }
 
     /**
@@ -90,5 +128,21 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         }
 
         return $command;
+    }
+
+    /**
+     * @todo: double check if its still needed when we use single command for update
+     *
+     * This method is created just for specific cases when product name needs to be updated
+     * using legacy object model, but not cqrs commands, to avoid some side effects while testing.
+     * For example when testing how cqrs command auto-fills link_rewrite in certain cases.
+     */
+    protected function updateProductNameManually(string $productReference, TableNode $table): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId, true);
+        $product->name = $this->localizeByRows($table)['name'];
+
+        $product->update();
     }
 }
