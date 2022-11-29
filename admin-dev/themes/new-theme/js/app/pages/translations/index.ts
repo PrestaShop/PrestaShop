@@ -23,16 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import {createApp} from 'vue';
-import app from './components/app.vue';
+import App from './components/app.vue';
 import store from './store';
 import router from './router';
 
-export default createApp({
-  router,
-  store,
-  template: '<app />',
-  components: {app},
-  beforeMount() {
-    this.$store.dispatch('getTranslations');
-  },
-}).use(store).mount('#translations-app');
+export default createApp(App).use(store).use(router).mount('#translations-app');
