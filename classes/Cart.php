@@ -326,17 +326,7 @@ class CartCore extends ObjectModel
             $this->update();
         }
 
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-        SET `id_address_delivery` = ' . (int) $id_address_new . '
-        WHERE  `id_cart` = ' . (int) $this->id . '
-            AND `id_address_delivery` = ' . (int) $id_address;
-        Db::getInstance()->execute($sql);
-
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
-            SET `id_address_delivery` = ' . (int) $id_address_new . '
-            WHERE  `id_cart` = ' . (int) $this->id . '
-                AND `id_address_delivery` = ' . (int) $id_address;
-        Db::getInstance()->execute($sql);
+        $this->setAllProductsAddressDelivery($id_address, $id_address_new);
     }
 
     /**
@@ -352,17 +342,7 @@ class CartCore extends ObjectModel
             $this->update();
         }
 
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'cart_product`
-        SET `id_address_delivery` = ' . $newAddressId . '
-        WHERE  `id_cart` = ' . (int) $this->id . '
-            AND `id_address_delivery` = ' . $currentAddressId;
-        Db::getInstance()->execute($sql);
-
-        $sql = 'UPDATE `' . _DB_PREFIX_ . 'customization`
-            SET `id_address_delivery` = ' . $newAddressId . '
-            WHERE  `id_cart` = ' . (int) $this->id . '
-                AND `id_address_delivery` = ' . $currentAddressId;
-        Db::getInstance()->execute($sql);
+        $this->setAllProductsAddressDelivery($currentAddressId, $newAddressId);
     }
 
     /**
@@ -4606,6 +4586,30 @@ class CartCore extends ObjectModel
             $old_id_address_delivery,
             $new_id_address_delivery
         );
+    }
+
+    /**
+     * Set delivery Address of all Products corresponding to old address in the Cart.
+     *
+     * @param int $old_id_address_delivery Old delivery Address ID
+     * @param int $new_id_address_delivery New delivery Address ID, valid for the current customer
+     */
+    public function setAllProductsAddressDelivery($old_id_address_delivery, $new_id_address_delivery)
+    {
+        // Check address is linked with the customer
+        if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
+            return;
+        }
+
+        $cartProducts = $this->getCartProducts($old_id_address_delivery);
+        foreach ($cartProducts as $cartProduct) {
+            $this->setProductAnyAddressDelivery(
+                $cartProduct['id_product'],
+                $cartProduct['id_product_attribute'],
+                $old_id_address_delivery,
+                $new_id_address_delivery
+            );
+        }
     }
 
     /**
