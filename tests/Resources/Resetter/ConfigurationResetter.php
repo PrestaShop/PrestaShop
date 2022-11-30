@@ -26,9 +26,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Resources;
+namespace Tests\Resources\Resetter;
 
-use Configuration;
+use Tests\Resources\DatabaseDump;
 
 class ConfigurationResetter
 {
@@ -38,6 +38,5 @@ class ConfigurationResetter
             'configuration',
             'configuration_lang',
         ]);
-        Configuration::resetStaticCache();
     }
 }

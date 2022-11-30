@@ -44,16 +44,24 @@ use ShopGroup;
 use ShopUrl;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\Resetter\ShopResetter;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeFeature @restore-shops-before-feature
+     */
+    public static function restoreShopTablesBeforeFeature(): void
+    {
+        ShopResetter::resetShops();
+    }
+
     /**
      * @AfterFeature @restore-shops-after-feature
      */
     public static function restoreShopTablesAfterFeature(): void
     {
-        self::restoreShopTables();
+        ShopResetter::resetShops();
     }
 
     /**
@@ -426,33 +434,6 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         if (!$exceptionTriggered) {
             throw new RuntimeException('Expected SearchShopException did not happen');
         }
-    }
-
-    private static function restoreShopTables(): void
-    {
-        DatabaseDump::restoreTables([
-            'shop',
-            'shop_group',
-            'shop_url',
-        ]);
-        DatabaseDump::restoreMatchingTables('/.*_shop$/');
-
-        // We need to restore lang tables that are also multi-shop
-        DatabaseDump::restoreTables([
-            'carrier_lang',
-            'category_lang',
-            'cms_category_lang',
-            'cms_lang',
-            'cms_role_lang',
-            'customization_field_lang',
-            'info_lang',
-            'linksmenutop_lang',
-            'meta_lang',
-            'product_lang',
-        ]);
-        Shop::setContext(Shop::CONTEXT_SHOP, 1);
-        self::toggleMultiShop(false);
-        Shop::resetStaticCache();
     }
 
     /**
