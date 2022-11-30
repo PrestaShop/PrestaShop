@@ -31,12 +31,13 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
  * Context for product assertions related to Options properties
  */
-class OptionsAssertionFeatureContext extends AbstractUpdateOptionsFeatureContext
+class OptionsAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Transform table:product option,value
