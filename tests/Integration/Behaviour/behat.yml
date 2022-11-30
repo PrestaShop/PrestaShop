@@ -451,7 +451,6 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateOptionsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext

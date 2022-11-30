@@ -115,16 +115,34 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
         $command = new UpdateProductCommand($productId, $shopConstraint);
 
+        // basic info
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
         }
-
         if (isset($data['description'])) {
             $command->setLocalizedDescriptions($data['description']);
         }
-
         if (isset($data['description_short'])) {
             $command->setLocalizedShortDescriptions($data['description_short']);
+        }
+        // details
+        if (isset($data['isbn'])) {
+            $command->setIsbn($data['isbn']);
+        }
+        if (isset($data['upc'])) {
+            $command->setUpc($data['upc']);
+        }
+        if (isset($data['ean13'])) {
+            $command->setEan13($data['ean13']);
+        }
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
+        }
+        if (isset($data['reference'])) {
+            $command->setReference($data['reference']);
+        }
+        if (isset($data['mpn'])) {
+            $command->setMpn($data['mpn']);
         }
 
         return $command;
