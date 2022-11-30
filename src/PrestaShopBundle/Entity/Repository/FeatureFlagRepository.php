@@ -83,6 +83,8 @@ class FeatureFlagRepository extends EntityRepository
         $featureFlag = $this->getByName($featureFlagName);
         if (null !== $featureFlag) {
             $featureFlag->enable();
+            $this->getEntityManager()->persist($featureFlag);
+            $this->getEntityManager()->flush();
         }
     }
 
@@ -96,6 +98,8 @@ class FeatureFlagRepository extends EntityRepository
         $featureFlag = $this->getByName($featureFlagName);
         if (null !== $featureFlag) {
             $featureFlag->disable();
+            $this->getEntityManager()->persist($featureFlag);
+            $this->getEntityManager()->flush();
         }
     }
 }

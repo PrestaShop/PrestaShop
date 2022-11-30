@@ -7,6 +7,8 @@ services:
     arguments:
       - '@tactician.commandbus.default'
 
+  PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface: '@prestashop.core.command_bus'
+
   prestashop.core.query_bus:
     parent: 'prestashop.core.command_bus'
     public: true

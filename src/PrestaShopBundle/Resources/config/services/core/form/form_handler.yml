@@ -212,19 +212,19 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
-      - '@prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
 
   prestashop.core.form.identifiable_object.combination_list_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
-      - '@prestashop.core.form.identifiable_object.data_handler.combination_list_form_data_handler'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler'
 
   prestashop.core.form.identifiable_object.bulk_combination_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
     factory: [ '@prestashop.core.form.identifiable_object.handler.form_handler_factory', 'create' ]
     arguments:
-      - '@prestashop.core.form.identifiable_object.data_handler.bulk_combination_form_data_handler'
+      - '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler'
 
   prestashop.core.form.identifiable_object.product_image_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'

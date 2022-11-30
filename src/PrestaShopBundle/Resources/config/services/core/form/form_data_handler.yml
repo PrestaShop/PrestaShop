@@ -199,25 +199,14 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.admin.shop.repository'
 
-  prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler:
+    autowire: true
 
-  prestashop.core.form.identifiable_object.data_handler.bulk_combination_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.data_formatter.bulk_combination_form_data_formatter'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler:
+    autowire: true
 
-  prestashop.core.form.identifiable_object.data_handler.combination_list_form_data_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
-      - '@prestashop.core.form.data_formatter.combination_list_form_data_formatter'
-      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler:
+    autowire: true
 
   prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
