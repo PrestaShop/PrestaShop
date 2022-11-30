@@ -49,11 +49,11 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
 use Shop;
-use Tools;
 use Validate;
 
 class OrderAmountUpdater
@@ -89,21 +89,29 @@ class OrderAmountUpdater
     private $keepOrderPrices = true;
 
     /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    /**
      * @param ShopConfigurationInterface $shopConfiguration
      * @param ContextStateManager $contextStateManager
      * @param OrderDetailUpdater $orderDetailUpdater
      * @param OrderProductRemover $orderProductRemover
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         ShopConfigurationInterface $shopConfiguration,
         ContextStateManager $contextStateManager,
         OrderDetailUpdater $orderDetailUpdater,
-        OrderProductRemover $orderProductRemover
+        OrderProductRemover $orderProductRemover,
+        MathHelper $mathHelper
     ) {
         $this->shopConfiguration = $shopConfiguration;
         $this->contextStateManager = $contextStateManager;
         $this->orderDetailUpdater = $orderDetailUpdater;
         $this->orderProductRemover = $orderProductRemover;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -281,15 +289,15 @@ class OrderAmountUpdater
         $order->total_discounts_tax_incl = (float) abs($cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $orderProducts, $carrierId, false, $this->keepOrderPrices));
 
         // We should always use Cart::BOTH for the order total since it contains all products, shipping fees and cart rules
-        $order->total_paid = Tools::ps_round(
+        $order->total_paid = $this->mathHelper->round(
             (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
             $computingPrecision
         );
-        $order->total_paid_tax_excl = Tools::ps_round(
+        $order->total_paid_tax_excl = $this->mathHelper->round(
             (float) $cart->getOrderTotal(false, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
             $computingPrecision
         );
-        $order->total_paid_tax_incl = Tools::ps_round(
+        $order->total_paid_tax_incl = $this->mathHelper->round(
             (float) $cart->getOrderTotal(true, Cart::BOTH, $orderProducts, $carrierId, false, $this->keepOrderPrices),
             $computingPrecision
         );
@@ -451,8 +459,8 @@ class OrderAmountUpdater
                     $orderCartRule->id_order = $order->id;
                     $orderCartRule->name = $cartRule->name;
                     $orderCartRule->free_shipping = $cartRule->free_shipping;
-                    $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-                    $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+                    $orderCartRule->value = $this->mathHelper->round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+                    $orderCartRule->value_tax_excl = $this->mathHelper->round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
 
                     if ($orderCartRule->free_shipping && !$this->getOrderConfiguration('PS_ORDER_RECALCULATE_SHIPPING', $order)) {
                         $orderCartRule->value = $orderCartRule->value - $calculator->getFees()->getInitialShippingFees()->getTaxIncluded() + $order->total_shipping;
@@ -490,8 +498,8 @@ class OrderAmountUpdater
             $orderCartRule->id_order_invoice = $orderInvoiceId ?? 0;
             $orderCartRule->name = $cartRule->name;
             $orderCartRule->free_shipping = $cartRule->free_shipping;
-            $orderCartRule->value = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
-            $orderCartRule->value_tax_excl = Tools::ps_round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
+            $orderCartRule->value = $this->mathHelper->round($cartRuleData->getDiscountApplied()->getTaxIncluded(), $computingPrecision);
+            $orderCartRule->value_tax_excl = $this->mathHelper->round($cartRuleData->getDiscountApplied()->getTaxExcluded(), $computingPrecision);
             $orderCartRule->save();
         }
     }
@@ -524,30 +532,30 @@ class OrderAmountUpdater
             // Shipping are computed on first invoice only
             $carrierId = $order->id_carrier;
             $totalMethod = ($firstInvoice === false || $firstInvoice->id == $invoice->id) ? Cart::BOTH : Cart::BOTH_WITHOUT_SHIPPING;
-            $invoice->total_paid_tax_excl = Tools::ps_round(
+            $invoice->total_paid_tax_excl = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(false, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );
-            $invoice->total_paid_tax_incl = Tools::ps_round(
+            $invoice->total_paid_tax_incl = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(true, $totalMethod, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );
 
-            $invoice->total_products = Tools::ps_round(
+            $invoice->total_products = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );
-            $invoice->total_products_wt = Tools::ps_round(
+            $invoice->total_products_wt = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );
 
-            $invoice->total_discount_tax_excl = Tools::ps_round(
+            $invoice->total_discount_tax_excl = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );
 
-            $invoice->total_discount_tax_incl = Tools::ps_round(
+            $invoice->total_discount_tax_incl = $this->mathHelper->round(
                 (float) $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $currentInvoiceProducts, $carrierId, false, $this->keepOrderPrices),
                 $computingPrecision
             );

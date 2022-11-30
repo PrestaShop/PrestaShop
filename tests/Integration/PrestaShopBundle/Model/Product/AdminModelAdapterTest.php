@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -188,6 +189,7 @@ class AdminModelAdapterTest extends KernelTestCase
             self::$kernel->getContainer()->get('prestashop.adapter.shop.context'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.tax'),
             self::$kernel->getContainer()->get('router'),
+            self::$kernel->getContainer()->get(MathHelper::class),
             self::$kernel->getContainer()->get('prestashop.utils.float_parser')
         );
     }

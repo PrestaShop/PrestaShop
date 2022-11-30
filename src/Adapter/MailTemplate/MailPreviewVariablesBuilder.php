@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutInterface;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -80,6 +81,11 @@ final class MailPreviewVariablesBuilder
     private $translator;
 
     /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    /**
      * MailPreviewVariablesBuilder constructor.
      *
      * @param ConfigurationInterface $configuration
@@ -88,6 +94,7 @@ final class MailPreviewVariablesBuilder
      * @param MailPartialTemplateRenderer $mailPartialTemplateRenderer
      * @param Locale $locale
      * @param TranslatorInterface $translatorComponent
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         ConfigurationInterface $configuration,
@@ -95,7 +102,8 @@ final class MailPreviewVariablesBuilder
         ContextEmployeeProviderInterface $employeeProvider,
         MailPartialTemplateRenderer $mailPartialTemplateRenderer,
         Locale $locale,
-        TranslatorInterface $translatorComponent
+        TranslatorInterface $translatorComponent,
+        MathHelper $mathHelper
     ) {
         $this->configuration = $configuration;
         $this->legacyContext = $legacyContext;
@@ -104,6 +112,7 @@ final class MailPreviewVariablesBuilder
         $this->mailPartialTemplateRenderer = $mailPartialTemplateRenderer;
         $this->locale = $locale;
         $this->translator = $translatorComponent;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -358,7 +367,7 @@ final class MailPreviewVariablesBuilder
             $price = Product::getPriceStatic((int) $product['id_product'], false, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
             $priceWithTax = Product::getPriceStatic((int) $product['id_product'], true, ($product['id_product_attribute'] ? (int) $product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int) $order->id_customer, (int) $order->id_cart, (int) $order->{$this->configuration->get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, null, true, $product['id_customization']);
 
-            $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $priceWithTax;
+            $productPrice = Product::getTaxCalculationMethod() == PS_TAX_EXC ? $this->mathHelper->round($price, 2) : $priceWithTax;
 
             $productTemplate = [
                 'id_product' => $product['id_product'],

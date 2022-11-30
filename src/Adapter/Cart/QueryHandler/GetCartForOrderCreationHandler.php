@@ -51,10 +51,10 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\Cust
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation\CustomizationFieldData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopException;
 use Product;
 use Shop;
-use Tools;
 
 /**
  * Handles GetCartForOrderCreation query using legacy object models
@@ -87,24 +87,32 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $defaultCarrierId;
 
     /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
      * @param int $defaultCarrierId
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
         ContextStateManager $contextStateManager,
-        int $defaultCarrierId
+        int $defaultCarrierId,
+        MathHelper $mathHelper
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
         $this->defaultCarrierId = $defaultCarrierId;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -544,9 +552,9 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $product['name'],
             isset($product['attributes_small']) ? $product['attributes_small'] : '',
             $product['reference'],
-            (string) Tools::ps_round($product['price'], $currency->precision),
+            (string) $this->mathHelper->round($product['price'], $currency->precision),
             $product['quantity'],
-            (string) Tools::ps_round($product['total'], $currency->precision),
+            (string) $this->mathHelper->round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
             Product::getQuantity(

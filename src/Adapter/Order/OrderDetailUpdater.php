@@ -42,11 +42,11 @@ use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use Product;
 use Shop;
 use TaxCalculator;
 use TaxManagerFactory;
-use Tools;
 
 class OrderDetailUpdater
 {
@@ -63,15 +63,23 @@ class OrderDetailUpdater
     private $shopConfiguration;
 
     /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    /**
      * @param ContextStateManager $contextStateManager
      * @param ShopConfigurationInterface $shopConfiguration
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         ContextStateManager $contextStateManager,
-        ShopConfigurationInterface $shopConfiguration
+        ShopConfigurationInterface $shopConfiguration,
+        MathHelper $mathHelper
     ) {
         $this->contextStateManager = $contextStateManager;
         $this->shopConfiguration = $shopConfiguration;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -177,13 +185,13 @@ class OrderDetailUpdater
                     foreach ($taxesAmount as $taxId => $amount) {
                         switch ($roundType) {
                             case Order::ROUND_ITEM:
-                                $unitAmount = (float) Tools::ps_round($amount, $computingPrecision);
+                                $unitAmount = $this->mathHelper->round($amount, $computingPrecision);
                                 $totalAmount = $unitAmount * $orderDetail->product_quantity;
 
                                 break;
                             case Order::ROUND_LINE:
                                 $unitAmount = $amount;
-                                $totalAmount = Tools::ps_round($unitAmount * $orderDetail->product_quantity, $computingPrecision);
+                                $totalAmount = $this->mathHelper->round($unitAmount * $orderDetail->product_quantity, $computingPrecision);
 
                                 break;
                             case Order::ROUND_TOTAL:
@@ -274,15 +282,15 @@ class OrderDetailUpdater
 
                 break;
             case Order::ROUND_LINE:
-                $orderDetail->total_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
-                $orderDetail->total_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
+                $orderDetail->total_price_tax_excl = $this->mathHelper->round($floatPriceTaxExcluded * $orderDetail->product_quantity, $computingPrecision);
+                $orderDetail->total_price_tax_incl = $this->mathHelper->round($floatPriceTaxIncluded * $orderDetail->product_quantity, $computingPrecision);
 
                 break;
 
             case Order::ROUND_ITEM:
             default:
-                $orderDetail->product_price = $orderDetail->unit_price_tax_excl = Tools::ps_round($floatPriceTaxExcluded, $computingPrecision);
-                $orderDetail->unit_price_tax_incl = Tools::ps_round($floatPriceTaxIncluded, $computingPrecision);
+                $orderDetail->product_price = $orderDetail->unit_price_tax_excl = $this->mathHelper->round($floatPriceTaxExcluded, $computingPrecision);
+                $orderDetail->unit_price_tax_incl = $this->mathHelper->round($floatPriceTaxIncluded, $computingPrecision);
                 $orderDetail->total_price_tax_excl = $orderDetail->unit_price_tax_excl * $orderDetail->product_quantity;
                 $orderDetail->total_price_tax_incl = $orderDetail->unit_price_tax_incl * $orderDetail->product_quantity;
 

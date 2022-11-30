@@ -6,3 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
     arguments:
       - '@property_accessor'
+
+  PrestaShop\PrestaShop\Core\Util\Number\MathHelper:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'

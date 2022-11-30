@@ -41,6 +41,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopBundle\Form\Admin\Type\CustomMoneyType;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
@@ -84,6 +85,10 @@ class AdminProductWrapper
      * @var FloatParser
      */
     private $floatParser;
+    /**
+     * @var MathHelper
+     */
+    private $mathHelper;
 
     /**
      * Constructor : Inject Symfony\Component\Translation Translator.
@@ -93,12 +98,18 @@ class AdminProductWrapper
      * @param Locale $locale
      * @param FloatParser|null $floatParser
      */
-    public function __construct($translator, array $employeeAssociatedShops, Locale $locale, FloatParser $floatParser = null)
-    {
+    public function __construct(
+        $translator,
+        array $employeeAssociatedShops,
+        Locale $locale,
+        MathHelper $mathHelper,
+        FloatParser $floatParser = null
+    ) {
         $this->translator = $translator;
         $this->employeeAssociatedShops = $employeeAssociatedShops;
         $this->locale = $locale;
         $this->floatParser = $floatParser ?? new FloatParser();
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -148,7 +159,7 @@ class AdminProductWrapper
             $combinationValues['attribute_ecotax'] = 0;
         } else {
             // Value is displayed tax included but must be saved tax excluded
-            $combinationValues['attribute_ecotax'] = Tools::ps_round(
+            $combinationValues['attribute_ecotax'] = $this->mathHelper->round(
                 $combinationValues['attribute_ecotax'] / (1 + Tax::getProductEcotaxRate() / 100),
                 $computingPrecision
             );
@@ -503,8 +514,8 @@ class AdminProductWrapper
                         $can_delete_specific_prices = (count($this->employeeAssociatedShops) > 1 && !$specific_price['id_shop']) || $specific_price['id_shop'];
                     }
 
-                    $price = Tools::ps_round($specific_price['price'], 2);
-                    $fixed_price = (($price == Tools::ps_round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : $this->locale->formatPrice($price, $current_specific_currency['iso_code']);
+                    $price = $this->mathHelper->round($specific_price['price'], 2);
+                    $fixed_price = (($price == $this->mathHelper->round($product->price, 2) && $current_specific_currency['id_currency'] == $defaultCurrency->id) || $specific_price['price'] == -1) ? '--' : $this->locale->formatPrice($price, $current_specific_currency['iso_code']);
 
                     $content[] = [
                         'id_specific_price' => $specific_price['id_specific_price'],

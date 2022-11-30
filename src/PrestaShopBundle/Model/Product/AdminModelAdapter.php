@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopBundle\Utils\FloatParser;
 use Product;
 use ProductDownload;
@@ -168,6 +169,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @var array
      */
     private $formData;
+    /**
+     * @var MathHelper|null
+     */
+    private $mathHelper;
 
     /**
      * Constructor
@@ -184,6 +189,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param ShopContext $shopContext
      * @param TaxRuleDataProvider $taxRuleDataProvider
      * @param Router $router
+     * @param MathHelper $mathHelper
      * @param FloatParser|null $floatParser
      */
     public function __construct(
@@ -198,6 +204,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         ShopContext $shopContext,
         TaxRuleDataProvider $taxRuleDataProvider,
         Router $router,
+        MathHelper $mathHelper,
         FloatParser $floatParser = null
     ) {
         $this->context = $legacyContext;
@@ -213,6 +220,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
+        $this->mathHelper = $mathHelper;
         $this->floatParser = $floatParser ?? new FloatParser();
     }
 
@@ -572,7 +580,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         // ecotax is stored with tax included but form uses the tax excluded value
         // using a precision of 6 digits as `AdminProductsController::_removeTaxFromEcotax()`
         // which does the opposite uses 6 digits too
-        $ecotax = $this->tools->round(
+        $ecotax = $this->mathHelper->round(
             $product->ecotax * (1 + $this->taxRuleDataProvider->getProductEcotaxRate() / 100),
             6
         );

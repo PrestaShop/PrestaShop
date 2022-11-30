@@ -55,12 +55,12 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use Product;
 use ProductAttribute;
 use Shop;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 /**
  * Handles adding product to an existing order using legacy object model classes.
@@ -105,18 +105,25 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     private $orderDetailUpdater;
 
     /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    /**
      * @param TranslatorInterface $translator
      * @param ContextStateManager $contextStateManager
      * @param OrderAmountUpdater $orderAmountUpdater
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
      * @param OrderDetailUpdater $orderDetailUpdater
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         TranslatorInterface $translator,
         ContextStateManager $contextStateManager,
         OrderAmountUpdater $orderAmountUpdater,
         OrderProductQuantityUpdater $orderProductQuantityUpdater,
-        OrderDetailUpdater $orderDetailUpdater
+        OrderDetailUpdater $orderDetailUpdater,
+        MathHelper $mathHelper
     ) {
         $this->context = Context::getContext();
         $this->translator = $translator;
@@ -124,6 +131,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $this->orderAmountUpdater = $orderAmountUpdater;
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
         $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -483,11 +491,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $carrier = new Carrier((int) $order->id_carrier);
         $taxCalculator = $carrier->getTaxCalculator($invoice_address);
 
-        $invoice->total_paid_tax_excl = Tools::ps_round(
+        $invoice->total_paid_tax_excl = $this->mathHelper->round(
             (float) $cart->getOrderTotal(false, $totalMethod, $newProducts),
             $this->computingPrecision
         );
-        $invoice->total_paid_tax_incl = Tools::ps_round(
+        $invoice->total_paid_tax_incl = $this->mathHelper->round(
             (float) $cart->getOrderTotal(true, $totalMethod, $newProducts),
             $this->computingPrecision
         );
@@ -528,11 +536,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     {
         $invoice = new OrderInvoice($orderInvoiceId);
 
-        $invoice->total_paid_tax_excl += Tools::ps_round(
+        $invoice->total_paid_tax_excl += $this->mathHelper->round(
             (float) $cart->getOrderTotal(false, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
             $this->computingPrecision
         );
-        $invoice->total_paid_tax_incl += Tools::ps_round(
+        $invoice->total_paid_tax_incl += $this->mathHelper->round(
             (float) $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING, $newProducts),
             $this->computingPrecision
         );

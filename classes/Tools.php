@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\PrestaShop\Core\Util\Number\Math;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -1784,22 +1785,12 @@ class ToolsCore
             $round_mode = Tools::$round_mode;
         }
 
-        switch ($round_mode) {
-            case PS_ROUND_UP:
-                return Tools::ceilf($value, $precision);
-            case PS_ROUND_DOWN:
-                return Tools::floorf($value, $precision);
-            case PS_ROUND_HALF_DOWN:
-            case PS_ROUND_HALF_EVEN:
-            case PS_ROUND_HALF_ODD:
-                return Tools::math_round($value, $precision, $round_mode);
-            case PS_ROUND_HALF_UP:
-            default:
-                return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
-        }
+        return Math::round($value, $precision, $round_mode);
     }
 
     /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\Number\Math::math_round function instead
+     *
      * @param int|float $value
      * @param int|float $places
      * @param int<2,5> $mode (PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)
@@ -1808,63 +1799,12 @@ class ToolsCore
      */
     public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
     {
-        //If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
-        if (defined('PHP_ROUND_HALF_UP')) {
-            return round($value, $places, $mode - 1);
-        }
-
-        $precision_places = 14 - floor(log10(abs($value)));
-        $f1 = 10.0 ** (float) abs($places);
-
-        /* If the decimal precision guaranteed by FP arithmetic is higher than
-        * the requested places BUT is small enough to make sure a non-zero value
-        * is returned, pre-round the result to the precision */
-        if ($precision_places > $places && $precision_places - $places < 15) {
-            $f2 = 10.0 ** (float) abs($precision_places);
-
-            if ($precision_places >= 0) {
-                $tmp_value = $value * $f2;
-            } else {
-                $tmp_value = $value / $f2;
-            }
-
-            /* preround the result (tmp_value will always be something * 1e14,
-            * thus never larger than 1e15 here) */
-            $tmp_value = Tools::round_helper($tmp_value, $mode);
-            /* now correctly move the decimal point */
-            $f2 = 10.0 ** (float) abs($places - $precision_places);
-            /* because places < precision_places */
-            $tmp_value = $tmp_value / $f2;
-        } else {
-            /* adjust the value */
-            if ($places >= 0) {
-                $tmp_value = $value * $f1;
-            } else {
-                $tmp_value = $value / $f1;
-            }
-
-            /* This value is beyond our precision, so rounding it is pointless */
-            if (abs($tmp_value) >= 1e15) {
-                return $value;
-            }
-        }
-
-        /* round the temp value */
-        $tmp_value = Tools::round_helper($tmp_value, $mode);
-
-        /* see if it makes sense to use simple division to round the value */
-        if (abs($places) < 23) {
-            if ($places > 0) {
-                $tmp_value /= $f1;
-            } else {
-                $tmp_value *= $f1;
-            }
-        }
-
-        return $tmp_value;
+        return Math::math_round($value, $places, $mode);
     }
 
     /**
+     * @deprecated since 8.1. There is no replacement
+     *
      * @param float $value
      * @param int $mode
      *
@@ -1894,6 +1834,8 @@ class ToolsCore
     }
 
     /**
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\Number\Math::ceilf function instead
+     *
      * Returns the rounded value up of $value to specified precision.
      *
      * @param float $value
@@ -1903,22 +1845,11 @@ class ToolsCore
      */
     public static function ceilf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
-        $tmp = $value * $precision_factor;
-        $tmp2 = (string) $tmp;
-        // If the current value has already the desired precision
-        if (strpos($tmp2, '.') === false) {
-            return $value;
-        }
-        if ($tmp2[strlen($tmp2) - 1] == 0) {
-            return $value;
-        }
-
-        return ceil($tmp) / $precision_factor;
+        return Math::ceilf($value, $precision);
     }
 
     /**
-     * Returns the rounded value down of $value to specified precision.
+     * @deprecated since 8.1 use PrestaShop\PrestaShop\Core\Util\Number\Math::floorf function instead
      *
      * @param float $value
      * @param int $precision
@@ -1927,18 +1858,7 @@ class ToolsCore
      */
     public static function floorf($value, $precision = 0)
     {
-        $precision_factor = $precision == 0 ? 1 : 10 ** $precision;
-        $tmp = $value * $precision_factor;
-        $tmp2 = (string) $tmp;
-        // If the current value has already the desired precision
-        if (strpos($tmp2, '.') === false) {
-            return $value;
-        }
-        if ($tmp2[strlen($tmp2) - 1] == 0) {
-            return $value;
-        }
-
-        return floor($tmp) / $precision_factor;
+        return Math::floorf($value, $precision);
     }
 
     /**

@@ -28,6 +28,7 @@ services:
       - "@translator"
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
       - "@prestashop.core.localization.locale.context_locale"
+      - '@PrestaShop\PrestaShop\Core\Util\Number\MathHelper'
       - "@prestashop.utils.float_parser"
 
   prestashop.adapter.admin.controller.attribute_generator:
@@ -58,9 +59,9 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@prestashop.core.localization.locale.context_locale'
-      - '@prestashop.adapter.tools'
       - '@prestashop.adapter.data_provider.currency'
       - '@prestashop.adapter.context_state_manager'
+      - '@PrestaShop\PrestaShop\Core\Util\Number\MathHelper'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts

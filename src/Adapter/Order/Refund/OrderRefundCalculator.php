@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidCancelProductExcept
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderDetailRefund;
 use PrestaShop\PrestaShop\Core\Domain\Order\VoucherRefundType;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Tools;
 
 /**
  * Performs all computation for a refund on an Order, returns a OrderRefundDetail
@@ -48,6 +48,16 @@ use Tools;
  */
 class OrderRefundCalculator
 {
+    /**
+     * @var MathHelper
+     */
+    private $mathHelper;
+
+    public function __construct(MathHelper $mathHelper)
+    {
+        $this->mathHelper = $mathHelper;
+    }
+
     /**
      * @param Order $order
      * @param array $orderDetailRefunds
@@ -211,11 +221,11 @@ class OrderRefundCalculator
 
             // Add data for OrderDetail updates, it's important to round because too many decimals will fail in Validate::isPrice
             if ($isTaxIncluded) {
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($productRefundAmount, $precision);
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($taxCalculator->removeTaxes($productRefundAmount), $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = $this->mathHelper->round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = $this->mathHelper->round($taxCalculator->removeTaxes($productRefundAmount), $precision);
             } else {
-                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = Tools::ps_round($productRefundAmount, $precision);
-                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = Tools::ps_round($taxCalculator->addTaxes($productRefundAmount), $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_excl'] = $this->mathHelper->round($productRefundAmount, $precision);
+                $productRefunds[$orderDetailId]['total_refunded_tax_incl'] = $this->mathHelper->round($taxCalculator->addTaxes($productRefundAmount), $precision);
             }
 
             // Add missing fields

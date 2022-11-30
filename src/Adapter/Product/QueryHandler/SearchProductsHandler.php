@@ -35,7 +35,6 @@ use Order;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\SearchProductsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
@@ -43,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationField;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
+use PrestaShop\PrestaShop\Core\Util\Number\MathHelper;
 use Product;
 use Shop;
 
@@ -72,29 +72,29 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
     private $currencyDataProvider;
 
     /**
-     * @var Tools
+     * @var MathHelper
      */
-    private $tools;
+    private $mathHelper;
 
     /**
      * @param int $contextLangId
      * @param LocaleInterface $contextLocale
-     * @param Tools $tools
      * @param CurrencyDataProvider $currencyDataProvider
      * @param ContextStateManager $contextStateManager
+     * @param MathHelper $mathHelper
      */
     public function __construct(
         int $contextLangId,
         LocaleInterface $contextLocale,
-        Tools $tools,
         CurrencyDataProvider $currencyDataProvider,
-        ContextStateManager $contextStateManager
+        ContextStateManager $contextStateManager,
+        MathHelper $mathHelper
     ) {
         $this->contextLangId = $contextLangId;
         $this->contextLocale = $contextLocale;
         $this->currencyDataProvider = $currencyDataProvider;
-        $this->tools = $tools;
         $this->contextStateManager = $contextStateManager;
+        $this->mathHelper = $mathHelper;
     }
 
     /**
@@ -193,8 +193,8 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
             $product->id,
             $product->name[$this->contextLangId],
             $this->contextLocale->formatPrice($priceTaxExcluded, $isoCodeCurrency),
-            $this->tools->round($priceTaxIncluded, $computingPrecision),
-            $this->tools->round($priceTaxExcluded, $computingPrecision),
+            $this->mathHelper->round($priceTaxIncluded, $computingPrecision),
+            $this->mathHelper->round($priceTaxExcluded, $computingPrecision),
             $product->getTaxesRate($address),
             Product::getQuantity($product->id),
             $product->location,

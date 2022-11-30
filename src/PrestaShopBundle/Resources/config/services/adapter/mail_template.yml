@@ -31,3 +31,4 @@ services:
       - "@prestashop.adapter.mail_template.partial_template_renderer"
       - "@prestashop.core.localization.locale.context_locale"
       - "@translator"
+      - '@PrestaShop\PrestaShop\Core\Util\Number\MathHelper'
