@@ -309,7 +309,7 @@ abstract class AbstractDomainFeatureContext implements Context
 
     protected function getDefaultCurrencyId(): int
     {
-        return (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        return Currency::getDefaultCurrencyId();
     }
 
     protected function getDefaultCurrencyIsoCode(): string

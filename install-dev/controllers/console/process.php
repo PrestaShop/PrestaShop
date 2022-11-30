@@ -94,7 +94,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
         if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency)) {
-            if ($id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT')) {
+            if ($id_currency = Currency::getDefaultCurrencyId()) {
                 Context::getContext()->currency = new Currency((int) $id_currency);
             }
         }
