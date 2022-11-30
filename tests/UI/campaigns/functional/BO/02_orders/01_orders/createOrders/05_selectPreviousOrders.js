@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -41,7 +37,7 @@ let browserContext;
 let page;
 let orderID = 0;
 let customerID = 0;
-const today = getDateFormat('yyyy-mm-dd');
+const today = date.getDateFormat('yyyy-mm-dd');
 
 const newCustomer = new CustomerFaker();
 const newAddress = new AddressFaker({

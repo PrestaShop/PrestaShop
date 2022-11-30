@@ -1,42 +1,39 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const generalPage = require('@pages/BO/shopParameters/general');
-const multiStorePage = require('@pages/BO/advancedParameters/multistore');
-const addShopGroupPage = require('@pages/BO/advancedParameters/multistore/add');
-const addShopPage = require('@pages/BO/advancedParameters/multistore/shop/add');
-const shopPage = require('@pages/BO/advancedParameters/multistore/shop/index');
+import dashboardPage from '@pages/BO/dashboard';
+import generalPage from '@pages/BO/shopParameters/general';
+import multiStorePage from '@pages/BO/advancedParameters/multistore';
+import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
+import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
+import shopPage from '@pages/BO/advancedParameters/multistore/shop/index';
 
 // Import data
-const ShopGroupFaker = require('@data/faker/shopGroup');
-const ShopFaker = require('@data/faker/shop');
+import ShopGroupFaker from '@data/faker/shopGroup';
+import ShopFaker from '@data/faker/shop';
 
-const baseContext = 'functional_BO_advancedParameters_multistore_CRUDShopGroups';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfShopGroups = 0;
-let shopID = 0;
-
-const createShopGroupData = new ShopGroupFaker({});
-const updateShopGroupData = new ShopGroupFaker({});
-const shopData = new ShopFaker({shopGroup: updateShopGroupData.name, categoryRoot: 'Home'});
+const baseContext: string = 'functional_BO_advancedParameters_multistore_CRUDShopGroups';
 
 // Create, Read, Update and Delete shop groups in BO
 describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delete shop groups in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfShopGroups: number = 0;
+  let shopID: string = '0';
+
+  const createShopGroupData: ShopGroupFaker = new ShopGroupFaker({});
+  const updateShopGroupData: ShopGroupFaker = new ShopGroupFaker({});
+  const shopData: ShopFaker = new ShopFaker({shopGroup: updateShopGroupData.name, categoryRoot: 'Home'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -1,33 +1,23 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const logsPage = require('@pages/BO/advancedParameters/logs');
-
-const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
+// Import common
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import data
-const {DefaultEmployee} = require('@data/demo/employees');
+import {DefaultEmployee} from '@data/demo/employees';
 
-let browserContext;
-let page;
-let numberOfLogs = 0;
-const today = getDateFormat('mm/dd/yyyy');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import logsPage from '@pages/BO/advancedParameters/logs';
+
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 /*
 Erase all logs
@@ -39,6 +29,11 @@ Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Er
  */
 
 describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfLogs: number = 0;
+  const today = date.getDateFormat('mm/dd/yyyy');
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -76,7 +71,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
 
   // Login and logout 11 times to have 11 logs
   describe('Logout then login 11 times to have 11 logs', async () => {
-    const tests = new Array(11).fill(0, 0, 11);
+    const tests: number[] = new Array(11).fill(0, 0, 11);
 
     tests.forEach((test, index) => {
       it(`should logout from BO n°${index + 1}`, async function () {
@@ -122,7 +117,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await logsPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -143,7 +138,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await logsPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -157,7 +152,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_log',
-            filterValue: 50,
+            filterValue: '50',
           },
       },
       {
@@ -202,7 +197,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByObjectID',
             filterType: 'input',
             filterBy: 'object_id',
-            filterValue: 2,
+            filterValue: '2',
           },
       },
       {
@@ -211,7 +206,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByErrorCode',
             filterType: 'input',
             filterBy: 'error_code',
-            filterValue: 1,
+            filterValue: '1',
           },
       },
     ].forEach((test) => {
@@ -375,8 +370,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
         let sortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
+          nonSortedTable = nonSortedTable.map((text: string): number => parseFloat(text));
+          sortedTable = sortedTable.map((text: string): number => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);

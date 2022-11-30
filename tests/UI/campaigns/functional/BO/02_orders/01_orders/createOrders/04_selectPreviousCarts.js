@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import Utils
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -51,8 +47,8 @@ let numberOfNonOrderedShoppingCarts;
 // Variable used to get the last shopping card ID
 let lastShoppingCartId = 0;
 // Const used to get today date format
-const today = getDateFormat('yyyy-mm-dd');
-const todayCartFormat = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const todayCartFormat = date.getDateFormat('mm/dd/yyyy');
 // Const used for My carrier cost
 const myCarrierCost = 8.40;
 // Variable used to get the available stock of the ordered product from BO > stocks page

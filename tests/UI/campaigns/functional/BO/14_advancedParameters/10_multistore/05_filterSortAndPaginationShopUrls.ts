@@ -1,33 +1,25 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const generalPage = require('@pages/BO/shopParameters/general');
-const multiStorePage = require('@pages/BO/advancedParameters/multistore');
-const addShopUrlPage = require('@pages/BO/advancedParameters/multistore/url/addURL');
-const shopUrlPage = require('@pages/BO/advancedParameters/multistore/url');
+import dashboardPage from '@pages/BO/dashboard';
+import generalPage from '@pages/BO/shopParameters/general';
+import multiStorePage from '@pages/BO/advancedParameters/multistore';
+import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
+import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
-const ShopFaker = require('@data/faker/shop');
+import ShopFaker from '@data/faker/shop';
 
-const baseContext = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopUrls';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopUrls';
 
 /*
 Enable multistore
@@ -39,6 +31,9 @@ Delete the created shop urls
 Disable multistore
  */
 describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shop Urls', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -128,12 +123,15 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 4 : Filter shop urls
   describe('Filter shop table', async () => {
     [
-      {args: {filterBy: 'id_shop_url', filterValue: 10, filterType: 'input'}},
+      {args: {filterBy: 'id_shop_url', filterValue: '10', filterType: 'input'}},
       {args: {filterBy: 's!name', filterValue: 'PrestaShop', filterType: 'input'}},
       {args: {filterBy: 'url', filterValue: 'ToDelete10', filterType: 'input'}},
       {args: {filterBy: 'main', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},
       {args: {filterBy: 'active', filterValue: 'Yes', filterType: 'select'}, expected: 'Enabled'},
-    ].forEach((test, index) => {
+    ].forEach((
+      test: {args:{filterBy: string, filterValue: string, filterType: string}, expected?: string},
+      index: number,
+    ) => {
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.filterBy}`, baseContext);
 
@@ -166,7 +164,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
@@ -187,7 +185,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await shopUrlPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -231,7 +229,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
             testIdentifier: 'sortByIdAsc', sortBy: 'id_shop_url', sortDirection: 'up', isFloat: true,
           },
       },
-    ].forEach((test) => {
+    ].forEach((test: {args: {testIdentifier: string, sortBy: string, sortDirection: string, isFloat?: boolean}}) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -241,8 +239,8 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         let sortedTable = await shopUrlPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
+          nonSortedTable = nonSortedTable.map((text: string): number => parseFloat(text));
+          sortedTable = sortedTable.map((text: string): number => parseFloat(text));
         }
 
         const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
@@ -258,7 +256,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
 
   // 7 : Delete all shops created
   describe('delete all shops created', async () => {
-    new Array(20).fill(0, 0, 20).forEach((test, index) => {
+    new Array(20).fill(0, 0, 20).forEach((test: number, index: number) => {
       it(`should delete the shop url contains 'ToDelete${index + 1}Shop'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `deleteShopUrl${index}_`, baseContext);
 

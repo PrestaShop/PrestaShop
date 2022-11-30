@@ -1,36 +1,33 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
+import {expect} from 'chai';
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const webservicePage = require('@pages/BO/advancedParameters/webservice');
-const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import webservicePage from '@pages/BO/advancedParameters/webservice';
+import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 // Import data
-const WebserviceFaker = require('@data/faker/webservice');
+import WebserviceFaker from '@data/faker/webservice';
+
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_advancedParameters_webservice_CRUDWebservice';
 
-let browserContext;
-let page;
-
-let numberOfWebserviceKeys = 0;
-
-const createWebserviceData = new WebserviceFaker({});
-const editWebserviceData = new WebserviceFaker({});
-
 // Create, Read, Update and Delete webservice key in BO
 describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delete webservice key in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfWebserviceKeys: number = 0;
+
+  const createWebserviceData: WebserviceFaker = new WebserviceFaker({});
+  const editWebserviceData: WebserviceFaker = new WebserviceFaker({});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,6 +70,7 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewWebserviceKeyPage', baseContext);
 
       await webservicePage.goToAddNewWebserviceKeyPage(page);
+
       const pageTitle = await addWebservicePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addWebservicePage.pageTitleCreate);
     });
@@ -108,6 +106,7 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditWebservicePage', baseContext);
 
       await webservicePage.goToEditWebservicePage(page, 1);
+
       const pageTitle = await addWebservicePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addWebservicePage.pageTitleEdit);
     });

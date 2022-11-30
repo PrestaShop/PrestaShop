@@ -1,4 +1,4 @@
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 // Using chai
 import {expect} from 'chai';
 // Import utils

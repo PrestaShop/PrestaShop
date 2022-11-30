@@ -1,33 +1,23 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const webservicePage = require('@pages/BO/advancedParameters/webservice');
-const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import webservicePage from '@pages/BO/advancedParameters/webservice';
+import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 // Import data
-const WebserviceFaker = require('@data/faker/webservice');
+import WebserviceFaker from '@data/faker/webservice';
 
-const baseContext = 'functional_BO_advancedParameters_webservice_sortPaginationAndBulkActions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfWebserviceKeys = 0;
+const baseContext: string = 'functional_BO_advancedParameters_webservice_sortPaginationAndBulkActions';
 
 /*
 Create 11 webservice keys
@@ -37,6 +27,11 @@ Enable/Disable by bulk actions
 Delete by bulk actions
  */
 describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk actions web service keys', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfWebserviceKeys: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -77,9 +72,9 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
 
   // 1 - Create 11 webservice keys
   describe('Create 11 webservice keys in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
+    const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test, index) => {
-      const webserviceData = new WebserviceFaker({keyDescription: `todelete${index}`});
+      const webserviceData: WebserviceFaker = new WebserviceFaker({keyDescription: `todelete${index}`});
 
       it('should go to add new webservice key page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
@@ -107,7 +102,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await webservicePage.selectPaginationLimit(page, '10');
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -128,7 +123,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await webservicePage.selectPaginationLimit(page, '50');
+      const paginationNumber = await webservicePage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -142,7 +137,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
       {args: {testIdentifier: 'sortByKeyAsc', sortBy: 'key', sortDirection: 'asc'}},
     ];
 
-    sortTests.forEach((test) => {
+    sortTests.forEach((test: {args: {testIdentifier: string, sortBy: string, sortDirection: string}}) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -150,7 +145,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
         await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -177,7 +172,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
       {args: {action: 'enable', enabledValue: true}},
     ];
 
-    tests.forEach((test) => {
+    tests.forEach((test: { args: {action: string, enabledValue: boolean}}) => {
       it(`should ${test.args.action} with bulk actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}WebserviceKey`, baseContext);
 

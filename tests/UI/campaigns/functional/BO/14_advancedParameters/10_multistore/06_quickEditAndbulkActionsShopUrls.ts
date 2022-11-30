@@ -1,32 +1,24 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const generalPage = require('@pages/BO/shopParameters/general');
-const multiStorePage = require('@pages/BO/advancedParameters/multistore');
-const addShopUrlPage = require('@pages/BO/advancedParameters/multistore/url/addURL');
-const shopUrlPage = require('@pages/BO/advancedParameters/multistore/url');
+import dashboardPage from '@pages/BO/dashboard';
+import generalPage from '@pages/BO/shopParameters/general';
+import multiStorePage from '@pages/BO/advancedParameters/multistore';
+import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
+import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
-const ShopFaker = require('@data/faker/shop');
+import ShopFaker from '@data/faker/shop';
 
-const baseContext = 'functional_BO_advancedParameters_multistore_quickEditAndBulkActionsShopUrls';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfShopUrls = 0;
-const ShopUrlData = new ShopFaker({name: 'ToDelete'});
+const baseContext: string = 'functional_BO_advancedParameters_multistore_quickEditAndBulkActionsShopUrls';
 
 /*
 Enable multistore
@@ -37,6 +29,11 @@ Deleted created shop url
 Disable multistore
  */
 describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions shop Urls', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfShopUrls: number = 0;
+  const ShopUrlData:ShopFaker = new ShopFaker({name: 'ToDelete'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -145,20 +142,20 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
     [
       {
         args: {
-          column: 6, columnName: 'Enabled', action: 'disable', enabledValue: false,
+          column: '6', columnName: 'Enabled', action: 'disable', enabledValue: false,
         },
       },
       {
         args: {
-          column: 6, columnName: 'Enabled', action: 'enable', enabledValue: true,
+          column: '6', columnName: 'Enabled', action: 'enable', enabledValue: true,
         },
       },
       {
         args: {
-          column: 5, columnName: 'Is it the mail URL', action: 'enable', enabledValue: true,
+          column: '5', columnName: 'Is it the mail URL', action: 'enable', enabledValue: true,
         },
       },
-    ].forEach((test, index) => {
+    ].forEach((test: {args: {column: string, columnName: string, action: string, enabledValue: boolean}}, index: number) => {
       it(`should ${test.args.action} the column '${test.args.columnName}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}_${index}`, baseContext);
 
@@ -189,14 +186,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
     it('should set the default URL as the main URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setDefaultMainURL', baseContext);
 
-      const isActionPerformed = await shopUrlPage.setStatus(page, 1, 5, true);
+      const isActionPerformed = await shopUrlPage.setStatus(page, 1, '5', true);
 
       if (isActionPerformed) {
         const resultMessage = await shopUrlPage.getAlertSuccessBlockContent(page);
         await expect(resultMessage).to.contains(shopUrlPage.successfulUpdateMessage);
       }
 
-      const carrierStatus = await shopUrlPage.getStatus(page, 1, 5);
+      const carrierStatus = await shopUrlPage.getStatus(page, 1, '5');
       await expect(carrierStatus).to.be.equal(true);
     });
   });
@@ -219,12 +216,14 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
     [
       {args: {status: 'disable', enable: false}},
       {args: {status: 'enable', enable: true}},
-    ].forEach((test) => {
+    ].forEach((test: {args: {status: string, enable: boolean}}) => {
       it(`should ${test.args.status} shop url with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.status}ShopUrl`, baseContext);
 
-        const textResult = await shopUrlPage.bulkSetStatus(page, test.args.enable);
-        await expect(textResult, 'Status is not updated!').to.be.equal(shopUrlPage.successfulUpdateStatusMessage);
+        await shopUrlPage.bulkSetStatus(page, test.args.enable);
+
+        const textResult = await shopUrlPage.getAlertSuccessBlockContent(page);
+        await expect(textResult, 'Status is not updated!').to.contains(shopUrlPage.successUpdateMessage);
       });
     });
 

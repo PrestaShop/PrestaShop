@@ -1,5 +1,5 @@
 import helper from '@utils/helpers';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 import {expect} from 'chai';
 
