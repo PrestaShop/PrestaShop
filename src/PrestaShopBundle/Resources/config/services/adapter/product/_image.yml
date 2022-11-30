@@ -6,7 +6,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\AddProductImageHandler
     arguments:
       - '@prestashop.adapter.product.image.uploader.product_image_uploader'
-      - '@prestashop.adapter.product.image.repository.product_image_multishop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - "@prestashop.adapter.image.image_validator"
     tags:
       - name: tactician.handler
@@ -36,7 +36,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.image.repository.product_image_multishop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
 
     tags:
       - name: tactician.handler
@@ -50,6 +50,13 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
+
+  PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetShopProductImagesHandler:
+    autowire: true
+    public: false
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages
 
   prestashop.adapter.product.image.query_handler.get_product_image_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler
@@ -72,8 +79,7 @@ services:
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
 
-  prestashop.adapter.product.image.repository.product_image_multishop_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository
+  PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
