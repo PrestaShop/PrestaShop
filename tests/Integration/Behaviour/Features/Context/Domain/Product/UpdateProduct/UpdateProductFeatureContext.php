@@ -28,12 +28,15 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateProductFeatureContext extends AbstractProductFeatureContext
@@ -86,6 +89,48 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
     public function updateProductName(string $productReference, TableNode $table): void
     {
         $this->updateProductNameManually($productReference, $table);
+    }
+
+    /**
+     * @When I update product :productReference prices and apply non-existing tax rules group
+     *
+     * @param string $productReference
+     */
+    public function updateTaxRulesGroupWithNonExistingGroup(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        $command = new UpdateProductCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
+        // this id value does not exist, it is used on purpose.
+        $command->setTaxRulesGroupId(50000000);
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I assign non existing manufacturer to product :productReference
+     *
+     * @param string $productReference
+     */
+    public function updateOptionsWithNonExistingManufacturer(string $productReference): void
+    {
+        // intentional. Mimics id of non-existing manufacturer
+        $nonExistingId = 50000;
+
+        try {
+            $command = new UpdateProductCommand(
+                $this->getSharedStorage()->get($productReference),
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
+            $command->setManufacturerId($nonExistingId);
+            $this->getCommandBus()->handle($command);
+        } catch (ManufacturerException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -167,30 +212,32 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['manufacturer'])) {
             $command->setManufacturerId($this->getManufacturerId($data['manufacturer']));
         }
+        // prices
+        if (isset($data['price'])) {
+            $command->setPrice($data['price']);
+        }
+        if (isset($data['ecotax'])) {
+            $command->setEcotax($data['ecotax']);
+        }
+        if (isset($data['tax rules group'])) {
+            $taxRulesGroupId = (int) TaxRulesGroupFeatureContext::getTaxRulesGroupByName($data['tax rules group'])->id;
+            $command->setTaxRulesGroupId($taxRulesGroupId);
+            Cache::clean('product_id_tax_rules_group_*');
+        }
+        if (isset($data['on_sale'])) {
+            $command->setOnSale(PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']));
+        }
+        if (isset($data['wholesale_price'])) {
+            $command->setWholesalePrice($data['wholesale_price']);
+        }
+        if (isset($data['unit_price'])) {
+            $command->setUnitPrice($data['unit_price']);
+        }
+        if (isset($data['unity'])) {
+            $command->setUnity($data['unity']);
+        }
 
         return $command;
-    }
-
-    /**
-     * @When I assign non existing manufacturer to product :productReference
-     *
-     * @param string $productReference
-     */
-    public function updateOptionsWithNonExistingManufacturer(string $productReference): void
-    {
-        // intentional. Mimics id of non-existing manufacturer
-        $nonExistingId = 50000;
-
-        try {
-            $command = new UpdateProductCommand(
-                $this->getSharedStorage()->get($productReference),
-                ShopConstraint::shop($this->getDefaultShopId())
-            );
-            $command->setManufacturerId($nonExistingId);
-            $this->getCommandBus()->handle($command);
-        } catch (ManufacturerException $e) {
-            $this->setLastException($e);
-        }
     }
 
     /**
@@ -200,7 +247,7 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
      * using legacy object model, but not cqrs commands, to avoid some side effects while testing.
      * For example when testing how cqrs command auto-fills link_rewrite in certain cases.
      */
-    protected function updateProductNameManually(string $productReference, TableNode $table): void
+    private function updateProductNameManually(string $productReference, TableNode $table): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
         $product = new Product($productId, true);
