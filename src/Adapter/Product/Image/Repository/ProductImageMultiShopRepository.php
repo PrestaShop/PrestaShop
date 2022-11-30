@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ShopProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
@@ -236,6 +237,31 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         return array_map(
             static function (array $shop): ShopId {
                 return new ShopId((int) $shop['id_shop']);
+            },
+            $results
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopProductImage[]
+     */
+    public function getImagesFromAllShop(ProductId $productId): array
+    {
+        $results = $this->connection->createQueryBuilder()
+            ->select('id_image', 'id_shop', 'cover')
+            ->from($this->dbPrefix . 'image_shop', 'i')
+            ->andWhere('i.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.id_image', 'ASC')
+            ->execute()
+            ->fetchAll()
+        ;
+
+        return array_map(
+            static function (array $image): ShopProductImage {
+                return new ShopProductImage((int) $image['id_image'], (int) $image['id_shop'], (int) $image['cover'] === 1);
             },
             $results
         );
