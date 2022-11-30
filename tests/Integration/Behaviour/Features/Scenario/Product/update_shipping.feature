@@ -21,7 +21,7 @@ Feature: Update product shipping options from Back Office (BO)
       | carriers                                | []      |
     Given carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | width                                   | 10.5                 |
       | height                                  | 6                    |
       | depth                                   | 7                    |
@@ -55,7 +55,7 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
       | carriers                                | [carrier1,carrier2]  |
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | width  | 15 |
       | height | 5  |
       | depth  | 4  |
@@ -77,16 +77,16 @@ Feature: Update product shipping options from Back Office (BO)
       | height | 5  |
       | depth  | 4  |
       | weight | 2  |
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | width | -15 |
     Then I should get error that product width is invalid
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | height | -5 |
     Then I should get error that product height is invalid
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | depth | -4 |
     Then I should get error that product depth is invalid
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | weight | -2 |
     Then I should get error that product weight is invalid
     And product product1 should have following shipping information:
@@ -98,7 +98,7 @@ Feature: Update product shipping options from Back Office (BO)
   Scenario: Provide negative additional shipping cost
     Given product product1 should have following shipping information:
       | additional_shipping_cost | 12 |
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | additional_shipping_cost | -12 |
     Then I should get error that product additional_shipping_cost is invalid
 
@@ -106,10 +106,10 @@ Feature: Update product shipping options from Back Office (BO)
     Given product product1 should have following shipping information:
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | delivery time in stock notes[en-US] | bla bla <{} |
     Then I should get error that product delivery_in_stock is invalid
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | delivery time out of stock notes[en-US] | ble ble >= |
     Then I should get error that product delivery_out_stock is invalid
     And product product1 should have following shipping information:
@@ -121,7 +121,7 @@ Feature: Update product shipping options from Back Office (BO)
       | delivery time notes type                | specific             |
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | delivery time in stock notes[en-US]     |  |
       | delivery time out of stock notes[en-US] |  |
     Then product product1 should have following shipping information:

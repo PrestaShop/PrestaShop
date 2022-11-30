@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use RuntimeException;
@@ -315,6 +316,31 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
             }
 
             $command->setRedirectOption($data['redirect_type'], $targetId ?? 0);
+        }
+        // shipping
+        if (isset($data['width'])) {
+            $command->setWidth($data['width']);
+        }
+        if (isset($data['height'])) {
+            $command->setHeight($data['height']);
+        }
+        if (isset($data['depth'])) {
+            $command->setDepth($data['depth']);
+        }
+        if (isset($data['weight'])) {
+            $command->setWeight($data['weight']);
+        }
+        if (isset($data['additional_shipping_cost'])) {
+            $command->setAdditionalShippingCost($data['additional_shipping_cost']);
+        }
+        if (isset($data['delivery time notes type'])) {
+            $command->setDeliveryTimeNoteType(DeliveryTimeNoteType::ALLOWED_TYPES[$data['delivery time notes type']]);
+        }
+        if (isset($data['delivery time in stock notes'])) {
+            $command->setLocalizedDeliveryTimeInStockNotes($data['delivery time in stock notes']);
+        }
+        if (isset($data['delivery time out of stock notes'])) {
+            $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
         }
 
         return $command;
