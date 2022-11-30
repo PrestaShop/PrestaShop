@@ -19,7 +19,7 @@ const {moduleCategories} = require('@data/demo/moduleCategories');
 const dashboardPage = require('@pages/BO/dashboard');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
-const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategories';
 
 let browserContext;
 let page;

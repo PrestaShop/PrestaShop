@@ -16,7 +16,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
 const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
 
-const baseContext = 'functional_BO_advancedParams_database_dbBackup_paginationAndBulkActions';
+const baseContext = 'functional_BO_advancedParameters_database_dbBackup_paginationAndBulkDelete';
 
 let browserContext;
 let page;

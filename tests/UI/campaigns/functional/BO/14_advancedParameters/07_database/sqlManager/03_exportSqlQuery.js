@@ -23,7 +23,7 @@ const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManage
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
 
-const baseContext = 'functional_BO_advancedParams_database_sqlManager_exportSqlQuery';
+const baseContext = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
 
 let browserContext;
 let page;

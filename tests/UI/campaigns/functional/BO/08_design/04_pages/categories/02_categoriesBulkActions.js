@@ -20,7 +20,7 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const pagesPage = require('@pages/BO/design/pages/index');
 const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 
-const baseContext = 'functional_BO_design_pages_categoriesBulkActions';
+const baseContext = 'functional_BO_design_pages_categories_categoriesBulkActions';
 
 let browserContext;
 let page;

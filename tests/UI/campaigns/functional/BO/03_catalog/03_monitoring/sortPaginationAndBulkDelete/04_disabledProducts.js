@@ -25,7 +25,7 @@ const monitoringPage = require('@pages/BO/catalog/monitoring');
 const {ProductsData} = require('@data/import/disabledProducts');
 
 // Test context
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_disabledProducts';
+const baseContext = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_disabledProducts';
 
 let browserContext;
 let page;

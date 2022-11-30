@@ -22,7 +22,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 
-const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipNumber';
+const baseContext = 'functional_BO_orders_deliverySlips_deliverySlipOptions_deliverySlipNumber';
 
 // Import expect from chai
 const {expect} = require('chai');

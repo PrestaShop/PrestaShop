@@ -16,7 +16,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const foHomePage = require('@pages/FO/home');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_enableDisableFriendlyUrl';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableFriendlyURL';
 
 let browserContext;
 let page;

@@ -23,7 +23,7 @@ const shopPage = require('@pages/BO/advancedParameters/multistore/shop/index');
 const ShopGroupFaker = require('@data/faker/shopGroup');
 const ShopFaker = require('@data/faker/shop');
 
-const baseContext = 'functional_BO_modules_advancedParameters_multistore_CRUDShopGroups';
+const baseContext = 'functional_BO_advancedParameters_multistore_CRUDShopGroups';
 
 let browserContext;
 let page;
