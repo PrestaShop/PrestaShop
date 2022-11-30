@@ -458,8 +458,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\SeoAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\ShippingAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateStockFeatureContext

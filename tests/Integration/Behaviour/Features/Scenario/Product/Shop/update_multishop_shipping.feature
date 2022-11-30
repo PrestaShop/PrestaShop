@@ -37,7 +37,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | carriers                                | []      |
     Given carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
-    When I update product product1 shipping information with following values:
+    When I update product "product1" with following values:
       | width                                   | 10.5                        |
       | height                                  | 6                           |
       | depth                                   | 7                           |
@@ -80,7 +80,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
     And product product1 is not associated to shop shop4
 
   Scenario: I update product shipping information for a specific shop
-    When I update product "product1" shipping information for shop "shop2" with following values:
+    When I update product "product1" for shop "shop2" with following values:
       | width                                   | 5           |
       | height                                  | 5           |
       | depth                                   | 5           |
@@ -122,7 +122,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
     And product product1 is not associated to shop shop4
 
   Scenario: I update product shipping information for all associated shops
-    When I update product "product1" shipping information for all shops with following values:
+    When I update product "product1" for all shops with following values:
       | width                                   | 100           |
       | height                                  | 200           |
       | depth                                   | 300           |
