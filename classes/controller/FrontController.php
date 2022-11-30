@@ -396,8 +396,7 @@ class FrontControllerCore extends Controller
                     !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
-                    $to_update = true;
-                    $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
+                    $cart->updateDeliveryAddressId(0, (int) Address::getFirstCustomerAddressId($cart->id_customer));
                 }
                 if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
                     $to_update = true;
