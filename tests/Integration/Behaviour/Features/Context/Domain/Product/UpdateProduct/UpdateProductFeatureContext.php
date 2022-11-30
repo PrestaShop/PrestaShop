@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -129,6 +130,68 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
             $command->setManufacturerId($nonExistingId);
             $this->getCommandBus()->handle($command);
         } catch (ManufacturerException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I update product :productReference localized SEO field :field with a value of :length symbols length
+     *
+     * @param string $productReference
+     * @param string $field
+     * @param int $length
+     */
+    public function updateLocalizedSeoFieldsTooLongValueForDefaultShop(
+        string $productReference,
+        string $field,
+        int $length
+    ): void {
+        $this->updateLocalizedSeoFieldsTooLongValue(
+            $productReference,
+            $field,
+            $length,
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $field
+     * @param int $length
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateLocalizedSeoFieldsTooLongValue(
+        string $productReference,
+        string $field,
+        int $length,
+        ShopConstraint $shopConstraint
+    ): void {
+        try {
+            $command = new UpdateProductCommand(
+                $this->getSharedStorage()->get($productReference),
+                $shopConstraint
+            );
+            switch ($field) {
+                case 'meta_title':
+                    $command->setLocalizedMetaTitles([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                case 'meta_description':
+                    $command->setLocalizedMetaDescriptions([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                case 'link_rewrite':
+                    $command->setLocalizedLinkRewrites([
+                        $this->getDefaultLangId() => PrimitiveUtils::generateRandomString($length),
+                    ]);
+                    break;
+                default:
+                    throw new RuntimeException(sprintf('Invalid field "%s" provided to scenario', $field));
+            }
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
             $this->setLastException($e);
         }
     }
@@ -235,6 +298,23 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         }
         if (isset($data['unity'])) {
             $command->setUnity($data['unity']);
+        }
+        // seo
+        if (isset($data['meta_title'])) {
+            $command->setLocalizedMetaTitles($data['meta_title']);
+        }
+        if (isset($data['meta_description'])) {
+            $command->setLocalizedMetaDescriptions($data['meta_description']);
+        }
+        if (isset($data['link_rewrite'])) {
+            $command->setLocalizedLinkRewrites($data['link_rewrite']);
+        }
+        if (isset($data['redirect_type'], $data['redirect_target'])) {
+            if ($this->getSharedStorage()->exists($data['redirect_target'])) {
+                $targetId = $this->getSharedStorage()->get($data['redirect_target']);
+            }
+
+            $command->setRedirectOption($data['redirect_type'], $targetId ?? 0);
         }
 
         return $command;
