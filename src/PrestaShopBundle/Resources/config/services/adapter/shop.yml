@@ -78,6 +78,9 @@ services:
 
   prestashop.adapter.shop.repository.shop_group_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
 
   prestashop.adapter.shop.repository.shop_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
