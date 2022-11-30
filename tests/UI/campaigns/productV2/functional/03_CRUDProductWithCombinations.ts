@@ -44,6 +44,19 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     status: true,
   });
 
+  const firstCombinationData = {
+    reference: 'abcd',
+    impactOnPriceTExc: 25,
+    quantity: 100,
+  };
+
+  const secondCombinationData = {
+    reference: 'efgh',
+    minimalQuantity: 2,
+    impactOnPriceTExc: 20,
+    quantity: 150,
+  };
+
   // Data to edit product with combinations
   const editProductData = new ProductFaker({
     type: 'combinations',
@@ -177,58 +190,73 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(isModalVisible).to.be.true;
     });
 
-    it('should edit the first combination', async function(){
+    it('should edit the first combination', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editFirstCombination', baseContext);
 
-
+      const successMessage = await combinationsTab.editCombination(page, firstCombinationData);
+      await expect(successMessage).to.equal('Update successful');
     });
 
-    it('should save the product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
+    it('should click on edit icon for the second combination and check the modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditSecondCombination', baseContext);
 
-      const updateProductMessage = await createProductsPage.saveProduct(page);
-      await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+      const isVisible = await combinationsTab.clickOnEditIcon(page, 2);
+      await expect(isVisible).to.be.true;
     });
 
-    it('should preview product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
+    it('should edit the combination from the modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editSecondCombination', baseContext);
 
-      // Click on preview button
-      page = await createProductsPage.previewProduct(page);
-
-      await foProductPage.changeLanguage(page, 'en');
-
-      const pageTitle = await foProductPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(newProductData.name);
+      const successMessage = await combinationsTab.editCombinationFromModal(page, secondCombinationData);
+      await expect(successMessage).to.equal('Update successful');
     });
 
-    it('should check all product information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+    /* it('should save the product', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
 
-      let result = await foProductPage.getProductInformation(page);
-      await Promise.all([
-        await expect(result.name).to.equal(newProductData.name),
-        await expect(result.price).to.equal(newProductData.price),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
-        await expect(result.description).to.equal(newProductData.description),
-      ]);
+       const updateProductMessage = await createProductsPage.saveProduct(page);
+       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+     });
 
-      result = await foProductPage.getProductAttributes(page);
-      await Promise.all([
-        await expect(result.size).to.equal(newProductData.attributes.size.join(' ')),
-        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
-      ]);
-    });
+     it('should preview product', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+       // Click on preview button
+       page = await createProductsPage.previewProduct(page);
 
-      // Go back to BO
-      page = await foProductPage.closePage(browserContext, page, 0);
+       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
-    });
+       const pageTitle = await foProductPage.getPageTitle(page);
+       await expect(pageTitle).to.contains(newProductData.name);
+     });
+
+     it('should check all product information', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+
+       let result = await foProductPage.getProductInformation(page);
+       await Promise.all([
+         await expect(result.name).to.equal(newProductData.name),
+         await expect(result.price).to.equal(newProductData.price),
+         await expect(result.shortDescription).to.equal(newProductData.summary),
+         await expect(result.description).to.equal(newProductData.description),
+       ]);
+
+       result = await foProductPage.getProductAttributes(page);
+       await Promise.all([
+         await expect(result.size).to.equal(newProductData.attributes.size.join(' ')),
+         await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
+       ]);
+     });
+
+     it('should go back to BO', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+
+       // Go back to BO
+       page = await foProductPage.closePage(browserContext, page, 0);
+
+       const pageTitle = await createProductsPage.getPageTitle(page);
+       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+     });*/
   });
 
   /*describe('Edit product', async () => {
