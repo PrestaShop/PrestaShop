@@ -202,13 +202,6 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.multistore_feature'
 
-  prestashop.adapter.shipping_preferences.package_configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\Carrier\PackageConfiguration'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.context'
-      - '@prestashop.adapter.multistore_feature'
-
   prestashop.adapter.shipping_preferences.carrier_options_configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
     arguments:
