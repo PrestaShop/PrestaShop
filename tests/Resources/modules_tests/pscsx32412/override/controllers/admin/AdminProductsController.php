@@ -2656,7 +2656,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     if ($this->context->currency->id) {
                         $product_supplier->id_currency = (int) $this->context->currency->id;
                     } else {
-                        $product_supplier->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                        $product_supplier->id_currency = Currency::getDefaultCurrencyId();
                     }
                     $product_supplier->save();
 
@@ -4335,7 +4335,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     'product' => $obj,
                     'link' => $this->context->link,
                     'token' => $this->token,
-                    'id_default_currency' => Configuration::get('PS_CURRENCY_DEFAULT'),
+                    'id_default_currency' => Currency::getDefaultCurrencyId(),
                 ]);
             } else {
                 $this->displayWarning($this->l('You must save the product in this shop before managing suppliers.'));

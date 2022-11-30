@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -331,6 +332,7 @@ class CombinationController extends FrameworkBundleAdminController
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
+            ShopConstraint::shop($combinationFilters->getShopId()),
             $combinationFilters->getLimit(),
             $combinationFilters->getOffset(),
             $combinationFilters->getOrderBy(),
@@ -373,7 +375,10 @@ class CombinationController extends FrameworkBundleAdminController
     public function deleteAction(int $combinationId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteCombinationCommand($combinationId));
+            $this->getCommandBus()->handle(new DeleteCombinationCommand(
+                $combinationId,
+                ShopConstraint::shop($this->getContextShopId()))
+            );
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
@@ -403,7 +408,11 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
+            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+                $productId,
+                json_decode($combinationIds),
+                ShopConstraint::shop($this->getContextShopId())
+            ));
         } catch (Exception $e) {
             if ($e instanceof BulkCombinationException) {
                 return $this->jsonBulkErrors($e);
@@ -501,7 +510,11 @@ class CombinationController extends FrameworkBundleAdminController
 
         try {
             /** @var CombinationId[] $combinationsIds */
-            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand($productId, $attributes));
+            $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $productId,
+                $attributes,
+                ShopConstraint::shop((int) $this->getContextShopId())
+            ));
         } catch (Exception $e) {
             return $this->json([
                 'error' => [

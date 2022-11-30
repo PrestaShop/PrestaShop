@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -13,7 +15,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 
-const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultiStore';
+const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultistore';
 
 let browserContext;
 let page;

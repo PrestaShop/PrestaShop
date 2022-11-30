@@ -53,6 +53,8 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
             ->addField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
             ->addField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
             ->addField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
+            ->addField('[stock][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+            ->addField('[stock][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
 
         $commandBuilder = new CommandBuilder($config);

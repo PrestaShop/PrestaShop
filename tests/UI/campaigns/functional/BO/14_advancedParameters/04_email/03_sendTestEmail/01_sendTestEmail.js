@@ -1,19 +1,21 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import utils
-const testContext = require('@utils/testContext');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
 
-const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail';
+const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail_sendTestEmail';
 
 let browserContext;
 let page;

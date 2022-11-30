@@ -1,11 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -22,7 +24,7 @@ const foCheckoutPage = require('@pages/FO/checkout');
 const {Carriers} = require('@data/demo/carriers');
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_shipping_preferences_carriersOptions_defaultCarrier';
+const baseContext = 'functional_BO_shipping_preferences_carrierOptions_defaultCarrier';
 
 // Browser and tab
 let browserContext;

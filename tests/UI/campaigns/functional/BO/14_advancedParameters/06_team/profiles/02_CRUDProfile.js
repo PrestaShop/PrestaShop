@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -18,7 +20,7 @@ const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 const addProfilePage = require('@pages/BO/advancedParameters/team/profiles/add');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
+const baseContext = 'functional_BO_advancedParameters_team_profiles_CRUDProfile';
 
 let browserContext;
 let page;

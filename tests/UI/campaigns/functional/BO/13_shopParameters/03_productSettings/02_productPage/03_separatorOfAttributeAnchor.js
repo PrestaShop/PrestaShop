@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -21,7 +23,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const {Products} = require('@data/demo/products');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_separatorOfAttributeAnchor';
+const baseContext = 'functional_BO_shopParameters_productSettings_productPage_separatorOfAttributeAnchor';
 
 let browserContext;
 let page;

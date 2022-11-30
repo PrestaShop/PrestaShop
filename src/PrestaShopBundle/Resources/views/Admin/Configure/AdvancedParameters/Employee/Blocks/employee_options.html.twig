@@ -23,6 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
+{% form_theme employeeOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% trans_default_domain 'Admin.Advparameters.Feature' %}
+
 {% block employee_options_form %}
   {{ form_start(employeeOptionsForm, {'action': path('admin_employees_save_options') }) }}
   <div class="card">
@@ -32,60 +35,12 @@
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
-        <div class="form-group row">
-          <label for="{{ employeeOptionsForm.password_change_time.vars.id }}" class="form-control-label">
-            {{ 'Password regeneration'|trans({}, 'Admin.Advparameters.Feature') }}
-          </label>
-
-          <div class="col-sm">
-            {{ form_errors(employeeOptionsForm.password_change_time) }}
-            {{ form_widget(employeeOptionsForm.password_change_time) }}
-            <small class="form-text">
-              {{ 'Security: Minimum time to wait between two password changes.'|trans({}, 'Admin.Advparameters.Feature') }}
-            </small>
-
-            {% if not canOptionsBeChanged %}
-            <div class="alert alert-warning mt-2 mb-0" role="alert">
-              <p class="alert-text">
-                {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
-              </p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label for="{{ employeeOptionsForm.allow_employee_specific_language.vars.id }}" class="form-control-label">
-            {{ 'Memorize the language used in Admin panel forms'|trans({}, 'Admin.Advparameters.Feature') }}
-          </label>
-
-          <div class="col-sm">
-            {{ form_errors(employeeOptionsForm.allow_employee_specific_language) }}
-            {{ form_widget(employeeOptionsForm.allow_employee_specific_language) }}
-            <small class="form-text">
-              {{ 'Allow employees to select a specific language for the Admin panel form.'|trans({}, 'Admin.Advparameters.Feature') }}
-            </small>
-
-            {% if not canOptionsBeChanged %}
-            <div class="alert alert-warning mt-2 mb-0" role="alert">
-              <p class="alert-text">
-                {{ 'You can\'t change the value of this configuration field in the context of this shop.'|trans({}, 'Admin.Notifications.Warning') }}
-              </p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-
-        {% block employee_options_form_rest %}
-          {{ form_rest(employeeOptionsForm) }}
-        {% endblock %}
+        {{ form_widget(employeeOptionsForm) }}
       </div>
     </div>
     <div class="card-footer">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-primary pull-right"
-                {% if not canOptionsBeChanged %}disabled{% endif %}
-        >
+        <button class="btn btn-primary pull-right" {% if not canOptionsBeChanged %}disabled{% endif %}>
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>

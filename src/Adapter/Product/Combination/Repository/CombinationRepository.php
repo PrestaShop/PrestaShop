@@ -29,19 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
-use Db;
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 use Product;
@@ -51,6 +52,8 @@ use Product;
  */
 class CombinationRepository extends AbstractObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -60,11 +63,6 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @var string
      */
     private $dbPrefix;
-
-    /**
-     * @var AttributeRepository
-     */
-    private $attributeRepository;
 
     /**
      * @var CombinationValidator
@@ -79,20 +77,17 @@ class CombinationRepository extends AbstractObjectModelRepository
     /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param AttributeRepository $attributeRepository
      * @param CombinationValidator $combinationValidator
      * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        AttributeRepository $attributeRepository,
         CombinationValidator $combinationValidator,
         ProductCombinationQueryBuilder $combinationQueryBuilder
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->attributeRepository = $attributeRepository;
         $this->combinationValidator = $combinationValidator;
         $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
@@ -116,6 +111,11 @@ class CombinationRepository extends AbstractObjectModelRepository
         return $combination;
     }
 
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return ProductId
+     */
     public function getProductId(CombinationId $combinationId): ProductId
     {
         $qb = $this->connection->createQueryBuilder();
@@ -134,25 +134,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     * @param bool $isDefault
-     *
-     * @return Combination
-     *
-     * @throws CoreException
-     */
-    public function create(ProductId $productId, bool $isDefault): Combination
-    {
-        $combination = new Combination();
-        $combination->id_product = $productId->getValue();
-        $combination->default_on = $isDefault;
-
-        $this->addObjectModel($combination, CannotAddCombinationException::class);
-
-        return $combination;
-    }
-
-    /**
      * @param Combination $combination
      * @param array $updatableProperties
      * @param int $errorCode
@@ -163,7 +144,7 @@ class CombinationRepository extends AbstractObjectModelRepository
         $this->partiallyUpdateObjectModel(
             $combination,
             $updatableProperties,
-            CannotAddCombinationException::class,
+            CannotUpdateCombinationException::class,
             $errorCode
         );
     }
@@ -260,32 +241,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param CombinationId $combinationId
-     * @param int[] $attributeIds
-     */
-    public function saveProductAttributeAssociation(CombinationId $combinationId, array $attributeIds): void
-    {
-        $this->assertCombinationExists($combinationId);
-        $this->attributeRepository->assertAllAttributesExist($attributeIds);
-
-        $attributesList = [];
-        foreach ($attributeIds as $attributeId) {
-            $attributesList[] = [
-                'id_product_attribute' => $combinationId->getValue(),
-                'id_attribute' => $attributeId,
-            ];
-        }
-
-        try {
-            if (!Db::getInstance()->insert('product_attribute_combination', $attributesList)) {
-                throw new CannotAddCombinationException('Failed saving product-combination associations');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when saving product-combination associations', 0, $e);
-        }
-    }
-
-    /**
      * Returns default combination ID identified as such in DB by default_on property
      *
      * @param ProductId $productId
@@ -365,5 +320,18 @@ class CombinationRepository extends AbstractObjectModelRepository
         return array_map(function (array $combination) {
             return new CombinationId((int) $combination['id_product_attribute']);
         }, $result);
+    }
+
+    public function updateCombinationStock(ProductId $productId, OutOfStockType $outOfStockType, ShopConstraint $shopConstraint = null): void
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
+            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $this->applyShopConstraint($qb, $shopConstraint)->execute();
     }
 }

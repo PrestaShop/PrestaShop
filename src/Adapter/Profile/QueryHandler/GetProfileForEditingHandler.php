@@ -42,6 +42,10 @@ use Profile;
 final class GetProfileForEditingHandler extends AbstractObjectModelHandler implements GetProfileForEditingHandlerInterface
 {
     /**
+     * @var string
+     */
+    private $defaultAvatarUrl;
+    /**
      * @var ImageTagSourceParserInterface
      */
     private $imageTagSourceParser;
@@ -53,8 +57,10 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
     /**
      * @param ImageTagSourceParserInterface|null $imageTagSourceParser
      * @param string $imgDir
+     * @param string $defaultAvatarUrl
      */
     public function __construct(
+        string $defaultAvatarUrl,
         ImageTagSourceParserInterface $imageTagSourceParser = null,
         string $imgDir = _PS_PROFILE_IMG_DIR_
     ) {
@@ -63,6 +69,7 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
             @trigger_error('The $imageTagSourceParser parameter should not be null, inject your main ImageTagSourceParserInterface service', E_USER_DEPRECATED);
         }
         $this->imageTagSourceParser = $imageTagSourceParser ?? new ImageTagSourceParser();
+        $this->defaultAvatarUrl = $defaultAvatarUrl;
     }
 
     /**
@@ -78,7 +85,7 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
         return new EditableProfile(
             $profileId,
             $profile->name,
-            $avatarUrl ? $avatarUrl['path'] : null
+            $avatarUrl ? $avatarUrl['path'] : $this->defaultAvatarUrl
         );
     }
 

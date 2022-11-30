@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -23,7 +25,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_displayRemainingQuantities';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_displayRemainingQuantities';
 
 let browserContext;
 let page;

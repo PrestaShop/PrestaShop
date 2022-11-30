@@ -1,8 +1,9 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Common tests BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -28,9 +29,6 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_orders_shoppingCarts_viewCarts';
 
 // Import expect from chai
@@ -51,7 +49,7 @@ const addressData = new AddressFaker({
   email: customerData.email,
   country: 'France',
 });
-const todayCartFormat = getDateFormat('mm/dd/yyyy');
+const todayCartFormat = date.getDateFormat('mm/dd/yyyy');
 
 /*
   Pre-condition:
@@ -118,7 +116,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
       await expect(numberOfShoppingCartsAfterFilter).to.be.at.equal(1);
 
-      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'status');
       await expect(textColumn).to.contains('Non ordered');
     });
 
@@ -241,8 +239,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await expect(textColumn).to.contains(orderId);
     });
 
-    // @todo : https://github.com/PrestaShop/PrestaShop/issues/29894
-    it.skip('should go the Shopping Cart details page', async function () {
+    it('should go the Shopping Cart details page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartDetailPage2', baseContext);
 
       await shoppingCartsPage.goToViewPage(page, 1);
@@ -251,7 +248,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartViewPage.pageTitle);
     });
 
-    it.skip('should check the customer Information Block', async function () {
+    it('should check the customer Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock2', baseContext);
 
       const customerInformation = await shoppingCartViewPage.getCustomerInformation(page);
@@ -261,7 +258,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
         .and.to.contains(todayCartFormat);
     });
 
-    it.skip('should check the order Information Block', async function () {
+    it('should check the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock2', baseContext);
 
       const orderInformation = await shoppingCartViewPage.getOrderInformation(page);
@@ -280,7 +277,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       {args: {columnName: 'total_cost_products', result: `€${Products.demo_1.finalPrice}`}},
       {args: {columnName: 'total_cart', result: `€${(Products.demo_1.finalPrice).toFixed(2)}`, row: 0}},
     ].forEach((test) => {
-      it.skip(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
+      it(`should check the product's ${test.args.columnName} in cart Summary Block`, async function () {
         await testContext
           .addContextItem(
             this,
@@ -302,7 +299,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       });
     });
 
-    it.skip('should click on the order Link in the order Information Block', async function () {
+    it('should click on the order Link in the order Information Block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOrderLink', baseContext);
 
       await shoppingCartViewPage.goToOrderPage(page);

@@ -1,12 +1,14 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
-const testContext = require('@utils/testContext');
-const {getDateFormat} = require('@utils/date');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -38,7 +40,7 @@ const baseContext = 'functional_BO_orders_orders_createOrders_addProductToTheCar
 
 let browserContext;
 let page;
-const pastDate = getDateFormat('yyyy-mm-dd', 'past');
+const pastDate = date.getDateFormat('yyyy-mm-dd', 'past');
 
 // Constant used to add a prefix to created products
 const prefixNewProduct = 'TOTEST';

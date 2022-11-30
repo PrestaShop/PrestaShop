@@ -1472,6 +1472,15 @@ class LinkCore
         $urlParameters = http_build_query($params['params']);
 
         switch ($params['entity']) {
+            case 'supplier':
+                $link = $context->link->getSupplierLink(
+                    new Supplier($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
+                break;
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
 
@@ -1513,6 +1522,15 @@ class LinkCore
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
 
+                break;
+            case 'manufacturer':
+                $link = $context->link->getManufacturerLink(
+                    new Manufacturer($params['id'], $params['id_lang']),
+                    $params['alias'],
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    $params['relative_protocol']
+                );
                 break;
             case 'manufacturerImage':
                 $link = $context->link->getManufacturerImageLink(

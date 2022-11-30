@@ -1,9 +1,12 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -17,17 +20,14 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_orders_deliverSlips_generateDeliverySlipByDate';
+const baseContext = 'functional_BO_orders_deliverySlips_generateDeliverySlipByDate';
 
 // Using chai
 const {expect} = require('chai');
 
 let browserContext;
 let page;
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
+const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
 
 /*
 Update the last order status to shipped

@@ -1,9 +1,12 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -17,9 +20,6 @@ const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Test context imports
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_orders_invoices_generateInvoiceByDate';
 
 // Import expect from chai
@@ -28,8 +28,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
-const todayDate = getDateFormat('yyyy-mm-dd');
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
+const todayDate = date.getDateFormat('yyyy-mm-dd');
+const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {

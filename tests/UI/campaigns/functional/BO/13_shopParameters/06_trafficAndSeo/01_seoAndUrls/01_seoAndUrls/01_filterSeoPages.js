@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -16,7 +18,7 @@ const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrl
 // Import data
 const {contact} = require('@data/demo/seoPages');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_filterSeoPages';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_filterSeoPages';
 
 let browserContext;
 let page;

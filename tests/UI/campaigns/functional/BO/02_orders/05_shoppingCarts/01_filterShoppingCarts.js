@@ -1,8 +1,9 @@
-require('module-alias/register');
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
+require('module-alias/register');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -14,9 +15,6 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 // Import data
 const {ShoppingCarts} = require('@data/demo/shoppingCarts');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_orders_shoppingCarts_filterShoppingCarts';
 
 // Import expect from chai
@@ -25,7 +23,7 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-const todayDate = getDateFormat('mm/dd/yyyy');
+const todayDate = date.getDateFormat('mm/dd/yyyy');
 
 /*
 Delete the non ordered shopping carts
@@ -78,7 +76,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
       await expect(textColumn).to.contains('Non ordered');
     }
 
@@ -101,7 +99,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     let paginationNumber = 0;
 
     if (numberOfShoppingCarts >= 21) {
-      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '300');
+      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, 300);
     }
 
     await expect(paginationNumber).to.equal('1');

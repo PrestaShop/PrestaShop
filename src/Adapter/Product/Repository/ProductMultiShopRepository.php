@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
@@ -209,7 +211,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         $product->link_rewrite = $localizedLinkRewrites;
 
         $this->productValidator->validateCreation($product);
-        $this->addObjectModelToShop($product, $shopId->getValue(), CannotAddProductException::class);
+        $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);
         $product->addToCategories([$product->id_category_default]);
 
         return $product;
@@ -246,7 +248,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
     {
-        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
         $productIdValue = $productId->getValue();
 
         $deleteQb = $this->connection->createQueryBuilder();
@@ -298,11 +303,9 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->validateProduct($product);
-        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
-
         $this->updateObjectModelForShops(
             $product,
-            $shopIds,
+            $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint),
             CannotUpdateProductException::class,
             $errorCode
         );
@@ -334,6 +337,112 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return $shops;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function deleteFromShops(ProductId $productId, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
+        }
+
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+
+        $this->deleteObjectModelFromShops($product, $shopIds, CannotDeleteProductException::class);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return bool
+     */
+    public function hasCombinations(ProductId $productId): bool
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchOne()
+        ;
+
+        return !empty($result);
+    }
+
+    /**
+     * Updates the Product's cache default attribute by selecting appropriate value from combination tables
+     *
+     * @param ProductId $productId
+     */
+    public function updateCachedDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = array_map(function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $this->getShopIdsByConstraint($productId, $shopConstraint));
+
+        $defaultShopId = $this->getProductDefaultShopId($productId)->getValue();
+        $defaultCombinations = $this->connection->fetchAllAssociative(
+            sprintf('
+                SELECT id_product_attribute, id_shop
+                FROM %sproduct_attribute_shop
+                WHERE id_product = %d
+                AND id_shop IN (%s)
+                AND default_on = 1
+                ORDER BY id_shop ASC
+            ',
+                $this->dbPrefix,
+                $productId->getValue(),
+                implode(',', $shopIds)
+            )
+        );
+
+        $productShopTable = sprintf('%sproduct_shop', $this->dbPrefix);
+        $combinationIdForDefaultShop = null;
+        $combinationShopIds = [];
+
+        foreach ($defaultCombinations as $defaultCombination) {
+            $combinationId = (int) $defaultCombination['id_product_attribute'];
+            $combinationShopId = (int) $defaultCombination['id_shop'];
+            $combinationShopIds[] = $combinationShopId;
+
+            if ($defaultShopId === $combinationShopId) {
+                $combinationIdForDefaultShop = $combinationId;
+            }
+
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                $combinationId,
+                $productId->getValue(),
+                $combinationShopId
+            ));
+        }
+
+        $this->connection->executeStatement(sprintf(
+            'UPDATE %sproduct SET cache_default_attribute = %d WHERE id_product = %d',
+            $this->dbPrefix,
+            $combinationIdForDefaultShop,
+            $productId->getValue()
+        ));
+
+        $unhandledShopIds = array_diff($shopIds, $combinationShopIds);
+        foreach ($unhandledShopIds as $shopId) {
+            // reset default combination to 0 to all shop ids which have no combinations
+            $this->connection->executeStatement(sprintf(
+                'UPDATE %s SET cache_default_attribute = %d WHERE id_product = %d AND id_shop = %d',
+                $productShopTable,
+                0,
+                $productId->getValue(),
+                $shopId
+            ));
+        }
     }
 
     /**
@@ -378,7 +487,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      * @param ProductId $productId
      * @param ShopConstraint $shopConstraint
      *
-     * @return int[]
+     * @return ShopId[]
      */
     public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
     {
@@ -386,17 +495,11 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
         }
 
-        $shopIds = [];
         if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds($productId);
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
+            return $this->getAssociatedShopIds($productId);
         }
 
-        return $shopIds;
+        return [$shopConstraint->getShopId()];
     }
 
     /**

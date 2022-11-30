@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -493,10 +496,15 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = $this->getSingleShopCommand();
-        $command->setMpn('mpn');
+        $command = $this->getSingleShopCommand()
+            ->setMpn('mpn')
+            ->setActive(true)
+        ;
         yield [
             [
+                'header' => [
+                    'active' => true,
+                ],
                 'specifications' => [
                     'references' => [
                         'mpn' => 'mpn',
@@ -525,12 +533,28 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setUpc('1345')
             ->setMpn('mpn')
             ->setReference('0123456789')
+            ->setWidth('50.5')
+            ->setHeight('40.5')
+            ->setDepth('30.5')
+            ->setWeight('2.2')
+            ->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_SPECIFIC)
+            ->setAdditionalShippingCost('5.7')
+            ->setLocalizedDeliveryTimeInStockNotes([
+                1 => 'In stock',
+                2 => 'Yra sandelyje',
+            ])
+            ->setLocalizedDeliveryTimeOutOfStockNotes([
+                1 => 'Out of stock',
+                2 => 'Isparduota',
+            ])
+            ->setActive(false)
         ;
 
         yield [
             [
                 'header' => [
                     'name' => $localizedNames,
+                    'active' => false,
                 ],
                 'description' => [
                     'description_short' => $localizedShortDescriptions,
@@ -573,6 +597,26 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         'upc' => '1345',
                         'mpn' => 'mpn',
                         'reference' => '0123456789',
+                    ],
+                ],
+                'shipping' => [
+                    'dimensions' => [
+                        'width' => '50.5',
+                        'height' => '40.5',
+                        'depth' => '30.5',
+                        'weight' => '2.2',
+                    ],
+                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+                    'additional_shipping_cost' => '5.7',
+                    'delivery_time_notes' => [
+                        'in_stock' => [
+                            1 => 'In stock',
+                            2 => 'Yra sandelyje',
+                        ],
+                        'out_of_stock' => [
+                            1 => 'Out of stock',
+                            2 => 'Isparduota',
+                        ],
                     ],
                 ],
             ],
@@ -906,13 +950,37 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        $localizedAvailableNowLabels = [
+            1 => 'Available now fr',
+            2 => 'Available now en',
+        ];
+        $localizedAvailableLaterLabels = [
+            1 => 'Available later fr',
+            2 => 'Available later en',
+        ];
+
         $singleShopCommand = $this->getSingleShopCommand();
         $singleShopCommand
             ->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE)
             ->setLocalizedShortDescriptions($localizedShortDescriptions)
             ->setLocalizedMetaTitles($localizedMetaTitles)
             ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setWidth('50.5')
+            ->setHeight('40.5')
+            ->setDepth('30.5')
+            ->setWeight('2.2')
+            ->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_SPECIFIC)
+            ->setLocalizedDeliveryTimeOutOfStockNotes([
+                1 => 'Out of stock',
+                2 => 'Isparduota',
+            ])
+            ->setActive(true)
+            ->setLowStockAlert(true)
+            ->setLowStockThreshold(10)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
+            ->setAvailableDate(new DateTime('2022-10-11'))
         ;
+
         $allShopsCommand = $this->getAllShopsCommand();
         $allShopsCommand
             ->setAvailableForOrder(true)
@@ -920,6 +988,14 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ->setLocalizedDescriptions($localizedDescriptions)
             ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
             ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+            ->setAdditionalShippingCost('5.7')
+            ->setLocalizedDeliveryTimeInStockNotes([
+                1 => 'In stock',
+                2 => 'Yra sandelyje',
+            ])
+            ->setMinimalQuantity(1)
+            ->setPackStockType(PackStockType::STOCK_TYPE_PRODUCTS_ONLY)
+            ->setLocalizedAvailableNowLabels($localizedAvailableNowLabels)
         ;
 
         yield [
@@ -927,6 +1003,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'header' => [
                     'name' => $localizedNames,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
+                    'active' => true,
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
@@ -955,6 +1032,52 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                             'id' => 42,
                             self::MODIFY_ALL_SHOPS_PREFIX . 'id' => true,
                         ],
+                    ],
+                ],
+                'shipping' => [
+                    'dimensions' => [
+                        'width' => '50.5',
+                        'height' => '40.5',
+                        'depth' => '30.5',
+                        'weight' => '2.2',
+                    ],
+                    'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_SPECIFIC,
+                    'additional_shipping_cost' => '5.7',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'additional_shipping_cost' => true,
+                    'delivery_time_notes' => [
+                        'in_stock' => [
+                            1 => 'In stock',
+                            2 => 'Yra sandelyje',
+                        ],
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'in_stock' => true,
+                        'out_of_stock' => [
+                            1 => 'Out of stock',
+                            2 => 'Isparduota',
+                        ],
+                    ],
+                ],
+                'stock' => [
+                    'quantities' => [
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
+                        // delta_quantity shouldn't affect anything in this command builder,
+                        // because it should be taken care of in a dedicated builder for StockAvailable
+                        'delta_quantity' => [
+                            'quantity' => 10,
+                            'delta' => 5,
+                        ],
+                    ],
+                    'options' => [
+                        'disabling_switch_low_stock_threshold' => true,
+                        'low_stock_threshold' => 10,
+                    ],
+                    'pack_stock_type' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'pack_stock_type' => true,
+                    'availability' => [
+                        'available_now_label' => $localizedAvailableNowLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
+                        'available_later_label' => $localizedAvailableLaterLabels,
+                        'available_date' => '2022-10-11',
                     ],
                 ],
             ],

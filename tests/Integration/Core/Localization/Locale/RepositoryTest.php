@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Resources\LocalizationPackResetter;
+use Tests\Resources\Resetter\LocalizationPackResetter;
 use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase

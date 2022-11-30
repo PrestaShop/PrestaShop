@@ -1,10 +1,14 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
-const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
 // Import common tests
@@ -22,7 +26,7 @@ const {ProductsData} = require('@data/import/disabledProducts');
 const {CombinationsData} = require('@data/import/combinations');
 
 // Test context
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withCombinationsWithoutQuantities';
+const baseContext = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_withCombinationsWithoutQuantities';
 
 let browserContext;
 let page;

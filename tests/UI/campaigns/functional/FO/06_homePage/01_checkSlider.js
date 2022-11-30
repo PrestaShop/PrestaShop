@@ -1,16 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import utils
-const helper = require('@utils/helpers');
-
 // Importing pages
 // FO pages
 const homePage = require('@pages/FO/home');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_homePage_checkSlider';
 
@@ -61,12 +61,12 @@ describe('FO - Home Page : Check slider', async () => {
     await expect(isVisible).to.be.true;
   });
 
-  it('should click on the slider and check the URL', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'clickOnSlider', baseContext);
+  it('should check the slider URL', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSliderURL', baseContext);
 
-    const currentURL = await homePage.clickOnSlider(page, 2);
+    const currentURL = await homePage.getSliderURL(page);
     await expect(currentURL)
-      .to.contains('https://www.prestashop.com/en')
+      .to.contains('http://www.prestashop.com/')
       .and.to.contains('homeslider&utm_campaign=back-office-EN&utm_content=download');
   });
 });

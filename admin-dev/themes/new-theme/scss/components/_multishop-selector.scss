@@ -1,0 +1,100 @@
+// stylelint-disable-next-line
+$component-name: shop-selector;
+
+.#{$component-name} {
+  ul.#{$component-name}-group-list {
+    position: relative;
+    max-height: 500px;
+    padding: 0 1rem 0 0;
+    margin-left: 0;
+    list-style-type: none;
+  }
+
+  &-group-item {
+    &.#{$component-name}-item {
+      justify-content: flex-start;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      color: $medium-gray;
+    }
+  }
+
+  &-item {
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    width: 100%;
+
+    > .#{$component-name}-color-check .material-icons {
+      font-size: 1.25rem;
+    }
+
+    .md-checkbox {
+      width: 100%;
+      cursor: pointer;
+
+      label {
+        width: 100%;
+        padding-left: 25px;
+
+        .md-checkbox-control::before,
+        .md-checkbox-control::after {
+          margin-top: 10px;
+        }
+      }
+    }
+
+    &-name {
+      display: flex;
+      align-items: start;
+      width: 100%;
+      padding: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      @include border-radius(0.5rem);
+
+      .material-icons {
+        margin-left: auto;
+        font-size: 1.4rem;
+        color: $brand-primary;
+        opacity: 0;
+      }
+
+      .shop-selector-status {
+        margin-right: 5px;
+        margin-left: auto;
+        color: $brand-primary;
+      }
+
+      &:hover {
+        background-color: $multishop-selector-selected-background;
+
+        .material-icons {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.selected-shop {
+      .shop-selector-item-name {
+        background-color: $multishop-selector-selected-background;
+      }
+    }
+
+    &.disabled {
+      .shop-selector-item-name {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-color {
+    display: block;
+    width: 1.5rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+    background-color: $multishop-header-default-background;
+    @include border-radius(3px);
+  }
+}

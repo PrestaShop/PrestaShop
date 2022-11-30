@@ -1,11 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -19,7 +21,7 @@ const pagesPage = require('@pages/BO/design/pages/index');
 const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
 const addPagePage = require('@pages/BO/design/pages/add');
 
-const baseContext = 'functional_BO_design_pages_pages_pagesBulkAction';
+const baseContext = 'functional_BO_design_pages_pages_pagesBulkActions';
 
 let browserContext;
 let page;

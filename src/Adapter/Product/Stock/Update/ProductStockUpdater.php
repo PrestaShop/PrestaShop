@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -83,19 +85,24 @@ class ProductStockUpdater
      */
     private $advancedStockEnabled;
 
+    /** @var HookManager */
+    private $hookManager;
+
     /**
      * @param StockManager $stockManager
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
+     * @param HookManager $hookManager
      */
     public function __construct(
         StockManager $stockManager,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         MovementReasonRepository $movementReasonRepository,
-        Configuration $configuration
+        Configuration $configuration,
+        HookManager $hookManager
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
@@ -103,6 +110,7 @@ class ProductStockUpdater
         $this->movementReasonRepository = $movementReasonRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
+        $this->hookManager = $hookManager;
     }
 
     /**
@@ -157,7 +165,7 @@ class ProductStockUpdater
                 continue;
             }
 
-            $employeeEditionReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($stockAvailable->quantity > 0);
+            $employeeEditionReasonId = $this->movementReasonRepository->getEmployeeEditionReasonId($stockAvailable->quantity > 0);
             $stockModification = new StockModification(-$stockAvailable->quantity, $employeeEditionReasonId);
 
             // Update product
@@ -177,6 +185,13 @@ class ProductStockUpdater
 
             // Generate stock movement related to the employee
             $this->saveMovement($stockAvailable, $stockModification);
+
+            // Update reserved and physical quantity for this stock
+            $this->stockAvailableRepository->updatePhysicalProductQuantity(
+                new StockId((int) $stockAvailable->id),
+                new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop)))
+            );
 
             if ($this->advancedStockEnabled) {
                 StockAvailable::synchronize($productId->getValue(), $shopId->getValue());
@@ -291,6 +306,13 @@ class ProductStockUpdater
         if ($properties->getStockModification()) {
             //Save movement only after stock has been updated
             $this->saveMovement($stockAvailable, $properties->getStockModification());
+
+            // Update reserved and physical quantity for this stock
+            $this->stockAvailableRepository->updatePhysicalProductQuantity(
+                new StockId((int) $stockAvailable->id),
+                new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop)))
+            );
         }
     }
 
@@ -306,6 +328,17 @@ class ProductStockUpdater
             $stockModification->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+                'id_shop' => (int) $stockAvailable->id_shop,
+            ]
+        );
+
+        $this->hookManager->exec(
+            'actionUpdateQuantity',
+            [
+                'id_product' => $stockAvailable->id_product,
+                'id_product_attribute' => $stockAvailable->id_product_attribute,
+                'quantity' => $stockAvailable->quantity,
+                'delta_quantity' => $stockModification->getDeltaQuantity(),
                 'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );

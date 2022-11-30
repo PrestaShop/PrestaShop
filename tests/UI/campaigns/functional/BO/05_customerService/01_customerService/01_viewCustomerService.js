@@ -1,12 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -20,7 +24,7 @@ const viewPage = require('@pages/BO/customerService/customerService/view');
 const homePage = require('@pages/FO/home');
 const contactUsPage = require('@pages/FO/contactUs');
 
-const baseContext = 'functional_BO_customerService_orderMessages_viewCustomerService';
+const baseContext = 'functional_BO_customerService_customerService_viewCustomerService';
 
 // Import data
 const ContactUsFakerData = require('@data/faker/contactUs');

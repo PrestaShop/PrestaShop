@@ -1,6 +1,10 @@
-require('module-alias/register');
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -11,9 +15,6 @@ const emailPage = require('@pages/BO/advancedParameters/email');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 // Import expect from chai
 const {expect} = require('chai');

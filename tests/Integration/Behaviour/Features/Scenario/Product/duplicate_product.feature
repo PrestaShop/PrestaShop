@@ -85,7 +85,7 @@ Feature: Duplicate product from Back Office (BO).
     And I assign product product1 with following carriers:
       | carrier1 |
       | carrier2 |
-    And I add new supplier supplier1 with following properties:
+    And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -147,10 +147,10 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
-      | id reference | name[en-US] | name[fr-FR] | is default |
-      | home         | Home        | Home        | false      |
-      | men          | Men         | Men         | false      |
-      | clothes      | Clothes     | Clothes     | true       |
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
@@ -175,10 +175,10 @@ Feature: Duplicate product from Back Office (BO).
       | supplier  | reference                      | currency | price_tax_excluded |
       | supplier1 | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
-      | price            | 100.00          |
-      | ecotax           | 0               |
-      | tax rules group  | US-AL Rate (4%) |
-      | on_sale          | true            |
+      | price                   | 100.00          |
+      | ecotax                  | 0               |
+      | tax rules group         | US-AL Rate (4%) |
+      | on_sale                 | true            |
       # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
       | wholesale_price         | 10              |
       | unit_price              | 500             |

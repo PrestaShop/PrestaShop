@@ -1,12 +1,14 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -49,7 +51,7 @@ let orderReference;
 let orderDate;
 let filePath;
 let fileName = '#RE0000';
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 
 // New order by customer data
 const orderData = {

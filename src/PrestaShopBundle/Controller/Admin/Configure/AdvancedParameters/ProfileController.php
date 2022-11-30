@@ -218,7 +218,6 @@ class ProfileController extends FrameworkBundleAdminController
             ),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
-            'editableProfile' => $editableProfile,
         ]);
     }
 

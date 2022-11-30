@@ -69,9 +69,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement increased by 100
     When I update combination "product1SWhite" stock with following details:
       | delta quantity             | 50          |
@@ -113,10 +113,10 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -101           |
-      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -101           |
+      | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement decreased by 101
     And product "product1" should have following stock information:
       | quantity | 49 |
@@ -135,11 +135,11 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 1              |
-      | Puff       | Daddy     | -101           |
-      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+      | Puff Daddy | -101           |
+      | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement increased by 1
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -162,11 +162,11 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 1              |
-      | Puff       | Daddy     | -101           |
-      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 1              |
+      | Puff Daddy | -101           |
+      | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement increased by 1
     And product "product1" should have following stock information:
       | quantity | 50 |
@@ -192,9 +192,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "product1SBlack" last stock movement increased by 10
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 10             |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 10             |
     When I update combination "product1SBlack" stock with following details:
       | fixed quantity | -3 |
     Then combination "product1SBlack" should have following stock details:
@@ -206,10 +206,10 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "product1SBlack" last stock movement decreased by 13
-    And combination "product1SBlack" last employees stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -13            |
-      | Puff       | Daddy     | 10             |
+    And combination "product1SBlack" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -13            |
+      | Puff Daddy | 10             |
 
   Scenario: I should not be able to provide both delta and fixed quantities when updating combination stock information
     Given combination "product1SBlack" should have following stock details:
@@ -234,3 +234,64 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements
+
+  Scenario: I should be able to fill product availability labels
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+    When I update combination "product1SBlack" stock with following details:
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+
+  Scenario: I should be able to delete product availability labels
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+    When I update combination "product1SBlack" stock with following details:
+      | available now labels[en-US]   |               |
+      | available later labels[en-US] |               |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   |               |
+      | available later labels[en-US] |               |
+
+  Scenario: I update product out of stock
+    And product "product1" should have following stock information:
+      | out_of_stock_type | default |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | available |
+    Then all combinations of product "product1" should have the stock policy to "available"
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | default |
+    Then all combinations of product "product1" should have the stock policy to "default"
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | not_available |
+    Then all combinations of product "product1" should have the stock policy to "not_available"

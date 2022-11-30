@@ -1,7 +1,10 @@
-require('module-alias/register');
+// Import utils
+import helper from '@utils/helpers';
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -12,9 +15,6 @@ const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCust
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const viewCustomerPage = require('@pages/BO/customers/view');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_viewGuest';
 

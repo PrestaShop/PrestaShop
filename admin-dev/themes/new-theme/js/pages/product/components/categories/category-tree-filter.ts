@@ -35,12 +35,9 @@ export default class CategoryTreeFilter {
 
   private $filterForm: JQuery;
 
-  private $categoryInput: JQuery;
-
   constructor() {
     this.$categoryTree = $(CategoryFilterMap.container);
-    this.$filterForm = $(CategoryFilterMap.filterForm);
-    this.$categoryInput = this.$filterForm.find(CategoryFilterMap.categoryInput);
+    this.$filterForm = this.$categoryTree.parent('form');
 
     this.init();
   }
@@ -51,7 +48,7 @@ export default class CategoryTreeFilter {
       // of the two actions, either expand/collapse or filter the selected category So We check which target has been
       // clicked exactly
       if (event.target instanceof HTMLInputElement) {
-        this.filterCategory(event.target.value);
+        this.$filterForm.submit();
       } else if (event.target.classList.contains(CategoryFilterMap.categoryLabelClass)) {
         this.toggleCategory($(event.currentTarget).parent(CategoryFilterMap.categoryNode));
       }
@@ -63,7 +60,7 @@ export default class CategoryTreeFilter {
     this.$categoryTree.on('click', CategoryFilterMap.collapseAll, () => {
       this.collapseAll();
     });
-    this.$categoryTree.on('click', CategoryFilterMap.resetFilter, () => {
+    $(CategoryFilterMap.resetFilter).on('click', () => {
       this.resetFilter();
     });
 
@@ -83,16 +80,12 @@ export default class CategoryTreeFilter {
     $categoryNode.toggleClass(CategoryFilterMap.collapsedClass, isExpanded);
   }
 
-  private filterCategory(categoryId: string): void {
-    this.$categoryInput.val(categoryId);
-    this.$filterForm.submit();
-  }
-
   private resetFilter(): void {
+    // Reset selected category
     this.$categoryTree
       .find(CategoryFilterMap.categoryRadio)
       .prop('checked', false);
-    this.$categoryInput.val('');
+
     this.$filterForm.submit();
   }
 

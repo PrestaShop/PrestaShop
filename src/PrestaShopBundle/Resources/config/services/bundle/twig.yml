@@ -121,8 +121,8 @@ services:
     tags:
       - { name: twig.extension }
 
-  prestashop.twig.extension.multistore_header_extension:
-    class: 'PrestaShopBundle\Twig\Extension\MultistoreHeaderExtension'
+  prestashop.twig.extension.multistore_components_extension:
+    class: 'PrestaShopBundle\Twig\Extension\MultistoreComponentsExtension'
     arguments:
       - '@prestashop.core.admin.multistore'
     tags:

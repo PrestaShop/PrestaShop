@@ -1,9 +1,11 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
-const mailHelper = require('@utils/mailHelper');
+import helper from '@utils/helpers';
+import mailHelper from '@utils/mailHelper';
 
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
@@ -16,9 +18,6 @@ const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_login_passwordReminder';
 

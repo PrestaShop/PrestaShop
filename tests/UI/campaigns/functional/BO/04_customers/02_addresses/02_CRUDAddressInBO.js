@@ -1,11 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -18,7 +20,7 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 // Import data
 const AddressFaker = require('@data/faker/address');
 
-const baseContext = 'functional_BO_customers_addresses_CRUDAddressesInBO';
+const baseContext = 'functional_BO_customers_addresses_CRUDAddressInBO';
 
 let browserContext;
 let page;

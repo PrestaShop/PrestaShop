@@ -1,12 +1,15 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
 const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -35,14 +38,11 @@ const Address = require('@data/demo/address');
 // Import faker data
 const ProductFaker = require('@data/faker/product');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 
 let browserContext;
 let page;
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 // Prefix for the new products to simply delete them by bulk actions
 const prefixNewProduct = 'TOTEST';
 

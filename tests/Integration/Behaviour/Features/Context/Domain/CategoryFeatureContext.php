@@ -61,12 +61,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
     public const EMPTY_VALUE = '';
     public const DEFAULT_ROOT_CATEGORY_ID = 1;
-    public const JPG_IMAGE_TYPE = '.jpg';
     public const THUMB0 = '0_thumb';
-    public const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
-        . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
-        . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
-        . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
     public const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
@@ -99,11 +94,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
     {
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
-        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash(), $langId);
+        $this->assertCategoriesInTree($categoriesTree, $tableNode->getColumnsHash());
     }
 
     /**
@@ -115,15 +110,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
     {
+        Category::resetStaticCache();
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
         $parentCategoryId = $this->getSharedStorage()->get($parentReference);
         $actualCategories = $this->extractCategoriesByParent($categoriesTree, $parentCategoryId);
 
-        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash(), $langId);
+        $this->assertCategoriesInTree($actualCategories, $tableNode->getColumnsHash());
     }
 
     /**
@@ -545,9 +541,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param CategoryForTree[] $actualCategories
      * @param array<int, array<string, string>> $expectedCategories
-     * @param int $langId
      */
-    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories, int $langId): void
+    private function assertCategoriesInTree(array $actualCategories, array $expectedCategories): void
     {
         Assert::assertEquals(
             count($actualCategories),
@@ -570,7 +565,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             );
 
             Assert::assertEquals($expectedId, $category->getCategoryId(), 'Unexpected category id');
-            Assert::assertEquals([$langId => $expectedCategory['category name']], $category->getLocalizedNames(), 'Unexpected category name');
+            Assert::assertEquals($expectedCategory['category name'], $category->getName(), 'Unexpected category name');
+            Assert::assertEquals($expectedCategory['display name'], $category->getDisplayName(), 'Unexpected category display name');
 
             foreach ($actualCategoryChildren as $index => $childCategory) {
                 Assert::assertEquals($expectedChildrenCategoryIds[$index], $childCategory->getCategoryId());
@@ -664,7 +660,11 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
         if (isset($testCaseData['Category cover image'])) {
-            $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
+            $coverImage = $this->pretendImageUploaded(
+                $this->psCatImgDir,
+                $testCaseData['Category cover image'],
+                $categoryId
+            );
         }
         $menuThumbNailsImages = [];
         if (isset($testCaseData['Menu thumbnails'])) {
@@ -717,31 +717,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $parentCategoryId;
-    }
-
-    /**
-     * @param array $testCaseData
-     * @param int $categoryId
-     *
-     * @return string
-     */
-    private function pretendImageUploaded(array $testCaseData, int $categoryId): string
-    {
-        //@todo: refactor CategoryCoverUploader. Move uploaded file in Form handler instead of Uploader and use the uploader here in tests
-        $categoryCoverImageName = $testCaseData['Category cover image'];
-        $data = base64_decode(self::JPG_IMAGE_STRING);
-        $im = imagecreatefromstring($data);
-        if ($im !== false) {
-            header('Content-Type: image/jpg');
-            imagejpeg(
-                $im,
-                $this->psCatImgDir . $categoryId . self::JPG_IMAGE_TYPE,
-                0
-            );
-            imagedestroy($im);
-        }
-
-        return $categoryCoverImageName;
     }
 
     /**

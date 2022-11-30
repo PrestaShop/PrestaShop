@@ -29,11 +29,15 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
@@ -59,6 +63,11 @@ class CombinationStockUpdater
     private $stockManager;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
      * @param StockManager $stockManager
@@ -66,11 +75,13 @@ class CombinationStockUpdater
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
-        StockManager $stockManager
+        StockManager $stockManager,
+        Configuration $configuration
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
         $this->stockManager = $stockManager;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -99,6 +110,18 @@ class CombinationStockUpdater
     {
         $updatableProperties = [];
 
+        $localizedLaterLabels = $properties->getLocalizedAvailableLaterLabels();
+        if (null !== $localizedLaterLabels) {
+            $combination->available_later = $localizedLaterLabels;
+            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
+        }
+
+        $localizedNowLabels = $properties->getLocalizedAvailableNowLabels();
+        if (null !== $localizedNowLabels) {
+            $combination->available_now = $localizedNowLabels;
+            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
+        }
+
         if (null !== $properties->getAvailableDate()) {
             $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
@@ -117,11 +140,6 @@ class CombinationStockUpdater
         if (null !== $properties->isLowStockAlertEnabled()) {
             $combination->low_stock_alert = $properties->isLowStockAlertEnabled();
             $updatableProperties[] = 'low_stock_alert';
-        }
-
-        if (null !== $properties->getLocation()) {
-            $combination->location = $properties->getLocation();
-            $updatableProperties[] = 'location';
         }
 
         return $updatableProperties;
@@ -155,6 +173,13 @@ class CombinationStockUpdater
         // save movement only after stockAvailable has been updated
         if ($stockModification) {
             $this->saveMovement($stockAvailable, $stockModification);
+
+            // Update reserved and physical quantity for this stock
+            $this->stockAvailableRepository->updatePhysicalProductQuantity(
+                new StockId((int) $stockAvailable->id),
+                new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop)))
+            );
         }
     }
 

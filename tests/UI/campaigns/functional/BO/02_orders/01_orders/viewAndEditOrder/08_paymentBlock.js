@@ -1,12 +1,14 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -33,8 +35,8 @@ let browserContext;
 let page;
 let filePath;
 
-const today = getDateFormat('yyyy-mm-dd');
-const todayToCheck = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const todayToCheck = date.getDateFormat('mm/dd/yyyy');
 
 const totalOrder = 22.94;
 

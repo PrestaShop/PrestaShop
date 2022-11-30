@@ -1,7 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {faker} = require('@faker-js/faker');
@@ -29,9 +34,6 @@ const orderDetails = require('@pages/FO/myAccount/orderDetails');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const customerServicePage = require('@pages/BO/customerService/customerService');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
 const messageOption = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes.size[0]} `

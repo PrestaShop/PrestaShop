@@ -74,14 +74,18 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      *
      * @return array a product ready for templating
      */
+    // @phpstan-ignore-next-line
     private function prepareProductForTemplate(array $rawProduct)
     {
+        // Enrich data of product
         $product = (new ProductAssembler($this->context))
             ->assembleProduct($rawProduct);
 
+        // Prepare configuration
         $presenter = $this->getProductPresenter();
         $settings = $this->getProductPresentationSettings();
 
+        // Present and return product
         return $presenter->present(
             $settings,
             $product,
@@ -99,7 +103,24 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function prepareMultipleProductsForTemplate(array $products)
     {
-        return array_map([$this, 'prepareProductForTemplate'], $products);
+        // Enrich data set of products
+        $products = (new ProductAssembler($this->context))
+            ->assembleProducts($products);
+
+        // Prepare configuration
+        $presenter = $this->getProductPresenter();
+        $settings = $this->getProductPresentationSettings();
+
+        // Present and return each product
+        foreach ($products as &$product) {
+            $product = $presenter->present(
+                $settings,
+                $product,
+                $this->context->language
+            );
+        }
+
+        return $products;
     }
 
     /**

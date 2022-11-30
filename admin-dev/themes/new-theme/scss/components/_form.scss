@@ -179,6 +179,7 @@
 .accordion-form {
   .card {
     margin-bottom: 0;
+    overflow: initial;
     border: none;
     box-shadow: none;
 
@@ -226,3 +227,7 @@
   }
 }
 
+.btn-collection {
+  justify-content: space-between;
+  gap: 10px;
+}

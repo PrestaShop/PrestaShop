@@ -79,7 +79,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
         if ($command->getDeltaQuantity()) {
             $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
             );
         } elseif (null !== $command->getFixedQuantity()) {
             $currentQuantity = (int) $this->stockAvailableRepository->getForCombination($command->getCombinationId())->quantity;
@@ -87,7 +87,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
 
             $stockModification = new StockModification(
                 $deltaQuantity,
-                $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0)
+                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
             );
         }
 
@@ -97,7 +97,9 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
             $command->getLocation(),
             $command->getLowStockThreshold(),
             $command->getLowStockAlertEnabled(),
-            $command->getAvailableDate()
+            $command->getAvailableDate(),
+            $command->getLocalizedAvailableNowLabels(),
+            $command->getLocalizedAvailableLaterLabels()
         );
 
         $this->combinationStockUpdater->update($command->getCombinationId(), $properties);

@@ -1,11 +1,15 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -19,7 +23,7 @@ const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManage
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
 
-const baseContext = 'functional_BO_advancedParams_database_sqlManager_exportSqlQuery';
+const baseContext = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
 
 let browserContext;
 let page;

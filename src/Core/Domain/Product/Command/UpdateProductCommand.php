@@ -27,12 +27,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Dimension;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -46,7 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 /**
  * Contains all the data needed to handle the product update.
  *
- * @see UpdateProductHandler
+ * @see UpdateProductHandlerInterface
  *
  * This command is only designed for the general data of product which can be persisted in one call.
  * It was not designed to handle the product relations.
@@ -192,6 +199,86 @@ class UpdateProductCommand
      * @var Reference|null
      */
     private $reference;
+
+    /**
+     * @var Dimension|null
+     */
+    private $width;
+
+    /**
+     * @var Dimension|null
+     */
+    private $height;
+
+    /**
+     * @var Dimension|null
+     */
+    private $depth;
+
+    /**
+     * @var Dimension|null
+     */
+    private $weight;
+
+    /**
+     * @var DecimalNumber|null
+     */
+    private $additionalShippingCost;
+
+    /**
+     * @var DeliveryTimeNoteType
+     */
+    private $deliveryTimeNoteType;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeInStockNotes;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedDeliveryTimeOutOfStockNotes;
+
+    /**
+     * @var PackStockType|null
+     */
+    private $packStockType;
+
+    /**
+     * @var int|null
+     */
+    private $minimalQuantity;
+
+    /**
+     * @var int|null
+     */
+    private $lowStockThreshold;
+
+    /**
+     * @var bool|null
+     */
+    private $lowStockAlertEnabled;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
+
+    /**
+     * @var DateTimeInterface|null
+     */
+    private $availableDate;
+
+    /**
+     * @var bool|null
+     */
+    private $active;
 
     /**
      * @param int $productId
@@ -743,5 +830,351 @@ class UpdateProductCommand
         $this->reference = new Reference($reference);
 
         return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getWidth(): ?Dimension
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param string $width
+     *
+     * @return self
+     */
+    public function setWidth(string $width): self
+    {
+        $this->setDimension($width, 'width');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getHeight(): ?Dimension
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param string $height
+     *
+     * @return self
+     */
+    public function setHeight(string $height): self
+    {
+        $this->setDimension($height, 'height');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getDepth(): ?Dimension
+    {
+        return $this->depth;
+    }
+
+    /**
+     * @param string $depth
+     *
+     * @return self
+     */
+    public function setDepth(string $depth): self
+    {
+        $this->setDimension($depth, 'depth');
+
+        return $this;
+    }
+
+    /**
+     * @return Dimension|null
+     */
+    public function getWeight(): ?Dimension
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     *
+     * @return self
+     */
+    public function setWeight(string $weight): self
+    {
+        $this->setDimension($weight, 'weight');
+
+        return $this;
+    }
+
+    /**
+     * @return DecimalNumber|null
+     */
+    public function getAdditionalShippingCost(): ?DecimalNumber
+    {
+        return $this->additionalShippingCost;
+    }
+
+    /**
+     * @param string $additionalShippingCost
+     *
+     * @return self
+     */
+    public function setAdditionalShippingCost(string $additionalShippingCost): self
+    {
+        $this->additionalShippingCost = new DecimalNumber($additionalShippingCost);
+
+        return $this;
+    }
+
+    /**
+     * @return DeliveryTimeNoteType|null
+     */
+    public function getDeliveryTimeNoteType(): ?DeliveryTimeNoteType
+    {
+        return $this->deliveryTimeNoteType;
+    }
+
+    /**
+     * @param int $type
+     *
+     * @return self
+     */
+    public function setDeliveryTimeNoteType(int $type): self
+    {
+        $this->deliveryTimeNoteType = new DeliveryTimeNoteType($type);
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDeliveryTimeInStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeInStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeInStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeInStockNotes(array $localizedDeliveryTimeInStockNotes): self
+    {
+        $this->localizedDeliveryTimeInStockNotes = $localizedDeliveryTimeInStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedDeliveryTimeOutOfStockNotes(): ?array
+    {
+        return $this->localizedDeliveryTimeOutOfStockNotes;
+    }
+
+    /**
+     * @param string[] $localizedDeliveryTimeOutOfStockNotes
+     *
+     * @return self
+     */
+    public function setLocalizedDeliveryTimeOutOfStockNotes(array $localizedDeliveryTimeOutOfStockNotes): self
+    {
+        $this->localizedDeliveryTimeOutOfStockNotes = $localizedDeliveryTimeOutOfStockNotes;
+
+        return $this;
+    }
+
+    /**
+     * @return PackStockType|null
+     */
+    public function getPackStockType(): ?PackStockType
+    {
+        return $this->packStockType;
+    }
+
+    /**
+     * @param int $packStockType
+     *
+     * @return self
+     *
+     * @throws ProductPackConstraintException
+     */
+    public function setPackStockType(int $packStockType): self
+    {
+        $this->packStockType = new PackStockType($packStockType);
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMinimalQuantity(): ?int
+    {
+        return $this->minimalQuantity;
+    }
+
+    /**
+     * @param int $minimalQuantity
+     *
+     * @return self
+     */
+    public function setMinimalQuantity(int $minimalQuantity): self
+    {
+        $this->minimalQuantity = $minimalQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLowStockThreshold(): ?int
+    {
+        return $this->lowStockThreshold;
+    }
+
+    /**
+     * @param int $lowStockThreshold
+     *
+     * @return self
+     */
+    public function setLowStockThreshold(int $lowStockThreshold): self
+    {
+        $this->lowStockThreshold = $lowStockThreshold;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isLowStockAlertEnabled(): ?bool
+    {
+        return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return self
+     */
+    public function setLowStockAlert(bool $enabled): self
+    {
+        $this->lowStockAlertEnabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableNowLabels(): ?array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableNowLabels
+     *
+     * @return self
+     */
+    public function setLocalizedAvailableNowLabels(array $localizedAvailableNowLabels): self
+    {
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableLaterLabels(): ?array
+    {
+        return $this->localizedAvailableLaterLabels;
+    }
+
+    /**
+     * @param string[] $localizedAvailableLaterLabels
+     *
+     * @return self
+     */
+    public function setLocalizedAvailableLaterLabels(array $localizedAvailableLaterLabels): self
+    {
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getAvailableDate(): ?DateTimeInterface
+    {
+        return $this->availableDate;
+    }
+
+    /**
+     * @param DateTimeInterface $availableDate
+     *
+     * @return self
+     */
+    public function setAvailableDate(DateTimeInterface $availableDate): self
+    {
+        $this->availableDate = $availableDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     *
+     * @return self
+     */
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @param string $propertyName
+     */
+    private function setDimension(string $value, string $propertyName): void
+    {
+        $codeByDimension = [
+            'width' => ProductConstraintException::INVALID_WIDTH,
+            'height' => ProductConstraintException::INVALID_HEIGHT,
+            'depth' => ProductConstraintException::INVALID_DEPTH,
+            'weight' => ProductConstraintException::INVALID_WEIGHT,
+        ];
+
+        try {
+            $this->{$propertyName} = new Dimension($value);
+        } catch (DomainConstraintException $e) {
+            throw new ProductConstraintException(
+                sprintf('Invalid product %s.', $propertyName),
+                $codeByDimension[$propertyName],
+                $e
+            );
+        }
     }
 }

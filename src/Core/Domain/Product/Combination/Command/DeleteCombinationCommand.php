@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteCombinationCommand
 {
@@ -38,11 +39,20 @@ class DeleteCombinationCommand
     private $combinationId;
 
     /**
-     * @param int $combinationId
+     * @var ShopConstraint
      */
-    public function __construct(int $combinationId)
-    {
+    private $shopConstraint;
+
+    /**
+     * @param int $combinationId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function __construct(
+        int $combinationId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->combinationId = new CombinationId($combinationId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -51,5 +61,13 @@ class DeleteCombinationCommand
     public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

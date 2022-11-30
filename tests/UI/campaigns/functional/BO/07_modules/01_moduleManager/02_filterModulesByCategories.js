@@ -1,11 +1,13 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Using chai
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -17,7 +19,7 @@ const {moduleCategories} = require('@data/demo/moduleCategories');
 const dashboardPage = require('@pages/BO/dashboard');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
-const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
+const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategories';
 
 let browserContext;
 let page;

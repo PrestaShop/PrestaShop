@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
@@ -51,15 +52,23 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
     private $movementReasonRepository;
 
     /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
      * @param ProductStockUpdater $productStockUpdater
      * @param MovementReasonRepository $movementReasonRepository
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         ProductStockUpdater $productStockUpdater,
-        MovementReasonRepository $movementReasonRepository
+        MovementReasonRepository $movementReasonRepository,
+        CombinationRepository $combinationRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;
         $this->movementReasonRepository = $movementReasonRepository;
+        $this->combinationRepository = $combinationRepository;
     }
 
     /**
@@ -71,7 +80,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
         if ($command->getDeltaQuantity()) {
             $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
             );
         }
 
@@ -91,5 +100,9 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
             ),
             $command->getShopConstraint()
         );
+
+        if (null !== $command->getOutOfStockType()) {
+            $this->combinationRepository->updateCombinationStock($command->getProductId(), $command->getOutOfStockType(), $command->getShopConstraint());
+        }
     }
 }

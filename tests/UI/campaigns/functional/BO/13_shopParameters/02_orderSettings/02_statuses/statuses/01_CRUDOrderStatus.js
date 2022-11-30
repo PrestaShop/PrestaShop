@@ -1,11 +1,15 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -21,7 +25,7 @@ const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
 // Import data
 const OrderStatusFaker = require('@data/faker/orderStatus');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_CRUDOrderStatus';
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_statuses_CRUDOrderStatus';
 
 let browserContext;
 let page;

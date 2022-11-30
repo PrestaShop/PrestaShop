@@ -1,9 +1,12 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import utils
-const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -13,9 +16,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceRules');
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_discounts_catalogPriceRules_filterSortAndPagination';
 
@@ -28,8 +28,8 @@ const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 // Browser and tab
 let browserContext;
 let page;
-const today = getDateFormat('yyyy-mm-dd');
-const dateToCheck = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const dateToCheck = date.getDateFormat('mm/dd/yyyy');
 
 let numberOfCatalogPriceRules = 0;
 

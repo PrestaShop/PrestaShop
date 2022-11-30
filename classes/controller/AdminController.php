@@ -399,7 +399,7 @@ class AdminControllerCore extends Controller
     /** @var array */
     protected $list_partners_modules = [];
 
-    /** @var array */
+    /** @var array<string, string|array> */
     public $modals = [];
 
     /** @var bool if logged employee has access to AdminImport */
@@ -2911,7 +2911,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-        $this->context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $this->context->currency = Currency::getDefaultCurrency();
     }
 
     /**

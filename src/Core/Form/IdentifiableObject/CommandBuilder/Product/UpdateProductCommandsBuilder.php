@@ -64,7 +64,11 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->configurePrices($config)
             ->configureSeo($config)
             ->configureDetails($config)
+            ->configureShipping($config)
+            ->configureStockInformation($config, $formData)
         ;
+
+        $config->addField('[header][active]', 'setActive', DataField::TYPE_BOOL);
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductCommand($productId->getValue(), $singleShopConstraint);
@@ -170,6 +174,42 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addField('[specifications][references][upc]', 'setUpc', DataField::TYPE_STRING)
             ->addField('[specifications][references][ean_13]', 'setEan13', DataField::TYPE_STRING)
             ->addField('[specifications][references][isbn]', 'setIsbn', DataField::TYPE_STRING)
+        ;
+
+        return $this;
+    }
+
+    /**
+     * @param CommandBuilderConfig $config
+     *
+     * @return self
+     */
+    private function configureShipping(CommandBuilderConfig $config): self
+    {
+        $config
+            ->addField('[shipping][dimensions][width]', 'setWidth', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][height]', 'setHeight', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][depth]', 'setDepth', DataField::TYPE_STRING)
+            ->addField('[shipping][dimensions][weight]', 'setWeight', DataField::TYPE_STRING)
+            ->addField('[shipping][delivery_time_note_type]', 'setDeliveryTimeNoteType', DataField::TYPE_INT)
+            ->addMultiShopField('[shipping][additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
+            ->addMultiShopField('[shipping][delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[shipping][delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
+        ;
+
+        return $this;
+    }
+
+    private function configureStockInformation(CommandBuilderConfig $config, array $formData): self
+    {
+        $config
+            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
         ;
 
         return $this;

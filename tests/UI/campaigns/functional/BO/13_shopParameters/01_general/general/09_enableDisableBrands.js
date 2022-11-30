@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -16,7 +18,7 @@ const brandsPage = require('@pages/BO/catalog/brands');
 const homePage = require('@pages/FO/home');
 const siteMapPage = require('@pages/FO/siteMap');
 
-const baseContext = 'functional_BO_shopParameters_general_general_enableDisableDisplayBrands';
+const baseContext = 'functional_BO_shopParameters_general_general_enableDisableBrands';
 
 let browserContext;
 let page;

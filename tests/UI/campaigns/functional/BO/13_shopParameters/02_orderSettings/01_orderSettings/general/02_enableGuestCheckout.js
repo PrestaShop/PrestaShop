@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -19,7 +21,7 @@ const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
-const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
+const baseContext = 'functional_BO_shopParameters_orderSettings_orderSettings_general_enableGuestCheckout';
 
 let browserContext;
 let page;

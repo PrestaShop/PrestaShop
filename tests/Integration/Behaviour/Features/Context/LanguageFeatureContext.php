@@ -30,7 +30,7 @@ use Configuration;
 use Language;
 use PHPUnit\Framework\Assert;
 use RuntimeException;
-use Tests\Resources\LanguageResetter;
+use Tests\Resources\Resetter\LanguageResetter;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {

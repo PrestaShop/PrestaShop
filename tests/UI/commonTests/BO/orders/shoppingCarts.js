@@ -1,9 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
 
 // Import login test
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -11,9 +14,6 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 let browserContext;
 let page;
@@ -71,7 +71,7 @@ function deleteNonOrderedShoppingCarts(baseContext = 'commonTests-deleteNonOrder
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });

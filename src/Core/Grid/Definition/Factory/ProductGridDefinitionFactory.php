@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
@@ -123,6 +122,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Image', [], 'Admin.Global'))
                     ->setOptions([
                         'src_field' => 'image',
+                        'alt_field' => 'legend',
                     ])
             )
             ->add(
@@ -136,10 +136,14 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('reference'))
-                    ->setName($this->trans('Reference', [], 'Admin.Global'))
+                (new LinkColumn('reference'))
+                    ->setName($this->trans('Reference', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'reference',
+                        'route' => 'admin_products_v2_edit',
+                        'route_param_name' => 'productId',
+                        'route_param_field' => 'id_product',
+                        'route_fragment' => 'tab-product_specifications-tab',
                     ])
             )
             ->add(
@@ -237,6 +241,17 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route' => 'admin_products_v2_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
+                'clickable_row' => true,
+            ])
+            )
+            ->add((new LinkRowAction('preview'))
+            ->setName($this->trans('Preview', [], 'Admin.Actions'))
+            ->setIcon('remove_red_eye')
+            ->setOptions([
+                'route' => 'admin_products_v2_preview',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                'target' => '_blank',
             ])
             )
             ->add((new SubmitRowAction('duplicate'))
@@ -300,13 +315,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('reference')
             )
             ->add(
-                (new HiddenFilter('id_category'))
-                    ->setTypeOptions([
-                        'required' => false,
-                    ])
-                    ->setAssociatedColumn('id_category')
-            )
-            ->add(
                 (new Filter('category', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
@@ -339,10 +347,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
-                        ],
+                        'reset_route' => 'admin_products_reset_grid_search',
                         'redirect_route' => 'admin_products_v2_index',
                     ])
                     ->setAssociatedColumn('actions')
@@ -354,6 +359,17 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     (new Filter('quantity', IntegerMinMaxFilterType::class))
                         ->setTypeOptions([
                             'required' => false,
+                            // Ignore default zero value to use negative values
+                            'min_field_options' => [
+                                'attr' => [
+                                    'min' => false,
+                                ],
+                            ],
+                            'max_field_options' => [
+                                'attr' => [
+                                    'min' => false,
+                                ],
+                            ],
                         ])
                         ->setAssociatedColumn('quantity')
                 )

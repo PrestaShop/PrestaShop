@@ -1,10 +1,12 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -19,7 +21,7 @@ const customersPage = require('@pages/BO/customers');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
 
-const baseContext = 'BO_customers_customers_subscribeToNewsletter';
+const baseContext = 'functional_BO_customers_customers_subscribeToNewsletter';
 
 let numberOfCustomers = 0;
 let browserContext;

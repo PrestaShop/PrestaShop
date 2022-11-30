@@ -1,8 +1,9 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -21,9 +22,6 @@ const cartPage = require('@pages/FO/cart');
 const CartRuleFaker = require('@data/faker/cartRule');
 const {Products} = require('@data/demo/products');
 
-// import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_discounts_cartRules_CRUDCartRule_withAndWithoutCode';
 
 // Import expect from chai
@@ -31,7 +29,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-const pastDate = getDateFormat('yyyy-mm-dd', 'past');
+const pastDate = date.getDateFormat('yyyy-mm-dd', 'past');
 
 const cartRuleWithoutCode = new CartRuleFaker(
   {

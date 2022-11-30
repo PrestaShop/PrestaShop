@@ -1,7 +1,10 @@
-require('module-alias/register');
-
 // Import utils
-const helper = require('@utils/helpers');
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
+require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
@@ -13,9 +16,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 // Import data
 const {DefaultEmployee} = require('@data/demo/employees');
 const EmployeeFaker = require('@data/faker/employee');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_login_login';
 

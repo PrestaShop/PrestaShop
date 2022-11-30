@@ -56,7 +56,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function storePreviousCurrencyId()
     {
-        $this->previousDefaultCurrencyId = Configuration::get('PS_CURRENCY_DEFAULT');
+        $this->previousDefaultCurrencyId = Currency::getDefaultCurrencyId();
         Cache::clean('Currency::*');
     }
 

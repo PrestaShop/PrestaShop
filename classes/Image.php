@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+
 /**
  * Class ImageCore.
  */
@@ -118,6 +120,45 @@ class ImageCore extends ObjectModel
         }
 
         return parent::add($autoDate, $nullValues);
+    }
+
+    /**
+     * This override is needed because we need to set 'id_product' => (int) $this->id_product, in $data array which is
+     * a specific case for association between shop and image
+     *
+     * {@inheritDoc}
+     */
+    public function associateTo($id_shops, int $productId = null)
+    {
+        if (!$this->id) {
+            return;
+        }
+
+        $productId = $productId ?? $this->id_product;
+        if (empty($productId)) {
+            throw new InvalidArgumentException('You cannot associate an image to shop without specifying product ID');
+        }
+
+        if (!is_array($id_shops)) {
+            $id_shops = [$id_shops];
+        }
+
+        $data = [];
+        foreach ($id_shops as $id_shop) {
+            if (!$this->isAssociatedToShop($id_shop)) {
+                $data[] = [
+                    $this->def['primary'] => (int) $this->id,
+                    'id_shop' => (int) $id_shop,
+                    'id_product' => $productId,
+                ];
+            }
+        }
+
+        if ($data) {
+            return Db::getInstance()->insert($this->def['table'] . '_shop', $data);
+        }
+
+        return true;
     }
 
     /**

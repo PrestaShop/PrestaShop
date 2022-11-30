@@ -1,12 +1,16 @@
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
-const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -24,7 +28,7 @@ const categoryPage = require('@pages/FO/category');
 // Import data
 const CategoryFaker = require('@data/faker/category');
 
-const baseContext = 'functional_BO_catalog_categories_CRUDCategoriesInBO';
+const baseContext = 'functional_BO_catalog_categories_CRUDCategoryInBO';
 
 let browserContext;
 let page;

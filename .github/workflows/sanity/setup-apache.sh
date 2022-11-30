@@ -21,4 +21,5 @@ sed -e "s?%BUILD_DIR%?$(echo $WORKSPACE)?g" --in-place /etc/apache2/sites-availa
 
 # Restart apache after giving permission
 chmod 777 -R $WORKSPACE
+chmod +x /home/runner/
 service apache2 restart

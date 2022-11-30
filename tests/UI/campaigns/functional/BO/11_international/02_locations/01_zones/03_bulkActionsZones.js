@@ -1,4 +1,8 @@
-const helper = require('@utils/helpers');
+// Import utils
+import helper from '@utils/helpers';
+
+// Import test context
+import testContext from '@utils/testContext';
 
 // Using chai
 const {expect} = require('chai');
@@ -13,9 +17,6 @@ const addZonePage = require('@pages/BO/international/locations/add');
 
 // Import data
 const ZoneFaker = require('@data/faker/zone');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_international_locations_zones_bulkActionsZones';
 

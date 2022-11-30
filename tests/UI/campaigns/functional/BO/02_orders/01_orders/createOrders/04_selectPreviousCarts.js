@@ -1,10 +1,11 @@
+// Import utils
+import date from '@utils/date';
+import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import Utils
-const helper = require('@utils/helpers');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -32,9 +33,6 @@ const {Products} = require('@data/demo/products');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousCarts';
 
 let browserContext;
@@ -49,8 +47,8 @@ let numberOfNonOrderedShoppingCarts;
 // Variable used to get the last shopping card ID
 let lastShoppingCartId = 0;
 // Const used to get today date format
-const today = getDateFormat('yyyy-mm-dd');
-const todayCartFormat = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const todayCartFormat = date.getDateFormat('mm/dd/yyyy');
 // Const used for My carrier cost
 const myCarrierCost = 8.40;
 // Variable used to get the available stock of the ordered product from BO > stocks page
@@ -116,7 +114,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -230,7 +228,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });
@@ -335,7 +333,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
 
       await shoppingCartsPage.reloadPage(page);
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'status');
+      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
     });
   });
 
