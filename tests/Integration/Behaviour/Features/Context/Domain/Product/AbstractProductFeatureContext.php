@@ -34,6 +34,7 @@ use DateTimeInterface;
 use Language;
 use LogicException;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -337,5 +338,19 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
                 implode(', ', array_keys(self::DATE_KEYS_BY_TYPE))
             )
         );
+    }
+
+    /**
+     * @param string $manufacturerReference
+     *
+     * @return int
+     */
+    protected function getManufacturerId(string $manufacturerReference): int
+    {
+        if ('' === $manufacturerReference) {
+            return NoManufacturerId::NO_MANUFACTURER_ID;
+        }
+
+        return $this->getSharedStorage()->get($manufacturerReference);
     }
 }

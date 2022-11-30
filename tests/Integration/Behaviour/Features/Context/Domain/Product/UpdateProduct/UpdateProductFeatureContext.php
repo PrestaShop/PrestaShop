@@ -28,11 +28,13 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
 
 use Behat\Gherkin\Node\TableNode;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -93,9 +95,8 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
      */
     private function updateProduct(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
-        $command = $this->buildUpdateProductCommand($productReference, $table, $shopConstraint);
-
         try {
+            $command = $this->buildUpdateProductCommand($productReference, $table, $shopConstraint);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             $this->setLastException($e);
@@ -144,8 +145,52 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);
         }
+        // options
+        if (isset($data['visibility'])) {
+            $command->setVisibility($data['visibility']);
+        }
+        if (isset($data['available_for_order'])) {
+            $command->setAvailableForOrder(PrimitiveUtils::castStringBooleanIntoBoolean($data['available_for_order']));
+        }
+        if (isset($data['online_only'])) {
+            $command->setOnlineOnly(PrimitiveUtils::castStringBooleanIntoBoolean($data['online_only']));
+        }
+        if (isset($data['show_price'])) {
+            $command->setShowPrice(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_price']));
+        }
+        if (isset($data['condition'])) {
+            $command->setCondition($data['condition']);
+        }
+        if (isset($data['show_condition'])) {
+            $command->setShowCondition(PrimitiveUtils::castStringBooleanIntoBoolean($data['show_condition']));
+        }
+        if (isset($data['manufacturer'])) {
+            $command->setManufacturerId($this->getManufacturerId($data['manufacturer']));
+        }
 
         return $command;
+    }
+
+    /**
+     * @When I assign non existing manufacturer to product :productReference
+     *
+     * @param string $productReference
+     */
+    public function updateOptionsWithNonExistingManufacturer(string $productReference): void
+    {
+        // intentional. Mimics id of non-existing manufacturer
+        $nonExistingId = 50000;
+
+        try {
+            $command = new UpdateProductCommand(
+                $this->getSharedStorage()->get($productReference),
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
+            $command->setManufacturerId($nonExistingId);
+            $this->getCommandBus()->handle($command);
+        } catch (ManufacturerException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
