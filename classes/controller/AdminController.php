@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
@@ -2031,7 +2032,7 @@ class AdminControllerCore extends Controller
             $this->context->smarty->assign([
                 'help_box' => Configuration::get('PS_HELPBOX'),
                 'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
-                'brightness' => Tools::getBrightness($bo_color) < 128 ? 'white' : '#383838',
+                'brightness' => (new ColorBrightnessCalculator())->isBright($bo_color) ? '#383838' : 'white',
                 'bo_width' => (int) $this->context->employee->bo_width,
                 'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
                 'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'],
