@@ -39,7 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ShopProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -51,6 +53,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @var ProductImageRepository
      */
     private $productImageRepository;
+
+    /**
+     * @var ShopProductImage[]
+     */
+    private $shopProductImages;
 
     public function __construct()
     {
@@ -365,6 +372,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When /^I try to get every image details for product "([^"]*)" in every shop:$/
+     */
+    public function iTryToGetEveryImageDetailsForProductInEveryShop(string $productReference): void
+    {
+        $this->shopProductImages = $this->getQueryBus()->handle(new GetShopProductImages($this->getSharedStorage()->get($productReference)));
+    }
+
+    /**
      * @param int $imageId
      *
      * @return string
@@ -542,6 +557,33 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                     $actualImage->getShopIds()
                 );
             }
+        }
+    }
+
+    /**
+     * @Then /^I should have the followings image details for shop "([^"]*)":$/
+     */
+    public function iShouldHaveTheFollowingsImageDetailsForShop(string $shopReference, TableNode $tableNode)
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopProductImages = array_filter(
+            $this->shopProductImages,
+            static function (ShopProductImage $shopProductImage) use ($shopId): bool {
+                return $shopProductImage->getShopId() === $shopId;
+            }
+        );
+
+        $dataRows = $this->localizeByColumns($tableNode);
+        Assert::assertSame(count($dataRows), count($shopProductImages));
+        foreach ($tableNode as $detail) {
+            Assert::assertContainsEquals(
+                new ShopProductImage(
+                    $this->getSharedStorage()->get(trim($detail['image reference'])),
+                    $shopId,
+                    (int) $detail['cover'] === 1
+                ),
+                $shopProductImages
+            );
         }
     }
 }
