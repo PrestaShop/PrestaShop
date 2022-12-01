@@ -85,15 +85,28 @@ smartyRegisterFunction($smarty, 'modifier', 'escape', 'smartyEscape');
 smartyRegisterFunction($smarty, 'modifier', 'truncate', 'smarty_modifier_truncate');
 smartyRegisterFunction($smarty, 'function', 'l', 'smartyTranslate', false);
 smartyRegisterFunction($smarty, 'function', 'hook', 'smartyHook');
-smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
-smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'function', 'dateFormat', array('Tools', 'dateFormat'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
 smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 smartyRegisterFunction($smarty, 'modifier', 'classname', 'smartyClassname');
 smartyRegisterFunction($smarty, 'modifier', 'classnames', 'smartyClassnames');
 smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty'));
+// Native PHP Functions
+smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
+smartyRegisterFunction($smarty, 'modifier', 'addslashes', 'addslashes');
+smartyRegisterFunction($smarty, 'modifier', 'end','end');
+smartyRegisterFunction($smarty, 'modifier', 'floatval', 'floatval');
+smartyRegisterFunction($smarty, 'modifier', 'htmlentities', 'htmlentities');
+smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
+smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
+smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
+smartyRegisterFunction($smarty, 'modifier', 'rand','rand');
+smartyRegisterFunction($smarty, 'modifier', 'strtolower','strtolower');
+smartyRegisterFunction($smarty, 'modifier', 'str_replace','str_replace');
+smartyRegisterFunction($smarty, 'modifier', 'strval','strval');
 smartyRegisterFunction($smarty, 'modifier', 'trim', 'trim');
+smartyRegisterFunction($smarty, 'modifier', 'ucfirst', 'ucfirst');
+smartyRegisterFunction($smarty, 'modifier', 'urlencode','urlencode');
 
 // Native PHP Functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');

@@ -27,6 +27,11 @@ abstract class Controller extends ControllerCore
 {
     protected $profiler = null;
 
+    /**
+     * @var string|null
+     */
+    public $outPutHtml;
+
     public function __construct()
     {
         $this->profiler = Profiler::getInstance();

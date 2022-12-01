@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
 use DateInterval;
+use DateTime as DateTimeAlias;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -95,7 +96,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public static function createFromMutable($object): DateTimeImmutable
+    public static function createFromMutable(DateTimeAlias $object): DateTimeImmutable
     {
         throw self::buildUnusableMethodException('createFromMutable');
     }

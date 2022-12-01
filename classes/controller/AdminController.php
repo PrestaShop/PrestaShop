@@ -2575,9 +2575,15 @@ class AdminControllerCore extends Controller
         $helper->show_toolbar = $this->show_toolbar;
         $helper->toolbar_scroll = $this->toolbar_scroll;
         $helper->override_folder = $this->tpl_folder;
-        $helper->actions = $this->actions;
-        $helper->simple_header = $this->list_simple_header;
-        $helper->bulk_actions = $this->bulk_actions;
+        if (isset($helper->actions)) {
+            $helper->actions = $this->actions;
+        }
+        if (isset($helper->simple_header)) {
+            $helper->simple_header = $this->list_simple_header;
+        }
+        if (isset($helper->bulk_actions)) {
+            $helper->bulk_actions = $this->bulk_actions;
+        }
         $helper->currentIndex = self::$currentIndex;
         if ($helper->className === null) {
             $helper->className = $this->className;
@@ -2586,22 +2592,38 @@ class AdminControllerCore extends Controller
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
         }
-        $helper->orderBy = $this->_orderBy;
-        $helper->orderWay = $this->_orderWay;
-        $helper->listTotal = $this->_listTotal;
+        if (isset($helper->orderBy)) {
+            $helper->orderBy = $this->_orderBy;
+        }
+        if (isset($helper->orderWay)) {
+            $helper->orderWay = $this->_orderWay;
+        }
+        if (isset($helper->listTotal)) {
+            $helper->listTotal = $this->_listTotal;
+        }
         if ($helper->shopLink === null) {
             $helper->shopLink = $this->shopLink;
         }
-        $helper->shopLinkType = $this->shopLinkType;
+        if (isset($helper->shopLinkType)) {
+            $helper->shopLinkType = $this->shopLinkType;
+        }
         $helper->identifier = $this->identifier;
         $helper->token = $this->token;
         // @phpstan-ignore-next-line
-        $helper->languages = $this->_languages;
-        $helper->specificConfirmDelete = $this->specificConfirmDelete;
-        $helper->imageType = $this->imageType;
-        $helper->no_link = $this->list_no_link;
+        if (isset($helper->languages)) {
+            $helper->languages = $this->_languages;
+        }
+        if (isset($helper->specificConfirmDelete)) {
+            $helper->specificConfirmDelete = $this->specificConfirmDelete;
+        }
+        if (isset($helper->imageType)) {
+            $helper->imageType = $this->imageType;
+        }
+        if (isset($helper->no_link)) {
+            $helper->no_link = $this->list_no_link;
+        }
         $helper->colorOnBackground = $this->colorOnBackground;
-        $helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
+        $helper->ajax_params = $this->ajax_params ?? null;
         // @phpstan-ignore-next-line
         $helper->default_form_language = $this->default_form_language;
         if ($helper->allow_employee_form_lang === null) {

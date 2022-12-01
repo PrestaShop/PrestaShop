@@ -38,6 +38,11 @@ abstract class ControllerCore
     public const SERVICE_MULTISTORE_FEATURE = 'prestashop.adapter.multistore_feature';
 
     /**
+     * @var string|null
+     */
+    public $className;
+
+    /**
      * @var Context
      */
     protected $context;

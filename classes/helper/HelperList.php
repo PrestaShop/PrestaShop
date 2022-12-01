@@ -75,6 +75,11 @@ class HelperListCore extends Helper
 
     public $position_identifier;
 
+    /**
+     * @var string|null
+     */
+    public $position_group_identifier;
+
     public $table_id;
 
     /** @var string */
