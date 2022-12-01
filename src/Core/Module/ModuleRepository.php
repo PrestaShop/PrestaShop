@@ -282,7 +282,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->modulesFromHook === null) {
             $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
             $modulesFromHook = array_values($modulesFromHook ?? []);
-            $this->modulesFromHook = empty(reset($modulesFromHook)) ? [] : array_merge(...$modulesFromHook);
+            $this->modulesFromHook = array_merge(...$modulesFromHook);
         }
 
         return $this->modulesFromHook;
