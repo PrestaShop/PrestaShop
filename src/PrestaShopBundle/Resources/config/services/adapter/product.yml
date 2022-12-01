@@ -480,15 +480,15 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
-  prestashop.adapter.product.stock.command_handler.update_product_stock_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockHandler
+  prestashop.adapter.product.stock.command_handler.update_product_stock_available_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand
 
   prestashop.adapter.product.update.filler.product_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller

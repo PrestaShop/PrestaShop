@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -38,9 +38,9 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 /**
  * Builds following command for single and all shops:
  *
- * @see UpdateProductStockCommand
+ * @see UpdateProductStockAvailableCommand
  */
-class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
+class ProductStockAvailableCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * @var string
@@ -60,7 +60,7 @@ class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInte
      * @param array $formData
      * @param ShopConstraint $singleShopConstraint
      *
-     * @return UpdateProductStockCommand[]
+     * @return UpdateProductStockAvailableCommand[]
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
@@ -86,8 +86,8 @@ class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInte
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateProductStockCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateProductStockCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateProductStockAvailableCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductStockAvailableCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
@@ -100,7 +100,7 @@ class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInte
      * @param array<string, mixed> $formData
      * @param ShopConstraint $singleShopConstraint
      *
-     * @return UpdateProductStockCommand[]
+     * @return UpdateProductStockAvailableCommand[]
      */
     private function buildCommandsForProductWithCombinations(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
@@ -110,8 +110,8 @@ class ProductStockCommandsBuilder implements MultiShopProductCommandsBuilderInte
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateProductStockCommand($productId->getValue(), $singleShopConstraint);
-        $allShopsCommand = new UpdateProductStockCommand($productId->getValue(), ShopConstraint::allShops());
+        $shopCommand = new UpdateProductStockAvailableCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductStockAvailableCommand($productId->getValue(), ShopConstraint::allShops());
 
         return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }

@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -85,7 +85,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
-        $command = new UpdateProductStockCommand(
+        $command = new UpdateProductStockAvailableCommand(
             $this->getSharedStorage()->get($productReference),
             ShopConstraint::shop($this->getDefaultShopId())
         );
@@ -112,7 +112,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $updateStockCommand = new UpdateProductStockCommand($productId, $shopConstraint);
+            $updateStockCommand = new UpdateProductStockAvailableCommand($productId, $shopConstraint);
             $this->setUpdateStockCommandData($data, $updateStockCommand);
             $this->getCommandBus()->handle($updateStockCommand);
 
@@ -125,9 +125,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @param array<string, mixed> $data
-     * @param UpdateProductStockCommand $command
+     * @param UpdateProductStockAvailableCommand $command
      */
-    private function setUpdateStockCommandData(array $data, UpdateProductStockCommand $command): void
+    private function setUpdateStockCommandData(array $data, UpdateProductStockAvailableCommand $command): void
     {
         if (isset($data['out_of_stock_type'])) {
             $command->setOutOfStockType($this->convertOutOfStockToInt($data['out_of_stock_type']));
