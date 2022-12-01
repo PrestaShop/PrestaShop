@@ -31,7 +31,7 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
       | type        | standard        |
-    Given I update product "product1" basic information with following values:
+    Given I update product "product1" with following values:
       | description[en-US]       | nice sunglasses            |
       | description[fr-FR]       | belles lunettes            |
       | description_short[en-US] | Simple & nice sunglasses   |
@@ -39,14 +39,14 @@ Feature: Duplicate product from Back Office (BO).
     And I assign product product1 to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    And I update product "product1" options with following values:
+    And I update product "product1" with following values:
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
       | manufacturer        | studioDesign |
-    And I update product "product1" details with following values:
+    And I update product "product1" with following values:
       | isbn      | 978-3-16-148410-0 |
       | upc       | 72527273070       |
       | ean13     | 978020137962      |
@@ -55,7 +55,7 @@ Feature: Duplicate product from Back Office (BO).
     And I update product "product1" tags with following values:
       | tags[en-US] | smart,glasses,sunglasses,men |
       | tags[fr-FR] | lunettes,bien,soleil         |
-    And I update product "product1" prices with following information:
+    And I update product "product1" with following values:
       | price           | 100.00          |
       | ecotax          | 0               |
       | tax rules group | US-AL Rate (4%) |
@@ -63,7 +63,7 @@ Feature: Duplicate product from Back Office (BO).
       | wholesale_price | 70              |
       | unit_price      | 500             |
       | unity           | bag of ten      |
-    And I update product product1 SEO information with following values:
+    And I update product "product1" with following values:
       | meta_title[en-US]       | SUNGLASSES meta title |
       | meta_description[en-US] | Its so smart          |
       | meta_description[fr-FR] | lel joke              |
@@ -71,7 +71,7 @@ Feature: Duplicate product from Back Office (BO).
       | link_rewrite[fr-FR]     | lunettes-de-soleil    |
       | redirect_type           | 301-product           |
       | redirect_target         | product2              |
-    And I update product product1 shipping information with following values:
+    And I update product "product1" with following values:
       | width                                   | 10.5                 |
       | height                                  | 6                    |
       | depth                                   | 7                    |
@@ -115,7 +115,7 @@ Feature: Duplicate product from Back Office (BO).
       | file_name          | app_icon.png     |
     When I associate product product1 with following attachments: "[att1]"
     And I enable product "product1"
-    When I update product product1 SEO information with following values:
+    When I update product "product1" with following values:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
     And product product1 should have following seo options:
