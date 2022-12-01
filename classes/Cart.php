@@ -4576,7 +4576,7 @@ class CartCore extends ObjectModel
     public function setProductAddressDelivery($id_product, $id_product_attribute, $old_id_address_delivery, $new_id_address_delivery)
     {
         // Check address is linked with the customer
-        if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
+        if (!Customer::customerHasAddress((int) $this->id_customer, $new_id_address_delivery)) {
             return false;
         }
 
@@ -4597,7 +4597,7 @@ class CartCore extends ObjectModel
     public function setAllProductsAddressDelivery($old_id_address_delivery, $new_id_address_delivery)
     {
         // Check address is linked with the customer
-        if (!Customer::customerHasAddress(Context::getContext()->customer->id, $new_id_address_delivery)) {
+        if (!Customer::customerHasAddress((int) $this->id_customer, $new_id_address_delivery)) {
             return;
         }
 
