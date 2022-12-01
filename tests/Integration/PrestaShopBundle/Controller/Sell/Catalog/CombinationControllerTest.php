@@ -38,7 +38,7 @@ use Symfony\Component\DomCrawler\Form;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
-use Tests\Resources\ProductResetter;
+use Tests\Resources\Resetter\ProductResetter;
 
 class CombinationControllerTest extends FormGridControllerTestCase
 {
