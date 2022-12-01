@@ -25,13 +25,12 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 /**
  * Context for asserting product Details related properties

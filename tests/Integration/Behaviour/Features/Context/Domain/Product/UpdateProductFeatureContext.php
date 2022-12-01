@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 

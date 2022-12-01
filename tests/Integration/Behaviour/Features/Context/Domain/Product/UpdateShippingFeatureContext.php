@@ -31,7 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractShippingFeatureContext;
 
 class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
 {
