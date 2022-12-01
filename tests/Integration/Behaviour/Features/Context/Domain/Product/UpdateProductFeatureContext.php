@@ -82,19 +82,6 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When /^I update product "([^"]*)" name \(not using commands\) with following localized values:$/
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     *
-     * @return void
-     */
-    public function updateProductName(string $productReference, TableNode $table): void
-    {
-        $this->updateProductNameManually($productReference, $table);
-    }
-
-    /**
      * @When I update product :productReference prices and apply non-existing tax rules group
      *
      * @param string $productReference
@@ -369,21 +356,5 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         }
 
         return $command;
-    }
-
-    /**
-     * @todo: double check if its still needed when we use single command for update
-     *
-     * This method is created just for specific cases when product name needs to be updated
-     * using legacy object model, but not cqrs commands, to avoid some side effects while testing.
-     * For example when testing how cqrs command auto-fills link_rewrite in certain cases.
-     */
-    private function updateProductNameManually(string $productReference, TableNode $table): void
-    {
-        $productId = $this->getSharedStorage()->get($productReference);
-        $product = new Product($productId, true);
-        $product->name = $this->localizeByRows($table)['name'];
-
-        $product->update();
     }
 }
