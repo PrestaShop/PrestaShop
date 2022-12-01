@@ -37,7 +37,7 @@ Feature: Add product to pack from Back Office (BO)
       | name[en-US] | shady sunglasses |
       | type        | standard         |
     And I copy product product2 from shop shop1 to shop shop2
-    And I update product "product2" details with following values:
+    And I update product "product2" with following values:
       | reference | ref1              |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
@@ -132,7 +132,7 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
       | productSkirt1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | productSkirt1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-    And I update product "productSkirt1" details with following values:
+    And I update product "productSkirt1" with following values:
       | reference | productSkirtRef |
     And I update combination "productSkirt1SWhite" details with following values:
       | reference | productSkirtSWhiteRef |
@@ -282,9 +282,9 @@ Feature: Add product to pack from Back Office (BO)
         | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
         | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
         | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
-      Given I update product "product7" basic information for shop "shop2" with following values:
+      Given I update product "product7" for shop "shop2" with following values:
         | name[en-US]              | casual sunglasses 2 |
-      And I update product "product7" basic information for shop "shop4" with following values:
+      And I update product "product7" for shop "shop4" with following values:
         | name[en-US]              | casual sunglasses 4 |
       Then product "product7" localized "name" for shops "shop4" should be:
         | locale | value               |
