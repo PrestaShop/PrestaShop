@@ -4668,7 +4668,7 @@ class CartCore extends ObjectModel
         $sql->select('id_product, id_product_attribute');
         $sql->from('cart_product');
         $sql->where('id_cart = ' . (int) $this->id);
-        $sql->where('id_address_delivery = ' . $old_id_address_delivery);
+        $sql->where('id_address_delivery = ' . (int) $old_id_address_delivery);
         $sql->orderBy('id_cart');
 
         return Db::getInstance()->executeS($sql);
