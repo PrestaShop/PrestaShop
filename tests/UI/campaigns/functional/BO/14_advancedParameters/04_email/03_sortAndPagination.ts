@@ -1,39 +1,32 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
+// Import pages
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const emailPage = require('@pages/BO/advancedParameters/email');
+import dashboardPage from '@pages/BO/dashboard';
+import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-const foLoginPage = require('@pages/FO/login');
-const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+import foLoginPage from '@pages/FO/login';
+import homePage from '@pages/FO/home';
+import productPage from '@pages/FO/product';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
 
-const baseContext = 'functional_BO_advancedParameters_email_sortAndPagination';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_advancedParameters_email_sortAndPagination';
 
 /*
 Create 6 orders to have 12 emails
@@ -42,6 +35,9 @@ Sort by Id, Recipient, Template, Language, Subject, Send
 Delete by bulk actions
  */
 describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -1,36 +1,34 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
-const viewQueryManagerPage = require('@pages/BO/advancedParameters/database/sqlManager/view');
+import dashboardPage from '@pages/BO/dashboard';
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
+import viewQueryManagerPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 
 // Import data
-const SQLQueryFaker = require('@data/faker/sqlQuery');
-const {Tables} = require('@data/demo/sqlTables');
+import {Tables} from '@data/demo/sqlTables';
+import SQLQueryFaker from '@data/faker/sqlQuery';
 
-const baseContext = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfSQLQuery = 0;
-
-const dbPrefix = global.INSTALL.DB_PREFIX;
-const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
-const editSqlQueryData = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
+const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_CRUDSqlQuery';
 
 describe('BO - Advanced Parameters - Database : Create, View, update and delete SQL query', async () => {
+  const dbPrefix: string = global.INSTALL.DB_PREFIX;
+  const sqlQueryData: SQLQueryFaker = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
+  const editSqlQueryData: SQLQueryFaker = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfSQLQuery: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

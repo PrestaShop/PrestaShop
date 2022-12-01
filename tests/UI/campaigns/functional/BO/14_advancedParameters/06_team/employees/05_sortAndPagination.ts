@@ -1,34 +1,23 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import data
-const EmployeeFaker = require('@data/faker/employee');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-const baseContext = 'functional_BO_advancedParameters_team_employees_sortAndPagination';
+// Import data
+import EmployeeFaker from '@data/faker/employee';
 
-let browserContext;
-let page;
-let numberOfEmployees = 0;
+import {expect} from 'chai';
+import {BrowserContext} from 'playwright';
 
-const employeeData = new EmployeeFaker();
+const baseContext: string = 'functional_BO_advancedParameters_team_employees_sortAndPagination';
 
 /*
 Create 20 employees
@@ -37,6 +26,12 @@ Pagination
 Delete created employees
  */
 describe('BO - Advanced Parameters - Team : Sort and pagination employees', async () => {
+  const employeeData: EmployeeFaker = new EmployeeFaker();
+
+  let browserContext: BrowserContext;
+  let page: PageTransitionEvent;
+  let numberOfEmployees: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -154,7 +149,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await employeesPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await employeesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
@@ -175,7 +170,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await employeesPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await employeesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });

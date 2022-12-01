@@ -1,30 +1,25 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const importPage = require('@pages/BO/advancedParameters/import');
+import dashboardPage from '@pages/BO/dashboard';
+import importPage from '@pages/BO/advancedParameters/import';
 
-const baseContext = 'functional_BO_advancedParameters_import_downloadSampleFiles';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let filePath;
+const baseContext: string = 'functional_BO_advancedParameters_import_downloadSampleFiles';
 
 describe('BO - Advanced Parameters - Import : Download sample csv files', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let filePath: string;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

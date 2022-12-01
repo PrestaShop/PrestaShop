@@ -1,34 +1,23 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
+import dashboardPage from '@pages/BO/dashboard';
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 
 // Import data
-const SQLQueryFaker = require('@data/faker/sqlQuery');
+import SQLQueryFaker from '@data/faker/sqlQuery';
 
-const dbPrefix = global.INSTALL.DB_PREFIX;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_advancedParameters_database_sqlManager_filterSortAndPagination';
-
-let browserContext;
-let page;
-let numberOfSQLQueries = 0;
+const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_filterSortAndPagination';
 
 /*
 Create 11 SQL queries
@@ -38,6 +27,12 @@ Sort SQL queries by : Id, Name, sql query
 Delete by bulk actions
  */
 describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL manager table', async () => {
+  const dbPrefix: string = global.INSTALL.DB_PREFIX;
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfSQLQueries: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -109,7 +104,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -130,7 +125,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -143,7 +138,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
           testIdentifier: 'filterById',
           filterType: 'input',
           filterBy: 'id_request_sql',
-          filterValue: 5,
+          filterValue: '5',
         },
       },
       {

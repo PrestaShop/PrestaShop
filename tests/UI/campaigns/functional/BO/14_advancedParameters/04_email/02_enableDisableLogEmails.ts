@@ -1,30 +1,27 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const emailPage = require('@pages/BO/advancedParameters/email');
+import dashboardPage from '@pages/BO/dashboard';
+import emailPage from '@pages/BO/advancedParameters/email';
 
-const baseContext = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
 
 /*
 Enable/Disable log emails
 Check the existence of E-mail table
  */
 describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

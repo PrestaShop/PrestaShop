@@ -1,28 +1,24 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team');
-const profilesPage = require('@pages/BO/advancedParameters/team/profiles');
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team';
 
-const baseContext = 'functional_BO_advancedParameters_team_profiles_helpCard';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_advancedParameters_team_employees_helpCard';
 
-// Check that help card is in english in profiles page
-describe('BO - Advanced Parameters - Team : Help card in Profiles page', async () => {
+// Check that help card is in english in employees page
+describe('BO - Advanced Parameters - Team : Help card in Employee page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -52,28 +48,20 @@ describe('BO - Advanced Parameters - Team : Help card in Profiles page', async (
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to \'Profiles\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
-
-    await employeesPage.goToProfilesPage(page);
-    const pageTitle = await profilesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(profilesPage.pageTitle);
-  });
-
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await profilesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await employeesPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await profilesPage.getHelpDocumentURL(page);
+    const documentURL = await employeesPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await profilesPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    const isHelpSidebarNotVisible = await employeesPage.closeHelpSideBar(page);
+    await expect(isHelpSidebarNotVisible).to.be.true;
   });
 });

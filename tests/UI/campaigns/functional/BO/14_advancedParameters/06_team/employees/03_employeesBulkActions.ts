@@ -1,47 +1,44 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import data
-const EmployeeFaker = require('@data/faker/employee');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team';
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-const baseContext = 'functional_BO_advancedParameters_team_employees_employeesBulkActions';
+// Import data
+import EmployeeFaker from '@data/faker/employee';
 
-let browserContext;
-let page;
-let numberOfEmployees = 0;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const firstEmployeeData = new EmployeeFaker(
-  {
-    firstName: 'todelete',
-    defaultPage: 'Orders',
-    permissionProfile: 'Logistician',
-  },
-);
-const secondEmployeeData = new EmployeeFaker(
-  {
-    firstName: 'todelete',
-    defaultPage: 'Orders',
-    permissionProfile: 'Logistician',
-  },
-);
+const baseContext: string = 'functional_BO_advancedParameters_team_employees_employeesBulkActions';
 
 // Create Employees, Then disable / Enable and Delete with Bulk actions
 describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delete Employees', async () => {
+  const firstEmployeeData: EmployeeFaker = new EmployeeFaker(
+    {
+      firstName: 'todelete',
+      defaultPage: 'Orders',
+      permissionProfile: 'Logistician',
+    },
+  );
+  const secondEmployeeData: EmployeeFaker = new EmployeeFaker(
+    {
+      firstName: 'todelete',
+      defaultPage: 'Orders',
+      permissionProfile: 'Logistician',
+    },
+  );
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfEmployees: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -87,6 +84,7 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
 
         await employeesPage.goToAddNewEmployeePage(page);
+
         const pageTitle = await addEmployeePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
       });
