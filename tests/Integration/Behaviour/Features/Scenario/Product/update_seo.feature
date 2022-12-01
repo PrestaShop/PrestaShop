@@ -394,11 +394,7 @@ Feature: Update product SEO options from Back Office (BO)
       | locale | value |
       | en-US  |       |
       | fr-FR  |       |
-    # This custom step allows to update only name without affecting link_rewrite,
-    # so that later we can assert that the UpdateProductSEOCommand updates the link_rewrite.
-    # (UpdateProductBasicInformationCommand also has a side effect which updates the link_rewrite,
-    # so we cannot use that command here if we want the test to be accurate)
-    When I update product "product4" name (not using commands) with following localized values:
+    When I update product "product4" with following values:
       | name[en-US] | en product 04 |
       | name[fr-FR] | fr product 04 |
     Then product "product4" localized "name" should be:
@@ -407,12 +403,5 @@ Feature: Update product SEO options from Back Office (BO)
       | fr-FR  | fr product 04 |
     And product "product4" localized "link_rewrite" should be:
       | locale | value |
-      | en-US  |       |
-      | fr-FR  |       |
-    When I update product "product4" with following values:
-      | link_rewrite[en-US] |  |
-      | link_rewrite[fr-FR] |  |
-    And product "product4" localized "link_rewrite" should be:
-      | locale | value         |
       | en-US  | en-product-04 |
       | fr-FR  | fr-product-04 |
