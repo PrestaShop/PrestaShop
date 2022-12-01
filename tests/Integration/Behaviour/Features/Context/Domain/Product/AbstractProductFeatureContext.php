@@ -37,6 +37,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
@@ -336,6 +337,24 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'available' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'not_available' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
             'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid stock type
+        ];
+
+        return $intValues[$outOfStock];
+    }
+
+    /**
+     * @param string $outOfStock
+     *
+     * @return int
+     */
+    protected function convertPackStockTypeToInt(string $outOfStock): int
+    {
+        $intValues = [
+            'default' => PackStockType::STOCK_TYPE_DEFAULT,
+            'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+            'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
+            'both' => PackStockType::STOCK_TYPE_BOTH,
+            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid pack stock type
         ];
 
         return $intValues[$outOfStock];

@@ -26,20 +26,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use DateTime;
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdateStockFeatureContext extends AbstractStockFeatureContext
+class UpdateStockFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I update product :productReference stock with following information:
@@ -117,54 +114,12 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
         try {
             $updateStockCommand = new UpdateProductStockCommand($productId, $shopConstraint);
             $this->setUpdateStockCommandData($data, $updateStockCommand);
-
-            $updateProductCommand = new UpdateProductCommand($productId, $shopConstraint);
-            $this->setUpdateProductCommandData($data, $updateProductCommand);
-
             $this->getCommandBus()->handle($updateStockCommand);
-            $this->getCommandBus()->handle($updateProductCommand);
 
             // Clean the cache or legacy code won't return the right quantity in following steps
             Cache::clean('StockAvailable::*');
         } catch (ProductException $e) {
             $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     * @param UpdateProductCommand $command
-     */
-    private function setUpdateProductCommandData(array $data, UpdateProductCommand $command): void
-    {
-        if (isset($data['pack_stock_type'])) {
-            // If pack is involved we clear the cache because its products settings might have changed
-            Pack::resetStaticCache();
-            $command->setPackStockType($this->convertPackStockTypeToInt($data['pack_stock_type']));
-        }
-
-        if (isset($data['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $data['minimal_quantity']);
-        }
-
-        if (isset($data['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $data['low_stock_threshold']);
-        }
-
-        if (isset($data['low_stock_alert'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
-        }
-
-        if (isset($data['available_now_labels'])) {
-            $command->setLocalizedAvailableNowLabels($data['available_now_labels']);
-        }
-
-        if (isset($data['available_later_labels'])) {
-            $command->setLocalizedAvailableLaterLabels($data['available_later_labels']);
-        }
-
-        if (isset($data['available_date'])) {
-            $command->setAvailableDate(new DateTime($data['available_date']));
         }
     }
 
