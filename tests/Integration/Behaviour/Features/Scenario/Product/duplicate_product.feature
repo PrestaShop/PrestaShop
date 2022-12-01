@@ -23,7 +23,7 @@ Feature: Duplicate product from Back Office (BO).
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
@@ -31,57 +31,55 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
       | type        | standard        |
-    Given I update product "product1" with following values:
-      | description[en-US]       | nice sunglasses            |
-      | description[fr-FR]       | belles lunettes            |
-      | description_short[en-US] | Simple & nice sunglasses   |
-      | description_short[fr-FR] | lunettes simples et belles |
-    And I assign product product1 to following categories:
-      | categories       | [home, men, clothes] |
-      | default category | clothes              |
     And I update product "product1" with following values:
-      | visibility          | catalog      |
-      | available_for_order | false        |
-      | online_only         | true         |
-      | show_price          | false        |
-      | condition           | used         |
-      | manufacturer        | studioDesign |
-    And I update product "product1" with following values:
-      | isbn      | 978-3-16-148410-0 |
-      | upc       | 72527273070       |
-      | ean13     | 978020137962      |
-      | mpn       | mpn1              |
-      | reference | ref1              |
+      | description[en-US]                      | nice sunglasses            |
+      | description[fr-FR]                      | belles lunettes            |
+      | description_short[en-US]                | Simple & nice sunglasses   |
+      | description_short[fr-FR]                | lunettes simples et belles |
+      | visibility                              | catalog                    |
+      | available_for_order                     | false                      |
+      | online_only                             | true                       |
+      | show_price                              | false                      |
+      | condition                               | used                       |
+      | manufacturer                            | studioDesign               |
+      | isbn                                    | 978-3-16-148410-0          |
+      | upc                                     | 72527273070                |
+      | ean13                                   | 978020137962               |
+      | mpn                                     | mpn1                       |
+      | reference                               | ref1                       |
+      | price                                   | 100.00                     |
+      | ecotax                                  | 0                          |
+      | tax rules group                         | US-AL Rate (4%)            |
+      | on_sale                                 | true                       |
+      | wholesale_price                         | 70                         |
+      | unit_price                              | 500                        |
+      | unity                                   | bag of ten                 |
+      | meta_title[en-US]                       | SUNGLASSES meta title      |
+      | meta_description[en-US]                 | Its so smart               |
+      | meta_description[fr-FR]                 | lel joke                   |
+      | link_rewrite[en-US]                     | smart-sunglasses           |
+      | link_rewrite[fr-FR]                     | lunettes-de-soleil         |
+      | redirect_type                           | 301-product                |
+      | redirect_target                         | product2                   |
+      | width                                   | 10.5                       |
+      | height                                  | 6                          |
+      | depth                                   | 7                          |
+      | weight                                  | 0.5                        |
+      | additional_shipping_cost                | 12                         |
+      | delivery time notes type                | specific                   |
+      | delivery time in stock notes[en-US]     | product in stock           |
+      | delivery time in stock notes[fr-FR]     | en stock                   |
+      | delivery time out of stock notes[en-US] | product out of stock       |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock        |
+      | redirect_type                           | 301-product                |
+      | redirect_target                         | product2                   |
+      | active                                  | true                       |
     And I update product "product1" tags with following values:
       | tags[en-US] | smart,glasses,sunglasses,men |
       | tags[fr-FR] | lunettes,bien,soleil         |
-    And I update product "product1" with following values:
-      | price           | 100.00          |
-      | ecotax          | 0               |
-      | tax rules group | US-AL Rate (4%) |
-      | on_sale         | true            |
-      | wholesale_price | 70              |
-      | unit_price      | 500             |
-      | unity           | bag of ten      |
-    And I update product "product1" with following values:
-      | meta_title[en-US]       | SUNGLASSES meta title |
-      | meta_description[en-US] | Its so smart          |
-      | meta_description[fr-FR] | lel joke              |
-      | link_rewrite[en-US]     | smart-sunglasses      |
-      | link_rewrite[fr-FR]     | lunettes-de-soleil    |
-      | redirect_type           | 301-product           |
-      | redirect_target         | product2              |
-    And I update product "product1" with following values:
-      | width                                   | 10.5                 |
-      | height                                  | 6                    |
-      | depth                                   | 7                    |
-      | weight                                  | 0.5                  |
-      | additional_shipping_cost                | 12                   |
-      | delivery time notes type                | specific             |
-      | delivery time in stock notes[en-US]     | product in stock     |
-      | delivery time in stock notes[fr-FR]     | en stock             |
-      | delivery time out of stock notes[en-US] | product out of stock |
-      | delivery time out of stock notes[fr-FR] | En rupture de stock  |
+    And I assign product product1 to following categories:
+      | categories       | [home, men, clothes] |
+      | default category | clothes              |
     And I assign product product1 with following carriers:
       | carrier1 |
       | carrier2 |
@@ -113,21 +111,14 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | macareux         |
       | file_name          | app_icon.png     |
-    When I associate product product1 with following attachments: "[att1]"
-    And I enable product "product1"
-    When I update product "product1" with following values:
-      | redirect_type   | 301-product |
-      | redirect_target | product2    |
-    And product product1 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product2    |
-    When I add a specific price specific_price1 to product product1 with following details:
+    And I associate product product1 with following attachments: "[att1]"
+    And I add a specific price specific_price1 to product product1 with following details:
       | fixed price     | 0.00   |
       | reduction type  | amount |
       | reduction value | 5.00   |
       | includes tax    | true   |
       | from quantity   | 1      |
-    Then product "product1" should have 1 specific prices
+    And product "product1" should have 1 specific prices
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations
@@ -254,9 +245,9 @@ Feature: Duplicate product from Back Office (BO).
 
   Scenario: I duplicate packed product
     Given I add product "product3" with following information:
-      | name[en-US] | packed product |
-      | name[fr-FR] | produit packagé|
-      | type        | pack           |
+      | name[en-US] | packed product  |
+      | name[fr-FR] | produit packagé |
+      | type        | pack            |
     And I update pack "product3" with following product quantities:
       | product  | combination | quantity |
       | product1 |             | 2        |
@@ -265,11 +256,11 @@ Feature: Duplicate product from Back Office (BO).
     And product "copy_of_product3" should be disabled
     And product "copy_of_product3" type should be pack
     And product "copy_of_product3" localized "name" should be:
-      | locale | value                       |
-      | en-US  | copy of packed product    |
+      | locale | value                    |
+      | en-US  | copy of packed product   |
       | fr-FR  | copie de produit packagé |
     And pack copy_of_product3 should contain products with following details:
       | product  | combination | name             | quantity | image url                                              |
-      | product1 |             | smart sunglasses |        2 | http://myshop.com/img/p/{no_picture}-small_default.jpg |
-      | product2 |             | Reading glasses  |        3 | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | product1 |             | smart sunglasses | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | product2 |             | Reading glasses  | 3        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
 
