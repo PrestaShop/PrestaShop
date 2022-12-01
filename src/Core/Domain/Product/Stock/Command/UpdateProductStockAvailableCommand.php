@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
  *
  * @see UpdateProductStockHandlerInterface
  */
-class UpdateProductStockCommand
+class UpdateProductStockAvailableCommand
 {
     /**
      * @var ProductId

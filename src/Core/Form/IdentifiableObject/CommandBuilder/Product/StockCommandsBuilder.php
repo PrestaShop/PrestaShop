@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  * @todo this class should be replaced with StockAvailableCommandsBuilder which will build StockAvailable related commands
  *       while other properties will be handled by unified UpdateProductCommand
  *
- * @see ProductStockCommandsBuilder
+ * @see ProductStockAvailableCommandsBuilder
  */
 final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {

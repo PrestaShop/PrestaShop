@@ -31,14 +31,14 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Updates product stock using legacy object model
  */
-class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
+class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInterface
 {
     /**
      * @var ProductStockUpdater
@@ -73,7 +73,7 @@ class UpdateProductStockHandler implements UpdateProductStockHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(UpdateProductStockCommand $command): void
+    public function handle(UpdateProductStockAvailableCommand $command): void
     {
         $stockModification = null;
         if ($command->getDeltaQuantity()) {

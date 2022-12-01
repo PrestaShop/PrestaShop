@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 
 /**
- * Defines contract for update stock handler
+ * Defines contract to handle @var UpdateProductStockAvailableCommand
  */
 interface UpdateProductStockHandlerInterface
 {
     /**
-     * @param UpdateProductStockCommand $command
+     * @param UpdateProductStockAvailableCommand $command
      */
-    public function handle(UpdateProductStockCommand $command): void;
+    public function handle(UpdateProductStockAvailableCommand $command): void;
 }
