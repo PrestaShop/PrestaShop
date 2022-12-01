@@ -1,6 +1,7 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
-import {Page} from 'playwright';
+
+import type {Page} from 'playwright';
 
 /**
  * FO parent page, contains functions that can be used on all FO page

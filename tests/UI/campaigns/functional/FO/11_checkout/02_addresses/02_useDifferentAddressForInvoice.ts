@@ -25,7 +25,7 @@ import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_checkout_addresses_useDifferentAddressForInvoice';
 
