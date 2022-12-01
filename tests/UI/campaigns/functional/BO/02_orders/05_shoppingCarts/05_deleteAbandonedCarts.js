@@ -90,7 +90,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
       numberOfShoppingCarts -= numberOfShoppingCartsAfterFilter;
 
       for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });
