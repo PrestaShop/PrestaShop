@@ -213,7 +213,23 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
         $command = new UpdateProductCommand($productId, $shopConstraint);
 
-        // basic info
+        $this->fillBasicInformation($command, $data);
+        $this->fillDetails($command, $data);
+        $this->fillOptions($command, $data);
+        $this->fillPrices($command, $data);
+        $this->fillSeo($command, $data);
+        $this->fillShipping($command, $data);
+        $this->fillStock($command, $data);
+
+        return $command;
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillBasicInformation(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);
         }
@@ -223,7 +239,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['description_short'])) {
             $command->setLocalizedShortDescriptions($data['description_short']);
         }
-        // details
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillDetails(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['isbn'])) {
             $command->setIsbn($data['isbn']);
         }
@@ -242,7 +265,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['mpn'])) {
             $command->setMpn($data['mpn']);
         }
-        // options
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillOptions(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['visibility'])) {
             $command->setVisibility($data['visibility']);
         }
@@ -264,7 +294,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['manufacturer'])) {
             $command->setManufacturerId($this->getManufacturerId($data['manufacturer']));
         }
-        // prices
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillPrices(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['price'])) {
             $command->setPrice($data['price']);
         }
@@ -288,7 +325,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['unity'])) {
             $command->setUnity($data['unity']);
         }
-        // seo
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillSeo(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['meta_title'])) {
             $command->setLocalizedMetaTitles($data['meta_title']);
         }
@@ -305,7 +349,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
 
             $command->setRedirectOption($data['redirect_type'], $targetId ?? 0);
         }
-        // shipping
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillShipping(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['width'])) {
             $command->setWidth($data['width']);
         }
@@ -330,7 +381,14 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['delivery time out of stock notes'])) {
             $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
         }
-        // stock
+    }
+
+    /**
+     * @param UpdateProductCommand $command
+     * @param array<string, mixed> $data
+     */
+    private function fillStock(UpdateProductCommand $command, array $data): void
+    {
         if (isset($data['pack_stock_type'])) {
             // If pack is involved we clear the cache because its products settings might have changed
             Pack::resetStaticCache();
@@ -354,7 +412,5 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['available_date'])) {
             $command->setAvailableDate(new DateTime($data['available_date']));
         }
-
-        return $command;
     }
 }
