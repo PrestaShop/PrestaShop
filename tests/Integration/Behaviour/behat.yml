@@ -152,13 +152,13 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\CurrencyTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\SharedStorageTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DetailsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         order_return_state:
           paths:
@@ -341,7 +341,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         shop:
             paths:
@@ -447,21 +447,21 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DetailsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\OptionsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\PricesAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\PricesAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\SeoAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\ShippingAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SeoAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ShippingAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
@@ -517,21 +517,21 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPriceContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\SpecificPricePrioritiesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateAttachmentFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\UpdateProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCategoriesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\DetailsAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\OptionsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\DetailsAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\OptionsAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\PricesAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\PricesAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\SeoAssertionFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\ShippingAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\SeoAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\ShippingAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStatusFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\StockAssertionFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateTagsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\VirtualProductFileFeatureContext
