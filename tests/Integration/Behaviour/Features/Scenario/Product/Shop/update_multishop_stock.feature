@@ -24,17 +24,18 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | name[en-US] | magic staff |
       | type        | standard    |
     Then product "product1" should have no stock movements
-    When I update product "product1" stock with following information:
+    And I update product "product1" with following values:
       | pack_stock_type               | pack_only    |
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
       | minimal_quantity              | 12           |
-      | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
+    When I update product "product1" stock with following information:
+      | out_of_stock_type | available |
+      | delta_quantity    | 42        |
+      | location          | dtc       |
     And I copy product product1 from shop shop1 to shop shop2
     Then product "product1" should have following stock information for shops "shop1,shop2":
       | pack_stock_type     | pack_only  |
@@ -62,17 +63,18 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop4
 
   Scenario: I update product stock for specific shop (not default one)
-    When I update product "product1" stock for shop shop2 with following information:
+    When I update product "product1" for shop shop2 with following values:
       | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
-      | delta_quantity                | 69            |
       | minimal_quantity              | 24            |
-      | location                      | upa           |
       | low_stock_threshold           | 51            |
       | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
+    And I update product "product1" stock for shop shop2 with following information:
+      | out_of_stock_type | not_available |
+      | delta_quantity    | 69            |
+      | location          | upa           |
     Then product "product1" should have following stock information for shops "shop2":
       | pack_stock_type     | products_only |
       | out_of_stock_type   | not_available |
@@ -119,24 +121,26 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop4
 
   Scenario: I update product stock for all associated shop (quantity not handled)
-    When I update product "product1" stock for all shops with following information:
+    When I update product "product1" for all shops with following values:
       | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
       | minimal_quantity              | 24            |
-      | location                      | upa           |
       | low_stock_threshold           | 51            |
       | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
+    When I update product "product1" stock for all shops with following information:
+      | out_of_stock_type | not_available |
+      | location          | upa           |
     Then product "product1" should have following stock information for shops "shop1,shop2":
-      | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
-      | minimal_quantity              | 24            |
-      | location                      | upa           |
-      | low_stock_threshold           | 51            |
-      | low_stock_alert               | false         |
-      | available_date                | 1969-09-16    |
+      | pack_stock_type     | products_only |
+      | out_of_stock_type   | not_available |
+      | minimal_quantity    | 24            |
+      | location            | upa           |
+      | low_stock_threshold | 51            |
+      | low_stock_alert     | false         |
+      | available_date      | 1969-09-16    |
+      | quantity            | 42            |
     And product "product1" localized "available_now_labels" for shops "shop1,shop2" should be:
       | locale | value    |
       | en-US  | hurry up |
@@ -149,22 +153,24 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop4
 
   Scenario: I update some fields for single shop and after for all shops (quantity not handled)
-    When I update product "product1" stock for shop shop2 with following information:
+    When I update product "product1" for shop shop2 with following values:
       | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
       | minimal_quantity              | 24            |
-      | location                      | upa           |
       | low_stock_threshold           | 51            |
       | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
-    When I update product "product1" stock for all shops with following information:
-      | pack_stock_type               | default  |
-      | out_of_stock_type             | default  |
-      | location                      | surprise |
-      | minimal_quantity              | 51       |
-      | available_now_labels[en-US]   | it is on |
+    And I update product "product1" stock for shop shop2 with following information:
+      | out_of_stock_type             | not_available |
+      | location                      | upa           |
+    And I update product "product1" for all shops with following values:
+      | pack_stock_type             | default  |
+      | minimal_quantity            | 51       |
+      | available_now_labels[en-US] | it is on |
+    And I update product "product1" stock for all shops with following information:
+      | out_of_stock_type           | default  |
+      | location                    | surprise |
     Then product "product1" should have following stock information for shops "shop2":
       | pack_stock_type     | default    |
       | out_of_stock_type   | default    |
@@ -199,17 +205,20 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop4
 
   Scenario: I update some fields for all shops and after for single shop (quantity not handled)
-    When I update product "product1" stock for all shops with following information:
-      | pack_stock_type               | default  |
-      | out_of_stock_type             | default  |
-      | location                      | surprise |
-      | minimal_quantity              | 51       |
-      | available_now_labels[en-US]   | it is on |
-    When I update product "product1" stock for shop shop2 with following information:
+    When I update product "product1" for all shops with following values:
+      | pack_stock_type             | default  |
+      | minimal_quantity            | 51       |
+      | available_now_labels[en-US] | it is on |
+    And I update product "product1" stock for all shops with following information:
+      | out_of_stock_type           | default  |
+      | location                    | surprise |
+    And I update product "product1" for shop shop2 with following values:
       | pack_stock_type               | products_only |
       | out_of_stock_type             | not_available |
       | low_stock_alert               | false         |
       | available_later_labels[en-US] | too slow...   |
+    And I update product "product1" stock for shop shop2 with following information:
+      | out_of_stock_type             | not_available |
     Then product "product1" should have following stock information for shops "shop2":
       | pack_stock_type     | products_only |
       | out_of_stock_type   | not_available |

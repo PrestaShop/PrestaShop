@@ -29,6 +29,8 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProd
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
+use DateTime;
+use Pack;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
@@ -341,6 +343,30 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         }
         if (isset($data['delivery time out of stock notes'])) {
             $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
+        }
+        // stock
+        if (isset($data['pack_stock_type'])) {
+            // If pack is involved we clear the cache because its products settings might have changed
+            Pack::resetStaticCache();
+            $command->setPackStockType($this->convertPackStockTypeToInt($data['pack_stock_type']));
+        }
+        if (isset($data['minimal_quantity'])) {
+            $command->setMinimalQuantity((int) $data['minimal_quantity']);
+        }
+        if (isset($data['low_stock_threshold'])) {
+            $command->setLowStockThreshold((int) $data['low_stock_threshold']);
+        }
+        if (isset($data['low_stock_alert'])) {
+            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
+        }
+        if (isset($data['available_now_labels'])) {
+            $command->setLocalizedAvailableNowLabels($data['available_now_labels']);
+        }
+        if (isset($data['available_later_labels'])) {
+            $command->setLocalizedAvailableLaterLabels($data['available_later_labels']);
+        }
+        if (isset($data['available_date'])) {
+            $command->setAvailableDate(new DateTime($data['available_date']));
         }
 
         return $command;

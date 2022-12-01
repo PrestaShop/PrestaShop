@@ -35,11 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 /**
  * Context for assertions related to product Stock
  */
-class StockAssertionFeatureContext extends AbstractStockFeatureContext
+class StockAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Then I should get error that product stock location is invalid
