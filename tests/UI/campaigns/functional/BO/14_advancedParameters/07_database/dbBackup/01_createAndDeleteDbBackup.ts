@@ -1,31 +1,20 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
+import dashboardPage from '@pages/BO/dashboard';
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
 
-const baseContext = 'functional_BO_advancedParameters_database_dbBackup_createAndDeleteDbBackup';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfBackups = 0;
-let filePath;
+const baseContext: string = 'functional_BO_advancedParameters_database_dbBackup_createAndDeleteDbBackup';
 
 /*
 Generate new backup
@@ -33,6 +22,12 @@ Download file
 Delete backup
  */
 describe('BO - Advanced Parameters - Database : Generate db backup and download it', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfBackups: number = 0;
+  let filePath: string;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -67,6 +62,7 @@ describe('BO - Advanced Parameters - Database : Generate db backup and download 
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
     await sqlManagerPage.goToDbBackupPage(page);
+
     const pageTitle = await dbBackupPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });

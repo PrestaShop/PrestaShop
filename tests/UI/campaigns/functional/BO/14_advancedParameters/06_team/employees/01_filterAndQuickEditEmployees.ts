@@ -1,40 +1,37 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import data
-const EmployeeFaker = require('@data/faker/employee');
-const {DefaultEmployee} = require('@data/demo/employees');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
-const baseContext = 'functional_BO_advancedParameters_team_employees_filterAndQuickEditEmployees';
+// Import data
+import {DefaultEmployee} from '@data/demo/employees';
+import EmployeeFaker from '@data/faker/employee';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let numberOfEmployees = 0;
-
-const createEmployeeData = new EmployeeFaker({
-  defaultPage: 'Orders',
-  permissionProfile: 'Logistician',
-  active: false,
-});
+const baseContext: string = 'functional_BO_advancedParameters_team_employees_filterAndQuickEditEmployees';
 
 // Filter and quick edit Employees in BO
 describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfEmployees: number = 0;
+
+  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+    defaultPage: 'Orders',
+    permissionProfile: 'Logistician',
+    active: false,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -124,6 +121,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
       await employeesPage.goToAddNewEmployeePage(page);
+
       const pageTitle = await addEmployeePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });

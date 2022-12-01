@@ -1,54 +1,51 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import data
-const EmployeeFaker = require('@data/faker/employee');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const loginPage = require('@pages/BO/login/index');
-const dashboardPage = require('@pages/BO/dashboard/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
-const productsPage = require('@pages/BO/catalog/products/index');
-const ordersPage = require('@pages/BO/orders/index');
+import loginPage from '@pages/BO/login/index';
+import dashboardPage from '@pages/BO/dashboard/index';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
+import productsPage from '@pages/BO/catalog/products/index';
+import ordersPage from '@pages/BO/orders/index';
 
-const baseContext = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
+// Import data
+import EmployeeFaker from '@data/faker/employee';
 
-let browserContext;
-let page;
-let numberOfEmployees = 0;
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-const createEmployeeData = new EmployeeFaker({
-  defaultPage: 'Products',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-});
-
-const firstEditEmployeeData = new EmployeeFaker({
-  defaultPage: 'Orders',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-});
-
-const secondEditEmployeeData = new EmployeeFaker({
-  defaultPage: 'Orders',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-  active: false,
-});
+const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRUDEmployee';
 
 // Create, Read, Update and Delete Employee in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Employee in BO', async () => {
+  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+    defaultPage: 'Products',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+  });
+
+  const firstEditEmployeeData: EmployeeFaker = new EmployeeFaker({
+    defaultPage: 'Orders',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+  });
+
+  const secondEditEmployeeData: EmployeeFaker = new EmployeeFaker({
+    defaultPage: 'Orders',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+    active: false,
+  });
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfEmployees: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -91,6 +88,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
       await employeesPage.goToAddNewEmployeePage(page);
+
       const pageTitle = await addEmployeePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });
@@ -113,6 +111,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
       await testContext.addContextItem(this, 'testIdentifier', 'signInWithCreatedEmployee', baseContext);
 
       await loginPage.successLogin(page, createEmployeeData.email, createEmployeeData.password);
+
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
@@ -155,6 +154,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditEmployeePage', baseContext);
 
         await employeesPage.goToEditEmployeePage(page, 1);
+
         const pageTitle = await addEmployeePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit);
       });
@@ -183,6 +183,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithUpdatedEmployee', baseContext);
 
         await loginPage.successLogin(page, firstEditEmployeeData.email, firstEditEmployeeData.password);
+
         const pageTitle = await ordersPage.getPageTitle(page);
         await expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
@@ -222,6 +223,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditEmployeePageToDisable', baseContext);
 
         await employeesPage.goToEditEmployeePage(page, 1);
+
         const pageTitle = await addEmployeePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addEmployeePage.pageTitleEdit);
       });
@@ -241,6 +243,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Empl
         await testContext.addContextItem(this, 'testIdentifier', 'signInWithDisabledEmployee', baseContext);
 
         await loginPage.failedLogin(page, secondEditEmployeeData.email, secondEditEmployeeData.password);
+
         const loginError = await loginPage.getLoginError(page);
         await expect(loginError).to.contains(loginPage.loginErrorText);
       });

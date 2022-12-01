@@ -1,37 +1,34 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
-// Import data
-const ProfileFaker = require('@data/faker/profile');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
-const addProfilePage = require('@pages/BO/advancedParameters/team/profiles/add');
+import dashboardPage from '@pages/BO/dashboard/index';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
-const baseContext = 'functional_BO_advancedParameters_team_profiles_CRUDProfile';
+// Import data
+import ProfileFaker from '@data/faker/profile';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let numberOfProfiles = 0;
-
-const profileData = new ProfileFaker();
-const editProfileData = new ProfileFaker();
+const baseContext: string = 'functional_BO_advancedParameters_team_profiles_CRUDProfile';
 
 // Create, Read, Update and Delete profile in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete profile in BO', async () => {
+  const profileData: ProfileFaker = new ProfileFaker();
+  const editProfileData: ProfileFaker = new ProfileFaker();
+
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfProfiles: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -65,6 +62,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
     await employeesPage.goToProfilesPage(page);
+
     const pageTitle = await profilesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(profilesPage.pageTitle);
   });
@@ -82,6 +80,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewProfilePage', baseContext);
 
       await profilesPage.goToAddNewProfilePage(page);
+
       const pageTitle = await addProfilePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProfilePage.pageTitleCreate);
     });
@@ -112,6 +111,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditProfile', baseContext);
 
       await profilesPage.goToEditProfilePage(page, 1);
+
       const pageTitle = await addProfilePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProfilePage.pageTitleEdit);
     });

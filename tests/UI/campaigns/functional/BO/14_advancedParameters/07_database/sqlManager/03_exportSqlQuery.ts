@@ -1,41 +1,36 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
+import dashboardPage from '@pages/BO/dashboard';
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 
-// Import pages
-const SQLQueryFaker = require('@data/faker/sqlQuery');
-const {Tables} = require('@data/demo/sqlTables');
+// Import data
+import {Tables} from '@data/demo/sqlTables';
+import SQLQueryFaker from '@data/faker/sqlQuery';
 
-const baseContext = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let filePath;
-
-let numberOfSQLQueries = 0;
-
-const dbPrefix = global.INSTALL.DB_PREFIX;
-const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
-const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
+const baseContext: string = 'functional_BO_advancedParameters_database_sqlManager_exportSqlQuery';
 
 describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
+  const dbPrefix: string = global.INSTALL.DB_PREFIX;
+  const sqlQueryData: SQLQueryFaker = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
+  const fileContent: string = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let filePath: string;
+
+  let numberOfSQLQueries: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -80,6 +75,7 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewSQLQueryPage', baseContext);
 
       await sqlManagerPage.goToNewSQLQueryPage(page);
+
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
     });

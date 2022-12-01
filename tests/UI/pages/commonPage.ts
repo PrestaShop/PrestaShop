@@ -471,9 +471,9 @@ export default class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} Selector to click on
    * @param targetBlank {boolean} Link has attribute target=blank
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async clickAndWaitForDownload(page: Page, selector: string, targetBlank: boolean = false): Promise<string> {
+  async clickAndWaitForDownload(page: Page, selector: string, targetBlank: boolean = false): Promise<string|null> {
     /* eslint-disable no-return-assign, no-param-reassign */
     // Delete the target because a new tab is opened when downloading the file
     if (targetBlank) {

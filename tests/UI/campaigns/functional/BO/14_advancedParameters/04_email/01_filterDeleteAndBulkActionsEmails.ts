@@ -3,36 +3,30 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
-const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
-
+// Import pages
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const emailPage = require('@pages/BO/advancedParameters/email');
+import dashboardPage from '@pages/BO/dashboard';
+import emailPage from '@pages/BO/advancedParameters/email';
 
 // Import FO pages
-const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+import homePage from '@pages/FO/home';
+import productPage from '@pages/FO/product';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Languages} = require('@data/demo/languages');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Languages} from '@data/demo/languages';
+import {PaymentMethods} from '@data/demo/paymentMethods';
 
-const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-const today = date.getDateFormat('yyyy-mm-dd');
-
-let numberOfEmails = 0;
+const baseContext: string = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 
 /*
 Create an order to have 2 email logs in email table
@@ -41,6 +35,12 @@ Delete email log
 Delete email logs by bulk action
  */
 describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emails', async () => {
+  const today:string = date.getDateFormat('yyyy-mm-dd');
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfEmails: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -1,14 +1,242 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
 
-require('module-alias/register');
+import {Page} from 'playwright';
 
 /**
  * BO parent page, contains functions that can be used on all BO page
  * @class
  * @extends CommonPage
  */
-class BOBasePage extends CommonPage {
+export default class BOBasePage extends CommonPage {
+  private readonly successfulCreationMessage: string;
+
+  private readonly successfulUpdateMessage: string;
+
+  private readonly successfulDeleteMessage: string;
+
+  private readonly successfulMultiDeleteMessage: string;
+
+  private readonly accessDeniedMessage: string;
+
+  private readonly pageNotFoundMessage: string;
+
+  private readonly userProfileIconNonMigratedPages: string;
+
+  private readonly userProfileIcon: string;
+
+  private readonly userProfileFirstname: string;
+
+  private readonly userProfileAvatar: string;
+
+  private readonly userProfileYourProfileLinkNonMigratedPages: string;
+
+  private readonly userProfileYourProfileLink: string;
+
+  private readonly userProfileLogoutLink: string;
+
+  private readonly shopVersionBloc: string;
+
+  private readonly headerShopNameLink: string;
+
+  private readonly quickAccessDropdownToggle: string;
+
+  private readonly quickAccessLink: (idLink: number) => string;
+
+  private readonly quickAddCurrentLink: string;
+
+  private readonly quickAccessRemoveLink: string;
+
+  private readonly manageYourQuickAccessLink: string;
+
+  private readonly navbarSarchInput: string;
+
+  private readonly helpButton: string;
+
+  private readonly menuMobileButton: string;
+
+  private readonly desktopNavbar: string;
+
+  private readonly navbarCollapseButton: string;
+
+  private readonly navbarCollapsed: (isCollapsed: boolean) => string;
+
+  private readonly dashboardLink: string;
+
+  private readonly ordersParentLink: string;
+
+  private readonly ordersLink: string;
+
+  private readonly invoicesLink: string;
+
+  private readonly creditSlipsLink: string;
+
+  private readonly deliverySlipslink: string;
+
+  private readonly shoppingCartsLink: string;
+
+  private readonly catalogParentLink: string;
+
+  private readonly productsLink: string;
+
+  private readonly categoriesLink: string;
+
+  private readonly monitoringLink: string;
+
+  private readonly attributesAndFeaturesLink: string;
+
+  private readonly brandsAndSuppliersLink: string;
+
+  private readonly filesLink: string;
+
+  private readonly discountsLink: string;
+
+  private readonly stocksLink: string;
+
+  private readonly customersParentLink: string;
+
+  private readonly customersLink: string;
+
+  private readonly addressesLink: string;
+
+  private readonly outstandingLink: string;
+
+  private readonly customerServiceParentLink: string;
+
+  private readonly customerServiceLink: string;
+
+  private readonly orderMessagesLink: string;
+
+  private readonly merchandiseReturnsLink: string;
+
+  private readonly modulesParentLink: string;
+
+  private readonly moduleCatalogueLink: string;
+
+  private readonly moduleManagerLink: string;
+
+  private readonly designParentLink: string;
+
+  private readonly themeAndLogoParentLink: string;
+
+  private readonly emailThemeLink: string;
+
+  private readonly pagesLink: string;
+
+  private readonly positionsLink: string;
+
+  private readonly imageSettingsLink: string;
+
+  private readonly linkWidgetLink: string;
+
+  private readonly shippingLink: string;
+
+  private readonly carriersLink: string;
+
+  private readonly shippingPreferencesLink: string;
+
+  private readonly paymentParentLink: string;
+
+  private readonly paymentMethodsLink: string;
+
+  private readonly preferencesLink: string;
+
+  private readonly internationalParentLink: string;
+
+  private readonly taxesLink: string;
+
+  private readonly localizationLink: string;
+
+  private readonly locationsLink: string;
+
+  private readonly translationsLink: string;
+
+  private readonly shopParametersParentLink: string;
+
+  private readonly shopParametersGeneralLink: string;
+
+  private readonly orderSettingsLink: string;
+
+  private readonly productSettingsLink: string;
+
+  private readonly customerSettingsLink: string;
+
+  private readonly contactLink: string;
+
+  private readonly trafficAndSeoLink: string;
+
+  private readonly searchLink: string;
+
+  private readonly advancedParametersLink: string;
+
+  private readonly informationLink: string;
+
+  private readonly performanceLink: string;
+
+  private readonly administrationLink: string;
+
+  private readonly emailLink: string;
+
+  private readonly importLink: string;
+
+  private readonly teamLink: string;
+
+  private readonly databaseLink: string;
+
+  private readonly webserviceLink: string;
+
+  private readonly logsLink: string;
+
+  private readonly featureFlagLink: string;
+
+  private readonly securityLink: string;
+
+  private readonly multistoreLink: string;
+
+  private readonly menuTabLink: string;
+
+  private readonly menuTree: { parent: string; children: string[] }[];
+
+  private readonly growlDiv: string;
+
+  private readonly growlDefaultDiv: string;
+
+  private readonly growlMessageBlock: string;
+
+  private readonly growlCloseButton: string;
+
+  private readonly alertBlock: string;
+
+  private readonly alertSuccessBlock: string;
+
+  private readonly alertDangerBlock: string;
+
+  private readonly alertInfoBlock: string;
+
+  private readonly alertSuccessBlockParagraph: string;
+
+  private readonly alertDangerBlockParagraph: string;
+
+  private readonly alertInfoBlockParagraph: string;
+
+  private readonly confirmationModal: string;
+
+  private readonly modalDialog: string;
+
+  private readonly modalDialogYesButton: string;
+
+  private readonly sfToolbarMainContentDiv: string;
+
+  private readonly sfCloseToolbarLink: string;
+
+  private readonly rightSidebar: string;
+
+  private readonly helpDocumentURL: string;
+
+  private readonly invalidTokenContinuelink: string;
+
+  private readonly invalidTokenCancellink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all BO pages
@@ -331,7 +559,7 @@ class BOBasePage extends CommonPage {
    * @param linkId {number} Page ID
    * @returns {Promise<void>}
    */
-  async quickAccessToPage(page, linkId) {
+  async quickAccessToPage(page: Page, linkId: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
     await this.waitForPageTitleToLoad(page);
@@ -343,7 +571,7 @@ class BOBasePage extends CommonPage {
    * @param linkId {number} Page ID
    * @returns {Promise<Page>}
    */
-  async quickAccessToPageNewWindow(page, linkId) {
+  async quickAccessToPageNewWindow(page: Page, linkId: number): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     return this.openLinkWithTargetBlank(page, this.quickAccessLink(linkId));
   }
@@ -353,7 +581,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async removeLinkFromQuickAccess(page) {
+  async removeLinkFromQuickAccess(page: Page): Promise<string|null> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
@@ -364,9 +592,9 @@ class BOBasePage extends CommonPage {
    * Add current page to quick access
    * @param page {Page} Browser tab
    * @param pageName {string} Page name to add on quick access
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async addCurrentPageToQuickAccess(page, pageName) {
+  async addCurrentPageToQuickAccess(page: Page, pageName: string): Promise<string|null> {
     await this.dialogListener(page, true, pageName);
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
@@ -379,7 +607,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToManageQuickAccessPage(page) {
+  async goToManageQuickAccessPage(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
   }
@@ -391,7 +619,7 @@ class BOBasePage extends CommonPage {
    * @param linkSelector {string} Selector of the child menu
    * @returns {Promise<void>}
    */
-  async goToSubMenu(page, parentSelector, linkSelector) {
+  async goToSubMenu(page: Page, parentSelector: string, linkSelector: string): Promise<void> {
     await this.clickSubMenu(page, parentSelector);
     await this.scrollTo(page, linkSelector);
     await this.clickAndWaitForNavigation(page, linkSelector);
@@ -408,7 +636,7 @@ class BOBasePage extends CommonPage {
    * @param parentSelector {string} Selector of the parent menu
    * @returns {Promise<void>}
    */
-  async clickSubMenu(page, parentSelector) {
+  async clickSubMenu(page: Page, parentSelector: string): Promise<void> {
     const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
 
     if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
@@ -428,7 +656,7 @@ class BOBasePage extends CommonPage {
    * @param linkSelector {string} Selector of the menu
    * @return {Promise<boolean>}
    */
-  async isSubMenuActive(page, linkSelector) {
+  async isSubMenuActive(page: Page, linkSelector: string): Promise<boolean> {
     return (await page.$$(`${linkSelector}.link-active`)).length > 0;
   }
 
@@ -437,7 +665,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async isNavbarVisible(page) {
+  async isNavbarVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.desktopNavbar, 1000);
   }
 
@@ -446,7 +674,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async isMobileMenuVisible(page) {
+  async isMobileMenuVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.menuMobileButton, 1000);
   }
 
@@ -457,7 +685,7 @@ class BOBasePage extends CommonPage {
    * @param linkSelector {string} Selector of the child menu
    * @return {Promise<boolean>}
    */
-  async isSubmenuVisible(page, parentSelector, linkSelector) {
+  async isSubmenuVisible(page: Page, parentSelector: string, linkSelector: string): Promise<boolean> {
     const openSelector = await this.isSidebarCollapsed(page) ? '.ul-open' : '.open';
 
     if (await this.elementNotVisible(page, `${parentSelector}${openSelector}`, 1000)) {
@@ -478,10 +706,10 @@ class BOBasePage extends CommonPage {
    * Collapse the sidebar
    * @param page {Page} Browser tab
    * @param isCollapsed {boolean} Selector of the parent menu
-   * @return {Promise<boolean>}
+   * @return {Promise<void>}
    */
-  async setSidebarCollapsed(page, isCollapsed) {
-    const isCurrentCollapsed = this.isSidebarCollapsed(page);
+  async setSidebarCollapsed(page: Page, isCollapsed: boolean): Promise<void> {
+    const isCurrentCollapsed = await this.isSidebarCollapsed(page);
 
     if (isCurrentCollapsed !== isCollapsed) {
       await Promise.all([
@@ -499,7 +727,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async isSidebarCollapsed(page) {
+  async isSidebarCollapsed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.navbarCollapsed(true), 1000);
   }
 
@@ -508,7 +736,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToMyProfile(page) {
+  async goToMyProfile(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
@@ -525,9 +753,9 @@ class BOBasePage extends CommonPage {
   /**
    * Returns the URL of the avatar for the current employee from the dropdown
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getCurrentEmployeeAvatar(page) {
+  async getCurrentEmployeeAvatar(page: Page): Promise<string|null> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
@@ -542,7 +770,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async logoutBO(page) {
+  async logoutBO(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
@@ -557,7 +785,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<Page>}
    */
-  async viewMyShop(page) {
+  async viewMyShop(page: Page): Promise<Page> {
     return this.openLinkWithTargetBlank(page, this.headerShopNameLink);
   }
 
@@ -568,7 +796,7 @@ class BOBasePage extends CommonPage {
    * @param value {string} Value to set on the iFrame
    * @return {Promise<void>}
    */
-  async setValueOnTinymceInput(page, iFrameSelector, value) {
+  async setValueOnTinymceInput(page: Page, iFrameSelector: string, value: string): Promise<void> {
     const args = {selector: iFrameSelector, vl: value};
     // eslint-disable-next-line no-eval
     const fn = eval(`({
@@ -588,28 +816,28 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeSfToolBar(page) {
+  async closeSfToolBar(page: Page): Promise<void> {
     if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
       await page.click(this.sfCloseToolbarLink);
     }
   }
 
   /**
-   * Open help side bar
+   * Open help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async openHelpSideBar(page) {
+  async openHelpSideBar(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.helpButton);
     return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
   }
 
   /**
-   * Close help side bar
+   * Close help sidebar
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeHelpSideBar(page) {
+  async closeHelpSideBar(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.helpButton);
     return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
   }
@@ -617,9 +845,9 @@ class BOBasePage extends CommonPage {
   /**
    * Get help document URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getHelpDocumentURL(page) {
+  async getHelpDocumentURL(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
@@ -627,9 +855,9 @@ class BOBasePage extends CommonPage {
    * Get growl message content
    * @param page {Page} Browser tab
    * @param timeout {number} Timeout to wait for the selector
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page, timeout = 10000) {
+  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string|null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 
@@ -638,7 +866,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async closeGrowlMessage(page) {
+  async closeGrowlMessage(page: Page): Promise<void> {
     let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
 
     while (!growlNotVisible) {
@@ -659,7 +887,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertDangerBlockParagraphContent(page) {
+  getAlertDangerBlockParagraphContent(page: Page): Promise<string|null> {
     return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 
@@ -668,7 +896,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockContent(page) {
+  getAlertSuccessBlockContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -677,7 +905,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertSuccessBlockParagraphContent(page) {
+  getAlertSuccessBlockParagraphContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 
@@ -686,7 +914,7 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertInfoBlockParagraphContent(page) {
+  getAlertInfoBlockParagraphContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertInfoBlockParagraph);
   }
 
@@ -697,7 +925,7 @@ class BOBasePage extends CommonPage {
    * @param continueToPage {boolean} True to continue false to cancel and return to dashboard page
    * @returns {Promise<void>}
    */
-  async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
+  async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
     if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
       await this.clickAndWaitForNavigation(
@@ -713,10 +941,10 @@ class BOBasePage extends CommonPage {
    * @param query {string} String
    * @returns {Promise<void>}
    */
-  async search(page, query) {
+  async search(page: Page, query: string): Promise<void> {
     await this.setValue(page, this.navbarSarchInput, query);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation('networkidle');
+    await page.waitForNavigation({waitUntil: 'networkidle'});
   }
 
   /**
@@ -725,7 +953,7 @@ class BOBasePage extends CommonPage {
    * @param mobileSize {boolean} Define if the viewport is for mobile or not
    * @returns {Promise<void>}
    */
-  async resize(page, mobileSize) {
+  async resize(page: Page, mobileSize: boolean): Promise<void> {
     await super.resize(page, mobileSize);
     await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
   }

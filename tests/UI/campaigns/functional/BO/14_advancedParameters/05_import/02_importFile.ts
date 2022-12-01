@@ -1,38 +1,23 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const importPage = require('@pages/BO/advancedParameters/import');
-const categoriesPage = require('@pages/BO/catalog/categories');
+import dashboardPage from '@pages/BO/dashboard';
+import importPage from '@pages/BO/advancedParameters/import';
+import categoriesPage from '@pages/BO/catalog/categories';
 
-// Import Data
-const {Data} = require('@data/import/categories');
+// Import data
+import {Data} from '@data/import/categories';
 
-const baseContext = 'functional_BO_advancedParameters_import_importFile';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-// Variables
-let browserContext;
-let page;
-
-// Variable Used to create csv file
-const fileName = 'categories.csv';
-
-// Variable used in the "check import success" test
-let numberOfCategories = 0;
+const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 
 /*
 Pre-condition:
@@ -45,6 +30,14 @@ Post-Condition:
 - delete imported categories
  */
 describe('BO - Advanced Parameters - Import : Import categories', async () => {
+  // Variable Used to create csv file
+  const fileName: string = 'categories.csv';
+
+  let browserContext: BrowserContext;
+  let page: Page;
+  // Variable used in the "check import success" test
+  let numberOfCategories: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
