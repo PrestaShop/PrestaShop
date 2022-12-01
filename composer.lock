@@ -5334,25 +5334,28 @@
         },
         {
             "name": "prestashop/dashactivity",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashactivity.git",
-                "reference": "8d41fab7a58cdaeabc0248f6fd571da32d7615d4"
+                "reference": "21e90c2d98dc797e2ce8927e6f6e510ac60a6159"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashactivity/zipball/8d41fab7a58cdaeabc0248f6fd571da32d7615d4",
-                "reference": "8d41fab7a58cdaeabc0248f6fd571da32d7615d4",
+                "url": "https://api.github.com/repos/PrestaShop/dashactivity/zipball/21e90c2d98dc797e2ce8927e6f6e510ac60a6159",
+                "reference": "21e90c2d98dc797e2ce8927e6f6e510ac60a6159",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -5363,9 +5366,9 @@
             "description": "PrestaShop module dashactivity",
             "homepage": "https://github.com/PrestaShop/dashactivity",
             "support": {
-                "source": "https://github.com/PrestaShop/dashactivity/tree/master"
+                "source": "https://github.com/PrestaShop/dashactivity/tree/v2.1.0"
             },
-            "time": "2017-12-08T11:06:01+00:00"
+            "time": "2022-12-01T10:40:27+00:00"
         },
         {
             "name": "prestashop/dashgoals",
@@ -5383,6 +5386,9 @@
             },
             "require": {
                 "php": ">=5.4"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
