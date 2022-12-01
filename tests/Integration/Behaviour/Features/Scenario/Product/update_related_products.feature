@@ -61,7 +61,7 @@ Feature: Update product related products from Back Office (BO)
       | product  | name            | reference | image url                                              |
       | product2 | book of love    |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | product4 | Reading glasses |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-    When I update product "product2" details with following values:
+    When I update product "product2" with following values:
       | reference | ref2              |
     Then product product1 should have following related products:
       | product  | name            | reference | image url                                              |
