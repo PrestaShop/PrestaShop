@@ -1,14 +1,127 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
-
-require('module-alias/register');
+import {Page} from 'playwright';
 
 /**
  * FO parent page, contains functions that can be used on all FO page
  * @class
  * @extends CommonPage
  */
-class FOBasePage extends CommonPage {
+export default class FOBasePage extends CommonPage {
+  private readonly content: string;
+
+  private readonly desktopLogo: string;
+
+  private readonly desktopLogoLink: string;
+
+  private readonly breadCrumbLink: (link: string) => string;
+
+  private readonly cartProductsCount: string;
+
+  private readonly cartLink: string;
+
+  private readonly userInfoLink: string;
+
+  private readonly accountLink: string;
+
+  private readonly logoutLink: string;
+
+  private readonly contactLink: string;
+
+  private readonly categoryMenu: (id: number) => string;
+
+  private readonly languageSelectorDiv: string;
+
+  private readonly defaultLanguageSpan: string;
+
+  private readonly languageSelectorExpandIcon: string;
+
+  private readonly languageSelectorList: string;
+
+  private readonly languageSelectorMenuItemLink: (language: string) => string;
+
+  private readonly currencySelectorDiv: string;
+
+  private readonly defaultCurrencySpan: string;
+
+  private readonly currencySelectorExpandIcon: string;
+
+  private readonly currencySelectorMenuItemLink: (currency: string) => string;
+
+  private readonly currencySelect: string;
+
+  private readonly searchInput: string;
+
+  private readonly autocompleteSearchResult: string;
+
+  private readonly autocompleteSearchResultItem: string;
+
+  private readonly autocompleteSearchResultItemLink: (nthChild: number) => string;
+
+  private readonly pricesDropLink: string;
+
+  private readonly newProductsLink: string;
+
+  private readonly bestSalesLink: string;
+
+  private readonly deliveryLink: string;
+
+  private readonly legalNoticeLink: string;
+
+  private readonly termsAndConditionsOfUseLink: string;
+
+  private readonly aboutUsLink: string;
+
+  private readonly securePaymentLink: string;
+
+  private readonly contactUsLink: string;
+
+  private readonly siteMapLink: string;
+
+  private readonly storesLink: string;
+
+  private readonly footerAccountList: string;
+
+  private readonly informationLink: string;
+
+  private readonly orderTrackingLink: string;
+
+  private readonly signInLink: string;
+
+  private readonly createAccountLink: string;
+
+  private readonly addressesLink: string;
+
+  private readonly addFirstAddressLink: string;
+
+  private readonly ordersLink: string;
+
+  private readonly creditSlipsLink: string;
+
+  private readonly vouchersLink: string;
+
+  private readonly wishListLink: string;
+
+  private readonly signOutLink: string;
+
+  private readonly wrapperContactBlockDiv: string;
+
+  private readonly footerLinksDiv: string;
+
+  private readonly wrapperDiv: (position: number) => string;
+
+  private readonly wrapperTitle: (position:number) => string;
+
+  private readonly wrapperSubmenu: (position: number) => string;
+
+  private readonly wrapperSubmenuItemLink: (position: number) => string;
+
+  private readonly copyrightLink: string;
+
+  private readonly alertSuccessBlock: string;
+
+  private readonly notificationsBlock: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on all FO pages
@@ -98,7 +211,7 @@ class FOBasePage extends CommonPage {
    * @param link {string} Header selector that contain link to click on to
    * @returns {Promise<void>}
    */
-  async clickOnHeaderLink(page, link) {
+  async clickOnHeaderLink(page: Page, link: string): Promise<void> {
     let selector;
 
     switch (link) {
@@ -131,7 +244,7 @@ class FOBasePage extends CommonPage {
    * @param link {string} Link to click on
    * @returns {Promise<void>}
    */
-  async clickOnBreadCrumbLink(page, link) {
+  async clickOnBreadCrumbLink(page: Page, link: string): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.breadCrumbLink(link));
   }
 
@@ -140,7 +253,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToHomePage(page) {
+  async goToHomePage(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.desktopLogo);
     await this.clickAndWaitForNavigation(page, this.desktopLogoLink);
   }
@@ -150,7 +263,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToLoginPage(page) {
+  async goToLoginPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.userInfoLink);
   }
 
@@ -159,7 +272,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async logout(page) {
+  async logout(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.logoutLink);
   }
 
@@ -168,7 +281,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async isCustomerConnected(page) {
+  async isCustomerConnected(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.logoutLink, 1000);
   }
 
@@ -177,7 +290,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToMyAccountPage(page) {
+  async goToMyAccountPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.accountLink);
   }
 
@@ -186,16 +299,16 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isLanguageListVisible(page) {
+  isLanguageListVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
   }
 
   /**
    * Get shop language
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getShopLanguage(page) {
+  getShopLanguage(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, 'html[lang]', 'lang');
   }
 
@@ -205,7 +318,7 @@ class FOBasePage extends CommonPage {
    * @param lang {string} Language to choose on the select (ex: en or fr)
    * @return {Promise<void>}
    */
-  async changeLanguage(page, lang = 'en') {
+  async changeLanguage(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
       page.click(this.languageSelectorExpandIcon),
       this.waitForVisibleSelector(page, this.languageSelectorList),
@@ -218,7 +331,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDefaultShopLanguage(page) {
+  getDefaultShopLanguage(page: Page): Promise<string> {
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
@@ -228,7 +341,7 @@ class FOBasePage extends CommonPage {
    * @param lang {string} Language to check on the select (ex: en or fr)
    * @return {Promise<boolean>}
    */
-  async languageExists(page, lang = 'en') {
+  async languageExists(page: Page, lang: string = 'en'): Promise<boolean> {
     await page.click(this.languageSelectorExpandIcon);
     return this.elementVisible(page, this.languageSelectorMenuItemLink(lang), 1000);
   }
@@ -240,13 +353,15 @@ class FOBasePage extends CommonPage {
    * @param symbol {string} Symbol of the currency to choose
    * @return {Promise<void>}
    */
-  async changeCurrency(page, isoCode = 'EUR', symbol = '€') {
+  async changeCurrency(page: Page, isoCode: string = 'EUR', symbol: string = '€'): Promise<void> {
     // If isoCode and symbol are the same, only isoCode id displayed in FO
     const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     await Promise.all([
       this.selectByVisibleText(page, this.currencySelect, currency, true),
-      page.waitForNavigation('newtorkidle'),
+      page.waitForNavigation({
+        waitUntil: 'networkidle',
+      }),
     ]);
   }
 
@@ -255,7 +370,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isCurrencyDropdownExist(page) {
+  isCurrencyDropdownExist(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.currencySelectorExpandIcon, 1000);
   }
 
@@ -265,7 +380,7 @@ class FOBasePage extends CommonPage {
    * @param currencyName {string} Name of the currency to check
    * @returns {Promise<boolean>}
    */
-  async currencyExists(page, currencyName = 'Euro') {
+  async currencyExists(page: Page, currencyName: string = 'Euro'): Promise<boolean> {
     await page.click(this.currencySelectorExpandIcon);
     return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName), 1000);
   }
@@ -275,7 +390,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDefaultCurrency(page) {
+  getDefaultCurrency(page: Page): Promise<string> {
     return this.getTextContent(page, this.defaultCurrencySpan);
   }
 
@@ -285,7 +400,7 @@ class FOBasePage extends CommonPage {
    * @param categoryID {number} Category id from the BO
    * @returns {Promise<void>}
    */
-  async goToCategory(page, categoryID) {
+  async goToCategory(page: Page, categoryID: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.categoryMenu(categoryID));
   }
 
@@ -296,7 +411,7 @@ class FOBasePage extends CommonPage {
    * @param subCategoryID {number} Subcategory id from the BO
    * @returns {Promise<void>}
    */
-  async goToSubCategory(page, categoryID, subCategoryID) {
+  async goToSubCategory(page: Page, categoryID: number, subCategoryID: number): Promise<void> {
     await page.hover(this.categoryMenu(categoryID));
     await this.clickAndWaitForNavigation(page, this.categoryMenu(subCategoryID));
   }
@@ -306,7 +421,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getStoreInformation(page) {
+  async getStoreInformation(page: Page): Promise<string> {
     return this.getTextContent(page, this.wrapperContactBlockDiv);
   }
 
@@ -315,7 +430,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getCartNotificationsNumber(page) {
+  async getCartNotificationsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.cartProductsCount, 2000);
   }
 
@@ -324,7 +439,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToCartPage(page) {
+  async goToCartPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.cartLink);
   }
 
@@ -333,7 +448,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {void}
    */
-  async closeAutocompleteSearch(page) {
+  async closeAutocompleteSearch(page: Page): Promise<void> {
     await page.keyboard.press('Escape');
   }
 
@@ -343,7 +458,7 @@ class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<boolean>}
    */
-  async hasAutocompleteSearchResult(page, productName) {
+  async hasAutocompleteSearchResult(page: Page, productName:string): Promise<boolean> {
     await this.setValue(page, this.searchInput, productName);
     return this.elementVisible(page, this.autocompleteSearchResult, 2000);
   }
@@ -354,7 +469,7 @@ class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<string>}
    */
-  async getAutocompleteSearchResult(page, productName) {
+  async getAutocompleteSearchResult(page: Page, productName: string): Promise<string> {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResult);
     return this.getTextContent(page, this.autocompleteSearchResult);
@@ -364,9 +479,9 @@ class FOBasePage extends CommonPage {
    * Count autocomplete search result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
-   * @returns {Promise<int>}
+   * @returns {Promise<number>}
    */
-  async countAutocompleteSearchResult(page, productName) {
+  async countAutocompleteSearchResult(page: Page, productName: string): Promise<number> {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
     return page.$$eval(this.autocompleteSearchResultItem, (all) => all.length);
@@ -378,20 +493,22 @@ class FOBasePage extends CommonPage {
    * @param productName {string} Product name to search
    * @returns {Promise<void>}
    */
-  async searchProduct(page, productName) {
+  async searchProduct(page: Page, productName: string): Promise<void > {
     await this.setValue(page, this.searchInput, productName);
     await page.keyboard.press('Enter');
-    await page.waitForNavigation('networkidle');
+    await page.waitForNavigation({
+      waitUntil: 'networkidle',
+    });
   }
 
   /**
    * Click autocomplete search on the nth result
    * @param page {Page} Browser tab
    * @param productName {string} Product name to search
-   * @param nthResult {integer} Nth result to click
-   * @returns {Promise<int>}
+   * @param nthResult {number} Nth result to click
+   * @returns {Promise<number>}
    */
-  async clickAutocompleteSearchResult(page, productName, nthResult) {
+  async clickAutocompleteSearchResult(page: Page, productName: string, nthResult: number): Promise<void> {
     await this.setValue(page, this.searchInput, productName);
     await this.waitForVisibleSelector(page, this.autocompleteSearchResultItem);
     await this.clickAndWaitForNavigation(page, this.autocompleteSearchResultItemLink(nthResult));
@@ -404,7 +521,7 @@ class FOBasePage extends CommonPage {
    * @param position {number} Position of the links on footer
    * @returns {Promise<string>}
    */
-  async getFooterLinksBlockTitle(page, position) {
+  async getFooterLinksBlockTitle(page: Page, position: number): Promise<string> {
     return this.getTextContent(page, this.wrapperTitle(position));
   }
 
@@ -414,10 +531,10 @@ class FOBasePage extends CommonPage {
    * @param position {number} Position of the links on footer
    * @return {Promise<Array<string>>}
    */
-  async getFooterLinksTextContent(page, position) {
+  async getFooterLinksTextContent(page: Page, position: number): Promise<Array<string>> {
     return page.$$eval(
       this.wrapperSubmenuItemLink(position),
-      (all) => all.map((el) => el.textContent.trim()),
+      (all) => all.map((el) => (el.textContent ?? '').trim()),
     );
   }
 
@@ -427,7 +544,7 @@ class FOBasePage extends CommonPage {
    * @param textSelector {string} String displayed on footer link to click on
    * @returns {Promise<void>}
    */
-  async goToFooterLink(page, textSelector) {
+  async goToFooterLink(page: Page, textSelector: string): Promise<void> {
     let selector;
 
     switch (textSelector) {
@@ -531,7 +648,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCopyright(page) {
+  async getCopyright(page: Page): Promise<string> {
     return this.getTextContent(page, this.copyrightLink);
   }
 
@@ -540,7 +657,7 @@ class FOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isCurrencyVisible(page) {
+  async isCurrencyVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.currencySelectorDiv, 1000);
   }
 
@@ -551,7 +668,7 @@ class FOBasePage extends CommonPage {
    * @param input {string} ID of the input
    * @returns {Promise<string>}
    */
-  async getInputValue(page, input) {
+  async getInputValue(page: Page, input: string): Promise<string> {
     return page.inputValue(input);
   }
 }

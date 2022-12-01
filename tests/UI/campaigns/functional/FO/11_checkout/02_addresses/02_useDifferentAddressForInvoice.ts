@@ -1,45 +1,33 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders');
-const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
+import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import FO pages
-const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+import foHomePage from '@pages/FO/home';
+import foProductPage from '@pages/FO/product';
+import foCartPage from '@pages/FO/cart';
+import foCheckoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-const {Products} = require('@data/demo/products');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const CustomerFaker = require('@data/faker/customer');
-const AddressFaker = require('@data/faker/address');
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
+import AddressFaker from '@data/faker/address';
+import CustomerFaker from '@data/faker/customer';
 
-// Create faker data
-const guestData = new CustomerFaker({password: ''});
-const deliveryAddress = new AddressFaker({country: 'France'});
-const invoiceAddress = new AddressFaker({country: 'France'});
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-// context
-const baseContext = 'functional_FO_checkout_addresses_useDifferentAddressForInvoice';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_checkout_addresses_useDifferentAddressForInvoice';
 
 /*
 Go to FO
@@ -58,6 +46,13 @@ Check that the 2 addresses are different
 */
 
 describe('FO - Guest checkout: Use different invoice address', async () => {
+  // Create faker data
+  const guestData: CustomerFaker = new CustomerFaker({password: ''});
+  const deliveryAddress: AddressFaker = new AddressFaker({country: 'France'});
+  const invoiceAddress: AddressFaker = new AddressFaker({country: 'France'});
+
+  let browserContext: BrowserContext;
+  let page: Page;
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
