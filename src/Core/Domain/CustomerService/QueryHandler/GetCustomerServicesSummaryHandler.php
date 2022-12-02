@@ -53,24 +53,31 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
     {
         $customerServicesSummary = [];
         foreach (Contact::getCategoriesContacts() as $categoriesContact) {
-            $customerServiceSummary = new CustomerServiceSummary((int) $categoriesContact['id_contact']);
             $customerThreadId = 0;
+            $totalThreads = 0;
+            $viewUrl = '';
             foreach (CustomerThread::getContacts() as $contact) {
                 if ($categoriesContact['id_contact'] === $contact['id_contact']) {
-                    $customerServiceSummary->setTotalThreads((int) $contact['total']);
+                    $totalThreads = (int) $contact['total'];
                     $customerThreadId = $contact['id_customer_thread'];
                 }
             }
             if ($customerThreadId > 0) {
-                $customerServiceSummary->setViewUrl(
-                    $this->router->generate(
-                        'admin_customer_threads_view',
-                        [
-                            'customerThreadId' => $customerThreadId,
-                        ]
-                    )
+                $viewUrl = $this->router->generate(
+                    'admin_customer_threads_view',
+                    [
+                        'customerThreadId' => $customerThreadId,
+                    ]
                 );
             }
+            $customerServiceSummary = new CustomerServiceSummary(
+                (int) $categoriesContact['id_contact'],
+                $categoriesContact['name'],
+                $categoriesContact['description'],
+                $totalThreads,
+                $viewUrl
+            );
+
             $customerServicesSummary[$customerServiceSummary->getContactId()] = $customerServiceSummary;
         }
 

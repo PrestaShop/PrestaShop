@@ -38,36 +38,69 @@ class CustomerServiceSummary
      */
     private $contactId;
 
-    private $totalThreads = 0;
-
-    private $viewUrl = '';
+    /**
+     * @var string
+     */
+    private $name;
 
     /**
-     * @param int $customerThreadId
+     * @var string
      */
-    public function __construct(int $customerThreadId)
-    {
-        $this->contactId = $customerThreadId;
+    private $description;
+
+    /**
+     * @var int
+     */
+    private $totalThreads;
+
+    /**
+     * @var string
+     */
+    private $viewUrl;
+
+    /**
+     * @param int $contactId
+     * @param string $name
+     * @param string $description
+     * @param int $totalThreads
+     * @param string $viewUrl
+     */
+    public function __construct(
+        int    $contactId,
+        string $name,
+        string $description,
+        int    $totalThreads = 0,
+        string $viewUrl = ''
+    ) {
+        $this->contactId = $contactId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->totalThreads = $totalThreads;
+        $this->viewUrl = $viewUrl;
     }
 
     /**
      * @return int
      */
-    public function getContactId()
+    public function getContactId(): int
     {
         return $this->contactId;
     }
 
     /**
-     * @param int $contactId
-     *
-     * @return CustomerServiceSummary
+     * @return string
      */
-    public function setContactId(int $contactId)
+    public function getName(): string
     {
-        $this->contactId = $contactId;
+        return $this->name;
+    }
 
-        return $this;
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     /**
@@ -79,18 +112,6 @@ class CustomerServiceSummary
     }
 
     /**
-     * @param int $totalThreads
-     *
-     * @return CustomerServiceSummary
-     */
-    public function setTotalThreads(int $totalThreads): CustomerServiceSummary
-    {
-        $this->totalThreads = $totalThreads;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getViewUrl(): string
@@ -98,15 +119,4 @@ class CustomerServiceSummary
         return $this->viewUrl;
     }
 
-    /**
-     * @param string $viewUrl
-     *
-     * @return CustomerServiceSummary
-     */
-    public function setViewUrl(string $viewUrl): CustomerServiceSummary
-    {
-        $this->viewUrl = $viewUrl;
-
-        return $this;
-    }
 }

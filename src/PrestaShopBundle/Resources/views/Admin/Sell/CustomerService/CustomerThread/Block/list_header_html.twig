@@ -27,47 +27,46 @@
 
 {% block leadin %}
   <div class="">
-    <div id="CustomerThreadContacts" class="d-flex justify-content-around">
-      {% set nb_categories = categories|length %}
-      {% for key, val in categories %}
+    <div id="CustomerThreadContacts" class="d-flex justify-content-around row">
+      {% set nb_categories = servicesSummary|length %}
+      {% for serviceSummary in servicesSummary %}
 
         {% set id_customer_thread = 0 %}
-        <div class="col-lg-3 p-0 card">
-          <div class="card-header">
-            {{ val.name }}
-          </div>
-          <div class="card-body">
-
-            {% if nb_categories < 6 %}
-              <p>{{ val.description }}</p>
-            {% endif %}
-                {% if servicesSummary[val.id_contact].getTotalThreads() == 0 %}
-                  <span
-                    class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-                {% else %}
-                  <a
-                    href="{{ servicesSummary[val.id_contact].getViewUrl() }}"
-                    class="button">
-                    {{ servicesSummary[val.id_contact].getTotalThreads() }}
-                    {% if servicesSummary[val.id_contact].getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                    {% endif %}
-                  </a>
-                {% endif %}
+        <div class="col-lg-3">
+          <div class="card">
+            <div class="card-header">
+              {{ serviceSummary.name }}
+            </div>
+            <div class="card-body">
+              <p>{{ serviceSummary.description }}</p>
+              {% if serviceSummary.getTotalThreads() == 0 %}
+                <span
+                  class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+              {% else %}
+                <a
+                  href="{{ serviceSummary.getViewUrl() }}"
+                  class="button">
+                  {{ serviceSummary.getTotalThreads() }}
+                  {% if serviceSummary.getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                  {% endif %}
+                </a>
+              {% endif %}
+            </div>
           </div>
         </div>
       {% endfor %}
-      <div class="col-lg-3 p-0 card">
-        <div class="card-header">
-          {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <div class="col-lg-3">
+        <div class="card">
+          <div class="card-header">
+            {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </div>
+          <ul class="list-unstyled card-body">
+            {% for text, value in statisticRows %}
+              <li class="border-bottom">{{ text }} <span class="text-dark float-right font-weight-bold">{{ value }}</span>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
-        <ul class="list-unstyled card-body">
-          {% set count = 0 %}
-          {% for key, val in params %}
-            {% set count = count+1 %}
-            <li class="border-bottom">{{ key }} <span class="text-dark float-right font-weight-bold">{{ val }}</span>
-            </li>
-          {% endfor %}
-        </ul>
       </div>
     </div>
   </div>
