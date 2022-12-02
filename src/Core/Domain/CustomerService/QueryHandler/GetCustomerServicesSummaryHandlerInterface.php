@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 
+/**
+ * Interface for service that gets summary of customer services threads
+ */
 interface GetCustomerServicesSummaryHandlerInterface
 {
     /**
