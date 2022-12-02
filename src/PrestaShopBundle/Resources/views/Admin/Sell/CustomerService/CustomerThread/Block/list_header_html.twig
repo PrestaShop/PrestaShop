@@ -23,51 +23,47 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-{# {% extends file="helpers/list/list_header.tpl" %} #}
+<div class="">
+  <div id="CustomerThreadContacts" class="d-flex justify-content-around row">
+    {% set nb_categories = servicesSummary|length %}
+    {% for serviceSummary in servicesSummary %}
 
-{% block leadin %}
-  <div class="">
-    <div id="CustomerThreadContacts" class="d-flex justify-content-around row">
-      {% set nb_categories = servicesSummary|length %}
-      {% for serviceSummary in servicesSummary %}
-
-        {% set id_customer_thread = 0 %}
-        <div class="col-lg-3">
-          <div class="card">
-            <div class="card-header">
-              {{ serviceSummary.name }}
-            </div>
-            <div class="card-body">
-              <p>{{ serviceSummary.description }}</p>
-              {% if serviceSummary.getTotalThreads() == 0 %}
-                <span
-                  class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-              {% else %}
-                <a
-                  href="{{ serviceSummary.getViewUrl() }}"
-                  class="button">
-                  {{ serviceSummary.getTotalThreads() }}
-                  {% if serviceSummary.getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
-                  {% endif %}
-                </a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
+      {% set id_customer_thread = 0 %}
       <div class="col-lg-3">
         <div class="card">
           <div class="card-header">
-            {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            {{ serviceSummary.name }}
           </div>
-          <ul class="list-unstyled card-body">
-            {% for text, value in statisticRows %}
-              <li class="border-bottom">{{ text }} <span class="text-dark float-right font-weight-bold">{{ value }}</span>
-              </li>
-            {% endfor %}
-          </ul>
+          <div class="card-body">
+            <p>{{ serviceSummary.description }}</p>
+            {% if serviceSummary.getTotalThreads() == 0 %}
+              <span
+                class="message-mail text-secondary">{{ 'No new messages'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
+            {% else %}
+              <a
+                href="{{ serviceSummary.getViewUrl() }}"
+                class="button">
+                {{ serviceSummary.getTotalThreads() }}
+                {% if serviceSummary.getTotalThreads() > 1 %}{{ 'New messages'|trans({}, 'Admin.Orderscustomers.Feature') }}{% else %}{{ 'New message'|trans({}, 'Admin.Orderscustomers.Feature') }}
+                {% endif %}
+              </a>
+            {% endif %}
+          </div>
         </div>
+      </div>
+    {% endfor %}
+    <div class="col-lg-3">
+      <div class="card">
+        <div class="card-header">
+          {{ 'Statistics'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </div>
+        <ul class="list-unstyled card-body">
+          {% for text, value in statisticRows %}
+            <li class="border-bottom">{{ text }} <span class="text-dark float-right font-weight-bold">{{ value }}</span>
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </div>
-{% endblock %}
+</div>
