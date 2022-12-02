@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
-use Contact;
 use CustomerMessage;
 use CustomerThread;
 use Exception;
