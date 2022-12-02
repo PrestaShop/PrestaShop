@@ -194,9 +194,6 @@
   <configuration id="PS_THEME_V11" name="PS_THEME_V11">
     <value>0</value>
   </configuration>
-  <configuration id="PRESTASTORE_LIVE" name="PRESTASTORE_LIVE">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_TIN_ACTIVE" name="PS_TIN_ACTIVE">
     <value>0</value>
   </configuration>
