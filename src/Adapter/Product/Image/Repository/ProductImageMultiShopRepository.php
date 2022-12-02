@@ -34,7 +34,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ShopProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
@@ -245,9 +247,9 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     /**
      * @param ProductId $productId
      *
-     * @return ShopProductImage[]
+     * @return ShopProductImagesCollection
      */
-    public function getImagesFromAllShop(ProductId $productId): array
+    public function getImagesFromAllShop(ProductId $productId): ShopProductImagesCollection
     {
         $results = $this->connection->createQueryBuilder()
             ->select('id_image', 'id_shop', 'cover')
@@ -259,11 +261,22 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             ->fetchAll()
         ;
 
-        return array_map(
-            static function (array $image): ShopProductImage {
-                return new ShopProductImage((int) $image['id_image'], (int) $image['id_shop'], (int) $image['cover'] === 1);
-            },
-            $results
-        );
+        $shopProductImagesArray = [];
+        foreach ($results as $result) {
+            $shopId = (int) $result['id_shop'];
+            $shopProductImagesFiltered = array_filter(
+                $shopProductImagesArray,
+                static function (ShopProductImages $shopProductImages) use ($shopId): bool {
+                    return $shopProductImages->getShopId() === $shopId;
+                }
+            );
+            $shopProductImages = reset($shopProductImagesFiltered) ?: new ShopProductImages($shopId);
+            $shopProductImages->addProductImage(
+                new ProductImage((int) $result['id_image'], (int) $result['cover'] === 1)
+            );
+            $shopProductImagesArray[] = $shopProductImages;
+        }
+
+        return new ShopProductImagesCollection(...$shopProductImagesArray);
     }
 }

@@ -26,15 +26,32 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
-
-/**
- * Handles @see GetShopProductImages query
- */
-interface GetShopProductImagesHandlerInterface
+class ShopProductImagesCollection
 {
-    public function handle(GetShopProductImages $query): ShopProductImagesCollection;
+    private $shopProductImages;
+
+    public function __construct(ShopProductImages ...$shopProductImages)
+    {
+        $this->shopProductImages = $shopProductImages;
+    }
+
+    public function getShopProductImagesByShopId(int $shopId): ShopProductImages
+    {
+        $shopProductImages = $this->shopProductImages;
+        $shopProductImagesFiltered = array_filter(
+            $shopProductImages,
+            static function (ShopProductImages $shopProductImages) use ($shopId): bool {
+                return $shopProductImages->getShopId() === $shopId;
+            }
+        );
+        $shopProductImages = reset($shopProductImagesFiltered);
+
+        if ($shopProductImages === false) {
+            throw new \Exception('No ShopProductImages for shop id ' . $shopId);
+        }
+
+        return $shopProductImages;
+    }
 }

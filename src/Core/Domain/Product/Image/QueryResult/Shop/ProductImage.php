@@ -26,15 +26,41 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
-
-/**
- * Handles @see GetShopProductImages query
- */
-interface GetShopProductImagesHandlerInterface
+class ProductImage
 {
-    public function handle(GetShopProductImages $query): ShopProductImagesCollection;
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var bool
+     */
+    private $isCover;
+
+    public function __construct(
+        int $id,
+        bool $isCover
+    ) {
+        $this->id = $id;
+        $this->isCover = $isCover;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCover(): bool
+    {
+        return $this->isCover;
+    }
 }

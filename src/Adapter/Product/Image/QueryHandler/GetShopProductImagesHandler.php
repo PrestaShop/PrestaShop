@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetShopProductImagesHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ShopProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 
 /**
  * Handles @see GetShopProductImages query
@@ -50,9 +50,9 @@ final class GetShopProductImagesHandler implements GetShopProductImagesHandlerIn
     }
 
     /**
-     * @return ShopProductImage[]
+     * {@inheritDoc}
      */
-    public function handle(GetShopProductImages $query): array
+    public function handle(GetShopProductImages $query): ShopProductImagesCollection
     {
         return $this->productImageMultiShopRepository->getImagesFromAllShop($query->getProductId());
     }
