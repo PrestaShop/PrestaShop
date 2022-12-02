@@ -16,6 +16,8 @@ RUN mkdir -p /var/www/.npm
 RUN chown -R www-data:www-data /var/www/.npm
 RUN mkdir -p /var/www/.composer
 RUN chown -R www-data:www-data /var/www/.composer
+RUN mkdir -p /var/www/.config
+RUN chown -R www-data:www-data /var/www/.config
 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs
