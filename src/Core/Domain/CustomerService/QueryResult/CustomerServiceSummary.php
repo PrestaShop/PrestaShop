@@ -66,10 +66,10 @@ class CustomerServiceSummary
      * @param string $viewUrl
      */
     public function __construct(
-        int    $contactId,
+        int $contactId,
         string $name,
         string $description,
-        int    $totalThreads = 0,
+        int $totalThreads = 0,
         string $viewUrl = ''
     ) {
         $this->contactId = $contactId;
@@ -118,5 +118,4 @@ class CustomerServiceSummary
     {
         return $this->viewUrl;
     }
-
 }
