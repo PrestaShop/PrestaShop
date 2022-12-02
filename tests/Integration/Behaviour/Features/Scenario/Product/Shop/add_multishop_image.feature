@@ -2,6 +2,7 @@
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
+@restore-shops-after-feature
 @product-image
 @add-multishop-image
 Feature: Add product image from Back Office (BO)

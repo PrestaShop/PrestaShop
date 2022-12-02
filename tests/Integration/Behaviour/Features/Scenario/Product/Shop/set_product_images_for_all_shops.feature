@@ -2,6 +2,7 @@
 @restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
+@restore-shops-after-feature
 @product-image
 @set-multishop-images-for-all-shops
 Feature: Set product images for all shops from Back Office (BO)
