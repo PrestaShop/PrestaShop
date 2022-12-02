@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSu
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @internal
+ */
 class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHandlerInterface
 {
     /**
