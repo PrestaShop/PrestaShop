@@ -46,10 +46,6 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', SwitchType::class, [
-                'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Choose a stability level for the modules downloaded from PrestaShop Addons Marketplace. All zips pushed on the marketplace are in stable state unless stated otherwise.', 'Admin.Advparameters.Help'),
-            ])
             ->add('check_ip_address', SwitchType::class, [
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
