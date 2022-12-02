@@ -36,5 +36,5 @@ class ImageTypeConstraintException extends ImageTypeException
     /**
      * Thrown when provided image type ID is not valid.
      */
-    const INVALID_ID = 10;
+    public const INVALID_ID = 10;
 }

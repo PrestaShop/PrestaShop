@@ -36,10 +36,10 @@ class DeleteImageTypeException extends ImageTypeException
     /**
      * When fails to delete single image type
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 
     /**
      * When fails to delete image types on bulk action
      */
-    const FAILED_BULK_DELETE = 20;
+    public const FAILED_BULK_DELETE = 20;
 }
