@@ -41,19 +41,19 @@ class UpdateContactOptionsCommand
     private $defaultMessage;
 
     /**
-     * @param $allowFileUploading
+     * @param bool $allowFileUploading
      * @param array<int, string> $defaultMessage
      */
-    public function __construct($allowFileUploading, array $defaultMessage)
+    public function __construct(bool $allowFileUploading, array $defaultMessage)
     {
         $this->allowFileUploading = $allowFileUploading;
         $this->defaultMessage = $defaultMessage;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getAllowFileUploading()
+    public function getAllowFileUploading(): bool
     {
         return $this->allowFileUploading;
     }

@@ -58,7 +58,7 @@ class ContactOptionType extends AbstractType
     {
         $builder
             ->add('PS_CUSTOMER_SERVICE_FILE_UPLOAD', SwitchType::class, [
-                'label' => $this->translator->trans('Allow file uploading', [], 'Admin.Orderscustomers.Feature'),
+                'label' => $this->translator->trans('Allow file upload', [], 'Admin.Orderscustomers.Feature'),
                 'required' => false,
             ])
             ->add('PS_CUSTOMER_SERVICE_SIGNATURE', TranslatableType::class, [
