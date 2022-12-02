@@ -46,17 +46,16 @@ Feature: Get every image details for a product in every shop
 
   Scenario: Get every image details for a product in every shop successfully
     When I try to get every image details for product "product1" in every shop:
-    Then I should have the followings image details for shop "shop1":
-      | image reference |  cover |
-      | image1          |  1     |
-      | image2          |  0     |
-    And I should have the followings image details for shop "shop2":
-      | image reference |  cover |
-      | image1          |  0     |
-      | image2          |  0     |
-      | image3          |  0     |
-    And I should have the followings image details for shop "shop3":
-      | image reference |  cover |
-      | image1          |  0     |
-      | image2          |  0     |
-      | image3          |  0     |
+    Then I should have the followings image details:
+      #shop1
+      | image reference |  cover | shopReference |
+      | image1          |  1     | shop1         |
+      | image2          |  0     | shop1         |
+      #shop2
+      | image1          |  0     | shop2         |
+      | image2          |  0     | shop2         |
+      | image3          |  0     | shop2         |
+      #shop3
+      | image1          |  0     | shop3         |
+      | image2          |  0     | shop3         |
+      | image3          |  0     | shop3         |

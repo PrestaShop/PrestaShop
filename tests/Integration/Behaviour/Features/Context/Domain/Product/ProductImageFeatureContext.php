@@ -41,7 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ShopProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage as ProductImageInShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -55,9 +56,9 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     private $productImageRepository;
 
     /**
-     * @var ShopProductImage[]
+     * @var ShopProductImagesCollection
      */
-    private $shopProductImages;
+    private $shopProductImagesCollection;
 
     public function __construct()
     {
@@ -376,7 +377,42 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function iTryToGetEveryImageDetailsForProductInEveryShop(string $productReference): void
     {
-        $this->shopProductImages = $this->getQueryBus()->handle(new GetShopProductImages($this->getSharedStorage()->get($productReference)));
+        $this->shopProductImagesCollection = $this->getQueryBus()->handle(new GetShopProductImages($this->getSharedStorage()->get($productReference)));
+    }
+
+    /**
+     * @Then /^I should have the followings image details:/
+     */
+    public function iShouldHaveTheFollowingsImageDetailsForShop(TableNode $tableNode)
+    {
+        $dataRows = $this->localizeByColumns($tableNode);
+        $shopIds = array_map(
+            function (array $dataRow): int {
+                return (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
+            },
+            $dataRows
+        );
+        $shopIds = array_unique($shopIds);
+
+        foreach ($shopIds as $shopId) {
+            $dataRowsByShop = array_filter(
+                $dataRows,
+                function (array $dataRow) use ($shopId): bool {
+                    return (int) $this->getSharedStorage()->get(trim($dataRow['shopReference'])) === $shopId;
+                }
+            );
+            $shopProductImages = $this->shopProductImagesCollection->getShopProductImagesByShopId($shopId);
+            Assert::assertEquals(count($dataRowsByShop), count($shopProductImages->getProductImages()));
+            foreach ($dataRowsByShop as $dataRow) {
+                Assert::assertContainsEquals(
+                    new ProductImageInShop(
+                        $this->getSharedStorage()->get(trim($dataRow['image reference'])),
+                        (int) $dataRow['cover'] === 1
+                    ),
+                    $shopProductImages->getProductImages()
+                );
+            }
+        }
     }
 
     /**
@@ -557,33 +593,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                     $actualImage->getShopIds()
                 );
             }
-        }
-    }
-
-    /**
-     * @Then /^I should have the followings image details for shop "([^"]*)":$/
-     */
-    public function iShouldHaveTheFollowingsImageDetailsForShop(string $shopReference, TableNode $tableNode)
-    {
-        $shopId = $this->getSharedStorage()->get(trim($shopReference));
-        $shopProductImages = array_filter(
-            $this->shopProductImages,
-            static function (ShopProductImage $shopProductImage) use ($shopId): bool {
-                return $shopProductImage->getShopId() === $shopId;
-            }
-        );
-
-        $dataRows = $this->localizeByColumns($tableNode);
-        Assert::assertSame(count($dataRows), count($shopProductImages));
-        foreach ($tableNode as $detail) {
-            Assert::assertContainsEquals(
-                new ShopProductImage(
-                    $this->getSharedStorage()->get(trim($detail['image reference'])),
-                    $shopId,
-                    (int) $detail['cover'] === 1
-                ),
-                $shopProductImages
-            );
         }
     }
 }

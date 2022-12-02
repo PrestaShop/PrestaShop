@@ -26,15 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
-
-/**
- * Handles @see GetShopProductImages query
- */
-interface GetShopProductImagesHandlerInterface
+class ShopProductImages
 {
-    public function handle(GetShopProductImages $query): ShopProductImagesCollection;
+    /**
+     * @var ProductImage[]
+     */
+    private $productImages = [];
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    public function __construct(int $shopId)
+    {
+        $this->shopId = $shopId;
+    }
+
+    /**
+     * @param ProductImage $productImage
+     */
+    public function addProductImage(ProductImage $productImage): void
+    {
+        $this->productImages[] = $productImage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
+    }
+
+    /**
+     * @return ProductImage[]
+     */
+    public function getProductImages(): array
+    {
+        return $this->productImages;
+    }
 }
