@@ -217,7 +217,6 @@ class CarrierCore extends ObjectModel
     {
         $cache_key = $id_carrier . '_package_weight_' . $total_weight;
 
-        PrestaShopLogger::addLog('Wieght ' . $total_weight);
         if (!isset(self::$package_weight_by_weight[$cache_key])) {
             $sql = 'SELECT w.`package_weight`
                     FROM `' . _DB_PREFIX_ . 'delivery` d
