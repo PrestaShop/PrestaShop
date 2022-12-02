@@ -38,6 +38,7 @@
         aria-haspopup="true"
         aria-expanded="false"
         id="form_invoice_prefix"
+        :data-role="`filter-by-${label.toLowerCase()}`"
       >
         {{ label }} {{ nbFiles }}
       </button>
@@ -50,6 +51,7 @@
           class="md-checkbox"
           v-for="filter in children"
           :key="filter.id"
+          :data-role="`${label.toLowerCase()}-${filter.id}`"
         >
           <label class="dropdown-item">
             <div class="md-checkbox-container">
