@@ -75,7 +75,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
         $customerThreadGridFactory = $this->get('prestashop.core.grid.factory.customer_thread');
         $customerThreadGrid = $customerThreadGridFactory->getGrid($filters);
 
-        $params = [
+        $statisticRows = [
             $this->trans('Total threads', 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
             $this->trans('Threads pending', 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
             $this->trans('Total number of customer messages', 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
@@ -93,9 +93,7 @@ class CustomerThreadController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'customerThreadGrid' => $this->presentGrid($customerThreadGrid),
             'enableSidebar' => true,
-            'categories' => Contact::getCategoriesContacts(),
-            'contacts' => CustomerThread::getContacts(),
-            'params' => $params,
+            'statisticRows' => $statisticRows,
             'customerThreadKpi' => $customerThreadKpiFactory->build(),
             'servicesSummary' => $getCustomerServiceSummary,
         ]);
