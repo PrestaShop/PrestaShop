@@ -316,7 +316,7 @@ class AddressCore extends ObjectModel
 			SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
 			FROM `' . _DB_PREFIX_ . 'address` a
 			LEFT JOIN `' . _DB_PREFIX_ . 'country` c ON c.`id_country` = a.`id_country`
-			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state`
+			LEFT JOIN `' . _DB_PREFIX_ . 'state` s ON s.`id_state` = a.`id_state` AND s.`id_country` = c.`id_country`
 			WHERE a.`id_address` = ' . (int) $id_address);
 
         if (empty($result['id_zone_state']) && empty($result['id_zone'])) {
