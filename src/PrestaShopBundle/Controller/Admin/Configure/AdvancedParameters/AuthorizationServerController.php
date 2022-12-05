@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\Response;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server" page.
