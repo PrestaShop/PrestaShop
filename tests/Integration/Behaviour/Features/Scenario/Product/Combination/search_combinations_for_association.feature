@@ -62,7 +62,7 @@ Feature: Search combinations to associate them in the BO
     And I search for combinations with locale "english" matching "978020137962" I should get no results
     And I search for combinations with locale "english" matching "mpn1" I should get no results
     And I search for combinations with locale "english" matching "ref1" I should get no results
-    When I update product "champaign_bottle" details with following values:
+    When I update product "champaign_bottle" with following values:
       | isbn      | 978-3-16-148410-0 |
       | upc       | 72527273070       |
       | ean13     | 978020137962      |
@@ -141,7 +141,7 @@ Feature: Search combinations to associate them in the BO
       | reference          | ref3white         |
       | upc                | 354321354321      |
     # General reference on product will be used for pink wine which has no reference on the combination
-    When I update product "wine_bottle" details with following values:
+    When I update product "wine_bottle" with following values:
       | reference | ref3wine |
     Then product "wine_bottle" should have following details:
       | product detail | value    |
