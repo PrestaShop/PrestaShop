@@ -468,6 +468,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.shop.repository.shop_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
+      - '@prestashop.adapter.product.stock.update.product_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
 
   prestashop.adapter.product.command_handler.update_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler

@@ -30,11 +30,16 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -66,21 +71,36 @@ class ProductShopUpdater
     private $productImageMultiShopRepository;
 
     /**
+     * @var ProductStockUpdater
+     */
+    private $productStockUpdater;
+
+    /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param ShopRepository $shopRepository
      * @param ProductImageMultiShopRepository $productImageMultiShopRepository
+     * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
-        ProductImageMultiShopRepository $productImageMultiShopRepository
+        ProductImageMultiShopRepository $productImageMultiShopRepository,
+        ProductStockUpdater $productStockUpdater,
+        MovementReasonRepository $movementReasonRepository
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
         $this->productImageMultiShopRepository = $productImageMultiShopRepository;
+        $this->productStockUpdater = $productStockUpdater;
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -118,17 +138,21 @@ class ProductShopUpdater
             $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId);
         }
 
-        // Copy source data to target
-        $targetStock->quantity = (int) $sourceStock->quantity;
-        $targetStock->location = $sourceStock->location;
-        $targetStock->out_of_stock = (int) $sourceStock->out_of_stock;
-        $targetStock->depends_on_stock = (bool) $sourceStock->depends_on_stock;
-
-        // These fields are not accessible via the Object but they probably should once we clean this part
-        // $targetStock->physical_quantity = $sourceStock->physical_quantity;
-        // $targetStock->reserved_quantity = $sourceStock->reserved_quantity;
-
-        $this->stockAvailableRepository->update($targetStock);
+        $deltaQuantity = (int) $sourceStock->quantity - (int) $targetStock->quantity;
+        if ($deltaQuantity !== 0) {
+            $stockModification = new StockModification(
+                $deltaQuantity,
+                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
+            );
+            $stockProperties = new ProductStockProperties(
+                null,
+                $stockModification,
+                new OutOfStockType((int) $sourceStock->out_of_stock),
+                null,
+                $sourceStock->location,
+            );
+            $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
+        }
     }
 
     /**
