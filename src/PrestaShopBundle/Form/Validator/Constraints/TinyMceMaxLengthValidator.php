@@ -28,10 +28,10 @@ namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The computation here means to only count the raw text, not the rich text with html strip tags, also all the
