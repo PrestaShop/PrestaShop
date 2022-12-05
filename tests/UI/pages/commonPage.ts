@@ -13,7 +13,7 @@ import {Unboxed} from 'playwright-core/types/structs';
  * Parent page, contains functions that can be used in every page (BO, FO ...)
  * @class
  */
-class CommonPage {
+export default class CommonPage {
   /**
    * Get page title
    * @param page {Page} Browser tab
@@ -262,7 +262,7 @@ class CommonPage {
    * @param tabId {number} Tab to get focus on after closing the other tab
    * @return {Promise<Page>}
    */
-  async closePage(browserContext: BrowserContext, page: Page, tabId: number = -1) {
+  async closePage(browserContext: BrowserContext, page: Page, tabId: number = -1): Promise<Page|undefined> {
     await page.close();
     let focusedPage;
 
@@ -290,7 +290,7 @@ class CommonPage {
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(page: Page, selector: string, textValue: string|number, force: boolean = false) {
+  async selectByVisibleText(page: Page, selector: string, textValue: string|number, force: boolean = false): Promise<void> {
     await page.selectOption(selector, {label: textValue.toString()}, {force});
   }
 
@@ -302,7 +302,7 @@ class CommonPage {
    * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByValue(page: Page, selector: string, valueToSelect: number, force: boolean = false) {
+  async selectByValue(page: Page, selector: string, valueToSelect: number, force: boolean = false): Promise<void> {
     await page.selectOption(selector, {value: valueToSelect.toString()}, {force});
   }
 
