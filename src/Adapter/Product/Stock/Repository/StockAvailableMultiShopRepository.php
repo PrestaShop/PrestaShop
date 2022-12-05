@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotDeleteStockAvailableException;
@@ -94,6 +95,26 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     }
 
     /**
+     * @param StockId $stockId
+     *
+     * @return StockAvailable
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function get(StockId $stockId): StockAvailable
+    {
+        /** @var StockAvailable $stockAvailable */
+        $stockAvailable = $this->getObjectModel(
+            $stockId->getValue(),
+            StockAvailable::class,
+            StockAvailableNotFoundException::class
+        );
+
+        return $stockAvailable;
+    }
+
+    /**
      * @param ProductId $productId
      * @param ShopId $shopId
      *
@@ -128,7 +149,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     {
         $stockId = $this->getStockIdByProduct($productId, $shopId);
 
-        return $this->getStockAvailable($stockId);
+        return $this->get($stockId);
     }
 
     /**
@@ -191,7 +212,7 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     {
         $stockId = $this->getStockIdByCombination($combinationId, $shopId);
 
-        return $this->getStockAvailable($stockId);
+        return $this->get($stockId);
     }
 
     /**
@@ -222,6 +243,10 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
             );
         }
 
+        if (empty($shopParams['id_shop']) && empty($shopParams['id_shop_group'])) {
+            throw new CannotAddStockAvailableException('StockAvailable must be assigned to a shop or a shop group');
+        }
+
         $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
         $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
         $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);
@@ -230,41 +255,25 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     }
 
     /**
-     * @param StockId $stockId
+     * @param ProductId $productId
+     * @param CombinationIdInterface $combinationId
      *
-     * @return ShopId[]
+     * @return StockId[]
      */
-    public function getAssociatedShopIds(StockId $stockId): array
+    public function getAllShopsStockIds(ProductId $productId, CombinationIdInterface $combinationId): array
     {
-        $subQb = $this->connection->createQueryBuilder();
-        $subQb
-            ->select('CONCAT(sa2.id_product, \'-\', sa2.id_product_attribute)')
-            ->from($this->dbPrefix . 'stock_available', 'sa2')
-            ->where('sa2.id_stock_available = :stockId')
-        ;
-
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('id_shop')
+            ->select('id_stock_available')
             ->from($this->dbPrefix . 'stock_available', 'sa')
-            ->where($qb->expr()->eq(
-                'CONCAT(sa.id_product, \'-\', sa.id_product_attribute)',
-                sprintf('(%s)', $subQb->getSQL())
-            ))
-            ->setParameter('stockId', $stockId->getValue())
+            ->where('sa.id_product = :productId AND sa.id_product_attribute = :combinationId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('combinationId', $combinationId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
-
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
-
-        return $shops;
+        return array_map(static function (array $stock) {
+            return new StockId((int) $stock['id_stock_available']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 
     /**
@@ -335,25 +344,5 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
             ;
             $updateQb->execute();
         }
-    }
-
-    /**
-     * @param StockId $stockId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
-     */
-    private function getStockAvailable(StockId $stockId): StockAvailable
-    {
-        /** @var StockAvailable $stockAvailable */
-        $stockAvailable = $this->getObjectModel(
-            $stockId->getValue(),
-            StockAvailable::class,
-            StockAvailableNotFoundException::class
-        );
-
-        return $stockAvailable;
     }
 }
