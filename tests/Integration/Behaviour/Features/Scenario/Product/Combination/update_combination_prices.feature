@@ -26,7 +26,7 @@ Feature: Update product combination prices in Back Office (BO)
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
-    And I update product "product1" prices with following information:
+    And I update product "product1" with following values:
       | price              | 51.49           |
       | ecotax             | 17.78           |
       | tax rules group    | US-AL Rate (4%) |
@@ -107,7 +107,7 @@ Feature: Update product combination prices in Back Office (BO)
       | impact on price      | 0 |
       | impact on unit price | 0 |
       | wholesale price      | 0 |
-    And I update product "product1" prices with following information:
+    And I update product "product1" with following values:
       | price              | 0 |
       | ecotax             | 0 |
       | tax rules group    |   |
