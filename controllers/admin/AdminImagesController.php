@@ -54,16 +54,24 @@ class AdminImagesControllerCore extends AdminController
         $this->generateAdditionalAvif = true; // $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
 
         $fields = [
-            'PS_IMAGE_QUALITY' => [
+            'PS_IMAGE_FORMAT' => [
                 'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
                 'show' => true,
                 'required' => true,
+                'skipIsCleanHtml' => true,
                 'type' => 'checkbox',
+                'multiple' => true,
                 'choices' => [
-                    '0' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
-                    '1' => $this->trans('PNG', [], 'Admin.Design.Feature'),
-                    '2' => $this->trans('WebP', [], 'Admin.Design.Feature'),
-                    '3' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                    'jpeg' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
+                    'png' => $this->trans('PNG', [], 'Admin.Design.Feature'),
+                    'webp' => $this->trans('WebP', [], 'Admin.Design.Feature'),
+                    'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
+                ],
+                'value_multiple' => [
+                    'jpeg' => false,
+                    'png' => false,
+                    'webp' => false,
+                    'avif' => false,
                 ],
             ],
             'PS_IMAGE_FORMAT_FALLBACK' => [
@@ -438,14 +446,14 @@ class AdminImagesControllerCore extends AdminController
         ];
     }
 
-    public function updateOptionPsImageQuality($value)
+    public function updateOptionPsImageFormat($value)
     {
         if ($this->access('edit') != '1') {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         if (!$this->errors && $value) {
-            Configuration::updateValue('PS_IMAGE_QUALITY', implode('', $value));
+            Configuration::updateValue('PS_IMAGE_FORMAT', implode(',', $value));
         }
     }
 

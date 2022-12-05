@@ -387,7 +387,7 @@
     <value>0</value>
   </configuration>
   <configuration id="PS_IMAGE_QUALITY" name="PS_IMAGE_QUALITY">
-    <value>jpg</value>
+    <value>1</value>
   </configuration>
   <configuration id="PS_PNG_QUALITY" name="PS_PNG_QUALITY">
     <value>7</value>
@@ -900,6 +900,9 @@ Country</value>
     </configuration>
     <configuration id="PS_ADDITIONAL_IMAGE_AVIF_QUALITY" name="PS_ADDITIONAL_IMAGE_AVIF_QUALITY">
       <value>90</value>
+    </configuration>
+    <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
+      <value>jpeg</value>
     </configuration>
     <configuration id="PS_IMAGE_FORMAT_FALLBACK" name="PS_IMAGE_FORMAT_FALLBACK">
       <value>0</value>
