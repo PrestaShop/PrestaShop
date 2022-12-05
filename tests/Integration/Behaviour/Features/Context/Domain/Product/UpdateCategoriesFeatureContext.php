@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use Cache;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
@@ -83,7 +82,6 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCategories(string $productReference, TableNode $table)
     {
-        Cache::clear();
         $productForEditing = $this->getProductForEditing($productReference);
         $expectedCategories = $table->getColumnsHash();
         $categoriesInfo = $productForEditing->getCategoriesInformation();
