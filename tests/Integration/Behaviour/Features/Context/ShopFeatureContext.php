@@ -153,6 +153,18 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given Shop group :reference shares its stock
+     *
+     * @param string $reference
+     */
+    public function setStockShareForGroup(string $reference): void
+    {
+        $shopGroup = new ShopGroup((int) $this->getSharedStorage()->get($reference));
+        $shopGroup->share_stock = true;
+        $shopGroup->update();
+    }
+
+    /**
      * @Given /^I copy "(.+)" shop data from "(.+)" to "(.+)"$/
      *
      * @param string $what
