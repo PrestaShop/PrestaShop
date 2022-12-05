@@ -22,16 +22,5 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
 
-{% block content %}
-  {% block authorized_applications_main_panel %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-  {% endblock %}
-{% endblock %}
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/authorization-server.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+<i class="material-icons">check</i>{{ 'Active'|trans({}, 'Admin.Global') }}: {{ record.active_api_access }} <i class="material-icons">close</i>{{ 'Inactive'|trans({}, 'Admin.Global') }}: {{ record.inactive_api_access }}

@@ -1,7 +1,28 @@
-admin_authorization_server_index:
+admin_authorized_applications_index:
   path: /
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::indexAction'
-    _legacy_controller: AdminAuthorizationServer
-    _legacy_link: AdminAuthorizationServer
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::indexAction
+
+admin_authorized_applications_view:
+  path: /{authorizedApplicationId}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::viewAction
+    categoryId: null
+  requirements:
+    authorizedApplicationId: \d+
+
+admin_authorized_applications_edit:
+  path: /{authorizedApplicationId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::editAction
+  requirements:
+    authorizedApplicationId: \d+
+
+admin_authorized_applications_delete:
+  path: /delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::deleteAction
