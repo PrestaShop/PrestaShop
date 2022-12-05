@@ -1,25 +1,22 @@
 services:
-  _defaults:
-    public: true
-
-  prestashop.form.error_message.label_provider:
+  PrestaShopBundle\Form\ErrorMessage\LabelProvider:
     class: PrestaShopBundle\Form\ErrorMessage\LabelProvider
 
-  prestashop.form.error_message.configuration_error_factory:
+  PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory:
     class: PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory
     arguments:
       - !tagged core.configuration_error_factory
       - '@prestashop.form.error_message.label_provider'
       - '@translator'
 
-  prestashop.form.error_message_factory.common_configuration_error_message_provider:
+  PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider:
     class: PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider
     arguments:
       - '@translator'
       - '@prestashop.core.admin.lang.repository'
     tags: [ 'core.configuration_error_factory' ]
 
-  prestashop.form.error_message_factory.administration_configuration_error_message_provider:
+  PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider:
     class: PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider
     arguments:
       - '@translator'
