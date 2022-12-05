@@ -15,9 +15,13 @@ class FeatureFlagTypeListener implements EventSubscriberInterface
     /** @var CommandBusInterface */
     private $commandBus;
 
-    public function __construct(CommandBusInterface $commandBus)
+    /** @var TabDataProvider */
+    private $tabDataProvider;
+
+    public function __construct(CommandBusInterface $commandBus, TabDataProvider $tabDataProvider)
     {
         $this->commandBus = $commandBus;
+        $this->tabDataProvider = $tabDataProvider;
     }
 
     public static function getSubscribedEvents()
@@ -34,7 +38,7 @@ class FeatureFlagTypeListener implements EventSubscriberInterface
                     $event->getHookParameters()['form_data']['feature_flags']['authorization_server']['enabled']
                 )
             );
-            TabDataProvider::resetTabCache();
+            $this->tabDataProvider->resetTabCache();
         }
     }
 }
