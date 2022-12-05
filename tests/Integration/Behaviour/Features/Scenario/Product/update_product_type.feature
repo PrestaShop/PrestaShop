@@ -96,7 +96,7 @@ Feature: Add basic product from Back Office (BO)
     And product "virtualProduct" should be assigned to following categories:
       | id reference | name | is default |
       | home         | Home | true       |
-    When I update product "virtualProduct" prices with following information:
+    When I update product "virtualProduct" with following values:
       | price              | 51.42           |
       | ecotax             | 8.56            |
       | tax rules group    | US-AL Rate (4%) |
