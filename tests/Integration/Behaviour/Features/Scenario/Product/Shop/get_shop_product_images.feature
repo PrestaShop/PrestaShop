@@ -12,11 +12,13 @@ Feature: Get every image details for a product in every shop
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop "shop3" with name "default_shop_group" and color "green" for the group "default_shop_group"
+    And I add a shop "shop4" with name "default_shop_group" and color "green" for the group "default_shop_group"
     And single shop context is loaded
     And I add product "product1" with following information:
       | name[en-US] | bottle of water |
       | type        | standard       |
     And product "product1" type should be standard
+    And I copy product product1 from shop shop1 to shop shop4
     And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
     And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
     And I copy product product1 from shop shop1 to shop shop2
@@ -59,3 +61,4 @@ Feature: Get every image details for a product in every shop
       | image1          |  0     | shop3         |
       | image2          |  0     | shop3         |
       | image3          |  0     | shop3         |
+    And the shop "shop4" should have empty image details

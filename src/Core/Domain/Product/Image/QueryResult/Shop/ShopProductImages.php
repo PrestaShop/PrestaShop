@@ -40,17 +40,14 @@ class ShopProductImages
      */
     private $shopId;
 
-    public function __construct(int $shopId)
+    /**
+     * @param int $shopId
+     * @param ProductImage[] $productImages
+     */
+    public function __construct(int $shopId, array $productImages)
     {
         $this->shopId = $shopId;
-    }
-
-    /**
-     * @param ProductImage $productImage
-     */
-    public function addProductImage(ProductImage $productImage): void
-    {
-        $this->productImages[] = $productImage;
+        $this->productImages = $productImages;
     }
 
     /**
