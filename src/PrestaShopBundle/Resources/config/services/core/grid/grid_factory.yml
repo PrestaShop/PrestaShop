@@ -439,3 +439,11 @@ services:
       - '@prestashop.core.grid.data_provider.customer_thread_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.grid.factory.authorized_application:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
+      - '@prestashop.core.grid.data_factory.authorized_application'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'

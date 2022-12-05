@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,12 +38,32 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthorizationServerController extends FrameworkBundleAdminController
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
+     * @param AuthorizedApplicationsFilters $filters the list of filters from the request
      *
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(AuthorizedApplicationsFilters $filters): Response
     {
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig');
+        $gridAuthorizedApplicationFactory = $this->get('prestashop.core.grid.factory.authorized_application');
+        $grid = $gridAuthorizedApplicationFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'grid' => $this->presentGrid($grid),
+        ]);
+    }
+
+    public function viewAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/edit.html.twig');
+    }
+
+    public function editAction(): Response
+    {
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/view.html.twig');
     }
 }
