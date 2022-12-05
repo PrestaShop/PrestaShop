@@ -347,7 +347,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
                     $catalogPriceRule->getReductionType(),
                     $catalogPriceRule->getReduction(),
                     $catalogPriceRule->getCurrencyIso() ?: $this->getContextCurrencyIso(),
-                    $catalogPriceRule->getTaxIncl()
+                    $catalogPriceRule->isTaxIncluded()
                 ),
                 'startDate' => $catalogPriceRule->getDateStart()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                 'endDate' => $catalogPriceRule->getDateEnd()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
@@ -380,10 +380,10 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         if ($reductionType === Reduction::TYPE_AMOUNT) {
             $price = $locale->formatPrice((string) $reductionValue, $currencyIsoCode);
             if ($taxIncl) {
-                return $this->trans('%price% (tax incl.)', 'Admin.Global', ['%price%' => $price]);
+                return $this->trans('%price% (tax incl.)', 'Admin.Catalog.Feature', ['%price%' => $price]);
             }
 
-            return $this->trans('%price% (tax excl.)', 'Admin.Global', ['%price%' => $price]);
+            return $this->trans('%price% (tax excl.)', 'Admin.Catalog.Feature', ['%price%' => $price]);
         }
 
         return sprintf('%s %%', (string) $reductionValue);
