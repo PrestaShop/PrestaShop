@@ -33,7 +33,7 @@ Feature: Duplicate product from Back Office (BO).
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
       | type        | standard           |
@@ -41,61 +41,59 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
       | type        | standard        |
-    And I update product "product1" basic information with following values:
-      | description[en-US]       | nice sunglasses            |
-      | description[fr-FR]       | belles lunettes            |
-      | description_short[en-US] | Simple & nice sunglasses   |
-      | description_short[fr-FR] | lunettes simples et belles |
+    And I update product "product1" with following values:
+      | description[en-US]                      | nice sunglasses            |
+      | description[fr-FR]                      | belles lunettes            |
+      | description_short[en-US]                | Simple & nice sunglasses   |
+      | description_short[fr-FR]                | lunettes simples et belles |
+      | visibility                              | catalog                    |
+      | available_for_order                     | false                      |
+      | online_only                             | true                       |
+      | show_price                              | false                      |
+      | condition                               | used                       |
+      | manufacturer                            | studioDesign               |
+      | isbn                                    | 978-3-16-148410-0          |
+      | upc                                     | 72527273070                |
+      | ean13                                   | 978020137962               |
+      | mpn                                     | mpn1                       |
+      | reference                               | ref1                       |
+      | price                                   | 100.00                     |
+      | ecotax                                  | 0                          |
+      | tax rules group                         | US-AL Rate (4%)            |
+      | on_sale                                 | true                       |
+      | wholesale_price                         | 70                         |
+      | unit_price                              | 500                        |
+      | unity                                   | bag of ten                 |
+      | meta_title[en-US]                       | SUNGLASSES meta title      |
+      | meta_description[en-US]                 | Its so smart               |
+      | meta_description[fr-FR]                 | lel joke                   |
+      | link_rewrite[en-US]                     | smart-sunglasses           |
+      | link_rewrite[fr-FR]                     | lunettes-de-soleil         |
+      | redirect_type                           | 301-product                |
+      | redirect_target                         | product2                   |
+      | width                                   | 10.5                       |
+      | height                                  | 6                          |
+      | depth                                   | 7                          |
+      | weight                                  | 0.5                        |
+      | additional_shipping_cost                | 12                         |
+      | delivery time notes type                | specific                   |
+      | delivery time in stock notes[en-US]     | product in stock           |
+      | delivery time in stock notes[fr-FR]     | en stock                   |
+      | delivery time out of stock notes[en-US] | product out of stock       |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock        |
+      | active                                  | true                       |
+      | redirect_type                           | 301-product                |
+      | redirect_target                         | product2                   |
     And I assign product product1 to following categories:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    And I update product "product1" options with following values:
-      | visibility          | catalog      |
-      | available_for_order | false        |
-      | online_only         | true         |
-      | show_price          | false        |
-      | condition           | used         |
-      | manufacturer        | studioDesign |
-    And I update product "product1" details with following values:
-      | isbn      | 978-3-16-148410-0 |
-      | upc       | 72527273070       |
-      | ean13     | 978020137962      |
-      | mpn       | mpn1              |
-      | reference | ref1              |
     And I update product "product1" tags with following values:
       | tags[en-US] | smart,glasses,sunglasses,men |
       | tags[fr-FR] | lunettes,bien,soleil         |
-    And I update product "product1" prices with following information:
-      | price           | 100.00          |
-      | ecotax          | 0               |
-      | tax rules group | US-AL Rate (4%) |
-      | on_sale         | true            |
-      | wholesale_price | 70              |
-      | unit_price      | 500             |
-      | unity           | bag of ten      |
-    And I update product product1 SEO information with following values:
-      | meta_title[en-US]       | SUNGLASSES meta title |
-      | meta_description[en-US] | Its so smart          |
-      | meta_description[fr-FR] | lel joke              |
-      | link_rewrite[en-US]     | smart-sunglasses      |
-      | link_rewrite[fr-FR]     | lunettes-de-soleil    |
-      | redirect_type           | 301-product           |
-      | redirect_target         | product2              |
-    And I update product product1 shipping information with following values:
-      | width                                   | 10.5                 |
-      | height                                  | 6                    |
-      | depth                                   | 7                    |
-      | weight                                  | 0.5                  |
-      | additional_shipping_cost                | 12                   |
-      | delivery time notes type                | specific             |
-      | delivery time in stock notes[en-US]     | product in stock     |
-      | delivery time in stock notes[fr-FR]     | en stock             |
-      | delivery time out of stock notes[en-US] | product out of stock |
-      | delivery time out of stock notes[fr-FR] | En rupture de stock  |
     And I assign product product1 with following carriers:
       | carrier1 |
       | carrier2 |
-    When I associate suppliers to product "product1"
+    And I associate suppliers to product "product1"
       | supplier  | product_supplier  |
       | supplier1 | product1supplier1 |
     And I update product product1 suppliers:
@@ -112,66 +110,61 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | macareux         |
       | file_name          | app_icon.png     |
-    When I associate product product1 with following attachments: "[att1]"
-    And I enable product "product1"
-    When I update product product1 SEO information with following values:
-      | redirect_type   | 301-product |
-      | redirect_target | product2    |
-    And product product1 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product2    |
-
-    Given I update product "product2" basic information with following values:
-      | description[en-US]       | Reading glasses                   |
-      | description[fr-FR]       | lunettes de lecture               |
-      | description_short[en-US] | Clear Reading glasses             |
-      | description_short[fr-FR] | Lunettes de lecture transparentes |
+    And I associate product product1 with following attachments: "[att1]"
+    And I update product "product2" with following values:
+      | description[en-US]                      | Reading glasses                   |
+      | description[fr-FR]                      | lunettes de lecture               |
+      | description_short[en-US]                | Clear Reading glasses             |
+      | description_short[fr-FR]                | Lunettes de lecture transparentes |
+      | visibility                              | catalog                           |
+      | available_for_order                     | true                              |
+      | online_only                             | false                             |
+      | show_price                              | true                              |
+      | condition                               | new                               |
+      | manufacturer                            | studioDesign                      |
+      | isbn                                    | 978-3-16-148410-1                 |
+      | upc                                     | 72527273072                       |
+      | ean13                                   | 978020137964                      |
+      | mpn                                     | mpn2                              |
+      | reference                               | ref2                              |
+      | isbn                                    | 978-3-16-148410-1                 |
+      | upc                                     | 72527273072                       |
+      | ean13                                   | 978020137964                      |
+      | mpn                                     | mpn2                              |
+      | reference                               | ref2                              |
+      | price                                   | 200.00                            |
+      | ecotax                                  | 0                                 |
+      | tax rules group                         | US-AL Rate (4%)                   |
+      | on_sale                                 | true                              |
+      | wholesale_price                         | 150                               |
+      | unit_price                              | 500                               |
+      | unity                                   | lots                              |
+      | meta_title[en-US]                       | READINGGLASSES meta title         |
+      | meta_description[en-US]                 | You can read now                  |
+      | meta_description[fr-FR]                 | You can read in french now        |
+      | link_rewrite[en-US]                     | reading-glasses                   |
+      | link_rewrite[fr-FR]                     | lunettes-de-lecture               |
+      | redirect_type                           | 301-product                       |
+      | redirect_target                         | product1                          |
+      | width                                   | 12                                |
+      | height                                  | 8                                 |
+      | depth                                   | 4                                 |
+      | weight                                  | 2                                 |
+      | additional_shipping_cost                | 8                                 |
+      | delivery time notes type                | specific                          |
+      | delivery time in stock notes[en-US]     | product in stock                  |
+      | delivery time in stock notes[fr-FR]     | en stock                          |
+      | delivery time out of stock notes[en-US] | product out of stock              |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock               |
+      | active                                  | true                              |
+      | redirect_type                           | 301-product                       |
+      | redirect_target                         | product1                          |
     And I assign product product2 to following categories:
       | categories       | [home, women, clothes] |
       | default category | women                  |
-    And I update product "product2" options with following values:
-      | visibility          | catalog      |
-      | available_for_order | true         |
-      | online_only         | false        |
-      | show_price          | true         |
-      | condition           | new          |
-      | manufacturer        | studioDesign |
-    And I update product "product2" details with following values:
-      | isbn      | 978-3-16-148410-1 |
-      | upc       | 72527273072       |
-      | ean13     | 978020137964      |
-      | mpn       | mpn2              |
-      | reference | ref2              |
     And I update product "product2" tags with following values:
       | tags[en-US] | glasses,readingglasses,women     |
       | tags[fr-FR] | lunettes,lunettespourlire,femmes |
-    And I update product "product2" prices with following information:
-      | price           | 200.00          |
-      | ecotax          | 0               |
-      | tax rules group | US-AL Rate (4%) |
-      | on_sale         | true            |
-      | wholesale_price | 150             |
-      | unit_price      | 500             |
-      | unity           | lots            |
-    And I update product product2 SEO information with following values:
-      | meta_title[en-US]       | READINGGLASSES meta title  |
-      | meta_description[en-US] | You can read now           |
-      | meta_description[fr-FR] | You can read in french now |
-      | link_rewrite[en-US]     | reading-glasses            |
-      | link_rewrite[fr-FR]     | lunettes-de-lecture        |
-      | redirect_type           | 301-product                |
-      | redirect_target         | product1                   |
-    And I update product product2 shipping information with following values:
-      | width                                   | 12                   |
-      | height                                  | 8                    |
-      | depth                                   | 4                    |
-      | weight                                  | 2                    |
-      | additional_shipping_cost                | 8                    |
-      | delivery time notes type                | specific             |
-      | delivery time in stock notes[en-US]     | product in stock     |
-      | delivery time in stock notes[fr-FR]     | en stock             |
-      | delivery time out of stock notes[en-US] | product out of stock |
-      | delivery time out of stock notes[fr-FR] | En rupture de stock  |
     And I assign product product2 with following carriers:
       | carrier1 |
       | carrier2 |
@@ -187,9 +180,6 @@ Feature: Duplicate product from Back Office (BO).
       | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
       | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
     And I enable product "product2"
-    When I update product product2 SEO information with following values:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
