@@ -92,10 +92,11 @@ class CatalogPriceRuleForListing
      * @var string|null
      */
     private $currencyIso;
+
     /**
      * @var bool
      */
-    private $taxIncl;
+    private $isTaxIncluded;
 
     /**
      * CatalogPriceRuleForListing constructor.
@@ -105,6 +106,7 @@ class CatalogPriceRuleForListing
      * @param int $fromQuantity
      * @param string $reductionType
      * @param DecimalNumber $reduction
+     * @param bool $isTaxIncluded
      * @param DateTimeInterface $dateStart
      * @param DateTimeInterface $dateEnd
      * @param string|null $shopName
@@ -119,7 +121,7 @@ class CatalogPriceRuleForListing
         int $fromQuantity,
         string $reductionType,
         DecimalNumber $reduction,
-        bool $taxIncl,
+        bool $isTaxIncluded,
         DateTimeInterface $dateStart,
         DateTimeInterface $dateEnd,
         ?string $shopName,
@@ -133,7 +135,7 @@ class CatalogPriceRuleForListing
         $this->fromQuantity = $fromQuantity;
         $this->reductionType = $reductionType;
         $this->reduction = $reduction;
-        $this->taxIncl = $taxIncl;
+        $this->isTaxIncluded = $isTaxIncluded;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
         $this->shopName = $shopName;
@@ -242,8 +244,8 @@ class CatalogPriceRuleForListing
     /**
      * @return bool
      */
-    public function getTaxIncl(): bool
+    public function isTaxIncluded(): bool
     {
-        return $this->taxIncl;
+        return $this->isTaxIncluded;
     }
 }
