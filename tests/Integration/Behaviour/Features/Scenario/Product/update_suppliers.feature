@@ -280,7 +280,7 @@ Feature: Update product suppliers from Back Office (BO)
       | unit_price       | 0     |
       | unit_price_ratio | 0     |
       | unity            |       |
-    When I update product "product4" prices with following information:
+    When I update product "product4" with following values:
       | wholesale_price  | 20    |
     # Updating the product wholesale price impacts the default supplier price
     Then product product4 should have following suppliers:
@@ -290,7 +290,7 @@ Feature: Update product suppliers from Back Office (BO)
     When I set product product4 default supplier to supplier2
     And product product4 should have following supplier values:
       | default supplier           | supplier2                       |
-    When I update product "product4" prices with following information:
+    When I update product "product4" with following values:
       | wholesale_price  | 30    |
     Then product product4 should have following suppliers:
       | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
@@ -360,7 +360,7 @@ Feature: Update product suppliers from Back Office (BO)
         | default supplier           | supplier1                      |
         | default supplier reference | my first supplier for product5 |
       # Wholesale price should have been updated as well matching the new default supplier
-      When I update product "product5" prices with following information:
+      When I update product "product5" with following values:
         | wholesale_price  | 10    |
       # Finally, I can remove all suppliers ith one command
       When I remove all associated product product5 suppliers
