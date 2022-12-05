@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\SendProcessOrderEmail
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderEmailSendException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShopException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Handles SendProcessOrderEmail command using legacy object model

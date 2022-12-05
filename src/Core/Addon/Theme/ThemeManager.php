@@ -48,8 +48,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 class ThemeManager implements AddonManagerInterface

@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms

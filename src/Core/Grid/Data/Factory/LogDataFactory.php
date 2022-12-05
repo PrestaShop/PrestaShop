@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Employee\AvatarProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LogDataFactory decorates DoctrineGridDataFactory configured for logs to modify log records.
