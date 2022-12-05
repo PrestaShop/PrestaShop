@@ -353,4 +353,19 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
         return $this->getSharedStorage()->get($manufacturerReference);
     }
+
+    /**
+     * @param string $shopReferences
+     *
+     * @return int[]
+     */
+    protected function getShopIdsFromReferences(string $shopReferences): array
+    {
+        $shopIds = [];
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $shopIds[] = (int) $this->getSharedStorage()->get(trim($shopReference));
+        }
+
+        return $shopIds;
+    }
 }

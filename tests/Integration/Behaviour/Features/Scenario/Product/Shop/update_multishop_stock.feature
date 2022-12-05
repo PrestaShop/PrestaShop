@@ -15,6 +15,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
+    And Shop group test_second_shop_group shares its stock
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
@@ -380,3 +381,133 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | Puff Daddy | -111           |
       | Puff Daddy | 69             |
     And product "productCombinations" last stock movement for shop "shop2" decreased by 111
+
+  Scenario: When I update the stock in a group that shares its stock all shops from the group should be impacted
+    Given product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    When I copy product product1 from shop shop1 to shop shop3
+    Then product "product1" should have following stock information for shops "shop1,shop2,shop3":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    And product product1 is not associated to shop shop4
+    And product "product1" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+    And product "product1" should have no stock movements for shop "shop2,shop3"
+    When I update product "product1" stock for shop shop3 with following information:
+      | delta_quantity    | 27             |
+      | out_of_stock_type | not_available  |
+      | location          | shared storage |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    Then product "product1" should have following stock information for shops "shop3":
+      | quantity          | 69             |
+      | out_of_stock_type | not_available  |
+      | location          | shared storage |
+    And product "product1" last stock movements for shop "shop3" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 27             |
+    And product "product1" should have no stock movements for shop "shop2"
+    And product product1 is not associated to shop shop4
+    # When the stock is copied for shop4 it impacts shop3 as well since they share the same StockAvailable
+    When I copy product product1 from shop shop1 to shop shop4
+    Then product "product1" should have following stock information for shops "shop1,shop2,shop3,shop4":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    # Stock for both shops are linked so are the stock movements
+    And product "product1" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 27             |
+    # Edit shop4 also impacts shop3
+    When I update product "product1" stock for shop shop4 with following information:
+      | delta_quantity    | 9             |
+      | out_of_stock_type | default       |
+      | location          | bound storage |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    And product "product1" should have following stock information for shops "shop3,shop4":
+      | out_of_stock_type | default       |
+      | quantity          | 51            |
+      | location          | bound storage |
+    And product "product1" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 9              |
+      | Puff Daddy | 27             |
+    # Edit shop3 also impacts shop4
+    When I update product "product1" stock for shop shop4 with following information:
+      | delta_quantity    | 18            |
+      | out_of_stock_type | available     |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 42        |
+      | location          | dtc       |
+    And product "product1" should have following stock information for shops "shop3,shop4":
+      | out_of_stock_type | available     |
+      | quantity          | 69            |
+      | location          | bound storage |
+    And product "product1" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 18             |
+      | Puff Daddy | 9              |
+      | Puff Daddy | 27             |
+    # We can still update for all shops
+    When I update product "product1" stock for all shops with following information:
+      | out_of_stock_type | available |
+      | delta_quantity    | 42        |
+      | location          | dtc       |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 84        |
+      | location          | dtc       |
+    Then product "product1" should have following stock information for shops "shop3,shop4":
+      | out_of_stock_type | available |
+      | quantity          | 111       |
+      | location          | dtc       |
+    And product "product1" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+      | Puff Daddy | 42             |
+    And product "product1" last stock movements for shop "shop2" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+    And product "product1" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+      | Puff Daddy | 18             |
+      | Puff Daddy | 9              |
+      | Puff Daddy | 27             |
+    # But grouped stock remain independent
+    When I update product "product1" stock for shop shop4 with following information:
+      | delta_quantity    | 9             |
+      | out_of_stock_type | default       |
+      | location          | bound storage |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | available |
+      | quantity          | 84        |
+      | location          | dtc       |
+    And product "product1" should have following stock information for shops "shop3,shop4":
+      | out_of_stock_type | default       |
+      | quantity          | 120           |
+      | location          | bound storage |
+    And product "product1" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+      | Puff Daddy | 42             |
+    And product "product1" last stock movements for shop "shop2" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 42             |
+    And product "product1" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 9              |
+      | Puff Daddy | 42             |
+      | Puff Daddy | 18             |
+      | Puff Daddy | 9              |
+      | Puff Daddy | 27             |
