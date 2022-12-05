@@ -109,7 +109,7 @@ class ShopGroupRepository extends AbstractObjectModelRepository
 
         $result = $qb->execute()->fetchNumeric();
         if (false === $result) {
-            throw new ShopNotFoundException(sprintf('Could not find shop witth id %d', $shopId->getValue()));
+            throw new ShopNotFoundException(sprintf('Could not find shop with id %d', $shopId->getValue()));
         }
 
         return new ShopGroupId((int) $result);
@@ -127,5 +127,25 @@ class ShopGroupRepository extends AbstractObjectModelRepository
             'shop_group',
             ShopGroupNotFoundException::class
         );
+    }
+
+    /**
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getShopsFromGroup(ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('s.id_shop')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->where('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+        ;
+
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 }
