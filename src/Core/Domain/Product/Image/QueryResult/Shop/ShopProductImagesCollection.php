@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-class ShopProductImagesCollection
+use ArrayIterator;
+use IteratorAggregate;
+
+class ShopProductImagesCollection implements IteratorAggregate
 {
     private $shopProductImages;
 
@@ -37,8 +40,8 @@ class ShopProductImagesCollection
         $this->shopProductImages = $shopProductImages;
     }
 
-    public function getShopProductImages(): array
+    public function getIterator()
     {
-        return $this->shopProductImages;
+        return new ArrayIterator($this->shopProductImages);
     }
 }

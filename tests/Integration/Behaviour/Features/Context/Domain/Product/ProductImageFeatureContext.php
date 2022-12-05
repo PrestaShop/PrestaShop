@@ -269,7 +269,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
 
         $actualShopProductImagesArray = array_filter(
-            $this->shopProductImagesCollection->getShopProductImages(),
+            iterator_to_array($this->shopProductImagesCollection),
             function (ShopProductImages $shopProductImages) use ($shopId): bool {
                 return $shopProductImages->getShopId() === $shopId;
             }
@@ -424,7 +424,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         );
         foreach ($expectedShopProductImagesArray as $expectedShopProductImage) {
             $actualShopProductImagesArray = array_filter(
-                $this->shopProductImagesCollection->getShopProductImages(),
+                iterator_to_array($this->shopProductImagesCollection),
                 function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
                     return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
                 }
