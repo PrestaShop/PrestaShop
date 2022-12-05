@@ -37,21 +37,8 @@ class ShopProductImagesCollection
         $this->shopProductImages = $shopProductImages;
     }
 
-    public function getShopProductImagesByShopId(int $shopId): ShopProductImages
+    public function getShopProductImages(): array
     {
-        $shopProductImages = $this->shopProductImages;
-        $shopProductImagesFiltered = array_filter(
-            $shopProductImages,
-            static function (ShopProductImages $shopProductImages) use ($shopId): bool {
-                return $shopProductImages->getShopId() === $shopId;
-            }
-        );
-        $shopProductImages = reset($shopProductImagesFiltered);
-
-        if ($shopProductImages === false) {
-            throw new \Exception('No ShopProductImages for shop id ' . $shopId);
-        }
-
-        return $shopProductImages;
+        return $this->shopProductImages;
     }
 }

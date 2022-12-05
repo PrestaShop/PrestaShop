@@ -261,21 +261,26 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             ->fetchAll()
         ;
 
-        $shopProductImagesArray = [];
+        $productImagesByShop = [];
         foreach ($results as $result) {
             $shopId = (int) $result['id_shop'];
-            $shopProductImagesFiltered = array_filter(
-                $shopProductImagesArray,
-                static function (ShopProductImages $shopProductImages) use ($shopId): bool {
-                    return $shopProductImages->getShopId() === $shopId;
-                }
-            );
-            $shopProductImages = reset($shopProductImagesFiltered) ?: new ShopProductImages($shopId);
-            $shopProductImages->addProductImage(
-                new ProductImage((int) $result['id_image'], (int) $result['cover'] === 1)
-            );
-            $shopProductImagesArray[] = $shopProductImages;
+            $productImagesByShop[$shopId][] = new ProductImage((int) $result['id_image'], (int) $result['cover'] === 1);
         }
+
+        foreach ($this->productMultiShopRepository->getAssociatedShopIds($productId) as $shopId) {
+            if (isset($productImagesByShop[$shopId->getValue()])) {
+                continue;
+            }
+            $productImagesByShop[$shopId->getValue()] = [];
+        }
+
+        $shopProductImagesArray = array_map(
+            function (int $shopId, array $productImages): ShopProductImages {
+                return new ShopProductImages($shopId, $productImages);
+            },
+            array_keys($productImagesByShop),
+            $productImagesByShop
+        );
 
         return new ShopProductImagesCollection(...$shopProductImagesArray);
     }

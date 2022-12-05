@@ -51,7 +51,7 @@ class ProductImage
     /**
      * @return int
      */
-    public function getId(): int
+    public function getImageId(): int
     {
         return $this->id;
     }

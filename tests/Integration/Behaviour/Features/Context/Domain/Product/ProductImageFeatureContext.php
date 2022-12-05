@@ -42,7 +42,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage as ProductImageInShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -111,7 +113,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws ShopException
      */
     public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference): void
     {
@@ -260,6 +262,24 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^the shop "([^"]*)" should have empty image details$/
+     */
+    public function theShopShouldNotHaveAnyImageDetails(string $shopReference)
+    {
+        $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
+
+        $actualShopProductImagesArray = array_filter(
+            $this->shopProductImagesCollection->getShopProductImages(),
+            function (ShopProductImages $shopProductImages) use ($shopId): bool {
+                return $shopProductImages->getShopId() === $shopId;
+            }
+        );
+        $actualShopProductImages = reset($actualShopProductImagesArray);
+
+        Assert::assertEmpty($actualShopProductImages->getProductImages());
+    }
+
+    /**
      * @param int $imageId
      *
      * @return string
@@ -385,31 +405,37 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function iShouldHaveTheFollowingsImageDetailsForShop(TableNode $tableNode)
     {
-        $dataRows = $this->localizeByColumns($tableNode);
-        $shopIds = array_map(
-            function (array $dataRow): int {
-                return (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
-            },
-            $dataRows
-        );
-        $shopIds = array_unique($shopIds);
+        $dataRows = $tableNode->getColumnsHash();
+        $productImagesByShop = [];
+        foreach ($dataRows as $dataRow) {
+            $shopId = (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
+            $productImagesByShop[$shopId][] = new ProductImageInShop(
+                (int) $this->getSharedStorage()->get(trim($dataRow['image reference'])),
+                (int) $dataRow['cover'] === 1
+            );
+        }
 
-        foreach ($shopIds as $shopId) {
-            $dataRowsByShop = array_filter(
-                $dataRows,
-                function (array $dataRow) use ($shopId): bool {
-                    return (int) $this->getSharedStorage()->get(trim($dataRow['shopReference'])) === $shopId;
+        $expectedShopProductImagesArray = array_map(
+            function (int $shopId, array $productImages): ShopProductImages {
+                return new ShopProductImages($shopId, $productImages);
+            },
+            array_keys($productImagesByShop),
+            $productImagesByShop
+        );
+        foreach ($expectedShopProductImagesArray as $expectedShopProductImage) {
+            $actualShopProductImagesArray = array_filter(
+                $this->shopProductImagesCollection->getShopProductImages(),
+                function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
+                    return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
                 }
             );
-            $shopProductImages = $this->shopProductImagesCollection->getShopProductImagesByShopId($shopId);
-            Assert::assertEquals(count($dataRowsByShop), count($shopProductImages->getProductImages()));
-            foreach ($dataRowsByShop as $dataRow) {
+            $actualShopProductImages = reset($actualShopProductImagesArray);
+
+            Assert::assertEquals(count($expectedShopProductImage->getProductImages()), count($actualShopProductImages->getProductImages()));
+            foreach ($expectedShopProductImage->getProductImages() as $expectedProductImage) {
                 Assert::assertContainsEquals(
-                    new ProductImageInShop(
-                        $this->getSharedStorage()->get(trim($dataRow['image reference'])),
-                        (int) $dataRow['cover'] === 1
-                    ),
-                    $shopProductImages->getProductImages()
+                    $expectedProductImage,
+                    $actualShopProductImages->getProductImages()
                 );
             }
         }
