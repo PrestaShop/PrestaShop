@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 /**
  * Contains all the data needed to handle the command update.
  *
- * @see UpdateCommandHandlerInterface
+ * @see UpdateCombinationHandlerInterface
  *
  * This command is only designed for the general data of combination which can be persisted in one call.
  * It was not designed to handle the combination relations.
