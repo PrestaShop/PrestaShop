@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 
 /**
  * Defines contract to handle @see UpdateCombinationCommand
+ *
  * @todo: rename. UpdateCombinationHandlerInterface
  */
 interface UpdateCommandHandlerInterface
