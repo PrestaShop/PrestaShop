@@ -434,7 +434,10 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             /** @var ShopProductImages $actualShopProductImages */
             $actualShopProductImages = reset($actualShopProductImagesArray);
 
-            Assert::assertEquals(iterator_count($expectedShopProductImage->getProductImageCollection()), iterator_count($actualShopProductImages->getProductImageCollection()));
+            Assert::assertEquals(
+                $expectedShopProductImage->getProductImageCollection()->count(),
+                $actualShopProductImages->getProductImageCollection()->count()
+            );
             foreach ($expectedShopProductImage->getProductImageCollection() as $expectedProductImage) {
                 Assert::assertContainsEquals(
                     $expectedProductImage,
