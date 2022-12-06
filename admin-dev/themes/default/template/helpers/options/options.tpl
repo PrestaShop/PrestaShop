@@ -190,7 +190,7 @@
 												{$field['suffix']|strval}
 											</span>
 											{/if}
-											{if isset($field['suffix'])}</div>{/if}
+											</div>
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9"><div class="input-group{if isset($field.class)} {$field.class}{/if}">
