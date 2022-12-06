@@ -276,7 +276,23 @@ export default class CombinationsListRenderer {
     const productPrice = this.productFormModel.getPriceTaxExcluded();
     const $finalPrice = $(CombinationsMap.list.finalPrice, $row);
     const $finalPricePreview = $finalPrice.siblings(CombinationsMap.list.finalPricePreview);
-    const finalPrice = this.productFormModel.displayPrice(productPrice.plus(priceImpactTaxExcluded));
+    let combinationPrice = productPrice.plus(priceImpactTaxExcluded);
+
+    const combinationEcoTax = $(CombinationsMap.list.ecoTax, $row).val();
+
+    let ecoTax;
+
+    if (combinationEcoTax !== undefined && combinationEcoTax > 0) {
+      ecoTax = new BigNumber(combinationEcoTax.toString());
+    } else {
+      ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    }
+
+    if (!ecoTax.isNaN()) {
+      combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));
+    }
+
+    const finalPrice = this.productFormModel.displayPrice(combinationPrice);
 
     if (typeof $finalPrice !== 'undefined') {
       $finalPrice.val(finalPrice);
