@@ -484,6 +484,8 @@ class AdminImagesControllerCore extends AdminController
         foreach ($toDel as $d) {
             foreach ($type as $imageType) {
                 if (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                    || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.avif$/', $d)
+                    || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.webp$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
                     || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)) {
                     if (file_exists($dir . $d)) {
@@ -503,7 +505,10 @@ class AdminImagesControllerCore extends AdminController
                     $toDel = scandir($dir . $imageObj->getImgFolder(), SCANDIR_SORT_NONE);
                     foreach ($toDel as $d) {
                         foreach ($type as $imageType) {
-                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
+                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                                || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.avif$/', $d)
+                                || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.webp$/', $d)
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
                                 if (file_exists($dir . $imageObj->getImgFolder() . $d)) {
                                     unlink($dir . $imageObj->getImgFolder() . $d);
                                 }
@@ -804,5 +809,26 @@ class AdminImagesControllerCore extends AdminController
         }
 
         parent::initContent();
+    }
+
+    public function processDelete()
+    {
+        $res = parent::processDelete();
+        // We will remove the images linked to this image setting
+        if (!empty(Tools::getValue('delete' . $this->table))) {
+            $process = [
+                ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
+                ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
+                ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
+                ['type' => 'products', 'dir' => _PS_PRODUCT_IMG_DIR_],
+                ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
+            ];
+            foreach ($process as $proc) {
+                $formats = ImageType::getImagesTypes($proc['type']);
+                $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
+            }
+        }
+
+        return $res;
     }
 }
