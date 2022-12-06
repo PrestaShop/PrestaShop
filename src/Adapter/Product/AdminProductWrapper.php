@@ -50,7 +50,7 @@ use ShopUrl;
 use SpecificPrice;
 use SpecificPriceRule;
 use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tax;
 use Tools;
 use Validate;

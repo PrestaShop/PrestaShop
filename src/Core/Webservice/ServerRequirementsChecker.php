@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
 use PrestaShop\PrestaShop\Core\Configuration\PhpExtensionCheckerInterface;
 use RuntimeException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Looks at server configuration in order to check if PrestaShop's Webservice feature can be enabled.

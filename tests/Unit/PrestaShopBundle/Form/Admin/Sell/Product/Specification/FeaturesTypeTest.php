@@ -31,7 +31,7 @@ namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeaturesTypeTest extends TestCase
 {

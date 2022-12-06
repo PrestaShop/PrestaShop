@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Email\EmailConfigurationTesterInterface;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class EmailConfigurationTester is responsible for sending test email.

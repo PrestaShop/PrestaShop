@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * PrestaShop forms needs custom domain name for field constraints

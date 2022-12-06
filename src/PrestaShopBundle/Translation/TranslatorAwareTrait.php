@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Translation;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Trait TranslatorAwareTrait is used for services that depends on translator.
