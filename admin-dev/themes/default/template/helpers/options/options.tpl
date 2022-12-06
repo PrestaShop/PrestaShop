@@ -193,7 +193,7 @@
 											{if isset($field['suffix'])}</div>{/if}
 										</div>
 									{elseif $field['type'] == 'password'}
-										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group{if isset($field.class)} {$field.class}{/if}">{/if}
+										<div class="col-lg-9"><div class="input-group{if isset($field.class)} {$field.class}{/if}">
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value=""{if isset($field['autocomplete']) && !$field['autocomplete']} autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
