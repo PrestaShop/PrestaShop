@@ -104,8 +104,14 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
 
+            $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MODSEC', 'disable_apache_mod_security', $configuration, $shopConstraint);
+
             if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
-                $configuration['friendly_url'] = false;
+                $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', ['friendly_url' => false], $shopConstraint);
 
                 $errorMessage = $this->translator
                     ->trans(
@@ -132,12 +138,6 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 
                 $errors[] = $errorMessage;
             }
-
-            $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MODSEC', 'disable_apache_mod_security', $configuration, $shopConstraint);
         }
 
         return $errors;
