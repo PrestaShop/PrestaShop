@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage as ProductImageInShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -269,14 +270,15 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
 
         $actualShopProductImagesArray = array_filter(
-            iterator_to_array($this->shopProductImagesCollection),
+            $this->shopProductImagesCollection->toArray(),
             function (ShopProductImages $shopProductImages) use ($shopId): bool {
                 return $shopProductImages->getShopId() === $shopId;
             }
         );
+        /** @var ShopProductImages $actualShopProductImages */
         $actualShopProductImages = reset($actualShopProductImagesArray);
 
-        Assert::assertEmpty($actualShopProductImages->getProductImages());
+        Assert::assertEmpty($actualShopProductImages->getProductImageCollection()->toArray());
     }
 
     /**
@@ -417,25 +419,26 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $expectedShopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
-                return new ShopProductImages($shopId, $productImages);
+                return new ShopProductImages($shopId, new ProductImageCollection(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop
         );
         foreach ($expectedShopProductImagesArray as $expectedShopProductImage) {
             $actualShopProductImagesArray = array_filter(
-                iterator_to_array($this->shopProductImagesCollection),
+                $this->shopProductImagesCollection->toArray(),
                 function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
                     return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
                 }
             );
+            /** @var ShopProductImages $actualShopProductImages */
             $actualShopProductImages = reset($actualShopProductImagesArray);
 
-            Assert::assertEquals(count($expectedShopProductImage->getProductImages()), count($actualShopProductImages->getProductImages()));
-            foreach ($expectedShopProductImage->getProductImages() as $expectedProductImage) {
+            Assert::assertEquals(iterator_count($expectedShopProductImage->getProductImageCollection()), iterator_count($actualShopProductImages->getProductImageCollection()));
+            foreach ($expectedShopProductImage->getProductImageCollection() as $expectedProductImage) {
                 Assert::assertContainsEquals(
                     $expectedProductImage,
-                    $actualShopProductImages->getProductImages()
+                    $actualShopProductImages->getProductImageCollection()
                 );
             }
         }

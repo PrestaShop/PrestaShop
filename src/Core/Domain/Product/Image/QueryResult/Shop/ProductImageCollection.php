@@ -30,10 +30,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
 use PrestaShop\PrestaShop\Core\Domain\AbstractCollection;
 
-class ShopProductImagesCollection extends AbstractCollection
+class ProductImageCollection extends AbstractCollection
 {
-    public function __construct(ShopProductImages ...$shopProductImages)
+    public function __construct(ProductImage ...$productImage)
     {
-        $this->values = $shopProductImages;
+        $this->values = $productImage;
     }
 }
