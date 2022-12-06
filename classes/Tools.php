@@ -2266,8 +2266,19 @@ class ToolsCore
         return self::$colorBrightnessCalculator->isBright($hex);
     }
 
+    /**
+     * @deprecated Since 8.1.0 and will be removed in the next major.
+     */
     public static function parserSQL($sql)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. There is no replacement',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (strlen($sql) > 0) {
             $parser = new PHPSQLParser($sql);
 
@@ -2277,8 +2288,19 @@ class ToolsCore
         return false;
     }
 
+    /**
+     * @deprecated Since 8.1.0 and will be removed in the next major.
+     */
     public static function replaceByAbsoluteURL($matches)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. Use Media::replaceByAbsoluteURL($matches) instead',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
 
         return Media::replaceByAbsoluteURL($matches);

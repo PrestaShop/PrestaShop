@@ -111,12 +111,22 @@ class RequestSqlCore extends ObjectModel
      * Call the parserSQL() method in Tools class
      * Cut the request in table for check it.
      *
+     * @deprecated Since 8.1.0 and will be removed in the next major.
+     *
      * @param string $sql
      *
      * @return array|bool
      */
     public function parsingSql($sql)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. There is no replacement',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         return Tools::parserSQL($sql);
     }
 
