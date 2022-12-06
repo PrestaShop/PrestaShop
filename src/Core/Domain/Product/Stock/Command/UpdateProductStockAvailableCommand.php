@@ -23,18 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Command to update some basic properties of product
+ * Updates product stock properties which are in a dedicated StockAvailable entity
+ *
+ * @see UpdateProductStockHandlerInterface
  */
-class UpdateProductBasicInformationCommand
+class UpdateProductStockAvailableCommand
 {
     /**
      * @var ProductId
@@ -42,24 +46,24 @@ class UpdateProductBasicInformationCommand
     private $productId;
 
     /**
-     * @var string[]|null
-     */
-    private $localizedNames;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedDescriptions;
-
-    /**
-     * @var string[]|null key value pairs where key is the id of language
-     */
-    private $localizedShortDescriptions;
-
-    /**
      * @var ShopConstraint
      */
     private $shopConstraint;
+
+    /**
+     * @var int|null
+     */
+    private $deltaQuantity;
+
+    /**
+     * @var OutOfStockType|null
+     */
+    private $outOfStockType;
+
+    /**
+     * @var string|null
+     */
+    private $location;
 
     /**
      * @param int $productId
@@ -82,70 +86,72 @@ class UpdateProductBasicInformationCommand
     }
 
     /**
-     * @return string[]|null
-     */
-    public function getLocalizedNames(): ?array
-    {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @param string[] $localizedNames
-     *
-     * @return UpdateProductBasicInformationCommand
-     */
-    public function setLocalizedNames(array $localizedNames): self
-    {
-        $this->localizedNames = $localizedNames;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedDescriptions(): ?array
-    {
-        return $this->localizedDescriptions;
-    }
-
-    /**
-     * @param string[] $localizedDescriptions
-     *
-     * @return UpdateProductBasicInformationCommand
-     */
-    public function setLocalizedDescriptions(array $localizedDescriptions): UpdateProductBasicInformationCommand
-    {
-        $this->localizedDescriptions = $localizedDescriptions;
-
-        return $this;
-    }
-
-    /**
-     * @return string[]|null
-     */
-    public function getLocalizedShortDescriptions(): ?array
-    {
-        return $this->localizedShortDescriptions;
-    }
-
-    /**
-     * @param string[] $localizedShortDescriptions
-     *
-     * @return UpdateProductBasicInformationCommand
-     */
-    public function setLocalizedShortDescriptions(array $localizedShortDescriptions): UpdateProductBasicInformationCommand
-    {
-        $this->localizedShortDescriptions = $localizedShortDescriptions;
-
-        return $this;
-    }
-
-    /**
      * @return ShopConstraint
      */
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDeltaQuantity(): ?int
+    {
+        return $this->deltaQuantity;
+    }
+
+    /**
+     * @param int $deltaQuantity
+     *
+     * @return self
+     */
+    public function setDeltaQuantity(int $deltaQuantity): self
+    {
+        $this->deltaQuantity = $deltaQuantity;
+
+        return $this;
+    }
+
+    /**
+     * @return OutOfStockType|null
+     */
+    public function getOutOfStockType(): ?OutOfStockType
+    {
+        return $this->outOfStockType;
+    }
+
+    /**
+     * @param int $outOfStockType
+     *
+     * @return $this
+     *
+     * @throws ProductStockConstraintException
+     */
+    public function setOutOfStockType(int $outOfStockType): self
+    {
+        $this->outOfStockType = new OutOfStockType($outOfStockType);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocation(): ?string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string $location
+     *
+     * @return self
+     */
+    public function setLocation(string $location): self
+    {
+        $this->location = $location;
+
+        return $this;
     }
 }

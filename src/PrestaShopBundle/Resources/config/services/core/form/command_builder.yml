@@ -56,7 +56,7 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder:
     tags: [ 'core.product_command_builder' ]
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockCommandsBuilder:
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockAvailableCommandsBuilder:
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]

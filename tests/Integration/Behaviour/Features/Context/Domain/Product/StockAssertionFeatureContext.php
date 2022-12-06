@@ -25,7 +25,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 /**
  * Context for assertions related to product Stock
  */
-class StockAssertionFeatureContext extends AbstractStockFeatureContext
+class StockAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @Then I should get error that product stock location is invalid

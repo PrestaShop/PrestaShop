@@ -30,18 +30,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Cache;
-use DateTime;
-use Pack;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractStockFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
-class UpdateStockFeatureContext extends AbstractStockFeatureContext
+class UpdateStockFeatureContext extends AbstractProductFeatureContext
 {
     /**
      * @When I update product :productReference stock with following information:
@@ -85,36 +80,12 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
         );
     }
 
-    private function updateProductStock(
-        string $productReference,
-        TableNode $table,
-        ShopConstraint $shopConstraint
-    ): void {
-        $data = $this->localizeByRows($table);
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        try {
-            $command = new UpdateProductStockInformationCommand($productId, $shopConstraint);
-            $unhandledData = $this->setUpdateStockCommandData($data, $command);
-            Assert::assertEmpty(
-                $unhandledData,
-                sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
-            );
-            $this->getCommandBus()->handle($command);
-
-            // Clean the cache or legacy code won't return the right quantity in following steps
-            Cache::clean('StockAvailable::*');
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
     /**
      * @When I update product :productReference location with value of :length symbols length
      */
     public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
-        $command = new UpdateProductStockInformationCommand(
+        $command = new UpdateProductStockAvailableCommand(
             $this->getSharedStorage()->get($productReference),
             ShopConstraint::shop($this->getDefaultShopId())
         );
@@ -128,81 +99,46 @@ class UpdateStockFeatureContext extends AbstractStockFeatureContext
     }
 
     /**
-     * @param array<string, mixed> $data
-     * @param UpdateProductStockInformationCommand $command
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
      */
-    private function setUpdateStockCommandData(array $data, UpdateProductStockInformationCommand $command): array
-    {
-        if (isset($data['pack_stock_type'])) {
-            // If pack is involved we clear the cache because its products settings might have changed
-            Pack::resetStaticCache();
-            $command->setPackStockType($this->convertPackStockTypeToInt($data['pack_stock_type']));
-            unset($data['pack_stock_type']);
-        }
+    private function updateProductStock(
+        string $productReference,
+        TableNode $table,
+        ShopConstraint $shopConstraint
+    ): void {
+        $data = $this->localizeByRows($table);
+        $productId = $this->getSharedStorage()->get($productReference);
 
+        try {
+            $updateStockCommand = new UpdateProductStockAvailableCommand($productId, $shopConstraint);
+            $this->setUpdateStockCommandData($data, $updateStockCommand);
+            $this->getCommandBus()->handle($updateStockCommand);
+
+            // Clean the cache or legacy code won't return the right quantity in following steps
+            Cache::clean('StockAvailable::*');
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param UpdateProductStockAvailableCommand $command
+     */
+    private function setUpdateStockCommandData(array $data, UpdateProductStockAvailableCommand $command): void
+    {
         if (isset($data['out_of_stock_type'])) {
             $command->setOutOfStockType($this->convertOutOfStockToInt($data['out_of_stock_type']));
-            unset($data['out_of_stock_type']);
         }
 
         if (isset($data['delta_quantity'])) {
             $command->setDeltaQuantity((int) $data['delta_quantity']);
-            unset($data['delta_quantity']);
-        }
-
-        if (isset($data['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $data['minimal_quantity']);
-            unset($data['minimal_quantity']);
         }
 
         if (isset($data['location'])) {
             $command->setLocation($data['location']);
-            unset($data['location']);
         }
-
-        if (isset($data['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $data['low_stock_threshold']);
-            unset($data['low_stock_threshold']);
-        }
-
-        if (isset($data['low_stock_alert'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
-            unset($data['low_stock_alert']);
-        }
-
-        if (isset($data['available_now_labels'])) {
-            $command->setLocalizedAvailableNowLabels($data['available_now_labels']);
-            unset($data['available_now_labels']);
-        }
-
-        if (isset($data['available_later_labels'])) {
-            $command->setLocalizedAvailableLaterLabels($data['available_later_labels']);
-            unset($data['available_later_labels']);
-        }
-
-        if (isset($data['available_date'])) {
-            $command->setAvailableDate(new DateTime($data['available_date']));
-            unset($data['available_date']);
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param string $outOfStock
-     *
-     * @return int
-     */
-    protected function convertPackStockTypeToInt(string $outOfStock): int
-    {
-        $intValues = [
-            'default' => PackStockType::STOCK_TYPE_DEFAULT,
-            'products_only' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
-            'pack_only' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'both' => PackStockType::STOCK_TYPE_BOTH,
-            'invalid' => 42, // This random number is hardcoded intentionally to reflect invalid pack stock type
-        ];
-
-        return $intValues[$outOfStock];
     }
 }

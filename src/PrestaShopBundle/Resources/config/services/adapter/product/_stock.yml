@@ -36,16 +36,6 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository
     deprecated: ~
 
-  prestashop.adapter.product.stock.command_handler.update_product_stock_information_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockInformationHandler
-    arguments:
-      - '@prestashop.adapter.product.stock.update.product_stock_updater'
-      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand
-
   prestashop.adapter.product.stock.query_handler.get_product_stock_movements_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler
     arguments:

@@ -29,51 +29,11 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetCarriersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct\AbstractShippingFeatureContext;
 
 class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
 {
-    /**
-     * @When I update product :productReference shipping information with following values:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function updateProductShipping(string $productReference, TableNode $table): void
-    {
-        $this->updateShipping($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
-    }
-
-    /**
-     * @When I update product :productReference shipping information for shop :shopReference with following values:
-     *
-     * @param string $productReference
-     * @param string $shopReference
-     * @param TableNode $table
-     */
-    public function updateProductShippingForShop(string $productReference, string $shopReference, TableNode $table): void
-    {
-        $shopId = $this->getSharedStorage()->get(trim($shopReference));
-        $this->updateShipping($productReference, $table, ShopConstraint::shop($shopId));
-    }
-
-    /**
-     * @When I update product :productReference shipping information for all shops with following values:
-     *
-     * @param string $productReference
-     * @param TableNode $table
-     */
-    public function updateProductShippingForAllShops(string $productReference, TableNode $table): void
-    {
-        $this->updateShipping($productReference, $table, ShopConstraint::allShops());
-    }
-
     /**
      * @When I assign product :productReference with following carriers:
      *
@@ -122,83 +82,5 @@ class UpdateShippingFeatureContext extends AbstractShippingFeatureContext
             $carrierReferences,
             $shopConstraint
         ));
-    }
-
-    /**
-     * @param string $productReference
-     * @param TableNode $table
-     * @param ShopConstraint $shopConstraint
-     */
-    private function updateShipping(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
-    {
-        $data = $this->localizeByRows($table);
-        $productId = $this->getSharedStorage()->get($productReference);
-
-        try {
-            $command = new UpdateProductShippingCommand($productId, $shopConstraint);
-            $unhandledData = $this->setUpdateShippingCommandData($data, $command);
-
-            Assert::assertEmpty(
-                $unhandledData,
-                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData, true))
-            );
-
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @param array $data
-     * @param UpdateProductShippingCommand $command
-     *
-     * @return array values that was provided, but wasn't handled
-     */
-    private function setUpdateShippingCommandData(array $data, UpdateProductShippingCommand $command): array
-    {
-        $unhandledValues = $data;
-
-        if (isset($data['width'])) {
-            $command->setWidth($data['width']);
-            unset($unhandledValues['width']);
-        }
-
-        if (isset($data['height'])) {
-            $command->setHeight($data['height']);
-            unset($unhandledValues['height']);
-        }
-
-        if (isset($data['depth'])) {
-            $command->setDepth($data['depth']);
-            unset($unhandledValues['depth']);
-        }
-
-        if (isset($data['weight'])) {
-            $command->setWeight($data['weight']);
-            unset($unhandledValues['weight']);
-        }
-
-        if (isset($data['additional_shipping_cost'])) {
-            $command->setAdditionalShippingCost($data['additional_shipping_cost']);
-            unset($unhandledValues['additional_shipping_cost']);
-        }
-
-        if (isset($data['delivery time notes type'])) {
-            $command->setDeliveryTimeNoteType(DeliveryTimeNoteType::ALLOWED_TYPES[$data['delivery time notes type']]);
-            unset($unhandledValues['delivery time notes type']);
-        }
-
-        if (isset($data['delivery time in stock notes'])) {
-            $command->setLocalizedDeliveryTimeInStockNotes($data['delivery time in stock notes']);
-            unset($unhandledValues['delivery time in stock notes']);
-        }
-
-        if (isset($data['delivery time out of stock notes'])) {
-            $command->setLocalizedDeliveryTimeOutOfStockNotes($data['delivery time out of stock notes']);
-            unset($unhandledValues['delivery time out of stock notes']);
-        }
-
-        return $unhandledValues;
     }
 }

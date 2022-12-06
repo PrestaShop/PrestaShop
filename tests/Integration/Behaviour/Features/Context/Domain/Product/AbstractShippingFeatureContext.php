@@ -25,10 +25,9 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Carrier;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 /**
  * This abstract class was introduced during UpdateProductCommand unification process,

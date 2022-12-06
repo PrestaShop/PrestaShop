@@ -27,7 +27,7 @@ Feature: Order from Back Office (BO)
       | customField | text | back image  | false       |
     And I update product "product12345" stock with following information:
       | out_of_stock_type             | available |
-    And I update product "product12345" details with following values:
+    And I update product "product12345" with following values:
       | reference | product12345      |
     Then product "product12345" should allow customization
     And product product12345 should have 1 customizable text field

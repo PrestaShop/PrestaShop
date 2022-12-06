@@ -839,7 +839,7 @@ Feature: Refund Order from Back Office (BO)
       | name         | US-FL Rate (10%) |
       | country      | US               |
       | state        | FL               |
-    And I update product product_mug_best_to_come prices with following information:
+    And I update product "product_mug_best_to_come" with following values:
       | tax rules group | US-FL Rate (10%) |
     When I issue a partial refund on "bo_order_refund" without restock with credit slip without voucher on following products:
       | product_name                | quantity                 | amount |

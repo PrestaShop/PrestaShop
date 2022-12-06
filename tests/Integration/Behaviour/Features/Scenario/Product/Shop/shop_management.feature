@@ -47,7 +47,7 @@ Feature: Copy product from shop to shop.
       | type        | standard    |
     Then product productWithPrices is associated to shop shop1
     And default shop for product productWithPrices is shop1
-    When I update product "productWithPrices" prices with following information:
+    When I update product "productWithPrices" with following values:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | US-AL Rate (4%) |
@@ -86,7 +86,7 @@ Feature: Copy product from shop to shop.
     And product productWithPrices is not associated to shop shop3
     And product productWithPrices is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithPrices" prices with following information:
+    When I update product "productWithPrices" with following values:
       | price              | 200.99            |
       | ecotax             | 2                 |
       | tax rules group    | US-AZ Rate (6.6%) |
@@ -137,7 +137,7 @@ Feature: Copy product from shop to shop.
       | type        | standard  |
     Then product productWithBasic is associated to shop shop1
     And default shop for product productWithBasic is shop1
-    When I update product "productWithBasic" basic information with following values:
+    When I update product "productWithBasic" with following values:
       | name[en-US]              | photo of funny mug |
       | description[en-US]       | nice mug           |
       | description_short[en-US] | Just a nice mug    |
@@ -170,7 +170,7 @@ Feature: Copy product from shop to shop.
     And product productWithBasic is not associated to shop shop3
     And product productWithBasic is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithBasic" basic information with following values:
+    When I update product "productWithBasic" with following values:
       | name[en-US]              | photo of super mug |
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
@@ -247,17 +247,18 @@ Feature: Copy product from shop to shop.
     Then product productWithStock is associated to shop shop1
     And default shop for product productWithStock is shop1
     # First modify data for default shop
-    When I update product "productWithStock" stock with following information:
+    When I update product "productWithStock" with following values:
       | pack_stock_type               | pack_only    |
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
       | minimal_quantity              | 12           |
-      | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
+    And I update product "productWithStock" stock with following information:
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | location                      | dtc          |
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | pack_only  |
       | out_of_stock_type   | available  |
@@ -303,17 +304,18 @@ Feature: Copy product from shop to shop.
     And product productWithStock is not associated to shop shop3
     And product productWithStock is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithStock" stock for shop shop1 with following information:
+    When I update product "productWithStock" for shop shop1 with following values:
       | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
-      | delta_quantity                | 69            |
       | minimal_quantity              | 24            |
-      | location                      | upa           |
       | low_stock_threshold           | 51            |
       | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
+    When I update product "productWithStock" stock for shop shop1 with following information:
+      | out_of_stock_type             | not_available |
+      | delta_quantity                | 69            |
+      | location                      | upa           |
     # First only one shop is updated
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | products_only |
@@ -428,22 +430,23 @@ Feature: Copy product from shop to shop.
     Then product productToDelete is associated to shop shop2
     And default shop for product productToDelete is shop2
     # First modify data for default shop
-    When I update product "productToDelete" stock for shop shop2 with following information:
+    When I update product "productToDelete" for shop shop2 with following values:
       | pack_stock_type               | pack_only    |
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
       | minimal_quantity              | 12           |
-      | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
-    And I update product "productToDelete" basic information for shop shop2 with following values:
+    And I update product "productToDelete" stock for shop shop2 with following information:
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | location                      | dtc          |
+    And I update product "productToDelete" for shop shop2 with following values:
       | name[en-US]              | photo of super mug |
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
-    When I update product "productToDelete" prices for shop shop2 with following information:
+    When I update product "productToDelete" for shop shop2 with following values:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | US-AL Rate (4%) |

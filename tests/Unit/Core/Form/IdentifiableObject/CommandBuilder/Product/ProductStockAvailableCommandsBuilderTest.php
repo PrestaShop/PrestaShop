@@ -27,13 +27,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStockAvailableCommandsBuilder;
 
-class ProductStockCommandsBuilderTest extends AbstractProductCommandBuilderTest
+class ProductStockAvailableCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -43,7 +43,7 @@ class ProductStockCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new ProductStockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new ProductStockAvailableCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -136,7 +136,7 @@ class ProductStockCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
-        $builder = new ProductStockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new ProductStockAvailableCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -300,13 +300,13 @@ class ProductStockCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
     }
 
-    private function getSingleShopCommand(): UpdateProductStockCommand
+    private function getSingleShopCommand(): UpdateProductStockAvailableCommand
     {
-        return new UpdateProductStockCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductStockAvailableCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
     }
 
-    private function getAllShopsCommand(): UpdateProductStockCommand
+    private function getAllShopsCommand(): UpdateProductStockAvailableCommand
     {
-        return new UpdateProductStockCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
+        return new UpdateProductStockAvailableCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

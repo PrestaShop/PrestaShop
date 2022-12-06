@@ -25,13 +25,12 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProduct;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
-use Tests\Integration\Behaviour\Features\Context\Domain\Product\AbstractProductFeatureContext;
 
 /**
  * Context for product assertions related to SEO properties
