@@ -144,9 +144,10 @@
         "friendsofphp/php-cs-fixer": "^v3.2.0",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
+        "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan": "^1",
         "phpunit/phpunit": "~8.5.16 || ~9.5.10",
-        "prestashop/phpstan-prestashop": "^2.0",
+        "spaze/phpstan-disallowed-calls": "^2.10",
         "symfony/phpunit-bridge": "^3.4"
     },
     "config": {
@@ -155,6 +156,7 @@
             "composer/installers": true,
             "composer/package-versions-deprecated": true,
             "ergebnis/composer-normalize": true,
+            "phpstan/extension-installer": true,
             "phpunit/phpunit": true,
             "symfony/phpunit-bridge": true
         },
