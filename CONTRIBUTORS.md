@@ -100,6 +100,7 @@ GitHub contributors:
 - bercik999
 - Bersam Karbasion
 - Berto Ferrero
+- Bertrand Merlier
 - BigZ
 - BluTiGeS
 - BMS-fenaille
@@ -344,6 +345,7 @@ GitHub contributors:
 - Jan Sýkora
 - janisVincent
 - Jaume
+- Javier García
 - Javsmile
 - JBWModules
 - JEAN
@@ -426,6 +428,7 @@ GitHub contributors:
 - ldecoker
 - Léa Mendes Da Silva
 - Leandro F. L
+- leemyongpakvn
 - Léo Cunéaz
 - Lesley Paone
 - LittleBigDev
@@ -505,6 +508,7 @@ GitHub contributors:
 - Maxime - Vaisonet
 - Maxime Aknin
 - Maxime Biloé
+- Maxime Flasquin
 - Maxime Morel-Bailly
 - Maxime Vasse
 - mchelh
@@ -588,6 +592,7 @@ GitHub contributors:
 - Pan P
 - Pan Ploenes
 - Panagiotis Tigas
+- panariga
 - panesarsandeep
 - Patanock
 - Patrick Mettraux
@@ -610,6 +615,7 @@ GitHub contributors:
 - Pierre Avizou
 - Pierre Joube
 - Pierre Rambaud
+- Pierre-Yves Christmann
 - Pierrick
 - pilothuy
 - Piotr Kaczor
@@ -696,6 +702,7 @@ GitHub contributors:
 - Sacha Froment
 - sadlyblue
 - sagaradonis
+- Salim Benouamer
 - sallemiines
 - Sam
 - Sam Sanchez
@@ -719,6 +726,7 @@ GitHub contributors:
 - Sébastien Rufer
 - Sébastien Sterckx
 - SebSept
+- sefirosweb
 - seleda
 - Serge Rivière
 - Sergio Quiñonez
