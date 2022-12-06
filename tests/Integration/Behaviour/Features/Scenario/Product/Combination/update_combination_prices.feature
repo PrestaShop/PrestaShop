@@ -54,7 +54,7 @@ Feature: Update product combination prices in Back Office (BO)
       | product tax rate                | 4.00  |
       | product price                   | 51.49 |
       | product ecotax                  | 17.78 |
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | eco tax              | 0.5 |
       | impact on price      | -5  |
       | impact on unit price | -1  |
@@ -87,7 +87,7 @@ Feature: Update product combination prices in Back Office (BO)
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset price
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | impact on price | 0 |
     Then combination "product1SWhite" should have following prices:
       | combination price detail        | value  |
@@ -102,7 +102,7 @@ Feature: Update product combination prices in Back Office (BO)
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset all
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | eco tax              | 0 |
       | impact on price      | 0 |
       | impact on unit price | 0 |

@@ -134,24 +134,23 @@ Feature: Generate attribute combinations for product in Back Office (BO)
 
   Scenario: I can sort combinations by reference, quantity, impact on price
     Given product "product1" combinations list search criteria is set to defaults
-    And I update combination "product1SWhite" prices with following details:
+    And I update combination "product1SWhite" with following values:
       | impact on price | -1  |
-    And I update combination "product1SWhite" stock with following details:
+    And I update combination "product1SWhite" with following values:
       | delta quantity  | 10  |
-    And I update combination "product1SWhite" details with following values:
+    And I update combination "product1SWhite" with following values:
       | reference       | AAA |
-    And I update combination "product1SBlue" prices with following details:
+    And I update combination "product1SBlue" with following values:
       | impact on price | 1   |
-    And I update combination "product1SBlue" stock with following details:
+    And I update combination "product1SBlue" with following values:
       | delta quantity  | 100 |
-    And I update combination "product1SBlue" details with following values:
+    And I update combination "product1SBlue" with following values:
       | reference       | BBB |
-
-    And I update combination "product1SBlack" prices with following details:
+    And I update combination "product1SBlack" with following values:
       | impact on price | 10   |
-    And I update combination "product1SBlack" stock with following details:
+    And I update combination "product1SBlack" with following values:
       | delta quantity  | 50 |
-    And I update combination "product1SBlack" details with following values:
+    And I update combination "product1SBlack" with following values:
       | reference       | CCC |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value           |
@@ -216,11 +215,11 @@ Feature: Generate attribute combinations for product in Back Office (BO)
 
   Scenario: I can filter combinations by reference
     Given product "product1" combinations list search criteria is set to defaults
-    And I update combination "product1SWhite" details with following values:
+    And I update combination "product1SWhite" with following values:
       | reference | ABC |
-    And I update combination "product1SBlue" details with following values:
+    And I update combination "product1SBlue" with following values:
       | reference | BBB |
-    And I update combination "product1SBlack" details with following values:
+    And I update combination "product1SBlack" with following values:
       | reference | CCCD |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
