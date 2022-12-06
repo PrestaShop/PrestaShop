@@ -91,6 +91,10 @@ class Products extends BOBasePage {
       await stocksTab.setProductStock(page, productData);
     }
 
+    if (productData.type === 'pack') {
+
+    }
+
     await pricingTab.setProductPricing(page, productData);
 
     await this.setProductStatus(page, productData.status);
