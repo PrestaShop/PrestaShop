@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AdministrationConfigurationErrorMessageProviderTest extends TestCase
 {

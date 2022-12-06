@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorMessageProviderInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /** Provider to get messages for common configuration errors */
 class CommonConfigurationErrorMessageProvider implements ConfigurationErrorMessageProviderInterface

@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 use PrestaShopBundle\Form\ErrorMessage\LabelProvider;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Base configuration error factory which cycles trough all existing configuration error factories
