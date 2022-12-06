@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory\ConfigurationErrorMessa
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 /** Provider to get messages for errors specific to administration page */
 class AdministrationConfigurationErrorMessageProvider implements ConfigurationErrorMessageProviderInterface
 {
