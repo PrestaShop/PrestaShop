@@ -43,9 +43,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @When I update combination :combinationReference details with following values:
-     * @When I update combination :combinationReference prices with following details:
-     * @When I update combination :combinationReference stock with following details:
+     * @When I update combination ":combinationReference" with following values:
      *
      * @param string $combinationReference
      * @param TableNode $tableNode
