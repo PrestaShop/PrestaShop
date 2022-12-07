@@ -268,17 +268,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function theShopShouldNotHaveAnyImageDetails(string $shopReference)
     {
         $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
-
-        $actualShopProductImagesArray = array_filter(
-            $this->shopProductImagesCollection->toArray(),
-            function (ShopProductImages $shopProductImages) use ($shopId): bool {
+        Assert::assertTrue($this->shopProductImagesCollection
+            ->filter(function (ShopProductImages $shopProductImages) use ($shopId): bool {
                 return $shopProductImages->getShopId() === $shopId;
-            }
+            })
+            ->first()
+            ->getProductImageCollection()
+            ->isEmpty()
         );
-        /** @var ShopProductImages $actualShopProductImages */
-        $actualShopProductImages = reset($actualShopProductImagesArray);
-
-        Assert::assertEmpty($actualShopProductImages->getProductImageCollection()->toArray());
     }
 
     /**
@@ -419,28 +416,26 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $expectedShopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
-                return new ShopProductImages($shopId, new ProductImageCollection(...$productImages));
+                return new ShopProductImages($shopId, ProductImageCollection::from(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop
         );
         foreach ($expectedShopProductImagesArray as $expectedShopProductImage) {
-            $actualShopProductImagesArray = array_filter(
-                $this->shopProductImagesCollection->toArray(),
-                function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
+            $actualShopProductImages = $this->shopProductImagesCollection
+                ->filter(function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
                     return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
-                }
-            );
-            /** @var ShopProductImages $actualShopProductImages */
-            $actualShopProductImages = reset($actualShopProductImagesArray);
+                })
+                ->first();
 
             Assert::assertEquals(
                 $expectedShopProductImage->getProductImageCollection()->count(),
                 $actualShopProductImages->getProductImageCollection()->count()
             );
+
             foreach ($expectedShopProductImage->getProductImageCollection() as $expectedProductImage) {
                 Assert::assertContainsEquals(
-                    $expectedProductImage,
+                    new ProductImageInShop($expectedProductImage->getImageId(), $expectedProductImage->isCover()),
                     $actualShopProductImages->getProductImageCollection()
                 );
             }

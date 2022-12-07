@@ -26,21 +26,33 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain;
+namespace PrestaShop\PrestaShop\Core\Data;
 
 use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 use Traversable;
 
-abstract class AbstractCollection implements IteratorAggregate
+/**
+ * @template T
+ * @template-implements  IteratorAggregate<T>
+ */
+abstract class ImmutableCollection implements IteratorAggregate, Countable
 {
+    /** @var T[] */
     protected $values;
 
-    public function toArray(): array
+    /**
+     * @param T[] $values
+     */
+    protected function __construct(array $values)
     {
-        return $this->values;
+        $this->values = $values;
     }
 
+    /**
+     * @return ArrayIterator<string|int, T>|T[]
+     */
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->values);
@@ -49,5 +61,26 @@ abstract class AbstractCollection implements IteratorAggregate
     public function count(): int
     {
         return count($this->values);
+    }
+
+    /**
+     * @return T
+     */
+    public function first()
+    {
+        return reset($this->values);
+    }
+
+    /**
+     * @return static
+     */
+    public function filter(callable $callback): self
+    {
+        return new static(array_filter($this->values, $callback));
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->values);
     }
 }

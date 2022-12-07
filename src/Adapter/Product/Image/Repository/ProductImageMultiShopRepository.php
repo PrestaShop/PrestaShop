@@ -277,12 +277,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
         $shopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
-                return new ShopProductImages($shopId, new ProductImageCollection(...$productImages));
+                return new ShopProductImages($shopId, ProductImageCollection::from(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop
         );
 
-        return new ShopProductImagesCollection(...$shopProductImagesArray);
+        return ShopProductImagesCollection::from(...$shopProductImagesArray);
     }
 }
