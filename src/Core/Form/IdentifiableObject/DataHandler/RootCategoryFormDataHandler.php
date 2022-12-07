@@ -41,27 +41,27 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  *
  * @internal
  */
-final class RootCategoryFormDataHandler
+final class RootCategoryFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
      */
-    protected $commandBus;
+    private $commandBus;
 
     /**
      * @var ImageUploaderInterface
      */
-    protected $categoryCoverUploader;
+    private $categoryCoverUploader;
 
     /**
      * @var ImageUploaderInterface
      */
-    protected $categoryThumbnailUploader;
+    private $categoryThumbnailUploader;
 
     /**
      * @var ImageUploaderInterface
      */
-    protected $categoryMenuThumbnailUploader;
+    private $categoryMenuThumbnailUploader;
 
     /**
      * @param CommandBusInterface $commandBus
@@ -132,54 +132,6 @@ final class RootCategoryFormDataHandler
     }
 
     /**
-     * @param CategoryId $categoryId
-     * @param UploadedFile|null $coverImage
-     * @param UploadedFile|null $thumbnailImage
-     * @param UploadedFile[] $menuThumbnailImages
-     */
-    private function uploadImages(
-        CategoryId $categoryId,
-        UploadedFile $coverImage = null,
-        UploadedFile $thumbnailImage = null,
-        array $menuThumbnailImages = []
-    ) {
-        if (null !== $coverImage) {
-            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
-        }
-
-        if (null !== $thumbnailImage) {
-            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
-        }
-
-        if (!empty($menuThumbnailImages)) {
-            foreach ($menuThumbnailImages as $menuThumbnail) {
-                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
-            }
-        }
-    }
-
-    /**
-     * @param int $categoryId
-     *
-     * @return array<int, int>
-     */
-    private function getAvailableKeys(int $categoryId): array
-    {
-        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
-        $usedKeys = [];
-
-        foreach ($files as $file) {
-            $matches = [];
-
-            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
-                $usedKeys[] = (int) $matches[1];
-            }
-        }
-
-        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
-    }
-
-    /**
      * Creates command with form data for adding new root category
      *
      * @param array $data
@@ -233,5 +185,53 @@ final class RootCategoryFormDataHandler
         }
 
         return $command;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param UploadedFile|null $coverImage
+     * @param UploadedFile|null $thumbnailImage
+     * @param UploadedFile[] $menuThumbnailImages
+     */
+    private function uploadImages(
+        CategoryId $categoryId,
+        UploadedFile $coverImage = null,
+        UploadedFile $thumbnailImage = null,
+        array $menuThumbnailImages = []
+    ) {
+        if (null !== $coverImage) {
+            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
+        }
+
+        if (null !== $thumbnailImage) {
+            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
+        }
+
+        if (!empty($menuThumbnailImages)) {
+            foreach ($menuThumbnailImages as $menuThumbnail) {
+                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
+            }
+        }
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return array<int, int>
+     */
+    private function getAvailableKeys(int $categoryId): array
+    {
+        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
+        $usedKeys = [];
+
+        foreach ($files as $file) {
+            $matches = [];
+
+            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
+                $usedKeys[] = (int) $matches[1];
+            }
+        }
+
+        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
     }
 }
