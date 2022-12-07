@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateC
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles the @see UpdateCombinationCommand using legacy object model
@@ -95,8 +94,7 @@ class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
         if (true === $command->isDefault()) {
             $this->defaultCombinationUpdater->setDefaultCombination(
                 $command->getCombinationId(),
-                // @todo: temporary hardcoded shop constraint. Needs to be required in command constructor.
-                ShopConstraint::shop((int) \Context::getContext()->shop->id)
+                $command->getShopConstraint()
             );
         }
 

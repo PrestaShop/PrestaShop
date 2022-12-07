@@ -33,6 +33,7 @@ use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
@@ -63,9 +64,41 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      *
      * @param string $combinationReference
      */
-    public function setDefaultCombination(string $combinationReference): void
+    public function setDefaultCombinationForDefaultShop(string $combinationReference): void
     {
-        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
+        $this->setDefaultCombination($combinationReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I set combination ":combinationReference" as default for shop ":shopReference"
+     *
+     * @param string $combinationReference
+     * @param string $shopReference
+     */
+    public function setDefaultCombinationForShop(string $combinationReference, string $shopReference): void
+    {
+        $this->setDefaultCombination(
+            $combinationReference,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I set combination ":combinationReference" as default for all shops
+     *
+     * @param string $combinationReference
+     */
+    public function setDefaultCombinationForAllShops(string $combinationReference): void
+    {
+        $this->setDefaultCombination($combinationReference, ShopConstraint::allShops());
+    }
+
+    private function setDefaultCombination(string $combinationReference, ShopConstraint $shopConstraint): void
+    {
+        $command = new UpdateCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            $shopConstraint
+        );
         $command->setIsDefault(true);
         $this->getCommandBus()->handle($command);
     }

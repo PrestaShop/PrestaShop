@@ -28,7 +28,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
