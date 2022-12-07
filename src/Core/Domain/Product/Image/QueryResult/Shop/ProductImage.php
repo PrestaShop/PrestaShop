@@ -33,7 +33,7 @@ class ProductImage
     /**
      * @var int
      */
-    private $id;
+    private $imageId;
 
     /**
      * @var bool
@@ -41,10 +41,10 @@ class ProductImage
     private $isCover;
 
     public function __construct(
-        int $id,
+        int $imageId,
         bool $isCover
     ) {
-        $this->id = $id;
+        $this->imageId = $imageId;
         $this->isCover = $isCover;
     }
 
@@ -53,7 +53,7 @@ class ProductImage
      */
     public function getImageId(): int
     {
-        return $this->id;
+        return $this->imageId;
     }
 
     /**

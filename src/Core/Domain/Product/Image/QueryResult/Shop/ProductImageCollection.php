@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-use PrestaShop\PrestaShop\Core\Domain\AbstractCollection;
+use PrestaShop\PrestaShop\Core\Data\ImmutableCollection;
 
-class ProductImageCollection extends AbstractCollection
+/**
+ * @template-extends ImmutableCollection<ProductImage>
+ */
+class ProductImageCollection extends ImmutableCollection
 {
-    public function __construct(ProductImage ...$productImage)
+    public static function from(ProductImage ...$productImages)
     {
-        $this->values = $productImage;
+        return new static($productImages);
     }
 }
