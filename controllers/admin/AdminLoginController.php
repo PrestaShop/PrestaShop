@@ -409,7 +409,7 @@ class AdminLoginControllerCore extends AdminController
         } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');
         } elseif ($reset_password !== $reset_confirm) {
-            $this->errors[] = $this->trans("The confirmation password doesn't match. Please double check both passwords.", [], 'Admin.Login.Notification');
+            $this->errors[] = $this->trans("The confirmation password doesn't match. Please double-check both passwords.", [], 'Admin.Login.Notification');
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($reset_email) || $employee->id != $id_employee) { // check matching employee id with its email
