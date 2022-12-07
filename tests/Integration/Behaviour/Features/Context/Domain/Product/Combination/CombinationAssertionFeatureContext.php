@@ -51,28 +51,20 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
      * @param string $combinationReference
      * @param CombinationDetails $expectedDetails
      */
-    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
+    public function assertDetailsForDefaultShop(string $combinationReference, CombinationDetails $expectedDetails): void
     {
-        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getDetails();
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->assertDetails($combinationReference, $expectedDetails, [$this->getDefaultShopId()]);
+    }
 
-        foreach ($scalarDetailNames as $propertyName) {
-            Assert::assertSame(
-                $propertyAccessor->getValue($expectedDetails, $propertyName),
-                $propertyAccessor->getValue($actualDetails, $propertyName),
-                sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
-            );
-        }
-
-        Assert::assertTrue(
-            $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
-            sprintf(
-                'Unexpected combination impact on weight. Expected "%s" got "%s"',
-                var_export($expectedDetails->getImpactOnWeight(), true),
-                var_export($actualDetails->getImpactOnWeight(), true)
-            )
-        );
+    /**
+     * @Then combination ":combinationReference" should have following details for shops ":shopReferences":
+     *
+     * @param string $combinationReference
+     * @param CombinationDetails $expectedDetails
+     */
+    public function assertDetailsForShops(string $combinationReference, CombinationDetails $expectedDetails, string $shopReferences): void
+    {
+        $this->assertDetails($combinationReference, $expectedDetails, $this->referencesToIds($shopReferences));
     }
 
     /**
@@ -386,6 +378,33 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                     )
                 );
             }
+        }
+    }
+
+    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+            $actualDetails = $this->getCombinationForEditing($combinationReference, $shopId)->getDetails();
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+            foreach ($scalarDetailNames as $propertyName) {
+                Assert::assertSame(
+                    $propertyAccessor->getValue($expectedDetails, $propertyName),
+                    $propertyAccessor->getValue($actualDetails, $propertyName),
+                    sprintf('Unexpected %s of "%s for shop %d"', $propertyName, $combinationReference, $shopId)
+                );
+            }
+
+            Assert::assertTrue(
+                $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
+                sprintf(
+                    'Unexpected combination impact on weight for shop %d. Expected "%s" got "%s"',
+                    var_export($expectedDetails->getImpactOnWeight(), true),
+                    var_export($actualDetails->getImpactOnWeight(), true),
+                    $shopId
+                )
+            );
         }
     }
 }

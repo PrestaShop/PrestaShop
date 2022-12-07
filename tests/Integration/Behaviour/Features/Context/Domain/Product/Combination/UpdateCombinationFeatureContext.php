@@ -49,14 +49,39 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
-    public function updateCombination(string $combinationReference, TableNode $tableNode): void
+    public function updateCombinationForDefaultShop(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
+        $this->updateCombination($combinationReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        $this->fillCommand($command, $tableNode->getRowsHash());
-        $this->getCommandBus()->handle($command);
+    /**
+     * @When I update combination ":combinationReference" with following values for shop ":shopReference":
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateCombinationForShop(string $combinationReference, TableNode $tableNode, string $shopReference): void
+    {
+        $this->updateCombination(
+            $combinationReference,
+            $tableNode,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
 
-        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
+    /**
+     * @When I update combination ":combinationReference" with following values for all shops:
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateCombinationForAllShops(string $combinationReference, TableNode $tableNode): void
+    {
+        $this->updateCombination(
+            $combinationReference,
+            $tableNode,
+            ShopConstraint::allShops()
+        );
     }
 
     /**
@@ -192,5 +217,18 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
             $command->setLocalizedAvailableLaterLabels($dataRows['available later labels']);
             unset($dataRows['available later labels']);
         }
+    }
+
+    private function updateCombination(string $combinationReference, TableNode $tableNode, ShopConstraint $shopConstraint): void
+    {
+        $command = new UpdateCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            $shopConstraint
+        );
+
+        $this->fillCommand($command, $tableNode->getRowsHash());
+        $this->getCommandBus()->handle($command);
+
+        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
     }
 }
