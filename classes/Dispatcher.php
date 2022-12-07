@@ -1024,8 +1024,7 @@ class DispatcherCore
             // "controller_not_found" (a static file should not go through the dispatcher)
             if (
                 !preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($test_request_uri, PHP_URL_PATH))
-                || preg_match('/^\/upload/', parse_url($test_request_uri, PHP_URL_PATH)))
-            {
+                || preg_match('/^\/upload/', parse_url($test_request_uri, PHP_URL_PATH))) {
                 // Add empty route as last route to prevent this greedy regexp to match request uri before right time
                 if ($this->empty_route) {
                     $this->addRoute(
