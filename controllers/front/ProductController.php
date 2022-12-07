@@ -1031,7 +1031,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    private function getIdProductAttributeByRequest()
+    protected function getIdProductAttributeByRequest()
     {
         $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
 
@@ -1079,7 +1079,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @return int
      */
-    private function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
+    protected function tryToGetAvailableIdProductAttribute($checkedIdProductAttribute)
     {
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
             $productCombinations = $this->product->getAttributeCombinations();
