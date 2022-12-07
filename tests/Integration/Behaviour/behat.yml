@@ -339,6 +339,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationStockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         shop:
