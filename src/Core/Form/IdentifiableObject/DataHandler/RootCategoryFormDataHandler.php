@@ -113,7 +113,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
             throw new MenuThumbnailsLimitException(sprintf('The maximum number of menu thumbnails has been reached for the %d category', $categoryId));
         }
-        $command = $this->createEditCategoryCommand($categoryId, $data);
+        $command = $this->createEditRootCategoryCommand($categoryId, $data);
 
         $this->commandBus->handle($command);
         $categoryId = new CategoryId($categoryId);
@@ -167,7 +167,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return EditRootCategoryCommand
      */
-    private function createEditCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
+    private function createEditRootCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
         $command->setIsActive($data['active']);
