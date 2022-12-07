@@ -58,6 +58,10 @@ if (!defined('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_')) {
     define('_PS_ALLOW_MULTI_STATEMENTS_QUERIES_', false);
 }
 
+if (!defined('_PS_DO_NOT_LOAD_CONFIGURATION_')) {
+    define('_PS_DO_NOT_LOAD_CONFIGURATION_', false);
+}
+
 $currentDir = dirname(__FILE__);
 
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
