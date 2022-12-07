@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <p class="userInfos aligned"><?php echo $this->translator->trans('Select the theme to install.', [], 'Install'); ?></p>
+      <p class="userInfos aligned"><?php echo $this->translator->trans('Select the theme to install', [], 'Install'); ?></p>
     </div>
   <?php endif; ?>
 
