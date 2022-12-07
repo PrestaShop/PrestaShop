@@ -26,15 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 
 /**
- * Defines contract to handle @see UpdateCombinationStockCommand
+ * Defines contract to handle @see UpdateCombinationCommand
  */
-interface UpdateCombinationStockHandlerInterface
+interface UpdateCombinationHandlerInterface
 {
-    /**
-     * @param UpdateCombinationStockCommand $command
-     */
-    public function handle(UpdateCombinationStockCommand $command): void;
+    public function handle(UpdateCombinationCommand $command): void;
 }

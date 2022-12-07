@@ -502,7 +502,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And product product3 should have following prices information:
       | wholesale_price | 70 |
     # Now I update combination wholesale price it should update the default supplier price
-    When I update combination "product3SWhite" prices with following details:
+    When I update combination "product3SWhite" with following values:
       | wholesale price      | 20  |
     Then combination "product3SWhite" should have following prices:
       | combination price detail        | value |
@@ -540,7 +540,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product ecotax                  | 0     |
     And product product3 should have following prices information:
       | wholesale_price | 70 |
-    When I update combination "product3SWhite" prices with following details:
+    When I update combination "product3SWhite" with following values:
       | wholesale price      | 44  |
     # The new default supplier is updated
     And combination "product3SWhite" should have following suppliers:

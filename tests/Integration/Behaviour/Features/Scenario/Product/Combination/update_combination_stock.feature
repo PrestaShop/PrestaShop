@@ -54,7 +54,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             |       |
 
   Scenario: I update combination options:
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | delta quantity             | 100         |
       | minimal quantity           | 10          |
       | location                   | Storage nr1 |
@@ -73,7 +73,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | employee   | delta_quantity |
       | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement increased by 100
-    When I update combination "product1SWhite" stock with following details:
+    When I update combination "product1SWhite" with following values:
       | delta quantity             | 50          |
       | minimal quantity           | 10          |
       | location                   | Storage nr1 |
@@ -100,7 +100,7 @@ Feature: Update product combination stock information in Back Office (BO)
     # Product quantity is the sum of all combinations' quantity
     And product "product1" should have following stock information:
       | quantity | 150 |
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | delta quantity      | -101        |
       | minimal quantity    | 1           |
       | location            | Storage nr2 |
@@ -120,7 +120,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And combination "product1SBlack" last stock movement decreased by 101
     And product "product1" should have following stock information:
       | quantity | 49 |
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | delta quantity             | 1          |
       | minimal quantity           | 0          |
       | location                   |            |
@@ -152,7 +152,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And product "product1" should have following stock information:
       | quantity | 50 |
     # Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | delta quantity | 0 |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail   | value      |
@@ -181,7 +181,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | fixed quantity | 10 |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail   | value |
@@ -195,7 +195,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And combination "product1SBlack" last stock movements should be:
       | employee   | delta_quantity |
       | Puff Daddy | 10             |
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | fixed quantity | -3 |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail   | value |
@@ -221,7 +221,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | fixed quantity | -7 |
       | delta quantity | -5 |
     Then I should get error that it is not allowed to perform update using both - delta and fixed quantity
@@ -244,7 +244,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false |
       | location                   |       |
       | available date             |       |
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | available now labels[en-US]   | Get it now    |
       | available later labels[en-US] | Too late dude |
     Then combination "product1SBlack" should have following stock details:
@@ -269,7 +269,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date                |               |
       | available now labels[en-US]   | Get it now    |
       | available later labels[en-US] | Too late dude |
-    When I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" with following values:
       | available now labels[en-US]   |               |
       | available later labels[en-US] |               |
     Then combination "product1SBlack" should have following stock details:
