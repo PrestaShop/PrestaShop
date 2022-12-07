@@ -3,7 +3,7 @@
 @clear-cache-before-feature
 @product-combination
 @set-default-multi-shop-combination
-Feature: Set default combination for product in Back Office (BO) in multiShop context
+Feature: Set default combination for product in Back Office (BO) in multi shop context
   As an employee
   I need to be able to set default combination from BO in multiple shops
 
