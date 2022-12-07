@@ -26,19 +26,159 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
+use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Creates/updates root category from data submitted in category form
  *
  * @internal
  */
-final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
+final class RootCategoryFormDataHandler
 {
+    /**
+     * @var CommandBusInterface
+     */
+    protected $commandBus;
+
+    /**
+     * @var ImageUploaderInterface
+     */
+    protected $categoryCoverUploader;
+
+    /**
+     * @var ImageUploaderInterface
+     */
+    protected $categoryThumbnailUploader;
+
+    /**
+     * @var ImageUploaderInterface
+     */
+    protected $categoryMenuThumbnailUploader;
+
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param ImageUploaderInterface $categoryCoverUploader
+     * @param ImageUploaderInterface $categoryThumbnailUploader
+     * @param ImageUploaderInterface $categoryMenuThumbnailUploader
+     */
+    public function __construct(
+        CommandBusInterface $commandBus,
+        ImageUploaderInterface $categoryCoverUploader,
+        ImageUploaderInterface $categoryThumbnailUploader,
+        ImageUploaderInterface $categoryMenuThumbnailUploader
+    ) {
+        $this->commandBus = $commandBus;
+        $this->categoryCoverUploader = $categoryCoverUploader;
+        $this->categoryThumbnailUploader = $categoryThumbnailUploader;
+        $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
+    }
+
+    public function create(array $data)
+    {
+        if (!isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
+            throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
+        }
+        $command = $this->createAddCategoryCommand($data);
+
+        /** @var CategoryId $categoryId */
+        $categoryId = $this->commandBus->handle($command);
+
+        /**
+         * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
+         */
+        $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
+        $this->uploadImages(
+            $categoryId,
+            $data['cover_image'],
+            $data['thumbnail_image'],
+            $menuThumbnailImages
+        );
+
+        return $categoryId->getValue();
+    }
+
+    public function update($categoryId, array $data)
+    {
+        $categoryId = (int) $categoryId;
+        $availableKeys = $this->getAvailableKeys($categoryId);
+
+        if (isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count($availableKeys)) {
+            throw new MenuThumbnailsLimitException(sprintf('The maximum number of menu thumbnails has been reached for the %d category', $categoryId));
+        }
+        $command = $this->createEditCategoryCommand($categoryId, $data);
+
+        $this->commandBus->handle($command);
+        $categoryId = new CategoryId($categoryId);
+
+        /**
+         * In some cases in form menu_thumbnail_images can be disabled so value won't get here.
+         */
+        $menuThumbnailImages = $data['menu_thumbnail_images'] ?? [];
+
+        $this->uploadImages(
+            $categoryId,
+            $data['cover_image'],
+            $data['thumbnail_image'],
+            $menuThumbnailImages
+        );
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param UploadedFile|null $coverImage
+     * @param UploadedFile|null $thumbnailImage
+     * @param UploadedFile[] $menuThumbnailImages
+     */
+    private function uploadImages(
+        CategoryId $categoryId,
+        UploadedFile $coverImage = null,
+        UploadedFile $thumbnailImage = null,
+        array $menuThumbnailImages = []
+    ) {
+        if (null !== $coverImage) {
+            $this->categoryCoverUploader->upload($categoryId->getValue(), $coverImage);
+        }
+
+        if (null !== $thumbnailImage) {
+            $this->categoryThumbnailUploader->upload($categoryId->getValue(), $thumbnailImage);
+        }
+
+        if (!empty($menuThumbnailImages)) {
+            foreach ($menuThumbnailImages as $menuThumbnail) {
+                $this->categoryMenuThumbnailUploader->upload($categoryId->getValue(), $menuThumbnail);
+            }
+        }
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return array<int, int>
+     */
+    private function getAvailableKeys(int $categoryId): array
+    {
+        $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
+        $usedKeys = [];
+
+        foreach ($files as $file) {
+            $matches = [];
+
+            if (preg_match('/^' . $categoryId . '-([0-9])?_thumb.jpg/i', $file, $matches) === 1) {
+                $usedKeys[] = (int) $matches[1];
+            }
+        }
+
+        return array_diff(MenuThumbnailId::ALLOWED_ID_VALUES, $usedKeys);
+    }
+
     /**
      * Creates command with form data for adding new root category
      *
@@ -48,7 +188,7 @@ final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @throws CategoryConstraintException
      */
-    protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand
+    private function createAddCategoryCommand(array $data): AddRootCategoryCommand
     {
         $command = new AddRootCategoryCommand(
             $data['name'],
@@ -75,7 +215,7 @@ final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
      *
      * @return EditRootCategoryCommand
      */
-    protected function createEditCategoryCommand(int $rootCategoryId, array $data): AbstractEditCategoryCommand
+    private function createEditCategoryCommand(int $rootCategoryId, array $data): EditRootCategoryCommand
     {
         $command = new EditRootCategoryCommand($rootCategoryId);
         $command->setIsActive($data['active']);

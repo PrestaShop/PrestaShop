@@ -31,17 +31,78 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddCategoryCommand adds new category.
  */
-class AddCategoryCommand extends AbstractAddCategoryCommand
+class AddCategoryCommand
 {
+    /**
+     * @var string[]
+     */
+    private $localizedNames;
+
     /**
      * @var int
      */
     private $parentCategoryId;
 
+    /**
+     * @var string[]
+     */
+    private $localizedLinkRewrites;
+
+    /**
+     * @var string[]
+     */
+    private $localizedDescriptions;
+
+    /**
+     * @var string[]|null
+     */
+    private $localizedAdditionalDescriptions;
+
+    /**
+     * @var bool
+     */
+    private $isActive;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaTitles;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaDescriptions;
+
+    /**
+     * @var string[]
+     */
+    private $localizedMetaKeywords;
+
+    /**
+     * @var int[]
+     */
+    private $associatedGroupIds;
+
+    /**
+     * @var int[]
+     */
+    private $associatedShopIds;
+
+    /**
+     * @param string[] $localizedNames
+     * @param string[] $localizedLinkRewrites
+     * @param bool $isActive
+     * @param int $parentCategoryId
+     *
+     * @throws CategoryConstraintException
+     */
     public function __construct(array $localizedNames, array $localizedLinkRewrites, $isActive, $parentCategoryId)
     {
-        parent::__construct($localizedNames, $localizedLinkRewrites, $isActive);
-        $this->parentCategoryId = $parentCategoryId;
+        $this
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setIsActive($isActive)
+            ->setParentCategoryId($parentCategoryId);
     }
 
     /**
@@ -66,6 +127,224 @@ class AddCategoryCommand extends AbstractAddCategoryCommand
         }
 
         $this->parentCategoryId = $parentCategoryId;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @param string[] $localizedNames
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setLocalizedNames(array $localizedNames)
+    {
+        if (empty($localizedNames)) {
+            throw new CategoryConstraintException('Category name cannot be empty', CategoryConstraintException::EMPTY_NAME);
+        }
+
+        $this->localizedNames = $localizedNames;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedLinkRewrites()
+    {
+        return $this->localizedLinkRewrites;
+    }
+
+    /**
+     * @param string[] $localizedLinkRewrites
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setLocalizedLinkRewrites(array $localizedLinkRewrites)
+    {
+        if (empty($localizedLinkRewrites)) {
+            throw new CategoryConstraintException('Category link rewrite cannot be empty', CategoryConstraintException::EMPTY_LINK_REWRITE);
+        }
+
+        $this->localizedLinkRewrites = $localizedLinkRewrites;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedDescriptions()
+    {
+        return $this->localizedDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedDescriptions(array $localizedDescriptions)
+    {
+        $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAdditionalDescriptions(): ?array
+    {
+        return $this->localizedAdditionalDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedAdditionalDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedAdditionalDescriptions(array $localizedAdditionalDescriptions): self
+    {
+        $this->localizedAdditionalDescriptions = $localizedAdditionalDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param bool $isActive
+     *
+     * @return $this
+     *
+     * @throws CategoryConstraintException
+     */
+    public function setIsActive($isActive)
+    {
+        if (!is_bool($isActive)) {
+            throw new CategoryConstraintException('Invalid Category status supplied', CategoryConstraintException::INVALID_STATUS);
+        }
+
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaTitles()
+    {
+        return $this->localizedMetaTitles;
+    }
+
+    /**
+     * @param string[] $localizedMetaTitles
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaTitles(array $localizedMetaTitles)
+    {
+        $this->localizedMetaTitles = $localizedMetaTitles;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaDescriptions()
+    {
+        return $this->localizedMetaDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedMetaDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaDescriptions(array $localizedMetaDescriptions)
+    {
+        $this->localizedMetaDescriptions = $localizedMetaDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedMetaKeywords()
+    {
+        return $this->localizedMetaKeywords;
+    }
+
+    /**
+     * @param string[] $localizedMetaKeywords
+     *
+     * @return $this
+     */
+    public function setLocalizedMetaKeywords(array $localizedMetaKeywords)
+    {
+        $this->localizedMetaKeywords = $localizedMetaKeywords;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedGroupIds()
+    {
+        return $this->associatedGroupIds;
+    }
+
+    /**
+     * @param int[] $associatedGroupIds
+     *
+     * @return $this
+     */
+    public function setAssociatedGroupIds(array $associatedGroupIds)
+    {
+        $this->associatedGroupIds = $associatedGroupIds;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAssociatedShopIds()
+    {
+        return $this->associatedShopIds;
+    }
+
+    /**
+     * @param int[] $associatedShopIds
+     *
+     * @return $this
+     */
+    public function setAssociatedShopIds(array $associatedShopIds)
+    {
+        $this->associatedShopIds = $associatedShopIds;
 
         return $this;
     }
