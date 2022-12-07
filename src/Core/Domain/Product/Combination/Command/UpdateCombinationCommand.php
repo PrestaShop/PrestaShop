@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Contains all the data needed to handle the command update.
@@ -138,14 +139,21 @@ class UpdateCombinationCommand
     private $localizedAvailableLaterLabels;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $combinationId
      *
      * @throws ProductConstraintException
      */
     public function __construct(
-        int $combinationId
+        int $combinationId,
+        ShopConstraint $shopConstraint
     ) {
         $this->combinationId = new CombinationId($combinationId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -502,5 +510,13 @@ class UpdateCombinationCommand
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
 
         return $this;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
