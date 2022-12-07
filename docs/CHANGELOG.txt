@@ -24,6 +24,72 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.8 - (2022-12-07)
+####################################
+- Back Office:
+  - Bug fix:
+    - #29693: Update material icons lib to fix the slow npm installation (by @NeOMakinG)
+    - #29465: Add available_now & available_later labels constraints (by @zuk3975)
+    - #29587: Replace exception message by custom error message when uploading avatar with invalid extension (by @lartist)
+    - #29554: Replace exception message by custom message on invalid avatar on employee page (by @lartist)
+    - #29224: Fix subcategories for multishop (by @MeKeyCool)
+    - #29553: Add min height on alert to center icons vertically (by @lartist)
+    - #29635: Do not reset customization in FO when changing combination (178x) (by @zuk3975)
+    - #29392: Fix menu items not showing on mobile (by @NeOMakinG)
+    - #29551: Text troncated on combine several attribute input (by @lartist)
+    - #29549: Fix validateSql method not accepting EXISTS after WHERE (by @atomiix)
+    - #29246: Fix Stock page style with RTL (by @MeKeyCool)
+    - #29307: Remove module_card.js from the product page v1 (by @NeOMakinG)
+    - #29214: Fix logo on pdf for RTL (by @MeKeyCool)
+    - #29096: BO - Bad display on Your Profile button on all of pages when hover and click on it (by @okom3pom)
+    - #28706: Fix orders export limit (by @Seb33300)
+    - #28829: Fix performances links spaces and URLs (by @NeOMakinG)
+    - #28392: Fix back-office translations when multishop and multiple languages (by @MeKeyCool)
+    - #28821: Handle fallback when currency has empty display names (by @jolelievre)
+- Front Office:
+  - Improvement:
+    - #28232: Optimizing queries for checking address existence (by @Progi1984)
+  - Bug fix:
+    - #28838: Update AbstractForm.php for Multilanguage fields (by @panariga)
+    - #29715: Fix discount detail in cart when a product has en ecotax with applied tax (by @mflasquin)
+    - #29910: Fix image size when zooming on tablet (by @NeOMakinG)
+    - #29665: Fix bad selector to fix checkbox issues on RMA (by @mflasquin)
+    - #29632: Select new invoice address automatically (by @lartist)
+    - #29471: Fix ps_facetedsearch - bad display after clearing a filter of no result (by @leemyongpakvn)
+    - #29413: Fix displayPackPrice compare price value instead of formatted price (by @jolelievre)
+    - #29373: Fix checkout when one module and no cgv validation (by @okom3pom)
+    - #29055: Fix anchor links in product list (by @jolelievre)
+    - #28904: Fix responsive for product quick view. (by @MeKeyCool)
+    - #27841: Multistore - Product on category page display out of stock flag instead of availlable on order (by @Rizzen59)
+    - #28426: Fix product images size consistency (by @MeKeyCool)
+    - #27738: FO : Fix offset for "NEW" products listing (by @idnovate)
+- Core:
+  - Improvement:
+    - #30454: Update composer dependencies (by @mflasquin)
+    - #29586: [BC Break] Disable execution of multiple statements in a single SQL query (by @atomiix)
+    - #29636: Upgrade Smarty to 3.1.47 (by @mflasquin)
+    - #29235: Update prestashop 1.7.8.x composer dependencies (by @matks)
+    - #29172: Save Smarty caching type setting in file instead of DB (by @atomiix)
+    - #29227: Bump wishlist to 2.1.2 (by @NeOMakinG)
+  - Bug fix:
+    - #30114: Do not build a domain from the module name (Cherry pick of #30080) (by @atomiix)
+    - #29504: Cherry-pick #29502 (by @atomiix)
+    - #27422: [BC Break] Use core translations sources for themes in addition to the translations of the theme itself (by @atomiix)
+    - #28780: Add cache to AddressFactory::addressExists() (by @eternoendless)
+    - #28608: Set $registeredHookName as renderWidget when no hook given (by @PrestaEdit)Contributors
+    - #GHSA-9qgp-9wwc-v29r: User needs to have rights to see /uploads/* content (by @atomiix)
+- Installer:
+  - Bug fix:
+    - #30099: Fix issue on fresh installation with docker in branch 1.7.8.x (by @sefirosweb)
+    - #29420: Clear translations cache before translating fixtures (by @atomiix)
+    - #28845: Update to latest blockwishlist module version 2.1.1 (by @jolelievre)
+- Tests:
+  - Bug fix:
+    - #29698: Disable apache mpm_event module in the CI (cherry-pick) (by @atomiix)
+  - Refactoring:
+    - #28682: Functional tests - Fix some random errors on nightly 178x (by @nesrineabdmouleh)
+
+####################################
 #   v1.7.8.7 - (2022-07-20)
 ####################################
 - Core:
