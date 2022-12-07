@@ -109,7 +109,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
         if (isset($options['id_category'])) {
             $disableMenuThumbnailsUpload = $options['disable_menu_thumbnails_upload'];
         }
-        $genericCharactersHint = $this->trans('Invalid characters:', 'Admin.Global') . ' <>;=#{}';
+        $genericCharactersHint = $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::CATALOG_CHARS]);
 
         $builder
             ->add('name', TranslatableType::class, [
