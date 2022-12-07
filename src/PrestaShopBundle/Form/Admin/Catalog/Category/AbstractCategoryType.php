@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Catalog\Category;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
@@ -54,8 +55,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 abstract class AbstractCategoryType extends TranslatorAwareType
 {
-    public const MAX_TITLE_LENGTH = 128;
-
     /**
      * @var array
      */
@@ -121,7 +120,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
                 'options' => [
                     'attr' => [
-                        'maxlength' => static::MAX_TITLE_LENGTH,
+                        'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
                         new Regex([
@@ -129,12 +128,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => static::MAX_TITLE_LENGTH,
+                            'max' => CategorySettings::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => static::MAX_TITLE_LENGTH,
+                                    '%limit%' => CategorySettings::MAX_TITLE_LENGTH,
                                 ]
                             ),
                         ]),
@@ -302,7 +301,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 ],
                 'options' => [
                     'attr' => [
-                        'maxlength' => static::MAX_TITLE_LENGTH,
+                        'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
                         new Regex([
@@ -310,12 +309,12 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                             'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
                         ]),
                         new Length([
-                            'max' => static::MAX_TITLE_LENGTH,
+                            'max' => CategorySettings::MAX_TITLE_LENGTH,
                             'maxMessage' => $this->trans(
                                 'This field cannot be longer than %limit% characters.',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%limit%' => static::MAX_TITLE_LENGTH,
+                                    '%limit%' => CategorySettings::MAX_TITLE_LENGTH,
                                 ]
                             ),
                         ]),
