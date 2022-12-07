@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix --ignore-path .gitignore .",
     "lint": "eslint --ignore-path .gitignore .",
     "// Step identifiers": "Script to check step identifiers",
-    "check:step-identifiers": "node tools/stepIdentifiersChecker.js ",
+    "check:step-identifiers": "ts-node tools/stepIdentifiersChecker.ts",
     "// Linkchecker": "Script to run link checker",
     "check:links": "ts-mocha tools/linkchecker.ts",
     "check:links:fast-fail": "ts-mocha --bail tools/linkchecker.ts",
