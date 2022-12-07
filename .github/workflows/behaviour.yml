@@ -2,10 +2,12 @@ name: Behaviour tests
 on: [ push, pull_request ]
 permissions:
   contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   integration:
     permissions:
-      actions: write   #   to cancel/stop running workflows (styfle/cancel-workflow-action)
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Behaviour tests
     runs-on: ubuntu-latest
@@ -14,12 +16,6 @@ jobs:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
       fail-fast: false
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
