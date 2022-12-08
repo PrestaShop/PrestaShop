@@ -22,7 +22,7 @@ Feature: Update product combination prices in Back Office (BO)
     And I identify tax rules group named "US-AL Rate (4%)" as "us-al-tax-rate"
     And I identify tax rules group named "US-KS Rate (5.3%)" as "us-ks-tax-rate"
 
-  Scenario: I update combination options:
+  Scenario: I update combination prices:
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |

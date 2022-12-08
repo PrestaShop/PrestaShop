@@ -30,7 +30,7 @@ services:
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.tax.tax_computer'

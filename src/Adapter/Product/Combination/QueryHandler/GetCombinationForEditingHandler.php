@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -82,7 +82,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $attributeRepository;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -121,7 +121,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductImageRepository $productImageRepository
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
@@ -134,7 +134,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         CombinationNameBuilderInterface $combinationNameBuilder,
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductImageRepository $productImageRepository,
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
@@ -162,7 +162,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     {
         $combination = $this->combinationRepository->getByShopConstraint($query->getCombinationId(), $query->getShopConstraint());
         $productId = new ProductId((int) $combination->id_product);
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getByShopConstraint($productId, $query->getShopConstraint());
         $images = $this->getImages($combination);
 
         return new CombinationForEditing(
