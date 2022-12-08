@@ -96,7 +96,7 @@ class ObjectModelTest extends TestCase
     }
 
     /**
-     * Check if html in trans is escaped even if _raw parameter is used
+     * Check if html in trans is not escaped when the _raw parameter is used
      *
      * @return void
      *
