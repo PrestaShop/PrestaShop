@@ -44,7 +44,7 @@ import FiltersSubmitButtonEnablerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
-import CustomerFormMap from "@pages/customer/customer-form-map";
+import CustomerFormMap from '@pages/customer/customer-form-map';
 
 const {$} = window;
 

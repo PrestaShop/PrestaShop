@@ -32,7 +32,6 @@ $(() => {
     ],
   );
 
-
   // Required fields : Display alert for optin checkbox
   $(CustomerPreferencesMap.switchPartnerOffers).on('click', () => handleFormCheckboxPartnerOffers());
 
