@@ -53,7 +53,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
 
-  Scenario: I update combination options:
+  Scenario: I update combination stock:
     When I update combination "product1SBlack" with following values:
       | delta quantity             | 100         |
       | minimal quantity           | 10          |

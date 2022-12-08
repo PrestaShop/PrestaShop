@@ -128,7 +128,7 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->getCommandBus()->handle($command);
     }
 
-    private function updateCombinationStockAvailable(string $combinationReference, array $dataRows): void
+    private function updateCombinationStockAvailable(string $combinationReference, array $dataRows, ShopConstraint $shopConstraint): void
     {
         if (!isset($dataRows['delta quantity'])
             && !isset($dataRows['fixed quantity'])
@@ -137,7 +137,10 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         }
 
         try {
-            $command = new UpdateCombinationStockAvailableCommand((int) $this->getSharedStorage()->get($combinationReference));
+            $command = new UpdateCombinationStockAvailableCommand(
+                (int) $this->getSharedStorage()->get($combinationReference),
+                $shopConstraint
+            );
             if (isset($dataRows['delta quantity'])) {
                 $command->setDeltaQuantity((int) $dataRows['delta quantity']);
             }
@@ -229,6 +232,6 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
 
-        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
+        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash(), $shopConstraint);
     }
 }
