@@ -117,3 +117,35 @@ Feature: Update product combination details in Back Office (BO) in multi shop co
       | reference          | ref2  |
       | upc                |       |
       | impact on weight   | 17.25 |
+    And combinations "product1SWhite" are not associated to shop "shop3"
+    And combinations "product1SWhite" are not associated to shop "shop4"
+
+  Scenario: I update combination details for all shops:
+    And combination "product1SBlack" should have following details for shops "shop1,shop2":
+      | combination detail | value |
+      | ean13              |       |
+      | isbn               |       |
+      | mpn                |       |
+      | reference          |       |
+      | upc                |       |
+      | impact on weight   | 0     |
+      # details are shared between shops.
+      # doesn't matter which shop we provide, they are updated in general product_attribute table
+      # except the impact_on_weight
+    When I update combination "product1SBlack" with following values for all shops:
+      | ean13            | 978020137962      |
+      | isbn             | 978-3-16-148410-0 |
+      | mpn              | mpn1              |
+      | reference        | ref1              |
+      | upc              | 72527273070       |
+      | impact on weight | 17.25             |
+    Then combination "product1SBlack" should have following details for shops "shop1,shop2":
+      | combination detail | value             |
+      | ean13              | 978020137962      |
+      | isbn               | 978-3-16-148410-0 |
+      | mpn                | mpn1              |
+      | reference          | ref1              |
+      | upc                | 72527273070       |
+      | impact on weight   | 17.25             |
+    And combinations "product1SBlack" are not associated to shop "shop3"
+    And combinations "product1SBlack" are not associated to shop "shop4"
