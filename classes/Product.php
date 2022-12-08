@@ -1306,10 +1306,7 @@ class ProductCore extends ObjectModel
         $result = parent::delete();
 
         // Removes the product from StockAvailable, for the current shop
-        $id_shop_list = Shop::getContextListShopID();
-        if (count($this->id_shop_list)) {
-            $id_shop_list = $this->id_shop_list;
-        }
+        $id_shop_list = count($this->id_shop_list) ? $this->id_shop_list : Shop::getContextListShopID();
         if (!empty($id_shop_list)) {
             foreach ($id_shop_list as $shopId) {
                 StockAvailable::removeProductFromStockAvailable($this->id, null, $shopId);
@@ -1330,7 +1327,7 @@ class ProductCore extends ObjectModel
             !$this->deleteProductAttributes() ||
             !$this->deleteImages() ||
             !GroupReduction::deleteProductReduction($this->id) ||
-            !$this->deleteCategories(true) ||
+            !$this->deleteCategories(false) ||
             !$this->deleteProductFeatures() ||
             !$this->deleteTags() ||
             !$this->deleteCartProducts() ||
