@@ -31,11 +31,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 use PrestaShop\PrestaShop\Core\Data\ImmutableCollection;
 
 /**
- * @template-extends ImmutableCollection<ProductImage>
+ * @template-extends ImmutableCollection<ShopImageAssociation>
  */
 class ProductImageCollection extends ImmutableCollection
 {
-    public static function from(ProductImage ...$productImages)
+    public static function from(ShopImageAssociation ...$productImages)
     {
         return new static($productImages);
     }

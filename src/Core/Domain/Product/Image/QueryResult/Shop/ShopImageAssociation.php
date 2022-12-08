@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 
-class ProductImage
+class ShopImageAssociation
 {
     /**
      * @var int

@@ -54,7 +54,7 @@ class ShopProductImages
         return $this->shopId;
     }
 
-    public function getProductImageCollection(): ProductImageCollection
+    public function getProductImages(): ProductImageCollection
     {
         return $this->productImageCollection;
     }

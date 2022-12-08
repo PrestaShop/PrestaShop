@@ -44,6 +44,8 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
 
     /**
      * @param T[] $values
+     *
+     * Keep the constructor protected to keep immutability
      */
     protected function __construct(array $values)
     {

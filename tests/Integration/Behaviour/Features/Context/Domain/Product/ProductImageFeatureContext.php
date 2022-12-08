@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage as ProductImageInShop;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImageCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -273,7 +273,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 return $shopProductImages->getShopId() === $shopId;
             })
             ->first()
-            ->getProductImageCollection()
+            ->getProductImages()
             ->isEmpty()
         );
     }
@@ -400,28 +400,41 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^I should have the followings image details:/
+     * @Transform table:image reference,cover,shopReference
+     *
+     * @param TableNode $tableNode
+     *
+     * @return ShopProductImagesCollection
      */
-    public function iShouldHaveTheFollowingsImageDetailsForShop(TableNode $tableNode)
+    public function transformShopProductImagesCollection(TableNode $tableNode): ShopProductImagesCollection
     {
         $dataRows = $tableNode->getColumnsHash();
         $productImagesByShop = [];
         foreach ($dataRows as $dataRow) {
             $shopId = (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
-            $productImagesByShop[$shopId][] = new ProductImageInShop(
+            $productImagesByShop[$shopId][] = new ShopImageAssociation(
                 (int) $this->getSharedStorage()->get(trim($dataRow['image reference'])),
                 (int) $dataRow['cover'] === 1
             );
         }
 
-        $expectedShopProductImagesArray = array_map(
+        $shopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
                 return new ShopProductImages($shopId, ProductImageCollection::from(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop
         );
-        foreach ($expectedShopProductImagesArray as $expectedShopProductImage) {
+
+        return ShopProductImagesCollection::from(...$shopProductImagesArray);
+    }
+
+    /**
+     * @Then /^I should have the followings image details:/
+     */
+    public function iShouldHaveTheFollowingsImageDetailsForShop(ShopProductImagesCollection $expectedShopProductImagesCollection)
+    {
+        foreach ($expectedShopProductImagesCollection as $expectedShopProductImage) {
             $actualShopProductImages = $this->shopProductImagesCollection
                 ->filter(function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
                     return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
@@ -429,14 +442,14 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 ->first();
 
             Assert::assertEquals(
-                $expectedShopProductImage->getProductImageCollection()->count(),
-                $actualShopProductImages->getProductImageCollection()->count()
+                $expectedShopProductImage->getProductImages()->count(),
+                $actualShopProductImages->getProductImages()->count()
             );
 
-            foreach ($expectedShopProductImage->getProductImageCollection() as $expectedProductImage) {
+            foreach ($expectedShopProductImage->getProductImages() as $expectedProductImage) {
                 Assert::assertContainsEquals(
-                    new ProductImageInShop($expectedProductImage->getImageId(), $expectedProductImage->isCover()),
-                    $actualShopProductImages->getProductImageCollection()
+                    new ShopImageAssociation($expectedProductImage->getImageId(), $expectedProductImage->isCover()),
+                    $actualShopProductImages->getProductImages()
                 );
             }
         }
