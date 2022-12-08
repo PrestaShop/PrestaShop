@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMult
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -72,7 +73,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $combinationNameBuilder;
 
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
@@ -119,7 +120,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     /**
      * @param CombinationMultiShopRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
-     * @param StockAvailableRepository $stockAvailableRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductMultiShopRepository $productRepository
      * @param ProductImageRepository $productImageRepository
@@ -132,7 +133,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     public function __construct(
         CombinationMultiShopRepository $combinationRepository,
         CombinationNameBuilderInterface $combinationNameBuilder,
-        StockAvailableRepository $stockAvailableRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
         ProductMultiShopRepository $productRepository,
         ProductImageRepository $productImageRepository,
@@ -276,7 +277,10 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     private function getStock(Combination $combination): CombinationStock
     {
-        $stockAvailable = $this->stockAvailableRepository->getForCombination(new Combinationid($combination->id));
+        $stockAvailable = $this->stockAvailableRepository->getForCombination(
+            new Combinationid($combination->id),
+            new ShopId($combination->getShopId())
+        );
 
         return new CombinationStock(
             (int) $stockAvailable->quantity,

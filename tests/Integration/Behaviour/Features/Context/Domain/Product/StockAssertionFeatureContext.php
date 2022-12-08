@@ -160,6 +160,19 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then combination ":combinationReference" should have no stock movements for shop ":shopReference"
+     *
+     * @param string $combinationReference
+     * @param string $shopReference
+     */
+    public function assertCombinationNoLastStockMovementsForShop(
+        string $combinationReference,
+        string $shopReference
+    ): void {
+        $this->assertNoStockMovementForCombination($combinationReference, $this->getSharedStorage()->get($shopReference));
+    }
+
+    /**
      * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
      */
     public function assertProductLastStockMovementForDefaultShop(
@@ -410,6 +423,16 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
 
         $stockMovementHistories = $this->getQueryBus()->handle(
             new GetProductStockMovements($productId, $shopId)
+        );
+        Assert::assertEmpty($stockMovementHistories, 'Expected to find no stock movements');
+    }
+
+    private function assertNoStockMovementForCombination(string $combinationReference, int $shopId): void
+    {
+        $combinationId = $this->getSharedStorage()->get($combinationReference);
+
+        $stockMovementHistories = $this->getQueryBus()->handle(
+            new GetCombinationStockMovements($combinationId, $shopId)
         );
         Assert::assertEmpty($stockMovementHistories, 'Expected to find no stock movements');
     }

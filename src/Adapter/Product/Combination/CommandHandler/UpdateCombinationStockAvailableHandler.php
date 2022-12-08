@@ -28,13 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Updates combination stock available using legacy object model
@@ -52,23 +54,31 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
     private $movementReasonRepository;
 
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
     /**
+     * @var CombinationMultiShopRepository
+     */
+    private $combinationMultiShopRepository;
+
+    /**
      * @param CombinationStockUpdater $combinationStockUpdater
      * @param MovementReasonRepository $movementReasonRepository
-     * @param StockAvailableRepository $stockAvailableRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param CombinationMultiShopRepository $combinationMultiShopRepository
      */
     public function __construct(
         CombinationStockUpdater $combinationStockUpdater,
         MovementReasonRepository $movementReasonRepository,
-        StockAvailableRepository $stockAvailableRepository
+        StockAvailableMultiShopRepository $stockAvailableRepository,
+        CombinationMultiShopRepository $combinationMultiShopRepository
     ) {
         $this->combinationStockUpdater = $combinationStockUpdater;
         $this->movementReasonRepository = $movementReasonRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->combinationMultiShopRepository = $combinationMultiShopRepository;
     }
 
     /**
@@ -83,9 +93,13 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
                 $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
             );
         } elseif (null !== $command->getFixedQuantity()) {
-            $currentQuantity = (int) $this->stockAvailableRepository->getForCombination($command->getCombinationId())->quantity;
-            $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
+            $combination = $this->combinationMultiShopRepository->getByShopConstraint($command->getCombinationId(), $command->getShopConstraint());
+            $currentQuantity = (int) $this->stockAvailableRepository->getForCombination(
+                $command->getCombinationId(),
+                new ShopId($combination->getShopId())
+            )->quantity;
 
+            $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
             $stockModification = new StockModification(
                 $deltaQuantity,
                 $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
@@ -106,6 +120,6 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
             null
         );
 
-        $this->combinationStockUpdater->update($command->getCombinationId(), $properties);
+        $this->combinationStockUpdater->update($command->getCombinationId(), $properties, $command->getShopConstraint());
     }
 }

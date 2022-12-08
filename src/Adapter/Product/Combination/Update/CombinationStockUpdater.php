@@ -30,14 +30,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
@@ -48,12 +49,12 @@ use StockAvailable;
 class CombinationStockUpdater
 {
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     private $combinationRepository;
 
@@ -68,13 +69,13 @@ class CombinationStockUpdater
     private $configuration;
 
     /**
-     * @param StockAvailableRepository $stockAvailableRepository
-     * @param CombinationRepository $combinationRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      * @param StockManager $stockManager
      */
     public function __construct(
-        StockAvailableRepository $stockAvailableRepository,
-        CombinationRepository $combinationRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
+        CombinationMultiShopRepository $combinationRepository,
         StockManager $stockManager,
         Configuration $configuration
     ) {
@@ -88,12 +89,16 @@ class CombinationStockUpdater
      * @param CombinationId $combinationId
      * @param CombinationStockProperties $properties
      */
-    public function update(CombinationId $combinationId, CombinationStockProperties $properties): void
-    {
-        $combination = $this->combinationRepository->get($combinationId);
+    public function update(
+        CombinationId $combinationId,
+        CombinationStockProperties $properties,
+        ShopConstraint $shopConstraint
+    ): void {
+        $combination = $this->combinationRepository->getByShopConstraint($combinationId, $shopConstraint);
         $this->combinationRepository->partialUpdate(
             $combination,
             $this->fillUpdatableProperties($combination, $properties),
+            $shopConstraint,
             CannotUpdateCombinationException::FAILED_UPDATE_STOCK
         );
 
@@ -158,7 +163,10 @@ class CombinationStockUpdater
             return;
         }
 
-        $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
+        $stockAvailable = $this->stockAvailableRepository->getForCombination(
+            new CombinationId((int) $combination->id),
+            new ShopId($combination->getShopId())
+        );
 
         if ($stockModification) {
             $stockAvailable->quantity += $stockModification->getDeltaQuantity();
@@ -195,6 +203,7 @@ class CombinationStockUpdater
             $stockModification->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+                'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );
     }

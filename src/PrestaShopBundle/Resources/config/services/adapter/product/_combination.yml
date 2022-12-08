@@ -28,7 +28,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
@@ -88,8 +88,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.legacy.configuration'
 
@@ -103,7 +103,7 @@ services:
       - '@prestashop.core.product.combination.generator.combination_generator'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater:

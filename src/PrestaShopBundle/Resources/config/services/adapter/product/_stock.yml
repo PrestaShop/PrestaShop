@@ -15,8 +15,7 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
     deprecated: ~
 
-  prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
@@ -39,7 +38,7 @@ services:
   prestashop.adapter.product.stock.query_handler.get_product_stock_movements_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.stock.repository.stock_movement_repository'
       - '@translator'
     tags:
@@ -49,7 +48,7 @@ services:
   prestashop.adapter.product.stock.query_handler.get_combination_stock_movements_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.stock.repository.stock_movement_repository'
       - '@translator'
     tags:
@@ -61,7 +60,7 @@ services:
     arguments:
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.hook.manager'

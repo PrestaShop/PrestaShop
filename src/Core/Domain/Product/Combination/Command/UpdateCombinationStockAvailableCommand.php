@@ -30,15 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * This class should actually be called UpdateCombinationStockCommand but the name is already take,
- * although the current command should be cleaned once the unification is done. When that is done this
- * command should be correctly renamed.
- *
- * Either that or UpdateProductStockCommand could be renamed into UpdateProductStockAvailableCommand,the
- * idea is to keep the consistency.
- */
 class UpdateCombinationStockAvailableCommand
 {
     /**
@@ -62,12 +55,19 @@ class UpdateCombinationStockAvailableCommand
     private $location;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $combinationId
      */
     public function __construct(
-        int $combinationId
+        int $combinationId,
+        ShopConstraint $shopConstraint
     ) {
         $this->combinationId = new CombinationId($combinationId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -148,5 +148,13 @@ class UpdateCombinationStockAvailableCommand
         $this->location = $location;
 
         return $this;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
