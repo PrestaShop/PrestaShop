@@ -122,7 +122,7 @@ Feature: Update product combination prices in Back Office (BO) in multi shop con
       | product price                   | 21.99  |
       | product ecotax                  | 5.5    |
     # Enable ecotax
-    And shop configuration for "PS_USE_ECOTAX" is set to 1
+    When shop configuration for "PS_USE_ECOTAX" is set to 1
     And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to us-ks-tax-rate
     Then combination "product1SWhite" should have following prices for shops "shop1":
       | combination price detail        | value  |
@@ -233,6 +233,145 @@ Feature: Update product combination prices in Back Office (BO) in multi shop con
       | ecotax          | 0 |
       | tax rules group |   |
     Then combination "product1SWhite" should have following prices for shops "shop1,shop2":
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+
+  Scenario: I update combination prices for all shops:
+    Given I update product "product1" for shop "shop1" with following values:
+      | price           | 51.49           |
+      | ecotax          | 17.78           |
+      | tax rules group | US-AL Rate (4%) |
+    And I update product "product1" for shop "shop2" with following values:
+      | price           | 21.99             |
+      | ecotax          | 5.5               |
+      | tax rules group | US-KS Rate (5.3%) |
+    And combination "product1SBlack" should have following prices for shops "shop1":
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 4.00  |
+      | product price                   | 51.49 |
+      | product ecotax                  | 17.78 |
+    And combination "product1SBlack" should have following prices for shops "shop2":
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 5.3   |
+      | product price                   | 21.99 |
+      | product ecotax                  | 5.5   |
+    When I update combination "product1SBlack" with following values for all shops:
+      | eco tax              | 0.5 |
+      | impact on price      | -5  |
+      | impact on unit price | -1  |
+      | wholesale price      | 20  |
+    Then combination "product1SBlack" should have following prices for shops "shop1":
+      | combination price detail        | value |
+      | impact on price                 | -5    |
+      | impact on price with taxes      | -5.20 |
+      | impact on unit price            | -1    |
+      | impact on unit price with taxes | -1.04 |
+      | eco tax                         | 0.5   |
+      | eco tax with taxes              | 0.5   |
+      | wholesale price                 | 20    |
+      | product tax rate                | 4.00  |
+      | product price                   | 51.49 |
+      | product ecotax                  | 17.78 |
+    And combination "product1SBlack" should have following prices for shops "shop2":
+      | combination price detail        | value  |
+      | impact on price                 | -5     |
+      | impact on price with taxes      | -5.265 |
+      | impact on unit price            | -1     |
+      | impact on unit price with taxes | -1.053 |
+      | eco tax                         | 0.5    |
+      | eco tax with taxes              | 0.5    |
+      | wholesale price                 | 20     |
+      | product tax rate                | 5.3    |
+      | product price                   | 21.99  |
+      | product ecotax                  | 5.5    |
+    # Enable ecotax
+    When shop configuration for "PS_USE_ECOTAX" is set to 1
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to us-ks-tax-rate
+    Then combination "product1SBlack" should have following prices for shops "shop1":
+      | combination price detail        | value  |
+      | impact on price                 | -5     |
+      | impact on price with taxes      | -5.20  |
+      | impact on unit price            | -1     |
+      | impact on unit price with taxes | -1.04  |
+      | eco tax                         | 0.5    |
+      | eco tax with taxes              | 0.5265 |
+      | wholesale price                 | 20     |
+      | product tax rate                | 4.00   |
+      | product price                   | 51.49  |
+      | product ecotax                  | 17.78  |
+    And combination "product1SBlack" should have following prices for shops "shop2":
+      | combination price detail        | value  |
+      | impact on price                 | -5     |
+      | impact on price with taxes      | -5.265 |
+      | impact on unit price            | -1     |
+      | impact on unit price with taxes | -1.053 |
+      | eco tax                         | 0.5    |
+      | eco tax with taxes              | 0.5265 |
+      | wholesale price                 | 20     |
+      | product tax rate                | 5.3    |
+      | product price                   | 21.99  |
+      | product ecotax                  | 5.5    |
+    # Reset price
+    When I update combination "product1SBlack" with following values for all shops:
+      | impact on price | 0 |
+    Then combination "product1SBlack" should have following prices for shops "shop1":
+      | combination price detail        | value  |
+      | impact on price                 | 0      |
+      | impact on price with taxes      | 0      |
+      | impact on unit price            | -1     |
+      | impact on unit price with taxes | -1.04  |
+      | eco tax                         | 0.5    |
+      | eco tax with taxes              | 0.5265 |
+      | wholesale price                 | 20     |
+      | product tax rate                | 4.00   |
+      | product price                   | 51.49  |
+      | product ecotax                  | 17.78  |
+    And combination "product1SBlack" should have following prices for shops "shop2":
+      | combination price detail        | value  |
+      | impact on price                 | 0      |
+      | impact on price with taxes      | 0      |
+      | impact on unit price            | -1     |
+      | impact on unit price with taxes | -1.053 |
+      | eco tax                         | 0.5    |
+      | eco tax with taxes              | 0.5265 |
+      | wholesale price                 | 20     |
+      | product tax rate                | 5.3    |
+      | product price                   | 21.99  |
+      | product ecotax                  | 5.5    |
+    # Reset all
+    When I update combination "product1SBlack" with following values for all shops:
+      | eco tax              | 0 |
+      | impact on price      | 0 |
+      | impact on unit price | 0 |
+      | wholesale price      | 0 |
+    And I update product "product1" for all shops with following values:
+      | price           | 0 |
+      | ecotax          | 0 |
+      | tax rules group |   |
+    Then combination "product1SBlack" should have following prices for shops "shop1,shop2":
       | combination price detail        | value |
       | impact on price                 | 0     |
       | impact on price with taxes      | 0     |
