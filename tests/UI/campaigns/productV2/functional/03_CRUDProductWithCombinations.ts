@@ -11,12 +11,14 @@ import {BrowserContext, Page} from 'playwright';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import BO pages
+// Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import combinationsTab from '@pages/BO/catalog/productsV2/add/combinationsTab';
 import attributesPage from '@pages/BO/catalog/attributes';
+import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
+import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductFaker from '@data/faker/product';
@@ -28,7 +30,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   let browserContext: BrowserContext;
   let page: Page;
   const todayDate = date.getDateFormat('yyyy-mm-dd');
-  let productID = 1;
 
   // Data to create product with combinations
   const newProductData = new ProductFaker({
@@ -41,17 +42,26 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     attributes: {
       size: ['S', 'M', 'L', 'XL'],
       color: ['Grey', 'Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
-
     },
-    status: true,
+    status: false,
   });
 
+  // Data after delete the first attribute
+  const editProductAttributesData = {
+    attributes: {
+      size: ['S', 'M', 'L', 'XL'],
+      color: ['Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
+    },
+  };
+
+  // Data to edit the first combination
   const firstCombinationData = {
     reference: 'abcd',
     impactOnPriceTExc: 25,
     quantity: 100,
   };
 
+  // Data to edit the second combination
   const secondCombinationData = {
     reference: 'efghigk',
     minimalQuantity: 2,
@@ -59,7 +69,38 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     quantity: 150,
   };
 
-  // Data to edit product with combinations
+  // Data to edit the stock of combinations by bulk actions
+  const editStockData = {
+    stocks: {
+      quantityToEnable: true,
+      quantity: 20,
+      minimalQuantityToEnable: true,
+      minimalQuantity: 3,
+      stockLocationToEnable: true,
+      stockLocation: 'location 1',
+    },
+    retailPrice: {
+      costPriceToEnable: true,
+      costPrice: 10,
+      impactOnPriceTIncToEnable: true,
+      impactOnPriceTInc: 20,
+      impactOnWeightToEnable: true,
+      impactOnWeight: 0.1,
+    },
+    specificReferences: {
+      referenceToEnable: true,
+      reference: 'comb_ref_bulk',
+    },
+  };
+
+  // Data to edit the product price
+  const pricingData = {
+    price: 15,
+    taxRule: 'FR Taux standard (20%)',
+    priceTaxIncl: 18,
+  };
+
+  // Data to edit the product with combinations
   const editProductData = new ProductFaker({
     type: 'combinations',
     taxRule: 'No tax',
@@ -67,13 +108,13 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     minimumQuantity: 1,
     status: true,
     attributes: {
-      color: ['Grey', 'Taupe', 'Red'],
+      color: ['Pink', 'Camel', 'Off White'],
       size: ['L', 'XL'],
     },
   });
 
   // Pre-condition: Enable new product page
-  //enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -109,12 +150,12 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it('should get the last product ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getLastProductID', baseContext);
+    /* it('should get the last product ID', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'getLastProductID', baseContext);
 
-      const lastProductID = await productsPage.getTextColumn(page, 'id_product', 1);
-      productID += lastProductID;
-    });
+       const lastProductID = await productsPage.getTextColumn(page, 'id_product', 1);
+       productID += lastProductID;
+     });*/
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
@@ -148,13 +189,6 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       const createProductMessage = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
-    });
-
-    it('should check that the save button is changed to \'Save and publish\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
-
-      const saveButtonName = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal('Save and publish');
     });
   });
 
@@ -243,7 +277,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     });
   });
 
-  describe('Sort of combinations table', async () => {
+  describe('Sort combinations table', async () => {
     it('should change the items number to 100 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo100', baseContext);
 
@@ -257,7 +291,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
           testIdentifier: 'sortByIdAsc',
           sortBy: 'combination_id',
           column: 3,
-          sortDirection: 'asc',
+          sortDirection: 'desc',
         },
       },
       {
@@ -329,7 +363,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
           testIdentifier: 'sortByIdDesc',
           sortBy: 'combination_id',
           column: 3,
-          sortDirection: 'desc',
+          sortDirection: 'asc',
         },
       },
     ];
@@ -447,62 +481,94 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await expect(modalTitle).to.equal('Edit 39 combinations');
     });
 
-    it('should edit the stock', async function () {
+    it('should edit Stocks, Retail price and Specific references', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editStock', baseContext);
 
-      const successMessage = await combinationsTab.editCombinationsByBulkActions(page, productID);
-      console.log(successMessage);
+      const successMessage = await combinationsTab.editCombinationsByBulkActions(page, editStockData);
+      await expect(successMessage).to.equal('Editing 39/39 combinations');
     });
   });
 
-  /* it('should save the product', async function () {
-     await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
+  describe('Edit product and check the header details', async () => {
+    it('should go to Pricing tab and edit retail price, enable the product then save', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
 
-     const updateProductMessage = await createProductsPage.saveProduct(page);
-     await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
-   });
+      await pricingTab.setProductPricing(page, pricingData);
 
-   it('should preview product', async function () {
-     await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
+      await createProductsPage.setProductStatus(page, true);
 
-     // Click on preview button
-     page = await createProductsPage.previewProduct(page);
+      const updateProductMessage = await createProductsPage.saveProduct(page);
+      await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+    });
 
-     await foProductPage.changeLanguage(page, 'en');
+    it('should check that the save button is changed to \'Save and publish\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
-     const pageTitle = await foProductPage.getPageTitle(page);
-     await expect(pageTitle).to.contains(newProductData.name);
-   });
+      const saveButtonName = await createProductsPage.getSaveButtonName(page);
+      await expect(saveButtonName).to.equal('Save and publish');
+    });
 
-   it('should check all product information', async function () {
-     await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+    it('should check the product header details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
-     let result = await foProductPage.getProductInformation(page);
-     await Promise.all([
-       await expect(result.name).to.equal(newProductData.name),
-       await expect(result.price).to.equal(newProductData.price),
-       await expect(result.shortDescription).to.equal(newProductData.summary),
-       await expect(result.description).to.equal(newProductData.description),
-     ]);
+      const taxValue = await basicHelper.percentage(pricingData.price, 20);
 
-     result = await foProductPage.getProductAttributes(page);
-     await Promise.all([
-       await expect(result.size).to.equal(newProductData.attributes.size.join(' ')),
-       await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
-     ]);
-   });
+      const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
+      await Promise.all([
+        expect(productHeaderSummary.priceTaxExc).to.equal(`€${(pricingData.price.toFixed(2))} tax excl.`),
+        expect(productHeaderSummary.priceTaxIncl).to.equal(
+          `€${(pricingData.price + taxValue).toFixed(2)} tax incl. (tax rule: 20%)`),
+        expect(productHeaderSummary.quantity).to.equal('930 in stock'),
+        expect(productHeaderSummary.reference).to.contains(newProductData.reference),
+      ]);
+    });
+  });
 
-   it('should go back to BO', async function () {
-     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+  describe('Check product in FO', async () => {
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewProduct', baseContext);
 
-     // Go back to BO
-     page = await foProductPage.closePage(browserContext, page, 0);
+      // Click on preview button
+      page = await createProductsPage.previewProduct(page);
 
-     const pageTitle = await createProductsPage.getPageTitle(page);
-     await expect(pageTitle).to.contains(createProductsPage.pageTitle);
-   });*/
+      await foProductPage.changeLanguage(page, 'en');
 
-  /*describe('Edit product', async () => {
+      const pageTitle = await foProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(newProductData.name);
+    });
+
+    it('should check all product information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+
+      const taxValue = await basicHelper.percentage(pricingData.price + secondCombinationData.impactOnPriceTExc, 20);
+
+      let result = await foProductPage.getProductInformation(page);
+      await Promise.all([
+        await expect(result.name).to.equal(newProductData.name),
+        await expect(result.price).to.equal(pricingData.price + secondCombinationData.impactOnPriceTExc + taxValue),
+        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.description).to.equal(newProductData.description),
+      ]);
+
+      result = await foProductPage.getProductAttributes(page);
+      await Promise.all([
+        await expect(result.size).to.equal(editProductAttributesData.attributes.size.join(' ')),
+        await expect(result.color).to.equal(editProductAttributesData.attributes.color.join(' ')),
+      ]);
+    });
+  });
+
+  describe('Edit product', async () => {
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+
+      // Go back to BO
+      page = await foProductPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+
     it('should edit the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
@@ -540,7 +606,9 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       const updateProductMessage = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
+  });
 
+  describe('Check product in FO', async () => {
     it('should preview product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'previewEditedProduct', baseContext);
 
@@ -559,15 +627,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       let result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
-        await expect(result.price).to.equal(editProductData.price),
+        await expect(result.price).to.equal(editProductData.price + secondCombinationData.impactOnPriceTExc),
         await expect(result.description).to.equal(editProductData.description),
       ]);
 
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(
-          `${newProductData.attributes.size.join(' ')} ${editProductData.attributes.size.join(' ')}`),
-        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
+        await expect(result.size).to.equal(editProductAttributesData.attributes.size.join(' ')),
+        await expect(result.color).to.equal(editProductAttributesData.attributes.color.join(' ')),
       ]);
     });
 
@@ -592,5 +659,5 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   });
 
   // Post-condition: Disable new product page
-  disableNewProductPageTest(`${baseContext}_disableNewProduct`);*/
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 });

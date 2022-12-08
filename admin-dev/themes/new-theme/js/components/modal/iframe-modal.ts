@@ -113,6 +113,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     this.iframe.frameBorder = '0';
     this.iframe.scrolling = 'no';
     this.iframe.width = '100%';
+    this.iframe.setAttribute('name', `${params.id}-iframe`);
     if (!params.autoSize) {
       this.iframe.height = '100%';
     }

@@ -26,11 +26,62 @@ class CombinationsTab extends BOBasePage {
     this.generateCombinationsCloseButton = `${this.generateCombinationsModal} button.close`;
     this.saveCombinationEditButton = '#save-combinations-edition';
 
+    // Bulk actions selectors
+    this.bulkActionsButton = '#combination-bulk-actions-btn';
+    this.bulkEditButton = '#combination-bulk-form-btn';
+
+    // Bulk edit modal
+    this.bulkEditModal = '#bulk-combination-form-modal';
+    this.bulkEditModalTitle = `${this.bulkEditModal} .modal-header .modal-title`;
+    // Edit stocks
+    this.bulkEditModalStocksButton = '#bulk_combination_stock_accordion_header h2 button';
+    this.bulkEditModalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_delta_quantity_'
+      + `${toEnable}`;
+    this.bulkEditModalQuantityInput = '#bulk_combination_stock_delta_quantity_delta';
+    this.bulkEditModalMinimalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_minimal'
+      + `_quantity_${toEnable}`;
+    this.bulkEditModalMinimalQuantityInput = '#bulk_combination_stock_minimal_quantity';
+    this.bulkEditModalStockLocationSwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_stock_'
+      + `location_${toEnable}`;
+    this.bulkEditModalStockLocationInput = '#bulk_combination_stock_stock_location';
+    this.bulkEditModalSaveButton = '#bulk-combination-form-modal div.modal-footer button.btn-confirm-submit';
+    // Edit retail price
+    this.bulkEditModalRetailPriceButton = '#bulk_combination_price_accordion_header h2 button';
+    this.bulkEditModalCostPriceSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_wholesale_'
+      + `price_${toEnable}`;
+    this.bulkEditModalCostPriceInput = '#bulk_combination_price_wholesale_price';
+    this.bulkEditModalImpactOnPriceTIncSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_price_'
+      + `tax_excluded_${toEnable}`;
+    this.bulkEditModalImpactOnPriceTIncInput = '#bulk_combination_price_price_tax_excluded';
+    this.bulkEditModalImpactOnWeightSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_weight_'
+      + `${toEnable}`;
+    this.bulkEditModalImpactOnWeightInput = '#bulk_combination_price_weight';
+    // Edit specific references
+    this.bulkEditModalSpecificReferences = '#bulk_combination_references_accordion_header h2 button';
+    this.bulkEditModalReferenceSwitchButton = (toEnable) => '#bulk_combination_references_disabling_switch_'
+      + `reference_${toEnable}`;
+    this.bulkEditModalReferenceInput = '#bulk_combination_references_reference';
+    // Save progress modal
+    this.bulkCombinationProgressModal = '#bulk-combination-progress-modal';
+    this.bulkCombinationProgressBarDone = '#modal_progressbar_done[aria-valuenow="100"]';
+    this.bulkCombinationProgressModalHeader = '#bulk-combination-progress-modal div.progress-headline div';
+    this.bulkCombinationProgressModalCloseButton = '#bulk-combination-progress-modal button.close-modal-button';
+
+    // Filter by size selectors
+    this.filterBySizeButton = '#form_invoice_prefix[data-role=filter-by-size]';
+    this.filterBySizeDropDownMenu = '.combinations-filters-dropdown div.dropdown-menu';
+    this.filterBySizeCheckboxButton = (id) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
+    this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
+
     // Selectors of combinations table
     this.combinationsListTable = '#combination_list';
     this.combinationListTableRow = (row) => `#combination-list-row-${row - 1}`;
     this.combinationListTableColumn = (row, column) => `td input#combination_list_${row - 1}_${column}`;
     this.combinationListTableActionsColumn = (row, action) => `td button#combination_list_${row - 1}_actions_${action}`;
+    this.combinationListTableSelectAllButton = '#bulk-all-selection-dropdown-button';
+    this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
+    this.combinationListBulkSelectAll = '#bulk-all-selection-dropdown label[for="bulk-select-all"]';
+    this.combinationListBulkSelectAllInPage = '#bulk-select-all-in-page + i';
 
     // Edit combination modal
     this.editCombinationIframe = '.combination-iframe';
@@ -44,9 +95,12 @@ class CombinationsTab extends BOBasePage {
     this.editCombinationModalCancelButton = `${this.editCombinationModal} footer button.btn-close`;
     this.editCombinationCloseModal = `${this.editCombinationEditModal} div.modal-prevent-close div.modal.show`;
     this.editCombinationModalDiscardButton = `${this.editCombinationCloseModal} button.btn-primary`;
-    this.combinationStockMovementsDate = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_date + span`;
-    this.combinationStockMovementsEmployeeName = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_employee_name + span`;
-    this.combinationStockMovements = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_delta_quantity + span`;
+    this.combinationStockMovementsDate = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
+      + 'date + span';
+    this.combinationStockMovementsEmployeeName = (row) => '#combination_form_stock_quantities_stock_movements_'
+      + `${row - 1}_employee_name + span`;
+    this.combinationStockMovements = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
+      + '_delta_quantity + span';
 
     // Delete combination modal
     this.modalConfirmDeleteCombination = '#modal-confirm-delete-combination';
@@ -55,7 +109,8 @@ class CombinationsTab extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.combinationsListTable} thead`;
-    this.sortColumnDiv = (columnNumber) => `${this.tableHead} th:nth-child(${columnNumber}) div.ps-sortable-column[data-sort-col-name]`;
+    this.sortColumnDiv = (columnNumber) => `${this.tableHead} th:nth-child(${columnNumber}) `
+      + 'div.ps-sortable-column[data-sort-col-name]';
     this.sortColumnSpanButton = (columnNumber) => `${this.sortColumnDiv(columnNumber)} span.ps-sort`;
 
     // Pagination selectors
@@ -64,18 +119,13 @@ class CombinationsTab extends BOBasePage {
     this.paginationLimitSelect = '#paginator-limit';
     this.paginationNextLink = `${this.paginationBlock} .page-link.next:not(.disabled)`;
     this.paginationPreviousLink = `${this.paginationBlock} .page-link.previous:not(.disabled)`;
-
-    // Filter selectors
-    this.filterBySizeButton = '#form_invoice_prefix[data-role=filter-by-size]';
-    this.filterBySizeDropDownMenu = '.combinations-filters-dropdown div.dropdown-menu';
-    this.filterBySizeCheckboxButton = (id) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
-    this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
   }
 
   /*
   Methods
    */
 
+  // Methods for create combinations
   /**
    * Click on attributes & features link
    * @param page {Page} Browser tab
@@ -148,6 +198,20 @@ class CombinationsTab extends BOBasePage {
     return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
   }
 
+  // Methods for edit/delete combinations
+
+  /**
+   * Click on edit icon
+   * @param page {Page} Browser tab
+   * @param row {number} Row in table
+   * @returns {Promise<void>}
+   */
+  async clickOnEditIcon(page, row = 1) {
+    await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'edit')}`);
+
+    return this.elementVisible(page, this.editCombinationModal, 2000);
+  }
+
   /**
    * Edit combination
    * @param page {Page} Browser tab
@@ -172,18 +236,6 @@ class CombinationsTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.saveCombinationEditButton);
 
     return this.getGrowlMessageContent(page);
-  }
-
-  /**
-   * Click on edit icon
-   * @param page {Page} Browser tab
-   * @param row {number} Row in table
-   * @returns {Promise<void>}
-   */
-  async clickOnEditIcon(page, row = 1) {
-    await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'edit')}`);
-
-    return this.elementVisible(page, this.editCombinationModal, 2000);
   }
 
   /**
@@ -266,7 +318,7 @@ class CombinationsTab extends BOBasePage {
     return this.elementVisible(combinationFrame, this.editCombinationModalQuantityInput, 2000);
   }
 
-  // Sort methods
+  // Methods for sort
   /**
    * Sort table by clicking on column name
    * @param page {Page} Browser tab
@@ -389,7 +441,7 @@ class CombinationsTab extends BOBasePage {
     return this.getPaginationLabel(page);
   }
 
-  // Methods for filter combinations
+  // Methods for filter combinations by size
   /**
    * Get number of combinations displayed in list
    * @param page {Page} Browser tab
@@ -416,6 +468,11 @@ class CombinationsTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.filterBySizeButton);
   }
 
+  /**
+   * Get filter button name
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   getFilterBySizeButtonName(page) {
     return this.getTextContent(page, this.filterBySizeButton);
   }
@@ -431,21 +488,22 @@ class CombinationsTab extends BOBasePage {
     return this.getNumberOfCombinationsFromList(page);
   }
 
+  // Methods for bulk actions
   /**
    * Select All combinations
    * @param page {Page} Browser tab
-   * @param allCombination {boolean} true to select all combination, false to select all in page
+   * @param allCombinations {boolean} true to select all combinations, false to select all in page
    * @returns {Promise<boolean>}
    */
-  async selectAllCombinations(page, allCombination = true) {
-    await this.waitForSelectorAndClick(page, '#bulk-all-selection-dropdown-button');
+  async selectAllCombinations(page, allCombinations = true) {
+    await this.waitForSelectorAndClick(page, this.combinationListTableSelectAllButton);
 
-    await this.waitForVisibleSelector(page, '#bulk-all-selection-dropdown .dropdown-menu.show');
-    if (allCombination) {
-      await this.setChecked(page, '#bulk-all-selection-dropdown > div > label[for="bulk-select-all"]');
-    } else await this.setChecked(page, '#bulk-select-all-in-page + i');
+    await this.waitForVisibleSelector(page, this.combinationListSelectAllDropDownMenu);
+    if (allCombinations) {
+      await this.setChecked(page, this.combinationListBulkSelectAll);
+    } else await this.setChecked(page, this.combinationListBulkSelectAllInPage);
 
-    return this.elementVisible(page, '#combination-bulk-actions-btn', 2000);
+    return this.elementVisible(page, this.bulkActionsButton, 2000);
   }
 
   /**
@@ -454,29 +512,105 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<string>}
    */
   async clickOnEditCombinationsByBulkActions(page) {
-    await this.waitForSelectorAndClick(page, '#combination-bulk-actions-btn');
-    await this.waitForSelectorAndClick(page, '#combination-bulk-form-btn');
+    await this.waitForSelectorAndClick(page, this.bulkActionsButton);
+    await this.waitForSelectorAndClick(page, this.bulkEditButton);
 
-    await this.waitForVisibleSelector(page, '#bulk-combination-form-modal');
+    await this.waitForVisibleSelector(page, this.bulkEditModal);
 
-    return this.getTextContent(page, '#bulk-combination-form-modal .modal-header .modal-title');
+    return this.getTextContent(page, this.bulkEditModalTitle);
   }
 
-  async editCombinationsByBulkActions(page, productID) {
-    const bulkEditCombinationFrame = await page.frame({url: new RegExp(`sell/catalog/products-v2/${productID}/combinations/bulk-form`, 'gmi')});
+  /**
+   * Edit combinations by bulk actions
+   * @param page {Page} Browser tab
+   * @param editStockData {object}
+   * @returns {Promise<string>}
+   */
+  async editCombinationsByBulkActions(page, editStockData) {
+    const bulkEditCombinationFrame = await page.frame('bulk-combination-form-modal-iframe');
 
-    await this.waitForSelectorAndClick(bulkEditCombinationFrame, '#bulk_combination_stock_accordion_header > h2 > button');
+    // Edit stocks
+    if (editStockData.stocks) {
+      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalStocksButton);
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalQuantitySwitchButton(editStockData.stocks.quantityToEnable ? 1 : 0),
+      );
+      await this.setValue(bulkEditCombinationFrame, this.bulkEditModalQuantityInput, editStockData.stocks.quantity);
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalMinimalQuantitySwitchButton(editStockData.stocks.minimalQuantityToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalMinimalQuantityInput,
+        editStockData.stocks.minimalQuantity,
+      );
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalStockLocationSwitchButton(editStockData.stocks.stockLocationToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalStockLocationInput,
+        editStockData.stocks.stockLocation,
+      );
+      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalStocksButton);
+    }
+    // Edit retail price
+    if (editStockData.retailPrice) {
+      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalRetailPriceButton);
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalCostPriceSwitchButton(editStockData.retailPrice.costPriceToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalCostPriceInput,
+        editStockData.retailPrice.costPrice,
+      );
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalImpactOnPriceTIncSwitchButton(editStockData.retailPrice.impactOnPriceTIncToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalImpactOnPriceTIncInput,
+        editStockData.retailPrice.impactOnPriceTInc,
+      );
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalImpactOnWeightSwitchButton(editStockData.retailPrice.impactOnWeightToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalImpactOnWeightInput,
+        editStockData.retailPrice.impactOnWeight,
+      );
+      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalRetailPriceButton);
+    }
+    // Edit specific references
+    if (editStockData.specificReferences) {
+      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalSpecificReferences);
+      await this.setChecked(
+        bulkEditCombinationFrame,
+        this.bulkEditModalReferenceSwitchButton(editStockData.specificReferences.referenceToEnable ? 1 : 0),
+      );
+      await this.setValue(
+        bulkEditCombinationFrame,
+        this.bulkEditModalReferenceInput,
+        editStockData.specificReferences.reference,
+      );
+    }
+    // Save and close progress modal
+    await this.waitForSelectorAndClick(page, this.bulkEditModalSaveButton);
+    await this.waitForVisibleSelector(page, this.bulkCombinationProgressModal);
+    await this.waitForVisibleSelector(page, this.bulkCombinationProgressBarDone);
+    const result = await this.getTextContent(page, this.bulkCombinationProgressModalHeader);
+    await this.waitForSelectorAndClick(page, this.bulkCombinationProgressModalCloseButton);
 
-    await this.waitForSelectorAndClick(bulkEditCombinationFrame, '#bulk_combination_stock_disabling_switch_delta_quantity_1');
-    await this.setValue(bulkEditCombinationFrame, '#bulk_combination_stock_delta_quantity_delta', 20);
-    await this.waitForSelectorAndClick(bulkEditCombinationFrame, '#bulk_combination_stock_disabling_switch_minimal_quantity_1');
-    await this.setValue(bulkEditCombinationFrame, '#bulk_combination_stock_minimal_quantity', 20);
-    await this.waitForSelectorAndClick(bulkEditCombinationFrame, '#bulk_combination_stock_disabling_switch_stock_location_1');
-    await this.setValue(bulkEditCombinationFrame, '#bulk_combination_stock_stock_location', 'Location 1');
-
-    await this.waitForSelectorAndClick(page, '#bulk-combination-form-modal > div > div > div.modal-footer > button.btn.btn-primary.btn-lg.btn-confirm-submit');
-
-    return this.getAlertSuccessBlockParagraphContent(bulkEditCombinationFrame);
+    // Return text in modal
+    return result;
   }
 }
 
