@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImageCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -265,7 +265,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $productImagesByShop = [];
         foreach ($results as $result) {
             $shopId = (int) $result['id_shop'];
-            $productImagesByShop[$shopId][] = new ProductImage((int) $result['id_image'], (int) $result['cover'] === 1);
+            $productImagesByShop[$shopId][] = new ShopImageAssociation((int) $result['id_image'], (int) $result['cover'] === 1);
         }
 
         foreach ($this->productMultiShopRepository->getAssociatedShopIds($productId) as $shopId) {
