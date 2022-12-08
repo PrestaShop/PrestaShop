@@ -696,7 +696,7 @@ class AdminProductsControllerCore extends AdminController
                              * - physical stock for this product
                              * - supply order(s) for this product
                              */
-                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && isset($stock_manager)) {
+                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && isset($stock_manager)) { // @phpstan-ignore-line
                                 $physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
                                 $real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
                                 if ($physical_quantity > 0 || $real_quantity > $physical_quantity) {

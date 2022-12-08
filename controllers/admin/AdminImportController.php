@@ -3102,10 +3102,10 @@ class AdminImportControllerCore extends AdminController
                         $customer->id_shop = (int) $key;
                         $customer->id_shop_group = (int) $id;
                         if ($customer_exist
-                            && isset($current_id_customer)
+                            && isset($current_id_customer) // @phpstan-ignore-line
                             && (
-                                (isset($current_id_shop_group) && (int) $current_id_shop_group == (int) $id)
-                                || (isset($current_id_shop) && in_array($current_id_shop, ShopGroup::getShopsFromGroup($id)))
+                                (isset($current_id_shop_group) && (int) $current_id_shop_group == (int) $id) // @phpstan-ignore-line
+                                || (isset($current_id_shop) && in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))) // @phpstan-ignore-line
                             )
                         ) {
                             $customer->id = (int) $current_id_customer;
@@ -3127,7 +3127,7 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     $customer->id_shop = $id_shop;
                     $customer->id_shop_group = $id_group;
-                    if ($customer_exist && isset($current_id_customer, $current_id_shop) && (int) $id_shop == (int) $current_id_shop) {
+                    if ($customer_exist && isset($current_id_customer, $current_id_shop) && (int) $id_shop == (int) $current_id_shop) { // @phpstan-ignore-line
                         $customer->id = (int) $current_id_customer;
                         $res &= ($validateOnly || $customer->update());
                     } else {

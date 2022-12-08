@@ -63,32 +63,19 @@ class LocaleCacheTest extends TestCase
     public function testReadWrite()
     {
         $data = new CldrLocaleData();
-        /* @phpstan-ignore-next-line */
-        $data->foo = ['bar', 'baz'];
 
-        /* @noinspection PhpUnhandledExceptionInspection */
         $this->layer->write('fooBar', $data);
-        /** @noinspection end */
 
         // Get value back from cache
-        /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('fooBar');
-        /* @noinspection end */
 
         $this->assertInstanceOf(
             CldrLocaleData::class,
             $cachedData
         );
 
-        $this->assertSame(
-            ['bar', 'baz'],
-            $cachedData->foo
-        );
-
         // Same test with unknown cache key
-        /** @noinspection PhpUnhandledExceptionInspection */
         $cachedData = $this->layer->read('unknown');
-        /* @noinspection end */
 
         $this->assertNull($cachedData);
     }

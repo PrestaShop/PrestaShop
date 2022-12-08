@@ -70,23 +70,14 @@ class LocaleReferenceTest extends TestCase
      */
     public function testRead()
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         $cldrLocaleData = $this->layer->read('fr-FR');
-        /* @noinspection end */
 
         $this->assertInstanceOf(
             CldrLocaleData::class,
             $cldrLocaleData
         );
 
-        $this->assertSame(
-            ['bar', 'baz'],
-            $cldrLocaleData->foo
-        );
-
-        /** @noinspection PhpUnhandledExceptionInspection */
         $cldrLocaleData = $this->layer->read('un-KNOWN');
-        /* @noinspection end */
 
         $this->assertNull($cldrLocaleData);
     }
