@@ -94,96 +94,20 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
      * @param string $combinationReference
      * @param CombinationPrices $expectedPrices
      */
-    public function assertCombinationPrices(string $combinationReference, CombinationPrices $expectedPrices): void
+    public function assertPricesForDefaultShop(string $combinationReference, CombinationPrices $expectedPrices): void
     {
-        $actualPrices = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getPrices();
+        $this->assertPrices($combinationReference, $expectedPrices, [$this->getDefaultShopId()]);
+    }
 
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
-            sprintf(
-                'Unexpected combination impact on price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPrice(),
-                (string) $actualPrices->getImpactOnPrice()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
-            sprintf(
-                'Unexpected combination impact on price with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
-                (string) $actualPrices->getImpactOnPriceTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
-            sprintf(
-                'Unexpected combination eco tax. Expected "%s", got "%s"',
-                (string) $expectedPrices->getEcotax(),
-                (string) $actualPrices->getEcotax()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
-            sprintf(
-                'Unexpected combination eco tax with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getEcotaxTaxIncluded(),
-                (string) $actualPrices->getEcotaxTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
-            sprintf(
-                'Unexpected combination impact on unit price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnUnitPrice(),
-                (string) $actualPrices->getImpactOnUnitPrice()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
-            sprintf(
-                'Unexpected combination impact on unit price with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
-                (string) $actualPrices->getImpactOnPriceTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
-            sprintf(
-                'Unexpected combination wholesale price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getWholesalePrice(),
-                (string) $actualPrices->getWholesalePrice()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
-            sprintf(
-                'Unexpected combination product tax rate. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductTaxRate(),
-                (string) $actualPrices->getProductTaxRate()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
-            sprintf(
-                'Unexpected combination product price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductPrice(),
-                (string) $actualPrices->getProductPrice()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
-            sprintf(
-                'Unexpected combination wholesale price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductEcotax(),
-                (string) $actualPrices->getProductEcotax()
-            )
-        );
+    /**
+     * @Then combination ":combinationReference" should have following prices for shops ":shopReferences":
+     *
+     * @param string $combinationReference
+     * @param CombinationPrices $expectedPrices
+     */
+    public function assertPricesForShops(string $combinationReference, CombinationPrices $expectedPrices, string $shopReferences): void
+    {
+        $this->assertPrices($combinationReference, $expectedPrices, $this->referencesToIds($shopReferences));
     }
 
     /**
@@ -403,6 +327,110 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                     var_export($expectedDetails->getImpactOnWeight(), true),
                     var_export($actualDetails->getImpactOnWeight(), true),
                     $shopId
+                )
+            );
+        }
+    }
+
+    private function assertPrices(string $combinationReference, CombinationPrices $expectedPrices, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $actualPrices = $this->getCombinationForEditing($combinationReference, $shopId)->getPrices();
+
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
+                sprintf(
+                    'Unexpected combination impact on price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPrice(),
+                    (string) $actualPrices->getImpactOnPrice()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+                sprintf(
+                    'Unexpected combination impact on price with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                    (string) $actualPrices->getImpactOnPriceTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
+                sprintf(
+                    'Unexpected combination eco tax for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getEcotax(),
+                    (string) $actualPrices->getEcotax()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
+                sprintf(
+                    'Unexpected combination eco tax with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getEcotaxTaxIncluded(),
+                    (string) $actualPrices->getEcotaxTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
+                sprintf(
+                    'Unexpected combination impact on unit price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnUnitPrice(),
+                    (string) $actualPrices->getImpactOnUnitPrice()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+                sprintf(
+                    'Unexpected combination impact on unit price with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                    (string) $actualPrices->getImpactOnPriceTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
+                sprintf(
+                    'Unexpected combination wholesale price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getWholesalePrice(),
+                    (string) $actualPrices->getWholesalePrice()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
+                sprintf(
+                    'Unexpected combination product tax rate for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductTaxRate(),
+                    (string) $actualPrices->getProductTaxRate()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
+                sprintf(
+                    'Unexpected combination product price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductPrice(),
+                    (string) $actualPrices->getProductPrice()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
+                sprintf(
+                    'Unexpected combination wholesale price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductEcotax(),
+                    (string) $actualPrices->getProductEcotax()
                 )
             );
         }
