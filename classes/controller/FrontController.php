@@ -1841,7 +1841,7 @@ class FrontControllerCore extends Controller
 
         if (null !== $extraParams) {
             foreach ($params as $key => $param) {
-                if (null === $param || '' === $param) {
+                if ('' === $param) {
                     unset($params[$key]);
                 }
             }
