@@ -560,7 +560,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
   describe('Edit product', async () => {
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
 
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
