@@ -22,13 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue, {PluginObject} from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
-
-Vue.use(<PluginObject<any>><unknown>Vuex);
 
 // root state object.
 
@@ -102,8 +99,10 @@ const getters = {
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
-export default new Vuex.Store({
-  state,
+export default createStore({
+  state() {
+    return state;
+  },
   getters,
   actions,
   mutations,

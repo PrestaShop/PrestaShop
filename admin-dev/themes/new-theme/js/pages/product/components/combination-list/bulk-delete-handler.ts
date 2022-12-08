@@ -91,7 +91,7 @@ export default class BulkDeleteHandler {
           },
         );
         modal.show();
-      } catch (error) {
+      } catch (error: any) {
         const errorMessage = error.response?.JSON ?? error;
         $.growl.error({message: errorMessage});
       }
@@ -146,7 +146,7 @@ export default class BulkDeleteHandler {
           progressModal.interruptProgress();
           stopProcess = true;
         }
-      } catch (e) {
+      } catch (e: any) {
         data = {
           error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
         };

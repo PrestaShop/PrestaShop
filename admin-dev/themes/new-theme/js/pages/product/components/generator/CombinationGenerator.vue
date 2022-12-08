@@ -61,7 +61,7 @@
           <span v-if="!loading">
             {{
               $tc('generator.action', generatedCombinationsNb, {
-                '%combinationsNb%': generatedCombinationsNb,
+                'combinationsNb': generatedCombinationsNb,
               })
             }}
           </span>
@@ -82,7 +82,8 @@
   import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
+  import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {Attribute, AttributeGroup} from '@pages/product/types';
 
@@ -100,7 +101,7 @@
     hasGeneratedCombinations: boolean,
   }
 
-  export default isSelected.extend({
+  export default defineComponent({
     name: 'CombinationGenerator',
     data(): CombinationGeneratorStates {
       return {
@@ -123,6 +124,7 @@
         required: true,
       },
     },
+    mixins: [isSelected],
     components: {
       Modal,
       AttributesSelector,
@@ -143,8 +145,7 @@
           if (combinationsNumber === 0) {
             combinationsNumber = 1;
           }
-          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
-            .attributes.length;
+          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId].attributes.length;
         });
 
         return combinationsNumber;
@@ -211,13 +212,13 @@
           const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
-              '%combinationsNb%': response.combination_ids.length,
+              combinationsNb: response.combination_ids.length,
             }),
           });
           this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
-        } catch (error) {
-          if (error.responseJSON && error.responseJSON.error) {
+        } catch (error: any) {
+          if (error.responseJSON && error.responseJSON?.error) {
             $.growl.error({message: error.responseJSON.error});
           } else {
             $.growl.error({message: error});

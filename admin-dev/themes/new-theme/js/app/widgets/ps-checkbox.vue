@@ -38,12 +38,12 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
   /**
    * @deprecated since 8.0, use app/components/checkbox.vue instead
    */
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       id: {
         type: String,

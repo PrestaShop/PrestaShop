@@ -29,7 +29,7 @@ import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
-import initFilters, {FiltersVueApp} from '@pages/product/components/filters';
+import initFilters from '@pages/product/components/filters';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
@@ -39,7 +39,7 @@ import BulkDeleteHandler from '@pages/product/components/combination-list/bulk-d
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import CombinationsListEditor from '@pages/product/components/combination-list/combinations-list-editor';
-import Vue from '@node_modules/vue';
+import {App} from 'vue';
 import RowDeleteHandler from '@pages/product/components/combination-list/row-delete-handler';
 import {AttributeGroup} from '@pages/product/types';
 
@@ -48,10 +48,10 @@ const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
 /**
- * This is the main class driving the combinations list, it orchestrates the initialisation of the several components
- * and it also handles their interaction so that each component remains as independent as possible. Most of the interactions
- * are driven via the event system.
- */
+  * This is the main class driving the combinations list, it orchestrates the initialisation of the several components
+  * and it also handles their interaction so that each component remains as independent as possible. Most of the interactions
+  * are driven via the event system.
+  */
 export default class CombinationsList {
   private readonly productId: number;
 
@@ -77,11 +77,11 @@ export default class CombinationsList {
 
   private readonly productFormModel: ProductFormModel;
 
-  private filtersApp?: FiltersVueApp;
+  private filtersApp?: App | null;
 
-  private combinationModalApp?: Vue;
+  private combinationModalApp?: App | null;
 
-  private combinationGeneratorApp?: Vue;
+  private combinationGeneratorApp?: App | null;
 
   private paginator?: DynamicPaginator;
 
@@ -185,7 +185,6 @@ export default class CombinationsList {
     this.combinationModalApp = initCombinationModal(
       CombinationsMap.editModal,
       this.paginatedCombinationsService,
-      this.productId,
       this.eventEmitter,
     );
     this.filtersApp = initFilters(
@@ -231,7 +230,11 @@ export default class CombinationsList {
     this.productAttributeGroups = await getProductAttributeGroups(this.productId);
 
     if (this.filtersApp) {
-      this.filtersApp.filters = this.productAttributeGroups;
+      this.filtersApp = initFilters(
+        CombinationsMap.combinationsFiltersContainer,
+        this.eventEmitter,
+        this.productAttributeGroups,
+      );
     }
 
     // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger

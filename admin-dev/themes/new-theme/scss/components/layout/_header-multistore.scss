@@ -39,8 +39,8 @@ $component-name: header-multishop;
     right: 1rem;
     z-index: 1002;
     display: flex;
-    transform: translateY(-50%);
     gap: 10px;
+    transform: translateY(-50%);
 
     @include media-breakpoint-down(sm) {
       a {

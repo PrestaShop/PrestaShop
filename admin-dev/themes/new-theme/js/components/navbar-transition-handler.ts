@@ -55,7 +55,7 @@ export function NavbarTransitionHandler(
 ): void {
   this.$body = $body;
   this.transitionFired = false;
-  this.$navBar = $navBar.get(0);
+  this.$navBar = $navBar.get(0)!;
   this.$mainMenu = $mainMenu;
   this.endTransitionEvent = endTransitionEvent;
 

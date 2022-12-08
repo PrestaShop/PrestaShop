@@ -451,6 +451,7 @@ div.mce-tinymce-inline {
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
+  // stylelint-disable-next-line value-keyword-case
   text-rendering: optimizeLegibility;
 }
 

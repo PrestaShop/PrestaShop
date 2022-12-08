@@ -77,7 +77,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="this.isLoading">
+        <tr v-if="isLoading">
           <td colspan="6">
             <PSLoader
               v-for="(n, index) in 3"
@@ -114,11 +114,12 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSTable from '@app/widgets/ps-table/ps-table.vue';
   import PSSort from '@app/widgets/ps-table/ps-sort.vue';
   import PSAlert from '@app/widgets/ps-alert.vue';
   import PSLoader from '@app/widgets/ps-loader.vue';
+  import {defineComponent} from 'vue';
+  import TranslationMixin from '@app/pages/stock/mixins/translate';
   import MovementLine from './movement-line.vue';
 
   const DEFAULT_SORT = 'desc';
@@ -154,7 +155,7 @@
   }
   /* eslint-enable camelcase */
 
-  export default Vue.extend({
+  export default defineComponent({
     computed: {
       isLoading(): boolean {
         return this.$store.state.isLoading;
@@ -169,6 +170,7 @@
         return this.$store.state.order;
       },
     },
+    mixins: [TranslationMixin],
     methods: {
       sort(order: string, sortDirection: string): void {
         this.$store.dispatch('updateOrder', order);

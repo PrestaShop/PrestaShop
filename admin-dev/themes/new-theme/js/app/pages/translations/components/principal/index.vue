@@ -120,14 +120,15 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSButton from '@app/widgets/ps-button.vue';
   import PSPagination from '@app/widgets/ps-pagination.vue';
   import PSAlert from '@app/widgets/ps-alert.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import TranslationMixin from '@app/pages/translations/mixins/translate';
+  import {defineComponent} from 'vue';
   import TranslationInput from './translation-input.vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       modal: {
         type: Object,
@@ -135,6 +136,7 @@
         default: () => ({}),
       },
     },
+    mixins: [TranslationMixin],
     data: () => ({
       originalTranslations: [] as Array<Record<string, any>>,
       modifiedTranslations: [] as Array<Record<string, any>>,
@@ -164,8 +166,8 @@
       currentDomainTotalTranslations(): string {
         /* eslint-disable max-len */
         return (this.$store.state.currentDomainTotalTranslations <= 1)
-          ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
-          : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+          ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations.toString())}`
+          : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations.toString())}`;
         /* eslint-enable max-len */
       },
       currentDomainTotalMissingTranslations(): number {
@@ -199,7 +201,7 @@
 
         return this.trans(transKey)
           .replace('%s', this.$store.getters.searchTags.join(' - '))
-          .replace('%d', this.$store.state.totalTranslations);
+          .replace('%d', this.$store.state.totalTranslations.toString());
       },
     },
     methods: {
@@ -283,7 +285,7 @@
       },
     },
     mounted() {
-      EventBus.$on('resetTranslation', (el: Record<string, any>) => {
+      EventEmitter.on('resetTranslation', (el: Record<string, any>) => {
         const translations = [];
 
         translations.push({

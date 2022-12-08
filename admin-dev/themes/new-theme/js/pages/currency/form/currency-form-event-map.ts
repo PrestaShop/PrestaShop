@@ -22,8 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
 
-export const EventBus = new Vue();
-
-export default EventBus;
+/**
+ * Defines all selectors that are used in currency add/edit form events.
+ */
+export default {
+  refreshCurrencyApp: 'refreshCurrencyApp',
+};

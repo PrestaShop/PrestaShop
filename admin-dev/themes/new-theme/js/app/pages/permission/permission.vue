@@ -46,9 +46,9 @@
         <template
           v-else
           v-for="(permission, permissionId) in permissions"
+          :key="permissionId"
         >
           <row
-            :key="permissionId"
             :can-edit="canEdit"
             :level-depth="1"
             :max-level-depth="4"
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import Bulk from './components/bulk.vue';
   import Row from './components/row.vue';
 
@@ -78,7 +78,7 @@
     profileDataPermissions: Record<string, any>;
   }
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Permission',
     components: {
       Bulk,

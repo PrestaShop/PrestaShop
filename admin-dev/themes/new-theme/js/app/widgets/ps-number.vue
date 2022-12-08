@@ -56,9 +56,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       value: {
         type: [Number, String],
@@ -78,16 +78,16 @@
       },
     },
     methods: {
-      onKeyup($event: JQueryEventObject): void {
+      onKeyup($event: Event): void {
         this.$emit('keyup', $event);
       },
-      onKeydown($event: JQueryEventObject): void {
+      onKeydown($event: Event): void {
         this.$emit('keydown', $event);
       },
       focusIn(): void {
         this.$emit('focus');
       },
-      focusOut($event: JQueryEventObject): void {
+      focusOut($event: Event): void {
         this.$emit('blur', $event);
       },
       increment() {
