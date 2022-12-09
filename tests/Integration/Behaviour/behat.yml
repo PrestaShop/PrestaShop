@@ -340,6 +340,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationStockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         shop:
@@ -429,12 +430,13 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationAssertionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\DeleteCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SearchCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationImagesFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationSuppliersFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext

@@ -31,8 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -128,35 +126,6 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         $this->getCommandBus()->handle($command);
     }
 
-    private function updateCombinationStockAvailable(string $combinationReference, array $dataRows, ShopConstraint $shopConstraint): void
-    {
-        if (!isset($dataRows['delta quantity'])
-            && !isset($dataRows['fixed quantity'])
-            && !isset($dataRows['location'])) {
-            return;
-        }
-
-        try {
-            $command = new UpdateCombinationStockAvailableCommand(
-                (int) $this->getSharedStorage()->get($combinationReference),
-                $shopConstraint
-            );
-            if (isset($dataRows['delta quantity'])) {
-                $command->setDeltaQuantity((int) $dataRows['delta quantity']);
-            }
-            if (isset($dataRows['fixed quantity'])) {
-                $command->setFixedQuantity((int) $dataRows['fixed quantity']);
-            }
-            if (isset($dataRows['location'])) {
-                $command->setLocation($dataRows['location']);
-            }
-
-            $this->getCommandBus()->handle($command);
-        } catch (ProductStockConstraintException $e) {
-            $this->setLastException($e);
-        }
-    }
-
     /**
      * @param UpdateCombinationCommand $command
      * @param array $dataRows
@@ -231,7 +200,5 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
 
         $this->fillCommand($command, $tableNode->getRowsHash());
         $this->getCommandBus()->handle($command);
-
-        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash(), $shopConstraint);
     }
 }
