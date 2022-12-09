@@ -90,6 +90,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.legacy.configuration'
 

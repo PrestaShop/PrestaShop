@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiSh
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Updates combination stock available using legacy object model
@@ -88,22 +87,9 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
     {
         $stockModification = null;
         if ($command->getDeltaQuantity()) {
-            $stockModification = new StockModification(
-                $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
-            );
+            $stockModification = StockModification::buildDeltaQuantity($command->getDeltaQuantity());
         } elseif (null !== $command->getFixedQuantity()) {
-            $combination = $this->combinationMultiShopRepository->getByShopConstraint($command->getCombinationId(), $command->getShopConstraint());
-            $currentQuantity = (int) $this->stockAvailableRepository->getForCombination(
-                $command->getCombinationId(),
-                new ShopId($combination->getShopId())
-            )->quantity;
-
-            $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
-            $stockModification = new StockModification(
-                $deltaQuantity,
-                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
-            );
+            $stockModification = StockModification::buildFixedQuantity($command->getFixedQuantity());
         }
 
         // Now we only fill the properties existing in StockAvailable object model.
