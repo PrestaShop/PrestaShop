@@ -214,6 +214,8 @@ export default {
     availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
     showPriceInput: 'input[name="product[options][visibility][show_price]"]',
     showPriceSwitchContainer: '.show-price-switch-container',
+    visibilityRadio: 'input[name="product[options][visibility][visibility]"]',
+    visibilityDescriptionField: '.js-visibility-description',
   },
   suppliers: {
     productSuppliers: '#product_options_product_suppliers',
