@@ -14,6 +14,11 @@ class CombinationsTab extends BOBasePage {
    */
   constructor() {
     super();
+    this.generateCombinationsMessage = (number) => `Generate ${number} combinations`;
+    this.successfulGenerateCombinationsMessage = (number) => `Successfully generated ${number} combinations.`;
+    this.editCombinationsModalTitle = (number) => `Edit ${number} combinations`;
+    this.editCombinationsModalMessage = (number) => `Editing ${number}/${number} combinations`;
+    this.successfulUpdateMessage = 'Update successful';
 
     // Selectors in combinations tab
     this.combinationsTabLink = '#product_combinations-tab-nav';
