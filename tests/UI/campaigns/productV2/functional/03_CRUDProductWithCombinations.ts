@@ -5,7 +5,7 @@ import files from '@utils/files';
 import date from '@utils/date';
 import basicHelper from '@utils/basicHelper';
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -24,15 +24,15 @@ import foProductPage from '@pages/FO/product';
 import ProductFaker from '@data/faker/product';
 import {DefaultEmployee} from '@data/demo/employees';
 
-const baseContext = 'productV2_functional_CRUDProductWithCombinations';
+const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
 
 describe('BO - Catalog - Products : CRUD product with combinations', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const todayDate = date.getDateFormat('yyyy-mm-dd');
+  const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create product with combinations
-  const newProductData = new ProductFaker({
+  const newProductData: ProductFaker = new ProductFaker({
     type: 'combinations',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -47,7 +47,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   });
 
   // Data after delete the first attribute
-  const editProductAttributesData = {
+  const editProductAttributesData: object = {
     attributes: {
       size: ['S', 'M', 'L', 'XL'],
       color: ['Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
@@ -55,14 +55,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the first combination
-  const firstCombinationData = {
+  const firstCombinationData : object = {
     reference: 'abcd',
     impactOnPriceTExc: 25,
     quantity: 100,
   };
 
   // Data to edit the second combination
-  const secondCombinationData = {
+  const secondCombinationData : object = {
     reference: 'efghigk',
     minimalQuantity: 2,
     impactOnPriceTExc: 20,
@@ -70,7 +70,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the stock of combinations by bulk actions
-  const editStockData = {
+  const editStockData : object = {
     stocks: {
       quantityToEnable: true,
       quantity: 20,
@@ -94,14 +94,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the product price
-  const pricingData = {
+  const pricingData : object = {
     price: 15,
     taxRule: 'FR Taux standard (20%)',
     priceTaxIncl: 18,
   };
 
   // Data to edit the product with combinations
-  const editProductData = new ProductFaker({
+  const editProductData : ProductFaker = new ProductFaker({
     type: 'combinations',
     taxRule: 'No tax',
     quantity: 100,

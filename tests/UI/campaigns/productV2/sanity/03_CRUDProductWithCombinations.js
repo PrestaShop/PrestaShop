@@ -94,7 +94,16 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should choose \'Product with combinations\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseProductWithCombinations', baseContext);
 
-      await productsPage.chooseProductType(page, newProductData.type);
+      await productsPage.selectProductType(page, newProductData.type);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);

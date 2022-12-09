@@ -173,7 +173,8 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseProductType(page, productType) {
-    await productsPage.chooseProductType(page, productType);
+    await productsPage.selectProductType(page, productType);
+    await productsPage.clickOnAddNewProduct(page);
     await page.waitForNavigation({waitUntil: 'networkidle'});
   }
 
