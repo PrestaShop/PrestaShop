@@ -136,19 +136,19 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     Given product "product1" combinations list search criteria is set to defaults
     And I update combination "product1SWhite" with following values:
       | impact on price | -1  |
-    And I update combination "product1SWhite" with following values:
+    And I update combination "product1SWhite" stock with following details:
       | delta quantity  | 10  |
     And I update combination "product1SWhite" with following values:
       | reference       | AAA |
     And I update combination "product1SBlue" with following values:
       | impact on price | 1   |
-    And I update combination "product1SBlue" with following values:
+    And I update combination "product1SBlue" stock with following details:
       | delta quantity  | 100 |
     And I update combination "product1SBlue" with following values:
       | reference       | BBB |
     And I update combination "product1SBlack" with following values:
       | impact on price | 10   |
-    And I update combination "product1SBlack" with following values:
+    And I update combination "product1SBlack" stock with following details:
       | delta quantity  | 50 |
     And I update combination "product1SBlack" with following values:
       | reference       | CCC |

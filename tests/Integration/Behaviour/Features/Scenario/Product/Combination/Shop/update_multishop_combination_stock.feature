@@ -70,12 +70,13 @@ Feature: Update product combination stock information in Back Office (BO) in mul
 
   Scenario: I update combination stock for specific shop using delta quantity:
     When I update combination "product1SBlack" with following values for shop "shop1":
-      | delta quantity             | 100         |
-      | minimal quantity           | 10          |
-      | location                   | Storage nr1 |
-      | low stock threshold        | 10          |
-      | low stock alert is enabled | true        |
-      | available date             | 2021-10-10  |
+      | minimal quantity           | 10         |
+      | low stock threshold        | 10         |
+      | low stock alert is enabled | true       |
+      | available date             | 2021-10-10 |
+    And I update combination "product1SBlack" stock for shop "shop1" with following details:
+      | delta quantity | 100         |
+      | location       | Storage nr1 |
     Then combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value       |
       | quantity                   | 100         |
@@ -98,12 +99,13 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | available date             |       |
     And combination "product1SBlack" should have no stock movements for shop "shop2"
     When I update combination "product1SBlack" with following values for shop "shop2":
-      | delta quantity             | 101         |
-      | minimal quantity           | 1           |
-      | location                   | Storage nr2 |
-      | low stock threshold        | 5           |
-      | low stock alert is enabled | true        |
-      | available date             | 2022-10-10  |
+      | minimal quantity           | 1          |
+      | low stock threshold        | 5          |
+      | low stock alert is enabled | true       |
+      | available date             | 2022-10-10 |
+    And I update combination "product1SBlack" stock for shop "shop2" with following details:
+      | delta quantity | 101         |
+      | location       | Storage nr2 |
     Then combination "product1SBlack" should have following stock details for shops "shop2":
       | combination stock detail   | value       |
       | quantity                   | 101         |
@@ -129,19 +131,21 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 100
     When I update combination "product1SWhite" with following values for shop "shop1":
-      | delta quantity             | 50          |
-      | minimal quantity           | 10          |
-      | location                   | Storage nr1 |
-      | low stock threshold        | 10          |
-      | low stock alert is enabled | true        |
-      | available date             | 2021-10-10  |
+      | minimal quantity           | 10         |
+      | low stock threshold        | 10         |
+      | low stock alert is enabled | true       |
+      | available date             | 2021-10-10 |
+    And I update combination "product1SWhite" stock for shop "shop1" with following details:
+      | delta quantity | 50          |
+      | location       | Storage nr1 |
     When I update combination "product1SWhite" with following values for shop "shop2":
-      | delta quantity             | 30          |
-      | minimal quantity           | 10          |
-      | location                   | Storage nr2 |
-      | low stock threshold        | 10          |
-      | low stock alert is enabled | true        |
-      | available date             | 2021-10-10  |
+      | minimal quantity           | 10         |
+      | low stock threshold        | 10         |
+      | low stock alert is enabled | true       |
+      | available date             | 2021-10-10 |
+    And I update combination "product1SWhite" stock for shop "shop2" with following details:
+      | delta quantity | 30          |
+      | location       | Storage nr2 |
     Then combination "product1SWhite" should have following stock details for shops "shop1":
       | combination stock detail   | value       |
       | quantity                   | 50          |
@@ -192,7 +196,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements for shop "shop1"
-    When I update combination "product1SBlack" with following values for shop "shop1":
+    When I update combination "product1SBlack" stock for shop "shop1" with following details:
       | fixed quantity | 10 |
     Then combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value |
@@ -202,7 +206,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | low stock alert is enabled | false |
       | location                   |       |
       | available date             |       |
-    When I update combination "product1SBlack" with following values for shop "shop1":
+    When I update combination "product1SBlack" stock for shop "shop1" with following details:
       | fixed quantity | -3 |
     Then combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value |
@@ -226,7 +230,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | location                   |       |
       | available date             |       |
     And combination "product1SBlack" should have no stock movements for shop "shop2"
-    When I update combination "product1SBlack" with following values for shop "shop2":
+    When I update combination "product1SBlack" stock for shop "shop2" with following details:
       | fixed quantity | 34 |
     Then combination "product1SBlack" should have following stock details for shops "shop2":
       | combination stock detail   | value |
@@ -240,7 +244,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 34             |
-    When I update combination "product1SBlack" with following values for shop "shop2":
+    When I update combination "product1SBlack" stock for shop "shop2" with following details:
       | fixed quantity | 4 |
     Then combination "product1SBlack" should have following stock details for shops "shop2":
       | combination stock detail   | value |
@@ -271,12 +275,13 @@ Feature: Update product combination stock information in Back Office (BO) in mul
 
   Scenario: I update combination stock for all shops using delta quantity:
     When I update combination "product1SBlack" with following values for all shops:
-      | delta quantity             | 120         |
-      | minimal quantity           | 10          |
-      | location                   | Storage nr1 |
-      | low stock threshold        | 10          |
-      | low stock alert is enabled | true        |
-      | available date             | 2021-10-10  |
+      | minimal quantity           | 10         |
+      | low stock threshold        | 10         |
+      | low stock alert is enabled | true       |
+      | available date             | 2021-10-10 |
+    And I update combination "product1SBlack" stock for all shops with following details:
+      | delta quantity | 120         |
+      | location       | Storage nr1 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
       | combination stock detail   | value       |
       | quantity                   | 120         |
@@ -297,7 +302,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combinations "product1SBlack" are not associated to shop "shop4"
 
   Scenario: I update combination stock for all shops using fixed quantity
-    Given I update combination "product1SBlack" with following values for shop "shop2":
+    Given I update combination "product1SBlack" stock for shop "shop2" with following details:
       | delta quantity | 10 |
     And combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value |
@@ -320,7 +325,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 10             |
-    When I update combination "product1SBlack" with following values for all shops:
+    When I update combination "product1SBlack" stock for all shops with following details:
       | fixed quantity | 12 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
       | combination stock detail   | value |
@@ -339,7 +344,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | employee   | delta_quantity |
       | Puff Daddy | 2              |
       | Puff Daddy | 10             |
-    When I update combination "product1SBlack" with following values for all shops:
+    When I update combination "product1SBlack" stock for all shops with following details:
       | fixed quantity | 5 |
     Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
       | combination stock detail   | value |
