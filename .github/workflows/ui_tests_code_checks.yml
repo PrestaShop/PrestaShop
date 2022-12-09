@@ -15,6 +15,10 @@ env:
   NODE_VERSION: '16'
   NPM_VERSION: '7'
 
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
   ESLint:
@@ -22,12 +26,6 @@ jobs:
     name: ESLint
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - name: Checkout the repository
         uses: actions/checkout@v3
 
@@ -56,12 +54,6 @@ jobs:
     name: Checking Steps identifiers
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - name: Checkout the repository
         uses: actions/checkout@v3
 
