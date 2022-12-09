@@ -15,7 +15,7 @@ import categoriesPage from '@pages/BO/catalog/categories';
 import {Data} from '@data/import/categories';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_importFile';
 

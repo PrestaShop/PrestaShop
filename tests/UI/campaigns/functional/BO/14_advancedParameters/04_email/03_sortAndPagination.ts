@@ -24,7 +24,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_email_sortAndPagination';
 

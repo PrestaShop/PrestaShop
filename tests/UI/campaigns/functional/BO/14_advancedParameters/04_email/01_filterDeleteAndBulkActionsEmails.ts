@@ -24,7 +24,7 @@ import {Languages} from '@data/demo/languages';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 
