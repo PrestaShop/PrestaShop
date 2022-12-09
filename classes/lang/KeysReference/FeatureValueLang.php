@@ -85,6 +85,6 @@ trans('4.33 in', 'Shop.Demo.Catalog');
 
 trans('2.76 in', 'Shop.Demo.Catalog');
 
-trans('120g', 'Shop.Demo.Catalog');
+trans('120 g', 'Shop.Demo.Catalog');
 
 trans('0.31 in', 'Shop.Demo.Catalog');
