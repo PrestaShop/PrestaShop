@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
@@ -239,5 +243,46 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             },
             $results
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return ShopProductImagesCollection
+     */
+    public function getImagesFromAllShop(ProductId $productId): ShopProductImagesCollection
+    {
+        $results = $this->connection->createQueryBuilder()
+            ->select('id_image', 'id_shop', 'cover')
+            ->from($this->dbPrefix . 'image_shop', 'i')
+            ->andWhere('i.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.id_image', 'ASC')
+            ->execute()
+            ->fetchAll()
+        ;
+
+        $productImagesByShop = [];
+        foreach ($results as $result) {
+            $shopId = (int) $result['id_shop'];
+            $productImagesByShop[$shopId][] = new ShopImageAssociation((int) $result['id_image'], (int) $result['cover'] === 1);
+        }
+
+        foreach ($this->productMultiShopRepository->getAssociatedShopIds($productId) as $shopId) {
+            if (isset($productImagesByShop[$shopId->getValue()])) {
+                continue;
+            }
+            $productImagesByShop[$shopId->getValue()] = [];
+        }
+
+        $shopProductImagesArray = array_map(
+            function (int $shopId, array $productImages): ShopProductImages {
+                return new ShopProductImages($shopId, ShopImageAssociationCollection::from(...$productImages));
+            },
+            array_keys($productImagesByShop),
+            $productImagesByShop
+        );
+
+        return ShopProductImagesCollection::from(...$shopProductImagesArray);
     }
 }

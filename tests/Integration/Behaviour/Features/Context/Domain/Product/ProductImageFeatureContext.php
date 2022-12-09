@@ -39,7 +39,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -51,6 +57,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @var ProductImageRepository
      */
     private $productImageRepository;
+
+    /**
+     * @var ShopProductImagesCollection
+     */
+    private $shopProductImagesCollection;
 
     public function __construct()
     {
@@ -103,7 +114,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return void
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     * @throws ShopException
      */
     public function uploadImageForSpecificShop(string $imageReference, string $fileName, string $productReference, string $shopReference): void
     {
@@ -252,6 +263,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Given /^the shop "([^"]*)" should have empty image details$/
+     */
+    public function theShopShouldNotHaveAnyImageDetails(string $shopReference)
+    {
+        $shopId = (int) $this->getSharedStorage()->get(trim($shopReference));
+        Assert::assertTrue($this->shopProductImagesCollection
+            ->filter(function (ShopProductImages $shopProductImages) use ($shopId): bool {
+                return $shopProductImages->getShopId() === $shopId;
+            })
+            ->first()
+            ->getProductImages()
+            ->isEmpty()
+        );
+    }
+
+    /**
      * @param int $imageId
      *
      * @return string
@@ -361,6 +388,70 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle($command);
         } catch (CannotRemoveCoverException $e) {
             $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When /^I try to get every image details for product "([^"]*)" in every shop:$/
+     */
+    public function iTryToGetEveryImageDetailsForProductInEveryShop(string $productReference): void
+    {
+        $this->shopProductImagesCollection = $this->getQueryBus()->handle(new GetShopProductImages($this->getSharedStorage()->get($productReference)));
+    }
+
+    /**
+     * @Transform table:image reference,cover,shopReference
+     *
+     * @param TableNode $tableNode
+     *
+     * @return ShopProductImagesCollection
+     */
+    public function transformShopProductImagesCollection(TableNode $tableNode): ShopProductImagesCollection
+    {
+        $dataRows = $tableNode->getColumnsHash();
+        $productImagesByShop = [];
+        foreach ($dataRows as $dataRow) {
+            $shopId = (int) $this->getSharedStorage()->get(trim($dataRow['shopReference']));
+            $productImagesByShop[$shopId][] = new ShopImageAssociation(
+                (int) $this->getSharedStorage()->get(trim($dataRow['image reference'])),
+                (int) $dataRow['cover'] === 1
+            );
+        }
+
+        $shopProductImagesArray = array_map(
+            function (int $shopId, array $productImages): ShopProductImages {
+                return new ShopProductImages($shopId, ShopImageAssociationCollection::from(...$productImages));
+            },
+            array_keys($productImagesByShop),
+            $productImagesByShop
+        );
+
+        return ShopProductImagesCollection::from(...$shopProductImagesArray);
+    }
+
+    /**
+     * @Then /^I should have the followings image details:/
+     */
+    public function iShouldHaveTheFollowingsImageDetailsForShop(ShopProductImagesCollection $expectedShopProductImagesCollection)
+    {
+        foreach ($expectedShopProductImagesCollection as $expectedShopProductImage) {
+            $actualShopProductImages = $this->shopProductImagesCollection
+                ->filter(function (ShopProductImages $shopProductImages) use ($expectedShopProductImage): bool {
+                    return $shopProductImages->getShopId() === $expectedShopProductImage->getShopId();
+                })
+                ->first();
+
+            Assert::assertEquals(
+                $expectedShopProductImage->getProductImages()->count(),
+                $actualShopProductImages->getProductImages()->count()
+            );
+
+            foreach ($expectedShopProductImage->getProductImages() as $expectedProductImage) {
+                Assert::assertContainsEquals(
+                    new ShopImageAssociation($expectedProductImage->getImageId(), $expectedProductImage->isCover()),
+                    $actualShopProductImages->getProductImages()
+                );
+            }
         }
     }
 
