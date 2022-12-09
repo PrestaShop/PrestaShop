@@ -15,7 +15,7 @@ import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import EmployeeFaker from '@data/faker/employee';
 
 import {expect} from 'chai';
-import {BrowserContext} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_sortAndPagination';
 
@@ -29,7 +29,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
   const employeeData: EmployeeFaker = new EmployeeFaker();
 
   let browserContext: BrowserContext;
-  let page: PageTransitionEvent;
+  let page: Page;
   let numberOfEmployees: number = 0;
 
   // before and after functions

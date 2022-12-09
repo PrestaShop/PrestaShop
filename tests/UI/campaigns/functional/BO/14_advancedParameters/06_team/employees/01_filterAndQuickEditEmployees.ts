@@ -15,7 +15,7 @@ import {DefaultEmployee} from '@data/demo/employees';
 import EmployeeFaker from '@data/faker/employee';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_team_employees_filterAndQuickEditEmployees';
 

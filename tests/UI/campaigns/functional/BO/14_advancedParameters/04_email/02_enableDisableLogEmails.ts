@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import emailPage from '@pages/BO/advancedParameters/email';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
 

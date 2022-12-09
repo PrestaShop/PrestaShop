@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import importPage from '@pages/BO/advancedParameters/import';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_advancedParameters_import_downloadSampleFiles';
 

@@ -27,7 +27,7 @@ import {PaymentMethods} from '@data/demo/paymentMethods';
 import type ContactUsData from '@data/types/contactUs';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from 'playwright';
+import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_orderConfirmation_contactUs';
