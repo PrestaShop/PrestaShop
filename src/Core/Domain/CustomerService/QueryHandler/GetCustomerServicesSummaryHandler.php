@@ -54,15 +54,17 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
      */
     public function handle(GetCustomerServiceSummary $query): array
     {
+        $contacts = CustomerThread::getContacts();
         $customerServicesSummary = [];
         foreach (Contact::getCategoriesContacts() as $categoriesContact) {
             $customerThreadId = 0;
             $totalThreads = 0;
             $viewUrl = '';
-            foreach (CustomerThread::getContacts() as $contact) {
+            foreach ($contacts as $contact) {
                 if ($categoriesContact['id_contact'] === $contact['id_contact']) {
                     $totalThreads = (int) $contact['total'];
                     $customerThreadId = $contact['id_customer_thread'];
+                    break;
                 }
             }
             if ($customerThreadId > 0) {
