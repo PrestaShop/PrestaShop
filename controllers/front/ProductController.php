@@ -1350,13 +1350,25 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         return $requiredQuantity;
     }
 
-    public function getBreadcrumbLinks()
+    /**
+     * Generates breadcrumb according to product categories and his category subtree.
+     * If the product is accessed from another category than product default category, it will generate the breadcrumb according to current category.
+     *
+     * @return array
+     * @throws PrestaShopException
+     */
+    public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
+        if (!is_null($this->category) && in_array($this->category->id_category, $this->product->getCategories(), true)) {
+            $currentCategory = $this->category;
+        } else {
+            $currentCategory = new Category($this->product->id_category_default, $this->context->language->id);
+        }
 
-        foreach ($categoryDefault->getAllParents() as $category) {
+
+        foreach ($currentCategory->getAllParents() as $category) {
             /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
@@ -1366,10 +1378,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             }
         }
 
-        if ($categoryDefault->id_parent != 0 && !$categoryDefault->is_root_category && $categoryDefault->active) {
+        if ($currentCategory->id_parent != 0 && !$currentCategory->is_root_category && $currentCategory->active) {
             $breadcrumb['links'][] = [
-                'title' => $categoryDefault->name,
-                'url' => $this->context->link->getCategoryLink($categoryDefault),
+                'title' => $currentCategory->name,
+                'url' => $this->context->link->getCategoryLink($currentCategory),
             ];
         }
 
