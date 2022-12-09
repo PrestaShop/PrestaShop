@@ -23,7 +23,7 @@ const baseContext = 'productV2_functional_filterProducts';
 describe('BO - Catalog - Products : Filter in Products Page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let numberOfProducts = 0;
+  let numberOfProducts: number = 0;
 
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
