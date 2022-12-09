@@ -77,7 +77,7 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
     {
         $stockModification = null;
         if ($command->getDeltaQuantity()) {
-            $stockModification = new StockModification(
+            $stockModification = StockModification::buildDeltaQuantity(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
             );
