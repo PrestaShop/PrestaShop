@@ -22,6 +22,7 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
+    this.saveAndPublichButtonName = 'Save and publish';
 
     // Header selectors
     this.productNameInput = '#product_header_name_1';
