@@ -39,24 +39,11 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServic
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * @When I add new customer thread :threadReference with following properties:
      *
@@ -71,7 +58,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $customerThread = new CustomerThread();
         $customerThread->id_contact = $data['contactId'];
         $customerThread->id_customer = 1;
-        $customerThread->id_shop = $this->defaultShopId;
+        $customerThread->id_shop = $this->getDefaultShopId();
         $customerThread->id_order = 0;
         $customerThread->id_lang = 1;
         $customerThread->email = 'test@gmail.com';
@@ -102,7 +89,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         // it executes to fast and the update date is the same as the original message so we can't find which message is the new one
         sleep(1);
@@ -120,18 +107,13 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertThreadLatestMessage(string $threadReference, string $message): void
     {
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(
             new GetCustomerThreadForViewing((int) $customerThread->id)
         );
         $messages = $customerThreadView->getMessages();
-
-        $lastMessage = end($messages);
-        foreach ($messages as $newMessage) {
-            $lastMessage = $newMessage->getDate() > $lastMessage->getDate() ? $newMessage : $lastMessage;
-        }
 
         $lastMessage = end($messages);
 
@@ -148,7 +130,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function updateThreadStatus(string $threadReference): void
     {
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         $this->getCommandBus()->handle(
             new UpdateCustomerThreadStatusCommand(
@@ -166,7 +148,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertThreadStatus(string $threadReference): void
     {
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         /** @var CustomerThreadView $customerThreadView */
         $customerThreadView = $this->getQueryBus()->handle(
@@ -198,7 +180,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function deleteThread(string $threadReference): void
     {
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         $this->getCommandBus()->handle(new DeleteCustomerThreadCommand((int) $customerThread->id));
     }
@@ -211,7 +193,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     public function assertThreadIsDeleted(string $threadReference): void
     {
         /** @var CustomerThread $customerThread */
-        $customerThread = SharedStorage::getStorage()->get($threadReference);
+        $customerThread = $this->getSharedStorage()->get($threadReference);
 
         try {
             $query = new GetCustomerThreadForViewing((int) $customerThread->id);
@@ -219,7 +201,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 
             throw new NoExceptionAlthoughExpectedException(sprintf('Thread %s exists, but it was expected to be deleted', $threadReference));
         } catch (CustomerThreadNotFoundException $e) {
-            SharedStorage::getStorage()->clear($threadReference);
+            $this->getSharedStorage()->clear($threadReference);
         }
     }
 
