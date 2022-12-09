@@ -220,7 +220,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
-        if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_) {
+        if (_PS_DO_NOT_LOAD_CONFIGURATION_) {
             return false;
         }
 
