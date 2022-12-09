@@ -97,7 +97,16 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
     it('should choose \'Standard product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.chooseProductType(page, firstProductData.type);
+      await productsPage.selectProductType(page, firstProductData.type);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
