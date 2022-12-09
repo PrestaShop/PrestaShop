@@ -1,33 +1,28 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
 
-const baseContext = 'functional_BO_advancedParameters_team_profiles_sortProfiles';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfProfiles = 0;
+const baseContext: string = 'functional_BO_advancedParameters_team_profiles_sortProfiles';
 
 // Sort profiles by id, name
 describe('BO - Advanced Parameters - Team : Sort Profiles table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfProfiles: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -61,6 +56,7 @@ describe('BO - Advanced Parameters - Team : Sort Profiles table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
     await employeesPage.goToProfilesPage(page);
+
     const pageTitle = await profilesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(profilesPage.pageTitle);
   });

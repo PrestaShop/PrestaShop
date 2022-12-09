@@ -1,26 +1,19 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
+import dashboardPage from '@pages/BO/dashboard';
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import dbBackupPage from '@pages/BO/advancedParameters/database/dbBackup';
 
-const baseContext = 'functional_BO_advancedParameters_database_dbBackup_paginationAndBulkDelete';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfBackups = 0;
+const baseContext: string = 'functional_BO_advancedParameters_database_dbBackup_paginationAndBulkDelete';
 
 /*
 Create 11 SQL queries
@@ -28,6 +21,10 @@ Pagination next and previous
 Delete by bulk actions
  */
 describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Backup', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfBackups: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,6 +59,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
     await sqlManagerPage.goToDbBackupPage(page);
+
     const pageTitle = await dbBackupPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dbBackupPage.pageTitle);
   });
