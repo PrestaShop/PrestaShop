@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop;
 class ShopProductImages
 {
     /**
-     * @var ProductImageCollection
+     * @var ShopImageAssociationCollection
      */
     private $productImageCollection;
 
@@ -40,7 +40,7 @@ class ShopProductImages
      */
     private $shopId;
 
-    public function __construct(int $shopId, ProductImageCollection $productImageCollection)
+    public function __construct(int $shopId, ShopImageAssociationCollection $productImageCollection)
     {
         $this->shopId = $shopId;
         $this->productImageCollection = $productImageCollection;
@@ -54,7 +54,7 @@ class ShopProductImages
         return $this->shopId;
     }
 
-    public function getProductImages(): ProductImageCollection
+    public function getProductImages(): ShopImageAssociationCollection
     {
         return $this->productImageCollection;
     }

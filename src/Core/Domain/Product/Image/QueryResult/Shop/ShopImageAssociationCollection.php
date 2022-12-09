@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Data\ImmutableCollection;
 /**
  * @template-extends ImmutableCollection<ShopImageAssociation>
  */
-class ProductImageCollection extends ImmutableCollection
+class ShopImageAssociationCollection extends ImmutableCollection
 {
     public static function from(ShopImageAssociation ...$productImages)
     {

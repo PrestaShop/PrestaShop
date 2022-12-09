@@ -34,8 +34,8 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -277,7 +277,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
 
         $shopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
-                return new ShopProductImages($shopId, ProductImageCollection::from(...$productImages));
+                return new ShopProductImages($shopId, ShopImageAssociationCollection::from(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop

@@ -45,7 +45,10 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
     /**
      * @param T[] $values
      *
-     * Keep the constructor protected to keep immutability
+     * Keep the constructor protected to keep immutability, the subclasses should not change this constructor
+     * and rely on a static factory method for their construction:
+     *
+     *   public static function from(T ...$values): static
      */
     protected function __construct(array $values)
     {

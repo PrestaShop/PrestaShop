@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ProductImageCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -420,7 +420,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
         $shopProductImagesArray = array_map(
             function (int $shopId, array $productImages): ShopProductImages {
-                return new ShopProductImages($shopId, ProductImageCollection::from(...$productImages));
+                return new ShopProductImages($shopId, ShopImageAssociationCollection::from(...$productImages));
             },
             array_keys($productImagesByShop),
             $productImagesByShop
