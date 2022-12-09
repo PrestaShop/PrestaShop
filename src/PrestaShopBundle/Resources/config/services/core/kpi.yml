@@ -53,8 +53,7 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - 'orders'
 
-  prestashop.core.kpi_row.factory.customer_thread:
-    class: PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory
+  PrestaShop\PrestaShop\Core\Kpi\Row\HookableKpiRowFactory:
     arguments:
       - - '@prestashop.adapter.kpi.pending_discussion_threads'
         - '@PrestaShop\PrestaShop\Adapter\Kpi\AverageResponseTimeKpi'
