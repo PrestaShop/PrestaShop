@@ -428,9 +428,11 @@ Feature: Update product combination stock information in Back Office (BO) in mul
   Scenario: I update product out of stock type to see how the combinations stock policy depends on it
     And product "product1" should have following stock information for shops "shop1,shop2":
       | out_of_stock_type | default |
-    And all combinations of product "product1" for shops "shop1,shop2" should have the stock policy to "available"
+    And all combinations of product "product1" for shops "shop1,shop2" should have the stock policy to "default"
     When I update product "product1" stock for shop "shop1" with following information:
       | out_of_stock_type | available |
+    And I update product "product1" stock for shop "shop2" with following information:
+      | out_of_stock_type | default |
     Then all combinations of product "product1" for shops "shop1" should have the stock policy to "available"
     Then all combinations of product "product1" for shops "shop2" should have the stock policy to "default"
     When I update product "product1" stock for shop "shop2" with following information:

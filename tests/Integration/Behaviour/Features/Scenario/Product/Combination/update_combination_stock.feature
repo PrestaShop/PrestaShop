@@ -286,6 +286,7 @@ Feature: Update product combination stock information in Back Office (BO)
   Scenario: I update product out of stock
     And product "product1" should have following stock information:
       | out_of_stock_type | default |
+    And all combinations of product "product1" should have the stock policy to "default"
     When I update product "product1" stock with following information:
       | out_of_stock_type | available |
     Then all combinations of product "product1" should have the stock policy to "available"

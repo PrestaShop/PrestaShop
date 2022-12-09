@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiSh
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -118,16 +119,22 @@ class CombinationCreator
 
         // avoid applying specificPrice on each combination.
         $this->disableSpecificPriceRulesApplication();
-
-        $combinationIds = $this->addCombinations(
-            $product,
-            $generatedCombinations,
-            $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint)
-        );
+        $shopIdsByConstraint = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $combinationIds = $this->addCombinations($product, $generatedCombinations, $shopIdsByConstraint);
 
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
         $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
+        $productStockAvailable = $this->stockAvailableMultiShopRepository->getForProduct($productId, new ShopId($product->getShopId()));
+        $outOfStockType = new OutOfStockType((int) $productStockAvailable->out_of_stock);
+
+        if ($shopConstraint->forAllShops()) {
+            foreach ($shopIdsByConstraint as $shopId) {
+                $this->combinationRepository->updateCombinationOutOfStockType($productId, $outOfStockType, ShopConstraint::shop($shopId->getValue()));
+            }
+        } else {
+            $this->combinationRepository->updateCombinationOutOfStockType($productId, $outOfStockType, $shopConstraint);
+        }
 
         return $combinationIds;
     }

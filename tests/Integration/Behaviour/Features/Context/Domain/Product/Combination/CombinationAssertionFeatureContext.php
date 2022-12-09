@@ -236,12 +236,13 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                 $outOfStockInt
             );
 
-            $combinations = $this->getCombinationsList($productReference, $this->getDefaultShopId());
+            $combinations = $this->getCombinationsList($productReference, $shopId);
 
             foreach ($combinations->getCombinations() as $combination) {
                 $id = StockAvailable::getStockAvailableIdByProductId(
                     $this->getSharedStorage()->get($productReference),
-                    $combination->getCombinationId()
+                    $combination->getCombinationId(),
+                    $shopId
                 );
 
                 Assert::assertSame(
