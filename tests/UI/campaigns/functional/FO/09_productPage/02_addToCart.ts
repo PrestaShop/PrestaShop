@@ -1,47 +1,32 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-const loginCommon = require('@commonTests/BO/loginBO');
-const files = require('@utils/files');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // FO
-const homePage = require('@pages/FO/home');
-const searchResultsPage = require('@pages/FO/searchResults');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
+import homePage from '@pages/FO/home';
+import searchResultsPage from '@pages/FO/searchResults';
+import productPage from '@pages/FO/product';
+import cartPage from '@pages/FO/cart';
 
 // BO
-const boDashboardPage = require('@pages/BO/dashboard');
-const boProductsPage = require('@pages/BO/catalog/products');
-const boAddProductPage = require('@pages/BO/catalog/products/add');
+import boDashboardPage from '@pages/BO/dashboard';
+import boProductsPage from '@pages/BO/catalog/products';
+import boAddProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-const {Products} = require('@data/demo/products');
-const ProductFaker = require('@data/faker/product');
+import {Products} from '@data/demo/products';
+import ProductFaker from '@data/faker/product';
+import type {Product, ProductCombination} from '@data/types/product';
 
-const baseContext = 'functional_FO_productPage_addToCart';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-const quantity = 6;
-const totalPrice = 137.66;
-const firstCombination = {color: 'White', size: 'XL'};
-const secondCombination = {color: 'Black', size: 'M'};
-const productToCreate = {
-  type: 'Standard product',
-  productHasCombinations: false,
-  coverImage: 'cover.jpg',
-  thumbImage: 'thumb.jpg',
-};
-const productData = new ProductFaker(productToCreate);
+const baseContext: string = 'functional_FO_productPage_addToCart';
 
 /*
 Check product details
@@ -54,6 +39,21 @@ Check share links
  */
 
 describe('FO - product page : Add product to cart', async () => {
+  const quantity: number = 6;
+  const totalPrice: number = 137.66;
+  const firstCombination: ProductCombination = {color: 'White', size: 'XL'};
+  const secondCombination: ProductCombination = {color: 'Black', size: 'M'};
+  const productToCreate: Product = {
+    type: 'Standard product',
+    productHasCombinations: false,
+    coverImage: 'cover.jpg',
+    thumbImage: 'thumb.jpg',
+  };
+  const productData: ProductFaker = new ProductFaker(productToCreate);
+
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -185,8 +185,8 @@ describe('FO - product page : Add product to cart', async () => {
 
         // Create products images
         await Promise.all([
-          files.generateImage(productData.coverImage),
-          files.generateImage(productData.thumbImage),
+          files.generateImage(productData.coverImage ?? ''),
+          files.generateImage(productData.thumbImage ?? ''),
         ]);
       });
 
@@ -227,8 +227,8 @@ describe('FO - product page : Add product to cart', async () => {
 
         /* Delete the generated images */
         await Promise.all([
-          files.deleteFile(productData.coverImage),
-          files.deleteFile(productData.thumbImage),
+          files.deleteFile(productData.coverImage ?? ''),
+          files.deleteFile(productData.thumbImage ?? ''),
         ]);
       });
     });

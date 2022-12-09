@@ -1,6 +1,9 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import ProductReviewData from '@data/faker/productReview';
+import {ProductCombination} from '@data/types/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Product page, contains functions that can be used on the page
@@ -8,6 +11,118 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class Product extends FOBasePage {
+  private readonly productName: string;
+
+  private readonly productCoverImg: string;
+
+  private readonly thumbFirstImg: string;
+
+  private readonly thumbSecondImg: string;
+
+  private readonly productQuantity: string;
+
+  private readonly shortDescription: string;
+
+  private readonly productDescription: string;
+
+  private readonly custumizedTextarea: string;
+
+  private readonly saveCustomizationButton: string;
+
+  private readonly addToCartButton: string;
+
+  private readonly blockCartModal: string;
+
+  private readonly proceedToCheckoutButton: string;
+
+  private readonly productQuantitySpan: string;
+
+  private readonly productDetail: string;
+
+  private readonly continueShoppingButton: string;
+
+  private readonly productAvailabilityIcon: string;
+
+  private readonly productAvailability: string;
+
+  private readonly productSizeSelect: string;
+
+  private readonly productSizeOption: (size: string) => string;
+
+  private readonly productColorUl: string;
+
+  private readonly productColorInput: (color: string) => string;
+
+  private readonly productColors: string;
+
+  private readonly metaLink: string;
+
+  private readonly facebookSocialSharing: string;
+
+  private readonly twitterSocialSharing: string;
+
+  private readonly pinterestSocialSharing: string;
+
+  private readonly productPricesBlock: string;
+
+  private readonly discountAmountSpan: string;
+
+  private readonly discountPercentageSpan: string;
+
+  private readonly regularPrice: string;
+
+  private readonly productPrice: string;
+
+  private readonly taxShippingDeliveryBlock: string;
+
+  private readonly deliveryInformationSpan: string;
+
+  private readonly discountTable: string;
+
+  private readonly quantityDiscountValue: string;
+
+  private readonly unitDiscountColumn: string;
+
+  private readonly unitDiscountValue: string;
+
+  private readonly commentCount: string;
+
+  private readonly emptyReviewBlock: string;
+
+  private readonly productReviewList: string;
+
+  private readonly productReviewRows: string;
+
+  private readonly productReviewRow: (row: number) => string;
+
+  private readonly productReviewTitle: (row: number) => string;
+
+  private readonly productReviewContent: (row: number) => string;
+
+  private readonly productRatingBlock: (row: number) => string;
+
+  private readonly productRatingStar: (row: number) => string;
+
+  private readonly emptyReviewAddReviewButton: string;
+
+  private readonly notEmptyReviewAddReviewButton: string;
+
+  private readonly productReviewModal: string;
+
+  private readonly reviewForm: string;
+
+  private readonly reviewTitle: string;
+
+  private readonly reviewTextContent: string;
+
+  private readonly reviewRating: (rating: number) => string;
+
+  private readonly reviewSubmitButton: string;
+
+  private readonly reviewSentConfirmationModal: string;
+
+  private readonly closeReviewSentConfirmationModalButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on product page
@@ -34,9 +149,9 @@ class Product extends FOBasePage {
     this.productAvailabilityIcon = '#product-availability i';
     this.productAvailability = '#product-availability';
     this.productSizeSelect = '#group_1';
-    this.productSizeOption = (size) => `${this.productSizeSelect} option[title=${size}]`;
+    this.productSizeOption = (size: string) => `${this.productSizeSelect} option[title=${size}]`;
     this.productColorUl = '#group_2';
-    this.productColorInput = (color) => `${this.productColorUl} input[title=${color}]`;
+    this.productColorInput = (color: string) => `${this.productColorUl} input[title=${color}]`;
     this.productColors = 'div.product-variants div:nth-child(2)';
     this.metaLink = '#main > meta';
     this.facebookSocialSharing = '.social-sharing .facebook a';
@@ -62,11 +177,11 @@ class Product extends FOBasePage {
     this.emptyReviewBlock = '#empty-product-comment';
     this.productReviewList = '#product-comments-list';
     this.productReviewRows = `${this.productReviewList} div.product-comment-list-item.row`;
-    this.productReviewRow = (row) => `${this.productReviewRows}:nth-child(${row})`;
-    this.productReviewTitle = (row) => `${this.productReviewRow(row)} h4`;
-    this.productReviewContent = (row) => `${this.productReviewRow(row)} p`;
-    this.productRatingBlock = (row) => `${this.productReviewRow(row)} .grade-stars`;
-    this.productRatingStar = (row) => `${this.productReviewRow(row)} .star-on`;
+    this.productReviewRow = (row: number) => `${this.productReviewRows}:nth-child(${row})`;
+    this.productReviewTitle = (row: number) => `${this.productReviewRow(row)} h4`;
+    this.productReviewContent = (row: number) => `${this.productReviewRow(row)} p`;
+    this.productRatingBlock = (row: number) => `${this.productReviewRow(row)} .grade-stars`;
+    this.productRatingStar = (row: number) => `${this.productReviewRow(row)} .star-on`;
     // Add review selectors
     this.emptyReviewAddReviewButton = '#empty-product-comment button';
     this.notEmptyReviewAddReviewButton = '#product-comments-list-footer button';
@@ -74,7 +189,7 @@ class Product extends FOBasePage {
     this.reviewForm = '#post-product-comment-form';
     this.reviewTitle = `${this.reviewForm} input[name=comment_title]`;
     this.reviewTextContent = `${this.reviewForm} textarea[name=comment_content]`;
-    this.reviewRating = (rating) => `.star-full div:nth-child(${rating})`;
+    this.reviewRating = (rating: number) => `.star-full div:nth-child(${rating})`;
     this.reviewSubmitButton = `${this.reviewForm} button[type=submit]`;
     this.reviewSentConfirmationModal = '#product-comment-posted-modal';
     this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
@@ -85,9 +200,9 @@ class Product extends FOBasePage {
   /**
    * Get product page URL
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getProductPageURL(page) {
+  getProductPageURL(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
@@ -96,7 +211,7 @@ class Product extends FOBasePage {
    * @param page
    * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
    */
-  async getProductInformation(page) {
+  async getProductInformation(page: Page) {
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
@@ -110,7 +225,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getRegularPrice(page) {
+  getRegularPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.regularPrice);
   }
 
@@ -120,7 +235,7 @@ class Product extends FOBasePage {
    * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<Array<string>>}
    */
-  getProductsAttributesFromUl(page, ulSelector) {
+  getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string|null>> {
     return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
   }
 
@@ -129,7 +244,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{size: string, color: string}>}
    */
-  async getProductAttributes(page) {
+  async getProductAttributes(page: Page): Promise<ProductCombination> {
     return {
       size: await this.getTextContent(page, this.productSizeSelect),
       color: (await this.getProductsAttributesFromUl(page, this.productColorUl)).join(' '),
@@ -141,7 +256,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{size: string, color: string}>}
    */
-  async getSelectedProductAttributes(page) {
+  async getSelectedProductAttributes(page: Page): Promise<ProductCombination> {
     return {
       size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
       color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
@@ -151,9 +266,9 @@ class Product extends FOBasePage {
   /**
    * Get product image urls
    * @param page {Page} Browser tab
-   * @returns {Promise<{thumbImage: string, coverImage: string}>}
+   * @returns {Promise<{thumbImage: string|null, coverImage: string|null}>}
    */
-  async getProductImageUrls(page) {
+  async getProductImageUrls(page: Page): Promise<{thumbImage: string|null, coverImage: string|null}> {
     return {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
       thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
@@ -165,7 +280,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountColumnTitle(page) {
+  getDiscountColumnTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountColumn);
   }
 
@@ -174,7 +289,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getQuantityDiscountValue(page) {
+  getQuantityDiscountValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.quantityDiscountValue);
   }
 
@@ -183,7 +298,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountValue(page) {
+  getDiscountValue(page: Page): Promise<string> {
     return this.getTextContent(page, this.unitDiscountValue);
   }
 
@@ -192,7 +307,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountAmount(page) {
+  getDiscountAmount(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountAmountSpan);
   }
 
@@ -201,11 +316,11 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountPercentage(page) {
+  getDiscountPercentage(page: Page):Promise<string> {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
-  getProductAvailabilityLabel(page) {
+  getProductAvailabilityLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.productAvailability, false);
   }
 
@@ -214,7 +329,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getDeliveryInformationText(page) {
+  getDeliveryInformationText(page: Page): Promise<string> {
     return this.getTextContent(page, this.deliveryInformationSpan);
   }
 
@@ -222,9 +337,9 @@ class Product extends FOBasePage {
    * Select thumb image
    * @param page {Page} Browser tab
    * @param id {number} Id for the thumb
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async selectThumbImage(page, id) {
+  async selectThumbImage(page: Page, id: number): Promise<string|null> {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.thumbFirstImg);
       await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
@@ -242,7 +357,7 @@ class Product extends FOBasePage {
    * @param attributes {{size: ?string, color: ?string}}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page, quantity, attributes) {
+  async selectAttributes(page: Page, quantity: number, attributes: ProductCombination): Promise<void> {
     if (attributes.color !== null) {
       await Promise.all([
         this.waitForVisibleSelector(page, `${this.productColorInput(attributes.color)}[checked]`),
@@ -267,10 +382,10 @@ class Product extends FOBasePage {
    * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, combination = {
+  async addProductToTheCart(page: Page, quantity: number = 1, combination: ProductCombination = {
     color: null,
     size: null,
-  }, proceedToCheckout = true, customizedText = 'text') {
+  }, proceedToCheckout: boolean = true, customizedText: string = 'text'): Promise<void> {
     await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
@@ -298,9 +413,9 @@ class Product extends FOBasePage {
    * Go to social sharing link
    * @param page {Page} Browser tab
    * @param socialSharing {string} Social network's name to get link from
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
-  async getSocialSharingLink(page, socialSharing) {
+  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string|null> {
     let selector;
 
     switch (socialSharing) {
@@ -329,7 +444,7 @@ class Product extends FOBasePage {
    * @param quantity {number} Quantity to set
    * @returns {Promise<void>}
    */
-  async setQuantity(page, quantity) {
+  async setQuantity(page: Page, quantity: number): Promise<void> {
     await this.setValue(page, this.productQuantity, quantity.toString());
   }
 
@@ -338,7 +453,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isQuantityDisplayed(page) {
+  async isQuantityDisplayed(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.productDetail);
     return this.elementVisible(page, this.productQuantitySpan, 1000);
   }
@@ -348,7 +463,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAvailabilityQuantityDisplayed(page) {
+  isAvailabilityQuantityDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productAvailabilityIcon, 1000);
   }
 
@@ -357,7 +472,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPriceDisplayed(page) {
+  isPriceDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productPrice, 1000);
   }
 
@@ -366,7 +481,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddToCartButtonDisplayed(page) {
+  isAddToCartButtonDisplayed(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addToCartButton, 1000);
   }
 
@@ -376,7 +491,7 @@ class Product extends FOBasePage {
    * @param size {string} The product size
    * @returns {Promise<boolean>}
    */
-  async isUnavailableProductSizeDisplayed(page, size) {
+  async isUnavailableProductSizeDisplayed(page: Page, size: string): Promise<boolean> {
     await page.waitForTimeout(2000);
     return await page.$(this.productSizeOption(size)) !== null;
   }
@@ -387,7 +502,7 @@ class Product extends FOBasePage {
    * @param color {string} Product's color to check
    * @returns {Promise<boolean>}
    */
-  isUnavailableProductColorDisplayed(page, color) {
+  isUnavailableProductColorDisplayed(page: Page, color: string): Promise<boolean> {
     return this.elementVisible(page, this.productColorInput(color), 1000);
   }
 
@@ -396,7 +511,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddToCartButtonEnabled(page) {
+  isAddToCartButtonEnabled(page: Page): Promise<boolean> {
     return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
   }
 
@@ -405,7 +520,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isDeliveryInformationVisible(page) {
+  isDeliveryInformationVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.deliveryInformationSpan, 1000);
   }
 
@@ -415,7 +530,7 @@ class Product extends FOBasePage {
    * @param productReviewData {ProductReviewData} The content of the product review (title, content, rating)
    * @returns {Promise<boolean>}
    */
-  async addProductReview(page, productReviewData) {
+  async addProductReview(page: Page, productReviewData: ProductReviewData): Promise<boolean> {
     if (await this.getNumberOfComments(page) !== 0) {
       await page.click(this.notEmptyReviewAddReviewButton);
     } else {
@@ -435,7 +550,7 @@ class Product extends FOBasePage {
    * @param page {Page} The browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfComments(page) {
+  getNumberOfComments(page: Page): Promise<number> {
     return page.$$eval(this.productReviewRows, (rows) => rows.length);
   }
 
@@ -445,7 +560,7 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
    */
-  getReviewTitle(page, row = 1) {
+  getReviewTitle(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.productReviewTitle(row));
   }
 
@@ -455,7 +570,7 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<string>}
    */
-  getReviewTextContent(page, row = 1) {
+  getReviewTextContent(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.productReviewContent(row));
   }
 
@@ -465,9 +580,9 @@ class Product extends FOBasePage {
    * @param row {Number} the review number in the list
    * @returns {Promise<number>}
    */
-  getReviewRating(page, row = 1) {
+  getReviewRating(page: Page, row: number = 1): Promise<number> {
     return page.$$eval(this.productRatingStar(row), (divs) => divs.length);
   }
 }
 
-module.exports = new Product();
+export default new Product();
