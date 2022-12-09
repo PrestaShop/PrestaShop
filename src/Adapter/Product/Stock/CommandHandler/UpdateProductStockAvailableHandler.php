@@ -27,13 +27,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Updates product stock using legacy object model
@@ -46,28 +47,28 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
     private $productStockUpdater;
 
     /**
-     * @var MovementReasonRepository
+     * @var ProductMultiShopRepository
      */
-    private $movementReasonRepository;
+    private $productRepository;
 
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     private $combinationRepository;
 
     /**
      * @param ProductStockUpdater $productStockUpdater
-     * @param MovementReasonRepository $movementReasonRepository
-     * @param CombinationRepository $combinationRepository
+     * @param ProductMultiShopRepository $productRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      */
     public function __construct(
         ProductStockUpdater $productStockUpdater,
-        MovementReasonRepository $movementReasonRepository,
-        CombinationRepository $combinationRepository
+        ProductMultiShopRepository $productRepository,
+        CombinationMultiShopRepository $combinationRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;
-        $this->movementReasonRepository = $movementReasonRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -75,12 +76,13 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
      */
     public function handle(UpdateProductStockAvailableCommand $command): void
     {
+        $productId = $command->getProductId();
+        $shopConstraint = $command->getShopConstraint();
+        $outOfStockType = $command->getOutOfStockType();
+
         $stockModification = null;
         if ($command->getDeltaQuantity()) {
-            $stockModification = StockModification::buildDeltaQuantity(
-                $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
-            );
+            $stockModification = StockModification::buildDeltaQuantity($command->getDeltaQuantity());
         }
 
         // Now we only fill the properties existing in StockAvailable object model.
@@ -90,11 +92,11 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
         // and then this handler will only persist StockAvailable related fields as it is designed for.
         // @todo: once the unification is done this should be refacto as the ProductStockProperties contains too many fields now
         $this->productStockUpdater->update(
-            $command->getProductId(),
+            $productId,
             new ProductStockProperties(
                 null,
                 $stockModification,
-                $command->getOutOfStockType(),
+                $outOfStockType,
                 null,
                 $command->getLocation(),
                 null,
@@ -103,11 +105,23 @@ class UpdateProductStockAvailableHandler implements UpdateProductStockHandlerInt
                 null,
                 null
             ),
-            $command->getShopConstraint()
+            $shopConstraint
         );
 
-        if (null !== $command->getOutOfStockType()) {
-            $this->combinationRepository->updateCombinationStock($command->getProductId(), $command->getOutOfStockType(), $command->getShopConstraint());
+        if (null !== $outOfStockType) {
+            if ($shopConstraint->forAllShops()) {
+                $associatedShopIds = $this->productRepository->getAssociatedShopIds($productId);
+
+                foreach ($associatedShopIds as $shopId) {
+                    $this->combinationRepository->updateCombinationOutOfStockType(
+                        $productId,
+                        $outOfStockType,
+                        ShopConstraint::shop($shopId->getValue())
+                    );
+                }
+            } else {
+                $this->combinationRepository->updateCombinationOutOfStockType($productId, $outOfStockType, $shopConstraint);
+            }
         }
     }
 }

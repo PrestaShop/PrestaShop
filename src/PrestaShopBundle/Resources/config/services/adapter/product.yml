@@ -484,8 +484,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockAvailableHandler
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
-      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand

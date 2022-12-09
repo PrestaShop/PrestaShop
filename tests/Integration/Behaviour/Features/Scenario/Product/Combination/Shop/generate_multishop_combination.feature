@@ -248,3 +248,42 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" default combination for shop "shop1" should be "product1SWhite"
     And product "product1" default combination for shop "shop2" should be "product1SWhite"
+
+  Scenario: Generated combination out of stock type matches with product when generating for specific shop
+    Given product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | default |
+    When I generate combinations in shop "shop1" for product "product1" using following attributes:
+      | Size  | [S]           |
+      | Color | [White,Black] |
+    Then product "product1" should have the following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+    And product "product1" should have no combinations for shops "shop2"
+    And all combinations of product "product1" for shops "shop1" should have the stock policy to "default"
+    When I update product "product1" stock for shop "shop2" with following information:
+      | out_of_stock_type | available |
+    And I generate combinations in shop "shop2" for product "product1" using following attributes:
+      | Size  | [S]           |
+      | Color | [White,Black] |
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | combination id | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+    And all combinations of product "product1" for shops "shop2" should have the stock policy to "available"
+    But all combinations of product "product1" for shops "shop1" should have the stock policy to "default"
+
+  Scenario: Generated combination out of stock type matches with product when generating for all shops
+    Given product "product1" should have following stock information for shops "shop1,shop2":
+      | out_of_stock_type | default |
+    When I generate combinations for product "product1" in all shops using following attributes:
+      | Size  | [S]           |
+      | Color | [White,Black] |
+    And all combinations of product "product1" for shops "shop1" should have the stock policy to "default"
+    When I update product "product1" stock for all shops with following information:
+      | out_of_stock_type | not_available |
+    And I generate combinations for product "product1" in all shops using following attributes:
+      | Size  | [S]           |
+      | Color | [White,Black] |
+    And all combinations of product "product1" for shops "shop2" should have the stock policy to "not_available"
+    And all combinations of product "product1" for shops "shop1" should have the stock policy to "not_available"
