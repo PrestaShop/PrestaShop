@@ -82,7 +82,7 @@ services:
   prestashop.core.form.choice_provider.contact_by_id:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ContactByIdChoiceProvider'
     arguments:
-      - '@prestashop.adapter.contact.repository'
+      - '@PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
 
   prestashop.core.form.choice_provider.translation_type:

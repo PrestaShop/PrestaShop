@@ -75,18 +75,18 @@ services:
   prestashop.core.domain.customer_service.repository.customer_thread_repository:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
 
-  prestashop.core.domain.customer_service.query_handler.GetCustomerServicesSummaryHandler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandler'
-    arguments:
-      - '@router'
+  PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandlerInterface:
+
+  PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandler:
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary
 
-  prestashop.core.domain.customer_service.command_handler.update_contact_options_handler:
-    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateContactOptionsHandler'
+  PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateContactOptionsHandler:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand
+

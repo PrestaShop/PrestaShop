@@ -28,10 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
-use Contact;
-use CustomerThread;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
+use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -44,9 +43,15 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
      */
     private $router;
 
-    public function __construct(RouterInterface $router)
+    /**
+     * @var ContactRepositoryInterface
+     */
+    private $contactRepository;
+
+    public function __construct(RouterInterface $router, ContactRepositoryInterface $contactRepository)
     {
         $this->router = $router;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -54,13 +59,13 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
      */
     public function handle(GetCustomerServiceSummary $query): array
     {
-        $contacts = CustomerThread::getContacts();
+        $contacts = $this->contactRepository->getContacts();
         $customerServicesSummary = [];
-        foreach (Contact::getCategoriesContacts() as $categoriesContact) {
+        foreach ($this->contactRepository->getCategoriesContacts() as $categoriesContact) {
             $customerThreadId = 0;
             $totalThreads = 0;
             $viewUrl = '';
-            foreach ($contacts as $contact) {
+            foreach ($this->contactRepository->getContacts() as $contact) {
                 if ($categoriesContact['id_contact'] === $contact['id_contact']) {
                     $totalThreads = (int) $contact['total'];
                     $customerThreadId = $contact['id_customer_thread'];

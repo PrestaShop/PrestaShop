@@ -24,33 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Support;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Repository;
+
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use Store;
 
 /**
- * Interface ContactRepositoryInterface defines contract for shop contact repository.
+ * Methods to access data source of Store
  */
-interface ContactRepositoryInterface
+class ContactRepository extends AbstractObjectModelRepository
 {
     /**
-     * Get shop contacts.
+     * @param StoreId $storeId
      *
-     * @param int $langId Language ID in which contacts should be returned
+     * @return Store
      *
-     * @return array
+     * @throws CoreException
+     * @throws StoreNotFoundException
      */
-    public function findAllByLangId(int $langId);
+    public function getCategoriesContacts(StoreId $storeId): Store
+    {
+        /** @var Store $store */
+        $store = $this->getObjectModel(
+            $storeId->getValue(),
+            Store::class,
+            StoreNotFoundException::class
+        );
 
-    /**
-     * Return available categories contacts.
-     *
-     * @return array{string, string}
-     */
-    public function getCategoriesContacts(): array;
-
-    /**
-     * Return all contacts.
-     *
-     * @return array{string, string}
-     */
-    public function getContacts(): array;
+        return $store;
+    }
 }

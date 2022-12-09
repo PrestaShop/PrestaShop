@@ -24,8 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\Support;
 
+use CustomerThread;
 use PrestaShop\PrestaShop\Adapter\Entity\Contact;
 use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 
@@ -34,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
  *
  * @internal
  */
-final class ContactRepository implements ContactRepositoryInterface
+class ContactRepository implements ContactRepositoryInterface
 {
     /**
      * {@inheritdoc}
@@ -42,5 +45,21 @@ final class ContactRepository implements ContactRepositoryInterface
     public function findAllByLangId($langId)
     {
         return Contact::getContacts($langId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCategoriesContacts(): array
+    {
+        return Contact::getCategoriesContacts();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContacts(): array
+    {
+        return CustomerThread::getContacts();
     }
 }

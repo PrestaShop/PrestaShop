@@ -24,33 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Support;
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Repository;
 
-/**
- * Interface ContactRepositoryInterface defines contract for shop contact repository.
- */
 interface ContactRepositoryInterface
 {
-    /**
-     * Get shop contacts.
-     *
-     * @param int $langId Language ID in which contacts should be returned
-     *
-     * @return array
-     */
-    public function findAllByLangId(int $langId);
-
-    /**
-     * Return available categories contacts.
-     *
-     * @return array{string, string}
-     */
     public function getCategoriesContacts(): array;
 
-    /**
-     * Return all contacts.
-     *
-     * @return array{string, string}
-     */
     public function getContacts(): array;
 }
