@@ -140,6 +140,17 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'required' => false,
             ])
+            ->add('force_default_category_breadcrumb', SwitchType::class, [
+                'label' => $this->trans(
+                    'Force default category use for breadcrumb generation',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'When active, if a product is assigned to multiple category, the product breadcrumb will always refer to default category path.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ])
             ->add('default_status', SwitchType::class, [
                 'label' => $this->trans(
                     'Activate new products by default',

@@ -1360,8 +1360,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-
-        if (!is_null($this->category) && in_array($this->category->id_category, $this->product->getCategories(), true)) {
+        $shouldForceDefaultCat = Configuration::get('PS_FORCE_DEFAULT_CAT_BREADCRUMB');
+        if (!$shouldForceDefaultCat &&
+            !is_null($this->category) &&
+            in_array($this->category->id_category, $this->product->getCategories(), true)) {
             $currentCategory = $this->category;
         } else {
             $currentCategory = new Category($this->product->id_category_default, $this->context->language->id);
