@@ -178,7 +178,8 @@
                             {if $field['multiple'] == false}
 														  <input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 														{else}
-                              <input type="checkbox" name="{$key}[]" id="{$key}{$k}_on" value="{$k}"{if $field['value_multiple'][$k]} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>                            {/if}
+                              <input type="checkbox" name="{$key}[]" id="{$key}{$k}_on" value="{$k}"{if $field['value_multiple'][$k]} checked="checked"{/if} {if isset($field['disabled'][$k]) && $field['disabled'][$k]} disabled="disabled"{/if} {if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+                            {/if}
                             {$v}
 													</label>
 													{/strip}

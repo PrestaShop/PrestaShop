@@ -50,8 +50,13 @@ class AdminImagesControllerCore extends AdminController
 
         parent::init();
 
-        /* TODO fix this line */
-        $this->generateAdditionalAvif = true; // $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
+        $this->generateAdditionalAvif = $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
+
+        $imageFormatsDisabled = [];
+
+        if (false === $this->generateAdditionalAvif) {
+            $imageFormatsDisabled['avif'] = true;
+        }
 
         $fields = [
             'PS_IMAGE_FORMAT' => [
@@ -73,6 +78,7 @@ class AdminImagesControllerCore extends AdminController
                     'webp' => false,
                     'avif' => false,
                 ],
+                'disabled' => $imageFormatsDisabled,
             ],
             'PS_IMAGE_FORMAT_FALLBACK' => [
                 'title' => $this->trans('Fallback', [], 'Admin.Design.Feature'),
