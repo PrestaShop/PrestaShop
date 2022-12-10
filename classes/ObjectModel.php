@@ -816,12 +816,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 $all_fields['id_shop'] = (int) $id_shop;
                 $where = $this->def['primary'] . ' = ' . (int) $this->id . ' AND id_shop = ' . (int) $id_shop;
 
-                // A little explanation of what we do here : we want to create multishop entry when update is called, but
-                // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
+                // A little explanation of what we do here we want to create multishop entry when update is called:
+                // - if the shop is already associated the data is updated
+                // - if we are in a single shop context the association is created
+                // - if the id_shop_list has been forced the association is created
                 $shop_exists = Db::getInstance()->getValue('SELECT ' . $this->def['primary'] . ' FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop WHERE ' . $where);
                 if ($shop_exists) {
                     $result &= Db::getInstance()->update($this->def['table'] . '_shop', $multiShopFieldsToUpdate, $where, 0, $null_values);
-                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
+                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP || count($this->id_shop_list)) {
                     $result &= Db::getInstance()->insert($this->def['table'] . '_shop', $all_fields, $null_values);
                 }
             }
