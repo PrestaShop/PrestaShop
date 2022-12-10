@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\MultiShopCombinationCommandsBuilderInterface;
 
 /**
  * Handles data posted from combination form
@@ -44,7 +44,7 @@ class CombinationFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
-     * @var CombinationCommandsBuilder
+     * @var MultiShopCombinationCommandsBuilderInterface
      */
     private $commandsBuilder;
 
@@ -60,11 +60,11 @@ class CombinationFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CommandBusInterface $bus
-     * @param CombinationCommandsBuilder $commandsBuilder
+     * @param MultiShopCombinationCommandsBuilderInterface $commandsBuilder
      */
     public function __construct(
         CommandBusInterface $bus,
-        CombinationCommandsBuilder $commandsBuilder,
+        MultiShopCombinationCommandsBuilderInterface $commandsBuilder,
         int $contextShopId,
         int $defaultShopId
     ) {
