@@ -43,7 +43,7 @@ Feature: Search stock movements from Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
   Scenario: I can get the last 5 rows of stock movements by default and I can paginate
-    When I update combination "product1SBlack" with following values:
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 100 |
     When I create an empty cart "dummy_cart1" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart1"
@@ -67,7 +67,7 @@ Feature: Search stock movements from Back Office (BO)
     # Even though the quantity is reserved and no stock movement was generated the available quantity is correctly updated
     And combination "product1SBlack" should have 95 available items
     # Then update the product stock from BO by adding 10 more combinations
-    When I update combination "product1SBlack" with following values:
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 10 |
     Then combination "product1SBlack" should have 105 available items
     # Then order 4 product1SBlack (status delivered)
@@ -91,7 +91,7 @@ Feature: Search stock movements from Back Office (BO)
       | status              | Delivered                  |
     And combination "product1SBlack" should have 96 available items
     # Now update product quantity of product1SBlack by 5
-    When I update combination "product1SBlack" with following values:
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 5 |
     Then combination "product1SBlack" should have 101 available items
     # Order 5 product1SBlack (status delivered)
@@ -157,11 +157,11 @@ Feature: Search stock movements from Back Office (BO)
 
   Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple editions one after another)
     # First edit product quantity
-    When I update combination "product1MWhite" with following values:
+    When I update combination "product1MWhite" stock with following details:
       | delta quantity | 15 |
     Then combination "product1MWhite" should have 15 available items
     # Edit a second time to have two edition rows one after another
-    When I update combination "product1MWhite" with following values:
+    When I update combination "product1MWhite" stock with following details:
       | delta quantity | -5 |
     Then combination "product1MWhite" should have 10 available items
     # Then create a cart with 2 product1MWhite and order it
@@ -174,7 +174,7 @@ Feature: Search stock movements from Back Office (BO)
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
     Then combination "product1MWhite" should have 8 available items
-    When I update combination "product1MWhite" with following values:
+    When I update combination "product1MWhite" stock with following details:
       | delta quantity | -3 |
     Then combination "product1MWhite" should have 5 available items
     When I search stock movements of combination "product1MWhite" I should get following results:
