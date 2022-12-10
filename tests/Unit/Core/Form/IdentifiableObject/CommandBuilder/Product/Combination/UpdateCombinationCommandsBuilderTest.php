@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
@@ -37,14 +38,15 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
 {
     /**
      * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedCommandsMultiShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommands(array $formData, array $expectedCommands)
     {
-        $builder = new UpdateCombinationCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
+        $builder = new UpdateCombinationCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -70,7 +72,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         // References
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setReference('toto');
         yield [
             [
@@ -81,7 +83,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setUpc('123456');
         $command->setMpn('mpn');
         yield [
@@ -94,7 +96,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setIsbn('0-8044-2957-X');
         $command->setEan13('12345678910');
         yield [
@@ -108,7 +110,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         // Price impact
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setImpactOnWeight('12');
         yield [
             [
@@ -120,7 +122,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setImpactOnUnitPrice('51.00');
         $command->setWholesalePrice('12.00');
         yield [
@@ -133,7 +135,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setEcoTax('42.00');
         $command->setImpactOnPrice('49.00');
         yield [
@@ -147,7 +149,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         // Stock information
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setMinimalQuantity(1);
         yield [
             [
@@ -160,7 +162,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setLowStockThreshold(5);
         yield [
             [
@@ -173,7 +175,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setLowStockAlert(false);
         yield [
             [
@@ -186,7 +188,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setAvailableDate(new DateTime('2022-10-10'));
         yield [
             [
@@ -197,7 +199,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setAvailableDate(new NullDateTime());
         yield [
             [
@@ -208,7 +210,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setIsDefault(true);
         yield [
             [
@@ -219,7 +221,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setIsDefault(false);
         yield [
             [
@@ -230,7 +232,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [$command],
         ];
 
-        $command = new UpdateCombinationCommand($this->getCombinationId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setIsDefault(false);
         yield [
             [
@@ -240,5 +242,240 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             ],
             [$command],
         ];
+    }
+
+    public function getExpectedCommandsMultiShop(): iterable
+    {
+        // check that references are always updated only as a single shop,
+        // even if for some reason there would be all shops prefix in form,
+        // because these fields are not multiShop shops
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setReference('toto')
+            ->setUpc('123456')
+            ->setMpn('mpn')
+            ->setIsbn('0-8044-2957-X')
+            ->setEan13('12345678910')
+        ;
+        yield [
+            [
+                'references' => [
+                    'reference' => 'toto',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'reference' => true,
+                    'upc' => '123456',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'upc' => true,
+                    'mpn' => 'mpn',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'mpn' => true,
+                    'isbn' => '0-8044-2957-X',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'isbn' => true,
+                    'ean_13' => '12345678910',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'ean_13' => true,
+                ],
+            ],
+            [$singleShopCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setImpactOnWeight('12')
+            ->setImpactOnUnitPrice('51.00')
+            ->setWholesalePrice('12.00')
+            ->setEcoTax('42.00')
+            ->setImpactOnPrice('49.00')
+        ;
+
+        yield [
+            [
+                'price_impact' => [
+                    'not_handled' => 0,
+                    'weight' => 12.0,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'weight' => true,
+                    'unit_price_tax_excluded' => 51.00,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price_tax_excluded' => true,
+                    'wholesale_price' => '12.00',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'wholesale_price' => true,
+                    'ecotax_tax_excluded' => 42.00,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'ecotax_tax_excluded' => true,
+                    'price_tax_excluded' => '49.00',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
+                ],
+            ],
+            [$allShopsCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setImpactOnWeight('12')
+            ->setImpactOnUnitPrice('51.00')
+            ->setWholesalePrice('12.00')
+
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setEcoTax('42.00')
+            ->setImpactOnPrice('49.00')
+        ;
+
+        yield [
+            [
+                'price_impact' => [
+                    'not_handled' => 0,
+                    'weight' => 12.0,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'weight' => false,
+                    'unit_price_tax_excluded' => 51.00,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price_tax_excluded' => false,
+                    'wholesale_price' => '12.00',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'wholesale_price' => false,
+                    'ecotax_tax_excluded' => 42.00,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'ecotax_tax_excluded' => true,
+                    'price_tax_excluded' => '49.00',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $localizedAvailableNow = [
+            1 => 'available',
+            2 => 'disponible',
+        ];
+        $localizedAvailableLater = [
+            1 => 'available1',
+            2 => 'disponible2',
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setLocalizedAvailableNowLabels($localizedAvailableNow)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setMinimalQuantity(1)
+            ->setLowStockThreshold(5)
+            ->setLowStockAlert(false)
+            ->setAvailableDate(new DateTime('2022-10-10'))
+        ;
+        yield [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
+                    ],
+                    'options' => [
+                        'low_stock_threshold' => '5',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
+                        'disabling_switch_low_stock_threshold' => '0',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'disabling_switch_low_stock_threshold' => true,
+                    ],
+                    'available_date' => '2022-10-10',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
+                    'available_now_label' => $localizedAvailableNow,
+                    // even if all shops field is present for some reason,
+                    // it still should generate single shop command for this field,
+                    // because it is not multiShop field
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
+                    'available_later_label' => $localizedAvailableLater,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setMinimalQuantity(1)
+            ->setLowStockThreshold(5)
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setLowStockAlert(false)
+            ->setAvailableDate(new NullDateTime())
+        ;
+        yield [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => false,
+                    ],
+                    'options' => [
+                        'low_stock_threshold' => '5',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => false,
+                        'disabling_switch_low_stock_threshold' => '0',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'disabling_switch_low_stock_threshold' => true,
+                    ],
+                    'available_date' => '',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setIsDefault(true)
+        ;
+        yield [
+            [
+                'header' => [
+                    'is_default' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'is_default' => true,
+                ],
+            ],
+            [$allShopsCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setIsDefault(false)
+        ;
+        yield [
+            [
+                'header' => [
+                    'is_default' => false,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'is_default' => true,
+                ],
+            ],
+            [$allShopsCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setIsDefault(true)
+        ;
+        yield [
+            [
+                'header' => [
+                    'is_default' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'is_default' => false,
+                ],
+            ],
+            [$singleShopCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setIsDefault(false)
+        ;
+        yield [
+            [
+                'header' => [
+                    'is_default' => false,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'is_default' => false,
+                ],
+            ],
+            [$singleShopCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateCombinationCommand
+    {
+        return new UpdateCombinationCommand($this->getCombinationId()->getValue(), $this->getSingleShopConstraint());
+    }
+
+    private function getAllShopsCommand(): UpdateCombinationCommand
+    {
+        return new UpdateCombinationCommand($this->getCombinationId()->getValue(), ShopConstraint::allShops());
     }
 }

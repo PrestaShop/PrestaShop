@@ -282,6 +282,7 @@ class ProductStockUpdater
     private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties)
     {
         $stockUpdateRequired = false;
+        $previousQuantity = $stockAvailable->quantity;
 
         if (null !== $properties->getOutOfStockType()) {
             $stockAvailable->out_of_stock = $properties->getOutOfStockType()->getValue();
@@ -293,7 +294,6 @@ class ProductStockUpdater
         }
 
         if ($properties->getStockModification()) {
-            $previousQuantity = $stockAvailable->quantity;
             $stockAvailable->quantity += $properties->getStockModification()->getDeltaQuantity();
             $stockUpdateRequired = true;
         }

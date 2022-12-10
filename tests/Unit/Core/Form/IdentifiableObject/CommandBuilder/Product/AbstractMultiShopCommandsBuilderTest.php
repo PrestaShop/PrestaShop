@@ -23,33 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\AbstractMultiShopCommandsBuilderTest;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-/**
- * Base class to test a combination command builder
- */
-abstract class AbstractCombinationCommandBuilderTest extends AbstractMultiShopCommandsBuilderTest
+abstract class AbstractMultiShopCommandsBuilderTest extends TestCase
 {
-    /**
-     * @var CombinationId
-     */
-    private $combinationId;
+    protected const SHOP_ID = 1;
 
-    /**
-     * @return CombinationId
-     */
-    protected function getCombinationId(): CombinationId
+    protected const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
+
+    protected function getSingleShopConstraint(): ShopConstraint
     {
-        if (null === $this->combinationId) {
-            $this->combinationId = new CombinationId(43);
-        }
-
-        return $this->combinationId;
+        return ShopConstraint::shop(self::SHOP_ID);
     }
 }

@@ -28,11 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
@@ -48,36 +45,12 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
     private $combinationStockUpdater;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
-     * @var StockAvailableMultiShopRepository
-     */
-    private $stockAvailableRepository;
-
-    /**
-     * @var CombinationMultiShopRepository
-     */
-    private $combinationMultiShopRepository;
-
-    /**
      * @param CombinationStockUpdater $combinationStockUpdater
-     * @param MovementReasonRepository $movementReasonRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableRepository
-     * @param CombinationMultiShopRepository $combinationMultiShopRepository
      */
     public function __construct(
-        CombinationStockUpdater $combinationStockUpdater,
-        MovementReasonRepository $movementReasonRepository,
-        StockAvailableMultiShopRepository $stockAvailableRepository,
-        CombinationMultiShopRepository $combinationMultiShopRepository
+        CombinationStockUpdater $combinationStockUpdater
     ) {
         $this->combinationStockUpdater = $combinationStockUpdater;
-        $this->movementReasonRepository = $movementReasonRepository;
-        $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->combinationMultiShopRepository = $combinationMultiShopRepository;
     }
 
     /**
