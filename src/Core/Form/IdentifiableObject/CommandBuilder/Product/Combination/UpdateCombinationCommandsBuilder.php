@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
@@ -39,16 +40,29 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
  * edition, to clarify the configuration each sub-domain is configured separately but in the end we use one config, one
  * builder and one command for the whole Combination fields updates.
  */
-class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
+class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        $config = new CommandBuilderConfig();
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addField('[header][is_default]', 'setIsDefault', DataField::TYPE_BOOL)
+            ->addMultiShopField('[header][is_default]', 'setIsDefault', DataField::TYPE_BOOL)
         ;
 
         $this
@@ -58,19 +72,20 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
         ;
 
         $commandBuilder = new CommandBuilder($config);
-        $shopCommand = new UpdateCombinationCommand($combinationId->getValue());
+        $shopCommand = new UpdateCombinationCommand($combinationId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateCombinationCommand($combinationId->getValue(), ShopConstraint::allShops());
 
-        return $commandBuilder->buildCommands($formData, $shopCommand);
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 
     private function configurePriceImpact(CommandBuilderConfig $config): self
     {
         $config
-            ->addField('[price_impact][price_tax_excluded]', 'setImpactOnPrice', DataField::TYPE_STRING)
-            ->addField('[price_impact][ecotax_tax_excluded]', 'setEcoTax', DataField::TYPE_STRING)
-            ->addField('[price_impact][unit_price_tax_excluded]', 'setImpactOnUnitPrice', DataField::TYPE_STRING)
-            ->addField('[price_impact][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
-            ->addField('[price_impact][weight]', 'setImpactOnWeight', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][price_tax_excluded]', 'setImpactOnPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][ecotax_tax_excluded]', 'setEcoTax', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][unit_price_tax_excluded]', 'setImpactOnUnitPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[price_impact][weight]', 'setImpactOnWeight', DataField::TYPE_STRING)
         ;
 
         return $this;
@@ -92,11 +107,10 @@ class UpdateCombinationCommandsBuilder implements CombinationCommandsBuilderInte
     private function configureStock(CommandBuilderConfig $config): self
     {
         $config
-            ->addField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
-            ->addField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
-            ->addField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
-            ->addField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
-            ->addField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
+            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addMultiShopField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
             ->addField('[stock][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
             ->addField('[stock][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
