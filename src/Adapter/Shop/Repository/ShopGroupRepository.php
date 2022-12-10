@@ -107,12 +107,12 @@ class ShopGroupRepository extends AbstractObjectModelRepository
             ->setParameter('shopId', $shopId->getValue())
         ;
 
-        $result = $qb->execute()->fetchNumeric();
+        $result = $qb->execute()->fetchAssociative();
         if (false === $result) {
             throw new ShopNotFoundException(sprintf('Could not find shop with id %d', $shopId->getValue()));
         }
 
-        return new ShopGroupId((int) $result);
+        return new ShopGroupId((int) $result['id_shop_group']);
     }
 
     /**
