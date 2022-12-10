@@ -149,7 +149,7 @@ class ProductShopUpdater
                 $stockModification,
                 new OutOfStockType((int) $sourceStock->out_of_stock),
                 null,
-                $sourceStock->location,
+                $sourceStock->location
             );
             $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
         }
