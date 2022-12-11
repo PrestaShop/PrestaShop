@@ -1,5 +1,6 @@
+import FOBasePage from '@pages/FO/FObasePage';
+
 require('module-alias/register');
-const FOBasePage = require('@pages/FO/FObasePage');
 
 /**
  * Order confirmation page, contains functions that can be used on the page

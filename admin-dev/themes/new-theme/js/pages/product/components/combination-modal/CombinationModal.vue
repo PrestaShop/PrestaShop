@@ -104,7 +104,7 @@
         <history
           :combinations-list="combinationsHistory"
           @selectCombination="selectCombination"
-          :selected-combination="selectedCombinationId"
+          :selected-combination-id="selectedCombinationId"
           :empty-image-url="emptyImageUrl"
         />
       </template>
@@ -115,9 +115,7 @@
     >
       <modal
         :modal-title="$t('modal.history.confirmTitle')"
-        :cancel-label="$t('modal.cancel')"
         :confirm-label="$t('modal.confirm')"
-        :close-label="$t('modal.close')"
         :confirmation="true"
         v-if="showConfirm"
         @close="hideConfirmModal"
@@ -127,7 +125,7 @@
           <p
             v-html="
               $t('modal.history.confirmBody', {
-                '%combinationName%': selectedCombinationName,
+                'combinationName': selectedCombinationName,
               })
             "
           />
@@ -140,9 +138,9 @@
 <script lang="ts">
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
   import Router from '@components/router';
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import PsModal from '@components/modal/modal';
   import History from './History.vue';
@@ -157,7 +155,7 @@
     selectedCombinationName: string | null,
     previousCombinationId: number | null,
     nextCombinationId: number | null,
-    editCombinationUrl: string | null,
+    editCombinationUrl?: string,
     loadingCombinationForm: boolean,
     submittingCombinationForm: boolean,
     combinationList: JQuery,
@@ -174,7 +172,7 @@
 
   const router = new Router();
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'CombinationModal',
     components: {Modal, History},
     data(): CombinationModalStates {
@@ -394,7 +392,7 @@
         if (combinationId === null) {
           this.previousCombinationId = null;
           this.nextCombinationId = null;
-          this.editCombinationUrl = null;
+          this.editCombinationUrl = undefined;
 
           return;
         }

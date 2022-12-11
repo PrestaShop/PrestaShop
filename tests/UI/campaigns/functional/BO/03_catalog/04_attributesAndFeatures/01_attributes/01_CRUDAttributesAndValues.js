@@ -19,7 +19,7 @@ const viewAttributePage = require('@pages/BO/catalog/attributes/view');
 const addAttributePage = require('@pages/BO/catalog/attributes/addAttribute');
 const addValuePage = require('@pages/BO/catalog/attributes/addValue');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUDAttributesAndValue';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_attributes_CRUDAttributesAndValues';
 
 // Import expect from chai
 const {expect} = require('chai');

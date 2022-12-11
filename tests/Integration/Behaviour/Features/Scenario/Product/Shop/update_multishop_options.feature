@@ -33,7 +33,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |
@@ -55,7 +55,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
     And product "product1" should not be indexed for shops "shop1,shop2"
 
   Scenario: I update product options for specific shop (not the default one)
-    When I update product "product1" options for shop "shop2" with following values:
+    When I update product "product1" for shop "shop2" with following values:
       | visibility          | search      |
       | available_for_order | true        |
       | online_only         | false       |
@@ -85,7 +85,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
     And product "product1" should not be indexed for shops "shop1,shop2"
 
   Scenario: I update product options for all associated shops
-    When I update product "product1" options for all shops with following values:
+    When I update product "product1" for all shops with following values:
       | visibility          | none          |
       | available_for_order | true          |
       | online_only         | true          |
@@ -111,7 +111,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
 #   @todo: UpdateProductStatus command does not yet support multishop, so it silently updates only single shop from context
 #          need to improve this scenario once UpdateProductStatus command supports multishop
     When I enable product "product1"
-    And I update product "product1" options for shop "shop1" with following values:
+    And I update product "product1" for shop "shop1" with following values:
       | visibility          | search       |
       | available_for_order | true         |
       | online_only         | true         |

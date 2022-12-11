@@ -15,7 +15,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 
-const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultiStore';
+const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultistore';
 
 let browserContext;
 let page;

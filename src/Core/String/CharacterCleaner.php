@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\String;
 
+@trigger_error('The CharacterCleaner is deprecated since version 8.0.0. Its use is not required.', E_USER_DEPRECATED);
+
 class CharacterCleaner
 {
     /**

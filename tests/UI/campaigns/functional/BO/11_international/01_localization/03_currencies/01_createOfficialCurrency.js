@@ -22,7 +22,7 @@ const foHomePage = require('@pages/FO/home');
 // Import Data
 const {Currencies} = require('@data/demo/currencies');
 
-const baseContext = 'functional_BO_international_localization_currencies_CreateOfficialCurrency';
+const baseContext = 'functional_BO_international_localization_currencies_createOfficialCurrency';
 
 let browserContext;
 let page;

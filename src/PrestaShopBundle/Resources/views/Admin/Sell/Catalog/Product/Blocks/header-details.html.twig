@@ -30,7 +30,7 @@
    #}
   {% set productData = productForm.vars.data %}
   <div class="product-header-summary">
-    <div class="product-field-preview">
+    <div class="product-field-preview" data-role="price-tax-excluded">
       <div class="product-field-value">
         {% if productData.pricing.retail_price.ecotax_tax_excluded is defined %}
           {% set final_price_tax_excluded = productData.pricing.retail_price.price_tax_excluded + productData.pricing.retail_price.ecotax_tax_excluded %}
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <div class="product-field-preview">
+    <div class="product-field-preview" data-role="price-tax-included">
       <div class="product-field-value">
         {{ productData.pricing.retail_price.price_tax_included|price_format }}
       </div>
@@ -86,7 +86,7 @@
         {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
       {% endif %}
 
-      <div class="product-field-preview">
+      <div class="product-field-preview" data-role="quantity">
         <div class="product-field-value {{ stockClass }}">
           {{ quantityData }}
         </div>

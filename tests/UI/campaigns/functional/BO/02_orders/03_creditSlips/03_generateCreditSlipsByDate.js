@@ -1,14 +1,12 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 // Import utils
 const files = require('@utils/files');
-const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -26,14 +24,14 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipByDate';
+const baseContext = 'functional_BO_orders_creditSlips_generateCreditSlipsByDate';
 
 // Import expect from chai
 const {expect} = require('chai');
 
 let browserContext;
 let page;
-const futureDate = getDateFormat('yyyy-mm-dd', 'future');
+const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
 
 const creditSlipDocumentName = 'Credit slip';
 const orderByCustomerData = {

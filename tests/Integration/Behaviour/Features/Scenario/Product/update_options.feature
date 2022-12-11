@@ -23,7 +23,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |
@@ -52,7 +52,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | available_for_order | true |
     # show_price is automatically set to true
     Then product "product1" should have following options:
@@ -76,7 +76,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | manufacturer | graphicCorner |
     Then product "product1" should have following options:
       | product option      | value         |
@@ -87,7 +87,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used          |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | manufacturer |  |
     Then product "product1" should have following options:
       | product option      | value   |
@@ -115,10 +115,10 @@ Feature: Update product options from Back Office (BO)
       | manufacturer        |       |
     When I assign non existing manufacturer to product "product2"
     Then I should get error that manufacturer does not exist
-    When I update product "product2" options with following values:
+    When I update product "product2" with following values:
       | visibility | show it to me plz |
     Then I should get error that product visibility is invalid
-    When I update product "product2" options with following values:
+    When I update product "product2" with following values:
       | condition | very good condition |
     Then I should get error that product condition is invalid
     And product "product2" should have following options:
@@ -145,7 +145,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | new   |
       | show_condition      | false |
       | manufacturer        |       |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility          | search       |
       | available_for_order | false        |
       | online_only         | true         |
@@ -180,7 +180,7 @@ Feature: Update product options from Back Office (BO)
       | show_condition      | false |
       | manufacturer        |       |
     And search indexation feature is disabled
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility          | search       |
       | available_for_order | false        |
       | online_only         | true         |
@@ -211,7 +211,7 @@ Feature: Update product options from Back Office (BO)
       | manufacturer        | studioDesign |
     And product "product1" should be disabled
     And product "product1" should not be indexed
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility | search |
     Then product "product1" should have following options:
       | product option      | value        |
@@ -227,7 +227,7 @@ Feature: Update product options from Back Office (BO)
     When I enable product "product1"
     Then product "product1" should be enabled
     And product "product1" should be indexed
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility | catalog |
     Then product "product1" should have following options:
       | product option      | value        |
@@ -240,7 +240,7 @@ Feature: Update product options from Back Office (BO)
       | manufacturer        | studioDesign |
     And product "product1" should be enabled
     And product "product1" should not be indexed
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | visibility | both |
     Then product "product1" should have following options:
       | product option      | value        |
@@ -268,7 +268,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | show_price | true |
     # We can show price when product is not available for order
     Then product "product1" should have following options:
@@ -281,7 +281,7 @@ Feature: Update product options from Back Office (BO)
       | show_condition      | true         |
       | manufacturer        | studioDesign |
     # Even if we try forcing the show price to false it will be true as long as product is available for order
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | available_for_order | true  |
       | show_price          | false |
     Then product "product1" should have following options:
@@ -293,7 +293,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | show_price          | false  |
     Then product "product1" should have following options:
       | product option      | value        |

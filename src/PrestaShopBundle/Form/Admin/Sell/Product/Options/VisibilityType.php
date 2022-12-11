@@ -28,30 +28,31 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VisibilityType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
+     * @var FormChoiceProviderInterface&FormChoiceAttributeProviderInterface
      */
     private $productVisibilityChoiceProvider;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $productVisibilityChoiceProvider
+     * @param FormChoiceProviderInterface&FormChoiceAttributeProviderInterface $productVisibilityChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $productVisibilityChoiceProvider
+        $productVisibilityChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->productVisibilityChoiceProvider = $productVisibilityChoiceProvider;
@@ -66,12 +67,15 @@ class VisibilityType extends TranslatorAwareType
             ->add('visibility', ChoiceType::class, [
                 'label' => false,
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
+                'choice_attr' => $this->productVisibilityChoiceProvider->getChoicesAttributes(),
                 'expanded' => true,
                 'required' => false,
                 // placeholder false is important to avoid empty option in radio select despite required being false
                 'placeholder' => false,
                 'column_breaker' => true,
                 'modify_all_shops' => true,
+                'help' => '', // should be set to enable help block
+                'help_attr' => ['class' => 'js-visibility-description'],
             ])
             ->add('available_for_order', SwitchType::class, [
                 'label' => $this->trans('Available for order', 'Admin.Catalog.Feature'),

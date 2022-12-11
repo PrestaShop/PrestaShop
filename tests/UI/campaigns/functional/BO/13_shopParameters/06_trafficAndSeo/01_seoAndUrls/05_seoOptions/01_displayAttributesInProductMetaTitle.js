@@ -23,7 +23,8 @@ const productPage = require('@pages/FO/product');
 const {Products} = require('@data/demo/products');
 const {Attributes} = require('@data/demo/attributes');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_displayAttributesInProductMetaTitle';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoOptions_'
+  + 'displayAttributesInProductMetaTitle';
 
 let browserContext;
 let page;

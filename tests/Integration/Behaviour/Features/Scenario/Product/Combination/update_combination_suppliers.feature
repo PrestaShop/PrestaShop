@@ -290,7 +290,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product2 type should be combinations
-    When I update product "product2" prices with following information:
+    When I update product "product2" with following values:
       | wholesale_price | 70  |
     Then product product2 should have following prices information:
       | wholesale_price | 70 |
@@ -460,7 +460,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product3 type should be combinations
-    When I update product "product3" prices with following information:
+    When I update product "product3" with following values:
       | wholesale_price | 70  |
     Then product product3 should have following prices information:
       | wholesale_price | 70 |
@@ -502,7 +502,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     And product product3 should have following prices information:
       | wholesale_price | 70 |
     # Now I update combination wholesale price it should update the default supplier price
-    When I update combination "product3SWhite" prices with following details:
+    When I update combination "product3SWhite" with following values:
       | wholesale price      | 20  |
     Then combination "product3SWhite" should have following prices:
       | combination price detail        | value |
@@ -540,7 +540,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product ecotax                  | 0     |
     And product product3 should have following prices information:
       | wholesale_price | 70 |
-    When I update combination "product3SWhite" prices with following details:
+    When I update combination "product3SWhite" with following values:
       | wholesale price      | 44  |
     # The new default supplier is updated
     And combination "product3SWhite" should have following suppliers:

@@ -82,6 +82,6 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
         }, $product->getCustomizationFieldIds());
 
         $this->customizationFieldDeleter->bulkDelete($customizationFieldIds);
-        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($command->getProductId());
     }
 }

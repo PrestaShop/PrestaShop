@@ -49,7 +49,7 @@ Feature: Search products to associate them in the BO
     And I search for products with locale "english" matching "978020137962" I should get no results
     And I search for products with locale "english" matching "mpn1" I should get no results
     And I search for products with locale "english" matching "ref1" I should get no results
-    When I update product "product3" details with following values:
+    When I update product "product3" with following values:
       | isbn      | 978-3-16-148410-0 |
       | upc       | 72527273070       |
       | ean13     | 978020137962      |
@@ -105,13 +105,13 @@ Feature: Search products to associate them in the BO
     And I search for products with locale "english" matching "mpn3white" I should get no results
     And I search for products with locale "english" matching "ref3white" I should get no results
     And I search for products with locale "english" matching "3543213543213" I should get no results
-    When I update combination "product4Red" details with following values:
+    When I update combination "product4Red" with following values:
       | ean13            | 154867313573      |
       | isbn             | 978-3-16-148410-3 |
       | mpn              | mpn3red           |
       | reference        | ref3red           |
       | upc              | 137684192354      |
-    And I update combination "product4White" details with following values:
+    And I update combination "product4White" with following values:
       | ean13            | 1357321357213     |
       | isbn             | 978-3-16-148410-4 |
       | mpn              | mpn3white         |

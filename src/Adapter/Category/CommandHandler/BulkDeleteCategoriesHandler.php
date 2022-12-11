@@ -47,6 +47,7 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
      */
     public function handle(BulkDeleteCategoriesCommand $command)
     {
+        $deletedCategoryIdsByParent = [];
         foreach ($command->getCategoryIds() as $categoryId) {
             $category = new Category($categoryId->getValue());
 
@@ -62,7 +63,13 @@ final class BulkDeleteCategoriesHandler extends AbstractDeleteCategoryHandler im
                 throw new FailedToDeleteCategoryException(sprintf('Failed to delete category with id %s', var_export($categoryId->getValue(), true)));
             }
 
-            $this->handleProductsUpdate((int) $category->id_parent, $command->getDeleteMode());
+            $deletedCategoryIdsByParent[(int) $category->id_parent][] = $categoryId->getValue();
         }
+
+        if (empty($deletedCategoryIdsByParent)) {
+            return;
+        }
+
+        $this->updateProductCategories($deletedCategoryIdsByParent, $command->getDeleteMode());
     }
 }

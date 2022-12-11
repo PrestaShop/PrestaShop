@@ -118,12 +118,12 @@
   import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
   const PhotoSwipeMap = ProductMap.dropzone.photoswipe;
   const PhotoSwipeEventMap = ProductEventMap.dropzone.photoswipe;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'DropzonePhotoSwipe',
     props: {
       files: {

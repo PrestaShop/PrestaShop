@@ -25,7 +25,7 @@ const monitoringPage = require('@pages/BO/catalog/monitoring');
 const {Data} = require('@data/import/categories');
 
 // Test context
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_emptyCategories';
+const baseContext = 'functional_BO_catalog_monitoring_sortPaginationAndBulkDelete_emptyCategories';
 
 let browserContext;
 let page;

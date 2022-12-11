@@ -102,8 +102,8 @@
         const currencyFormatter = NumberFormatter.build(language.priceSpecification);
 
         return this.$t('list.example.format', {
-          '%price%': currencyFormatter.format(14251999.42),
-          '%discount%': currencyFormatter.format(-566.268),
+          price: currencyFormatter.format(14251999.42),
+          discount: currencyFormatter.format(-566.268),
         });
       },
     },

@@ -117,7 +117,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
-            'specifications' => $this->extractSpecificationsData($productForEditing),
+            'specifications' => $this->extractSpecificationsData($productForEditing, $shopConstraint),
             'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -211,17 +211,19 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<int, array<string, int|string>>
      */
-    protected function extractPackedProducts(int $productId): array
+    protected function extractPackedProducts(int $productId, ShopConstraint $shopConstraint): array
     {
         /** @var PackedProductDetails[] $packedProductsDetails
          */
         $packedProductsDetails = $this->queryBus->handle(
             new GetPackedProducts(
                 $productId,
-                $this->contextLangId
+                $this->contextLangId,
+                $shopConstraint
             )
         );
         $packedProductsData = [];
@@ -302,10 +304,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, mixed>
      */
-    private function extractSpecificationsData(ProductForEditing $productForEditing): array
+    private function extractSpecificationsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $details = $productForEditing->getDetails();
         $options = $productForEditing->getOptions();
@@ -322,7 +325,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'attachments' => $this->extractAttachmentsData($productForEditing),
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'customizations' => $this->extractCustomizationsData($productForEditing),
+            'customizations' => $this->extractCustomizationsData($productForEditing, $shopConstraint),
         ];
     }
 
@@ -384,7 +387,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'options' => [
                 'stock_location' => $stockInformation->getLocation(),
                 'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
-                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+                'disabling_switch_low_stock_threshold' => $stockInformation->isLowStockAlertEnabled(),
             ],
             'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
             'pack_stock_type' => $stockInformation->getPackStockType(),
@@ -394,7 +397,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
                 'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
             ],
-            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId(), $shopConstraint),
         ];
     }
 
@@ -592,14 +595,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, array<int, mixed>>
      */
-    private function extractCustomizationsData(ProductForEditing $productForEditing): array
+    private function extractCustomizationsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         /** @var CustomizationField[] $customizationFields */
         $customizationFields = $this->queryBus->handle(
-            new GetProductCustomizationFields($productForEditing->getProductId())
+            new GetProductCustomizationFields($productForEditing->getProductId(), $shopConstraint)
         );
 
         if (empty($customizationFields)) {

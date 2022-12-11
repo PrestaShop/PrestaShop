@@ -19,10 +19,10 @@
       "@components/*": ["js/components/*"],
       "@scss/*": ["scss/*"],
       "@node_modules/*": ["node_modules/*"],
-      "@vue/*": ["js/vue/*"],
+      "@PSVue/*": ["js/vue/*"],
       "@PSTypes/*": ["js/types/*"]
     },
-    "typeRoots": ["js/types", "node_modules/@types"]
+    "typeRoots": ["js/types", "node_modules/@types"],
   },
   "ts-node": {
     "compilerOptions": {

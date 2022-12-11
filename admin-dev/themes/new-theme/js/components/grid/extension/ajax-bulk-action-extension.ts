@@ -137,7 +137,7 @@ export default class AjaxBulkActionExtension {
         const response = await this.callAjaxAction($ajaxButton, chunkIds, abortController.signal);
         // eslint-disable-next-line no-await-in-loop
         data = await response.json();
-      } catch (e) {
+      } catch (e: any) {
         data = {error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`};
       }
 

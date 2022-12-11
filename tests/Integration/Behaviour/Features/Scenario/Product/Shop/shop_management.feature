@@ -2,6 +2,7 @@
 @restore-products-before-feature
 @clear-cache-before-feature
 @restore-shops-after-feature
+@restore-languages-after-feature
 @clear-cache-after-feature
 @product-multi-shop
 @update-multi-shop-management
@@ -46,7 +47,7 @@ Feature: Copy product from shop to shop.
       | type        | standard    |
     Then product productWithPrices is associated to shop shop1
     And default shop for product productWithPrices is shop1
-    When I update product "productWithPrices" prices with following information:
+    When I update product "productWithPrices" with following values:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | US-AL Rate (4%) |
@@ -85,7 +86,7 @@ Feature: Copy product from shop to shop.
     And product productWithPrices is not associated to shop shop3
     And product productWithPrices is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithPrices" prices with following information:
+    When I update product "productWithPrices" with following values:
       | price              | 200.99            |
       | ecotax             | 2                 |
       | tax rules group    | US-AZ Rate (6.6%) |
@@ -136,7 +137,7 @@ Feature: Copy product from shop to shop.
       | type        | standard  |
     Then product productWithBasic is associated to shop shop1
     And default shop for product productWithBasic is shop1
-    When I update product "productWithBasic" basic information with following values:
+    When I update product "productWithBasic" with following values:
       | name[en-US]              | photo of funny mug |
       | description[en-US]       | nice mug           |
       | description_short[en-US] | Just a nice mug    |
@@ -169,7 +170,7 @@ Feature: Copy product from shop to shop.
     And product productWithBasic is not associated to shop shop3
     And product productWithBasic is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithBasic" basic information with following values:
+    When I update product "productWithBasic" with following values:
       | name[en-US]              | photo of super mug |
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
@@ -206,6 +207,38 @@ Feature: Copy product from shop to shop.
     And product productWithBasic is not associated to shop shop3
     And product productWithBasic is not associated to shop shop4
 
+  Scenario: I copy a pack to another shop, the product associated are in sync
+    Given I add product "productPack" to shop shop1 with following information:
+      | name[en-US] | weird sunglasses box |
+      | type        | pack                 |
+    And product "productPack" type should be pack for shop shop1
+    And I add product "product5" to shop shop1 with following information:
+      | name[en-US] | work sunglasses |
+      | type        | standard        |
+    And I add product "product6" to shop shop1 with following information:
+      | name[en-US] | personal sunglasses |
+      | type        | standard            |
+    And I add product "product7" to shop shop1 with following information:
+      | name[en-US] | casual sunglasses |
+      | type        | standard          |
+    When I update pack productPack with following product quantities:
+      | product  | quantity |
+      | product5 | 10       |
+      | product6 | 11       |
+      | product7 | 15       |
+    Then pack "productPack" should contain products with following details for shops "shop1":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+    When I copy product productWithBasic from shop shop1 to shop shop2
+    Then pack "productPack" should contain products with following details for shops "shop1,shop2":
+      | product  | combination | name                | quantity | image url                                              | reference |
+      | product5 |             | work sunglasses     | 10       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product6 |             | personal sunglasses | 11       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+      | product7 |             | casual sunglasses   | 15       | http://myshop.com/img/p/{no_picture}-small_default.jpg |           |
+
+
   Scenario: I copy product to another shop that was not associated, stock data are copied
     # By default the product is created for default shop
     Given I add product "productWithStock" with following information:
@@ -214,17 +247,18 @@ Feature: Copy product from shop to shop.
     Then product productWithStock is associated to shop shop1
     And default shop for product productWithStock is shop1
     # First modify data for default shop
-    When I update product "productWithStock" stock with following information:
+    When I update product "productWithStock" with following values:
       | pack_stock_type               | pack_only    |
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
       | minimal_quantity              | 12           |
-      | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
+    And I update product "productWithStock" stock with following information:
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | location                      | dtc          |
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | pack_only  |
       | out_of_stock_type   | available  |
@@ -270,17 +304,18 @@ Feature: Copy product from shop to shop.
     And product productWithStock is not associated to shop shop3
     And product productWithStock is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
-    When I update product "productWithStock" stock for shop shop1 with following information:
+    When I update product "productWithStock" for shop shop1 with following values:
       | pack_stock_type               | products_only |
-      | out_of_stock_type             | not_available |
-      | delta_quantity                | 69            |
       | minimal_quantity              | 24            |
-      | location                      | upa           |
       | low_stock_threshold           | 51            |
       | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
+    When I update product "productWithStock" stock for shop shop1 with following information:
+      | out_of_stock_type             | not_available |
+      | delta_quantity                | 69            |
+      | location                      | upa           |
     # First only one shop is updated
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | products_only |
@@ -338,24 +373,46 @@ Feature: Copy product from shop to shop.
       | en-US  | too slow... |
       | fr-FR  |             |
 
+  Scenario: I copy product to another shop that was not associated, customization fields are copied
+    When I add product "customizable_product" with following information:
+      | name[en-US] | nice customizable t-shirt |
+      | type        | standard                  |
+    And product "customizable_product" type should be standard
+    When I update product customizable_product with following customization fields:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+    Then product "customizable_product" should require customization
+    And product customizable_product should have 2 customizable text fields
+    And product customizable_product should have 0 customizable file fields
+    And product customizable_product should have following customization fields:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+    And I copy product customizable_product from shop shop1 to shop shop2
+    And product customizable_product should have following customization fields for shops shop1,shop2:
+      | reference    | type | name[en-US] | name[fr-FR]  | is required |
+      | customField1 | text | front-text  | texte devant | true        |
+      | customField2 | text | bottom-text | texte du bas | true        |
+
   Scenario: I copy product to another shop that was not associated, image associations are copied
-    Given I add product "product1" with following information:
+    Given I add product "graphicProduct" with following information:
       | name[en-US] | funny mug |
       | type        | standard  |
-    And I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
-    And I add new image "image2" named "some_image.jpg" to product "product1" for shop "shop1"
-    And I copy product product1 from shop shop1 to shop shop2
-    Then product "product1" should have following images for shop "shop1":
+    And I add new image "image1" named "app_icon.png" to product "graphicProduct" for shop "shop1"
+    And I add new image "image2" named "some_image.jpg" to product "graphicProduct" for shop "shop1"
+    And I copy product graphicProduct from shop shop1 to shop shop2
+    Then product "graphicProduct" should have following images for shop "shop1":
       | image reference |  position | shops        |
       | image1          |  1        | shop1, shop2 |
       | image2          |  2        | shop1, shop2 |
-    And product "product1" should have following images for shop "shop2":
+    And product "graphicProduct" should have following images for shop "shop2":
       | image reference |  position | shops        |
       | image1          |  1        | shop1, shop2 |
       | image2          |  2        | shop1, shop2 |
-    And product "product1" should have following images for shop "shop3":
+    And product "graphicProduct" should have following images for shop "shop3":
       | image reference |  position | shops        |
-    And product "product1" should have following images for shop "shop4":
+    And product "graphicProduct" should have following images for shop "shop4":
       | image reference |  position | shops        |
     And following image types should be applicable to products:
       | reference     | name           | width | height |
@@ -373,22 +430,23 @@ Feature: Copy product from shop to shop.
     Then product productToDelete is associated to shop shop2
     And default shop for product productToDelete is shop2
     # First modify data for default shop
-    When I update product "productToDelete" stock for shop shop2 with following information:
+    When I update product "productToDelete" for shop shop2 with following values:
       | pack_stock_type               | pack_only    |
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
       | minimal_quantity              | 12           |
-      | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
-    And I update product "productToDelete" basic information for shop shop2 with following values:
+    And I update product "productToDelete" stock for shop shop2 with following information:
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | location                      | dtc          |
+    And I update product "productToDelete" for shop shop2 with following values:
       | name[en-US]              | photo of super mug |
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
-    When I update product "productToDelete" prices for shop shop2 with following information:
+    When I update product "productToDelete" for shop shop2 with following values:
       | price              | 100.99          |
       | ecotax             | 0               |
       | tax rules group    | US-AL Rate (4%) |

@@ -2,11 +2,12 @@ name: UI tests
 on: [ push, pull_request ]
 permissions:
   contents: read   #   to fetch code (actions/checkout)
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
-
   sanity:
     permissions:
-      actions: write   #   to cancel/stop running workflows (styfle/cancel-workflow-action)
       contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
@@ -16,12 +17,6 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          all_but_latest: true
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v3
 
       - name: Setup environment

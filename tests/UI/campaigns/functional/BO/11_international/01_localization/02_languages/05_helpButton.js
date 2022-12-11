@@ -15,7 +15,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const languagesPage = require('@pages/BO/international/languages');
 
-const baseContext = 'functional_BO_international_localization_languages_helpCard';
+const baseContext = 'functional_BO_international_localization_languages_helpButton';
 
 let browserContext;
 let page;

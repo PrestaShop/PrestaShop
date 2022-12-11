@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -26,7 +22,7 @@ const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustome
 let browserContext;
 let page;
 let numberOfCustomers = 0;
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 
 /*
 Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin

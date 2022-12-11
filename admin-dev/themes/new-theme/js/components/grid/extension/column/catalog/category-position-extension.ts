@@ -24,7 +24,7 @@
  */
 
 import 'tablednd/dist/jquery.tablednd.min';
-import {Grid} from '@PSTypes/grid';
+import {Grid} from '@js/types/grid';
 import GridMap from '@components/grid/grid-map';
 
 const {$} = window;

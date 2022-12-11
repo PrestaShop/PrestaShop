@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Api;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractApi
 {

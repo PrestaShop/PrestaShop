@@ -249,11 +249,11 @@
           @include border-right-radius(0);
 
           .card-img-top {
-            border-top-right-radius: 0;
+            @include border-top-right-radius(0);
           }
 
           .card-img-bottom {
-            border-bottom-right-radius: 0;
+            @include border-bottom-right-radius(0);
           }
         }
 
@@ -261,11 +261,11 @@
           @include border-left-radius(0);
 
           .card-img-top {
-            border-top-left-radius: 0;
+            @include border-top-left-radius(0);
           }
 
           .card-img-bottom {
-            border-bottom-left-radius: 0;
+            @include border-bottom-left-radius(0);
           }
         }
         /* stylelint-enable property-blacklist */

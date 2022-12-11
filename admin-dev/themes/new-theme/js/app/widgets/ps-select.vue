@@ -47,12 +47,12 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent, PropType} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       items: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       itemId: {

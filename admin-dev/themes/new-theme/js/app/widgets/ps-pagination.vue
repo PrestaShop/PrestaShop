@@ -38,7 +38,7 @@
         <a
           v-show="activeLeftArrow"
           class="float-left page-link"
-          @click="prev($event)"
+          @click="prev()"
           href="#"
         >
           <span class="sr-only">Previous</span>
@@ -78,7 +78,7 @@
         <a
           v-show="activeRightArrow"
           class="float-left page-link"
-          @click="next($event)"
+          @click="next()"
           href="#"
         >
           <span class="sr-only">Next</span>
@@ -89,9 +89,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       pagesCount: {
         type: Number,

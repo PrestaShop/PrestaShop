@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\InvalidGiftMessageException
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CannotDeleteCartRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\CartRuleException;
 use PrestaShopException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Validate;
 
 /**

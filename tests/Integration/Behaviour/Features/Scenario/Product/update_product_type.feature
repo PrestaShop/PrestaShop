@@ -96,7 +96,7 @@ Feature: Add basic product from Back Office (BO)
     And product "virtualProduct" should be assigned to following categories:
       | id reference | name | is default |
       | home         | Home | true       |
-    When I update product "virtualProduct" prices with following information:
+    When I update product "virtualProduct" with following values:
       | price              | 51.42           |
       | ecotax             | 8.56            |
       | tax rules group    | US-AL Rate (4%) |
@@ -181,7 +181,7 @@ Feature: Add basic product from Back Office (BO)
       | productCombinations3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
       | productCombinations3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
       | productCombinations3MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
-    When I update combination "productCombinations3SWhite" stock with following details:
+    When I update combination "productCombinations3SWhite" with following values:
       | delta quantity | 100 |
     Then combination "productCombinations3SWhite" should have following stock details:
       | combination stock detail   | value |
@@ -195,7 +195,7 @@ Feature: Add basic product from Back Office (BO)
       | employee   | delta_quantity |
       | Puff Daddy | 100            |
     And combination "productCombinations3SWhite" last stock movement increased by 100
-    When I update combination "productCombinations3SBlack" stock with following details:
+    When I update combination "productCombinations3SBlack" with following values:
       | delta quantity | 50 |
     Then combination "productCombinations3SBlack" should have following stock details:
       | combination stock detail   | value |

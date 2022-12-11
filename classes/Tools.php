@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
+use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -264,8 +265,7 @@ class ToolsCore
      */
     public static function getShopProtocol()
     {
-        $protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
-            && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+        $protocol = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 
         return $protocol;
     }
@@ -705,7 +705,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance(Currency::getDefaultCurrencyId());
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -850,7 +850,7 @@ class ToolsCore
      */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $default_currency = Currency::getDefaultCurrencyId();
 
         if (!$context) {
             $context = Context::getContext();
@@ -889,14 +889,14 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = Currency::getDefaultCurrency();
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = Currency::getDefaultCurrency();
         }
 
-        if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
+        if ($currency_from->id == Currency::getDefaultCurrencyId()) {
             $amount *= $currency_to->conversion_rate;
         } else {
             $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
@@ -1401,45 +1401,7 @@ class ToolsCore
      */
     public static function str2url($str)
     {
-        static $array_str = [];
-        static $allow_accented_chars = null;
-
-        if (!is_string($str)) {
-            return false;
-        }
-
-        if (isset($array_str[$str])) {
-            return $array_str[$str];
-        }
-
-        if ($str == '') {
-            return '';
-        }
-
-        if ($allow_accented_chars === null) {
-            $allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
-        }
-
-        $return_str = trim($str);
-        $return_str = mb_strtolower($return_str, 'UTF-8');
-
-        if (!$allow_accented_chars) {
-            $return_str = Tools::replaceAccentedChars($return_str);
-        }
-
-        // Remove all non-whitelist chars.
-        if ($allow_accented_chars) {
-            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
-        } else {
-            $return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/', '', $return_str);
-        }
-
-        $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
-        $return_str = str_replace([' ', '/'], '-', $return_str);
-
-        $array_str[$str] = $return_str;
-
-        return $return_str;
+        return (new StringModifier())->str2url((string) $str);
     }
 
     /**
@@ -1451,13 +1413,7 @@ class ToolsCore
      */
     public static function replaceAccentedChars($str)
     {
-        static $transliterator;
-
-        if (!$transliterator) {
-            $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
-        }
-
-        return $transliterator->transliterate($str);
+        return (new StringModifier())->replaceAccentedChars($str);
     }
 
     /**

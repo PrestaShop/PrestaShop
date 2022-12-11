@@ -16,7 +16,7 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const pagesPage = require('@pages/BO/design/pages/index');
 
-const baseContext = 'functional_BO_design_pages_helperCard';
+const baseContext = 'functional_BO_design_pages_helpCard';
 
 let browserContext;
 let page;

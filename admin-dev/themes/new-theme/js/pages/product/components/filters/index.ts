@@ -23,18 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Vue from 'vue';
+import {createApp, App} from 'vue';
 import EventEmitter from '@components/event-emitter';
 import Filters from '@pages/product/components/filters/Filters.vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import {AttributeGroup} from '@pages/product/types';
-
-Vue.use(VueI18n);
-
-export interface FiltersVueApp extends Vue {
-  filters: Array<AttributeGroup>,
-};
+import {createI18n} from 'vue-i18n';
+import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 
 /**
  * @param {string} combinationsFiltersSelector
@@ -46,24 +39,23 @@ export default function initCombinationsFilters(
   combinationsFiltersSelector: string,
   eventEmitter: typeof EventEmitter,
   filters: Record<string, any>,
-): FiltersVueApp {
+): App {
   const container = <HTMLElement> document.querySelector(combinationsFiltersSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);
-  const i18n = new VueI18n({
+  const i18n = createI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
     messages: {en: translations},
   });
 
-  return new Vue({
-    el: combinationsFiltersSelector,
-    template: '<filters :filters=filters :eventEmitter=eventEmitter />',
-    components: {Filters},
+  const vueApp = createApp(Filters, {
     i18n,
-    data: {
-      filters,
-      eventEmitter,
-    },
-  });
+    filters,
+    eventEmitter,
+  }).use(i18n);
+
+  vueApp.mount(combinationsFiltersSelector);
+
+  return vueApp;
 }
