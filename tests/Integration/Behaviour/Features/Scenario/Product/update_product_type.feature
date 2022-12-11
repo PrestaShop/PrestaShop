@@ -181,7 +181,7 @@ Feature: Add basic product from Back Office (BO)
       | productCombinations3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
       | productCombinations3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
       | productCombinations3MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
-    When I update combination "productCombinations3SWhite" with following values:
+    When I update combination "productCombinations3SWhite" stock with following details:
       | delta quantity | 100 |
     Then combination "productCombinations3SWhite" should have following stock details:
       | combination stock detail   | value |
@@ -195,7 +195,7 @@ Feature: Add basic product from Back Office (BO)
       | employee   | delta_quantity |
       | Puff Daddy | 100            |
     And combination "productCombinations3SWhite" last stock movement increased by 100
-    When I update combination "productCombinations3SBlack" with following values:
+    When I update combination "productCombinations3SBlack" stock with following details:
       | delta quantity | 50 |
     Then combination "productCombinations3SBlack" should have following stock details:
       | combination stock detail   | value |

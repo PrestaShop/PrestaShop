@@ -31,6 +31,7 @@ use Combination;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFillerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 abstract class CombinationFillerTestCase extends TestCase
 {
@@ -81,6 +82,6 @@ abstract class CombinationFillerTestCase extends TestCase
      */
     protected function getEmptyCommand(): UpdateCombinationCommand
     {
-        return new UpdateCombinationCommand(self::COMBINATION_ID);
+        return new UpdateCombinationCommand(self::COMBINATION_ID, ShopConstraint::shop(self::DEFAULT_SHOP_ID));
     }
 }
