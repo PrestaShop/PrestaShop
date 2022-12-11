@@ -109,7 +109,7 @@ class LogoUploader
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 
             if (!$tmpName || !move_uploaded_file($files[$fieldName]['tmp_name'], $tmpName)) {
-                throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
+                throw new PrestaShopException(sprintf('Upload of temporary file to %s has failed.', $tmpName));
             }
 
             if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
