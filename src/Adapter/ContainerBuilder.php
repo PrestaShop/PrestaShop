@@ -134,13 +134,13 @@ class ContainerBuilder
         $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->compileContainer();
+        } else {
+            $this->loadModulesAutoloader($container);
         }
 
         // synthetic definitions can't be compiled
         $container->set('shop', $container->get('context')->shop);
         $container->set('employee', $container->get('context')->employee);
-
-        $this->loadModulesAutoloader($container);
 
         return $container;
     }
@@ -184,6 +184,7 @@ class ContainerBuilder
         }
 
         $this->loadServicesFromConfig($container);
+        $this->loadModulesAutoloader($container);
         $container->compile();
 
         //Dump the container file
