@@ -1626,6 +1626,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.pricing.catalog_price_rules_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.pricing.specific_price_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType'
     parent: 'form.type.translatable.aware'

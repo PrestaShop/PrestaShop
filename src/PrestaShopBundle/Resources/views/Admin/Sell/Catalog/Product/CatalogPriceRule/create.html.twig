@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +21,22 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+ * #}
 
-{% block specific_prices_widget %}
-  <div id="specific-prices-container">
-    {{ form_widget(form) }}
-    {{ block('specific_prices_list') }}
-  </div>
+{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
 {% endblock %}
 
-{% block specific_prices_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/list.html.twig' %}
+{% block content %}
+  {% include '@PrestaShop/Admin/Sell/Catalog/Product/CatalogPriceRule/Blocks/form.html.twig' %}
 {% endblock %}
 
-{% block catalog_price_rules_widget %}
-  <div id="catalog-price-rules-container">
-    {{ form_widget(form) }}
-    {{ block('catalog_price_rules_list') }}
-  </div>
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/specific_price_form.bundle.js') }}"></script>
 {% endblock %}
 
-{% block catalog_price_rules_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/CatalogPriceRule/Blocks/list.html.twig' %}
-{% endblock %}

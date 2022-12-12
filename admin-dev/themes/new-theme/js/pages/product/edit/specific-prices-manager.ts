@@ -30,6 +30,8 @@ import {EventEmitter} from 'events';
 import SpecificPriceListRenderer from '@pages/product/components/specific-price/specific-price-list-renderer';
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
+import FormFieldDisabler from '@components/form/form-field-disabler';
+import CatalogPriceRuleList from "@pages/product/components/catalog-price-rule/catalog-price-rule-list";
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
@@ -48,6 +50,8 @@ export default class SpecificPricesManager {
 
   router: Router;
 
+  catalogPriceRuleList: CatalogPriceRuleList;
+
   paginator!: DynamicPaginator;
 
   constructor(
@@ -56,8 +60,13 @@ export default class SpecificPricesManager {
     this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.specificPriceList = new SpecificPriceList(productId);
+    this.catalogPriceRuleList = new CatalogPriceRuleList();
+
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
     this.initComponents();
+    this.specificPriceList.renderList();
+    this.catalogPriceRuleList.renderList();
     this.initListeners();
   }
 
