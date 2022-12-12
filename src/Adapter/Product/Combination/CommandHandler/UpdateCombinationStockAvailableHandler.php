@@ -30,8 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockAvailableHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
@@ -47,28 +45,12 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
     private $combinationStockUpdater;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
-     * @var StockAvailableRepository
-     */
-    private $stockAvailableRepository;
-
-    /**
      * @param CombinationStockUpdater $combinationStockUpdater
-     * @param MovementReasonRepository $movementReasonRepository
-     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
-        CombinationStockUpdater $combinationStockUpdater,
-        MovementReasonRepository $movementReasonRepository,
-        StockAvailableRepository $stockAvailableRepository
+        CombinationStockUpdater $combinationStockUpdater
     ) {
         $this->combinationStockUpdater = $combinationStockUpdater;
-        $this->movementReasonRepository = $movementReasonRepository;
-        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -78,18 +60,9 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
     {
         $stockModification = null;
         if ($command->getDeltaQuantity()) {
-            $stockModification = new StockModification(
-                $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
-            );
+            $stockModification = StockModification::buildDeltaQuantity($command->getDeltaQuantity());
         } elseif (null !== $command->getFixedQuantity()) {
-            $currentQuantity = (int) $this->stockAvailableRepository->getForCombination($command->getCombinationId())->quantity;
-            $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
-
-            $stockModification = new StockModification(
-                $deltaQuantity,
-                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
-            );
+            $stockModification = StockModification::buildFixedQuantity($command->getFixedQuantity());
         }
 
         // Now we only fill the properties existing in StockAvailable object model.
@@ -106,6 +79,6 @@ class UpdateCombinationStockAvailableHandler implements UpdateCombinationStockAv
             null
         );
 
-        $this->combinationStockUpdater->update($command->getCombinationId(), $properties);
+        $this->combinationStockUpdater->update($command->getCombinationId(), $properties, $command->getShopConstraint());
     }
 }

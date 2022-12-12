@@ -26,11 +26,11 @@ services:
   prestashop.adapter.product.combination.query_handler.get_combination_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
     arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.tax.tax_computer'
@@ -78,8 +78,7 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
     deprecated: ~
 
-  prestashop.adapter.product.combination.repository.combination_multi_shop_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository
+  PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
@@ -89,8 +88,9 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.legacy.configuration'
 
@@ -102,14 +102,14 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
     arguments:
       - '@prestashop.core.product.combination.generator.combination_generator'
-      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater:
     arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
   prestashop.adapter.product.combination.update.default_combination_updater:
@@ -120,7 +120,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   prestashop.adapter.product.combination.update.combination_images_updater:

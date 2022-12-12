@@ -42,11 +42,12 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedCommandsMultiShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommands(array $formData, array $expectedCommands)
     {
         $builder = new UpdateProductCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
@@ -622,19 +623,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
-    }
-
-    /**
-     * @dataProvider getExpectedCommandsMultiShop
-     *
-     * @param array $formData
-     * @param array $expectedCommands
-     */
-    public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
-    {
-        $builder = new UpdateProductCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
-        $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     /**
