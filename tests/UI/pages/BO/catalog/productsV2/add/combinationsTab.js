@@ -526,86 +526,97 @@ class CombinationsTab extends BOBasePage {
   }
 
   /**
+   * Bulk edit stock
+   * @param page {Page} Browser tab
+   * @param editStockData {object} Data to set on bulk edit stock form
+   * @returns {Promise<void>}
+   */
+  async bulkEditStock(page, editStockData) {
+    await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
+    await this.setChecked(
+      page,
+      this.bulkEditModalQuantitySwitchButton(editStockData.quantityToEnable ? 1 : 0),
+    );
+    await this.setValue(page, this.bulkEditModalQuantityInput, editStockData.quantity);
+    await this.setChecked(
+      page,
+      this.bulkEditModalMinimalQuantitySwitchButton(editStockData.minimalQuantityToEnable ? 1 : 0),
+    );
+    await this.setValue(
+      page,
+      this.bulkEditModalMinimalQuantityInput,
+      editStockData.minimalQuantity,
+    );
+    await this.setChecked(
+      page,
+      this.bulkEditModalStockLocationSwitchButton(editStockData.stockLocationToEnable ? 1 : 0),
+    );
+    await this.setValue(
+      page,
+      this.bulkEditModalStockLocationInput,
+      editStockData.stockLocation,
+    );
+    await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
+  }
+
+  /**
+   * Bulk edit retail price
+   * @param page {Page} Browser tab
+   * @param editRetailPriceData {object} Data to set on bulk edit retail price form
+   * @returns {Promise<void>}
+   */
+  async bulkEditRetailPrice(page, editRetailPriceData) {
+    await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
+    await this.setChecked(page, this.bulkEditModalCostPriceSwitchButton(editRetailPriceData.costPriceToEnable ? 1 : 0),
+    );
+    await this.setValue(page, this.bulkEditModalCostPriceInput, editRetailPriceData.costPrice);
+    await this.setChecked(page,
+      this.bulkEditModalImpactOnPriceTIncSwitchButton(editRetailPriceData.impactOnPriceTIncToEnable ? 1 : 0),
+    );
+    await this.setValue(page, this.bulkEditModalImpactOnPriceTIncInput, editRetailPriceData.impactOnPriceTInc);
+    await this.setChecked(
+      page,
+      this.bulkEditModalImpactOnWeightSwitchButton(editRetailPriceData.impactOnWeightToEnable ? 1 : 0),
+    );
+    await this.setValue(page, this.bulkEditModalImpactOnWeightInput, editRetailPriceData.impactOnWeight);
+    await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
+  }
+
+  /**
+   * Bulk edit references
+   * @param page {Page} Browser tab
+   * @param specificReferencesData {object} Data to set on specific references form
+   * @returns {Promise<void>}
+   */
+  async bulkEditSpecificPrice(page, specificReferencesData) {
+    await this.waitForSelectorAndClick(page, this.bulkEditModalSpecificReferences);
+    await this.setChecked(
+      page,
+      this.bulkEditModalReferenceSwitchButton(specificReferencesData.referenceToEnable ? 1 : 0),
+    );
+    await this.setValue(page, this.bulkEditModalReferenceInput, specificReferencesData.reference);
+  }
+
+  /**
    * Edit combinations by bulk actions
    * @param page {Page} Browser tab
-   * @param editStockData {object}
+   * @param editCombinationsData {object}
    * @returns {Promise<string>}
    */
-  async editCombinationsByBulkActions(page, editStockData) {
+  async editCombinationsByBulkActions(page, editCombinationsData) {
     const bulkEditCombinationFrame = await page.frame('bulk-combination-form-modal-iframe');
 
     // Edit stocks
-    if (editStockData.stocks) {
-      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalStocksButton);
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalQuantitySwitchButton(editStockData.stocks.quantityToEnable ? 1 : 0),
-      );
-      await this.setValue(bulkEditCombinationFrame, this.bulkEditModalQuantityInput, editStockData.stocks.quantity);
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalMinimalQuantitySwitchButton(editStockData.stocks.minimalQuantityToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalMinimalQuantityInput,
-        editStockData.stocks.minimalQuantity,
-      );
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalStockLocationSwitchButton(editStockData.stocks.stockLocationToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalStockLocationInput,
-        editStockData.stocks.stockLocation,
-      );
-      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalStocksButton);
+    if (editCombinationsData.stocks) {
+      await this.bulkEditStock(bulkEditCombinationFrame, editCombinationsData.stocks);
     }
     // Edit retail price
-    if (editStockData.retailPrice) {
-      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalRetailPriceButton);
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalCostPriceSwitchButton(editStockData.retailPrice.costPriceToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalCostPriceInput,
-        editStockData.retailPrice.costPrice,
-      );
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalImpactOnPriceTIncSwitchButton(editStockData.retailPrice.impactOnPriceTIncToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalImpactOnPriceTIncInput,
-        editStockData.retailPrice.impactOnPriceTInc,
-      );
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalImpactOnWeightSwitchButton(editStockData.retailPrice.impactOnWeightToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalImpactOnWeightInput,
-        editStockData.retailPrice.impactOnWeight,
-      );
-      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalRetailPriceButton);
+    if (editCombinationsData.retailPrice) {
+      await this.bulkEditRetailPrice(bulkEditCombinationFrame, editCombinationsData.retailPrice);
     }
     // Edit specific references
-    if (editStockData.specificReferences) {
-      await this.waitForSelectorAndClick(bulkEditCombinationFrame, this.bulkEditModalSpecificReferences);
-      await this.setChecked(
-        bulkEditCombinationFrame,
-        this.bulkEditModalReferenceSwitchButton(editStockData.specificReferences.referenceToEnable ? 1 : 0),
-      );
-      await this.setValue(
-        bulkEditCombinationFrame,
-        this.bulkEditModalReferenceInput,
-        editStockData.specificReferences.reference,
-      );
+    if (editCombinationsData.specificReferences) {
+      await this.bulkEditSpecificPrice(bulkEditCombinationFrame, editCombinationsData.specificReferences);
     }
     // Save and close progress modal
     await this.waitForSelectorAndClick(page, this.bulkEditModalSaveButton);
