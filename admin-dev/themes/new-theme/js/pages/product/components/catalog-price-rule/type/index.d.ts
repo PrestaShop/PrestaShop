@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +21,26 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+ */
 
-{% block specific_prices_widget %}
-  <div id="specific-prices-container">
-    {{ form_widget(form) }}
-    {{ block('specific_prices_list') }}
-  </div>
-{% endblock %}
+//@todo: Im not sure this is the best place for types, but I don't like them being in generic js/types dir.
+//    whole js structure needs cleaning (for product) it should be more oriented to feature driven structure rather than type driven
+//    e.g. everything related to specificPrices should go to product/specific-price (including components, services(data providers), managers etc.),
+//    code related to categories goes to product/category etc.
 
-{% block specific_prices_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/list.html.twig' %}
-{% endblock %}
+type CatalogPriceRuleForListing = {
+  id: number,
+  currency: string,
+  country: string,
+  group: string,
+  customer: string,
+  price: string,
+  impact: string,
+  period: Period|null,
+  fromQuantity: string,
+}
 
-{% block catalog_price_rules_widget %}
-  <div id="catalog-price-rules-container">
-    {{ form_widget(form) }}
-    {{ block('catalog_price_rules_list') }}
-  </div>
-{% endblock %}
-
-{% block catalog_price_rules_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/CatalogPriceRule/Blocks/list.html.twig' %}
-{% endblock %}
+type CatalogPriceRulePeriod = {
+  from: string,
+  to: string
+}

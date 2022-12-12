@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,27 +22,52 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+ */
 
-{% block specific_prices_widget %}
-  <div id="specific-prices-container">
-    {{ form_widget(form) }}
-    {{ block('specific_prices_list') }}
-  </div>
-{% endblock %}
+declare(strict_types=1);
 
-{% block specific_prices_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/list.html.twig' %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
-{% block catalog_price_rules_widget %}
-  <div id="catalog-price-rules-container">
-    {{ form_widget(form) }}
-    {{ block('catalog_price_rules_list') }}
-  </div>
-{% endblock %}
+/**
+ * Transfer SpecificPrice list data
+ */
+class CatalogPriceRuleList
+{
+    /**
+     * @var CatalogPriceRuleForListing[]
+     */
+    private $catalogPriceRules;
 
-{% block catalog_price_rules_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/CatalogPriceRule/Blocks/list.html.twig' %}
-{% endblock %}
+    /**
+     * @var int
+     */
+    private $totalCatalogPriceRulesCount;
+
+    /**
+     * @param CatalogPriceRuleForListing[] $catalogPriceRules
+     * @param int $totalCatalogPriceRulesCount
+     */
+    public function __construct(
+        array $catalogPriceRules,
+        int $totalCatalogPriceRulesCount
+    ) {
+        $this->catalogPriceRules = $catalogPriceRules;
+        $this->totalCatalogPriceRulesCount = $totalCatalogPriceRulesCount;
+    }
+
+    /**
+     * @return CatalogPriceRuleForListing[]
+     */
+    public function getCatalogPriceRules(): array
+    {
+        return $this->catalogPriceRules;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalCatalogPriceRulesCount(): int
+    {
+        return $this->totalCatalogPriceRulesCount;
+    }
+}

@@ -33,7 +33,11 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotDeleteCat
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CannotUpdateCatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
@@ -42,6 +46,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,6 +78,15 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'catalogPriceRuleGrid' => $this->presentGrid($catalogPriceRuleGrid),
         ]);
+    }
+
+    public function productFormListAction(): JsonResponse
+    {
+        $catalogPriceRuleList = $this->getQueryBus()->handle(
+            new GetCatalogPriceRuleList()
+        );
+
+        return $this->json(['catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList)]);
     }
 
     /**
@@ -288,5 +302,21 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     private function getFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
+    }
+
+    private function formatCatalogPriceRule(CatalogPriceRuleList $catalogPriceRuleList): array
+    {
+        $list = [];
+        foreach ($catalogPriceRuleList->getCatalogPriceRules() as $catalogPriceRule) {
+            $list[] = [
+                'id' => $catalogPriceRule->getCatalogPriceRuleId(),
+                'currency' => $catalogPriceRule->getCurrencyId() ?? $this->trans('All currencies', 'Admin.Global'),
+                'country' => $catalogPriceRule->getCountryId() ?? $this->trans('All countries', 'Admin.Global'),
+                'group' => $catalogPriceRule->getGroupId() ?? $this->trans('All groups', 'Admin.Global'),
+                'name' => $catalogPriceRule->getName() ?? $this->trans('All customers', 'Admin.Global'),
+            ];
+        }
+
+        return $list;
     }
 }

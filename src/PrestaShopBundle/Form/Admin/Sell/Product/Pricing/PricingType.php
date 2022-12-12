@@ -97,6 +97,11 @@ class PricingType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('Set specific prices for customers meeting certain conditions.', 'Admin.Catalog.Help'),
             ])
+            ->add('catalog_price_rules', CatalogPriceRulesType::class, [
+                'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_help_box' => $this->trans('Set catalog price rules for customers meeting certain conditions.', 'Admin.Catalog.Help'),
+            ])
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
