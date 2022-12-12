@@ -487,7 +487,9 @@ class AdminImagesControllerCore extends AdminController
                     || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.avif$/', $d)
                     || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.webp$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)) {
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.avif$/', $d)
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.webp$/', $d)) {
                     if (file_exists($dir . $d)) {
                         unlink($dir . $d);
                     }
@@ -508,7 +510,9 @@ class AdminImagesControllerCore extends AdminController
                             if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)
                                 || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.avif$/', $d)
                                 || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.webp$/', $d)
-                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.avif$/', $d))
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.webp$/', $d))) {
                                 if (file_exists($dir . $imageObj->getImgFolder() . $d)) {
                                     unlink($dir . $imageObj->getImgFolder() . $d);
                                 }
@@ -813,7 +817,7 @@ class AdminImagesControllerCore extends AdminController
 
     public function processDelete()
     {
-        $res = parent::processDelete();
+        $name = 'large_default'; // we need to dynamize this
         // We will remove the images linked to this image setting
         if (!empty(Tools::getValue('delete' . $this->table))) {
             $process = [
@@ -824,11 +828,13 @@ class AdminImagesControllerCore extends AdminController
                 ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
             ];
             foreach ($process as $proc) {
-                $formats = ImageType::getImagesTypes($proc['type']);
+                $formats = ImageType::getImagesTypesByName($name, $proc['type']);
                 $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
             }
         }
 
-        return $res;
+        parent::processDelete();
+
+        return true;
     }
 }
