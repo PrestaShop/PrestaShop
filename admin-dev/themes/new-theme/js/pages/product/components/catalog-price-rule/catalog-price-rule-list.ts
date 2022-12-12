@@ -25,18 +25,23 @@
 import {getCatalogRules} from '@pages/product/services/catalog-rule-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
+import Router from "@components/router";
 
 const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 
 export default class CatalogPriceRuleList {
+  private router: Router;
+
   eventEmitter: EventEmitter;
 
   listContainer: HTMLElement
+
 
   constructor(
   ) {
     this.listContainer = document.querySelector(CatalogPriceRuleMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.router = new Router();
   }
 
   public renderList(): void {
@@ -66,7 +71,7 @@ export default class CatalogPriceRuleList {
         const startDateField = this.selectListField(trClone, listFields.from);
         const endDateField = this.selectListField(trClone, listFields.to);
 
-        const editBtn = this.selectListField(trClone, listFields.editBtn);
+        const editBtn = this.selectLink(trClone, listFields.editBtn);
         idField.textContent = String(catalogPriceRule.id);
         currencyField.textContent = catalogPriceRule.currency;
         countryField.textContent = catalogPriceRule.country;
@@ -77,7 +82,7 @@ export default class CatalogPriceRuleList {
         reductionField.textContent = catalogPriceRule.reduction;
         startDateField.textContent = catalogPriceRule.startDate;
         endDateField.textContent = catalogPriceRule.endDate;
-        editBtn.dataset.catalogPriceRuleId = String(catalogPriceRule.id);
+        editBtn.href = this.router.generate('admin_catalog_price_rules_edit', {catalogPriceRuleId: String(catalogPriceRule.id)});
         tbody.append(trClone);
       });
     });
@@ -89,5 +94,9 @@ export default class CatalogPriceRuleList {
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
     return templateTrClone.querySelector(selector) as HTMLElement;
+  }
+
+  private selectLink(templateTrClone: HTMLElement, selector: string): HTMLLinkElement {
+    return templateTrClone.querySelector(selector) as HTMLLinkElement;
   }
 }
