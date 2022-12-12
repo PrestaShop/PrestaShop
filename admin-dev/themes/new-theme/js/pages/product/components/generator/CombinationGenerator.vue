@@ -40,9 +40,21 @@
           @toggleAll="toggleAll"
           v-if="attributeGroups"
         />
-      </template>
 
-      <template #footer-confirmation>
+        <div class="md-checkbox md-checkbox-inline">
+          <label>
+            <input
+              v-model=applyToAllShops
+              type="checkbox"
+              id="generate_combinations_all_shop"
+              name="generate_combinations_all_shop"
+              class="form-check-input"
+            >
+            <i class="md-checkbox-control"/>
+            {{ $t('label.apply-to-all-shops') }}
+          </label>
+        </div>
+
         <button
           type="button"
           class="btn btn-outline-secondary"
@@ -99,6 +111,7 @@
     preLoading: boolean,
     loading: boolean,
     hasGeneratedCombinations: boolean,
+    applyToAllShops: boolean,
   }
 
   export default defineComponent({
@@ -112,6 +125,7 @@
         preLoading: true,
         loading: false,
         hasGeneratedCombinations: false,
+        applyToAllShops: false,
       };
     },
     props: {
@@ -198,6 +212,7 @@
         this.loading = true;
         const data: Record<string, any> = {
           attributes: {},
+          applyToAllShops: this.applyToAllShops ? 1 : 0,
         };
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
