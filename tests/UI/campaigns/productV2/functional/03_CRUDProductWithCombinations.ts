@@ -55,14 +55,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the first combination
-  const firstCombinationData : object = {
+  const firstCombinationData: object = {
     reference: 'abcd',
     impactOnPriceTExc: 25,
     quantity: 100,
   };
 
   // Data to edit the second combination
-  const secondCombinationData : object = {
+  const secondCombinationData: object = {
     reference: 'efghigk',
     minimalQuantity: 2,
     impactOnPriceTExc: 20,
@@ -70,7 +70,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the stock of combinations by bulk actions
-  const editStockData : object = {
+  const editStockData: object = {
     stocks: {
       quantityToEnable: true,
       quantity: 20,
@@ -94,14 +94,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the product price
-  const pricingData : object = {
+  const pricingData: object = {
     price: 15,
     taxRule: 'FR Taux standard (20%)',
     priceTaxIncl: 18,
   };
 
   // Data to edit the product with combinations
-  const editProductData : ProductFaker = new ProductFaker({
+  const editProductData: ProductFaker = new ProductFaker({
     type: 'combinations',
     taxRule: 'No tax',
     quantity: 100,
@@ -323,7 +323,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         args: {
           testIdentifier: 'sortByFinalPriceTaxExcAsc',
           sortBy: 'final_price_te',
-          column: 8,
+          column: 9,
           sortDirection: 'asc',
         },
       },
@@ -331,7 +331,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         args: {
           testIdentifier: 'sortByFinalPriceTaxExcDesc',
           sortBy: 'final_price_te',
-          column: 8,
+          column: 9,
           sortDirection: 'desc',
         },
       },
@@ -339,7 +339,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         args: {
           testIdentifier: 'sortByQuantityAsc',
           sortBy: 'delta_quantity_quantity',
-          column: 9,
+          column: 10,
           sortDirection: 'asc',
         },
       },
@@ -347,7 +347,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
         args: {
           testIdentifier: 'sortByQuantityDesc',
           sortBy: 'delta_quantity_quantity',
-          column: 9,
+          column: 10,
           sortDirection: 'desc',
         },
       },
