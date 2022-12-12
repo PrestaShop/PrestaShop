@@ -138,7 +138,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And I update combination "product1SWhite" stock for shop "shop1" with following details:
       | delta quantity | 50          |
       | location       | Storage nr1 |
-    When I update combination "product1SWhite" with following values for shop "shop2":
+    And I update combination "product1SWhite" with following values for shop "shop2":
       | minimal quantity           | 10         |
       | low stock threshold        | 10         |
       | low stock alert is enabled | true       |
@@ -163,7 +163,14 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
     And combination "product1SWhite" last stock movement for shop "shop1" increased by 50
+    And combination "product1SWhite" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 50             |
     And combination "product1SWhite" last stock movement for shop "shop2" increased by 30
+    And combination "product1SWhite" last stock movements for shop "shop2" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 30             |
+
     And product "product1" should have the following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 50       | true       |
@@ -274,29 +281,61 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | Puff Daddy | 10             |
 
   Scenario: I update combination stock for all shops using delta quantity:
-    When I update combination "product1SBlack" with following values for all shops:
+    Given I update combination "product1SBlack" with following values for all shops:
       | minimal quantity           | 10         |
       | low stock threshold        | 10         |
       | low stock alert is enabled | true       |
       | available date             | 2021-10-10 |
-    And I update combination "product1SBlack" stock for all shops with following details:
-      | delta quantity | 120         |
+    And I update combination "product1SBlack" stock for shop "shop1" with following details:
+      | delta quantity | 10          |
       | location       | Storage nr1 |
-    Then combination "product1SBlack" should have following stock details for shops "shop1,shop2":
+    And I update combination "product1SBlack" stock for shop "shop2" with following details:
+      | delta quantity | 100         |
+      | location       | Storage nr2 |
+    And combination "product1SBlack" should have following stock details for shops "shop1":
       | combination stock detail   | value       |
-      | quantity                   | 120         |
+      | quantity                   | 10          |
       | minimal quantity           | 10          |
       | low stock threshold        | 10          |
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
+    And combination "product1SBlack" should have following stock details for shops "shop2":
+      | combination stock detail   | value       |
+      | quantity                   | 100         |
+      | minimal quantity           | 10          |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr2 |
+      | available date             | 2021-10-10  |
+    When I update combination "product1SBlack" stock for all shops with following details:
+      | delta quantity | 120         |
+      | location       | Storage nr3 |
+    Then combination "product1SBlack" should have following stock details for shops "shop1":
+      | combination stock detail   | value       |
+      | quantity                   | 130         |
+      | minimal quantity           | 10          |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr3 |
+      | available date             | 2021-10-10  |
+    Then combination "product1SBlack" should have following stock details for shops "shop2":
+      | combination stock detail   | value       |
+      | quantity                   | 220         |
+      | minimal quantity           | 10          |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr3 |
+      | available date             | 2021-10-10  |
     And combination "product1SBlack" last stock movements for shop "shop1" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 120            |
+      | Puff Daddy | 10             |
     And combination "product1SBlack" last stock movement for shop "shop1" increased by 120
     And combination "product1SBlack" last stock movements for shop "shop2" should be:
       | employee   | delta_quantity |
       | Puff Daddy | 120            |
+      | Puff Daddy | 100            |
     And combination "product1SBlack" last stock movement for shop "shop2" increased by 120
     And combinations "product1SBlack" are not associated to shop "shop3"
     And combinations "product1SBlack" are not associated to shop "shop4"

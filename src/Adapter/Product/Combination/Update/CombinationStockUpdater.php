@@ -113,7 +113,7 @@ class CombinationStockUpdater
         );
 
         $this->updateStockByShopConstraint(
-            $this->stockAvailableRepository->getForCombination($combinationId, new ShopId($combination->getShopId())),
+            $combination,
             $properties,
             $shopConstraint
         );
@@ -232,22 +232,26 @@ class CombinationStockUpdater
     }
 
     private function updateStockByShopConstraint(
-        StockAvailable $stockAvailable,
+        Combination $combination,
         CombinationStockProperties $properties,
         ShopConstraint $shopConstraint
     ): void {
+        $combinationId = new CombinationId((int) $combination->id);
         if ($shopConstraint->forAllShops()) {
             // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
             // so we manually loop to update each associated stocks
-            $shops = $this->stockAvailableRepository->getAssociatedShopIds(new StockId((int) $stockAvailable->id));
+            $shops = $this->combinationRepository->getAssociatedShopIds($combinationId);
             foreach ($shops as $shopId) {
                 $this->updateStockAvailable(
-                    $this->stockAvailableRepository->getForCombination(new CombinationId((int) $stockAvailable->id_product_attribute), $shopId),
+                    $this->stockAvailableRepository->getForCombination($combinationId, $shopId),
                     $properties
                 );
             }
         } else {
-            $this->updateStockAvailable($stockAvailable, $properties);
+            $this->updateStockAvailable(
+                $this->stockAvailableRepository->getForCombination($combinationId, new ShopId($combination->getShopId())),
+                $properties
+            );
         }
     }
 }
