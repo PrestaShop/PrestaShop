@@ -68,6 +68,11 @@ class ApplicableGroupsType extends TranslatorAwareType
      */
     protected $isMultiShopEnabled;
 
+    /**
+     * @var int
+     */
+    protected $contextShopId;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -76,7 +81,8 @@ class ApplicableGroupsType extends TranslatorAwareType
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
         string $defaultCurrencySymbol,
-        bool $isMultiShopEnabled
+        bool $isMultiShopEnabled,
+        int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
@@ -85,6 +91,7 @@ class ApplicableGroupsType extends TranslatorAwareType
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
         $this->defaultCurrencySymbol = $defaultCurrencySymbol;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
+        $this->contextShopId = $contextShopId;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -125,16 +132,31 @@ class ApplicableGroupsType extends TranslatorAwareType
         ;
 
         if ($this->isMultiShopEnabled) {
-            $shops = array_merge([
-                $this->trans('All stores', 'Admin.Global') => 0,
-            ], $this->shopByIdChoiceProvider->getChoices());
             $builder->add('shop_id', ChoiceType::class, [
                 'label' => false,
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $shops,
+                'choices' => $this->buildShopChoices(),
             ]);
         }
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function buildShopChoices(): array
+    {
+        $choices = [];
+        $allShops = $this->shopByIdChoiceProvider->getChoices();
+        foreach ($allShops as $name => $shopId) {
+            if ($shopId === $this->contextShopId) {
+                $choices[$name] = $shopId;
+                break;
+            }
+        }
+        $choices[$this->trans('All stores', 'Admin.Global')] = 0;
+
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver)
