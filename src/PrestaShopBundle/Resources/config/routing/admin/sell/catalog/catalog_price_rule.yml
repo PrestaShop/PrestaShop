@@ -32,6 +32,8 @@ admin_catalog_price_rules_edit:
     # _legacy_link: AdminSpecificPriceRule:updatespecific_price_rule
     _legacy_parameters:
       id_specific_price_rule: catalogPriceRuleId
+  options:
+    expose: true
   requirements:
     catalogPriceRuleId: \d+
 
