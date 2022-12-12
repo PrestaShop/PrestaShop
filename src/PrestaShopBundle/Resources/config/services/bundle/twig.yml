@@ -52,6 +52,8 @@ services:
     properties:
       logger: "@logger"
       translator: "@translator"
+    tags:
+      - { name: twig.extension }
 
   PrestaShopBundle\Twig\Extension\LocalizationExtension:
     arguments:

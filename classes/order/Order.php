@@ -180,6 +180,11 @@ class OrderCore extends ObjectModel
     public $product_list = [];
 
     /**
+     * @var string|null
+     */
+    public $weight;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [

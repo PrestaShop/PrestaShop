@@ -94,12 +94,14 @@ smartyRegisterFunction($smarty, 'function', 'url', array('Link', 'getUrlSmarty')
 // Native PHP Functions
 smartyRegisterFunction($smarty, 'modifier', 'addcslashes', 'addcslashes');
 smartyRegisterFunction($smarty, 'modifier', 'addslashes', 'addslashes');
+smartyRegisterFunction($smarty, 'modifier', 'date','date');
 smartyRegisterFunction($smarty, 'modifier', 'end','end');
 smartyRegisterFunction($smarty, 'modifier', 'floatval', 'floatval');
 smartyRegisterFunction($smarty, 'modifier', 'htmlentities', 'htmlentities');
 smartyRegisterFunction($smarty, 'modifier', 'intval', 'intval');
 smartyRegisterFunction($smarty, 'modifier', 'json_decode', 'json_decode');
 smartyRegisterFunction($smarty, 'modifier', 'json_encode', 'json_encode');
+smartyRegisterFunction($smarty, 'modifier', 'mt_rand','mt_rand');
 smartyRegisterFunction($smarty, 'modifier', 'rand','rand');
 smartyRegisterFunction($smarty, 'modifier', 'strtolower','strtolower');
 smartyRegisterFunction($smarty, 'modifier', 'str_replace','str_replace');

@@ -57,7 +57,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     /** @var bool */
     protected $useRegularH1Structure;
     /** @var bool */
-    protected $lockedToAllShopContext = false;
+    public $lockedToAllShopContext = false;
 
     /**
      * @param string $controllerName

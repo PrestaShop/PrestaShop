@@ -32,6 +32,9 @@ class StoreCore extends ObjectModel
     /** @var int Store id */
     public $id;
 
+    /** @var int|bool Store id */
+    public $id_image;
+
     /** @var int Country id */
     public $id_country;
 

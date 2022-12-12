@@ -150,6 +150,24 @@ abstract class ModuleCore implements ModuleInterface
     /** @var bool */
     public $show_quick_view = false;
 
+    /** @var bool */
+    public $onclick_option = false;
+
+    /** @var string|null */
+    public $addons_buy_url = false;
+
+    /** @var string|null */
+    public $url = null;
+
+    /** @var string|null */
+    public $image = null;
+
+    /** @var string|null */
+    public $price = null;
+
+    /** @var string|null Can be addonsPartner|addonsNative */
+    public $type = null;
+
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
 

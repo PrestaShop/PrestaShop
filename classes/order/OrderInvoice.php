@@ -60,6 +60,9 @@ class OrderInvoiceCore extends ObjectModel
     public $total_products_wt;
 
     /** @var float */
+    public $total_shipping;
+
+    /** @var float */
     public $total_shipping_tax_excl;
 
     /** @var float */
@@ -88,6 +91,9 @@ class OrderInvoiceCore extends ObjectModel
 
     /** @var Order|null */
     private $order;
+
+    /** @var bool|null */
+    public $is_delivery;
 
     /**
      * @see ObjectModel::$definition

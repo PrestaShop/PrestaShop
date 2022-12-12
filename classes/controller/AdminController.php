@@ -148,6 +148,9 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $fields_value = [];
 
+    /** @var int|null */
+    public $max_image_size = null;
+
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
 
@@ -2622,28 +2625,41 @@ class AdminControllerCore extends Controller
         if (isset($helper->no_link)) {
             $helper->no_link = $this->list_no_link;
         }
-        $helper->colorOnBackground = $this->colorOnBackground;
-        $helper->ajax_params = $this->ajax_params ?? null;
-        // @phpstan-ignore-next-line
-        $helper->default_form_language = $this->default_form_language;
+        if (isset($helper->colorOnBackground)) {
+            $helper->colorOnBackground = $this->colorOnBackground;
+        }
+        if (isset($helper->ajax_params)) {
+            $helper->ajax_params = $this->ajax_params ?? null;
+        }
+        if (isset($helper->default_form_language)) {
+            $helper->default_form_language = $this->default_form_language;
+        }
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
         }
         if ($helper->multiple_fieldsets === null) {
             $helper->multiple_fieldsets = $this->multiple_fieldsets;
         }
-        $helper->row_hover = $this->row_hover;
-        $helper->position_identifier = $this->position_identifier;
+        if (isset($helper->row_hover)) {
+            $helper->row_hover = $this->row_hover;
+        }
+        if (isset($helper->position_identifier)) {
+            $helper->position_identifier = $this->position_identifier;
+        }
         if ($helper->position_group_identifier === null) {
             $helper->position_group_identifier = $this->position_group_identifier;
         }
         // @phpstan-ignore-next-line
         $helper->controller_name = $this->controller_name;
-        $helper->list_id = $this->list_id ?? $this->table;
+        if (isset($helper->list_id)) {
+            $helper->list_id = $this->list_id ?? $this->table;
+        }
         $helper->bootstrap = $this->bootstrap;
 
         // For each action, try to add the corresponding skip elements list
-        $helper->list_skip_actions = $this->list_skip_actions;
+        if (isset($helper->list_skip_actions)) {
+            $helper->list_skip_actions = $this->list_skip_actions;
+        }
 
         $this->helper = $helper;
     }
@@ -3928,7 +3944,7 @@ class AdminControllerCore extends Controller
             }
 
             // Check image validity
-            $max_size = isset($this->max_image_size) ? $this->max_image_size : 0;
+            $max_size = $this->max_image_size ?: 0;
             if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize($max_size))) {
                 $this->errors[] = $error;
             }
