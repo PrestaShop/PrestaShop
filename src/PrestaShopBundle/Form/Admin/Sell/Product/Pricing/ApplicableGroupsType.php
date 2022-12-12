@@ -146,7 +146,10 @@ class ApplicableGroupsType extends TranslatorAwareType
      */
     private function buildShopChoices(): array
     {
-        $choices = [];
+        $choices = [
+            $this->trans('All stores', 'Admin.Global') => 0,
+        ];
+
         $allShops = $this->shopByIdChoiceProvider->getChoices();
         foreach ($allShops as $name => $shopId) {
             if ($shopId === $this->contextShopId) {
@@ -154,7 +157,6 @@ class ApplicableGroupsType extends TranslatorAwareType
                 break;
             }
         }
-        $choices[$this->trans('All stores', 'Admin.Global')] = 0;
 
         return $choices;
     }
