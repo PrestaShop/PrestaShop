@@ -513,7 +513,7 @@ class CombinationController extends FrameworkBundleAdminController
             $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $productId,
                 $attributes,
-                ShopConstraint::shop((int) $this->getContextShopId())
+                $request->request->get('applyToAllShops') ? ShopConstraint::allShops() : ShopConstraint::shop((int) $this->getContextShopId())
             ));
         } catch (Exception $e) {
             return $this->json([
