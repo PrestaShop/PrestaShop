@@ -276,7 +276,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             $shopId = $shopConstraint->getShopId();
         }
 
-        return $this->getCombinationByShopId($combinationId, $shopId);
+        return $this->get($combinationId, $shopId);
     }
 
     /**
@@ -680,23 +680,5 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         return [$shopConstraint->getShopId()];
-    }
-
-    /**
-     * @param CombinationId $combinationId
-     * @param ShopId $shopId
-     *
-     * @return Combination
-     */
-    private function getCombinationByShopId(CombinationId $combinationId, ShopId $shopId): Combination
-    {
-        $combination = $this->getObjectModelForShop(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class,
-            $shopId
-        );
-
-        return $this->get($combinationId, $shopId);
     }
 }

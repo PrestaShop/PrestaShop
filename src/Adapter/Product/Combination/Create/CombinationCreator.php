@@ -125,6 +125,24 @@ class CombinationCreator
         // apply all specific price rules at once after all the combinations are generated
         $this->applySpecificPriceRules($productId);
         $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
+        $this->syncOutOfStockType($product, $shopConstraint, $shopIdsByConstraint);
+
+        return $combinationIds;
+    }
+
+    /**
+     * Makes sure combinations out_of_stock type has the same value as the product out_of_stock type.
+     *
+     * @param Product $product
+     * @param ShopConstraint $shopConstraint
+     * @param ShopId[] $shopIdsByConstraint
+     */
+    private function syncOutOfStockType(
+        Product $product,
+        ShopConstraint $shopConstraint,
+        array $shopIdsByConstraint
+    ): void {
+        $productId = new ProductId((int) $product->id);
         $productStockAvailable = $this->stockAvailableMultiShopRepository->getForProduct($productId, new ShopId($product->getShopId()));
         $outOfStockType = new OutOfStockType((int) $productStockAvailable->out_of_stock);
 
@@ -135,8 +153,6 @@ class CombinationCreator
         } else {
             $this->combinationRepository->updateCombinationOutOfStockType($productId, $outOfStockType, $shopConstraint);
         }
-
-        return $combinationIds;
     }
 
     /**
