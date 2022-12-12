@@ -458,7 +458,7 @@ class CategoryController extends FrameworkBundleAdminController
      */
     public function deleteCoverImageAction(Request $request, $categoryId)
     {
-        if (!$this->isCsrfTokenValid('delete-cover_image', $request->request->get('_csrf_token'))) {
+        if (!$this->isCsrfTokenValid('delete-cover-image', $request->request->get('_csrf_token'))) {
             return $this->redirectToRoute('admin_security_compromised', [
                 'uri' => $this->generateUrl('admin_categories_edit', [
                     'categoryId' => $categoryId,
