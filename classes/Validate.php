@@ -1087,7 +1087,7 @@ class ValidateCore
      */
     public static function isSortDirection($value)
     {
-        return $value !== null && ($value === 'ASC' || $value === 'DESC');
+        return $value === 'ASC' || $value === 'DESC';
     }
 
     /**
