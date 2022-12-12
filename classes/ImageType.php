@@ -113,6 +113,37 @@ class ImageTypeCore extends ObjectModel
     }
 
     /**
+     * Returns image type definitions by name.
+     *
+     * @param string $name name
+     * @param string|null $type Image type
+     * @param bool $orderBySize
+     *
+     * @return array Image type definitions
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getImagesTypesByName($name, $type = null, $orderBySize = false)
+    {
+        if (!isset(self::$images_types_cache[$type])) {
+            $where = 'WHERE `name` = "' . pSQL($name) . '" ';
+            if (!empty($type)) {
+                $where .= ' AND `' . bqSQL($type) . '` = 1 ';
+            }
+
+            if ($orderBySize) {
+                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+            } else {
+                $query = 'SELECT * FROM `' . _DB_PREFIX_ . 'image_type` ' . $where . ' ORDER BY `name` ASC';
+            }
+
+            self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
+        }
+
+        return self::$images_types_cache[$type];
+    }
+
+    /**
      * Check if type already is already registered in database.
      *
      * @param string $typeName Name
