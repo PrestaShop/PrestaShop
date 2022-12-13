@@ -375,6 +375,22 @@ class AdminImagesControllerCore extends AdminController
                 ],
             ],
         ];
+
+        $this->modals[] = [
+            'modal_id' => 'modalConfirmDeleteType',
+            'modal_class' => 'modal-md',
+            'modal_title' => $this->trans('Are you sure you want to delete this image setting?', [], 'Admin.Design.Feature'),
+            'modal_content' => $this->context->smarty->fetch('controllers/images/modal_confirm_delete_type.tpl'),
+            'modal_cancel_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+            'modal_actions' => [
+                [
+                    'type' => 'button',
+                    'label' => $this->trans('Delete', [], 'Admin.Design.Feature'),
+                    'class' => 'btn-danger btn-confirm-delete-images-type',
+                    'value' => '',
+                ],
+            ],
+        ];
     }
 
     public function postProcess()
@@ -804,6 +820,7 @@ class AdminImagesControllerCore extends AdminController
             $this->context->smarty->assign([
                 'display_regenerate' => true,
                 'display_move' => $this->display_move,
+                'is_images_page' => true,
             ]);
         }
 
