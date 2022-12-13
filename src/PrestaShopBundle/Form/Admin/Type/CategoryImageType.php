@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -37,13 +36,35 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of an accordion.
  */
-class CategoryThumbnailType extends FileType
+class CategoryImageType extends FileType
 {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
         $view->vars['download_url'] = $options['download_url'];
-        $view->vars['preview_image'] = $options['preview_image'];
+
+        /*
+         * An array of preview images, must have params id and image_path.
+         */
+        $view->vars['preview_images'] = $options['preview_images'];
+
+        /*
+         * Indicates if image can be deleted.
+         * If image can be deleted you also need to have csrf_delete_token which is checked in delete action.
+         * Also if images can be deleted preview_images must contain delete_path,
+         * a path to to delete action of that specific image.
+         */
+        $view->vars['can_be_deleted'] = $options['can_be_deleted'];
+        $view->vars['csrf_delete_token'] = $options['csrf_delete_token'];
+
+        /*
+         * Indicates whether or not to show size next to image.
+         * If used, then preview_images must also contain param size.
+         */
+        $view->vars['show_size'] = $options['show_size'];
+
+        /* A warning message that will be shown if field is disabled.*/
+        $view->vars['warning_message'] = $options['warning_message'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -51,9 +72,17 @@ class CategoryThumbnailType extends FileType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'download_url' => null,
-            'preview_image' => null,
+            'preview_images' => null,
+            'can_be_deleted' => false,
+            'csrf_delete_token' => null,
+            'show_size' => false,
+            'warning_message' => null,
         ])
+            ->setAllowedTypes('can_be_deleted', ['bool'])
             ->setAllowedTypes('download_url', ['null', 'string'])
+            ->setAllowedTypes('csrf_delete_token', ['null', 'string'])
+            ->setAllowedTypes('show_size', ['bool'])
+            ->setAllowedTypes('warning_message', ['null', 'string'])
         ;
     }
 
@@ -62,7 +91,6 @@ class CategoryThumbnailType extends FileType
      */
     public function getBlockPrefix()
     {
-        return 'category_thumbnail';
+        return 'category_image';
     }
-
 }

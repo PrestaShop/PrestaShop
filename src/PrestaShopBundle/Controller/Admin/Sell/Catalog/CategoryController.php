@@ -342,7 +342,6 @@ class CategoryController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'allowMenuThumbnailsUpload' => $editableCategory->canContainMoreMenuThumbnails(),
-                'maxMenuThumbnails' => count(MenuThumbnailId::ALLOWED_ID_VALUES),
                 'contextLangId' => $this->getContextLangId(),
                 'editCategoryForm' => $categoryForm->createView(),
                 'editableCategory' => $editableCategory,
