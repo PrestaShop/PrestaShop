@@ -36,16 +36,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of an accordion.
  */
-class CategoryImageType extends FileType
+class ImageWithPreviewType extends FileType
 {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
         $view->vars['download_url'] = $options['download_url'];
 
-        /*
-         * An array of preview images, must have params id and image_path.
-         */
+        /* An array of preview images, must have params id and image_path.*/
         $view->vars['preview_images'] = $options['preview_images'];
 
         /*
@@ -91,6 +89,6 @@ class CategoryImageType extends FileType
      */
     public function getBlockPrefix()
     {
-        return 'category_image';
+        return 'image_with_preview';
     }
 }

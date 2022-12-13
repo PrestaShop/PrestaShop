@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use PrestaShop\PrestaShop\Core\Domain\Category\SeoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShopBundle\Form\Admin\Type\CategoryImageType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\ImageWithPreviewType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -225,7 +225,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ),
                 'required' => false,
             ])
-            ->add('cover_image', CategoryImageType::class, [
+            ->add('cover_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category cover image', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('This is the cover image for your category: it will be displayed on the category\'s page. The description will appear in its top-left corner.', 'Admin.Catalog.Help'),
                 'required' => false,
@@ -234,7 +234,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'csrf_delete_token' => 'delete-cover-image',
                 'preview_images' => $coverImages,
             ])
-            ->add('thumbnail_image', CategoryImageType::class, [
+            ->add('thumbnail_image', ImageWithPreviewType::class, [
                 'label' => $this->trans('Category thumbnail', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail on the parent category\'s page, if the theme allows it.', 'Admin.Catalog.Help'),
                 'required' => false,
@@ -242,7 +242,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'preview_images' => $thumbnailImages,
                 'show_size' => true,
             ])
-            ->add('menu_thumbnail_images', CategoryImageType::class, [
+            ->add('menu_thumbnail_images', ImageWithPreviewType::class, [
                 'label' => $this->trans('Menu thumbnails', 'Admin.Catalog.Feature'),
                 'help' => $this->trans('It will display a thumbnail representing the category in the menu, if the theme allows it.', 'Admin.Catalog.Help'),
                 'multiple' => true,
