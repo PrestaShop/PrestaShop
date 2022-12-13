@@ -833,8 +833,6 @@ class AdminImagesControllerCore extends AdminController
             }
         }
 
-        parent::processDelete();
-
-        return true;
+        return parent::processDelete();
     }
 }
