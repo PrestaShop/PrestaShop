@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
@@ -17,7 +18,6 @@ const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productPage_displayAvailableQuantities';
 

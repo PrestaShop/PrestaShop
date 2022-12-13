@@ -1,6 +1,9 @@
 // Import utils
-import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 // Using chai
@@ -8,7 +11,6 @@ const {expect} = require('chai');
 
 // Import pages
 const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
 
 // Import data
 const {Products} = require('@data/demo/products');
