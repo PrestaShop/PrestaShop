@@ -834,9 +834,11 @@ class AdminImagesControllerCore extends AdminController
 
     public function processDelete()
     {
-        $name = 'large_default'; // we need to dynamize this
+        $imageTypeId = Tools::getValue('id_image_type');
+        $imageType = ImageType::getImageTypeById($imageTypeId);
+
         // We will remove the images linked to this image setting
-        if (!empty(Tools::getValue('delete' . $this->table))) {
+        if (!empty(Tools::getValue('delete_linked_images')) && Tools::getValue('delete_linked_images') === true) {
             $process = [
                 ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
                 ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
@@ -845,7 +847,7 @@ class AdminImagesControllerCore extends AdminController
                 ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
             ];
             foreach ($process as $proc) {
-                $formats = ImageType::getImagesTypesByName($name, $proc['type']);
+                $formats = ImageType::getImagesTypesByName($imageType['name'], $proc['type']);
                 $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
             }
         }
