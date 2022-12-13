@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
@@ -355,10 +355,15 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
-        /** @var CombinationRepository $repository */
-        $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
+        /** @var CombinationMultiShopRepository $repository */
+        $repository = $this->get('PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository');
 
-        $combinationIds = $repository->getCombinationIds(new ProductId($productId), $filters);
+        $combinationIds = $repository->getCombinationIds(
+            new ProductId($productId),
+            ShopConstraint::shop($this->getContextShopId()),
+            $filters
+        );
+
         $data = [];
         foreach ($combinationIds as $combinationId) {
             $data[] = $combinationId->getValue();

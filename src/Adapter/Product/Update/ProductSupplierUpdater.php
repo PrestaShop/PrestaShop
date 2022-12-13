@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
@@ -43,6 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Product;
@@ -59,7 +61,7 @@ class ProductSupplierUpdater
     private $productRepository;
 
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     private $combinationRepository;
 
@@ -79,24 +81,31 @@ class ProductSupplierUpdater
     private $defaultCurrencyId;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
      * @param ProductRepository $productRepository
-     * @param CombinationRepository $combinationRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param int $defaultCurrencyId
      */
     public function __construct(
         ProductRepository $productRepository,
-        CombinationRepository $combinationRepository,
+        CombinationMultiShopRepository $combinationRepository,
         SupplierRepository $supplierRepository,
         ProductSupplierRepository $productSupplierRepository,
-        int $defaultCurrencyId
+        int $defaultCurrencyId,
+        int $defaultShopId
     ) {
         $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->combinationRepository = $combinationRepository;
         $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->defaultShopId = $defaultShopId;
     }
 
     /**
@@ -131,7 +140,10 @@ class ProductSupplierUpdater
         // We should always create an association not related to a combination
         $combinationIds = [new NoCombinationId()];
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
-            $combinationIds = array_merge($combinationIds, $this->combinationRepository->getCombinationIds($productId));
+            $combinationIds = array_merge(
+                $combinationIds,
+                $this->combinationRepository->getCombinationIds($productId, ShopConstraint::shop($this->defaultShopId))
+            );
         }
 
         // Now we search for each associated supplier if some associations are missing
@@ -352,13 +364,18 @@ class ProductSupplierUpdater
      */
     private function updateDefaultSupplierDataForCombination(ProductSupplier $defaultCombinationSupplier): void
     {
-        $combination = $this->combinationRepository->get(new CombinationId((int) $defaultCombinationSupplier->id_product_attribute));
+        $shopConstraint = ShopConstraint::shop($this->defaultShopId);
+        $combination = $this->combinationRepository->getByShopConstraint(
+            new CombinationId((int) $defaultCombinationSupplier->id_product_attribute),
+            $shopConstraint
+        );
         $combination->supplier_reference = $defaultCombinationSupplier->product_supplier_reference;
         $combination->wholesale_price = (float) $defaultCombinationSupplier->product_supplier_price_te;
 
         $this->combinationRepository->partialUpdate(
             $combination,
             ['supplier_reference', 'wholesale_price', 'id_supplier'],
+            $shopConstraint,
             CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_SUPPLIER_DATA
         );
     }
@@ -395,7 +412,11 @@ class ProductSupplierUpdater
      */
     private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId): ?ProductSupplier
     {
-        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
+        $defaultCombinationId = $this->combinationRepository->findDefaultCombinationIdForShop(
+            $productId,
+            new ShopId($this->defaultShopId)
+        );
+
         if (!$defaultCombinationId) {
             return null;
         }

@@ -90,6 +90,11 @@ class SpecificPriceType extends TranslatorAwareType
             throw new SpecificPriceException('product_id is required to add/edit specific price.');
         }
 
+        if (!isset($builder->getData()['shop_id'])) {
+            // product_id is required for create action and to load combinations choices list, but it is not editable
+            throw new SpecificPriceException('shop_id is required to add/edit specific price.');
+        }
+
         $builder
             ->add('product_id', HiddenType::class)
             ->add('groups', ApplicableGroupsType::class, [
@@ -124,7 +129,9 @@ class SpecificPriceType extends TranslatorAwareType
             $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
-                'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
+                'choices' => $this->combinationIdChoiceProvider->getChoices([
+                    'product_id' => $builder->getData()['product_id'], ]
+                ),
                 'required' => false,
             ]);
         }

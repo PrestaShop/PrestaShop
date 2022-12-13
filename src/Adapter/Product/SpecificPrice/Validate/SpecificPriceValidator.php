@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
 use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
@@ -74,7 +74,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $shopRepository;
 
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     private $combinationRepository;
 
@@ -111,7 +111,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
-     * @param CombinationRepository $combinationRepository
+     * @param CombinationMultiShopRepository $combinationRepository
      * @param CurrencyRepository $currencyRepository
      * @param CountryRepository $countryRepository
      * @param GroupRepository $groupRepository
@@ -122,7 +122,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
         ShopRepository $shopRepository,
-        CombinationRepository $combinationRepository,
+        CombinationMultiShopRepository $combinationRepository,
         CurrencyRepository $currencyRepository,
         CountryRepository $countryRepository,
         GroupRepository $groupRepository,

@@ -71,6 +71,10 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
 
         $data = [
             'product_id' => $specificPriceForEditing->getProductId(),
+            //@todo: this is used to get combination choices based on shop, but probably it should be dynamic -
+            //       if all shops are chosen, then combination from all shops should be loaded to choice list,
+            //       if one shop is selected, then that shop combinations list should be loaded.
+            'shop_id' => (int) $specificPriceForEditing->getShopId(),
             'groups' => [
                 'currency_id' => $specificPriceForEditing->getCurrencyId(),
                 'country_id' => $specificPriceForEditing->getCountryId(),

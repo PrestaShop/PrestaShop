@@ -85,6 +85,7 @@ services:
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.core.grid.query_builder.product_combination'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
@@ -128,7 +129,7 @@ services:
   prestashop.adapter.product.combination.command_handler.update_combination_suppliers_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandler
     arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
       - '@prestashop.adapter.product.update.product_supplier_updater'
     tags:
@@ -139,7 +140,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_supplier_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
