@@ -145,7 +145,7 @@
         $('#display_regenerate_form').trigger('submit');
       });
       $('.btn-confirm-delete-images-type').on('click', function () {
-        document.location = $(this).attr('data-confirm-url') + '&delete=' + $('#delete_linked_images').is(":checked");
+        document.location = $(this).attr('data-confirm-url') + '&delete_linked_images=' + $('#delete_linked_images').is(":checked");
       });
 
       $('#modalConfirmDeleteType ').on('hidden.bs.modal', function () {
