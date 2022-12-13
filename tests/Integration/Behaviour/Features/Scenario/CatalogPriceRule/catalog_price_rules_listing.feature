@@ -188,7 +188,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 5 | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
 
   Scenario: I can see correctly with manufacturer condition
-    When I update product "product1" options with following values:
+    When I update product "product1" with following values:
       | manufacturer        | studioDesign |
     And I add following conditions to catalog price rule "catalogPriceRuleReference3":
       | type         | value        |
