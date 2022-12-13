@@ -4,18 +4,18 @@ type JsonReportTest = {
   context?: string,
   file: string,
   pending: boolean,
-  fullTitle: string
+  fullTitle: string,
 }
 type JsonReportSuite = {
   file: string,
-  tests: Array<JsonReportTest>
-  suites: Array<JsonReportSuite>
+  tests: Array<JsonReportTest>,
+  suites: Array<JsonReportSuite>,
 }
 type JsonReportResult = {
-  suites?: Array<JsonReportSuite>
+  suites?: Array<JsonReportSuite>,
 }
 type JsonReport = {
-  results: Array<JsonReportResult>
+  results: Array<JsonReportResult>,
 }
 
 // Get mochawesome report
@@ -34,9 +34,8 @@ const getAllTests = (jsonFile: string): JsonReportTest[] => {
 
   let allTests: JsonReportTest[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
-  if (parentSuites !== undefined) {
-    parentSuites.forEach((suite:JsonReportSuite): void => {
+  if (parentSuites) {
+    parentSuites.forEach((suite: JsonReportSuite): void => {
       allTests = allTests.concat(getTestsFromSuite(suite));
     });
   }
@@ -75,9 +74,12 @@ const getTestsFromSuite = (suite: JsonReportSuite): JsonReportTest[] => {
  */
 const checkUndefined = (jsonFile: string): boolean => {
   const allTests = getAllTests(jsonFile);
-  const undefinedContextsSteps: string[] = allTests
-    .filter((test: JsonReportTest) => (test.context === undefined || !test.context) && !test.pending)
-    .map((test: JsonReportTest) => test.fullTitle.trim());
+  const undefinedContextsSteps: string[] = [];
+  allTests.forEach((value: JsonReportTest): void => {
+    if ((value.context === undefined || !value.context) && !value.pending) {
+      undefinedContextsSteps.push(value.fullTitle.trim());
+    }
+  });
 
   if (undefinedContextsSteps.length !== 0) {
     console.error(
@@ -98,8 +100,12 @@ const checkDoubles = (jsonFile: string): boolean => {
   const allTests: JsonReportTest[] = getAllTests(jsonFile);
 
   const reportContexts: string[] = Object.values(allTests)
-    .filter((test: JsonReportTest) => test.context !== undefined && test.context !== null)
-    .map((test: JsonReportTest) => JSON.parse(test.context ?? '').value);
+    .reduce((result: string[], test: JsonReportTest) => {
+      if (test.context) {
+        result.push(JSON.parse(test.context ?? '').value);
+      }
+      return result;
+    }, []);
 
   const contextExisting: string[] = [];
   const contextDoubles: string[] = [];
@@ -123,38 +129,34 @@ const checkDoubles = (jsonFile: string): boolean => {
 };
 
 const checkBaseContext = (jsonFile: string): boolean => {
-  type reportContext = {
+  type ReportContext = {
     file: string
     baseContext: string
   };
-
-  const allTests: JsonReportTest[] = getAllTests(jsonFile);
-
   const reportBaseContext: string[] = [];
-  const reportContexts: reportContext[] = Object.values(allTests)
-    .filter((test: JsonReportTest) => test.context)
-    .map((test: JsonReportTest): reportContext|false => {
-      const value: string[] = JSON.parse(test.context ?? '').value.split('_');
-      // Extract the base context from the context
-      const baseContext: string = value.slice(0, value.length - 1).join('_');
-      const {file} = test;
+  const reportContexts: ReportContext[] = getAllTests(jsonFile)
+    .reduce((result: ReportContext[], test: JsonReportTest) => {
+      if (typeof test.context === 'string') {
+        const value: string[] = JSON.parse(test.context).value.split('_');
+        // Extract the base context from the context
+        const baseContext: string = value.slice(0, value.length - 1).join('_');
+        const {file} = test;
 
-      if (!baseContext || reportBaseContext.includes(file)) {
-        return false;
+        if (baseContext && !reportBaseContext.includes(file)) {
+          reportBaseContext.push(file);
+          result.push({file, baseContext});
+        }
       }
-
-      reportBaseContext.push(file);
-      return {file, baseContext};
-    })
-    .filter((test): test is reportContext => test !== false);
+      return result;
+    }, []);
 
   const baseContextErrors: string[] = [];
-  reportContexts.forEach((context: reportContext): void => {
+  reportContexts.forEach((context: ReportContext): void => {
     const contextFile = context.file.split('/');
     // Try to rebuild the baseContext from the filename
     const baseContextFile = contextFile
       .slice(2, contextFile.length)
-      .map((part) => part
+      .map((part: string) => part
         .replace(/[0-9]{2}_/, '')
         .replace('.js', '')
         .replace('.ts', ''))
