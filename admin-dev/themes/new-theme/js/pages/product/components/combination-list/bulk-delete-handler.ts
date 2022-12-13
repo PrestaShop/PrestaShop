@@ -91,7 +91,7 @@ export default class BulkDeleteHandler {
           $.growl.error({message: errorMessage});
         }
       });
-    })
+    });
   }
 
   private async bulkDelete(combinationIds: number[], bulkDeleteBtn: HTMLButtonElement): Promise<void> {
