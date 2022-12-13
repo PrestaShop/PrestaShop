@@ -1,0 +1,56 @@
+services:
+  _defaults:
+    public: false
+
+  PrestaShopBundle\Security\OAuth2\Repository\ClientRepository:
+    arguments:
+      - '@security.user.provider.concrete.oauth2'
+      - '@security.user_password_encoder.generic'
+
+  PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository:
+
+  PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository:
+
+  League\OAuth2\Server\Grant\ClientCredentialsGrant:
+
+  prestashop.api.private_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_private_key%' ]
+
+  prestashop.api.public_key:
+    class: League\OAuth2\Server\CryptKey
+    arguments: [ '%api_public_key%' ]
+
+  League\OAuth2\Server\AuthorizationServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\ClientRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@PrestaShopBundle\Security\OAuth2\Repository\NullScopeRepository'
+      - '@prestashop.api.private_key'
+      - '%new_cookie_key%'
+    calls:
+      - [ 'enableGrantType', [ '@League\OAuth2\Server\Grant\ClientCredentialsGrant' ] ]
+
+  League\OAuth2\Server\ResourceServer:
+    arguments:
+      - '@PrestaShopBundle\Security\OAuth2\Repository\AccessTokenRepository'
+      - '@prestashop.api.public_key'
+
+  Nyholm\Psr7\Factory\Psr17Factory:
+
+  Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory:
+    arguments:
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
+
+  Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory:
+
+  PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController:
+    public: true
+    arguments:
+      - '@League\OAuth2\Server\AuthorizationServer'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory'
+      - '@Nyholm\Psr7\Factory\Psr17Factory'
