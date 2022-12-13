@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
@@ -207,10 +208,21 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
             ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
             ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
-            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
             ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
         ;
+
+        $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
+        if ($productType === ProductType::TYPE_COMBINATIONS) {
+            $config
+                ->addMultiShopField('[combinations][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+                ->addMultiShopField('[combinations][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
+            ;
+        } else {
+            $config
+                ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+                ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
+            ;
+        }
 
         return $this;
     }
