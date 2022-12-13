@@ -67,17 +67,6 @@ services:
   prestashop.adapter.product.combination.validate.combination_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator
 
-  PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository:
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
-      - '@prestashop.adapter.product.combination.validate.combination_validator'
-      - '@prestashop.core.grid.query_builder.product_combination'
-
-  prestashop.adapter.product.combination.repository.combination_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
-    deprecated: ~
-
   PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
