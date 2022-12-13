@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Category\CategorySettings;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
@@ -51,6 +52,7 @@ use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -181,9 +183,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>;=#{}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_CATALOG_NAME,
                         ]),
                         new Length([
                             'max' => CategorySettings::MAX_TITLE_LENGTH,
@@ -292,9 +293,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         ),
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SeoSettings::MAX_TITLE_LENGTH,
@@ -327,9 +327,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         ),
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SeoSettings::MAX_DESCRIPTION_LENGTH,
@@ -351,9 +350,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'required' => false,
                 'options' => [
                     'constraints' => [
-                        new Regex([
-                            'pattern' => '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                         new Length([
                             'max' => SeoSettings::MAX_KEYWORDS_LENGTH,
@@ -386,9 +384,8 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                         'maxlength' => CategorySettings::MAX_TITLE_LENGTH,
                     ],
                     'constraints' => [
-                        new Regex([
-                            'pattern' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL') ? '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u' : '/^[^<>={}]*$/u',
-                            'message' => $this->trans('%s is invalid.', 'Admin.Notifications.Error'),
+                        new TypedRegex([
+                            'type' => TypedRegex::TYPE_LINK_REWRITE,
                         ]),
                         new Length([
                             'max' => CategorySettings::MAX_TITLE_LENGTH,
