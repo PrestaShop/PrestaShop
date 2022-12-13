@@ -1355,24 +1355,22 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * If the product is accessed from another category than product default category, it will generate the breadcrumb according to current category.
      *
      * @return array
+     *
      * @throws PrestaShopException
      */
     public function getBreadcrumbLinks(): array
     {
         $breadcrumb = parent::getBreadcrumbLinks();
-        $productBreadcrumbCategoryMode = Configuration::get('PS_PRODUCT_BREADCRUMB_CATEGORY');
+
         // $productBreadcrumbCategory can have two possible values
         // - current : Category the product was accessed from
         // - default : Product default category
-
-        if (('current' === $productBreadcrumbCategoryMode) &&
-            !is_null($this->category) &&
-            in_array($this->category->id_category, $this->product->getCategories(), true)) {
+        if (('current' === Configuration::get('PS_PRODUCT_BREADCRUMB_CATEGORY')) &&
+            !is_null($this->category)) {
             $productBreadcrumbCategory = $this->category;
         } else {
             $productBreadcrumbCategory = new Category($this->product->id_category_default, $this->context->language->id);
         }
-
 
         foreach ($productBreadcrumbCategory->getAllParents() as $category) {
             /** @var Category $category */
