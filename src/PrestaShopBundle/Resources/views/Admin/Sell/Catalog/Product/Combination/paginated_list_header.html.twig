@@ -45,9 +45,14 @@
       >
         {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
       </button>
+      {% if isMultistoreActive %}
+        {% set deleteLabel = 'Delete %combinations_number% combinations for shop "%shop%"'|trans({'%shop%': contextShopName}, 'Admin.Catalog.Feature') %}
+      {% else %}
+        {% set deleteLabel = 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') %}
+      {% endif %}
       <button
-        id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn" type="button"
-        data-btn-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+        id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn bulk-delete-btn" type="button"
+        data-btn-label="{{ deleteLabel }}"
         data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
         data-modal-message="{{ 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Notification') }}"
         data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
@@ -63,8 +68,30 @@
         data-view-error-log="{{ 'View %error_count% error logs'|trans({}, 'Admin.Catalog.Feature') }}"
         data-view-error-title="{{ 'Error log'|trans({}, 'Admin.Catalog.Feature') }}"
       >
-        {{ 'Delete %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
+        {{ deleteLabel }}
       </button>
+      {% if isMultistoreActive %}
+        <button
+          id="combination-bulk-delete-btn-all-shops" class="dropdown-item bulk-action-btn bulk-delete-btn" type="button"
+          data-btn-label="{{ 'Delete %combinations_number% combinations for all shops'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
+          data-modal-message="{{ 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Notification') }}"
+          data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+          data-bulk-chunk-size="10"
+          data-progress-title="{{ 'Deleting %total% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-progress-message="{{ 'Deleting %done%/%total% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-close-label="{{ 'Close'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-stop-processing="{{ 'Stop processing'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-errors-message="{{ '%error_count% errors occurred. You can download the logs for future reference.'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-back-to-processing="{{ 'Back to processing'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-download-error-log="{{ 'Download error log'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-view-error-log="{{ 'View %error_count% error logs'|trans({}, 'Admin.Catalog.Feature') }}"
+          data-view-error-title="{{ 'Error log'|trans({}, 'Admin.Catalog.Feature') }}"
+        >
+          {{ 'Delete %combinations_number% combinations for all shops'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
+        </button>
+      {% endif %}
     </div>
   </div>
 
