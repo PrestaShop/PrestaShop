@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
 
@@ -19,7 +20,6 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const loginPage = require('@pages/FO/login');
 

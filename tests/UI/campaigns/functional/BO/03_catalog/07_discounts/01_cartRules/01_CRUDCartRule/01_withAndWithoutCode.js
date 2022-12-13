@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import FO pages
+import foProductPage from '@pages/FO/product';
+
 require('module-alias/register');
 
 // Import login steps
@@ -15,7 +18,6 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 
 // Import data

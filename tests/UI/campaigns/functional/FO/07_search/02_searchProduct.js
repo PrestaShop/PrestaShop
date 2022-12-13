@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
@@ -10,7 +11,6 @@ const {expect} = require('chai');
 
 // Import pages
 const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
 const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import data

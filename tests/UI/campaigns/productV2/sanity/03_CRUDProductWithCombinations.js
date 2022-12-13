@@ -1,8 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import pages
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
 // Using chai
@@ -17,9 +19,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/productsV2');
 const createProductsPage = require('@pages/BO/catalog/productsV2/add');
 const combinationsTab = require('@pages/BO/catalog/productsV2/add/combinationsTab');
-
-// Import FO pages
-const foProductPage = require('@pages/FO/product');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');

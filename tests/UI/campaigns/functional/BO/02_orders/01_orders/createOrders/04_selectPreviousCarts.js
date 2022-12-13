@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import FO pages
+import productPage from '@pages/FO/product';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -22,7 +25,6 @@ const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 // Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
