@@ -61,46 +61,42 @@ export default class BulkDeleteHandler {
   }
 
   private async init(): Promise<void> {
-    const bulkDeleteBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkDeleteBtn);
+    const bulkDeleteButtons = document.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkDeleteBtn);
 
-    if (!(bulkDeleteBtn instanceof HTMLButtonElement)) {
-      console.error(`${CombinationMap.bulkDeleteBtn} must be a HTMLButtonElement`);
+    bulkDeleteButtons.forEach((bulkDeleteBtn: HTMLButtonElement) => {
+      bulkDeleteBtn.addEventListener('click', async () => {
+        const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
 
-      return;
-    }
+        try {
+          const selectedCombinationsCount = selectedCombinationIds.length;
+          const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
+            ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
 
-    bulkDeleteBtn.addEventListener('click', async () => {
-      const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
-
-      try {
-        const selectedCombinationsCount = selectedCombinationIds.length;
-        const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
-          ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
-
-        const modal = new ConfirmModal(
-          {
-            id: 'modal-confirm-delete-combinations',
-            confirmTitle: bulkDeleteBtn.innerHTML,
-            confirmMessage: bulkDeleteBtn.dataset.modalMessage,
-            confirmButtonLabel: confirmLabel,
-            closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
-            closable: true,
-          },
-          async () => {
-            await this.bulkDelete(selectedCombinationIds);
-          },
-        );
-        modal.show();
-      } catch (error: any) {
-        const errorMessage = error.response?.JSON ?? error;
-        $.growl.error({message: errorMessage});
-      }
-    });
+          const modal = new ConfirmModal(
+            {
+              id: 'modal-confirm-delete-combinations',
+              confirmTitle: bulkDeleteBtn.innerHTML,
+              confirmMessage: bulkDeleteBtn.dataset.modalMessage,
+              confirmButtonLabel: confirmLabel,
+              closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
+              closable: true,
+            },
+            async () => {
+              await this.bulkDelete(selectedCombinationIds, bulkDeleteBtn);
+            },
+          );
+          modal.show();
+        } catch (error: any) {
+          const errorMessage = error.response?.JSON ?? error;
+          $.growl.error({message: errorMessage});
+        }
+      });
+    })
   }
 
-  private async bulkDelete(combinationIds: number[]): Promise<void> {
-    const $bulkDeleteBtn = $(CombinationMap.bulkDeleteBtn);
-    const bulkChunkSize = Number($bulkDeleteBtn.data('bulkChunkSize'));
+  private async bulkDelete(combinationIds: number[], bulkDeleteBtn: HTMLButtonElement): Promise<void> {
+    // const $bulkDeleteBtn = $(bulkDeleteBtn);
+    const bulkChunkSize = Number(bulkDeleteBtn.dataset.bulkChunkSize);
     const abortController = new AbortController();
 
     const progressModal = new ProgressModal({
@@ -110,15 +106,15 @@ export default class BulkDeleteHandler {
         abortController.abort();
       },
       closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished),
-      progressionTitle: $bulkDeleteBtn.data('progressTitle'),
-      progressionMessage: $bulkDeleteBtn.data('progressMessage'),
-      closeLabel: $bulkDeleteBtn.data('closeLabel'),
-      abortProcessingLabel: $bulkDeleteBtn.data('stopProcessing'),
-      errorsMessage: $bulkDeleteBtn.data('errorsMessage'),
-      backToProcessingLabel: $bulkDeleteBtn.data('backToProcessing'),
-      downloadErrorLogLabel: $bulkDeleteBtn.data('downloadErrorLog'),
-      viewErrorLogLabel: $bulkDeleteBtn.data('viewErrorLog'),
-      viewErrorTitle: $bulkDeleteBtn.data('viewErrorTitle'),
+      progressionTitle: bulkDeleteBtn.dataset.progressTitle,
+      progressionMessage: bulkDeleteBtn.dataset.progressMessage,
+      closeLabel: bulkDeleteBtn.dataset.closeLabel,
+      abortProcessingLabel: bulkDeleteBtn.dataset.stopProcessing,
+      errorsMessage: bulkDeleteBtn.dataset.errorsMessage,
+      backToProcessingLabel: bulkDeleteBtn.dataset.backToProcessing,
+      downloadErrorLogLabel: bulkDeleteBtn.dataset.downloadErrorLog,
+      viewErrorLogLabel: bulkDeleteBtn.dataset.viewErrorLog,
+      viewErrorTitle: bulkDeleteBtn.dataset.viewErrorTitle,
       total: combinationIds.length,
     });
     progressModal.show();
@@ -137,6 +133,7 @@ export default class BulkDeleteHandler {
         const response: Response = await this.combinationsService.bulkDeleteCombinations(
           this.productId,
           chunkIds,
+          bulkDeleteBtn.id === CombinationMap.bulkDeleteBtnAllShopsId,
           abortController.signal,
         );
 
