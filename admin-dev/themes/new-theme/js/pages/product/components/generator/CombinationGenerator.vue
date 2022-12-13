@@ -40,11 +40,13 @@
           @toggleAll="toggleAll"
           v-if="attributeGroups"
         />
+      </template>
 
+      <template #footer-confirmation>
         <div class="md-checkbox md-checkbox-inline">
           <label>
             <input
-              v-model=applyToAllShops
+              v-model="applyToAllShops"
               type="checkbox"
               id="generate_combinations_all_shop"
               name="generate_combinations_all_shop"
