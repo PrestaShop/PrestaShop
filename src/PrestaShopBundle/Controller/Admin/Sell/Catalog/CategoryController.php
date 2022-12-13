@@ -386,9 +386,12 @@ class CategoryController extends FrameworkBundleAdminController
 
         $rootCategoryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.root_category_form_builder');
         $rootCategoryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.root_category_form_handler');
+        $categoryFormOptions = [
+            'disable_menu_thumbnails_upload' => !$editableCategory->canContainMoreMenuThumbnails(),
+        ];
 
         try {
-            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId);
+            $rootCategoryForm = $rootCategoryFormBuilder->getFormFor((int) $categoryId, [], $categoryFormOptions);
         } catch (Exception $exception) {
             $this->addFlash('error', $this->getErrorMessageForException($exception, $this->getErrorMessages()));
 

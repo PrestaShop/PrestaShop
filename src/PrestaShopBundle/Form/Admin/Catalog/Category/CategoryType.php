@@ -69,14 +69,13 @@ class CategoryType extends AbstractCategoryType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
                 'id_category' => null,
                 'subcategories' => [],
-                'disable_menu_thumbnails_upload' => null,
             ])
             ->setAllowedTypes('subcategories', ['array'])
-            ->setAllowedTypes('id_category', ['int', 'null'])
-            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
+            ->setAllowedTypes('id_category', ['int', 'null']);
     }
 }

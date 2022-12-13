@@ -38,27 +38,27 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Creates/updates category from data submitted in category form
  */
-final class CategoryFormDataHandler implements FormDataHandlerInterface
+class CategoryFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
      */
-    private $commandBus;
+    protected $commandBus;
 
     /**
      * @var ImageUploaderInterface
      */
-    private $categoryCoverUploader;
+    protected $categoryCoverUploader;
 
     /**
      * @var ImageUploaderInterface
      */
-    private $categoryThumbnailUploader;
+    protected $categoryThumbnailUploader;
 
     /**
      * @var ImageUploaderInterface
      */
-    private $categoryMenuThumbnailUploader;
+    protected $categoryMenuThumbnailUploader;
 
     /**
      * @param CommandBusInterface $commandBus
@@ -140,7 +140,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return AddCategoryCommand
      */
-    private function createAddCategoryCommand(array $data)
+    protected function createAddCategoryCommand(array $data)
     {
         $command = new AddCategoryCommand(
             $data['name'],
@@ -171,7 +171,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return EditCategoryCommand
      */
-    private function createEditCategoryCommand($categoryId, array $data)
+    protected function createEditCategoryCommand($categoryId, array $data)
     {
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($data['active']);
@@ -194,11 +194,11 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
 
     /**
      * @param CategoryId $categoryId
-     * @param UploadedFile $coverImage
-     * @param UploadedFile $thumbnailImage
+     * @param UploadedFile|null $coverImage
+     * @param UploadedFile|null $thumbnailImage
      * @param UploadedFile[] $menuThumbnailImages
      */
-    private function uploadImages(
+    protected function uploadImages(
         CategoryId $categoryId,
         UploadedFile $coverImage = null,
         UploadedFile $thumbnailImage = null,
@@ -224,7 +224,7 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @return array
      */
-    private function getAvailableKeys(int $categoryId): array
+    protected function getAvailableKeys(int $categoryId): array
     {
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
         $usedKeys = [];

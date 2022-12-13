@@ -43,6 +43,8 @@ use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
@@ -345,5 +347,17 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                 'label' => $this->trans('Store association', 'Admin.Global')
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'disable_menu_thumbnails_upload' => null,
+            ])
+            ->setAllowedTypes('disable_menu_thumbnails_upload', ['bool', 'null']);
     }
 }
