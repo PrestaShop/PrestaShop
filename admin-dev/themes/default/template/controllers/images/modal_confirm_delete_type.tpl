@@ -22,19 +22,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<a href="#"
-   title="{$action|escape:'html':'UTF-8'}"
-   class="delete"
-   onclick="
-    {if $confirm && !isset($is_images_page)}
-      confirm_link('', '{$confirm|escape:'html':'UTF-8'}', '{l s='Yes' d='Admin.Global'}', '{l s='No' d='Admin.Global'}', '{$href|escape:'html':'UTF-8'}', '#')
-    {else if $confirm && isset($is_images_page)}
-      var modalConfirmDeleteType = $('#modalConfirmDeleteType');
-      $('.btn-confirm-delete-images-type', modalConfirmDeleteType).attr('data-confirm-url', '{$href|escape:'html':'UTF-8'}');
-      modalConfirmDeleteType.modal('show');
-    {else}
-      event.stopPropagation();event.preventDefault()
-    {/if}
-  ">
-  <i class="icon-trash"></i> {$action|escape:'html':'UTF-8'}
-</a>
+<div class="modal-body">
+  <div class="form-group">
+    {l
+      s="By deleting this image format, the theme will not be able to use it. This will result in a degraded experience on your front office."
+      d="Admin.Design.Notification"
+    }
+  </div>
+
+  <div class="modal-checkbox">
+    <input type="checkbox" id="delete_linked_images" name="delete">
+    <label for="delete_linked_images">{l s="Delete the images linked to this image setting" d="Admin.Design.Notification"}</label>
+  </div>
+</div>
