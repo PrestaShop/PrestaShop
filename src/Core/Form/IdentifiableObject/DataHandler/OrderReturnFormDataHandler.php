@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use OrderReturn;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand;
+use PrestaShop\PrestaShop\Core\Exception\NotImplementedException;
 
 /**
  * Saves or updates order return data submitted in form
@@ -64,9 +65,11 @@ class OrderReturnFormDataHandler implements FormDataHandlerInterface
      * Order Return doesn't have a create option
      *
      * @param array $data
+     *
+     * @throws NotImplementedException
      */
     public function create(array $data): void
     {
-        @trigger_error(OrderReturn::class . ' is not created by form, this method should never be called', E_USER_WARNING);
+        throw new NotImplementedException(OrderReturn::class . ' is not created by form, this method should never be called');
     }
 }
