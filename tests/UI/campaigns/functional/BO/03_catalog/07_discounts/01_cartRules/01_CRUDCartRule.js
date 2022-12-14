@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
 // Using chai
@@ -17,7 +18,6 @@ const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
-const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 
 // Import data

@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
@@ -17,7 +18,6 @@ const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrl
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
 
 // Import data
 const {Products} = require('@data/demo/products');

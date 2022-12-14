@@ -1,67 +1,32 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-const loginCommon = require('@commonTests/BO/loginBO');
-const files = require('@utils/files');
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // FO
-const homePage = require('@pages/FO/home');
-const cartPage = require('@pages/FO/cart');
-const productPage = require('@pages/FO/product');
-const searchResultsPage = require('@pages/FO/searchResults');
+import homePage from '@pages/FO/home';
+import cartPage from '@pages/FO/cart';
+import productPage from '@pages/FO/product';
+import searchResultsPage from '@pages/FO/searchResults';
 
 // BO
-const boDashboardPage = require('@pages/BO/dashboard');
-const boProductsPage = require('@pages/BO/catalog/products');
-const boAddProductPage = require('@pages/BO/catalog/products/add');
-
-const baseContext = 'functional_FO_productPage_quickView';
+import boDashboardPage from '@pages/BO/dashboard';
+import boProductsPage from '@pages/BO/catalog/products';
+import boAddProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-const {Products} = require('@data/demo/products');
-const ProductFaker = require('@data/faker/product');
+import {Products} from '@data/demo/products';
+import ProductFaker from '@data/faker/product';
+import type {Product, ProductAttributes, ProductDetails} from '@data/types/product';
 
-let browserContext;
-let page;
-const attributes = {
-  size: 'M',
-  color: 'Black',
-  quantity: 4,
-  totalPrice: 91.78,
-};
-const productToCreate = {
-  type: 'Standard product',
-  productHasCombinations: false,
-  coverImage: 'cover.jpg',
-  thumbImage: 'thumb.jpg',
-};
-const productData = new ProductFaker(productToCreate);
-const firstCheckProductDetails = {
-  name: Products.demo_1.name,
-  price: Products.demo_1.finalPrice,
-  size: 'S',
-  color: 'White',
-  quantity: 1,
-  shipping: 'Free',
-};
-const secondCheckProductDetails = {
-  name: Products.demo_1.name,
-  price: Products.demo_1.finalPrice,
-  size: 'S',
-  color: 'White',
-  quantity: 2,
-  subtotal: 45.89,
-  shipping: 'Free',
-  totalTaxInc: 45.89,
-};
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext: string = 'functional_FO_productPage_quickView';
 
 /*
 Add to cart from quick view
@@ -75,6 +40,41 @@ Change image from quick view
  */
 
 describe('FO - product page : Product quick view', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const attributes: ProductAttributes = {
+    size: 'M',
+    color: 'Black',
+    quantity: 4,
+    totalTaxInc: 91.78,
+  };
+  const productToCreate: Product = {
+    type: 'Standard product',
+    productHasCombinations: false,
+    coverImage: 'cover.jpg',
+    thumbImage: 'thumb.jpg',
+  };
+  const productData: ProductFaker = new ProductFaker(productToCreate);
+  const firstCheckProductDetails: ProductDetails = {
+    name: Products.demo_1.name,
+    price: Products.demo_1.finalPrice,
+    size: 'S',
+    color: 'White',
+    quantity: 1,
+    shipping: 'Free',
+  };
+  const secondCheckProductDetails: ProductDetails = {
+    name: Products.demo_1.name,
+    price: Products.demo_1.finalPrice,
+    size: 'S',
+    color: 'White',
+    quantity: 2,
+    shipping: 'Free',
+    subtotal: 45.89,
+    totalTaxInc: 45.89,
+  };
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -296,7 +296,7 @@ describe('FO - product page : Product quick view', async () => {
         expect(result.discountPercentage).to.equal(`-${Products.demo_1.discount}`),
         expect(result.image).to.contains(Products.demo_1.coverImage),
         expect(result.quantity).to.equal(attributes.quantity),
-        expect(result.totalPrice).to.equal(attributes.totalPrice),
+        expect(result.totalPrice).to.equal(attributes.totalTaxInc),
       ]);
 
       result = await cartPage.getProductAttributes(page, 1);
@@ -309,8 +309,8 @@ describe('FO - product page : Product quick view', async () => {
 
   // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
-    let imageFirstColor;
-    let imageSecondColor;
+    let imageFirstColor: {thumbImage: string, coverImage: string};
+    let imageSecondColor: {thumbImage: string, coverImage: string};
 
     it('should go to home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomeToSelectColor', baseContext);
@@ -365,8 +365,8 @@ describe('FO - product page : Product quick view', async () => {
 
         // Create products images
         await Promise.all([
-          files.generateImage(productData.coverImage),
-          files.generateImage(productData.thumbImage),
+          files.generateImage(productData.coverImage ?? ''),
+          files.generateImage(productData.thumbImage ?? ''),
         ]);
       });
 
@@ -407,8 +407,8 @@ describe('FO - product page : Product quick view', async () => {
 
         /* Delete the generated images */
         await Promise.all([
-          files.deleteFile(productData.coverImage),
-          files.deleteFile(productData.thumbImage),
+          files.deleteFile(productData.coverImage ?? ''),
+          files.deleteFile(productData.thumbImage ?? ''),
         ]);
       });
     });
