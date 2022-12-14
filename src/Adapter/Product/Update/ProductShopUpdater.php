@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
@@ -76,11 +75,6 @@ class ProductShopUpdater
     private $productStockUpdater;
 
     /**
-     * @var MovementReasonRepository
-     */
-    private $movementReasonRepository;
-
-    /**
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param ShopRepository $shopRepository
@@ -92,15 +86,13 @@ class ProductShopUpdater
         StockAvailableMultiShopRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
-        ProductStockUpdater $productStockUpdater,
-        MovementReasonRepository $movementReasonRepository
+        ProductStockUpdater $productStockUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
         $this->productImageMultiShopRepository = $productImageMultiShopRepository;
         $this->productStockUpdater = $productStockUpdater;
-        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -140,10 +132,7 @@ class ProductShopUpdater
 
         $deltaQuantity = (int) $sourceStock->quantity - (int) $targetStock->quantity;
         if ($deltaQuantity !== 0) {
-            $stockModification = new StockModification(
-                $deltaQuantity,
-                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
-            );
+            $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
             $stockProperties = new ProductStockProperties(
                 null,
                 $stockModification,
