@@ -4,13 +4,13 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import utils
 const files = require('@utils/files');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages

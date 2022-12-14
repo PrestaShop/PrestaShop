@@ -2,6 +2,9 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import expect from chai
@@ -10,9 +13,6 @@ const {expect} = require('chai');
 // Import utils
 const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
 
 // Import pages

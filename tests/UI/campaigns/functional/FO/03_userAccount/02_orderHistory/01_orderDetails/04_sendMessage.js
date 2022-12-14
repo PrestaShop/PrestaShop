@@ -1,6 +1,7 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import productPage from '@pages/FO/product';
@@ -8,7 +9,6 @@ import productPage from '@pages/FO/product';
 require('module-alias/register');
 
 const {expect} = require('chai');
-const loginCommon = require('@commonTests/BO/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {faker} = require('@faker-js/faker');
 

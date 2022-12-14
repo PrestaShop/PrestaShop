@@ -4,6 +4,9 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import BO pages
@@ -12,9 +15,6 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import data

@@ -2,15 +2,15 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
 // Import FO pages
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import BO pages

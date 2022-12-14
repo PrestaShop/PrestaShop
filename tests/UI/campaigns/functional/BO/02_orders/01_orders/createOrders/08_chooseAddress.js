@@ -4,6 +4,9 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -30,9 +33,6 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 // Import faker data
 const AddressFaker = require('@data/faker/address');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createAddressTest, bulkDeleteAddressesTest} = require('@commonTests/BO/customers/createDeleteAddress');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_chooseAddress';

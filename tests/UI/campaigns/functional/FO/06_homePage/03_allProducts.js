@@ -3,6 +3,8 @@ import helper from '@utils/helpers';
 
 // Import test context
 import testContext from '@utils/testContext';
+// BO pages
+import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 
@@ -12,8 +14,6 @@ const {expect} = require('chai');
 // FO pages
 const homePage = require('@pages/FO/home');
 const categoryPageFO = require('@pages/FO/category');
-// BO pages
-const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 
