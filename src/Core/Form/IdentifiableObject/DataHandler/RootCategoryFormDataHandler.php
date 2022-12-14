@@ -81,12 +81,15 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(array $data)
     {
         if (!isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
             throw new MenuThumbnailsLimitException('Maximum number of menu thumbnails exceeded for new category');
         }
-        $command = $this->createAddCategoryCommand($data);
+        $command = $this->createAddRootCategoryCommand($data);
 
         /** @var CategoryId $categoryId */
         $categoryId = $this->commandBus->handle($command);
@@ -105,6 +108,9 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
         return $categoryId->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update($categoryId, array $data)
     {
         $categoryId = (int) $categoryId;
@@ -140,7 +146,7 @@ final class RootCategoryFormDataHandler implements FormDataHandlerInterface
      *
      * @throws CategoryConstraintException
      */
-    private function createAddCategoryCommand(array $data): AddRootCategoryCommand
+    public function createAddRootCategoryCommand(array $data): AddRootCategoryCommand
     {
         $command = new AddRootCategoryCommand(
             $data['name'],

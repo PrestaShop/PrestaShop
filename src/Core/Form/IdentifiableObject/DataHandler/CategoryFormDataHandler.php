@@ -81,6 +81,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         $this->categoryMenuThumbnailUploader = $categoryMenuThumbnailUploader;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(array $data)
     {
         if (!isset($data['menu_thumbnail_images']) && count($data['menu_thumbnail_images']) > count(MenuThumbnailId::ALLOWED_ID_VALUES)) {
@@ -105,6 +108,9 @@ final class CategoryFormDataHandler implements FormDataHandlerInterface
         return $categoryId->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update($categoryId, array $data)
     {
         $categoryId = (int) $categoryId;
