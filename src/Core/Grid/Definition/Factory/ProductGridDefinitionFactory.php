@@ -46,9 +46,11 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Product\ShopListColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
@@ -70,16 +72,18 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $configuration;
 
     /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param ConfigurationInterface $configuration
+     * @var MultistoreContextCheckerInterface
      */
+    private $multiStoreContext;
+
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        MultistoreContextCheckerInterface $multiStoreContext
     ) {
         parent::__construct($hookDispatcher);
-
         $this->configuration = $configuration;
+        $this->multiStoreContext = $multiStoreContext;
     }
 
     /**
@@ -224,6 +228,16 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_stock-tab',
                     ])
+            );
+        }
+
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            $columns->addBefore('image', (new ShopListColumn('associated_shops'))
+                ->setName($this->trans('Store(s)', [], 'Admin.Global'))
+                ->setOptions([
+                    'field' => 'associated_shops',
+                    'max_displayed_characters' => 35,
+                ])
             );
         }
 

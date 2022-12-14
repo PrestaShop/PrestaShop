@@ -244,11 +244,10 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             'filters' => ['product[name]' => ''],
             'total_count' => 2,
             'products_values' => [
-                0 => array_merge(
-                    static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME], [
                     // Stock is shared for the group and has been incremented by 21 twice
-                    ['quantity' => 42]
-                ),
+                    'quantity' => 42,
+                ]),
                 1 => static::FIXTURE_PRODUCT_DATA[static::SHARED_SHOP_NAME],
             ],
         ];
@@ -260,11 +259,10 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             'filters' => ['product[name]' => ''],
             'total_count' => 3,
             'products_values' => [
-                0 => array_merge(
-                    static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME], [
                     // Stock is shared for the group and has been incremented by 21 twice
-                    ['quantity' => 42]
-                ),
+                    'quantity' => 42,
+                ]),
                 1 => static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
                 2 => static::FIXTURE_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
             ],
@@ -278,9 +276,15 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             'filters' => ['product[name]' => ''],
             'total_count' => 21,
             'products_values' => [
-                0 => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                1 => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                2 => static::FIXTURE_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::DEFAULT_SHOP_NAME, static::INDEPENDENT_SHOP_NAME]),
+                ]),
+                1 => array_merge(static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => static::DEFAULT_SHOP_NAME,
+                ]),
+                2 => array_merge(static::FIXTURE_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::DEFAULT_SHOP_NAME, static::INDEPENDENT_SHOP_NAME]),
+                ]),
             ],
         ];
 
@@ -292,14 +296,18 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             'filters' => ['product[name]' => ''],
             'total_count' => 3,
             'products_values' => [
-                0 => array_merge(
-                    static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME], [
                     // Stock is shared for the group and has been incremented by 21 twice
-                    ['quantity' => 42]
-                ),
+                    'quantity' => 42,
+                    'associated_shops' => implode(', ', [static::SHARED_SHOP_NAME, static::SECOND_SHARED_SHOP_NAME]),
+                ]),
                 // Partial product is part of the group, but it only belongs to the second shared shop (so the data from this shop are displayed)
-                1 => static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
-                2 => static::FIXTURE_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                1 => array_merge(static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME], [
+                    'associated_shops' => static::SECOND_SHARED_SHOP_NAME,
+                ]),
+                2 => array_merge(static::FIXTURE_PRODUCT_DATA[static::SHARED_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::SHARED_SHOP_NAME, static::SECOND_SHARED_SHOP_NAME]),
+                ]),
             ],
         ];
 
@@ -310,9 +318,15 @@ class MultiShopProductControllerTest extends GridControllerTestCase
             'filters' => ['product[name]' => ''],
             'total_count' => 21,
             'products_values' => [
-                0 => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                1 => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                2 => static::FIXTURE_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::DEFAULT_SHOP_NAME, static::INDEPENDENT_SHOP_NAME, static::SHARED_SHOP_NAME, static::SECOND_SHARED_SHOP_NAME]),
+                ]),
+                1 => array_merge(static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::DEFAULT_SHOP_NAME, static::SECOND_SHARED_SHOP_NAME]),
+                ]),
+                2 => array_merge(static::FIXTURE_PRODUCT_DATA[static::DEFAULT_SHOP_NAME], [
+                    'associated_shops' => implode(', ', [static::DEFAULT_SHOP_NAME, static::INDEPENDENT_SHOP_NAME, static::SHARED_SHOP_NAME, static::SECOND_SHARED_SHOP_NAME]),
+                ]),
             ],
         ];
     }
@@ -322,6 +336,9 @@ class MultiShopProductControllerTest extends GridControllerTestCase
      */
     protected function parseEntityFromRow(Crawler $tr, int $i): TestEntityDTO
     {
+        $shopListNode = $tr->filter('.column-associated_shops .product-shop-list');
+        $associatedShops = $shopListNode->count() ? $shopListNode->attr('title') : '';
+
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
             [
@@ -331,6 +348,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
                 'price_tax_excluded' => trim($tr->filter('.column-final_price_tax_excluded')->text()),
                 'price_tax_included' => trim($tr->filter('.column-price_tax_included')->text()),
                 'quantity' => (int) trim($tr->filter('.column-quantity')->text()),
+                'associated_shops' => $associatedShops,
             ]
         );
     }
