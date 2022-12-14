@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form type is needed to display custom list of Catalog Price Rules.
