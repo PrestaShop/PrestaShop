@@ -84,8 +84,8 @@ services:
     public: false
     autowire: true
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id_profile'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.data_provider.profile:
     class: PrestaShop\PrestaShop\Adapter\Profile\ProfileDataProvider
