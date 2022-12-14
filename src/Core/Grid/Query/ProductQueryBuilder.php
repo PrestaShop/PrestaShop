@@ -111,7 +111,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
-            $qb->addSelect('sa.`quantity`');
+            $qb->addSelect('IF(sa.`quantity` IS NULL OR sa.`quantity` = \'\', 0, sa.`quantity`) AS quantity');
         }
 
         $this->searchCriteriaApplicator
