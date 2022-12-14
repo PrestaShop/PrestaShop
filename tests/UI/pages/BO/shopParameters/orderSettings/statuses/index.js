@@ -155,6 +155,8 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterTable(page, tableName, filterType, filterBy, value) {
+    let textValue;
+
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
@@ -162,9 +164,14 @@ class Statuses extends BOBasePage {
         break;
 
       case 'select':
+        if (typeof value === 'string') {
+          textValue = value === '1' ? 'Yes' : 'No';
+        } else {
+          textValue = value ? 'Yes' : 'No';
+        }
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), textValue),
         ]);
         break;
 
