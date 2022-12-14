@@ -60,7 +60,6 @@ final class LinkRowAction extends AbstractRowAction
                 //route_param_name and route_param_field becomes redundant, but it cannot be removed due to BC break
                 'extra_route_params' => [],
                 'clickable_row' => false,
-                'disabled' => true,
                 'target' => '',
             ])
             ->setAllowedTypes('route', 'string')
@@ -71,7 +70,6 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
             ->setAllowedTypes('clickable_row', 'boolean')
             ->setAllowedTypes('target', 'string')
-            ->setAllowedTypes('disabled', 'boolean')
         ;
     }
 
