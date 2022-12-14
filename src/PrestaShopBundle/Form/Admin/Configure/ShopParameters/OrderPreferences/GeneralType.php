@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -54,9 +54,15 @@ class GeneralType extends TranslatorAwareType
      */
     private $tosCmsChoices;
 
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        ConfigurationInterface $configuration,
         $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
@@ -64,13 +70,13 @@ class GeneralType extends TranslatorAwareType
 
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;
+        $this->configuration = $configuration;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Configuration $configuration */
-        $configuration = $this->getConfiguration();
-        $isMultishippingEnabled = $configuration->getBoolean('PS_ALLOW_MULTISHIPPING');
+        $configuration = $this->configuration;
+        $isMultishippingEnabled = (bool) $configuration->get('PS_ALLOW_MULTISHIPPING');
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder

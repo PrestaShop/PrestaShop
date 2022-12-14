@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -50,23 +50,28 @@ class HandlingType extends TranslatorAwareType
      */
     private $currencyDataProvider;
 
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        ConfigurationInterface $configuration,
         CurrencyDataProvider $currencyDataProvider
     ) {
         parent::__construct($translator, $locales);
 
         $this->currencyDataProvider = $currencyDataProvider;
+        $this->configuration = $configuration;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Configuration $configuration */
-        $configuration = $this->getConfiguration();
-        $defaultCurrencyId = $configuration->getInt('PS_CURRENCY_DEFAULT');
+        $defaultCurrencyId = (int) $this->configuration->get('PS_CURRENCY_DEFAULT');
         $defaultCurrency = $this->currencyDataProvider->getCurrencyById($defaultCurrencyId);
-        $weightUnit = $configuration->get('PS_WEIGHT_UNIT');
+        $weightUnit = $this->configuration->get('PS_WEIGHT_UNIT');
 
         $builder
             ->add('shipping_handling_charges', MoneyWithSuffixType::class, [

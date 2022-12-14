@@ -40,10 +40,20 @@ abstract class CommonAbstractType extends AbstractType
     /**
      * Get the configuration adapter.
      *
+     * @deprecated Since 8.1 Use dependency injection in your form type instead.
+     *
      * @return Configuration Configuration adapter
      */
     protected function getConfiguration()
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0 and will be removed in the next major version.',
+                __FUNCTION__
+            ),
+            E_USER_DEPRECATED
+        );
+
         return new Configuration();
     }
 

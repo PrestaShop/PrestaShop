@@ -79,3 +79,10 @@ parameters:
             message: 'use Symfony\Contracts\Translation\TranslatorInterface instead'
             disallowIn:
                 - src/*
+  disallowedMethodCalls:
+        -
+            method: 'PrestaShopBundle\Form\Admin\Type\CommonAbstractType::getConfiguration()'
+            message: 'Use dependency injection instead'
+            disallowIn:
+                - src/*
+
