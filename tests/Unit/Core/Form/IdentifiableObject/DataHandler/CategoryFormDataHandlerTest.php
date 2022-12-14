@@ -40,7 +40,6 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataHandler;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\AbstractCategoryFormDataHandler;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CategoryFormDataHandler;
 use PrestaShop\PrestaShop\Core\Image\Uploader\ImageUploaderInterface;
 use ReflectionClass;
@@ -58,7 +57,7 @@ class CategoryFormDataHandlerTest extends TestCase
             $imageUploaderMock
         );
 
-        $reflectionClass = new ReflectionClass(AbstractCategoryFormDataHandler::class);
+        $reflectionClass = new ReflectionClass(CategoryFormDataHandler::class);
 
         $reflectionMethod = $reflectionClass->getMethod('getAvailableKeys');
         $reflectionMethod->setAccessible(true);
