@@ -3,10 +3,10 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 // Common tests BO
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
+
+require('module-alias/register');
 const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
 

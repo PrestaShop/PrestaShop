@@ -5,6 +5,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import test context
 import testContext from '@utils/testContext';
+import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 
@@ -14,7 +15,6 @@ const {expect} = require('chai');
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
 const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/advancedParameters/createDeleteEmployee');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import FO common tests
 const {createOrderByCustomerTest, createOrderByGuestTest} = require('@commonTests/FO/createOrder');

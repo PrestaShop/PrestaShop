@@ -4,11 +4,11 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Common tests login BO
+import loginCommon from '@commonTests/BO/loginBO';
+
 // Using chai
 const {expect} = require('chai');
-
-// Common tests login BO
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

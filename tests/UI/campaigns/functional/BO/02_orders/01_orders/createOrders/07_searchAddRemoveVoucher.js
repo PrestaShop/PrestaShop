@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -24,9 +27,6 @@ const {Carriers} = require('@data/demo/carriers');
 
 // Import faker data
 const CartRuleFaker = require('@data/faker/cartRule');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createCartRuleTest, bulkDeleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_searchAddRemoveVoucher';

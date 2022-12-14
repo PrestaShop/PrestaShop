@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -10,9 +13,6 @@ const {expect} = require('chai');
 // Import utils
 const files = require('@utils/files');
 const basicHelper = require('@utils/basicHelper');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest, createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');

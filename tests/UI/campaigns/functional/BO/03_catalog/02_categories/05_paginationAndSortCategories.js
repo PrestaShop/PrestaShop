@@ -4,6 +4,9 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import expect from chai
@@ -12,9 +15,6 @@ const {expect} = require('chai');
 // Import utils
 const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
 const {bulkDeleteCategoriesTest} = require('@commonTests/BO/catalog/createDeleteCategory');
 

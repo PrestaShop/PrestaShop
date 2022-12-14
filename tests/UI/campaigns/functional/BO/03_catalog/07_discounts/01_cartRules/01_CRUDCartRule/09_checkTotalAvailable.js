@@ -2,13 +2,13 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import common tests
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule.js');

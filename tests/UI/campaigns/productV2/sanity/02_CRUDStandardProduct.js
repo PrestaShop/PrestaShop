@@ -2,6 +2,9 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 
@@ -11,9 +14,6 @@ const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
 
 // Import BO pages

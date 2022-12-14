@@ -2,13 +2,13 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createShoppingCart} = require('@commonTests/FO/createShoppingCart');
 
 // Import BO pages

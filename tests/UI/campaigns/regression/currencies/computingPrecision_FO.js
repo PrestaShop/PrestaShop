@@ -2,13 +2,13 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Common tests login BO
+import loginCommon from '@commonTests/BO/loginBO';
+
 // Import FO pages
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
-
-// Common tests login BO
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 

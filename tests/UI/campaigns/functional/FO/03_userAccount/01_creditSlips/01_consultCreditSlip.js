@@ -3,6 +3,7 @@ import helper from '@utils/helpers';
 
 // Import test context
 import testContext from '@utils/testContext';
+import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 
@@ -16,7 +17,6 @@ const {createAccountTest} = require('@commonTests/FO/createAccount');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

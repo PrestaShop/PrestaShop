@@ -4,13 +4,13 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import expect from chai
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import expect from chai
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const CategoryPageFaker = require('@data/faker/CMScategory');

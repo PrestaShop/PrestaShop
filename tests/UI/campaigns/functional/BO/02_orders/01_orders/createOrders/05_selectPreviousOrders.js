@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -15,9 +18,6 @@ const addOrderPage = require('@pages/BO/orders/add');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
