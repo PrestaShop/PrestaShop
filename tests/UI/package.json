@@ -9,6 +9,8 @@
     "// ESLint": "To run ESLint commands",
     "lint:fix": "eslint --fix --ignore-path .gitignore .",
     "lint": "eslint --ignore-path .gitignore .",
+    "// TypeScript Check": "Script to check typescript",
+    "check:typescript": "tsc --build ./tsconfig.json",
     "// Step identifiers": "Script to check step identifiers",
     "check:step-identifiers": "ts-node tools/stepIdentifiersChecker.ts",
     "// Linkchecker": "Script to run link checker",
