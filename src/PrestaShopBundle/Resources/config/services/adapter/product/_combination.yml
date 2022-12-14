@@ -94,10 +94,6 @@ services:
       - '@prestashop.core.stock.stock_manager'
       - '@prestashop.adapter.legacy.configuration'
 
-  prestashop.adapter.product.combination.update.combination_stock_updater:
-    alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
-    deprecated: ~
-
   prestashop.adapter.product.combination.create.combination_creator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
     arguments:

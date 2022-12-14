@@ -260,7 +260,10 @@ class ProductStockUpdater
             $updatableProperties[] = 'pack_stock_type';
         }
         if (null !== $properties->getStockModification()) {
-            $product->quantity = $stockAvailable->quantity + $properties->getStockModification()->getDeltaQuantity();
+            $product->quantity = $properties->getStockModification()->getDeltaQuantity() !== null ?
+                $stockAvailable->quantity + $properties->getStockModification()->getDeltaQuantity() :
+                $properties->getStockModification()->getFixedQuantity()
+            ;
             $updatableProperties[] = 'quantity';
         }
         if (null !== $properties->getAvailableDate()) {
@@ -305,7 +308,10 @@ class ProductStockUpdater
         }
 
         if ($properties->getStockModification()) {
-            $stockAvailable->quantity += $properties->getStockModification()->getDeltaQuantity();
+            $stockAvailable->quantity = $properties->getStockModification()->getDeltaQuantity() !== null ?
+                $stockAvailable->quantity + $properties->getStockModification()->getDeltaQuantity() :
+                $properties->getStockModification()->getFixedQuantity()
+            ;
             $stockUpdateRequired = true;
         }
 

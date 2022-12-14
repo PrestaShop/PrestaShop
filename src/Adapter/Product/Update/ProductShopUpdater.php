@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
@@ -40,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotF
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use Product;
@@ -75,24 +79,31 @@ class ProductShopUpdater
     private $productStockUpdater;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
-     * @param StockAvailableMultiShopRepository $stockAvailableRepository
-     * @param ShopRepository $shopRepository
-     * @param ProductImageMultiShopRepository $productImageMultiShopRepository
-     * @param ProductStockUpdater $productStockUpdater
+     * @var CombinationMultiShopRepository
      */
+    private $combinationRepository;
+
+    /**
+     * @var CombinationStockUpdater
+     */
+    private $combinationStockUpdater;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         ShopRepository $shopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
-        ProductStockUpdater $productStockUpdater
+        ProductStockUpdater $productStockUpdater,
+        CombinationMultiShopRepository $combinationMultiShopRepository,
+        CombinationStockUpdater $combinationStockUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
         $this->productImageMultiShopRepository = $productImageMultiShopRepository;
         $this->productStockUpdater = $productStockUpdater;
+        $this->combinationRepository = $combinationMultiShopRepository;
+        $this->combinationStockUpdater = $combinationStockUpdater;
     }
 
     /**
@@ -113,15 +124,16 @@ class ProductShopUpdater
             CannotUpdateProductException::FAILED_SHOP_COPY
         );
 
-        $this->copyStockToShop($productId, $sourceShopId, $targetShopId);
+        $this->copyStockToShop($productId, $sourceShopId, $targetShopId, $sourceProduct->getProductType());
         $this->copyCarriersToShop($sourceProduct, $targetShopId);
         $this->copyImageAssociations($productId, $sourceShopId, $targetShopId);
     }
 
-    private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
+    private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId, string $productType): void
     {
         // First get the source stock
         $sourceStock = $this->stockAvailableRepository->getForProduct($productId, $sourceShopId);
+        $outOfStock = new OutOfStockType((int) $sourceStock->out_of_stock);
 
         // Then try to get the target stock, if it doesn't exist create it
         try {
@@ -131,17 +143,51 @@ class ProductShopUpdater
         }
 
         $deltaQuantity = (int) $sourceStock->quantity - (int) $targetStock->quantity;
-        if ($deltaQuantity !== 0) {
-            $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
+        if ($deltaQuantity !== 0 || (int) $sourceStock->out_of_stock !== (int) $targetStock->out_of_stock || $sourceStock->location !== $targetStock->location) {
+            $stockModification = StockModification::buildFixedQuantity((int) $sourceStock->quantity);
             $stockProperties = new ProductStockProperties(
                 null,
                 $stockModification,
-                new OutOfStockType((int) $sourceStock->out_of_stock),
+                $outOfStock,
                 null,
                 $sourceStock->location
             );
             $this->productStockUpdater->update($productId, $stockProperties, ShopConstraint::shop($targetShopId->getValue()));
         }
+
+        if ($productType === ProductType::TYPE_COMBINATIONS) {
+            $this->copyCombinationsStockToShop($productId, $sourceShopId, $targetShopId, $outOfStock);
+        }
+    }
+
+    private function copyCombinationsStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId, OutOfStockType $outOfStockType): void
+    {
+        $sourceCombinations = $this->combinationRepository->getCombinationIds($productId, ShopConstraint::shop($targetShopId->getValue()));
+        $targetConstraint = ShopConstraint::shop($targetShopId->getValue());
+
+        foreach ($sourceCombinations as $combinationId) {
+            // First get the source stock
+            $sourceStock = $this->stockAvailableRepository->getForCombination($combinationId, $sourceShopId);
+
+            // Then try to get the target stock, if it doesn't exist create it
+            try {
+                $targetStock = $this->stockAvailableRepository->getForCombination($combinationId, $targetShopId);
+            } catch (StockAvailableNotFoundException $e) {
+                $targetStock = $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId, $combinationId);
+            }
+
+            $deltaQuantity = (int) $sourceStock->quantity - (int) $targetStock->quantity;
+            if ($deltaQuantity !== 0) {
+                $stockModification = StockModification::buildDeltaQuantity($deltaQuantity);
+                $stockProperties = new CombinationStockProperties(
+                    $stockModification,
+                    null,
+                    $sourceStock->location
+                );
+                $this->combinationStockUpdater->update($combinationId, $stockProperties, $targetConstraint);
+            }
+        }
+        $this->combinationRepository->updateCombinationOutOfStockType($productId, $outOfStockType, $targetConstraint);
     }
 
     /**
