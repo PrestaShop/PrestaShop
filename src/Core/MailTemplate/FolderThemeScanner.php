@@ -210,7 +210,7 @@ final class FolderThemeScanner
             // We remove the start of the file path then we append @Modules before it.
             return '@Modules' . substr($realPath, strpos($realPath, $this->moduleDirectory) + strlen($this->moduleDirectory));
         }
-        
-        return '@MailThemes' . substr($fileInfo->getRealPath(), strlen($this->baseThemeFolder));
+
+        return '@MailThemes' . substr($realPath, strlen($this->baseThemeFolder));
     }
 }
