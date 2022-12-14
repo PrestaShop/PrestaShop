@@ -128,12 +128,18 @@ abstract class GridControllerTestCase extends WebTestCase
             }
         }
 
+        // Get total number
+        $gridTitleHeader = trim($crawler->filter('.card-header-title')->first()->text());
+        preg_match('/\(([0-9]+)\)/', $gridTitleHeader, $titleMatches);
+        $totalCount = (int) ($titleMatches[1] ?? 0);
+        $testEntityDTOCollection->setTotalCount($totalCount);
+
         return $testEntityDTOCollection;
     }
 
     /**
      * Calls the grid page with specific filters and return the parsed entities it contains, based on the
-     * parseEntityFromRow that each sub-class must implement.
+     * parseEntityFromRow that each subclass must implement.
      *
      * @param array $testFilters
      * @param array $routeParams
