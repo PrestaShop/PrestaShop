@@ -56,7 +56,7 @@ export default class CombinationsService {
     productId: number,
     combinationIds: number[],
     allShops: boolean,
-    abortSignal: AbortSignal
+    abortSignal: AbortSignal,
   ): Promise<Response> {
     const formData = new FormData();
     formData.append('combinationIds', JSON.stringify(combinationIds));

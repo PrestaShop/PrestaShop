@@ -95,7 +95,6 @@ export default class BulkDeleteHandler {
   }
 
   private async bulkDelete(combinationIds: number[], bulkDeleteBtn: HTMLButtonElement): Promise<void> {
-    // const $bulkDeleteBtn = $(bulkDeleteBtn);
     const bulkChunkSize = Number(bulkDeleteBtn.dataset.bulkChunkSize);
     const abortController = new AbortController();
 
