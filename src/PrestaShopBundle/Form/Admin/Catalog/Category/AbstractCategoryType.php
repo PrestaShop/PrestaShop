@@ -65,7 +65,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     /**
      * @var ConfigurationInterface
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @param TranslatorInterface $translator
