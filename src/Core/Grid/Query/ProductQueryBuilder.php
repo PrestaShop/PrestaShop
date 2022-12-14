@@ -33,6 +33,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
@@ -175,28 +176,24 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'ps',
                 $this->addShopCondition('ps.`id_product` = p.`id_product`', 'ps', $shopId, $filteredShopGroupId)
             )
-            ->addOrderBy('ps.id_shop', 'ASC')
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'product_lang',
                 'pl',
                 $this->addShopCondition('pl.`id_product` = p.`id_product` AND pl.`id_lang` = :langId', 'pl', $shopId, $filteredShopGroupId)
             )
-            ->addOrderBy('pl.id_shop', 'ASC')
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'category_lang',
                 'cl',
                 $this->addShopCondition('cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :langId', 'cl', $shopId, $filteredShopGroupId)
             )
-            ->addOrderBy('cl.id_shop', 'ASC')
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'image_shop',
                 'img_shop',
                 $this->addShopCondition('img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1', 'img_shop', $shopId, $filteredShopGroupId)
             )
-            ->addOrderBy('img_shop.id_shop', 'ASC')
             ->leftJoin(
                 'img_shop',
                 $this->dbPrefix . 'image_lang',
@@ -204,8 +201,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :langId'
             )
             ->andWhere('p.`state` = 1')
-            // We group by product since we only need one row per product (there could be several ones if the product is associated to several shops)
-            ->addGroupBy('p.id_product')
         ;
 
         $filteredCategoryId = $this->getFilteredCategoryId($filterValues);
@@ -327,11 +322,17 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     private function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
     {
         if ($shopId) {
+            // Single shop context simple left join on a single shopId
             return $sql . ' AND ' . $tableAlias . '.`id_shop` = :shopId';
         } elseif ($filteredShopGroupId) {
-            return $sql . ' AND ' . $tableAlias . '.`id_shop` IN (SELECT s2.id_shop FROM ' . $this->dbPrefix . 'shop s2 WHERE s2.id_shop_group = :filteredShopGroupId)';
+            // Group shop context, we add a condition on the left join that the id_shop must be part of the group shop AND be associated with the product
+            // And we only select the MIN because we only need the first id_shop which will be used as the default display thus we don't need to use a group by on id_product
+            $groupSubQuery = 'SELECT MIN(s2.id_shop) FROM ' . $this->dbPrefix . 'shop s2 INNER JOIN ' . $this->dbPrefix . 'product_shop ps2 ON ps2.id_shop = s2.id_shop AND ps2.id_product = ps.id_product WHERE s2.id_shop_group = :filteredShopGroupId';
+
+            return $sql . ' AND ' . $tableAlias . '.`id_shop` IN (' . $groupSubQuery . ')';
         }
 
+        // All shops context left join on the product's default shop
         return $sql . ' AND ' . $tableAlias . '.`id_shop` = p.id_shop_default';
     }
 

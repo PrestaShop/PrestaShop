@@ -34,6 +34,7 @@ services:
       - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.repository.shop_group_repository'
+      - '@prestashop.adapter.shop.context'
     public: true
 
   prestashop.core.grid.query_builder.product_light:
