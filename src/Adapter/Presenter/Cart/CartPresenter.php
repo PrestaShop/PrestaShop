@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Configuration\AvifExtensionChecker;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use Product;
 use ProductAssembler;
@@ -91,8 +90,7 @@ class CartPresenter implements PresenterInterface
         $this->link = $context->link;
         $this->translator = $context->getTranslator();
 
-        $isAvifAvailable = new AvifExtensionChecker(Configuration::get('PS_ADDITIONAL_IMAGE_AVIF'));
-        $this->imageRetriever = new ImageRetriever($this->link, $isAvifAvailable);
+        $this->imageRetriever = new ImageRetriever($this->link);
         $this->taxConfiguration = new TaxConfiguration();
     }
 

@@ -33,7 +33,6 @@ use ImageManager;
 use ImageType;
 use Language;
 use Link;
-use PrestaShop\PrestaShop\Core\Configuration\AvifExtensionChecker;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -49,15 +48,9 @@ class ImageRetriever
      */
     private $link;
 
-    /**
-     * @var AvifExtensionChecker
-     */
-    private $avifExtensionChecker;
-
-    public function __construct(Link $link, AvifExtensionChecker $avifExtensionChecker = null)
+    public function __construct(Link $link)
     {
         $this->link = $link;
-        $this->avifExtensionChecker = $avifExtensionChecker;
     }
 
     /**
