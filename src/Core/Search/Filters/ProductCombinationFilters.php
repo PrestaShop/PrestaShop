@@ -69,7 +69,7 @@ class ProductCombinationFilters extends Filters
         $this->productId = (int) $filters['filters']['product_id'];
         $this->shopId = (int) $filters['filters']['shop_id'];
 
-        // Since each combination lists depends on its associated product, the filterId must depends on it so that each
+        // Since each combination lists depends on its associated product, the filterId must depend on it so that each
         // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
         // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
         $this->filterId = static::generateFilterId($this->productId, $this->shopId);

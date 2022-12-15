@@ -48,8 +48,10 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 
 /**
@@ -89,23 +91,32 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     private $productRepository;
 
     /**
+     * @var ProductCombinationQueryBuilder
+     */
+    private $combinationQueryBuilder;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
      * @param AttributeRepository $attributeRepository
+     * @param ProductMultiShopRepository $productRepository
+     * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         CombinationValidator $combinationValidator,
         AttributeRepository $attributeRepository,
-        ProductMultiShopRepository $productRepository
+        ProductMultiShopRepository $productRepository,
+        ProductCombinationQueryBuilder $combinationQueryBuilder
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->combinationValidator = $combinationValidator;
         $this->attributeRepository = $attributeRepository;
         $this->productRepository = $productRepository;
+        $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
 
     /**
@@ -412,23 +423,32 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      *
      * @return CombinationId[]
      */
-    public function getCombinationIds(ProductId $productId, ShopConstraint $shopConstraint): array
-    {
+    public function getCombinationIds(
+        ProductId $productId,
+        ShopConstraint $shopConstraint,
+        ?ProductCombinationFilters $filters = null
+    ): array {
         $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $shopIds = array_map(function (ShopId $shopId) {
             return $shopId->getValue();
         }, $shopIds);
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pas.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
-            ->andWhere('pas.id_product = :productId')
-            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
-            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('productId', $productId->getValue())
-            ->addOrderBy('pas.id_product_attribute', 'ASC')
-        ;
+        if ($filters) {
+            $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
+                ->select('pas.id_product_attribute')
+            ;
+        } else {
+            $qb = $this->connection->createQueryBuilder();
+            $qb
+                ->select('pas.id_product_attribute')
+                ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+                ->andWhere('pas.id_product = :productId')
+                ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+                ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+                ->setParameter('productId', $productId->getValue())
+                ->addOrderBy('pas.id_product_attribute', 'ASC')
+            ;
+        }
 
         $combinationIds = $qb->execute()->fetchAllAssociative();
 
