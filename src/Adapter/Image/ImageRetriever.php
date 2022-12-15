@@ -197,7 +197,7 @@ class ImageRetriever
             if ($generateAdditionalWebP) {
                 $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    sprintf('%s-%s.webp', $id_image, $image_type),
+                    sprintf('%s-%s.webp', $id_image, $image_type['name']),
                 ]);
 
                 if (!file_exists($resizedImagePathWebP)) {
@@ -219,7 +219,7 @@ class ImageRetriever
             if ($generateAdditionalAvif) {
                 $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    sprintf('%s-%s.avif', $id_image, $image_type),
+                    sprintf('%s-%s.avif', $id_image, $image_type['name']),
                 ]);
 
                 if (!file_exists($resizedImagePathAvif)) {
