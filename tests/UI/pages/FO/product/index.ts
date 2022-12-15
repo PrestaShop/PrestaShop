@@ -193,6 +193,13 @@ class Product extends FOBasePage {
     this.reviewSubmitButton = `${this.reviewForm} button[type=submit]`;
     this.reviewSentConfirmationModal = '#product-comment-posted-modal';
     this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
+
+    // Products in pack selectors
+    this.productInPackList = (productInList) => `.product-pack article:nth-child(${productInList})`;
+    this.productInPackImage = (productInList) => `${this.productInPackList(productInList)} div.thumb-mask img`;
+    this.productInPackName = (productInList) => `${this.productInPackList(productInList)} div.pack-product-name a`;
+    this.productInPackPrice = (productInList) => `${this.productInPackList(productInList)} div.pack-product-price`;
+    this.productInPackQuantity = (productInList) => `${this.productInPackList(productInList)} div.pack-product-quantity`;
   }
 
   // Methods
@@ -208,7 +215,7 @@ class Product extends FOBasePage {
 
   /**
    * Get Product information (Product name, price, short description, description)
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
    */
   async getProductInformation(page: Page) {
@@ -217,6 +224,21 @@ class Product extends FOBasePage {
       price: await this.getPriceFromText(page, this.productPrice),
       shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
+    };
+  }
+
+  /**
+   * Get product information in pack
+   * @param page {Page} Browser tab
+   * @param productInList {object} Product in pack list
+   * @returns {Promise<{image: string, quantity: number, price: string, name: string}>}
+   */
+  async getProductInPackList(page, productInList = 1) {
+    return {
+      image: await this.getAttributeContent(page, this.productInPackImage(productInList), 'src'),
+      name: await this.getTextContent(page, this.productInPackName(productInList)),
+      price: await this.getTextContent(page, this.productInPackPrice(productInList)),
+      quantity: await this.getNumberFromText(page, this.productInPackQuantity(productInList)),
     };
   }
 
