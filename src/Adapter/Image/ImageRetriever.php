@@ -221,7 +221,9 @@ class ImageRetriever
                 $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
             }
 
-            if ($this->avifExtensionChecker !== null && $this->avifExtensionChecker->isAvailable()) {
+            $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
+
+            if ($generateAdditionalAvif) {
                 $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     sprintf('%s-%s.avif', $id_image, $image_type),

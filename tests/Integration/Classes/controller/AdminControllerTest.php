@@ -343,7 +343,6 @@ class AdminControllerTest extends TestCase
     private function getMockedAvifExtensionChecker(): AvifExtensionChecker
     {
         $mockAvifExtensionChecker = $this->getMockBuilder(AvifExtensionChecker::class)
-            ->disableOriginalConstructor()
             ->getMock();
 
         $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
