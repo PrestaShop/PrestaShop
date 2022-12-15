@@ -831,12 +831,33 @@ class AdminImagesControllerCore extends AdminController
         parent::initContent();
     }
 
+    /**
+     * This method will remove the elements in $allFormats
+     * where the `name` key is not equal to $nameToFilter
+     *
+     * @param array $allFormats
+     * @param string $nameToFilter
+     *
+     * @return array
+     */
+    private function filterFormats(array $allFormats, string $nameToFilter): array
+    {
+        $formats = [];
+        foreach ($allFormats as $format) {
+            if ($nameToFilter === $format['name']) {
+                $formats[] = $format;
+            }
+        }
+
+        return $formats;
+    }
+
     public function processDelete()
     {
         $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
 
         // We will remove the images linked to this image setting
-        if (!empty(Tools::getValue('delete_linked_images')) && Tools::getValue('delete_linked_images') === true) {
+        if (Tools::getValue('delete_linked_images', 0)) {
             $imageDirectoriesByEntity = [
                 ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
                 ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
@@ -845,7 +866,9 @@ class AdminImagesControllerCore extends AdminController
                 ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
             ];
             foreach ($imageDirectoriesByEntity as $imagesDirectory) {
-                $formats = ImageType::getImagesTypesByName($imageType['name'], $imagesDirectory['type']);
+                $allFormats = ImageType::getImagesTypes($imagesDirectory['type']);
+                $formats = $this->filterFormats($allFormats, $imageType['name']);
+
                 $this->_deleteOldImages($imagesDirectory['dir'], $formats, ($imagesDirectory['type'] == 'products' ? true : false));
             }
         }
