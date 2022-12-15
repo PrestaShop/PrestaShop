@@ -180,7 +180,7 @@ class ImageRetriever
             $id_image . '.' . $ext,
         ]);
 
-        $rewriteLink = isset($object->link_rewrite) ? $object->link_rewrite : $object->name;
+        $rewriteLink = !empty($object->link_rewrite) ? $object->link_rewrite : $object->name;
         foreach ($image_types as $image_type) {
             $additionalSources = [];
             // Final path thumbnail in our size
@@ -204,7 +204,7 @@ class ImageRetriever
             if ($generateAdditionalWebP) {
                 $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . '.webp',
+                    sprintf('%s-%s.webp', $id_image, $image_type),
                 ]);
 
                 if (!file_exists($resizedImagePathWebP)) {
@@ -224,7 +224,7 @@ class ImageRetriever
             if ($this->avifExtensionChecker !== null && $this->avifExtensionChecker->isAvailable()) {
                 $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . '.avif',
+                    sprintf('%s-%s.avif', $id_image, $image_type),
                 ]);
 
                 if (!file_exists($resizedImagePathAvif)) {

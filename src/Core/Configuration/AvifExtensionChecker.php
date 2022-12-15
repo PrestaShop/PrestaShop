@@ -33,18 +33,10 @@ use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
  */
 class AvifExtensionChecker
 {
-    private $psAdditionalImageAvif;
-
-    public function __construct($psAdditionalImageAvif)
-    {
-        $this->psAdditionalImageAvif = $psAdditionalImageAvif;
-    }
-
     public function isAvailable()
     {
         $isAvailable = extension_loaded('gd') && /* @phpstan-ignore-line */
             version_compare(PHP_VERSION, '8.1') >= 0 &&
-            $this->psAdditionalImageAvif &&
             function_exists('imageavif') &&
             is_callable('imageavif'); /* @phpstan-ignore-line */
 

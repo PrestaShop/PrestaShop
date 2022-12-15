@@ -387,7 +387,7 @@
     <value>0</value>
   </configuration>
   <configuration id="PS_IMAGE_QUALITY" name="PS_IMAGE_QUALITY">
-    <value>1</value>
+    <value>jpg</value>
   </configuration>
   <configuration id="PS_PNG_QUALITY" name="PS_PNG_QUALITY">
     <value>7</value>
