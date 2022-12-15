@@ -80,33 +80,6 @@ class AdminImagesControllerCore extends AdminController
                 ],
                 'disabled' => $imageFormatsDisabled,
             ],
-            'PS_IMAGE_FORMAT_FALLBACK' => [
-                'title' => $this->trans('Fallback', [], 'Admin.Design.Feature'),
-                'validation' => 'isUnsignedId',
-                'required' => false,
-                'cast' => 'intval',
-                'type' => 'select',
-                'list' => [
-                    [
-                        'id' => '0',
-                        'name' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
-                    ],
-                    [
-                        'id' => '1',
-                        'name' => $this->trans('PNG', [], 'Admin.Design.Feature'),
-                    ],
-                    [
-                        'id' => '2',
-                        'name' => $this->trans('WebP', [], 'Admin.Design.Feature'),
-                    ],
-                    [
-                        'id' => '3',
-                        'name' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
-                    ],
-                ],
-                'identifier' => 'id',
-                'visibility' => Shop::CONTEXT_ALL,
-            ],
             'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
                 'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
                 'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),

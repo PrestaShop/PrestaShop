@@ -904,8 +904,5 @@ Country</value>
     <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
       <value>jpeg</value>
     </configuration>
-    <configuration id="PS_IMAGE_FORMAT_FALLBACK" name="PS_IMAGE_FORMAT_FALLBACK">
-      <value>0</value>
-    </configuration>
   </entities>
 </entity_configuration>
