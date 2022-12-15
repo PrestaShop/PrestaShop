@@ -77,7 +77,7 @@ services:
       - '%database_prefix%'
       - '@prestashop.adapter.product.image.validate.product_image_validator'
       - '@prestashop.adapter.product.image.product_image_url_factory'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
     arguments:

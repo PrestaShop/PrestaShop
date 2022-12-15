@@ -54,14 +54,7 @@ use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 
-/**
- * @todo: This class has been added while we progressively migrate each domain to multishop It contains the new
- *        dedicated function bound with multishop When everything has been migrated they will be moved back to
- *        the initial CombinationRepository and single shop methods should be removed But since this will be done
- *        in several PRs for now it's easier to separate them into two services
- *        This is why a lot of code is duplicated between the two classes but don't worry this one is only temporary
- */
-class CombinationMultiShopRepository extends AbstractMultiShopObjectModelRepository
+class CombinationRepository extends AbstractMultiShopObjectModelRepository
 {
     use ShopConstraintTrait;
 

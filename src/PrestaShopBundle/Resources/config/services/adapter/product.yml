@@ -351,7 +351,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
@@ -491,7 +491,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand

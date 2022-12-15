@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
@@ -61,7 +61,7 @@ class ProductSupplierUpdater
     private $productRepository;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -87,14 +87,14 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductRepository $productRepository
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param int $defaultCurrencyId
      */
     public function __construct(
         ProductRepository $productRepository,
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         SupplierRepository $supplierRepository,
         ProductSupplierRepository $productSupplierRepository,
         int $defaultCurrencyId,

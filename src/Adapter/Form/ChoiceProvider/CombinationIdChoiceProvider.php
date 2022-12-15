@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -39,7 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInterface
 {
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -59,13 +59,13 @@ class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInter
     private $languageId;
 
     /**
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param AttributeRepository $attributeRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param int $languageId
      */
     public function __construct(
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         AttributeRepository $attributeRepository,
         CombinationNameBuilderInterface $combinationNameBuilder,
         int $languageId
