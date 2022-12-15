@@ -2723,7 +2723,7 @@ class ProductCore extends ObjectModel
 
         $combinations = array_column($combinations, null, 'id_product_attribute');
 
-        $product_attributes = array_keys($combinations);
+        $combinationIds = array_keys($combinations);
 
         $lang = Db::getInstance()->executeS('SELECT pac.id_product_attribute, GROUP_CONCAT(agl.`name`, \'' . pSQL($attribute_value_separator) . '\',al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \'' . pSQL($attribute_separator) . '\') as attribute_designation
                 FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
