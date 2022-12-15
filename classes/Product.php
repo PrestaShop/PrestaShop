@@ -2731,7 +2731,7 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
-                WHERE pac.id_product_attribute IN (' . implode(',', $product_attributes) . ')
+                WHERE pac.id_product_attribute IN (' . implode(',', $combinationIds) . ')
                 GROUP BY pac.id_product_attribute
                 ORDER BY pac.id_product_attribute');
 
