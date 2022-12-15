@@ -896,7 +896,7 @@ Country</value>
       <value>1</value>
     </configuration>
     <configuration id="PS_ADDITIONAL_IMAGE_AVIF" name="PS_ADDITIONAL_IMAGE_AVIF">
-      <value>1</value>
+      <value>0</value>
     </configuration>
     <configuration id="PS_ADDITIONAL_IMAGE_AVIF_QUALITY" name="PS_ADDITIONAL_IMAGE_AVIF_QUALITY">
       <value>90</value>
