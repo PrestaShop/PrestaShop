@@ -3,6 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -13,9 +14,6 @@ const {expect} = require('chai');
 const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
 const {createAccountTest} = require('@commonTests/FO/createAccount');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-
-// import FO pages
-const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const addressesPage = require('@pages/FO/myAccount/addresses');

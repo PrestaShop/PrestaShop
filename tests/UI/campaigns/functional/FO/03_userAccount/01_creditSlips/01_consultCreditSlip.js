@@ -1,9 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -24,9 +25,6 @@ const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
 const viewOrderProductsBlockPage = require('@pages/BO/orders/view/productsBlock');
 const viewOrderTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');

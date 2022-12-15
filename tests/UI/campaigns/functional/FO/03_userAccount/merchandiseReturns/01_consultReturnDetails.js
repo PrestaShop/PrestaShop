@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -15,9 +16,6 @@ const {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
 } = require('@commonTests/BO/customerService/enableDisableMerchandiseReturns');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');

@@ -3,6 +3,9 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import FO pages
+import homePage from '@pages/FO/home';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
@@ -11,9 +14,6 @@ const {expect} = require('chai');
 const {createAccountTest} = require('@commonTests/FO/createAccount');
 const {createCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');

@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -16,9 +17,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
-
-// FO pages
-const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');

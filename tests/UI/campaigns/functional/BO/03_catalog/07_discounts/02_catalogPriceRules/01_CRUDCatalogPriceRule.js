@@ -6,6 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -18,9 +19,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceRules');
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
