@@ -15,7 +15,6 @@ import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRul
 // Import FO pages
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-import homePage from '@pages/FO/home';
 
 // Import data
 import PriceRuleFaker from '@data/faker/catalogPriceRule';
