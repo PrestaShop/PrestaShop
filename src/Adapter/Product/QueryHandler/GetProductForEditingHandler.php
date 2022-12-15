@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformati
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
@@ -105,9 +104,9 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $virtualProductFileRepository;
 
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
-    private $productImageRepository;
+    private $productImageMultiShopRepository;
 
     /**
      * @var TaxComputer
@@ -155,7 +154,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * @param CategoryRepository $categoryRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageMultiShopRepository
      * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
@@ -171,7 +170,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         CategoryRepository $categoryRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
-        ProductImageRepository $productImageRepository,
+        ProductImageMultiShopRepository $productImageMultiShopRepository,
         AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
         int $countryId,
@@ -190,7 +189,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $this->countryId = $countryId;
         $this->attachmentRepository = $attachmentRepository;
         $this->targetProvider = $targetProvider;
-        $this->productImageRepository = $productImageRepository;
+        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
         $this->specificPriceRepository = $specificPriceRepository;
         $this->configuration = $configuration;
@@ -222,7 +221,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
             $this->getVirtualProductFile($product),
-            $this->getCover($product)
+            $this->getCover($query->getProductId(), $product->getShopId())
         );
     }
 
@@ -548,16 +547,12 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         );
     }
 
-    /**
-     * @param Product $product
-     *
-     * @return string
-     */
-    private function getCover(Product $product): string
+    private function getCover(ProductId $productId, int $shopId): string
     {
-        $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));
-        if ($coverImage) {
-            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
+        $idOfCoverImage = $this->productImageMultiShopRepository->getCoverImageId($productId, new ShopId($shopId));
+
+        if ($idOfCoverImage) {
+            return $this->productImageUrlFactory->getPathByType($idOfCoverImage, ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }
 
         return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);

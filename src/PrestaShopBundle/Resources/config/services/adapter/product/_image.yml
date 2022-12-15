@@ -45,7 +45,7 @@ services:
   prestashop.adapter.product.image.query_handler.get_product_images_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler
     arguments:
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
     tags:
       - name: tactician.handler
@@ -84,6 +84,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.image.validate.product_image_validator'
 
   prestashop.adapter.product.image.update.product_image_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater
@@ -93,6 +94,7 @@ services:
       - '@prestashop.core.grid.position.position_update_factory'
       - '@prestashop.core.grid.image.position_definition'
       - '@prestashop.core.grid.position.doctrine_grid_position_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
 
   prestashop.adapter.product.image.product_image_filesystem_path_factory:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory

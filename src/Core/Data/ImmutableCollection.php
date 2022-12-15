@@ -73,6 +73,7 @@ abstract class ImmutableCollection implements IteratorAggregate, Countable
      */
     public function first()
     {
+        //todo: use another way to fetch the first element since reset replace the cursor at the first place
         return reset($this->values);
     }
 
