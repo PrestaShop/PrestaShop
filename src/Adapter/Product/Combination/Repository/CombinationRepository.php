@@ -154,16 +154,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     */
-    public function deleteByProductId(ProductId $productId): void
-    {
-        $combinationIds = $this->getCombinationIds($productId);
-
-        $this->bulkDelete($combinationIds);
-    }
-
-    /**
      * @param CombinationId[] $combinationIds
      *
      * @throws CannotBulkDeleteCombinationException
