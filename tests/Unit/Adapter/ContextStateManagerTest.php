@@ -57,10 +57,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setCart($this->createContextFieldMock(Cart::class, 51));
         $this->assertEquals(51, $context->cart->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setCart($this->createContextFieldMock(Cart::class, 69));
         $this->assertEquals(69, $context->cart->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -80,10 +82,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setCountry($this->createContextFieldMock(Country::class, 51));
         $this->assertEquals(51, $context->country->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setCountry($this->createContextFieldMock(Country::class, 69));
         $this->assertEquals(69, $context->country->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -103,10 +107,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 51));
         $this->assertEquals(51, $context->currency->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setCurrency($this->createContextFieldMock(Currency::class, 69));
         $this->assertEquals(69, $context->currency->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -126,10 +132,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setCustomer($this->createContextFieldMock(Customer::class, 51));
         $this->assertEquals(51, $context->customer->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setCustomer($this->createContextFieldMock(Customer::class, 69));
         $this->assertEquals(69, $context->customer->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -150,11 +158,13 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
         $this->assertEquals('test51', $context->getTranslator()->getLocale());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
         $this->assertEquals('test69', $context->getTranslator()->getLocale());
 
@@ -175,11 +185,15 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertNull($contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
+        /* @phpstan-ignore-next-line */
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
+        /* @phpstan-ignore-next-line */
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -211,6 +225,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
             ->setLanguage($this->createContextFieldMock(Language::class, 51))
         ;
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $this->assertEquals(51, $context->cart->id);
@@ -241,10 +256,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->saveCurrentContext();
@@ -256,6 +273,7 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -267,10 +285,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -301,6 +321,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             ->setCurrency($this->createContextFieldMock(Currency::class, 51))
             ->setCustomer($this->createContextFieldMock(Customer::class, 51))
         ;
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $this->assertEquals(51, $context->cart->id);
@@ -331,6 +352,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(51, $context->currency->id);
         $this->assertEquals(51, $context->customer->id);
         $this->assertEquals(42, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -355,10 +377,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->saveCurrentContext();
@@ -369,6 +393,7 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -382,6 +407,7 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 93));
         $this->assertEquals(93, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -406,10 +432,12 @@ class ContextStateManagerTest extends ContextStateTestCase
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         // Save point 2
@@ -421,6 +449,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         // Back to save point 2
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(69, $context->language->id);
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         // Back to save point 1

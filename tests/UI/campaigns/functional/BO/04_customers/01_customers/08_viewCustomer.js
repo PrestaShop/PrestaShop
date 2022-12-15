@@ -3,12 +3,15 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -21,7 +24,6 @@ const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');

@@ -29,16 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class CombinationCommandsBuilder implements CombinationCommandsBuilderInterface
+class CombinationCommandsBuilder implements MultiShopCombinationCommandsBuilderInterface
 {
     /**
-     * @var CombinationCommandsBuilderInterface[]
+     * @var iterable<CombinationCommandsBuilderInterface|MultiShopCombinationCommandsBuilderInterface>
      */
     private $commandBuilders;
 
     /**
-     * @param CombinationCommandsBuilderInterface[] $commandBuilders
+     * @param iterable<CombinationCommandsBuilderInterface|MultiShopCombinationCommandsBuilderInterface> $commandBuilders
      */
     public function __construct(iterable $commandBuilders)
     {
@@ -46,16 +47,18 @@ class CombinationCommandsBuilder implements CombinationCommandsBuilderInterface
     }
 
     /**
-     * @param CombinationId $combinationId
-     * @param array $formData
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function buildCommands(CombinationId $combinationId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $commandCollection = [];
         foreach ($this->commandBuilders as $commandBuilder) {
-            $commands = $commandBuilder->buildCommands($combinationId, $formData);
+            if ($commandBuilder instanceof MultiShopCombinationCommandsBuilderInterface) {
+                $commands = $commandBuilder->buildCommands($combinationId, $formData, $singleShopConstraint);
+            } else {
+                $commands = $commandBuilder->buildCommands($combinationId, $formData);
+            }
+
             if (!empty($commands)) {
                 $commandCollection = array_merge($commandCollection, $commands);
             }

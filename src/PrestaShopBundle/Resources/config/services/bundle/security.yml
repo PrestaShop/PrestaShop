@@ -19,3 +19,19 @@ services:
     tags:
       - { name: security.voter }
     public: false
+
+  PrestaShop\PrestaShop\Core\Security\TokenAuthenticator:
+    public: false
+    arguments:
+      - '@PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface'
+      - '@Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory'
+
+  PrestaShopBundle\Security\OAuth2\ResourceServer:
+    public: false
+    arguments:
+      - '@League\OAuth2\Server\ResourceServer'
+      - '@security.user.provider.concrete.oauth2'
+
+  PrestaShop\PrestaShop\Core\OAuth2\OAuth2Interface:
+    alias: PrestaShopBundle\Security\OAuth2\ResourceServer
+    public: false

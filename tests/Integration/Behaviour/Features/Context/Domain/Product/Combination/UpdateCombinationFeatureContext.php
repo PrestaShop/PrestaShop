@@ -31,8 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 /**
@@ -48,14 +47,39 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      * @param string $combinationReference
      * @param TableNode $tableNode
      */
-    public function updateCombination(string $combinationReference, TableNode $tableNode): void
+    public function updateCombinationForDefaultShop(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
+        $this->updateCombination($combinationReference, $tableNode, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        $this->fillCommand($command, $tableNode->getRowsHash());
-        $this->getCommandBus()->handle($command);
+    /**
+     * @When I update combination ":combinationReference" with following values for shop ":shopReference":
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateCombinationForShop(string $combinationReference, TableNode $tableNode, string $shopReference): void
+    {
+        $this->updateCombination(
+            $combinationReference,
+            $tableNode,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
 
-        $this->updateCombinationStockAvailable($combinationReference, $tableNode->getRowsHash());
+    /**
+     * @When I update combination ":combinationReference" with following values for all shops:
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateCombinationForAllShops(string $combinationReference, TableNode $tableNode): void
+    {
+        $this->updateCombination(
+            $combinationReference,
+            $tableNode,
+            ShopConstraint::allShops()
+        );
     }
 
     /**
@@ -63,37 +87,43 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
      *
      * @param string $combinationReference
      */
-    public function setDefaultCombination(string $combinationReference): void
+    public function setDefaultCombinationForDefaultShop(string $combinationReference): void
     {
-        $command = new UpdateCombinationCommand((int) $this->getSharedStorage()->get($combinationReference));
-        $command->setIsDefault(true);
-        $this->getCommandBus()->handle($command);
+        $this->setDefaultCombination($combinationReference, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
-    private function updateCombinationStockAvailable(string $combinationReference, array $dataRows): void
+    /**
+     * @When I set combination ":combinationReference" as default for shop ":shopReference"
+     *
+     * @param string $combinationReference
+     * @param string $shopReference
+     */
+    public function setDefaultCombinationForShop(string $combinationReference, string $shopReference): void
     {
-        if (!isset($dataRows['delta quantity'])
-            && !isset($dataRows['fixed quantity'])
-            && !isset($dataRows['location'])) {
-            return;
-        }
+        $this->setDefaultCombination(
+            $combinationReference,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
 
-        try {
-            $command = new UpdateCombinationStockAvailableCommand((int) $this->getSharedStorage()->get($combinationReference));
-            if (isset($dataRows['delta quantity'])) {
-                $command->setDeltaQuantity((int) $dataRows['delta quantity']);
-            }
-            if (isset($dataRows['fixed quantity'])) {
-                $command->setFixedQuantity((int) $dataRows['fixed quantity']);
-            }
-            if (isset($dataRows['location'])) {
-                $command->setLocation($dataRows['location']);
-            }
+    /**
+     * @When I set combination ":combinationReference" as default for all shops
+     *
+     * @param string $combinationReference
+     */
+    public function setDefaultCombinationForAllShops(string $combinationReference): void
+    {
+        $this->setDefaultCombination($combinationReference, ShopConstraint::allShops());
+    }
 
-            $this->getCommandBus()->handle($command);
-        } catch (ProductStockConstraintException $e) {
-            $this->setLastException($e);
-        }
+    private function setDefaultCombination(string $combinationReference, ShopConstraint $shopConstraint): void
+    {
+        $command = new UpdateCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            $shopConstraint
+        );
+        $command->setIsDefault(true);
+        $this->getCommandBus()->handle($command);
     }
 
     /**
@@ -159,5 +189,16 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
             $command->setLocalizedAvailableLaterLabels($dataRows['available later labels']);
             unset($dataRows['available later labels']);
         }
+    }
+
+    private function updateCombination(string $combinationReference, TableNode $tableNode, ShopConstraint $shopConstraint): void
+    {
+        $command = new UpdateCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            $shopConstraint
+        );
+
+        $this->fillCommand($command, $tableNode->getRowsHash());
+        $this->getCommandBus()->handle($command);
     }
 }

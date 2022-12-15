@@ -3,6 +3,12 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -16,14 +22,10 @@ const loginPage = require('@pages/FO/login');
 const createAccountPage = require('@pages/FO/myAccount/add');
 const myAccountPage = require('@pages/FO/myAccount');
 const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const checkoutPage = require('@pages/FO/checkout');
 const contactUsPage = require('@pages/FO/contactUs');
-
-// Import BO pages
-const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');

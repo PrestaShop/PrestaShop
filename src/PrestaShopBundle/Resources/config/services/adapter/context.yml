@@ -3,13 +3,13 @@ services:
     public: true
 
   # SECURITY
-  # @todo: is this service used?
   prestashop.adapter.security.admin:
     class: "%AdapterSecurityAdminClass%"
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@security.token_storage"
       - "@prestashop.security.admin.provider"
+      - "@security.helper"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

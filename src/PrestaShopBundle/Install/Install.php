@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Install;
 
+use FileLogger as LegacyFileLogger;
 use Language as LanguageLegacy;
 use PhpEncryption;
 use PrestaShop\PrestaShop\Adapter\Entity\Cache;
@@ -38,7 +39,6 @@ use PrestaShop\PrestaShop\Adapter\Entity\Country;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Employee;
-use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Group;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
@@ -62,6 +62,8 @@ use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestaShopException;
 use PrestashopInstallerException;
+use PrestaShopLoggerInterface;
+use PSRLoggerAdapter;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -71,8 +73,6 @@ class Install extends AbstractInstall
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     public const DEFAULT_THEME = 'classic';
-
-    protected $logger;
 
     /**
      * The path of the bootsrap file we want to use for the installation.
@@ -98,7 +98,12 @@ class Install extends AbstractInstall
      */
     protected $isDebug = null;
 
-    public function __construct($settingsFile = null, $bootstrapFile = null)
+    /**
+     * @param string|null $settingsFile
+     * @param string|null $bootstrapFile
+     * @param PrestaShopLoggerInterface $logger
+     */
+    public function __construct($settingsFile = null, $bootstrapFile = null, $logger = null)
     {
         if ($bootstrapFile === null) {
             $bootstrapFile = static::BOOTSTRAP_FILE;
@@ -111,21 +116,21 @@ class Install extends AbstractInstall
         $this->settingsFile = $settingsFile;
         $this->bootstrapFile = $bootstrapFile;
         $this->isDebug = _PS_MODE_DEV_;
+
+        if (null === $logger) {
+            $this->logger = new LegacyFileLogger();
+            $this->logger->setFilename(
+                _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log'
+            );
+        } else {
+            $this->setLogger($logger);
+        }
+
         parent::__construct();
     }
 
     public function setError($errors)
     {
-        static $logger = null;
-
-        if (null === $logger) {
-            $logger = new FileLogger();
-            $logger->setFilename(
-                _PS_ROOT_DIR_ . '/var/logs/' . _PS_ENV_ . '_' . @date('Ymd') . '_installation.log'
-            );
-            $this->logger = $logger;
-        }
-
         if (!is_array($errors)) {
             $errors = [$errors];
         }
@@ -133,7 +138,7 @@ class Install extends AbstractInstall
         parent::setError($errors);
 
         foreach ($errors as $error) {
-            $this->logger->logError($error);
+            $this->getLogger()->logError($error);
         }
     }
 
@@ -185,6 +190,12 @@ class Install extends AbstractInstall
         }
 
         $key = PhpEncryption::createNewRandomKey();
+        $privateKey = openssl_pkey_new([
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+        openssl_pkey_export($privateKey, $apiPrivateKey);
+        $apiPublicKey = openssl_pkey_get_details($privateKey)['key'];
 
         $parameters = [
             'parameters' => [
@@ -198,6 +209,8 @@ class Install extends AbstractInstall
                 'cookie_key' => $cookie_key,
                 'cookie_iv' => $cookie_iv,
                 'new_cookie_key' => $key,
+                'api_public_key' => $apiPublicKey,
+                'api_private_key' => $apiPrivateKey,
                 'ps_creation_date' => date('Y-m-d'),
                 'secret' => $secret,
                 'locale' => $this->language->getLanguage()->getLocale(),
@@ -1155,12 +1168,16 @@ class Install extends AbstractInstall
         $themeName = $themeName ?: _THEME_NAME_;
         $builder = new ThemeManagerBuilder(
             Context::getContext(),
-            Db::getInstance()
+            Db::getInstance(),
+            null,
+            new PSRLoggerAdapter($this->getLogger())
         );
 
         $theme_manager = $builder->build();
 
         if (!($theme_manager->install($themeName) && $theme_manager->enable($themeName))) {
+            $this->getLogger()->log('Could not install theme');
+
             return false;
         }
 

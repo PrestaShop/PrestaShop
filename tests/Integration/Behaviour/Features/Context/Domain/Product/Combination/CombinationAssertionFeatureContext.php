@@ -51,28 +51,20 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
      * @param string $combinationReference
      * @param CombinationDetails $expectedDetails
      */
-    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails): void
+    public function assertDetailsForDefaultShop(string $combinationReference, CombinationDetails $expectedDetails): void
     {
-        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getDetails();
-        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->assertDetails($combinationReference, $expectedDetails, [$this->getDefaultShopId()]);
+    }
 
-        foreach ($scalarDetailNames as $propertyName) {
-            Assert::assertSame(
-                $propertyAccessor->getValue($expectedDetails, $propertyName),
-                $propertyAccessor->getValue($actualDetails, $propertyName),
-                sprintf('Unexpected %s of "%s"', $propertyName, $combinationReference)
-            );
-        }
-
-        Assert::assertTrue(
-            $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
-            sprintf(
-                'Unexpected combination impact on weight. Expected "%s" got "%s"',
-                var_export($expectedDetails->getImpactOnWeight(), true),
-                var_export($actualDetails->getImpactOnWeight(), true)
-            )
-        );
+    /**
+     * @Then combination ":combinationReference" should have following details for shops ":shopReferences":
+     *
+     * @param string $combinationReference
+     * @param CombinationDetails $expectedDetails
+     */
+    public function assertDetailsForShops(string $combinationReference, CombinationDetails $expectedDetails, string $shopReferences): void
+    {
+        $this->assertDetails($combinationReference, $expectedDetails, $this->referencesToIds($shopReferences));
     }
 
     /**
@@ -102,96 +94,20 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
      * @param string $combinationReference
      * @param CombinationPrices $expectedPrices
      */
-    public function assertCombinationPrices(string $combinationReference, CombinationPrices $expectedPrices): void
+    public function assertPricesForDefaultShop(string $combinationReference, CombinationPrices $expectedPrices): void
     {
-        $actualPrices = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getPrices();
+        $this->assertPrices($combinationReference, $expectedPrices, [$this->getDefaultShopId()]);
+    }
 
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
-            sprintf(
-                'Unexpected combination impact on price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPrice(),
-                (string) $actualPrices->getImpactOnPrice()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
-            sprintf(
-                'Unexpected combination impact on price with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
-                (string) $actualPrices->getImpactOnPriceTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
-            sprintf(
-                'Unexpected combination eco tax. Expected "%s", got "%s"',
-                (string) $expectedPrices->getEcotax(),
-                (string) $actualPrices->getEcotax()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
-            sprintf(
-                'Unexpected combination eco tax with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getEcotaxTaxIncluded(),
-                (string) $actualPrices->getEcotaxTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
-            sprintf(
-                'Unexpected combination impact on unit price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnUnitPrice(),
-                (string) $actualPrices->getImpactOnUnitPrice()
-            )
-        );
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
-            sprintf(
-                'Unexpected combination impact on unit price with taxes. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
-                (string) $actualPrices->getImpactOnPriceTaxIncluded()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
-            sprintf(
-                'Unexpected combination wholesale price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getWholesalePrice(),
-                (string) $actualPrices->getWholesalePrice()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
-            sprintf(
-                'Unexpected combination product tax rate. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductTaxRate(),
-                (string) $actualPrices->getProductTaxRate()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
-            sprintf(
-                'Unexpected combination product price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductPrice(),
-                (string) $actualPrices->getProductPrice()
-            )
-        );
-
-        Assert::assertTrue(
-            $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
-            sprintf(
-                'Unexpected combination wholesale price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getProductEcotax(),
-                (string) $actualPrices->getProductEcotax()
-            )
-        );
+    /**
+     * @Then combination ":combinationReference" should have following prices for shops ":shopReferences":
+     *
+     * @param string $combinationReference
+     * @param CombinationPrices $expectedPrices
+     */
+    public function assertPricesForShops(string $combinationReference, CombinationPrices $expectedPrices, string $shopReferences): void
+    {
+        $this->assertPrices($combinationReference, $expectedPrices, $this->referencesToIds($shopReferences));
     }
 
     /**
@@ -249,66 +165,25 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     }
 
     /**
-     * @Then combination :combinationReference should have following stock details:
+     * @Then combination ":combinationReference" should have following stock details:
      *
      * @param string $combinationReference
      * @param CombinationStock $expectedStock
      */
-    public function assertStockDetails(string $combinationReference, CombinationStock $expectedStock): void
+    public function assertStockForDefaultShop(string $combinationReference, CombinationStock $expectedStock): void
     {
-        $actualStock = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getStock();
+        $this->assertStockDetails($combinationReference, $expectedStock, [$this->getDefaultShopId()]);
+    }
 
-        Assert::assertSame(
-            $expectedStock->getQuantity(),
-            $actualStock->getQuantity(),
-            sprintf('Unexpected combination "%s" quantity', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getMinimalQuantity(),
-            $actualStock->getMinimalQuantity(),
-            sprintf('Unexpected combination "%s" minimal quantity', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getLowStockThreshold(),
-            $actualStock->getLowStockThreshold(),
-            sprintf('Unexpected combination "%s" low stock threshold', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->isLowStockAlertEnabled(),
-            $actualStock->isLowStockAlertEnabled(),
-            sprintf('Unexpected combination "%s" low stock alert', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getLocation(),
-            $actualStock->getLocation(),
-            sprintf('Unexpected combination "%s" location', $combinationReference)
-        );
-        if (null === $expectedStock->getAvailableDate()) {
-            Assert::assertSame(
-                $expectedStock->getAvailableDate(),
-                $actualStock->getAvailableDate(),
-                sprintf('Unexpected combination "%s" availability date. Expected NULL, got "%s"',
-                    $combinationReference,
-                    var_export($actualStock->getAvailableDate(), true)
-                )
-            );
-        } else {
-            Assert::assertEquals(
-                $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                sprintf('Unexpected combination "%s" availability date', $combinationReference)
-            );
-        }
-        $this->assertLocalizedProperty(
-            $expectedStock->getLocalizedAvailableNowLabels(),
-            $actualStock->getLocalizedAvailableNowLabels(),
-            'available now label'
-        );
-        $this->assertLocalizedProperty(
-            $expectedStock->getLocalizedAvailableLaterLabels(),
-            $actualStock->getLocalizedAvailableLaterLabels(),
-            'available later label'
-        );
+    /**
+     * @Then combination ":combinationReference" should have following stock details for shops ":shopReferences":
+     *
+     * @param string $combinationReference
+     * @param CombinationStock $expectedStock
+     */
+    public function assertStockForShops(string $combinationReference, CombinationStock $expectedStock, string $shopReferences): void
+    {
+        $this->assertStockDetails($combinationReference, $expectedStock, $this->referencesToIds($shopReferences));
     }
 
     /**
@@ -337,28 +212,44 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     /**
      * @Then /^all combinations of product "([^"]*)" should have the stock policy to "([^"]*)"$/
      */
-    public function allCombinationsOfProductShouldHaveTheStockPolicyTo(string $reference, string $outOfStock)
+    public function assertCombinationStockPolicyForDefaultShop(string $productReference, string $outOfStock)
     {
-        $product = $this->getProductForEditing($reference);
+        $this->assertStockPolicyForShops($productReference, $outOfStock, [$this->getDefaultShopId()]);
+    }
 
-        $outOfStockInt = $this->convertOutOfStockToInt($outOfStock);
-        Assert::assertSame(
-            $product->getStockInformation()->getOutOfStockType(),
-            $outOfStockInt
-        );
+    /**
+     * @Then /^all combinations of product "([^"]*)" for shops "([^"]*)" should have the stock policy to "([^"]*)"$/
+     */
+    public function assertCombinationStockPolicyForShops(string $productReference, string $shopReferences, string $outOfStock)
+    {
+        $this->assertStockPolicyForShops($productReference, $outOfStock, $this->referencesToIds($shopReferences));
+    }
 
-        $combinations = $this->getCombinationsList($reference, $this->getDefaultShopId());
+    private function assertStockPolicyForShops(string $productReference, string $outOfStock, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $product = $this->getProductForEditing($productReference, $shopId);
 
-        foreach ($combinations->getCombinations() as $combination) {
-            $id = StockAvailable::getStockAvailableIdByProductId(
-                $this->getSharedStorage()->get($reference),
-                $combination->getCombinationId()
-            );
-
+            $outOfStockInt = $this->convertOutOfStockToInt($outOfStock);
             Assert::assertSame(
-                (int) (new StockAvailable($id))->out_of_stock,
+                $product->getStockInformation()->getOutOfStockType(),
                 $outOfStockInt
             );
+
+            $combinations = $this->getCombinationsList($productReference, $shopId);
+
+            foreach ($combinations->getCombinations() as $combination) {
+                $id = StockAvailable::getStockAvailableIdByProductId(
+                    $this->getSharedStorage()->get($productReference),
+                    $combination->getCombinationId(),
+                    $shopId
+                );
+
+                Assert::assertSame(
+                    (int) (new StockAvailable($id))->out_of_stock,
+                    $outOfStockInt
+                );
+            }
         }
     }
 
@@ -386,6 +277,203 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
                     )
                 );
             }
+        }
+    }
+
+    public function assertDetails(string $combinationReference, CombinationDetails $expectedDetails, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
+            $actualDetails = $this->getCombinationForEditing($combinationReference, $shopId)->getDetails();
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+            foreach ($scalarDetailNames as $propertyName) {
+                Assert::assertSame(
+                    $propertyAccessor->getValue($expectedDetails, $propertyName),
+                    $propertyAccessor->getValue($actualDetails, $propertyName),
+                    sprintf('Unexpected %s of "%s for shop %d"', $propertyName, $combinationReference, $shopId)
+                );
+            }
+
+            Assert::assertTrue(
+                $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
+                sprintf(
+                    'Unexpected combination impact on weight for shop %d. Expected "%s" got "%s"',
+                    var_export($expectedDetails->getImpactOnWeight(), true),
+                    var_export($actualDetails->getImpactOnWeight(), true),
+                    $shopId
+                )
+            );
+        }
+    }
+
+    private function assertPrices(string $combinationReference, CombinationPrices $expectedPrices, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $actualPrices = $this->getCombinationForEditing($combinationReference, $shopId)->getPrices();
+
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
+                sprintf(
+                    'Unexpected combination impact on price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPrice(),
+                    (string) $actualPrices->getImpactOnPrice()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+                sprintf(
+                    'Unexpected combination impact on price with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                    (string) $actualPrices->getImpactOnPriceTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
+                sprintf(
+                    'Unexpected combination eco tax for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getEcotax(),
+                    (string) $actualPrices->getEcotax()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
+                sprintf(
+                    'Unexpected combination eco tax with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getEcotaxTaxIncluded(),
+                    (string) $actualPrices->getEcotaxTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
+                sprintf(
+                    'Unexpected combination impact on unit price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnUnitPrice(),
+                    (string) $actualPrices->getImpactOnUnitPrice()
+                )
+            );
+            Assert::assertTrue(
+                $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+                sprintf(
+                    'Unexpected combination impact on unit price with taxes for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                    (string) $actualPrices->getImpactOnPriceTaxIncluded()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
+                sprintf(
+                    'Unexpected combination wholesale price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getWholesalePrice(),
+                    (string) $actualPrices->getWholesalePrice()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
+                sprintf(
+                    'Unexpected combination product tax rate for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductTaxRate(),
+                    (string) $actualPrices->getProductTaxRate()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
+                sprintf(
+                    'Unexpected combination product price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductPrice(),
+                    (string) $actualPrices->getProductPrice()
+                )
+            );
+
+            Assert::assertTrue(
+                $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
+                sprintf(
+                    'Unexpected combination wholesale price for shop %d. Expected "%s", got "%s"',
+                    $shopId,
+                    (string) $expectedPrices->getProductEcotax(),
+                    (string) $actualPrices->getProductEcotax()
+                )
+            );
+        }
+    }
+
+    /**
+     * @param string $combinationReference
+     * @param CombinationStock $expectedStock
+     * @param int[] $shopIds
+     */
+    private function assertStockDetails(string $combinationReference, CombinationStock $expectedStock, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $actualStock = $this->getCombinationForEditing($combinationReference, $shopId)->getStock();
+
+            Assert::assertSame(
+                $expectedStock->getQuantity(),
+                $actualStock->getQuantity(),
+                sprintf('Unexpected combination "%s" quantity for shop %d', $combinationReference, $shopId)
+            );
+            Assert::assertSame(
+                $expectedStock->getMinimalQuantity(),
+                $actualStock->getMinimalQuantity(),
+                sprintf('Unexpected combination "%s" minimal quantity for shop %d', $combinationReference, $shopId)
+            );
+            Assert::assertSame(
+                $expectedStock->getLowStockThreshold(),
+                $actualStock->getLowStockThreshold(),
+                sprintf('Unexpected combination "%s" low stock threshold for shop %d', $combinationReference, $shopId)
+            );
+            Assert::assertSame(
+                $expectedStock->isLowStockAlertEnabled(),
+                $actualStock->isLowStockAlertEnabled(),
+                sprintf('Unexpected combination "%s" low stock alert for shop %d', $combinationReference, $shopId)
+            );
+            Assert::assertSame(
+                $expectedStock->getLocation(),
+                $actualStock->getLocation(),
+                sprintf('Unexpected combination "%s" location for shop %d', $combinationReference, $shopId)
+            );
+            if (null === $expectedStock->getAvailableDate()) {
+                Assert::assertSame(
+                    $expectedStock->getAvailableDate(),
+                    $actualStock->getAvailableDate(),
+                    sprintf('Unexpected combination "%s" availability date for shop %d. Expected NULL, got "%s"',
+                        $combinationReference,
+                        $shopId,
+                        var_export($actualStock->getAvailableDate(), true)
+                    )
+                );
+            } else {
+                Assert::assertEquals(
+                    $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                    $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                    sprintf('Unexpected combination "%s" availability date for shop %d', $combinationReference, $shopId)
+                );
+            }
+
+            $this->assertLocalizedProperty(
+                $expectedStock->getLocalizedAvailableNowLabels(),
+                $actualStock->getLocalizedAvailableNowLabels(),
+                sprintf('available now label for shop %d', $shopId)
+            );
+            $this->assertLocalizedProperty(
+                $expectedStock->getLocalizedAvailableLaterLabels(),
+                $actualStock->getLocalizedAvailableLaterLabels(),
+                sprintf('available later label for shop %d', $shopId)
+            );
         }
     }
 }

@@ -1674,6 +1674,7 @@ services:
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
     public: true
     tags:
       - { name: form.type }

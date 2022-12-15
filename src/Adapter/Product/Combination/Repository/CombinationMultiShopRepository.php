@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdate
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShopException;
 
 /**
@@ -59,6 +61,8 @@ use PrestaShopException;
  */
 class CombinationMultiShopRepository extends AbstractMultiShopObjectModelRepository
 {
+    use ShopConstraintTrait;
+
     /**
      * @var Connection
      */
@@ -575,6 +579,22 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         $this->setDefaultCombinationInShopTable($productId, $newDefaultCombinationId, $shopIds);
+    }
+
+    public function updateCombinationOutOfStockType(
+        ProductId $productId,
+        OutOfStockType $outOfStockType,
+        ShopConstraint $shopConstraint
+    ): void {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
+            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
+            ->where('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $this->applyShopConstraint($qb, $shopConstraint)->execute();
     }
 
     /**

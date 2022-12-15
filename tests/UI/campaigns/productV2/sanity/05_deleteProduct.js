@@ -4,12 +4,12 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
 
 // Import BO pages
@@ -86,7 +86,16 @@ describe('BO - Catalog - Products : Delete product', async () => {
     it('should choose \'Standard product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
 
-      await productsPage.chooseProductType(page, newProductData.type);
+      await productsPage.selectProductType(page, newProductData.type);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);

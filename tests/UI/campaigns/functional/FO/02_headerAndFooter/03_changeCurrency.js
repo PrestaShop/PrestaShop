@@ -3,6 +3,7 @@ import helper from '@utils/helpers';
 
 // Import test context
 import testContext from '@utils/testContext';
+import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 
@@ -13,7 +14,6 @@ const files = require('@utils/files');
 
 // Import common tests
 const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/international/createDeleteCurrency');
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');

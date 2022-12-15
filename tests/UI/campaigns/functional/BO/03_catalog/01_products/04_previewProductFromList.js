@@ -1,16 +1,17 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const {Products} = require('@data/demo/products');
@@ -18,7 +19,6 @@ const {Products} = require('@data/demo/products');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
-const foProductPage = require('@pages/FO/product');
 
 const baseContext = 'functional_BO_catalog_products_previewProductFromList';
 

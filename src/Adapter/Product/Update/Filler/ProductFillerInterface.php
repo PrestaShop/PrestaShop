@@ -41,7 +41,7 @@ interface ProductFillerInterface
      * Simple (not multilingual) fields will be provided in a simple array as a values, while for
      * multilingual ones the array key will be the field name and the value will be an array of language ids.
      *
-     * @return array<int, string|array<string, int>>
+     * @return array<int|string, string|array<string|int, int|string>>
      *
      * e.g.:
      * [

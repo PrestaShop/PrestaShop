@@ -1,13 +1,14 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 // Common tests login BO
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
+
+require('module-alias/register');
 
 // Import pages
 
@@ -27,7 +28,6 @@ const viewSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManag
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');

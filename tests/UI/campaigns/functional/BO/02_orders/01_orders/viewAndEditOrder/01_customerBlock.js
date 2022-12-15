@@ -4,10 +4,10 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 // Import BO common tests
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
+
+require('module-alias/register');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import FO common tests

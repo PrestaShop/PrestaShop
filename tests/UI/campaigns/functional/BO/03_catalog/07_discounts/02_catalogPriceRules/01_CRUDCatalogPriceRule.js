@@ -1,16 +1,17 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
 // Using chai
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -19,7 +20,6 @@ const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceR
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
 
 // Import FO pages
-const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 
 // Import data

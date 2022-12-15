@@ -1,15 +1,16 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import BO pages
@@ -22,7 +23,6 @@ const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 // Import FO pages
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const checkoutPage = require('@pages/FO/checkout');

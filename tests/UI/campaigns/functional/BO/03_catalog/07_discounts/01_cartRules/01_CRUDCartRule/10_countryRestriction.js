@@ -1,13 +1,14 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 // Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import foProductPage from '@pages/FO/product';
+
+require('module-alias/register');
 
 // Import common tests
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule.js');
@@ -21,7 +22,6 @@ const countriesPage = require('@pages/BO/international/locations/countries');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 

@@ -36,9 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDelete
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -320,18 +318,5 @@ class CombinationRepository extends AbstractObjectModelRepository
         return array_map(function (array $combination) {
             return new CombinationId((int) $combination['id_product_attribute']);
         }, $result);
-    }
-
-    public function updateCombinationStock(ProductId $productId, OutOfStockType $outOfStockType, ShopConstraint $shopConstraint = null): void
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->update(sprintf('%sstock_available', $this->dbPrefix), 'ps')
-            ->set('ps.out_of_stock', (string) $outOfStockType->getValue())
-            ->where('ps.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $this->applyShopConstraint($qb, $shopConstraint)->execute();
     }
 }

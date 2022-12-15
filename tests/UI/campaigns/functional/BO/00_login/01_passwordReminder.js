@@ -4,10 +4,10 @@ import mailHelper from '@utils/mailHelper';
 
 // Import test context
 import testContext from '@utils/testContext';
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
 
 // Import pages

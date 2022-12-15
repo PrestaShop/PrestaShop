@@ -22,6 +22,7 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
+    this.saveAndPublichButtonName = 'Save and publish';
 
     // Header selectors
     this.productNameInput = '#product_header_name_1';
@@ -62,6 +63,16 @@ class Products extends BOBasePage {
   }
 
   /**
+   * Set product status
+   * @param page {Page} Browser tab
+   * @param status {boolean} The product status
+   * @returns {Promise<void>}
+   */
+  async setProductStatus(page, status) {
+    await this.setChecked(page, this.productActiveSwitchButton, status);
+  }
+
+  /**
    * Set product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set in new product page
@@ -82,7 +93,7 @@ class Products extends BOBasePage {
 
     await pricingTab.setProductPricing(page, productData);
 
-    await this.setChecked(page, this.productActiveSwitchButton, productData.status);
+    await this.setProductStatus(page, productData.status);
 
     return this.saveProduct(page);
   }
@@ -162,7 +173,8 @@ class Products extends BOBasePage {
    * @returns {Promise<void>}
    */
   async chooseProductType(page, productType) {
-    await productsPage.chooseProductType(page, productType);
+    await productsPage.selectProductType(page, productType);
+    await productsPage.clickOnAddNewProduct(page);
     await page.waitForNavigation({waitUntil: 'networkidle'});
   }
 

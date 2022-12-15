@@ -4,6 +4,9 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import expect from chai
@@ -13,9 +16,6 @@ const {expect} = require('chai');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
-
-// Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 

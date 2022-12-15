@@ -3,13 +3,13 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Common tests login BO
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-
-// Common tests login BO
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

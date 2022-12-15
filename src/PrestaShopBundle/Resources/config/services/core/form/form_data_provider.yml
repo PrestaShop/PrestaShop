@@ -205,6 +205,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SpecificPriceFormDataProvider'
     arguments:
       - '@prestashop.core.query_bus'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
 
   prestashop.core.form.identifiable_object.data_provider.state_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\StateFormDataProvider'

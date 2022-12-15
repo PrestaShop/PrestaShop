@@ -1,6 +1,5 @@
 imports:
   - { resource: set_parameters.php }
-  - { resource: security.yml }
   - { resource: services.yml }
   - { resource: addons/*.yml }
   - { resource: doctrine.yml }
@@ -105,6 +104,8 @@ swiftmailer:
   password: "%mailer_password%"
   spool: { type: memory }
 
-sensio_framework_extra:
-  router:
-    annotations: false
+api_platform:
+  title: PrestaShop API
+  version: 1.0.0
+
+  metadata_backward_compatibility_layer: false

@@ -1,16 +1,17 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -21,7 +22,6 @@ const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
 // Import FO mages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const checkoutPage = require('@pages/FO/checkout');

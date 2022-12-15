@@ -1,8 +1,13 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import pages
+// Import FO pages
+import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
 // Using chai
@@ -10,18 +15,12 @@ const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/productsV2');
 const createProductsPage = require('@pages/BO/catalog/productsV2/add');
-
-// Import FO pages
-const foProductPage = require('@pages/FO/product');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
@@ -91,7 +90,16 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should choose \'Virtual product\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseVirtualProduct', baseContext);
 
-      await productsPage.chooseProductType(page, newProductData.type);
+      await productsPage.selectProductType(page, newProductData.type);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+
+    it('should go to new product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+
+      await productsPage.clickOnAddNewProduct(page);
 
       const pageTitle = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
