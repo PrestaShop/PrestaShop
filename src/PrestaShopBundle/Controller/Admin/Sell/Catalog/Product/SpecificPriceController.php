@@ -61,7 +61,9 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 $productId,
                 $this->getContextLangId(),
                 $request->query->getInt('limit') ?: null,
-                $request->query->getInt('offset') ?: null
+                $request->query->getInt('offset') ?: null,
+                // Show only specific prices for current context shop or All shops
+                ['shopIds' => [0, $this->getContextShopId()]]
             )
         );
 

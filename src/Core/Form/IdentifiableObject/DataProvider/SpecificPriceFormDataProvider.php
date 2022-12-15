@@ -42,12 +42,20 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $queryBus
+     * @param int $contextShopId
      */
     public function __construct(
-        CommandBusInterface $queryBus
+        CommandBusInterface $queryBus,
+        int $contextShopId
     ) {
         $this->queryBus = $queryBus;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -116,6 +124,9 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
                     'include_tax' => true,
                 ],
                 'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
+            ],
+            'groups' => [
+                'shop_id' => $this->contextShopId,
             ],
         ];
     }
