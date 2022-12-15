@@ -53,6 +53,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
+use PrestaShop\PrestaShop\Core\Configuration\AvifExtensionChecker;
 
 class AdminControllerTest extends TestCase
 {
@@ -267,6 +268,9 @@ class AdminControllerTest extends TestCase
                 if ($param === 'security.csrf.token_manager') {
                     return $this->getMockedCsrfTokenManager();
                 }
+                if ($param === 'prestashop.core.configuration.avif_extension_checker') {
+                    return $this->getMockedAvifExtensionChecker();
+                }
             });
 
         return $mockContainerBuilder;
@@ -334,6 +338,17 @@ class AdminControllerTest extends TestCase
         $mockMultistoreController->method('header')->withAnyParameters()->willReturn($mockResponse);
 
         return $mockMultistoreController;
+    }
+
+    private function getMockedAvifExtensionChecker(): AvifExtensionChecker
+    {
+        $mockAvifExtensionChecker = $this->getMockBuilder(AvifExtensionChecker::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
+
+        return $mockAvifExtensionChecker;
     }
 
     private function getMockNumberSpecification(): NumberSpecification
