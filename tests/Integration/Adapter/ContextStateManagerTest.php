@@ -99,6 +99,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop1->id, Shop::getContextShopID());
         $this->assertEquals($this->shop1->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setShop($this->shop2);
@@ -106,6 +107,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop2->id, Shop::getContextShopID());
         $this->assertEquals($this->shop2->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -141,6 +143,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop1->id, Shop::getContextShopID());
         $this->assertEquals($this->shop1->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setShop($this->shop2);
@@ -148,6 +151,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop2->id, Shop::getContextShopID());
         $this->assertEquals($this->shop2->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
@@ -182,6 +186,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop1->id, Shop::getContextShopID());
         $this->assertEquals($this->shop1->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->setShop($this->shop2);
@@ -189,6 +194,7 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->shop2->id, Shop::getContextShopID());
         $this->assertEquals($this->shop2->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertIsArray($contextStateManager->getContextFieldsStack());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
         $contextStateManager->restorePreviousContext();
