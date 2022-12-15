@@ -833,21 +833,20 @@ class AdminImagesControllerCore extends AdminController
 
     public function processDelete()
     {
-        $imageTypeId = Tools::getValue('id_image_type');
-        $imageType = ImageType::getImageTypeById($imageTypeId);
+        $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
 
         // We will remove the images linked to this image setting
         if (!empty(Tools::getValue('delete_linked_images')) && Tools::getValue('delete_linked_images') === true) {
-            $process = [
+            $imageDirectoriesByEntity = [
                 ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
                 ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
                 ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
                 ['type' => 'products', 'dir' => _PS_PRODUCT_IMG_DIR_],
                 ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
             ];
-            foreach ($process as $proc) {
-                $formats = ImageType::getImagesTypesByName($imageType['name'], $proc['type']);
-                $this->_deleteOldImages($proc['dir'], $formats, ($proc['type'] == 'products' ? true : false));
+            foreach ($imageDirectoriesByEntity as $imagesDirectory) {
+                $formats = ImageType::getImagesTypesByName($imageType['name'], $imagesDirectory['type']);
+                $this->_deleteOldImages($imagesDirectory['dir'], $formats, ($imagesDirectory['type'] == 'products' ? true : false));
             }
         }
 
