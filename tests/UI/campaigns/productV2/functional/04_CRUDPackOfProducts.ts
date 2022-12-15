@@ -299,7 +299,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     });
 
     it('should delete the customized product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomizedProduct', baseContext);
 
       const firstProductInList: string = await packTab.deleteProduct(page, 1, true);
       await expect(firstProductInList).to.equal(createProductsPage.successfulUpdateMessage);
@@ -367,7 +367,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     });
 
     it('should check all product information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkAllProductInformation', baseContext);
 
       const taxValue: number = await basicHelper.percentage(pricingData.price, 20);
 

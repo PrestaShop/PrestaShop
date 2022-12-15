@@ -199,7 +199,8 @@ class Product extends FOBasePage {
     this.productInPackImage = (productInList) => `${this.productInPackList(productInList)} div.thumb-mask img`;
     this.productInPackName = (productInList) => `${this.productInPackList(productInList)} div.pack-product-name a`;
     this.productInPackPrice = (productInList) => `${this.productInPackList(productInList)} div.pack-product-price`;
-    this.productInPackQuantity = (productInList) => `${this.productInPackList(productInList)} div.pack-product-quantity`;
+    this.productInPackQuantity = (productInList) => `${this.productInPackList(productInList)}`
+      + ' div.pack-product-quantity';
   }
 
   // Methods
