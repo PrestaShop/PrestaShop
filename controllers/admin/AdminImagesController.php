@@ -385,7 +385,7 @@ class AdminImagesControllerCore extends AdminController
             'modal_actions' => [
                 [
                     'type' => 'button',
-                    'label' => $this->trans('Delete', [], 'Admin.Design.Feature'),
+                    'label' => $this->trans('Delete', [], 'Admin.Actions'),
                     'class' => 'btn-danger btn-confirm-delete-images-type',
                     'value' => '',
                 ],
@@ -820,7 +820,6 @@ class AdminImagesControllerCore extends AdminController
             $this->context->smarty->assign([
                 'display_regenerate' => true,
                 'display_move' => $this->display_move,
-                'is_images_page' => true,
             ]);
         }
 
