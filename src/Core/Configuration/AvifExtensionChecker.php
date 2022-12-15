@@ -35,6 +35,7 @@ class AvifExtensionChecker
 {
     public function isAvailable()
     {
+        return false;
         $isAvailable = extension_loaded('gd') && /* @phpstan-ignore-line */
             version_compare(PHP_VERSION, '8.1') >= 0 &&
             function_exists('imageavif') &&
