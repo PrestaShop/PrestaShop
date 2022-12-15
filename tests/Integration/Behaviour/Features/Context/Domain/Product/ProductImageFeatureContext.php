@@ -139,43 +139,56 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @When I update image :imageReference with following information:
-     *
-     * @param string $imageReference
-     * @param TableNode $tableNode
      */
-    public function updateImage(string $imageReference, TableNode $tableNode): void
+    public function updateImageForDefaultShop(string $imageReference, TableNode $tableNode): void
     {
-        $dataRows = $this->localizeByRows($tableNode);
-        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::shop($this->getDefaultShopId()),
+            $tableNode
+        );
+    }
 
-        $command = new UpdateProductImageCommand($imageId);
-        if (isset($dataRows['file'])) {
-            $pathName = DummyFileUploader::upload($dataRows['file']);
-            $command->setFilePath($pathName);
-        }
+    /**
+     * @When I update image :imageReference with following information for shop :shop:
+     */
+    public function updateImageByShopReference(string $imageReference, string $shopReference, TableNode $tableNode): void
+    {
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::shop((int) $this->getSharedStorage()->get(trim($shopReference))),
+            $tableNode
+        );
+    }
 
-        if (isset($dataRows['cover'])) {
-            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
-        }
-
-        if (isset($dataRows['legend'])) {
-            $command->setLocalizedLegends($dataRows['legend']);
-        }
-
-        if (isset($dataRows['position'])) {
-            $command->setPosition((int) $dataRows['position']);
-        }
-
-        $this->getCommandBus()->handle($command);
+    /**
+     * @When I update image :imageReference with following information for all shops:
+     */
+    public function updateImageForAllShops(string $imageReference, TableNode $tableNode): void
+    {
+        $this->updateImageByShopConstraint(
+            $imageReference,
+            ShopConstraint::allShops(),
+            $tableNode
+        );
     }
 
     /**
      * @Then image :imageReference should have same file as :fileName
-     *
+     */
+    public function assertImageFile(string $imageReference, string $fileName): void
+    {
+        $this->assertImageFileByShopConstraint(
+            $imageReference,
+            $fileName
+        );
+    }
+
+    /**
      * @param string $imageReference
      * @param string $fileName
      */
-    public function assertImageFile(string $imageReference, string $fileName): void
+    private function assertImageFileByShopConstraint(string $imageReference, string $fileName): void
     {
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
@@ -310,9 +323,33 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoImages(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductImages($productReference),
+            $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId())),
             sprintf('No images expected for product "%s"', $productReference)
         );
+    }
+
+    /**
+     * @Then product :productReference should have no images for shop :shops
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductHasNoImagesForShops(string $productReference, string $shopReferences): void
+    {
+        //todo: use transformer
+        $shopIds = array_map(
+          function (string $shopReference): int {
+              return $this->getSharedStorage()->get(trim($shopReference));
+          },
+            explode(',', $shopReferences)
+        );
+
+        foreach ($shopIds as $shopId) {
+            Assert::assertEmpty(
+                $this->getProductImages($productReference, ShopConstraint::shop($shopId)),
+                sprintf('No images expected for product "%s"', $productReference)
+            );
+        }
     }
 
     /**
@@ -327,6 +364,23 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $realImageUrl = $this->getRealImageUrl($coverUrl);
 
         Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
+    }
+
+    /**
+     * @Then product :productReference should have following cover :coverUrl for shops :shop
+     *
+     * @param string $productReference
+     * @param string $coverUrl
+     */
+    public function assertProductCoverForShops(string $productReference, string $coverUrl, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $productForEditing = $this->getProductForEditing($productReference, $this->getSharedStorage()->get(trim($shopReference)));
+            $realImageUrl = $this->getRealImageUrl($coverUrl);
+
+            Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
+        }
     }
 
     /**
@@ -472,10 +526,11 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      *
      * @return ProductImage[]
      */
-    private function getProductImages(string $productReference): array
+    private function getProductImages(string $productReference, ShopConstraint $shopConstraint): array
     {
         return $this->getQueryBus()->handle(new GetProductImages(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            $shopConstraint
         ));
     }
 
@@ -519,7 +574,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     private function assertAllProductImages(string $productReference, TableNode $tableNode): void
     {
-        $images = $this->getProductImages($productReference);
+        $images = $this->getProductImages($productReference, ShopConstraint::shop($this->getDefaultShopId()));
         $this->assertProductImages($tableNode, $images);
     }
 
@@ -533,7 +588,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId): void
     {
         $images = array_filter(
-            $this->getProductImages($productReference),
+            $this->getProductImages($productReference, ShopConstraint::shop($shopId)),
             static function (ProductImage $productImage) use ($shopId): bool {
                 return in_array($shopId, $productImage->getShopIds(), true);
             }
@@ -558,7 +613,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     private function assertProductImages(TableNode $tableNode, array $images): void
     {
         $dataRows = $this->localizeByColumns($tableNode);
-
         Assert::assertEquals(
             count($images),
             count($dataRows),
@@ -634,5 +688,38 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
                 );
             }
         }
+    }
+
+    /**
+     * @param string $imageReference
+     * @param TableNode $tableNode
+     */
+    private function updateImageByShopConstraint(string $imageReference, ShopConstraint $shopConstraint, TableNode $tableNode): void
+    {
+        $dataRows = $this->localizeByRows($tableNode);
+        $imageId = (int) $this->getSharedStorage()->get($imageReference);
+
+        $command = new UpdateProductImageCommand(
+            $imageId,
+            $shopConstraint
+        );
+        if (isset($dataRows['file'])) {
+            $pathName = DummyFileUploader::upload($dataRows['file']);
+            $command->setFilePath($pathName);
+        }
+
+        if (isset($dataRows['cover'])) {
+            $command->setIsCover(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['cover']));
+        }
+
+        if (isset($dataRows['legend'])) {
+            $command->setLocalizedLegends($dataRows['legend']);
+        }
+
+        if (isset($dataRows['position'])) {
+            $command->setPosition((int) $dataRows['position']);
+        }
+
+        $this->getCommandBus()->handle($command);
     }
 }

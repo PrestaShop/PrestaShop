@@ -76,11 +76,10 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
             throw new FileUploadException('No file was uploaded', UPLOAD_ERR_NO_FILE);
         }
 
-        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
             $uploadedFile->getPathname(),
-            $shopConstraint
+            $this->getShopConstraint()
         );
 
         /** @var ImageId $imageId */
@@ -94,7 +93,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new UpdateProductImageCommand((int) $id);
+        $command = new UpdateProductImageCommand((int) $id, $this->getShopConstraint());
 
         if (isset($data['is_cover'])) {
             $command->setIsCover($data['is_cover']);
@@ -114,5 +113,10 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->bus->handle($command);
+    }
+
+    private function getShopConstraint(): ShopConstraint
+    {
+        return null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
     }
 }

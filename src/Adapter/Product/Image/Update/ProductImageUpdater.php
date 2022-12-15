@@ -29,12 +29,16 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Image\Update;
 
 use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
@@ -70,6 +74,11 @@ class ProductImageUpdater
     private $positionUpdater;
 
     /**
+     * @var ProductImageMultiShopRepository
+     */
+    private $productImageMultiShopRepository;
+
+    /**
      * @param ProductImageRepository $productImageRepository
      * @param ProductImageUploader $productImageUploader
      * @param PositionUpdateFactory $positionUpdateFactory
@@ -81,13 +90,15 @@ class ProductImageUpdater
         ProductImageUploader $productImageUploader,
         PositionUpdateFactory $positionUpdateFactory,
         PositionDefinition $positionDefinition,
-        GridPositionUpdaterInterface $positionUpdater
+        GridPositionUpdaterInterface $positionUpdater,
+        ProductImageMultiShopRepository $productImageMultiShopRepository
     ) {
         $this->productImageRepository = $productImageRepository;
         $this->productImageUploader = $productImageUploader;
         $this->positionUpdateFactory = $positionUpdateFactory;
         $this->positionDefinition = $positionDefinition;
         $this->positionUpdater = $positionUpdater;
+        $this->productImageMultiShopRepository = $productImageMultiShopRepository;
     }
 
     /**
@@ -101,15 +112,9 @@ class ProductImageUpdater
         $image = $this->productImageRepository->get($imageId);
 
         $this->productImageUploader->remove($image);
-        $this->productImageRepository->delete($image);
+        $this->productImageMultiShopRepository->delete($image);
 
-        if ($image->cover) {
-            $images = $this->productImageRepository->getImages(new ProductId((int) $image->id_product));
-            if (count($images) > 0) {
-                $firstImage = $images[0];
-                $this->updateCover($firstImage, true);
-            }
-        }
+        $this->productImageMultiShopRepository->setCoversIfDoesntExist(new ProductId((int) $image->id_product));
     }
 
     /**
@@ -117,16 +122,31 @@ class ProductImageUpdater
      *
      * @throws CannotUpdateProductImageException
      */
-    public function updateProductCover(Image $newCover): void
+    public function updateProductCover(Image $newCover, ShopConstraint $shopConstraint): void
     {
-        $productId = new ProductId((int) $newCover->id_product);
-        $currentCover = $this->productImageRepository->findCover($productId);
-
-        if ($currentCover) {
-            $this->updateCover($currentCover, false);
+        if ($shopConstraint->getShopGroupId() !== null) {
+            throw new InvalidShopConstraintException('Image has no features related with shop group use single shop and all shops constraints');
+        } elseif ($shopConstraint->forAllShops()) {
+            $shopIds = $this->productImageMultiShopRepository->getAssociatedShopIds(new ImageId((int) $newCover->id));
+        } else {
+            $shopIds = [$shopConstraint->getShopId()];
         }
 
-        $this->updateCover($newCover, true);
+        $productId = new ProductId((int) $newCover->id_product);
+        foreach ($shopIds as $shopId) {
+            $currentCover = $this->productImageMultiShopRepository->getCoverImageId($productId, $shopId);
+
+            if ($currentCover !== null && $currentCover->getValue() === (int) $newCover->id) {
+                continue;
+            }
+
+            if ($currentCover) {
+                $currentImage = $this->productImageMultiShopRepository->get($currentCover, $shopId);
+                $this->updateCover($currentImage, false, $shopId);
+            }
+
+            $this->updateCover($newCover, true, $shopId);
+        }
     }
 
     /**
@@ -176,12 +196,13 @@ class ProductImageUpdater
      *
      * @throws CannotUpdateProductImageException
      */
-    private function updateCover(Image $image, bool $isCover): void
+    private function updateCover(Image $image, bool $isCover, ShopId $shopId): void
     {
         $image->cover = $isCover;
-        $this->productImageRepository->partialUpdate(
+        $this->productImageMultiShopRepository->partialUpdateForShops(
             $image,
             ['cover'],
+            [$shopId],
             CannotUpdateProductImageException::FAILED_UPDATE_COVER
         );
     }

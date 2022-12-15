@@ -233,7 +233,7 @@ class ProductShopUpdater
     {
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         foreach ($imagesFromSourceShop as $image) {
-            $image->associateTo($targetShopId->getValue(), $productId->getValue());
+            $this->productImageMultiShopRepository->associateImageToShop($image, $targetShopId);
         }
     }
 

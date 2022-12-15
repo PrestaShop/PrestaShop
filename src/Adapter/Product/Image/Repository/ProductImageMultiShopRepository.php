@@ -30,9 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 
 use Doctrine\DBAL\Connection;
 use Image;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociationCollection;
@@ -47,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 /**
+ * todo: merge this repository with ProductImageRepository
  * Provides access to product Image data source with shop context
  */
 class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelRepository
@@ -67,17 +70,20 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     private $productMultiShopRepository;
 
     /**
-     * @param Connection $connection
-     * @param string $dbPrefix
+     * @var ProductImageValidator
      */
+    private $productImageValidator;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductMultiShopRepository $productMultiShopRepository
+        ProductMultiShopRepository $productMultiShopRepository,
+        ProductImageValidator $productImageValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productMultiShopRepository = $productMultiShopRepository;
+        $this->productImageValidator = $productImageValidator;
     }
 
     /**
@@ -96,10 +102,15 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         } else {
             $shopId = $shopConstraint->getShopId();
         }
+        $idOfCoverImage = $this->getCoverImageId($productId, $shopConstraint->getShopId());
 
         return array_map(
-            function (ImageId $imageId) use ($shopId): Image {
-                return $this->get($imageId, $shopId);
+            function (ImageId $imageId) use ($shopId, $idOfCoverImage, $productId): Image {
+                $image = $this->get($imageId, $shopId);
+                $image->cover = (int) $image->id === $idOfCoverImage->getValue();
+                $image->id_product = $productId->getValue();
+
+                return $image;
             },
             $this->getImagesIds($productId, $shopConstraint)
         );
@@ -175,25 +186,18 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
      */
     public function getAssociatedShopIds(ImageId $imageId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop')
-            ->from($this->dbPrefix . 'image_shop')
-            ->where('id_image = :imageId')
-            ->setParameter('imageId', $imageId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
-
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
-
-        return $shops;
+        return array_map(
+            static function (array $shop): ShopId {
+                return new ShopId((int) $shop['id_shop']);
+            },
+            $this->connection->createQueryBuilder()
+                ->select('id_shop')
+                ->from($this->dbPrefix . 'image_shop')
+                ->where('id_image = :imageId')
+                ->setParameter('imageId', $imageId->getValue())
+                ->execute()
+                ->fetchAllAssociative()
+        );
     }
 
     public function create(ProductId $productId, ShopConstraint $shopConstraint): Image
@@ -201,10 +205,12 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $productIdValue = $productId->getValue();
         $image = new Image();
         $image->id_product = $productIdValue;
-        $image->cover = !Image::getCover($productIdValue);
+        $image->cover = null;
 
         $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $this->addObjectModelToShops($image, $shopIds, CannotAddProductImageException::class);
+
+        $this->setCoversIfDoesntExist($productId);
 
         return $image;
     }
@@ -285,5 +291,106 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         );
 
         return ShopProductImagesCollection::from(...$shopProductImagesArray);
+    }
+
+    public function getCoverImageId(ProductId $productId, ShopId $shopId): ?ImageId
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('id_image')
+            ->from($this->dbPrefix . 'image_shop')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->andWhere('id_shop = :shopId')
+            ->setParameter('shopId', $shopId->getValue())
+            ->andWhere('cover = 1')
+            ->execute()
+            ->fetchOne()
+            ;
+
+        return $result ? new ImageId((int) $result) : null;
+    }
+
+    public function associateImageToShop(Image $image, ShopId $shopId): void
+    {
+        $this->connection->createQueryBuilder()
+            ->insert($this->dbPrefix . 'image_shop')
+            ->values(
+                [
+                    'id_product' => ':productId',
+                    'id_image' => ':imageId',
+                    'id_shop' => ':shopId',
+                    'cover' => ':cover',
+                ]
+            )
+
+            ->setParameter('productId', (int) $image->id_product)
+            ->setParameter('imageId', (int) $image->id)
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('cover', $image->cover ? 1 : null)
+            ->execute()
+        ;
+    }
+
+    public function setCoversIfDoesntExist(ProductId $productId): void
+    {
+        //todo: remove duplication
+        $results = $this->connection->createQueryBuilder()
+            ->select('id_image', 'id_shop', 'cover')
+            ->from($this->dbPrefix . 'image_shop', 'i')
+            ->andWhere('i.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.id_image', 'ASC')//todo: to remove
+            ->execute()
+            ->fetchAll()
+        ;
+
+        foreach ($results as $image) {
+            $coverId = $this->getCoverImageId($productId, new ShopId((int) $image['id_shop']));
+            if ($coverId !== null && $coverId->getValue() === (int) $image['id_image']) {
+                continue;
+            }
+
+            if ($coverId === null) {
+                $image['cover'] = 1;
+            } else {
+                $image['cover'] = null;
+            }
+
+            $this->connection->createQueryBuilder()
+                ->update($this->dbPrefix . 'image_shop')
+                ->set($this->dbPrefix . 'image_shop' . '.cover', ':cover')
+                ->setParameter('cover', $image['cover'])
+                ->andWhere($this->dbPrefix . 'image_shop' . '.id_image = :imageId')
+                ->setParameter('imageId', (int) $image['id_image'])
+                ->andWhere($this->dbPrefix . 'image_shop' . '.id_shop = :shopId')
+                ->setParameter('shopId', (int) $image['id_shop'])
+                ->execute()
+            ;
+        }
+    }
+
+    /**
+     * @param array<int|string, string|int[]> $updatableProperties
+     * @param ShopId[] $shopIds
+     */
+    public function partialUpdateForShops(Image $image, array $updatableProperties, array $shopIds, int $errorCode = 0): void
+    {
+        $this->productImageValidator->validate($image);
+        $this->partiallyUpdateObjectModelForShops(
+            $image,
+            $updatableProperties,
+            $shopIds,
+            CannotUpdateProductImageException::class,
+            $errorCode
+        );
+    }
+
+    public function delete(Image $image): void
+    {
+        $this->deleteObjectModelFromShops(
+            $image,
+            $this->getAssociatedShopIds(new ImageId((int) $image->id)),
+            CannotDeleteProductImageException::class
+        );
     }
 }
