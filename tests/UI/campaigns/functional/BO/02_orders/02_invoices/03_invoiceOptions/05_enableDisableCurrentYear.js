@@ -4,15 +4,15 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 
 // Using chai
 const {expect} = require('chai');
 const chai = require('chai');
 chai.use(require('chai-string'));
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

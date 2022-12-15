@@ -4,15 +4,15 @@ import helper from '@utils/helpers';
 // Import test context
 import testContext from '@utils/testContext';
 
+// Import common
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
-
-// Import common
-const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 

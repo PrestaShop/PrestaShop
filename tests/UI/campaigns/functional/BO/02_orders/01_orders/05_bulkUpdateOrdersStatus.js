@@ -1,13 +1,11 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 // Import common tests
-const loginCommon = require('@commonTests/BO/loginBO');
+import loginCommon from '@commonTests/BO/loginBO';
+
+require('module-alias/register');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages

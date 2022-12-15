@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 
+// Import login steps
+import loginCommon from '@commonTests/BO/loginBO';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-
-// Import login steps
-const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
