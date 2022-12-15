@@ -41,6 +41,7 @@ $(() => {
     'TextWithLengthCounter',
     'DeltaQuantityInput',
     'DisablingSwitch',
+    'ModifyAllShopsCheckbox',
   ]);
 
   const $combinationForm: JQuery = $(CombinationMap.combinationForm);
