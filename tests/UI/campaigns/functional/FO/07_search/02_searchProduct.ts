@@ -3,23 +3,17 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import pages
-const homePage = require('@pages/FO/home');
-const searchResultsPage = require('@pages/FO/searchResults');
+import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-const {Products} = require('@data/demo/products');
+import {Products} from '@data/demo/products';
 
-const baseContext = 'functional_FO_search_searchProduct';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_search_searchProduct';
 
 /*
   Go to FO
@@ -29,6 +23,9 @@ let page;
   Click on Enter in autocomplete list
 */
 describe('FO - Search Page : Search a product and validate', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

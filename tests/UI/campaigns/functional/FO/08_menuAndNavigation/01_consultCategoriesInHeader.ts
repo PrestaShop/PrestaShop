@@ -1,23 +1,17 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import pages
-const homePage = require('@pages/FO/home');
+import homePage from '@pages/FO/home';
 
 // Import data
-const {Categories} = require('@data/demo/categories');
+import {Categories} from '@data/demo/categories';
 
-const baseContext = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
 
 /*
 Go to FO
@@ -25,6 +19,9 @@ Check all categories and subcategories links in header
  */
 
 describe('FO - Menu and Navigation : Check categories and subcategories links in header', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

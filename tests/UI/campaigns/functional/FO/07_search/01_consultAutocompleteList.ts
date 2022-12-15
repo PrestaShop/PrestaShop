@@ -1,21 +1,14 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
+// Import FO pages
+import homePage from '@pages/FO/home';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import pages
-// FO
-const homePage = require('@pages/FO/home');
-
-const baseContext = 'functional_FO_search_consultAutocompleteList';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_search_consultAutocompleteList';
 
 /*
   Go to FO
@@ -26,6 +19,9 @@ let page;
 */
 
 describe('FO - Search Page : Search product and consult autocomplete list', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,8 +44,8 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
   it('should check the autocomplete list', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkAutocompleteList', baseContext);
 
-    const searchValue = 'test';
-    const numSearchResults = 7;
+    const searchValue: string = 'test';
+    const numSearchResults: number = 7;
 
     const numResults = await homePage.countAutocompleteSearchResult(page, searchValue);
     await expect(numResults).equal(numSearchResults);
