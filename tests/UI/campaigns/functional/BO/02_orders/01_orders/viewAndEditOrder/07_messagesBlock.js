@@ -3,8 +3,11 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import common tests
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import foHomePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -19,7 +22,6 @@ const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 
 // Import FO pages
 const foLoginPage = require('@pages/FO/login');
-const foHomePage = require('@pages/FO/home');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');

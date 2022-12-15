@@ -9,7 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import productSettingsPage from '@pages/BO/shopParameters/productSettings';
-
 // Import FO pages
 import homePageFO from '@pages/FO/home';
 import categoryPageFO from '@pages/FO/category';

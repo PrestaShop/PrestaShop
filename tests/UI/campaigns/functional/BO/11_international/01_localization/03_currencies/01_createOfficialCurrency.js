@@ -1,10 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import foHomePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -15,9 +17,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const addCurrencyPage = require('@pages/BO/international/currencies/add');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
 
 // Import Data
 const {Currencies} = require('@data/demo/currencies');

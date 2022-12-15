@@ -2,12 +2,12 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 
+// Import FO pages
+import homePage from '@pages/FO/home';
+
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-
-// Import pages
-const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const loginPage = require('@pages/FO/login');
 const checkoutPage = require('@pages/FO/checkout');

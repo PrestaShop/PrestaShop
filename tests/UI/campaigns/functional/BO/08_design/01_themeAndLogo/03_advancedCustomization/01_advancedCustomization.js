@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -19,9 +20,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const themeAndLogoPage = require('@pages/BO/design/themeAndLogo/themeAndLogo');
 const advancedCustomizationPage = require('@pages/BO/design/themeAndLogo/advancedCustomization');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 
 // Import demo data
 const {themeCustomization} = require('@data/demo/modules');

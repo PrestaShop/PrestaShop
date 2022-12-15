@@ -1,18 +1,15 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 // BO pages
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import FO pages
+import homePage from '@pages/FO/home';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Importing pages
-// FO pages
-const homePage = require('@pages/FO/home');
 const categoryPageFO = require('@pages/FO/category');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');

@@ -1,10 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -13,7 +15,6 @@ const {expect} = require('chai');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const localizationPage = require('@pages/BO/international/localization');
-const homePage = require('@pages/FO/home');
 
 // Import Data
 const {Languages} = require('@data/demo/languages');

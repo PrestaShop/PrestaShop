@@ -1,9 +1,10 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -24,9 +25,6 @@ const {Products} = require('@data/demo/products');
 const currenciesPage = require('@pages/BO/international/currencies');
 const localizationPage = require('@pages/BO/international/localization');
 const dashboardPage = require('@pages/BO/dashboard');
-
-// FO
-const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
 const baseContext = 'functional_FO_headerAndFooter_changeCurrency';

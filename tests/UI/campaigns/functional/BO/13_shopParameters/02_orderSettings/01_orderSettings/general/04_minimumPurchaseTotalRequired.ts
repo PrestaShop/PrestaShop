@@ -10,8 +10,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 import dashboardPage from '@pages/BO/dashboard';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
-import productPage from '@pages/FO/product';
 import homePage from '@pages/FO/home';
+import productPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 
 import {expect} from 'chai';
