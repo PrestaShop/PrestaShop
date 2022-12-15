@@ -16,7 +16,6 @@ const {expect} = require('chai');
 const files = require('@utils/files');
 
 // Import FO pages
-const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');
