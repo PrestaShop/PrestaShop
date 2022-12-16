@@ -64,17 +64,22 @@ abstract class AbstractFormDataFormatter
                 // as the bulk request is a partial request not every data is expected And when it's not present
                 // it means there is no modification to do so this field is simply ignored
             }
+
+            try {
+                $modifyAllShopsPath = $this->prefixWithModifyAllShops($bulkFormPath);
+                $modifyAllShopsValue = $propertyAccessor->getValue($formData, $modifyAllShopsPath);
+                $propertyAccessor->setValue(
+                    $formattedData,
+                    $this->prefixWithModifyAllShops($editFormPath),
+                    $modifyAllShopsValue
+                );
+            } catch (AccessException $e) {
+                // this means the field does not have related modify_all_shops field, so it is not multiShop field
+                // therefore we don't need to re-format its related modify_all_shops field name
+            }
         }
 
         return $formattedData;
-    }
-
-    protected function formatMultiShopAssociation(string $originalField, string $formattedField): array
-    {
-        return [
-            $originalField => $formattedField,
-            $this->prefixWithModifyAllShops($originalField) => $this->prefixWithModifyAllShops($formattedField),
-        ];
     }
 
     /**
