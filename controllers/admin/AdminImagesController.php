@@ -836,7 +836,7 @@ class AdminImagesControllerCore extends AdminController
         $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
 
         // We will remove the images linked to this image setting
-        if (Tools::getValue('delete_linked_images', 0)) {
+        if (Tools::getValue('delete_linked_images', 0) === 'true') {
             $imageDirectoriesByEntity = [
                 ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
                 ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
