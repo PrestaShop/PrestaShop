@@ -143,7 +143,7 @@ class Zones extends BOBasePage {
         break;
 
       case 'select':
-        await this.selectByVisibleText(page, this.zonesFilterColumnInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.zonesFilterColumnInput(filterBy), value == '1' ? 'Yes' : 'No');
         break;
 
       default:

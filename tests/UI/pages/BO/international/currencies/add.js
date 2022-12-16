@@ -99,7 +99,7 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Update exchange rate
    * @param page {Page} Browser tab
-   * @param value {string} Value to set on exchange rate input
+   * @param value {number} Value to set on exchange rate input
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page, value) {
