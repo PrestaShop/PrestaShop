@@ -23,154 +23,86 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
-use DateTime;
-use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockAvailableCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
 {
     /**
-     * @When I update combination :combinationReference stock with following details:
-     *
-     * @param string $combinationReference
-     * @param TableNode $tableNode
+     * @When I update combination ":combinationReference" stock with following details:
      */
-    public function updateStock(string $combinationReference, TableNode $tableNode): void
+    public function updateStockForDefaultShop(
+        string $combinationReference,
+        TableNode $tableNode
+    ): void {
+        $this->updateStockAvailable(
+            $combinationReference,
+            $tableNode->getRowsHash(),
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
+    }
+
+    /**
+     * @When I update combination ":combinationReference" stock for shop ":shopReference" with following details:
+     */
+    public function updateStockForShop(
+        string $combinationReference,
+        string $shopReference,
+        TableNode $tableNode
+    ): void {
+        $this->updateStockAvailable(
+            $combinationReference,
+            $tableNode->getRowsHash(),
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I update combination ":combinationReference" stock for all shops with following details:
+     */
+    public function updateStockForAllShops(
+        string $combinationReference,
+        TableNode $tableNode
+    ): void {
+        $this->updateStockAvailable(
+            $combinationReference,
+            $tableNode->getRowsHash(),
+            ShopConstraint::allShops()
+        );
+    }
+
+    private function updateStockAvailable(string $combinationReference, array $dataRows, ShopConstraint $shopConstraint): void
     {
+        if (!isset($dataRows['delta quantity'])
+            && !isset($dataRows['fixed quantity'])
+            && !isset($dataRows['location'])) {
+            return;
+        }
+
         try {
-            $command = new UpdateCombinationStockCommand($this->getSharedStorage()->get($combinationReference));
-            $this->fillCommand($command, $tableNode->getRowsHash());
+            $command = new UpdateCombinationStockAvailableCommand(
+                (int) $this->getSharedStorage()->get($combinationReference),
+                $shopConstraint
+            );
+            if (isset($dataRows['delta quantity'])) {
+                $command->setDeltaQuantity((int) $dataRows['delta quantity']);
+            }
+            if (isset($dataRows['fixed quantity'])) {
+                $command->setFixedQuantity((int) $dataRows['fixed quantity']);
+            }
+            if (isset($dataRows['location'])) {
+                $command->setLocation($dataRows['location']);
+            }
 
             $this->getCommandBus()->handle($command);
         } catch (ProductStockConstraintException $e) {
             $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @Transform table:combination stock detail,value
-     *
-     * @param TableNode $tableNode
-     *
-     * @return CombinationStock
-     */
-    public function transformCombinationStock(TableNode $tableNode): CombinationStock
-    {
-        $dataRows = $tableNode->getRowsHash();
-
-        return new CombinationStock(
-            (int) $dataRows['quantity'],
-            (int) $dataRows['minimal quantity'],
-            (int) $dataRows['low stock threshold'],
-            PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']),
-            $dataRows['location'],
-            '' === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
-        );
-    }
-
-    /**
-     * @Then combination :combinationReference should have following stock details:
-     *
-     * @param string $combinationReference
-     * @param CombinationStock $expectedStock
-     */
-    public function assertStockDetails(string $combinationReference, CombinationStock $expectedStock): void
-    {
-        $actualStock = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId())->getStock();
-
-        Assert::assertSame(
-            $expectedStock->getQuantity(),
-            $actualStock->getQuantity(),
-            sprintf('Unexpected combination "%s" quantity', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getMinimalQuantity(),
-            $actualStock->getMinimalQuantity(),
-            sprintf('Unexpected combination "%s" minimal quantity', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getLowStockThreshold(),
-            $actualStock->getLowStockThreshold(),
-            sprintf('Unexpected combination "%s" low stock threshold', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->isLowStockAlertEnabled(),
-            $actualStock->isLowStockAlertEnabled(),
-            sprintf('Unexpected combination "%s" low stock alert', $combinationReference)
-        );
-        Assert::assertSame(
-            $expectedStock->getLocation(),
-            $actualStock->getLocation(),
-            sprintf('Unexpected combination "%s" location', $combinationReference)
-        );
-
-        if (null === $expectedStock->getAvailableDate()) {
-            Assert::assertSame(
-                $expectedStock->getAvailableDate(),
-                $actualStock->getAvailableDate(),
-                sprintf('Unexpected combination "%s" availability date. Expected NULL, got "%s"',
-                    $combinationReference,
-                    var_export($actualStock->getAvailableDate(), true)
-                )
-            );
-        } else {
-            Assert::assertEquals(
-                $expectedStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                sprintf('Unexpected combination "%s" availability date', $combinationReference)
-            );
-        }
-    }
-
-    /**
-     * @Then I should get error that it is not allowed to perform update using both - delta and fixed quantity
-     *
-     * @return void
-     */
-    public function assertLastErrorIsDuplicateQuantityUpdate(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::FIXED_AND_DELTA_QUANTITY_PROVIDED
-        );
-    }
-
-    /**
-     * @param UpdateCombinationStockCommand $command
-     * @param array<string, mixed> $dataRows
-     */
-    private function fillCommand(UpdateCombinationStockCommand $command, array $dataRows): void
-    {
-        if (isset($dataRows['delta quantity'])) {
-            $command->setDeltaQuantity((int) $dataRows['delta quantity']);
-        }
-        if (isset($dataRows['fixed quantity'])) {
-            $command->setFixedQuantity((int) $dataRows['fixed quantity']);
-        }
-        if (isset($dataRows['minimal quantity'])) {
-            $command->setMinimalQuantity((int) $dataRows['minimal quantity']);
-        }
-        if (isset($dataRows['location'])) {
-            $command->setLocation($dataRows['location']);
-        }
-        if (isset($dataRows['low stock threshold'])) {
-            $command->setLowStockThreshold((int) $dataRows['low stock threshold']);
-        }
-        if (isset($dataRows['low stock alert is enabled'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']));
-        }
-        if (isset($dataRows['available date'])) {
-            $command->setAvailableDate(new DateTime($dataRows['available date']));
         }
     }
 }
