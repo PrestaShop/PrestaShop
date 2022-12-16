@@ -129,10 +129,7 @@ abstract class GridControllerTestCase extends WebTestCase
         }
 
         // Get total number
-        $gridTitleHeader = trim($crawler->filter('.card-header-title')->first()->text());
-        preg_match('/\(([0-9]+)\)/', $gridTitleHeader, $titleMatches);
-        $totalCount = (int) ($titleMatches[1] ?? 0);
-        $testEntityDTOCollection->setTotalCount($totalCount);
+        $testEntityDTOCollection->setTotalCount((int) $grid->first()->attr('data-total'));
 
         return $testEntityDTOCollection;
     }
