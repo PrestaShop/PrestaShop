@@ -26,35 +26,44 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Product;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TestEntityDTOCollection extends AbstractTypedCollection
+/**
+ * Display a list of shops, the first shop is highlighted as bold and the rest are truncated if
+ * max_displayed_characters is set.
+ */
+final class ShopListColumn extends AbstractColumn
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $totalCount = 0;
-
-    /**
-     * @return int
-     */
-    public function getTotalCount(): int
+    public function getType()
     {
-        return $this->totalCount;
+        return 'shop_list';
     }
 
     /**
-     * @param int $totalCount
+     * {@inheritdoc}
      */
-    public function setTotalCount(int $totalCount): void
+    protected function configureOptions(OptionsResolver $resolver)
     {
-        $this->totalCount = $totalCount;
-    }
+        parent::configureOptions($resolver);
 
-    protected function getType()
-    {
-        return TestEntityDTO::class;
+        $resolver
+            ->setRequired([
+                'field',
+            ])
+            ->setDefaults([
+                'sortable' => false,
+                'clickable' => true,
+                'max_displayed_characters' => 0,
+            ])
+            ->setAllowedTypes('field', 'string')
+            ->setAllowedTypes('clickable', 'bool')
+            ->setAllowedTypes('max_displayed_characters', 'int')
+        ;
     }
 }

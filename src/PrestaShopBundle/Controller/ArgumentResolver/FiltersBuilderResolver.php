@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\ArgumentResolver;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Builder\FiltersBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,9 +63,16 @@ class FiltersBuilderResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
+        // The shop constraint should be added in the request attributes by another listener (@see ShopConstraintListener)
+        $shopConstraint = null;
+        if ($request->attributes->has('shopConstraint') && $request->attributes->get('shopConstraint') instanceof ShopConstraint) {
+            $shopConstraint = $request->attributes->get('shopConstraint');
+        }
+
         $this->builder->setConfig([
             'filters_class' => $argument->getType(),
             'request' => $request,
+            'shop_constraint' => $shopConstraint,
         ]);
 
         $filters = $this->builder->buildFilters();

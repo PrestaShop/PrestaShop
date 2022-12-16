@@ -31,9 +31,14 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\DoctrineFilterApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\Filter\SqlFilters;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
 /**
  * Defines all required sql statements to render products list.
@@ -51,21 +56,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextLanguageId;
 
     /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
-     * @var bool
-     */
-    private $isStockSharingBetweenShopGroupEnabled;
-
-    /**
-     * @var int
-     */
-    private $contextShopGroupId;
-
-    /**
      * @var DoctrineFilterApplicatorInterface
      */
     private $filterApplicator;
@@ -75,25 +65,26 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $configuration;
 
+    /**
+     * @var ShopGroupRepository
+     */
+    private $shopGroupRepository;
+
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         int $contextLanguageId,
-        int $contextShopId,
-        int $contextShopGroupId,
-        bool $isStockSharingBetweenShopGroupEnabled,
         DoctrineFilterApplicatorInterface $filterApplicator,
-        Configuration $configuration
+        Configuration $configuration,
+        ShopGroupRepository $shopGroupRepository
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextLanguageId = $contextLanguageId;
-        $this->contextShopId = $contextShopId;
-        $this->isStockSharingBetweenShopGroupEnabled = $isStockSharingBetweenShopGroupEnabled;
-        $this->contextShopGroupId = $contextShopGroupId;
         $this->filterApplicator = $filterApplicator;
         $this->configuration = $configuration;
+        $this->shopGroupRepository = $shopGroupRepository;
     }
 
     /**
@@ -101,7 +92,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder($searchCriteria);
         $qb
             ->addSelect('p.`id_product`, p.`reference`')
             ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
@@ -120,7 +111,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
-            $qb->addSelect('sa.`quantity`');
+            $qb->addSelect('IF(sa.`quantity` IS NULL OR sa.`quantity` = \'\', 0, sa.`quantity`) AS quantity');
         }
 
         $this->searchCriteriaApplicator
@@ -143,7 +134,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder($searchCriteria);
         $qb->select('COUNT(p.`id_product`)');
 
         return $qb;
@@ -152,12 +143,30 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * Gets query builder.
      *
-     * @param array $filterValues
+     * @param SearchCriteriaInterface $searchCriteria
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(array $filterValues): QueryBuilder
+    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
+        if (!$searchCriteria instanceof ShopSearchCriteriaInterface) {
+            throw new InvalidArgumentException(sprintf('Invalid search criteria, expected a %s', ShopSearchCriteriaInterface::class));
+        }
+
+        $shopId = null;
+        $filteredShopGroupId = null;
+        $sharedStockGroupId = null;
+        if ($searchCriteria->getShopConstraint()->getShopId()) {
+            $shopId = $searchCriteria->getShopConstraint()->getShopId()->getValue();
+            $shopGroup = $this->shopGroupRepository->getByShop($searchCriteria->getShopConstraint()->getShopId());
+            $sharedStockGroupId = (bool) $shopGroup->share_stock ? (int) $shopGroup->id : null;
+        } elseif ($searchCriteria->getShopConstraint()->getShopGroupId()) {
+            $filteredShopGroupId = $searchCriteria->getShopConstraint()->getShopGroupId()->getValue();
+            $shopGroup = $this->shopGroupRepository->get(new ShopGroupId($filteredShopGroupId));
+            $sharedStockGroupId = (bool) $shopGroup->share_stock ? $filteredShopGroupId : null;
+        }
+
+        $filterValues = $searchCriteria->getFilters();
         $qb = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'product', 'p')
@@ -165,33 +174,33 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p',
                 $this->dbPrefix . 'product_shop',
                 'ps',
-                'ps.`id_product` = p.`id_product` AND ps.`id_shop` = :id_shop'
+                $this->addShopCondition('ps.`id_product` = p.`id_product`', 'ps', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'product_lang',
                 'pl',
-                'pl.`id_product` = p.`id_product` AND pl.`id_lang` = :id_lang AND pl.`id_shop` = :id_shop'
+                $this->addShopCondition('pl.`id_product` = p.`id_product` AND pl.`id_lang` = :langId', 'pl', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'category_lang',
                 'cl',
-                'cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :id_lang AND cl.`id_shop` = :id_shop'
+                $this->addShopCondition('cl.`id_category` = ps.`id_category_default` AND cl.`id_lang` = :langId', 'cl', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'ps',
                 $this->dbPrefix . 'image_shop',
                 'img_shop',
-                'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
+                $this->addShopCondition('img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1', 'img_shop', $shopId, $filteredShopGroupId)
             )
             ->leftJoin(
                 'img_shop',
                 $this->dbPrefix . 'image_lang',
                 'img_lang',
-                'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :id_lang'
+                'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :langId'
             )
-            ->andWhere('p.`state`=1')
+            ->andWhere('p.`state` = 1')
         ;
 
         $filteredCategoryId = $this->getFilteredCategoryId($filterValues);
@@ -216,14 +225,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                     AND sa.`id_product_attribute` = 0
                 ';
 
-            if ($this->isStockSharingBetweenShopGroupEnabled) {
+            if ($sharedStockGroupId) {
                 $stockOnCondition .= '
-                     AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :id_shop_group
+                     AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId
                 ';
+                $qb->setParameter('sharedShopGroupId', $sharedStockGroupId);
             } else {
-                $stockOnCondition .= '
-                     AND sa.`id_shop` = :id_shop AND sa.`id_shop_group` = 0
-                ';
+                $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
             }
 
             $qb->leftJoin(
@@ -232,10 +240,9 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'sa',
                 $stockOnCondition
             );
-
-            $qb->setParameter('id_shop_group', $this->contextShopGroupId);
         }
 
+        // Prepare filters
         $sqlFilters = new SqlFilters();
         $sqlFilters
             ->addFilter(
@@ -272,8 +279,14 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->filterApplicator->apply($qb, $sqlFilters, $filterValues);
 
-        $qb->setParameter('id_shop', $this->contextShopId);
-        $qb->setParameter('id_lang', $this->contextLanguageId);
+        // If shop is specified we use it as the reference, if not we use the product's default shop (for each product)
+        $qb->setParameter('langId', $this->contextLanguageId);
+        if ($shopId) {
+            $qb->setParameter('shopId', $shopId);
+        }
+        if ($filteredShopGroupId) {
+            $qb->setParameter('filteredShopGroupId', $filteredShopGroupId);
+        }
 
         foreach ($filterValues as $filterName => $filter) {
             if ('active' === $filterName) {
@@ -304,6 +317,23 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         return $qb;
+    }
+
+    private function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
+    {
+        if ($shopId) {
+            // Single shop context simple left join on a single shopId
+            return $sql . ' AND ' . $tableAlias . '.`id_shop` = :shopId';
+        } elseif ($filteredShopGroupId) {
+            // Group shop context, we add a condition on the left join that the id_shop must be part of the group shop AND be associated with the product
+            // And we only select the MIN because we only need the first id_shop which will be used as the default display thus we don't need to use a group by on id_product
+            $groupSubQuery = 'SELECT MIN(s2.id_shop) FROM ' . $this->dbPrefix . 'shop s2 INNER JOIN ' . $this->dbPrefix . 'product_shop ps2 ON ps2.id_shop = s2.id_shop AND ps2.id_product = ps.id_product WHERE s2.id_shop_group = :filteredShopGroupId';
+
+            return $sql . ' AND ' . $tableAlias . '.`id_shop` IN (' . $groupSubQuery . ')';
+        }
+
+        // All shops context left join on the product's default shop
+        return $sql . ' AND ' . $tableAlias . '.`id_shop` = p.id_shop_default';
     }
 
     private function getFilteredCategoryId(array $filterValues): ?int

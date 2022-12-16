@@ -64,3 +64,4 @@ services:
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.hook.manager'
+      - '@prestashop.adapter.shop.repository.shop_group_repository'

@@ -128,12 +128,15 @@ abstract class GridControllerTestCase extends WebTestCase
             }
         }
 
+        // Get total number
+        $testEntityDTOCollection->setTotalCount((int) $grid->first()->attr('data-total'));
+
         return $testEntityDTOCollection;
     }
 
     /**
      * Calls the grid page with specific filters and return the parsed entities it contains, based on the
-     * parseEntityFromRow that each sub-class must implement.
+     * parseEntityFromRow that each subclass must implement.
      *
      * @param array $testFilters
      * @param array $routeParams

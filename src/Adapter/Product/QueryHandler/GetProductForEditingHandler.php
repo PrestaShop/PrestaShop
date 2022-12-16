@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformati
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
@@ -501,7 +502,11 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      */
     private function getProductStockInformation(Product $product): ProductStockInformation
     {
-        $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id), new ShopId($product->getShopId()));
+        try {
+            $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id), new ShopId($product->getShopId()));
+        } catch (StockAvailableNotFoundException $e) {
+            $stockAvailable = $this->stockAvailableRepository->createStockAvailable(new ProductId($product->id), new ShopId($product->getShopId()));
+        }
 
         return new ProductStockInformation(
             (int) $product->pack_stock_type,

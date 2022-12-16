@@ -26,35 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace PrestaShop\PrestaShop\Core\Grid\Search;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class TestEntityDTOCollection extends AbstractTypedCollection
+/**
+ * This extended interface of the SearchCriteriaInterface integrates a mandatory ShopConstraint
+ * which is used for multishop feature.
+ */
+interface ShopSearchCriteriaInterface extends SearchCriteriaInterface
 {
-    /**
-     * @var int
-     */
-    private $totalCount = 0;
-
-    /**
-     * @return int
-     */
-    public function getTotalCount(): int
-    {
-        return $this->totalCount;
-    }
-
-    /**
-     * @param int $totalCount
-     */
-    public function setTotalCount(int $totalCount): void
-    {
-        $this->totalCount = $totalCount;
-    }
-
-    protected function getType()
-    {
-        return TestEntityDTO::class;
-    }
+    public function getShopConstraint(): ?ShopConstraint;
 }

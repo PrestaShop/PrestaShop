@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -38,11 +39,19 @@ abstract class AbstractFiltersBuilder implements FiltersBuilderInterface
     protected $filterId;
 
     /**
+     * @var ShopConstraint|null
+     */
+    protected $shopConstraint;
+
+    /**
      * {@inheritdoc}
      */
     public function setConfig(array $config)
     {
-        $this->filterId = isset($config['filter_id']) ? $config['filter_id'] : '';
+        $this->filterId = $config['filter_id'] ?? '';
+        if (isset($config['shop_constraint']) && $config['shop_constraint'] instanceof ShopConstraint) {
+            $this->shopConstraint = $config['shop_constraint'];
+        }
 
         return $this;
     }

@@ -26,35 +26,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace Tests\Resources;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
-class TestEntityDTOCollection extends AbstractTypedCollection
+class SampleShopFilters extends ShopFilters
 {
     /**
-     * @var int
+     * {@inheritdoc}
      */
-    private $totalCount = 0;
-
-    /**
-     * @return int
-     */
-    public function getTotalCount(): int
+    public static function getDefaults()
     {
-        return $this->totalCount;
-    }
-
-    /**
-     * @param int $totalCount
-     */
-    public function setTotalCount(int $totalCount): void
-    {
-        $this->totalCount = $totalCount;
-    }
-
-    protected function getType()
-    {
-        return TestEntityDTO::class;
+        return [
+            'limit' => 13,
+            'offset' => 69,
+            'orderBy' => 'id_shop_sample',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ];
     }
 }

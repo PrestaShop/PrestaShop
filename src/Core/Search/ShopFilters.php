@@ -26,35 +26,36 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\PrestaShopBundle\Controller;
+namespace PrestaShop\PrestaShop\Core\Search;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 
-class TestEntityDTOCollection extends AbstractTypedCollection
+/**
+ * ShopFilters contains a ShopConstraint to handle multishop feature, the shop constraint is mandatory and immutable.
+ * The class can't be used as is and needs to be used as a parent, you should respect the parameters orders in your
+ * implementation (if you don't you'll have to handle the specific build via a TypedBuilderInterface dedicated service).
+ */
+abstract class ShopFilters extends Filters implements ShopSearchCriteriaInterface
 {
     /**
-     * @var int
+     * @var ShopConstraint
      */
-    private $totalCount = 0;
+    private $shopConstraint;
 
     /**
-     * @return int
+     * @param ShopConstraint $shopConstraint
+     * @param array<string, mixed> $filters
+     * @param string $filterId
      */
-    public function getTotalCount(): int
+    public function __construct(ShopConstraint $shopConstraint, array $filters = [], $filterId = '')
     {
-        return $this->totalCount;
+        parent::__construct($filters, $filterId);
+        $this->shopConstraint = $shopConstraint;
     }
 
-    /**
-     * @param int $totalCount
-     */
-    public function setTotalCount(int $totalCount): void
+    public function getShopConstraint(): ShopConstraint
     {
-        $this->totalCount = $totalCount;
-    }
-
-    protected function getType()
-    {
-        return TestEntityDTO::class;
+        return $this->shopConstraint;
     }
 }
