@@ -4,7 +4,6 @@ services:
     abstract: true
     arguments:
       - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
-      - '@prestashop.core.util.string.string_modifier'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter:
     parent: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\AbstractFormDataFormatter
