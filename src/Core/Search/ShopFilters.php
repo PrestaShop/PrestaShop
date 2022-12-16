@@ -45,7 +45,7 @@ abstract class ShopFilters extends Filters implements ShopSearchCriteriaInterfac
 
     /**
      * @param ShopConstraint $shopConstraint
-     * @param array $filters
+     * @param array<string, mixed> $filters
      * @param string $filterId
      */
     public function __construct(ShopConstraint $shopConstraint, array $filters = [], $filterId = '')

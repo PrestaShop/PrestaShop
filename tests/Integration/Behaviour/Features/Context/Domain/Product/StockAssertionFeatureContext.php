@@ -286,7 +286,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
                 $movementDatum['employee'],
                 $stockMovement->getEmployeeName(),
                 sprintf(
-                    'Invalid employee name of stock movement event for shop%d, expected "%s" instead of "%s"',
+                    'Invalid employee name of stock movement event for shop %d, expected "%s" instead of "%s"',
                     $shopId,
                     $movementDatum['employee'],
                     $stockMovement->getEmployeeName()
