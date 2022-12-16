@@ -124,9 +124,7 @@ class StringModifierTest extends TestCase
      */
     public function testStr2url(string $input, string $expected): void
     {
-        $cc = new StringModifier();
-
-        self::assertSame($expected, $cc->str2url($input));
+        self::assertSame($expected, $this->stringModifier->str2url($input));
     }
 
     public function str2UrlProvider(): Generator
@@ -146,9 +144,7 @@ class StringModifierTest extends TestCase
      */
     public function testReplaceAccentedCharacters(string $input, string $expected): void
     {
-        $cc = new StringModifier();
-
-        self::assertSame($expected, $cc->replaceAccentedChars($input));
+        self::assertSame($expected, $this->stringModifier->replaceAccentedChars($input));
     }
 
     public function getTestReplaceAccentedCharactersData(): Generator
@@ -156,5 +152,38 @@ class StringModifierTest extends TestCase
         yield 'empty string' => ['', ''];
         yield 'Test a variations' => ['aaâæaa', 'aaaaeaa'];
         yield 'Test e variations' => ['éèê', 'eee'];
+    }
+
+    /**
+     * @dataProvider getTestPrefixFieldPathData
+     *
+     * @param string $fieldPath
+     * @param string $prefix
+     * @param string $expectedResult
+     */
+    public function testPrefixFieldPath(string $fieldPath, string $prefix, string $expectedResult): void
+    {
+        self::assertSame($expectedResult, $this->stringModifier->prefixFieldPath($fieldPath, $prefix));
+    }
+
+    public function getTestPrefixFieldPathData(): iterable
+    {
+        yield [
+            '',
+            'what',
+            '',
+        ];
+
+        yield [
+            '[foo][bar]',
+            'hello',
+            '[foo][hellobar]',
+        ];
+
+        yield [
+            '[stock][delta_quantity][delta]',
+            'modify_all_shops_',
+            '[stock][delta_quantity][modify_all_shops_delta]',
+        ];
     }
 }

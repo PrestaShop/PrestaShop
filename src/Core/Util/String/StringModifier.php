@@ -134,20 +134,20 @@ final class StringModifier implements StringModifierInterface
             return $fieldPath;
         }
 
-        $allShopsFieldName = '';
+        $prefixedFieldName = '';
         $lastIndex = count($matches[1]) - 1;
         foreach ($matches[1] as $index => $subFieldName) {
             if ($index !== $lastIndex) {
                 // It is not the last field, then just rebuild the field name as it was and continue searching for the last one
-                $allShopsFieldName .= sprintf('[%s]', $subFieldName);
+                $prefixedFieldName .= sprintf('[%s]', $subFieldName);
 
                 continue;
             }
 
             // it is the last field, so we prefix it with provided $prefix inside the angle brackets
-            $allShopsFieldName .= sprintf('[%s%s]', $prefix, $subFieldName);
+            $prefixedFieldName .= sprintf('[%s%s]', $prefix, $subFieldName);
         }
 
-        return $allShopsFieldName;
+        return $prefixedFieldName;
     }
 }
