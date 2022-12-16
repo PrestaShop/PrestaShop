@@ -361,11 +361,8 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      */
     protected function getShopIdsFromReferences(string $shopReferences): array
     {
-        $shopIds = [];
-        foreach (explode(',', $shopReferences) as $shopReference) {
-            $shopIds[] = (int) $this->getSharedStorage()->get(trim($shopReference));
-        }
-
-        return $shopIds;
+        return array_map(function (string $shopReference) {
+            return (int) $this->getSharedStorage()->get(trim($shopReference));
+        }, explode(',', $shopReferences));
     }
 }

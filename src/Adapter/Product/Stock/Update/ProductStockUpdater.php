@@ -327,7 +327,7 @@ class ProductStockUpdater
             } else {
                 // We can use any shop from the shop group, the stock movement will correctly associate the proper StockAvailable based on the shopId only
                 $shopsFromGroup = $this->shopGroupRepository->getShopsFromGroup(new ShopGroupId((int) $stockAvailable->id_shop_group));
-                $shopId = $shopsFromGroup[0]->getValue();
+                $shopId = reset($shopsFromGroup)->getValue();
             }
 
             //Save movement only after stock has been updated
