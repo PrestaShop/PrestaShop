@@ -4,10 +4,13 @@
 Feature: Customer service
 
   Scenario: Add customer thread
-    When I add new customer thread "thread1" with following properties:
-      | message   | test message |
-      | contactId | 2            |
-    Then customer thread "thread1" should have the latest message "test message"
+    When I create a contact "CONTACT-1" with following properties:
+      | localisedTitles        | Support |
+      | isMessageSavingEnabled | true    |
+    And I add new customer thread "thread1" with following properties:
+      | message          | test message1 |
+      | contactReference | CONTACT-1    |
+    Then customer thread "thread1" should have the latest message "test message1"
 
   Scenario: Response to thread
     When I respond to customer thread "thread1" with following properties:
@@ -15,8 +18,20 @@ Feature: Customer service
     Then customer thread "thread1" should have the latest message "test message2"
 
   Scenario: Update thread status to handled
-    When I update thread "thread1" status to handled
-    Then customer thread "thread1" should be closed
+    When I update thread "thread1" status to "closed"
+    Then customer thread "thread1" should be "closed"
+
+  Scenario: Update thread status to handled
+    When I update thread "thread1" status to "pending1"
+    Then customer thread "thread1" should be "pending1"
+
+  Scenario: Update thread status to handled
+    When I update thread "thread1" status to "pending2"
+    Then customer thread "thread1" should be "pending2"
+
+  Scenario: Update thread status to handled
+    When I update thread "thread1" status to "open"
+    Then customer thread "thread1" should be "open"
 
   Scenario: I delete thread
     When I delete thread "thread1"

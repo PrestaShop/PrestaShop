@@ -28,7 +28,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use CustomerThread;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
+use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
@@ -40,10 +42,18 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThread
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
 
 class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * Registry to keep track of created/edited contacts using references
+     *
+     * @var int[]
+     */
+    protected $contactRegistry = [];
+
     /**
      * @When I add new customer thread :threadReference with following properties:
      *
@@ -54,9 +64,11 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
+        $contactReference = $this->contactRegistry[$data['contactReference']];
+
         // Add this message in the customer thread
         $customerThread = new CustomerThread();
-        $customerThread->id_contact = $data['contactId'];
+        $customerThread->id_contact = $contactReference;
         $customerThread->id_customer = 1;
         $customerThread->id_shop = $this->getDefaultShopId();
         $customerThread->id_order = 0;
@@ -123,11 +135,11 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I update thread :threadReference status to handled
+     * @When I update thread :threadReference status to :status
      *
      * @param string $threadReference
      */
-    public function updateThreadStatus(string $threadReference): void
+    public function updateThreadStatus(string $threadReference, string $status): void
     {
         /** @var CustomerThread $customerThread */
         $customerThread = $this->getSharedStorage()->get($threadReference);
@@ -135,17 +147,17 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         $this->getCommandBus()->handle(
             new UpdateCustomerThreadStatusCommand(
                 (int) $customerThread->id,
-                CustomerThreadStatus::CLOSED
+                $status
             )
         );
     }
 
     /**
-     * @Then customer thread :threadReference should be closed
+     * @Then customer thread :threadReference should be :status
      *
      * @param string $threadReference
      */
-    public function assertThreadStatus(string $threadReference): void
+    public function assertThreadStatus(string $threadReference, string $status): void
     {
         /** @var CustomerThread $customerThread */
         $customerThread = $this->getSharedStorage()->get($threadReference);
@@ -155,20 +167,26 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             new GetCustomerThreadForViewing((int) $customerThread->id)
         );
 
-        $actions = $customerThreadView->getActions();
+        $allPossibleActions = [
+            CustomerThreadStatus::OPEN,
+            CustomerThreadStatus::CLOSED,
+            CustomerThreadStatus::PENDING_1,
+            CustomerThreadStatus::PENDING_2,
+        ];
+        $expectedPossibleActions = array_diff($allPossibleActions, [$status]);
 
-        if (!array_key_exists(CustomerThreadStatus::OPEN, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::OPEN));
-        }
-        if (!array_key_exists(CustomerThreadStatus::PENDING_1, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::PENDING_1));
-        }
-        if (!array_key_exists(CustomerThreadStatus::PENDING_2, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, CustomerThreadStatus::PENDING_2));
+        $actions = array_map(function ($action) {
+            return $action['value'];
+        }, $customerThreadView->getActions());
+
+        foreach ($actions as $action) {
+            if (!in_array($action, $expectedPossibleActions)) {
+                throw new RuntimeException(sprintf('thread "%s" should have action "%s" possible.', $threadReference, $action));
+            }
         }
 
-        if (array_key_exists(CustomerThreadStatus::CLOSED, $actions)) {
-            throw new RuntimeException(sprintf('thread "%s" should not have action "%s" possible.', $threadReference, CustomerThreadStatus::CLOSED));
+        if (in_array($status, $actions)) {
+            throw new RuntimeException(sprintf('thread "%s" should not have action "%s" possible.', $threadReference, $status));
         }
     }
 
@@ -206,29 +224,14 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then customer service should fine two services
-     */
-    public function assertCustomerServiceSummary(): void
-    {
-        /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
-        $getCustomerServiceSummary = $this->getQueryBus()->handle(
-            new GetCustomerServiceSummary()
-        );
-
-        $countCustomerServiceSummary = count($getCustomerServiceSummary);
-        if ($countCustomerServiceSummary !== 2) {
-            throw new NoExceptionAlthoughExpectedException(sprintf('%s customer services where found, but only 2 where expected', $countCustomerServiceSummary));
-        }
-    }
-
-    /**
-     * @Then contact :contactId should have :expectedThreads threads
+     * @Then contact :contactReference should have :expectedThreads threads
      *
-     * @param int $contactId
+     * @param string $contactReference
      * @param int $expectedThreads
      */
-    public function assertContactHasThreads(int $contactId, int $expectedThreads): void
+    public function assertContactHasThreads(string $contactReference, int $expectedThreads): void
     {
+        $contactId = $this->contactRegistry[$contactReference];
         /** @var CustomerServiceSummary[] $getCustomerServiceSummary */
         $getCustomerServiceSummary = $this->getQueryBus()->handle(
             new GetCustomerServiceSummary()
@@ -243,5 +246,49 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
                 throw new NoExceptionAlthoughExpectedException(sprintf('Contact expected to have %s threads, but it had %s', $expectedThreads, $customerServiceSummary->getTotalThreads()));
             }
         }
+    }
+
+    /**
+     * @When /^I create a contact "(.+)" with following properties:$/
+     */
+    public function createContactUsingCommand($contactReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $data = $this->formatContactDataIfNeeded($data);
+        $commandBus = $this->getCommandBus();
+
+        $mandatoryFields = [
+            'localisedTitles',
+            'isMessageSavingEnabled',
+        ];
+
+        foreach ($mandatoryFields as $mandatoryField) {
+            if (!array_key_exists($mandatoryField, $data)) {
+                throw new Exception(sprintf('Mandatory property %s for contact has not been provided', $mandatoryField));
+            }
+        }
+
+        $command = new AddContactCommand(
+            $data['localisedTitles'],
+            $data['isMessageSavingEnabled']
+        );
+
+        /** @var $contactId $id */
+        $id = $commandBus->handle($command);
+
+        $this->latestResult = $id->getValue();
+        $this->contactRegistry[$contactReference] = $id->getValue();
+    }
+
+    protected function formatContactDataIfNeeded(array $data)
+    {
+        if (array_key_exists('localisedTitles', $data)) {
+            $data['localisedTitles'] = [$this->getDefaultShopId() => $data['localisedTitles']];
+        }
+        if (array_key_exists('isMessageSavingEnabled', $data)) {
+            $data['isMessageSavingEnabled'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['isMessageSavingEnabled']);
+        }
+
+        return $data;
     }
 }
