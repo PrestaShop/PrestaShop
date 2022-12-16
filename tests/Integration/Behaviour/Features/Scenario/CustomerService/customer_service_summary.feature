@@ -3,13 +3,15 @@
 @customer-management
 Feature: Customer service summary
 
-  Scenario: Get default customer service summary
-    Given that default contacts exists
-    Then customer service should fine two services
-
   Scenario: Add customer thread
-    When I add new customer thread "thread1" with following properties:
-      | message   | test message |
-      | contactId | 2            |
-    Then contact 1 should have 0 threads
-    And contact 2 should have 1 threads
+    When I create a contact "CONTACT-1" with following properties:
+      | localisedTitles        | Support |
+      | isMessageSavingEnabled | true    |
+    And I create a contact "CONTACT-2" with following properties:
+      | localisedTitles        | Support |
+      | isMessageSavingEnabled | true   |
+    And I add new customer thread "thread1" with following properties:
+      | message          | test message2 |
+      | contactReference | CONTACT-2     |
+    Then contact "CONTACT-1" should have 0 threads
+    And contact "CONTACT-2" should have 1 threads
