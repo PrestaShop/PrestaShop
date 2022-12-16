@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Translations page, contains functions that can be used on the page
@@ -7,6 +8,56 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Translations extends BOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly validationMessage: string;
+
+  private readonly validationResetMessage: string;
+
+  private readonly successAlertMessage: string;
+
+  private readonly typeOfTranslationSelect: string;
+
+  private readonly selectYourThemeSelect: string;
+
+  private readonly selectYourLanguageSelect: string;
+
+  private readonly modifyTranslationsButton: string;
+
+  private readonly searchInput: string;
+
+  private readonly searchButton: string;
+
+  private readonly translationTextarea: string;
+
+  private readonly saveTranslationButton: string;
+
+  private readonly resetTranslationButton: string;
+
+  private readonly growlMessage: string;
+
+  private readonly addUpdateLanguageForm: string;
+
+  private readonly languageToAddSelect: string;
+
+  private readonly searchLanguageInput: string;
+
+  private readonly searchLanguageResult: string;
+
+  private readonly addUpdateLanguageButton: string;
+
+  private readonly exportLanguageSelect: string;
+
+  private readonly prestashopTranslationRadio: string;
+
+  private readonly prestashopTranslationTypeCheckbox: (position: number) => string;
+
+  private readonly themeTranslationRadio: string;
+
+  private readonly exportLanguageThemeSelect: string;
+
+  private readonly exportLanguageButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on translations page
@@ -44,7 +95,7 @@ class Translations extends BOBasePage {
 
     // Prestashop translation
     this.prestashopTranslationRadio = '#form_core_selectors_core_type';
-    this.prestashopTranslationTypeCheckbox = (position) => `#form_core_selectors_selected_value_${position}`;
+    this.prestashopTranslationTypeCheckbox = (position: number) => `#form_core_selectors_selected_value_${position}`;
 
     // Theme translation
     this.themeTranslationRadio = '#form_themes_selectors_themes_type';
@@ -64,7 +115,7 @@ class Translations extends BOBasePage {
    * @param language {string} Value of language to select on language select
    * @returns {Promise<void>}
    */
-  async modifyTranslation(page, translation, theme, language) {
+  async modifyTranslation(page: Page, translation: string, theme: string, language: string): Promise<void> {
     await this.selectByVisibleText(page, this.typeOfTranslationSelect, translation);
     await this.selectByVisibleText(page, this.selectYourThemeSelect, theme);
     await this.selectByVisibleText(page, this.selectYourLanguageSelect, language);
@@ -77,7 +128,7 @@ class Translations extends BOBasePage {
    * @param expression {string} Expression to set on search input
    * @returns {Promise<void>}
    */
-  async searchTranslation(page, expression) {
+  async searchTranslation(page: Page, expression: string): Promise<void> {
     await this.setValue(page, this.searchInput, expression);
     await page.click(this.searchButton);
     await this.waitForAttachedSelector(page, this.translationTextarea);
@@ -90,7 +141,7 @@ class Translations extends BOBasePage {
    * @param translation {string} Value of translation to set
    * @returns {Promise<string>}
    */
-  async translateExpression(page, translation) {
+  async translateExpression(page: Page, translation: string): Promise<string> {
     await this.setValue(page, this.translationTextarea, translation);
     await page.click(this.saveTranslationButton);
 
@@ -102,7 +153,7 @@ class Translations extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async resetTranslation(page) {
+  async resetTranslation(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.resetTranslationButton);
     await page.click(this.saveTranslationButton);
 
@@ -115,7 +166,7 @@ class Translations extends BOBasePage {
    * @param language {string} Language to set on language input
    * @returns {Promise<string>}
    */
-  async addUpdateLanguage(page, language) {
+  async addUpdateLanguage(page: Page, language: string): Promise<string> {
     await this.waitForSelectorAndClick(page, this.languageToAddSelect);
     await this.setValue(page, this.searchLanguageInput, language);
     await this.waitForSelectorAndClick(page, this.searchLanguageResult);
@@ -130,7 +181,7 @@ class Translations extends BOBasePage {
    * @param language {string} language to export
    * @return {Promise<void>}
    */
-  async selectExportLanguage(page, language) {
+  async selectExportLanguage(page: Page, language: string): Promise<void> {
     await this.selectByVisibleText(page, this.exportLanguageSelect, language);
   }
 
@@ -139,9 +190,9 @@ class Translations extends BOBasePage {
    * @param page {Page} Browser type
    * @param language {string} language to export
    * @param types {Array<string>} Array of strings of what to export
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async exportPrestashopTranslations(page, language, types = ['Other']) {
+  async exportPrestashopTranslations(page: Page, language: string, types: string[] = ['Other']): Promise<string|null> {
     await this.selectExportLanguage(page, language);
     await page.click(this.prestashopTranslationRadio);
 
@@ -176,4 +227,4 @@ class Translations extends BOBasePage {
   }
 }
 
-module.exports = new Translations();
+export default new Translations();
