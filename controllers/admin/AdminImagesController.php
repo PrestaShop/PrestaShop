@@ -831,27 +831,6 @@ class AdminImagesControllerCore extends AdminController
         parent::initContent();
     }
 
-    /**
-     * This method will remove the elements in $allFormats
-     * where the `name` key is not equal to $nameToFilter
-     *
-     * @param array $allFormats
-     * @param string $nameToFilter
-     *
-     * @return array
-     */
-    private function filterFormats(array $allFormats, string $nameToFilter): array
-    {
-        $formats = [];
-        foreach ($allFormats as $format) {
-            if ($nameToFilter === $format['name']) {
-                $formats[] = $format;
-            }
-        }
-
-        return $formats;
-    }
-
     public function processDelete()
     {
         $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
@@ -867,7 +846,11 @@ class AdminImagesControllerCore extends AdminController
             ];
             foreach ($imageDirectoriesByEntity as $imagesDirectory) {
                 $allFormats = ImageType::getImagesTypes($imagesDirectory['type']);
-                $formats = $this->filterFormats($allFormats, $imageType['name']);
+                $nameToFilter = $imageType['name'];
+
+                $formats = array_filter($allFormats, function ($element) use ($nameToFilter) {
+                    return $element['name'] == $nameToFilter;
+                });
 
                 $this->_deleteOldImages($imagesDirectory['dir'], $formats, ($imagesDirectory['type'] == 'products' ? true : false));
             }
