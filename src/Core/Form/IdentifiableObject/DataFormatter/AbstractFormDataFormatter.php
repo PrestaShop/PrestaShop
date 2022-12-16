@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
-use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
+use PrestaShop\PrestaShop\Core\Util\String\ModifyAllShopsUtil;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -39,17 +39,10 @@ abstract class AbstractFormDataFormatter
      */
     protected $modifyAllNamePrefix;
 
-    /**
-     * @var StringModifierInterface
-     */
-    protected $stringModifier;
-
-    protected function __construct(
-        string $modifyAllNamePrefix,
-        StringModifierInterface $stringModifier
+    public function __construct(
+        string $modifyAllNamePrefix
     ) {
         $this->modifyAllNamePrefix = $modifyAllNamePrefix;
-        $this->stringModifier = $stringModifier;
     }
 
     protected function formatByPath(array $formData, array $pathAssociations): array
@@ -74,11 +67,11 @@ abstract class AbstractFormDataFormatter
             }
 
             try {
-                $modifyAllShopsPath = $this->stringModifier->prefixFieldPath($bulkFormPath, $this->modifyAllNamePrefix);
+                $modifyAllShopsPath = ModifyAllShopsUtil::prefixFieldPathWithAllShops($bulkFormPath, $this->modifyAllNamePrefix);
                 $modifyAllShopsValue = $propertyAccessor->getValue($formData, $modifyAllShopsPath);
                 $propertyAccessor->setValue(
                     $formattedData,
-                    $this->stringModifier->prefixFieldPath($editFormPath, $this->modifyAllNamePrefix),
+                    ModifyAllShopsUtil::prefixFieldPathWithAllShops($editFormPath, $this->modifyAllNamePrefix),
                     $modifyAllShopsValue
                 );
             } catch (AccessException $e) {

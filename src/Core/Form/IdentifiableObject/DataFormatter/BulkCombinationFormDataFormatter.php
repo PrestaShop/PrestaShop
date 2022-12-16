@@ -27,8 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
-use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
-
 /**
  * This class transforms the data from bulk form into data adapted to the combination form structure,
  * since the forms are not constructed the same way the goal is to rebuild the same data values with the
@@ -36,16 +34,6 @@ use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
  */
 class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
 {
-    /**
-     * @param string $modifyAllNamePrefix
-     */
-    public function __construct(
-        string $modifyAllNamePrefix,
-        StringModifierInterface $stringModifier
-    ) {
-        parent::__construct($modifyAllNamePrefix, $stringModifier);
-    }
-
     /**
      * @param array<string, mixed> $formData
      *

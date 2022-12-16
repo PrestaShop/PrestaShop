@@ -153,37 +153,4 @@ class StringModifierTest extends TestCase
         yield 'Test a variations' => ['aaâæaa', 'aaaaeaa'];
         yield 'Test e variations' => ['éèê', 'eee'];
     }
-
-    /**
-     * @dataProvider getTestPrefixFieldPathData
-     *
-     * @param string $fieldPath
-     * @param string $prefix
-     * @param string $expectedResult
-     */
-    public function testPrefixFieldPath(string $fieldPath, string $prefix, string $expectedResult): void
-    {
-        self::assertSame($expectedResult, $this->stringModifier->prefixFieldPath($fieldPath, $prefix));
-    }
-
-    public function getTestPrefixFieldPathData(): iterable
-    {
-        yield [
-            '',
-            'what',
-            '',
-        ];
-
-        yield [
-            '[foo][bar]',
-            'hello',
-            '[foo][hellobar]',
-        ];
-
-        yield [
-            '[stock][delta_quantity][delta]',
-            'modify_all_shops_',
-            '[stock][delta_quantity][modify_all_shops_delta]',
-        ];
-    }
 }

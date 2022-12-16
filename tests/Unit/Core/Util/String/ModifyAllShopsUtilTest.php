@@ -23,31 +23,45 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Util\String;
+namespace Tests\Unit\Core\Util\String;
 
-/**
- * Defines reusable methods for strings modifications.
- *
- * @method str2url(string $string) will be added in 9.0
- * @method replaceAccentedChars(string $string) will be added in 9.0
- */
-interface StringModifierInterface
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\String\ModifyAllShopsUtil;
+
+class ModifyAllShopsUtilTest extends TestCase
 {
     /**
-     * @param string $string
+     * @dataProvider getTestPrefixFieldPathData
      *
-     * @return string
+     * @param string $fieldPath
+     * @param string $prefix
+     * @param string $expectedResult
      */
-    public function splitByCamelCase($string);
+    public function testPrefixFieldPath(string $fieldPath, string $prefix, string $expectedResult): void
+    {
+        self::assertSame($expectedResult, ModifyAllShopsUtil::prefixFieldPathWithAllShops($fieldPath, $prefix));
+    }
 
-    /**
-     * Cuts string end if it exceeds expected length
-     *
-     * @param string $string
-     * @param int $expectedLength
-     *
-     * @return string
-     */
-    public function cutEnd(string $string, int $expectedLength): string;
+    public function getTestPrefixFieldPathData(): iterable
+    {
+        yield [
+            '',
+            'what',
+            '',
+        ];
+
+        yield [
+            '[foo][bar]',
+            'hello',
+            '[foo][hellobar]',
+        ];
+
+        yield [
+            '[stock][delta_quantity][delta]',
+            'modify_all_shops_',
+            '[stock][delta_quantity][modify_all_shops_delta]',
+        ];
+    }
 }
