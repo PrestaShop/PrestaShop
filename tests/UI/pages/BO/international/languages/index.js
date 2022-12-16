@@ -124,7 +124,7 @@ class Languages extends LocalizationBasePage {
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing

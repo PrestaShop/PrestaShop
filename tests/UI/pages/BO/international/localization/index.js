@@ -42,9 +42,7 @@ class Localization extends LocalizationBasePage {
    * Import a localization pack
    * @param page {Page} Browser tab
    * @param country {string} Country to select
-   * @param contentToImport {{importStates: boolean, importTaxes: boolean, importCurrencies: boolean,
-   * importLanguages: boolean, importUnits: boolean,
-   * updatePriceDisplayForGroups: boolean}} Data of content to import to choose
+   * @param contentToImport {ImportContent} Data of content to import to choose
    * @param downloadPackData {boolean} True if we need to download pack data
    * @return {Promise<void>}
    */

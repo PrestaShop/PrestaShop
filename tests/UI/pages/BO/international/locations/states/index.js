@@ -142,7 +142,7 @@ class States extends BOBasePage {
         break;
 
       case 'select':
-        if (typeof value === 'boolean') {
+        if (typeof value === 'string' && (value === '1' || value === '0')) {
           filterValue = value ? 'Yes' : 'No';
         }
 
