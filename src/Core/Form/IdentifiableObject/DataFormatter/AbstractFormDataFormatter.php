@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
+use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -38,10 +39,17 @@ abstract class AbstractFormDataFormatter
      */
     protected $modifyAllNamePrefix;
 
+    /**
+     * @var StringModifierInterface
+     */
+    protected $stringModifier;
+
     protected function __construct(
-        string $modifyAllNamePrefix
+        string $modifyAllNamePrefix,
+        StringModifierInterface $stringModifier
     ) {
         $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+        $this->stringModifier = $stringModifier;
     }
 
     protected function formatByPath(array $formData, array $pathAssociations): array
@@ -66,11 +74,11 @@ abstract class AbstractFormDataFormatter
             }
 
             try {
-                $modifyAllShopsPath = $this->prefixWithModifyAllShops($bulkFormPath);
+                $modifyAllShopsPath = $this->stringModifier->prefixFieldPath($bulkFormPath, $this->modifyAllNamePrefix);
                 $modifyAllShopsValue = $propertyAccessor->getValue($formData, $modifyAllShopsPath);
                 $propertyAccessor->setValue(
                     $formattedData,
-                    $this->prefixWithModifyAllShops($editFormPath),
+                    $this->stringModifier->prefixFieldPath($editFormPath, $this->modifyAllNamePrefix),
                     $modifyAllShopsValue
                 );
             } catch (AccessException $e) {
@@ -80,35 +88,5 @@ abstract class AbstractFormDataFormatter
         }
 
         return $formattedData;
-    }
-
-    /**
-     * Appends modify_all_shops prefix to last part of field name.
-     * e.g. "[stock][delta_quantity][delta]" becomes "[stock][delta_quantity][modify_all_shops_delta]"
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    private function prefixWithModifyAllShops(string $field): string
-    {
-        preg_match_all('/\\[(.*?)\\]/', $field, $matches);
-
-        if (empty($matches[1])) {
-            return $field;
-        }
-
-        $allShopsFieldName = '';
-        $lastIndex = count($matches[1]) - 1;
-        foreach ($matches[1] as $index => $subFieldName) {
-            if ($index === $lastIndex) {
-                $allShopsFieldName .= sprintf('[%s%s]', $this->modifyAllNamePrefix, $subFieldName);
-                continue;
-            }
-
-            $allShopsFieldName .= sprintf('[%s]', $subFieldName);
-        }
-
-        return $allShopsFieldName;
     }
 }

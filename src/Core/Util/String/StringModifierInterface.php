@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Util\String;
  *
  * @method str2url(string $string) will be added in 9.0
  * @method replaceAccentedChars(string $string) will be added in 9.0
+ * @method prefixFieldPath(string $fieldPath, string $prefix)
  */
 interface StringModifierInterface
 {
