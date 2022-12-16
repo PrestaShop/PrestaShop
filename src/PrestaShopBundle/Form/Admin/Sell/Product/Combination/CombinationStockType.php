@@ -58,6 +58,7 @@ class CombinationStockType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('available_now_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -76,6 +77,7 @@ class CombinationStockType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -97,6 +99,7 @@ class CombinationStockType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }

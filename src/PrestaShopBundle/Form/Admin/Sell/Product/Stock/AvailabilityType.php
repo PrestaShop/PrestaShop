@@ -98,7 +98,6 @@ class AvailabilityType extends TranslatorAwareType
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
-                // @this doesn't work in combination form for some reason (works for product).
                 'modify_all_shops' => true,
             ])
             ->add('available_date', DatePickerType::class, [
@@ -107,7 +106,6 @@ class AvailabilityType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
-                //@todo: this doesnt work on DatePickerType in combination form for some reason (works for product though)
                 'modify_all_shops' => true,
             ])
         ;
