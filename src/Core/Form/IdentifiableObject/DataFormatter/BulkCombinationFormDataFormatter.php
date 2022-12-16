@@ -35,6 +35,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
 {
     /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        parent::__construct($modifyAllNamePrefix);
+    }
+
+    /**
      * @param array<string, mixed> $formData
      *
      * @return array<string, mixed>
@@ -42,19 +50,19 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
     public function format(array $formData): array
     {
         $pathAssociations = [
-            // References data follow same format so it is quite easy
+            // References data follow same format
             '[references][reference]' => '[references][reference]',
             '[references][mpn]' => '[references][mpn]',
             '[references][upc]' => '[references][upc]',
             '[references][ean_13]' => '[references][ean_13]',
             '[references][isbn]' => '[references][isbn]',
-            // Prices data have almost the same format
+            '[price][price_tax_included]' => '[price_impact][price_tax_included]',
+        ];
+        $multiShopPathAssociations = [
             '[price][wholesale_price]' => '[price_impact][wholesale_price]',
             '[price][price_tax_excluded]' => '[price_impact][price_tax_excluded]',
-            '[price][price_tax_included]' => '[price_impact][price_tax_included]',
             '[price][unit_price]' => '[price_impact][unit_price]',
             '[price][weight]' => '[price_impact][weight]',
-            // Stock data are the trickiest
             '[stock][delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
             '[stock][fixed_quantity]' => '[stock][quantities][fixed_quantity]',
             '[stock][minimal_quantity]' => '[stock][quantities][minimal_quantity]',
@@ -65,6 +73,11 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[stock][available_now_label]' => '[stock][available_now_label]',
             '[stock][available_later_label]' => '[stock][available_later_label]',
         ];
+
+        foreach ($multiShopPathAssociations as $originalField => $formattedField) {
+            $pathAssociations = array_merge($pathAssociations, $this->formatMultiShopAssociation($originalField, $formattedField));
+        }
+
         $formattedData = $this->formatByPath($formData, $pathAssociations);
 
         // We only update images if disabling_switch_images value is truthy

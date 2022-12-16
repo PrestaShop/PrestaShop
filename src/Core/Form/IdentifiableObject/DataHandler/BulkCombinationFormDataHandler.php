@@ -60,6 +60,13 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
      */
     private $defaultShopId;
 
+    /**
+     * @param CommandBusInterface $commandBus
+     * @param BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter
+     * @param MultiShopCombinationCommandsBuilderInterface $commandsBuilder
+     * @param int $contextShopId
+     * @param int $defaultShopId
+     */
     public function __construct(
         CommandBusInterface $commandBus,
         BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter,
@@ -91,11 +98,7 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
         // @todo: a hook system should be integrated in this handler for extendability
         $singleShopConstraint = $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         $formattedData = $this->bulkCombinationFormDataFormatter->format($data);
-        $commands = $this->commandsBuilder->buildCommands(
-            new CombinationId($id),
-            $formattedData,
-            $singleShopConstraint
-        );
+        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $formattedData, $singleShopConstraint);
 
         foreach ($commands as $command) {
             $this->commandBus->handle($command);

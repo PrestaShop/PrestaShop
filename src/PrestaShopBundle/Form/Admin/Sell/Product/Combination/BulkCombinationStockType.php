@@ -87,6 +87,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'disabled_value' => function (?array $data) {
                         return empty($data['quantity']) && empty($data['delta']);
                     },
+                    'modify_all_shops' => true,
                 ])
                 ->add('fixed_quantity', IntegerType::class, [
                     'required' => false,
@@ -159,6 +160,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'placeholder' => 'YYYY-MM-DD',
                 ],
                 'disabling_switch' => true,
+                'modify_all_shops' => true,
             ])
             ->add('available_now_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -178,6 +180,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -200,6 +203,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }
