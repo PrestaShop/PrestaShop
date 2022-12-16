@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServic
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tools;
@@ -55,6 +56,15 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      * @var int[]
      */
     protected $contactRegistry = [];
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct()
+    {
+        $this->configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+    }
 
     /**
      * @When I add new customer thread :threadReference with following properties:
@@ -292,5 +302,48 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $data;
+    }
+
+    /**
+     * @When I update contact options with following properties:
+     *
+     * @param TableNode $table
+     */
+    public function updateContactOptions(TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+
+        $defaultLang = [$this->configuration->get('PS_LANG_DEFAULT'), $data['defaultMessage']];
+        $this->getCommandBus()->handle(
+            new UpdateContactOptionsCommand(PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']), $defaultLang)
+        );
+    }
+
+    /**
+     * @Then contact options should have the following properties:
+     *
+     * @param TableNode $table
+     */
+    public function assertIsCorrectContactOptions(TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+
+        $defaultMessage = $this->configuration->get('PS_CUSTOMER_SERVICE_SIGNATURE');
+        $isFileUploadingAllowed = (bool) $this->configuration->get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+
+        $expectedMessage = $data['defaultMessage'];
+        $expectedIsFileUploadingAllowed = PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']);
+
+        if ($defaultMessage[$this->configuration->get('PS_LANG_DEFAULT')] !== $expectedMessage) {
+            throw new NoExceptionAlthoughExpectedException(
+                sprintf('Default contact message is expected to be %s , but it is %s', $defaultMessage, $expectedMessage)
+            );
+        }
+
+        if ($isFileUploadingAllowed !== $expectedIsFileUploadingAllowed) {
+            throw new NoExceptionAlthoughExpectedException(
+                sprintf('Allow file uploading is expected to be set to %s , but it is %s', $isFileUploadingAllowed, $expectedIsFileUploadingAllowed)
+            );
+        }
     }
 }

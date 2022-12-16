@@ -65,7 +65,7 @@ class GetCustomerServicesSummaryHandler implements GetCustomerServicesSummaryHan
             $customerThreadId = 0;
             $totalThreads = 0;
             $viewUrl = '';
-            foreach ($this->contactRepository->getContacts() as $contact) {
+            foreach ($contacts as $contact) {
                 if ($categoriesContact['id_contact'] === $contact['id_contact']) {
                     $totalThreads = (int) $contact['total'];
                     $customerThreadId = $contact['id_customer_thread'];
