@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
+use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\ConfigCache;
@@ -170,7 +171,7 @@ class ContainerBuilder
         //If the container builder is modified the container logically should be rebuilt
         $container->addResource(new FileResource(__FILE__));
 
-        $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, 200);
+        $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, PrestaShopBundle::LOAD_MODULE_SERVICES_PASS_PRIORITY);
         $container->addCompilerPass(new LegacyCompilerPass());
 
         //Build extensions
