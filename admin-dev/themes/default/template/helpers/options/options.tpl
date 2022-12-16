@@ -175,7 +175,7 @@
 												<p class="checkbox">
 													{strip}
 													<label class="col-lg-3" for="{$key}{$k}_on">
-                            {if $field['multiple'] == false}
+                            {if empty($field['multiple'])}
 														  <input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 														{else}
                               <input type="checkbox" name="{$key}[]" id="{$key}{$k}_on" value="{$k}"{if $field['value_multiple'][$k]} checked="checked"{/if} {if isset($field['disabled'][$k]) && $field['disabled'][$k]} disabled="disabled"{/if} {if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
