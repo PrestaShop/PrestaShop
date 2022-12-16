@@ -53,7 +53,7 @@ final class FolderThemeScanner
     /**
      * @param string $moduleDirectory
      */
-    public function __construct($moduleDirectory)
+    public function __construct(string $moduleDirectory)
     {
         $this->moduleDirectory = $moduleDirectory;
     }
