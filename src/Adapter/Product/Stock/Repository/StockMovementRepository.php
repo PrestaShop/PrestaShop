@@ -78,7 +78,9 @@ class StockMovementRepository
                 'GROUP_CONCAT(id_employee) id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
-                'SUM(sm.sign * sm.physical_quantity) delta_quantity',
+//                'SUM(sm.sign * sm.physical_quantity) delta_quantity',
+                'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
+                'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
                 'MIN(sm.date_add) date_add_min',
                 'MAX(sm.date_add) date_add_max'
             )
@@ -88,7 +90,7 @@ class StockMovementRepository
         $this->addGroupingCondition($queryBuilder);
 
         $queryBuilder
-            ->andHaving('delta_quantity != 0')
+//            ->andHaving('delta_quantity != 0')
             ->orderBy('id_stock_mvt_min', 'DESC')
             ->andWhere('sm.id_stock = :stockId')
             ->setParameter('stockId', $stockId->getValue())
@@ -98,7 +100,14 @@ class StockMovementRepository
 
         // It is CRITICAL to reset the counter before each request
         $this->connection->executeStatement('SET @grouping_id := null');
-        $result = $queryBuilder->execute()->fetchAllAssociative();
+        try {
+            $result = $queryBuilder->execute()->fetchAllAssociative();
+            foreach ($result as $key => $row) {
+                $result[$key]['delta_quantity'] = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
+            }
+        }catch (\Exception $e) {
+            $a = 1;
+        }
 
         return $result;
     }
