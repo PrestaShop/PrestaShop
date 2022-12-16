@@ -43,14 +43,14 @@ interface ContactRepositoryInterface
     /**
      * Return available categories contacts.
      *
-     * @return array{string, string}
+     * @return array<array<string, string|null>>
      */
     public function getCategoriesContacts(): array;
 
     /**
      * Return all contacts.
      *
-     * @return array{string, string}
+     * @return array<array<string, string|null>>
      */
     public function getContacts(): array;
 }

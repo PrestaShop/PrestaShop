@@ -32,6 +32,7 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\CustomerMessage;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand;
@@ -285,7 +286,7 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
             $data['isMessageSavingEnabled']
         );
 
-        /** @var $contactId $id */
+        /** @var ContactId $id */
         $id = $commandBus->handle($command);
 
         $this->latestResult = $id->getValue();
