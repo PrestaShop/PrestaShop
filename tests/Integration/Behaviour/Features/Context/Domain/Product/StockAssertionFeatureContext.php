@@ -296,7 +296,7 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
                 (int) $movementDatum['delta_quantity'],
                 $stockMovement->getDeltaQuantity(),
                 sprintf(
-                    'Invalid delta quantity of stock movement event for shop%d, expected "%d" instead of "%d"',
+                    'Invalid delta quantity of stock movement event for shop %d, expected "%d" instead of "%d"',
                     $shopId,
                     $movementDatum['delta_quantity'],
                     $stockMovement->getDeltaQuantity()

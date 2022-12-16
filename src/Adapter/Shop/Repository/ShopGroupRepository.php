@@ -136,16 +136,16 @@ class ShopGroupRepository extends AbstractObjectModelRepository
      */
     public function getShopsFromGroup(ShopGroupId $shopGroupId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $this->connection
+            ->createQueryBuilder()
             ->select('s.id_shop')
             ->from($this->dbPrefix . 'shop', 's')
             ->where('s.id_shop_group = :shopGroupId')
             ->setParameter('shopGroupId', $shopGroupId->getValue())
-        ;
-
-        return array_map(static function (array $shop) {
-            return new ShopId((int) $shop['id_shop']);
-        }, $qb->execute()->fetchAllAssociative());
+            ->execute()
+            ->fetchAllAssociative()
+        );
     }
 }
