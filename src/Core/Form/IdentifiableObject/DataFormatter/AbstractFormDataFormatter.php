@@ -31,8 +31,19 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class AbstractFormDataFormatter
+abstract class AbstractFormDataFormatter
 {
+    /**
+     * @var string
+     */
+    protected $modifyAllNamePrefix;
+
+    protected function __construct(
+        string $modifyAllNamePrefix
+    ) {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     protected function formatByPath(array $formData, array $pathAssociations): array
     {
         // @todo: a hook system should be integrated in this formatter abstract class for extendability
@@ -56,5 +67,43 @@ class AbstractFormDataFormatter
         }
 
         return $formattedData;
+    }
+
+    protected function formatMultiShopAssociation(string $originalField, string $formattedField): array
+    {
+        return [
+            $originalField => $formattedField,
+            $this->prefixWithModifyAllShops($originalField) => $this->prefixWithModifyAllShops($formattedField),
+        ];
+    }
+
+    /**
+     * Appends modify_all_shops prefix to last part of field name.
+     * e.g. "[stock][delta_quantity][delta]" becomes "[stock][delta_quantity][modify_all_shops_delta]"
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    private function prefixWithModifyAllShops(string $field): string
+    {
+        preg_match_all('/\\[(.*?)\\]/', $field, $matches);
+
+        if (empty($matches[1])) {
+            return $field;
+        }
+
+        $allShopsFieldName = '';
+        $lastIndex = count($matches[1]) - 1;
+        foreach ($matches[1] as $index => $subFieldName) {
+            if ($index === $lastIndex) {
+                $allShopsFieldName .= sprintf('[%s%s]', $this->modifyAllNamePrefix, $subFieldName);
+                continue;
+            }
+
+            $allShopsFieldName .= sprintf('[%s]', $subFieldName);
+        }
+
+        return $allShopsFieldName;
     }
 }
