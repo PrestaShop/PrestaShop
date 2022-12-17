@@ -381,4 +381,26 @@ export default {
   packedProducts: {
     searchInput: '#product_stock_packed_products',
   },
+  catalogPriceRule: {
+    listContainer: '#catalog-price-rule-list-container',
+    paginationContainer: '#catalog-price-rules-pagination',
+    loadingSpinner: '#catalog-price-rules-loading',
+    listTable: '#catalog-price-rules-list-table',
+    listRowTemplate: '#catalog-price-rule-tr-template',
+    showCatalogPriceRules: '#product_pricing_show_catalog_price_rules',
+    blockContainer: '#product_pricing_catalog_price_rules',
+    listFields: {
+      catalogPriceRuleId: '.catalog-price-rule-id',
+      shop: '.shop',
+      currency: '.currency',
+      country: '.country',
+      group: '.group',
+      name: '.name',
+      impact: '.impact',
+      from: '.from',
+      to: '.to',
+      fromQuantity: '.from-qty',
+      editBtn: '.js-edit-catalog-price-rule-btn',
+    },
+  },
 };

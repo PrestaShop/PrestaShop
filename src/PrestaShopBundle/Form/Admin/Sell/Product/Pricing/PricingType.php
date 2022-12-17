@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
+use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -49,6 +50,11 @@ class PricingType extends TranslatorAwareType
      */
     private $defaultCurrency;
 
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param Currency $defaultCurrency
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -97,6 +103,15 @@ class PricingType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('Set specific prices for customers meeting certain conditions.', 'Admin.Catalog.Help'),
             ])
+            ->add('show_catalog_price_rules', IconButtonType::class, [
+                'icon' => 'visibility',
+                'label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-hide-label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
+                    'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                ],
+            ])
+            ->add('catalog_price_rules', CatalogPriceRulesType::class)
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
