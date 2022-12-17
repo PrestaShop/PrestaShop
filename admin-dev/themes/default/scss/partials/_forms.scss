@@ -330,3 +330,16 @@ input[type="tel"] {
     }
   }
 }
+
+.modal-checkbox {
+  input {
+    margin: 0;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  label {
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+}

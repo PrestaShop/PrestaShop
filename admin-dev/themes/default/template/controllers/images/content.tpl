@@ -144,6 +144,13 @@
       $('.btn-regenerate-thumbnails').on('click', function () {
         $('#display_regenerate_form').trigger('submit');
       });
+      $('.btn-confirm-delete-images-type').on('click', function () {
+        document.location = $(this).attr('data-confirm-url') + '&delete_linked_images=' + $('#delete_linked_images').is(":checked");
+      });
+
+      $('#modalConfirmDeleteType ').on('hidden.bs.modal', function () {
+        $('.modal-checkbox input', this).prop('checked', false)
+      });
     });
   </script>
 {/if}

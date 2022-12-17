@@ -375,6 +375,22 @@ class AdminImagesControllerCore extends AdminController
                 ],
             ],
         ];
+
+        $this->modals[] = [
+            'modal_id' => 'modalConfirmDeleteType',
+            'modal_class' => 'modal-md',
+            'modal_title' => $this->trans('Are you sure you want to delete this image setting?', [], 'Admin.Design.Feature'),
+            'modal_content' => $this->context->smarty->fetch('controllers/images/modal_confirm_delete_type.tpl'),
+            'modal_cancel_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+            'modal_actions' => [
+                [
+                    'type' => 'button',
+                    'label' => $this->trans('Delete', [], 'Admin.Actions'),
+                    'class' => 'btn-danger btn-confirm-delete-images-type',
+                    'value' => '',
+                ],
+            ],
+        ];
     }
 
     public function postProcess()
@@ -484,8 +500,12 @@ class AdminImagesControllerCore extends AdminController
         foreach ($toDel as $d) {
             foreach ($type as $imageType) {
                 if (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                    || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.avif$/', $d)
+                    || preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.webp$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)) {
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.avif$/', $d)
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.webp$/', $d)) {
                     if (file_exists($dir . $d)) {
                         unlink($dir . $d);
                     }
@@ -503,7 +523,12 @@ class AdminImagesControllerCore extends AdminController
                     $toDel = scandir($dir . $imageObj->getImgFolder(), SCANDIR_SORT_NONE);
                     foreach ($toDel as $d) {
                         foreach ($type as $imageType) {
-                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
+                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)
+                                || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.avif$/', $d)
+                                || preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.webp$/', $d)
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.avif$/', $d))
+                                || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.webp$/', $d))) {
                                 if (file_exists($dir . $imageObj->getImgFolder() . $d)) {
                                     unlink($dir . $imageObj->getImgFolder() . $d);
                                 }
@@ -804,5 +829,33 @@ class AdminImagesControllerCore extends AdminController
         }
 
         parent::initContent();
+    }
+
+    public function processDelete()
+    {
+        $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
+
+        // We will remove the images linked to this image setting
+        if (Tools::getValue('delete_linked_images', 0) === 'true') {
+            $imageDirectoriesByEntity = [
+                ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
+                ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
+                ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
+                ['type' => 'products', 'dir' => _PS_PRODUCT_IMG_DIR_],
+                ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
+            ];
+            foreach ($imageDirectoriesByEntity as $imagesDirectory) {
+                $allFormats = ImageType::getImagesTypes($imagesDirectory['type']);
+                $nameToFilter = $imageType['name'];
+
+                $formats = array_filter($allFormats, function ($element) use ($nameToFilter) {
+                    return $element['name'] == $nameToFilter;
+                });
+
+                $this->_deleteOldImages($imagesDirectory['dir'], $formats, ($imagesDirectory['type'] == 'products' ? true : false));
+            }
+        }
+
+        return parent::processDelete();
     }
 }
