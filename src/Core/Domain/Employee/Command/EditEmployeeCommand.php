@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Employee\Command;
 
+use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
@@ -86,6 +87,11 @@ class EditEmployeeCommand
      * @var Password
      */
     private $plainPassword;
+
+    /**
+     * @var DateTime
+     */
+    private $lastPasswordGen;
 
     /**
      * @var bool
@@ -299,8 +305,17 @@ class EditEmployeeCommand
     public function setPlainPassword($plainPassword, int $minLength, int $maxLength, int $minScore)
     {
         $this->plainPassword = new Password($plainPassword, $minLength, $maxLength, $minScore);
+        $this->lastPasswordGen = new DateTime('now');
 
         return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getLastPasswordGen(): DateTime
+    {
+        return $this->lastPasswordGen;
     }
 
     /**
