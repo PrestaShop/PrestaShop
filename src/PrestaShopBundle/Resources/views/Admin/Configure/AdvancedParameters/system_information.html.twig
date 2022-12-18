@@ -109,11 +109,17 @@
       </h3>
       <div class="card-body">
         <div class="card-text">
-          <ul>
-            {% for override in system.overrides %}
-              <li>{{ override }}</li>
-            {% endfor %}
-          </ul>
+          {% if system.overrides is empty %}
+            <div class="alert alert-success mb-0" role="alert"><p class="alert-text">
+              {{ 'No overrides have been found.'|trans({}, 'Admin.Advparameters.Feature') }}
+            </p></div>
+          {% else %}
+            <ul>
+              {% for override in system.overrides %}
+                <li>{{ override }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </div>
       </div>
     </div>
