@@ -51,6 +51,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '%ps_config_dir%/defines.inc.php'
       - '@prestashop.adapter.cache.clearer.class_index_cache_clearer'
+      - '@prestashop.adapter.debug_profiling'
 
   prestashop.adapter.optional_features.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'

@@ -32,6 +32,9 @@ services:
   prestashop.adapter.debug_mode:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
+  prestashop.adapter.debug_profiling:
+    class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugProfiling'
+
   prestashop.adapter.database:
     class: 'PrestaShop\PrestaShop\Adapter\Database'
 

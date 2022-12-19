@@ -56,21 +56,29 @@ class DebugModeConfiguration implements DataConfigurationInterface
     private $classIndexCacheClearer;
 
     /**
+     * @var DebugProfiling Debug profiling manager
+     */
+    private $debugProfiling;
+
+    /**
      * @param DebugMode $debugMode
      * @param Configuration $configuration
      * @param string $configDefinesPath
      * @param ClassIndexCacheClearer $classIndexCacheClearer
+     * @param DebugProfiling $debugProfiling
      */
     public function __construct(
         DebugMode $debugMode,
         Configuration $configuration,
         $configDefinesPath,
-        ClassIndexCacheClearer $classIndexCacheClearer
+        ClassIndexCacheClearer $classIndexCacheClearer,
+        DebugProfiling $debugProfiling
     ) {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
         $this->configDefinesPath = $configDefinesPath;
         $this->classIndexCacheClearer = $classIndexCacheClearer;
+        $this->debugProfiling = $debugProfiling;
     }
 
     /**
@@ -83,6 +91,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
         return [
             'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
+            'debug_profiling' => $this->debugProfiling->isProfilingEnabled(),
         ];
     }
 
@@ -124,6 +133,32 @@ class DebugModeConfiguration implements DataConfigurationInterface
                 default:
                     break;
             }
+
+            // Update Debug Profiler
+            $status = $this->updateDebugProfiling((bool) $configuration['debug_profiling']);
+            switch ($status) {
+                case DebugProfiling::DEBUG_PROFILING_ERROR_NO_WRITE_ACCESS_CUSTOM:
+                case DebugProfiling::DEBUG_PROFILING_ERROR_NO_READ_ACCESS:
+                case DebugProfiling::DEBUG_PROFILING_ERROR_NO_WRITE_ACCESS:
+                    $errors[] = [
+                        'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
+                        'domain' => 'Admin.Advparameters.Notification',
+                        'parameters' => [$this->configDefinesPath],
+                    ];
+
+                    break;
+                case DebugProfiling::DEBUG_PROFILING_ERROR_NO_DEFINITION_FOUND:
+                    $errors[] = [
+                        'key' => 'Error: Could not find whether debug profiling is enabled. Make sure that the correct permissions are set on the file %s',
+                        'domain' => 'Admin.Advparameters.Notification',
+                        'parameters' => [$this->configDefinesPath],
+                    ];
+
+                    break;
+                case DebugProfiling::DEBUG_PROFILING_SUCCEEDED:
+                default:
+                    break;
+            }
         }
 
         return $errors;
@@ -136,7 +171,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
     {
         return isset(
             $configuration['disable_overrides'],
-            $configuration['debug_mode']
+            $configuration['debug_mode'],
+            $configuration['debug_profiling']
         );
     }
 
@@ -153,6 +189,24 @@ class DebugModeConfiguration implements DataConfigurationInterface
 
         if ($enableStatus !== $currentDebugMode) {
             return (true === $enableStatus) ? $this->debugMode->enable() : $this->debugMode->disable();
+        }
+
+        return null;
+    }
+
+    /**
+     * Change Debug profiling value if needed.
+     *
+     * @param bool $enableStatus
+     *
+     * @return int|null Status of update
+     */
+    private function updateDebugProfiling(bool $enableStatus): ?int
+    {
+        $isProfilingEnabled = $this->debugProfiling->isProfilingEnabled();
+
+        if ($enableStatus !== $isProfilingEnabled) {
+            return (true === $enableStatus) ? $this->debugProfiling->enable() : $this->debugProfiling->disable();
         }
 
         return null;
