@@ -1,4 +1,4 @@
-name: UI tests
+name: UI tests Product V2
 on:
   pull_request:
     paths:
@@ -14,7 +14,7 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  sanity:
+  sanity_product_v2:
     runs-on: ubuntu-latest
     name: Sanity Product V2
     strategy:
