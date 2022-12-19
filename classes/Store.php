@@ -147,7 +147,8 @@ class StoreCore extends ObjectModel
             'SELECT s.id_store AS `id`, s.*, sl.*
             FROM ' . _DB_PREFIX_ . 'store s  ' . Shop::addSqlAssociation('store', 's') . '
             LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $idLang . ')
-            WHERE s.active = 1'
+            WHERE s.active = 1
+            ORDER BY sl.`name` ASC'
         );
     }
 
