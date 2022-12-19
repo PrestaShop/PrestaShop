@@ -66,7 +66,7 @@ services:
     arguments:
       - !tagged core.combination_command_builder
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\MultiShopCombinationCommandsBuilderInterface: '@PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilder'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder:
     tags: [ 'core.combination_command_builder' ]
