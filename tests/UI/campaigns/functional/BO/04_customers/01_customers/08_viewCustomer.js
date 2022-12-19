@@ -7,6 +7,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import foHomePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -21,9 +22,6 @@ const viewCustomerPage = require('@pages/BO/customers/view');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');

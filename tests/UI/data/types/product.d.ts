@@ -13,6 +13,7 @@ type Product = {
 type ProductAttributes = {
   size: string
   color: string
+  dimension: string|null
   quantity: number
   totalTaxInc?: number
 }

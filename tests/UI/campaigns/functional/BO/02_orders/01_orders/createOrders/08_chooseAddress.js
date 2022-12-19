@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import common tests
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -17,9 +18,6 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');

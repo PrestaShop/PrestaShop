@@ -4,6 +4,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import foHomePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -18,10 +19,6 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
 
 const messageSend = faker.lorem.sentence().substring(0, 35).trim();
-
-// Importing pages
-// FO
-const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');

@@ -1,8 +1,9 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
+
+// Import FO pages
+import homePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -14,9 +15,6 @@ const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCust
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const accountIdentityPage = require('@pages/FO/myAccount/identity');

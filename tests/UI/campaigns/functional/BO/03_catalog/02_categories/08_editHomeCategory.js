@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import FO pages
+import foHomePage from '@pages/FO/home';
 
 require('module-alias/register');
 
@@ -19,9 +20,6 @@ const files = require('@utils/files');
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
 const editCategoryPage = require('@pages/BO/catalog/categories/add');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
 const siteMapPage = require('@pages/FO/siteMap');
 const categoryPage = require('@pages/FO/category');
 

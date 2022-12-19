@@ -1,21 +1,15 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import pages
-const homePage = require('@pages/FO/home');
-const searchResultsPage = require('@pages/FO/searchResults');
+import homePage from '@pages/FO/home';
+import searchResultsPage from '@pages/FO/searchResults';
 
-const baseContext = 'functional_FO_search_searchNoResult';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_search_searchNoResult';
 
 /*
   Go to FO
@@ -23,6 +17,9 @@ let page;
   Search an empty string
 */
 describe('FO - Search Page : Search product', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

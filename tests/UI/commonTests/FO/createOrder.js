@@ -2,14 +2,11 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import pages
 // Import FO pages
+import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const searchResultsPage = require('@pages/FO/searchResults');
 const cartPage = require('@pages/FO/cart');
