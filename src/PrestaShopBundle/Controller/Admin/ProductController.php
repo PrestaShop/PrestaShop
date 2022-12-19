@@ -592,8 +592,8 @@ class ProductController extends FrameworkBundleAdminController
                 }
             }
         } catch (Exception $e) {
-            // this controller can be called as an AJAX JSON route or a HTML page
-            // so we need to return the right type of response if an exception it thrown
+            // this controller can be called as an AJAX JSON route or an HTML page
+            // so we need to return the right type of response if an exception is thrown
             if ($request->isXmlHttpRequest()) {
                 return $this->returnErrorJsonResponse(
                     [],
