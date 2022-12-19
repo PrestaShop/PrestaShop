@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -19,7 +20,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const preferencesPage = require('@pages/BO/payment/preferences');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
-const foLoginPage = require('@pages/FO/login');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');

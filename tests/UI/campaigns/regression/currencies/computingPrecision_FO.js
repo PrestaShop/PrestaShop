@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -25,7 +26,6 @@ const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager
 const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
 const viewSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/view');
 const searchResultsPage = require('@pages/FO/searchResults');
-const foLoginPage = require('@pages/FO/login');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');

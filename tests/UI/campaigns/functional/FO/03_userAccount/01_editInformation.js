@@ -4,6 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import loginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -15,7 +16,6 @@ const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCust
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
-const loginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const accountIdentityPage = require('@pages/FO/myAccount/identity');
 

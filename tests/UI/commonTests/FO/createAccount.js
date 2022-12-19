@@ -4,9 +4,9 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 require('module-alias/register');
-const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');

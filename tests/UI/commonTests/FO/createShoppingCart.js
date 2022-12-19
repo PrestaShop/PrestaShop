@@ -4,10 +4,10 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
-const foLoginPage = require('@pages/FO/login');
 const searchResultsPage = require('@pages/FO/searchResults');
 const cartPage = require('@pages/FO/cart');
 

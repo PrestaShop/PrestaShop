@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -25,7 +26,6 @@ const addGroupPage = require('@pages/BO/shopParameters/customerSettings/groups/a
 const preferencesPage = require('@pages/BO/shipping/preferences');
 const carriersPage = require('@pages/BO/shipping/carriers');
 const addCarrierPage = require('@pages/BO/shipping/carriers/add');
-const foLoginPage = require('@pages/FO/login');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 

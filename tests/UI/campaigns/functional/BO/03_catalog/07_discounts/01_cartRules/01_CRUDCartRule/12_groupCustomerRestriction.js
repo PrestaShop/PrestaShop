@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
+import loginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -19,7 +20,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const cartPage = require('@pages/FO/cart');
-const loginPage = require('@pages/FO/login');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
