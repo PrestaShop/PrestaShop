@@ -137,7 +137,6 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await imageSettingsPage.resetFilter(page);
-
       await imageSettingsPage.filterTable(
         page,
         'input',
