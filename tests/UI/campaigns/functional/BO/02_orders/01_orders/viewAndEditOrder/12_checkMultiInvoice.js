@@ -1,7 +1,6 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -10,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
 const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {createProductTest, bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
 const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');

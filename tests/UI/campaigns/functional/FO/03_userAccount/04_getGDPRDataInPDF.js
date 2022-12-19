@@ -1,5 +1,6 @@
 // Import utils
 import date from '@utils/date';
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -16,7 +17,6 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 // Import utils
-const files = require('@utils/files');
 const createAccountPage = require('@pages/FO/myAccount/add');
 const myAccountPage = require('@pages/FO/myAccount');
 const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');

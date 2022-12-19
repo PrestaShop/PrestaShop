@@ -1,5 +1,6 @@
 // Import utils
 import date from '@utils/date';
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -13,9 +14,6 @@ import loginPage from '@pages/FO/login';
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const {
   enableMerchandiseReturns,

@@ -1,6 +1,9 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
@@ -9,9 +12,6 @@ import homePage from '@pages/FO/home';
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const files = require('@utils/files');
 
 // Import common tests
 const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/international/createDeleteCurrency');

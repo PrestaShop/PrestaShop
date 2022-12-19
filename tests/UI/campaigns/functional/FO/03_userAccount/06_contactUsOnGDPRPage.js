@@ -1,4 +1,5 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -13,8 +14,7 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import utils
-const files = require('@utils/files');
+// Import FO pages
 const myAccountPage = require('@pages/FO/myAccount');
 const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');
 const contactUsPage = require('@pages/FO/contactUs');
