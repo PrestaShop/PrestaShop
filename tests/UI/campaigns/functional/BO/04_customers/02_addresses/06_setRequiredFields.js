@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -16,9 +17,6 @@ const {expect} = require('chai');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addressesPage = require('@pages/BO/customers/addresses');
-
-// Import FO pages
-const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
 const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');

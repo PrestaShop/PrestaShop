@@ -20,7 +20,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import ContactUsFakerData from '@data/faker/contactUs';
 
 import {expect} from 'chai';
-import {BrowserContext, Page} from "playwright";
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_contactUs_sendMessageAsAnonymous';
 

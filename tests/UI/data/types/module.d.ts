@@ -3,6 +3,4 @@ type ModuleInformation = {
   name: string
 }
 
-export {
-  ModuleInformation
-};
+export default ModuleInformation;

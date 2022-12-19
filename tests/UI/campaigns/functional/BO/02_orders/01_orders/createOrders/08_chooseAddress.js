@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -18,7 +19,6 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
-const foLoginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
