@@ -597,11 +597,11 @@ class ProductController extends FrameworkBundleAdminController
             if ($request->isXmlHttpRequest()) {
                 return $this->returnErrorJsonResponse(
                     [
-                        "Error code: ".$e->getCode(),
-                        "Error: ".$e->getMessage(),
-                        "Trace: ".$e->getTraceAsString(),
-                        "File: ".$e->getFile()."#".$e->getLine(),
-                        "Previous: ".$e->getPrevious()
+                        'Error code: ' . $e->getCode(),
+                        'Error: ' . $e->getMessage(),
+                        'Trace: ' . $e->getTraceAsString(),
+                        'File: ' . $e->getFile() . '#' . $e->getLine(),
+                        'Previous: ' . $e->getPrevious(),
                     ],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
