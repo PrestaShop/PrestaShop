@@ -21,7 +21,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 // Import data
 import {Products} from '@data/demo/products';
 import ProductFaker from '@data/faker/product';
-import type {Product, ProductCombination} from '@data/types/product';
+import type {Product, ProductCombinationColorSize} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,8 +41,8 @@ Check share links
 describe('FO - product page : Add product to cart', async () => {
   const quantity: number = 6;
   const totalPrice: number = 137.66;
-  const firstCombination: ProductCombination = {color: 'White', size: 'XL'};
-  const secondCombination: ProductCombination = {color: 'Black', size: 'M'};
+  const firstCombination: ProductCombinationColorSize = {color: 'White', size: 'XL'};
+  const secondCombination: ProductCombinationColorSize = {color: 'Black', size: 'M'};
   const productToCreate: Product = {
     type: 'Standard product',
     productHasCombinations: false,

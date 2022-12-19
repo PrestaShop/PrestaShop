@@ -21,7 +21,7 @@ import boAddProductPage from '@pages/BO/catalog/products/add';
 // Import data
 import {Products} from '@data/demo/products';
 import ProductFaker from '@data/faker/product';
-import type {Product, ProductAttributes, ProductDetails} from '@data/types/product';
+import type {Product, ProductAttributesColorSize, ProductDetails} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,7 +43,7 @@ describe('FO - product page : Product quick view', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const attributes: ProductAttributes = {
+  const attributes: ProductAttributesColorSize = {
     size: 'M',
     color: 'Black',
     quantity: 4,

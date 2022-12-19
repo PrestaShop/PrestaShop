@@ -1,7 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import ProductReviewData from '@data/faker/productReview';
-import {ProductCombination} from '@data/types/product';
+import {ProductCombinationColorSize} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -242,9 +242,9 @@ class Product extends FOBasePage {
   /**
    * Get product attributes
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: string, color: string}>}
+   * @returns {Promise<ProductCombinationColorSize>}
    */
-  async getProductAttributes(page: Page): Promise<ProductCombination> {
+  async getProductAttributes(page: Page): Promise<ProductCombinationColorSize> {
     return {
       size: await this.getTextContent(page, this.productSizeSelect),
       color: (await this.getProductsAttributesFromUl(page, this.productColorUl)).join(' '),
@@ -254,9 +254,9 @@ class Product extends FOBasePage {
   /**
    * Get selected product attributes
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: string, color: string}>}
+   * @returns {Promise<ProductCombinationColorSize>}
    */
-  async getSelectedProductAttributes(page: Page): Promise<ProductCombination> {
+  async getSelectedProductAttributes(page: Page): Promise<ProductCombinationColorSize> {
     return {
       size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
       color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
@@ -354,10 +354,10 @@ class Product extends FOBasePage {
    * Select product attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param attributes {{size: ?string, color: ?string}}  Product's attributes data to select
+   * @param attributes {ProductCombinationColorSize}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number, attributes: ProductCombination): Promise<void> {
+  async selectAttributes(page: Page, quantity: number, attributes: ProductCombinationColorSize): Promise<void> {
     if (attributes.color !== null) {
       await Promise.all([
         this.waitForVisibleSelector(page, `${this.productColorInput(attributes.color)}[checked]`),
@@ -382,7 +382,7 @@ class Product extends FOBasePage {
    * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page: Page, quantity: number = 1, combination: ProductCombination = {
+  async addProductToTheCart(page: Page, quantity: number = 1, combination: ProductCombinationColorSize = {
     color: null,
     size: null,
   }, proceedToCheckout: boolean = true, customizedText: string = 'text'): Promise<void> {

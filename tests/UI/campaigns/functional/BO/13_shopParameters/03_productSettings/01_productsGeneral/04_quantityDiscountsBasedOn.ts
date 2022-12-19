@@ -52,8 +52,8 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       },
     },
   );
-  const firstAttributeToChoose: ProductCombination = {color: 'White', size: 'S'};
-  const secondAttributeToChoose: ProductCombination = {color: 'Black', size: 'S'};
+  const firstAttributeToChoose: ProductCombinationColorSize = {color: 'White', size: 'S'};
+  const secondAttributeToChoose: ProductCombinationColorSize = {color: 'Black', size: 'S'};
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
 
