@@ -15,6 +15,16 @@ import addLanguagePage from '@pages/BO/international/languages/add';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 
+require('module-alias/register');
+// Using chai
+const {expect} = require('chai');
+
+// Import pages
+const dashboardPage = require('@pages/BO/dashboard');
+const localizationPage = require('@pages/BO/international/localization');
+const languagesPage = require('@pages/BO/international/languages');
+const addLanguagePage = require('@pages/BO/international/languages/add');
+
 // Import data
 import LanguageFaker from '@data/faker/language';
 
