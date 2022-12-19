@@ -2725,10 +2725,9 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-        $product_attributes = [];
-        foreach ($combinations as $combination) {
-            $product_attributes[] = (int) $combination['id_product_attribute'];
-        }
+        $combinations = array_column($combinations, null, 'id_product_attribute');
+
+        $combinationIds = array_keys($combinations);
 
         $lang = Db::getInstance()->executeS('SELECT pac.id_product_attribute, GROUP_CONCAT(agl.`name`, \'' . pSQL($attribute_value_separator) . '\',al.`name` ORDER BY agl.`id_attribute_group` SEPARATOR \'' . pSQL($attribute_separator) . '\') as attribute_designation
                 FROM `' . _DB_PREFIX_ . 'product_attribute_combination` pac
@@ -2736,12 +2735,12 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
-                WHERE pac.id_product_attribute IN (' . implode(',', $product_attributes) . ')
+                WHERE pac.id_product_attribute IN (' . implode(',', $combinationIds) . ')
                 GROUP BY pac.id_product_attribute
                 ORDER BY pac.id_product_attribute');
 
-        foreach ($lang as $k => $row) {
-            $combinations[$k]['attribute_designation'] = $row['attribute_designation'];
+        foreach ($lang as $row) {
+            $combinations[$row['id_product_attribute']]['attribute_designation'] = $row['attribute_designation'];
         }
 
         $computingPrecision = Context::getContext()->getComputingPrecision();
