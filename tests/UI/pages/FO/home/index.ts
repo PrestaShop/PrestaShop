@@ -127,9 +127,9 @@ class Home extends FOBasePage {
 
   private readonly continueShoppingButton: string;
 
-  private readonly successSubscriptionMessage: string;
+  public readonly successSubscriptionMessage: string;
 
-  private readonly alreadyUsedEmailMessage: string;
+  public readonly alreadyUsedEmailMessage: string;
 
   /**
    * @constructs
