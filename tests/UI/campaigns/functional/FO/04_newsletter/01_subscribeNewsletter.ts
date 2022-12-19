@@ -5,38 +5,27 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
+import moduleConfigurationPage from '@pages/BO/modules/moduleConfiguration';
+import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import pages
-// BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
-const moduleConfigurationPage = require('@pages/BO/modules/moduleConfiguration');
-const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
-const foLoginPage = require('@pages/FO/login');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
+import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import {ModuleInformation} from '@data/types/module';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext = 'functional_FO_newsletter_subscribeNewsletter';
-
-let browserContext;
-let page;
-
-const moduleInformation = {
-  tag: 'ps_emailsubscription',
-  name: 'Newsletter subscription',
-};
-
-const moduleName = 'Newsletter subscription';
+const baseContext: string = 'functional_FO_newsletter_subscribeNewsletter';
 
 /*
 Go to the FO homepage
@@ -48,6 +37,15 @@ Try to subscribe again with the same email
 Go to back to BO and delete subscription
  */
 describe('FO - Newsletter : Subscribe to Newsletter', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const moduleInformation: ModuleInformation = {
+    tag: 'ps_emailsubscription',
+    name: 'Newsletter subscription',
+  };
+  const moduleName: string = 'Newsletter subscription';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,6 +61,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
       await foHomePage.goTo(page, global.FO.URL);
+
       const result = await foHomePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -89,6 +88,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -124,7 +124,6 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
         dashboardPage.modulesParentLink,
         dashboardPage.moduleManagerLink,
       );
-
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
@@ -165,6 +164,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOToSubscribeToNewsletter', baseContext);
 
       await foHomePage.goTo(page, global.FO.URL);
+
       const result = await foHomePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -190,7 +190,6 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
         dashboardPage.modulesParentLink,
         dashboardPage.moduleManagerLink,
       );
-
       await moduleManagerPage.closeSfToolBar(page);
 
       const pageTitle = await moduleManagerPage.getPageTitle(page);
