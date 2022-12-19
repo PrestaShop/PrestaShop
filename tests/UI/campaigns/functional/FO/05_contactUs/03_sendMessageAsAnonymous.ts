@@ -1,67 +1,28 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import customerServicePage from '@pages/BO/customerService/customerService';
+import foLoginPage from '@pages/FO/login';
+import foContactUsPage from '@pages/FO/contactUs';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-const files = require('@utils/files');
-
-// Import pages
-// BO
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const foLoginPage = require('@pages/FO/login');
-const foContactUsPage = require('@pages/FO/contactUs');
-
-const baseContext = 'functional_FO_contactUs_sendMessageAsAnonymous';
-
 // Import data
-const ContactUsFakerData = require('@data/faker/contactUs');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import ContactUsFakerData from '@data/faker/contactUs';
 
-const contactUsEmptyEmail = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: '',
-  },
-);
-const contactUsInvalidEmail = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: 'demo@prestashop',
-  },
-);
-const contactUsEmptyContent = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
-    message: '',
-  },
-);
-const contactUsData = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
-  },
-);
+import {expect} from 'chai';
+import {BrowserContext, Page} from "playwright";
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_contactUs_sendMessageAsAnonymous';
 
 /*
 Go to FO
@@ -72,6 +33,35 @@ Go to BO
 Verify message on customer service page
  */
 describe('FO - Contact us : Send message from contact us page with customer not logged', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const contactUsEmptyEmail: ContactUsFakerData = new ContactUsFakerData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: '',
+  });
+  const contactUsInvalidEmail: ContactUsFakerData = new ContactUsFakerData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: 'demo@prestashop',
+  });
+  const contactUsEmptyContent: ContactUsFakerData = new ContactUsFakerData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: DefaultCustomer.email,
+    message: '',
+  });
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: DefaultCustomer.email,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

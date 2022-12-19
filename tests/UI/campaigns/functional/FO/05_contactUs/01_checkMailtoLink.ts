@@ -3,20 +3,16 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-const contactUsPage = require('@pages/FO/contactUs');
-
 // Import data
-const {DefaultEmployee} = require('@data/demo/employees');
+import {DefaultEmployee} from '@data/demo/employees';
 
-const baseContext = 'functional_FO_contactUs_checkMailtoLink';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_contactUs_checkMailtoLink';
 
 /*
 Go to FO
@@ -24,6 +20,9 @@ Click on contact us link
 Check email us link
  */
 describe('FO - Contact us : Check mail link on contact us page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

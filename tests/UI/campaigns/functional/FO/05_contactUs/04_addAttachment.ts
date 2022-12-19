@@ -1,47 +1,30 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import FO pages
-import foHomePage from '@pages/FO/home';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const files = require('@utils/files');
-
 // Import pages
-// BO
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const viewPage = require('@pages/BO/customerService/customerService/view');
-const foLoginPage = require('@pages/FO/login');
-const foContactUsPage = require('@pages/FO/contactUs');
-
-const baseContext = 'functional_FO_contactUs_addAttachment';
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import customerServicePage from '@pages/BO/customerService/customerService';
+import viewPage from '@pages/BO/customerService/customerService/view';
+// Import FO pages
+import foContactUsPage from '@pages/FO/contactUs';
+import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 // Import data
-const ContactUsFakerData = require('@data/faker/contactUs');
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Orders} = require('@data/demo/orders');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Orders} from '@data/demo/orders';
+import ContactUsFakerData from '@data/faker/contactUs';
 
-const contactUsData = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
-    reference: Orders.firstOrder.ref,
-  },
-);
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let idCustomer;
-let messageDateTime;
+const baseContext: string = 'functional_FO_contactUs_addAttachment';
 
 /*
 Go to FO
@@ -51,6 +34,19 @@ Send a message on contact page with png attachment
 Verify message and attachment on view customer service page
  */
 describe('FO - Contact us : Add attachment', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let idCustomer: string;
+  let messageDateTime: string;
+
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: DefaultCustomer.email,
+    reference: Orders.firstOrder.ref,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -80,6 +76,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
     await foHomePage.goToLoginPage(page);
+
     const pageTitle = await foLoginPage.getPageTitle(page);
     await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
   });
@@ -88,6 +85,7 @@ describe('FO - Contact us : Add attachment', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
     await foLoginPage.customerLogin(page, DefaultCustomer);
+
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
