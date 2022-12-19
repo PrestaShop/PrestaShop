@@ -123,6 +123,16 @@ class Product extends FOBasePage {
 
   private readonly closeReviewSentConfirmationModalButton: string;
 
+  private readonly productInPackList: (productInList: number) => string;
+
+  private readonly productInPackImage: (productInList: number) => string;
+
+  private readonly productInPackName: (productInList: number) => string;
+
+  private readonly productInPackPrice: (productInList: number) => string;
+
+  private readonly productInPackQuantity: (productInList: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on product page
@@ -210,7 +220,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  getProductPageURL(page: Page): Promise<string|null> {
+  getProductPageURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.metaLink, 'content');
   }
 
@@ -234,7 +244,7 @@ class Product extends FOBasePage {
    * @param productInList {object} Product in pack list
    * @returns {Promise<{image: string, quantity: number, price: string, name: string}>}
    */
-  async getProductInPackList(page, productInList = 1) {
+  async getProductInPackList(page: Page, productInList: number = 1) {
     return {
       image: await this.getAttributeContent(page, this.productInPackImage(productInList), 'src'),
       name: await this.getTextContent(page, this.productInPackName(productInList)),
@@ -258,7 +268,7 @@ class Product extends FOBasePage {
    * @param ulSelector {string} Selector to locate the element
    * @returns {Promise<Array<string>>}
    */
-  getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string|null>> {
+  getProductsAttributesFromUl(page: Page, ulSelector: string): Promise<Array<string | null>> {
     return page.$$eval(`${ulSelector} li .attribute-name`, (all) => all.map((el) => el.textContent));
   }
 
@@ -291,7 +301,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{thumbImage: string|null, coverImage: string|null}>}
    */
-  async getProductImageUrls(page: Page): Promise<{thumbImage: string|null, coverImage: string|null}> {
+  async getProductImageUrls(page: Page): Promise<{ thumbImage: string | null, coverImage: string | null }> {
     return {
       coverImage: await this.getAttributeContent(page, this.productCoverImg, 'src'),
       thumbImage: await this.getAttributeContent(page, this.thumbFirstImg, 'src'),
@@ -339,7 +349,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getDiscountPercentage(page: Page):Promise<string> {
+  getDiscountPercentage(page: Page): Promise<string> {
     return this.getTextContent(page, this.discountPercentageSpan);
   }
 
@@ -362,7 +372,7 @@ class Product extends FOBasePage {
    * @param id {number} Id for the thumb
    * @returns {Promise<string|null>}
    */
-  async selectThumbImage(page: Page, id: number): Promise<string|null> {
+  async selectThumbImage(page: Page, id: number): Promise<string | null> {
     if (id === 1) {
       await this.waitForSelectorAndClick(page, this.thumbFirstImg);
       await this.waitForVisibleSelector(page, `${this.thumbFirstImg}.selected`);
@@ -438,7 +448,7 @@ class Product extends FOBasePage {
    * @param socialSharing {string} Social network's name to get link from
    * @returns {Promise<string|null>}
    */
-  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string|null> {
+  async getSocialSharingLink(page: Page, socialSharing: string): Promise<string | null> {
     let selector;
 
     switch (socialSharing) {
