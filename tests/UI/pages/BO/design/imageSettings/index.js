@@ -59,7 +59,7 @@ class ImageSettings extends BOBasePage {
     this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
+    this.deleteModalButtonYes = '.btn-confirm-delete-images-type';
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
