@@ -1,27 +1,29 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-// BO pages
+
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/products';
 // Import FO pages
+import categoryPageFO from '@pages/FO/category';
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const {expect} = require('chai');
-const categoryPageFO = require('@pages/FO/category');
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
-
-const baseContext = 'functional_FO_homePage_allProducts';
-
-let browserContext;
-let page;
-let numberOfActiveProducts;
-let numberOfProducts;
+const baseContext: string = 'functional_FO_homePage_allProducts';
 
 describe('FO - Home Page : Display all products', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfActiveProducts: number;
+  let numberOfProducts: number;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +47,6 @@ describe('FO - Home Page : Display all products', async () => {
         dashboardPage.catalogParentLink,
         dashboardPage.productsLink,
       );
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -63,6 +64,7 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatus', baseContext);
 
       await productsPage.filterProducts(page, 'active', 'Active', 'select');
+
       numberOfActiveProducts = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfActiveProducts).to.within(0, numberOfProducts);
 
@@ -78,6 +80,7 @@ describe('FO - Home Page : Display all products', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       await homePage.goTo(page, global.FO.URL);
+
       const result = await homePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -87,6 +90,7 @@ describe('FO - Home Page : Display all products', async () => {
 
       await homePage.changeLanguage(page, 'en');
       await homePage.goToAllProductsPage(page);
+
       const isCategoryPageVisible = await categoryPageFO.isCategoryPage(page);
       await expect(isCategoryPageVisible, 'Home category page was not opened').to.be.true;
     });
@@ -94,8 +98,8 @@ describe('FO - Home Page : Display all products', async () => {
     it('should check the number of products on the page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'numberOfProducts', baseContext);
 
-      const val = await categoryPageFO.getNumberOfProducts(page);
-      expect(val).to.eql(numberOfActiveProducts);
+      const numberOfProducts = await categoryPageFO.getNumberOfProducts(page);
+      expect(numberOfProducts).to.eql(numberOfActiveProducts);
     });
 
     it('should check that the header name is equal to HOME', async function () {

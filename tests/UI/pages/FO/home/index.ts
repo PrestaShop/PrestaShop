@@ -2,7 +2,12 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
-import {ProductAttributes, ProductCombination} from '@data/types/product';
+import {
+  ProductAttributesColorSize,
+  ProductAttributesDimension,
+  ProductCombinationColorSize,
+  ProductCombinationDimension,
+} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -357,21 +362,21 @@ class Home extends FOBasePage {
   /**
    * Change product attributes
    * @param page {Page} Browser tab
-   * @param attributes {ProductAttributes} The attributes data (size, color, dimension)
+   * @param attributes {ProductAttributesColorSize|ProductAttributesDimension} The attributes data (size, color, dimension)
    * @returns {Promise<void>}
    */
-  async changeAttributes(page: Page, attributes: ProductAttributes): Promise<void> {
-    if (attributes.size) {
+  async changeAttributes(page: Page, attributes: ProductAttributesColorSize|ProductAttributesDimension): Promise<void> {
+    if ('size' in attributes && attributes.size) {
       await this.selectByVisibleText(page, this.quickViewProductSize, attributes.size);
     }
-    if (attributes.color) {
+    if ('color' in attributes && attributes.color) {
       await this.waitForSelectorAndClick(page, `${this.quickViewProductColor} input[title='${attributes.color}']`);
       await this.waitForVisibleSelector(
         page,
         `${this.quickViewProductColor} input[title='${attributes.color}'][checked]`,
       );
     }
-    if (attributes.dimension) {
+    if ('dimension' in attributes && attributes.dimension) {
       await Promise.all([
         page.waitForResponse((response) => response.url().includes('product&token=')),
         this.selectByVisibleText(page, this.quickViewProductDimension, attributes.dimension),
@@ -401,10 +406,10 @@ class Home extends FOBasePage {
   /**
    * Change attributes and add to cart
    * @param page {Page} Browser tab
-   * @param attributes {object} The attributes data (size, color, quantity)
+   * @param attributes {ProductAttributesColorSize} The attributes data (size, color, quantity)
    * @returns {Promise<void>}
    */
-  async changeAttributesAndAddToCart(page: Page, attributes: ProductAttributes) {
+  async changeAttributesAndAddToCart(page: Page, attributes: ProductAttributesColorSize) {
     await this.changeAttributes(page, attributes);
     await this.changeQuantity(page, attributes.quantity);
     await this.addToCartByQuickView(page);
@@ -449,18 +454,21 @@ class Home extends FOBasePage {
   /**
    * Get selected attribute from quick view
    * @param page {Page} Browser tab
-   * @param attribute {object} Attribute to get value
-   * @returns {Promise<{size: string, color: string}|{dimension: string}>}
+   * @param attribute {ProductAttributesColorSize|ProductAttributesDimension} Attribute to get value
+   * @returns {Promise<ProductCombinationColorSize|ProductCombinationDimension>}
    */
-  async getSelectedAttributesFromQuickViewModal(page: Page, attribute: ProductAttributes) {
-    let attributes;
+  async getSelectedAttributesFromQuickViewModal(
+    page: Page,
+    attribute: ProductAttributesColorSize|ProductAttributesDimension,
+  ): Promise<ProductCombinationColorSize|ProductCombinationDimension> {
+    let attributes: ProductCombinationColorSize|ProductCombinationDimension;
 
-    if (attribute.size) {
+    if ('color' in attribute && 'size' in attribute) {
       attributes = {
         size: await page.getAttribute(`${this.quickViewProductSize} option[selected]`, 'title'),
         color: await page.getAttribute(`${this.quickViewProductColor} input[checked='checked']`, 'title'),
       };
-    } else if (attribute.dimension) {
+    } else {
       attributes = {
         dimension: await page.getAttribute(`${this.quickViewProductDimension} option[selected]`, 'title'),
       };
@@ -471,9 +479,9 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<ProductCombination>}
+   * @returns {Promise<ProductCombinationColorSize>}
    */
-  async getProductAttributesFromQuickViewModal(page: Page): Promise<ProductCombination> {
+  async getProductAttributesFromQuickViewModal(page: Page): Promise<ProductCombinationColorSize> {
     return {
       size: await this.getTextContent(page, this.quickViewProductSize),
       color: await this.getTextContent(page, this.quickViewProductColor, false),
@@ -585,9 +593,9 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from block cart modal
    * @param page {Page} Browser tab
-   * @returns {Promise<ProductCombination>}
+   * @returns {Promise<ProductCombinationColorSize>}
    */
-  async getProductAttributesFromBlockCartModal(page: Page): Promise<ProductCombination> {
+  async getProductAttributesFromBlockCartModal(page: Page): Promise<ProductCombinationColorSize> {
     return {
       size: await this.getTextContent(page, this.cartModalProductSizeBlock),
       color: await this.getTextContent(page, this.cartModalProductColorBlock),

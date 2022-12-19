@@ -2,45 +2,22 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/createDeleteProduct';
+import categoryPage from '@pages/FO/category';
+
 // Import FO pages
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
+// Import data
+import {Products} from '@data/demo/products';
+import ProductFaker from '@data/faker/product';
+import {ProductAttributesDimension, ProductCombinationDimension} from '@data/types/product';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import common tests
-const {createProductTest, deleteProductTest} = require('@commonTests/BO/catalog/createDeleteProduct');
-const categoryPage = require('@pages/FO/category');
-
-// Import Data
-const {Products} = require('@data/demo/products');
-const ProductFaker = require('@data/faker/product');
-
-const baseContext = 'functional_FO_homePage_productQuickView';
-
-let browserContext;
-let page;
-
-const defaultAttributes = {
-  dimension: '40x60cm',
-  quantity: 1,
-};
-const attributes = {
-  dimension: '60x90cm',
-  quantity: 4,
-};
-
-// Data to create product out of stock not allowed
-const productOutOfStockNotAllowed = new ProductFaker({
-  name: 'Out of stock not allowed',
-  type: 'Standard product',
-  taxRule: 'No tax',
-  quantity: -15,
-  minimumQuantity: 1,
-  lowStockLevel: 3,
-  behaviourOutOfStock: 'Deny orders',
-});
+const baseContext: string = 'functional_FO_homePage_productQuickView';
 
 /*
 Pre-condition:
@@ -54,6 +31,29 @@ Post-condition:
 - Delete created product
  */
 describe('FO - Home Page : Product quick view', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const defaultAttributes: ProductAttributesDimension = {
+    dimension: '40x60cm',
+    quantity: 1,
+  };
+  const attributes: ProductAttributesDimension = {
+    dimension: '60x90cm',
+    quantity: 4,
+  };
+
+  // Data to create product out of stock not allowed
+  const productOutOfStockNotAllowed: ProductFaker = new ProductFaker({
+    name: 'Out of stock not allowed',
+    type: 'Standard product',
+    taxRule: 'No tax',
+    quantity: -15,
+    minimumQuantity: 1,
+    lowStockLevel: 3,
+    behaviourOutOfStock: 'Deny orders',
+  });
+
   // Pre-condition : Create product out of stock not allowed
   createProductTest(productOutOfStockNotAllowed, `${baseContext}_preTest`);
 
@@ -72,6 +72,7 @@ describe('FO - Home Page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       await homePage.goTo(page, global.FO.URL);
+
       const result = await homePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -88,7 +89,7 @@ describe('FO - Home Page : Product quick view', async () => {
     it('should check product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await homePage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_6.name),
         expect(result.price).to.equal(Products.demo_6.priceDimension4060),
@@ -98,8 +99,8 @@ describe('FO - Home Page : Product quick view', async () => {
         expect(result.thumbImage).to.contains(Products.demo_6.thumbnailImage),
       ]);
 
-      result = await homePage.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
-      await expect(result.dimension).to.equal(defaultAttributes.dimension);
+      const resultAttributes = await homePage.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
+      await expect((resultAttributes as ProductCombinationDimension).dimension).to.equal(defaultAttributes.dimension);
     });
 
     it('should change combination and check product information', async function () {
@@ -107,7 +108,7 @@ describe('FO - Home Page : Product quick view', async () => {
 
       await homePage.changeAttributes(page, attributes);
 
-      let result = await homePage.getProductDetailsFromQuickViewModal(page);
+      const result = await homePage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_6.name),
         expect(result.price).to.equal(Products.demo_6.priceDimension6090),
@@ -116,15 +117,14 @@ describe('FO - Home Page : Product quick view', async () => {
         expect(result.thumbImage).to.contains(Products.demo_6.thumbnailImage),
       ]);
 
-      result = await homePage.getSelectedAttributesFromQuickViewModal(page, attributes);
-      await expect(result.dimension).to.equal(attributes.dimension);
+      const resultAttributes = await homePage.getSelectedAttributesFromQuickViewModal(page, attributes);
+      await expect((resultAttributes as ProductCombinationDimension).dimension).to.equal(attributes.dimension);
     });
 
     it('should change the product quantity and click on add to cart', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await homePage.changeQuantity(page, attributes.quantity);
-
       await homePage.addToCartByQuickView(page);
 
       const isVisible = await homePage.isBlockCartModalVisible(page);
@@ -167,7 +167,6 @@ describe('FO - Home Page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
       await homePage.changeQuantity(page, attributes.quantity);
-
       await homePage.addToCartByQuickView(page);
 
       const isVisible = await homePage.isBlockCartModalVisible(page);
@@ -196,7 +195,6 @@ describe('FO - Home Page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'quickViewCustomizedProduct', baseContext);
 
       await categoryPage.goToNextPage(page);
-
       await categoryPage.quickViewProduct(page, 7);
 
       const isModalVisible = await categoryPage.isQuickViewProductModalVisible(page);
