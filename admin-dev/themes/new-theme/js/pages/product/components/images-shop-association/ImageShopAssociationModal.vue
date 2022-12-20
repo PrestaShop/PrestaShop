@@ -25,12 +25,16 @@
 <script lang="ts" setup>
   import Modal from '@PSVue/components/Modal.vue';
   import {ref} from 'vue';
-  import {getProductImages, getProductShopImages} from '@pages/product/services/images';
+  import {getProductImages, getProductShopImages, updateProductShopImages} from '@pages/product/services/images';
   import ImageShopGrid from '@pages/product/components/images-shop-association/ImageShopGrid.vue';
+  import ProductEventMap from '@pages/product/product-event-map';
+
+  const DropzoneEvents = ProductEventMap.dropzone;
 
   const modalOpened = ref(false);
   const loadingAssociations = ref(false);
   const submittingAssociations = ref(false);
+
   const productImages = ref<ProductImage[]>([]);
   const productShops = ref<ProductShop[]>([]);
 
@@ -59,11 +63,45 @@
     loadingAssociations.value = true;
 
     // Get data from APIs
-    const images = await getProductImages(props.productId);
-    const shopImages = await getProductShopImages(props.productId);
+    const shopImagesResponse = await getProductShopImages(props.productId);
+    const shopImages = await shopImagesResponse.json();
+    await updateImages(shopImages);
 
+    loadingAssociations.value = false;
+  }
+
+  async function saveAssociations(): Promise<void> {
+    if (submittingAssociations.value) {
+      return;
+    }
+
+    submittingAssociations.value = true;
+
+    // Formatted data for each image contains the list of associated shops IDs
+    const formattedAssociations = productImages.value.map((productImage: ProductImage) => ({
+      imageId: productImage.imageId,
+      shops: productImage.associations
+        .filter((association: ProductShopImage) => association.isAssociated)
+        .map((association: ProductShopImage) => association.shopId),
+    }));
+
+    const newImagesResponse = await updateProductShopImages(props.productId, formattedAssociations);
+    const newImages = await newImagesResponse.json();
+
+    if (newImages.status === false) {
+      $.growl.error({message: newImages.message});
+    } else {
+      await updateImages(newImages);
+      window.prestashop.instance.eventEmitter.emit(DropzoneEvents.resetDropzone);
+    }
+
+    submittingAssociations.value = false;
+  }
+
+  async function updateImages(shopImages: any[]): Promise<void> {
     // Reformat data for product images
-    productImages.value = [];
+    const newProductImages: ProductImage[] = [];
+    const images = await getProductImages(props.productId);
     images.forEach((productImage: any) => {
       const shopAssociations = shopImages.map((productShopImage: any) => {
         let isAssociated = false;
@@ -79,7 +117,7 @@
         return {shopId: productShopImage.shopId, isAssociated, isCover};
       });
 
-      productImages.value.push({
+      newProductImages.push({
         imageId: productImage.image_id,
         thumbnailUrl: productImage.thumbnail_url,
         associations: shopAssociations,
@@ -87,15 +125,17 @@
     });
 
     // Reformat shops
-    productShops.value = [];
+    const newShops: ProductShop[] = [];
     shopImages.forEach((shop: any) => {
-      productShops.value.push({
+      newShops.push({
         shopId: shop.shopId,
         shopName: shop.shopName,
       });
     });
 
-    loadingAssociations.value = false;
+    // Update references
+    productShops.value = newShops;
+    productImages.value = newProductImages;
   }
 </script>
 

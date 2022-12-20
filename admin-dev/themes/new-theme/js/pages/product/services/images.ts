@@ -38,12 +38,19 @@ export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<
   return $.get(imagesUrl);
 };
 
-export const getProductShopImages = async (productId: number): Promise<JQuery.jqXHR<any>> => {
-  const imagesShopUrl = router.generate('admin_products_v2_get_shop_images', {
-    productId,
-  });
+export const getProductShopImages = async (productId: number): Promise<Response> => fetch(router.generate('admin_products_v2_product_shop_images', {productId}));
 
-  return $.get(imagesShopUrl);
+export const updateProductShopImages = async (productId: number, imageAssociations: any): Promise<Response> => {
+  const formData = new FormData();
+  formData.append('image_associations', JSON.stringify(imageAssociations));
+
+  return fetch(
+    router.generate('admin_products_v2_product_shop_images', {productId}),
+    {
+      method: 'POST',
+      body: formData,
+    },
+  );
 };
 
 export const saveImageInformations = async (selectedFile: Record<string, any>, token: string, formName: string): Promise<JQuery.jqXHR<any>> => {

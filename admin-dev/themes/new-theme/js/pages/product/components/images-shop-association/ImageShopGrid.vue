@@ -63,8 +63,7 @@
               :name="`shop_association_${productImage.imageId}_${shopAssociation.shopId}`"
               type="checkbox"
               class="form-check-input"
-              :checked="shopAssociation.isAssociated"
-              :value="shopAssociation.isAssociated"
+              v-model="shopAssociation.isAssociated"
               :disabled="shopAssociation.isCover"
             >
             <i class="md-checkbox-control" />
