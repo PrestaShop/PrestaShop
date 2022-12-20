@@ -90,16 +90,11 @@ class DescriptionType extends TranslatorAwareType
             $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
         }
 
-        if ($productId) {
-            $builder
-                ->add('images', ImageDropzoneType::class, [
-                    'product_id' => $productId,
-                    'update_form_type' => ProductImageType::class,
-                ])
-            ;
-        }
-
         $builder
+            ->add('images', ImageDropzoneType::class, [
+                'product_id' => $productId,
+                'update_form_type' => ProductImageType::class,
+            ])
             ->add('description_short', TranslatableType::class, [
                 'required' => false,
                 'label' => $this->trans('Summary', 'Admin.Global'),

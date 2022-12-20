@@ -28,11 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Image;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form type integrates a Dropzone used to manage images, the twig templates is a simple div
@@ -43,6 +47,47 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImageDropzoneType extends TranslatorAwareType
 {
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FeatureInterface $multistoreFeature
+    ) {
+        parent::__construct($translator, $locales);
+        $this->multistoreFeature = $multistoreFeature;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        parent::buildForm($builder, $options);
+
+        if ($this->multistoreFeature->isUsed()) {
+            $builder->add('shop_images', ButtonType::class, [
+                'label' => $this->trans('Manage images', 'Admin.Catalog.feature'),
+                'row_attr' => [
+                    'class' => 'manage-shop-images-button-container',
+                    'data-product-id' => $options['product_id'],
+                    'data-translations' => json_encode([
+                        'button.label' => $this->trans('Manage images', 'Admin.Catalog.feature'),
+                        'modal.save' => $this->trans('Save and publish', 'Admin.Actions'),
+                        'modal.close' => $this->trans('Close', 'Admin.Actions'),
+                        'modal.cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                        'cover.label' => $this->trans('Is Cover', 'Admin.Catalog.Feature'),
+                        'modal.noImages' => $this->trans('Product has no images.', 'Admin.Catalog.Feature'),
+                        'grid.imageHeader' => $this->trans('Image', 'Admin.Catalog.Feature'),
+                    ]),
+                ],
+                'attr' => [
+                    'class' => 'btn-outline-secondary manage-shop-images-button',
+                ],
+            ]);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

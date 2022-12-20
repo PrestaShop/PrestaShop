@@ -36,6 +36,9 @@
     'data-token': csrf_token(update_form_name)
   }) %}
 
+  {% if form.shop_images is defined %}
+    {{ form_row(form.shop_images) }}
+  {% endif %}
   <div {{ block('widget_attributes') }}>
   </div>
 {% endblock %}
