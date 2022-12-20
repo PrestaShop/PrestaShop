@@ -1403,6 +1403,8 @@ services:
   form.type.sell.product.image.image_dropzone_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
     parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.adapter.feature.multistore'
     public: true
     tags:
       - { name: form.type }
