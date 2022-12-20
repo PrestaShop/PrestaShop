@@ -13,11 +13,11 @@ admin_products_v2_get_images:
   requirements:
     productId: \d+
 
-admin_products_v2_get_shop_images:
+admin_products_v2_product_shop_images:
   path: /{productId}/shopImages
-  methods: [ GET ]
+  methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::getShopImagesAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ImageController::productShopImagesAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:getshopimages
