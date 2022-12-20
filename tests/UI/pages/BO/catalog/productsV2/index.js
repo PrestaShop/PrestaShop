@@ -16,6 +16,10 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
+    this.alertDangerIDFilterValue = 'ID: Maximum value must be higher than minimum value.';
+    this.alertDangerPriceFilterValue = 'Price (tax excl.): Maximum value must be higher than minimum value.';
+    this.alertDangerQuantityFilterValue = 'Quantity: Maximum value must be higher than minimum value.';
+
     this.standardProductDescription = 'A physical product that needs to be shipped.';
     this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
       + 'customers can choose.';
@@ -28,6 +32,15 @@ class Products extends BOBasePage {
     this.productGridPanel = '#product_grid_panel';
     this.productGridHeader = `${this.productGridPanel} div.js-grid-header`;
     this.headerTitle = `${this.productGridHeader} .card-header-title`;
+    this.productGrid = '#product_grid';
+
+    // Filter by categories
+    this.filterByCategoryBlock = `${this.productGrid} form.d-inline-block`;
+    this.filterByCategoriesButton = `${this.filterByCategoryBlock} div button.dropdown-toggle`;
+    this.filterByCategoriesExpandButton = `${this.filterByCategoryBlock} div button.category_tree_filter_expand`;
+    this.filterByCategoriesUnselectButton = `${this.filterByCategoryBlock} div button.category_tree_filter_reset.btn`;
+    this.filterByCategoriesLabel = '#category_filter ul.category-tree li div.category-label';
+    this.clearFilterButton = `${this.filterByCategoryBlock} button.btn-link.category_tree_filter_reset`;
 
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
@@ -52,9 +65,11 @@ class Products extends BOBasePage {
     this.productFilterQuantityMinInput = '#product_quantity_min_field';
     this.productFilterQuantityMaxInput = '#product_quantity_max_field';
     this.productFilterSelectStatus = '#product_active';
+    this.productFilterPositionInput = '#product_position';
 
     // Products list
     this.productRow = `${this.productGridTable} tbody tr`;
+    this.productEmptyRow = `${this.productRow}.empty_row`;
     this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
     this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)} td.column-id_product`;
     this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td.column-name a`;
@@ -65,7 +80,8 @@ class Products extends BOBasePage {
     this.productsListTableColumnPriceATI = (row) => `${this.productsListTableRow(row)} `
       + 'td.column-price_tax_included';
     this.productsListTableColumnQuantity = (row) => `${this.productsListTableRow(row)} td.column-quantity a`;
-    this.productsListTableColumnStatusInput = (row) => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productsListTableColumnStatus = (row) => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productsListTableColumnPosition = (row) => `${this.productsListTableRow(row)} td.column-position`;
     this.productListTableDropDownList = (row) => `${this.productsListTableRow(row)} td.column-actions `
       + 'a.dropdown-toggle';
     this.productListTableDeleteButton = (row) => `${this.productsListTableRow(row)}`
@@ -129,6 +145,15 @@ class Products extends BOBasePage {
     const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
 
     return this.getTextContent(createProductFrame, this.productTypedescription);
+  }
+
+  /**
+   * Get alert danger block content
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAlertDangerBlockContent(page) {
+    return this.getAlertDangerBlockParagraphContent(page);
   }
 
   /**
@@ -228,6 +253,95 @@ class Products extends BOBasePage {
 
   // Filter products table methods
   /**
+   * Reset filter by category
+   * @param page {Page} Browser tab
+   * @param categoryName {string} Category name to filter by
+   * @returns {Promise<void>}
+   */
+  async filterProductsByCategory(page, categoryName = 'Home') {
+    // Click and wait to be open
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
+
+    // Click on expand button
+    await page.click(this.filterByCategoriesExpandButton);
+
+    // Choose category to filter with
+    const args = {allCategoriesSelector: this.filterByCategoriesLabel, val: categoryName};
+    // eslint-disable-next-line no-eval
+    const fn = eval(`({
+      async categoryClick(args) {
+        /* eslint-env browser */
+        const allCategories = [...await document.querySelectorAll(args.allCategoriesSelector)];
+        const category = await allCategories.find((el) => el.textContent.includes(args.val));
+
+        if (category === undefined) {
+          return false;
+        }
+        await category.querySelector('input').click();
+        return true;
+      }
+    })`);
+    const found = await page.evaluate(fn.categoryClick, args);
+
+    if (!found) {
+      throw new Error(`${categoryName} not found as a category`);
+    }
+    await page.waitForNavigation('networkidle');
+  }
+
+  /**
+   * Get filter by categories button name
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getFilterByCategoryButtonName(page) {
+    return this.getTextContent(page, this.filterByCategoriesButton);
+  }
+
+  /**
+   * Reset filter by category
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async resetFilterCategory(page) {
+    // Click and wait to be open
+    await page.click(this.filterByCategoriesButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
+
+    // Unselect all categories
+    await this.clickAndWaitForNavigation(page, this.filterByCategoriesUnselectButton);
+    await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='false']`);
+  }
+
+  /**
+   * Is clear filter link visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isClearFilterLinkVisible(page) {
+    return this.elementVisible(page, this.clearFilterButton, 2000);
+  }
+
+  /**
+   * Click on clear filter link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnClearFilterLink(page) {
+    await this.clickAndWaitForNavigation(page, this.clearFilterButton);
+  }
+
+  /**
+   * Is position column visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isPositionColumnVisible(page) {
+    return this.elementVisible(page, this.productFilterPositionInput);
+  }
+
+  /**
    * Filter products Min - Max
    * @param page {Page} Browser tab
    * @param idMin {number} Value of id min to set on filter input
@@ -267,7 +381,7 @@ class Products extends BOBasePage {
    * Filter products
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter
-   * @param value {{min: number, max:number}|string} Value to put on filter
+   * @param value {{min: number, max:number}|string|boolean|number} Value to put on filter
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
@@ -292,6 +406,9 @@ class Products extends BOBasePage {
             break;
           case 'quantity':
             await this.filterProductsByQuantity(page, value.min, value.max);
+            break;
+          case 'position':
+            await this.setValue(page, this.productFilterPositionInput, value);
             break;
           default:
         }
@@ -371,7 +488,7 @@ class Products extends BOBasePage {
   async getProductStatusFromList(page, row) {
     const inputValue = await this.getAttributeContent(
       page,
-      `${this.productsListTableColumnStatusInput(row)}[checked]`,
+      `${this.productsListTableColumnStatus(row)}[checked]`,
       'value',
     );
 
@@ -385,7 +502,7 @@ class Products extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string|number>}
    */
-  async getTextColumn(page, columnName, row) {
+  async getTextColumn(page, columnName, row = 1) {
     switch (columnName) {
       case 'id_product':
         return this.getNumberFromText(page, this.productsListTableColumnID(row));
@@ -401,10 +518,21 @@ class Products extends BOBasePage {
         return this.getNumberFromText(page, this.productsListTableColumnQuantity(row));
       case 'active':
         return this.getProductStatusFromList(page, row);
+      case 'position':
+        return this.getNumberFromText(page, this.productsListTableColumnPosition(row));
       default:
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Get text for empty table
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getTextForEmptyTable(page) {
+    return this.getTextContent(page, this.productEmptyRow);
   }
 
   /**
