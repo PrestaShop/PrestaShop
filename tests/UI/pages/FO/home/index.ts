@@ -17,7 +17,7 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Home extends FOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly carouselSliderId: string;
 
