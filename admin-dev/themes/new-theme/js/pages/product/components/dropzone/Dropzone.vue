@@ -236,6 +236,7 @@
     computed: {},
     mounted() {
       this.watchLocaleChanges();
+      this.watchResetDropzone();
       this.initProductImages();
     },
     methods: {
@@ -255,6 +256,14 @@
                 this.selectedLocale = locale;
               }
             });
+          },
+        );
+      },
+      watchResetDropzone(): void {
+        window.prestashop.instance.eventEmitter.on(
+          DropzoneEvents.resetDropzone,
+          () => {
+            this.resetDropzone();
           },
         );
       },

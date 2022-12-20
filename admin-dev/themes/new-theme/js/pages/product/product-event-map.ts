@@ -34,6 +34,7 @@ export default {
     error: 'error',
     success: 'success',
     languageSelected: 'languageSelected',
+    resetDropzone: 'resetDropzone',
     photoswipe: {
       destroy: 'destroy',
       closeGallery: 'closeGallery',
