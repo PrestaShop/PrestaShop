@@ -35,6 +35,13 @@ class VirtualProductTab extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.virtualProductTabLink);
     await this.setValue(page, this.productQuantityInput, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);
+    if (productData.downloadFile) {
+      await this.waitForSelectorAndClick(page, '#product_stock_virtual_product_file_has_file_1');
+      await this.waitForVisibleSelector(page, '#product_stock_virtual_product_file_file');
+      await this.uploadFile(page, '#product_stock_virtual_product_file_file', productData.fileName);
+      await this.setValue(page, '#product_stock_virtual_product_file_name', productData.fileName);
+      await this.setValue(page, '#product_stock_virtual_product_file_download_times_limit', productData.allowedDownload);
+    }
   }
 }
 
