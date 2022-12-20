@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
@@ -36,7 +37,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductIm
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetShopProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
@@ -63,6 +68,21 @@ class ImageController extends FrameworkBundleAdminController
         $images = $this->getQueryBus()->handle(new GetProductImages($productId));
 
         return new JsonResponse(array_map([$this, 'formatImage'], $images));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function getShopImagesAction(int $productId): JsonResponse
+    {
+        /** @var ShopProductImagesCollection $shopImages */
+        $shopImages = $this->getQueryBus()->handle(new GetShopProductImages($productId));
+
+        return new JsonResponse($this->formatShopImages($shopImages));
     }
 
     /**
@@ -196,6 +216,32 @@ class ImageController extends FrameworkBundleAdminController
             'thumbnail_url' => $image->getThumbnailUrl(),
             'legends' => $image->getLocalizedLegends(),
         ];
+    }
+
+    private function formatShopImages(ShopProductImagesCollection $shopImagesCollection): array
+    {
+        /** @var ShopRepository $shopRepository */
+        $shopRepository = $this->get(ShopRepository::class);
+        $formattedShopsImages = [];
+        foreach ($shopImagesCollection as $shopProductImage) {
+            $shopImages = [
+                'shopId' => $shopProductImage->getShopId(),
+                'shopName' => $shopRepository->getShopName(new ShopId($shopProductImage->getShopId())),
+                'images' => [],
+            ];
+
+            /** @var ShopImageAssociation $shopImageAssociation */
+            foreach ($shopProductImage->getProductImages() as $shopImageAssociation) {
+                $shopImages['images'][] = [
+                    'imageId' => $shopImageAssociation->getImageId(),
+                    'isCover' => $shopImageAssociation->isCover(),
+                ];
+            }
+
+            $formattedShopsImages[] = $shopImages;
+        }
+
+        return $formattedShopsImages;
     }
 
     /**
