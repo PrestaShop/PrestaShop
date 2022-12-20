@@ -261,7 +261,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             'Use a longer keyboard pattern with more turns' => $this->translator->trans('Use a longer keyboard pattern with more turns'),
             'Repeats like "aaa" are easy to guess' => $this->translator->trans('Repeats like "aaa" are easy to guess'),
             'Repeats like "abcabcabc" are only slightly harder to guess than "abc"' => $this->translator->trans('Repeats like "abcabcabc" are only slightly harder to guess than "abc"'),
-            'Sequences like abc or 6543 are easy to guess' => $this->translator->trans('Sequences like abc or 6543 are easy to guess'),
+            'Sequences like abc or 6543 are easy to guess' => $this->translator->trans('Sequences like "abc" or "6543" are easy to guess'),
             'Recent years are easy to guess' => $this->translator->trans('Recent years are easy to guess'),
             'Dates are often easy to guess' => $this->translator->trans('Dates are often easy to guess'),
             'This is a top-10 common password' => $this->translator->trans('This is a top-10 common password'),
@@ -286,7 +286,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
             'Capitalization doesn\'t help very much' => $this->translator->trans('Capitalization doesn\'t help very much'),
             'All-uppercase is almost as easy to guess as all-lowercase' => $this->translator->trans('All-uppercase is almost as easy to guess as all-lowercase'),
             'Reversed words aren\'t much harder to guess' => $this->translator->trans('Reversed words aren\'t much harder to guess'),
-            'Predictable substitutions like \'@\' instead of \'a\' don\'t help very much' => $this->translator->trans('Predictable substitutions like \'@\' instead of \'a\' don\'t help very much'),
+            'Predictable substitutions like \'@\' instead of \'a\' don\'t help very much' => $this->translator->trans('Predictable substitutions like "@" instead of "a" don\'t help very much'),
             'Add another word or two. Uncommon words are better.' => $this->translator->trans('Add another word or two. Uncommon words are better.'),
         ]);
 

@@ -363,6 +363,7 @@ GitHub contributors:
 - Jan Sýkora
 - janisVincent
 - Jaume
+- Javier García
 - Javsmile
 - JBWModules
 - JEAN
@@ -533,6 +534,7 @@ GitHub contributors:
 - Maxime - Vaisonet
 - Maxime Aknin
 - Maxime Biloé
+- Maxime Flasquin
 - Maxime Morel-Bailly
 - Maxime Vasse
 - mchelh
@@ -617,6 +619,7 @@ GitHub contributors:
 - Pan P
 - Pan Ploenes
 - Panagiotis Tigas
+- panariga
 - panesarsandeep
 - Pascal Cescon
 - Patanock
@@ -737,6 +740,8 @@ GitHub contributors:
 - sagaradonis
 - Salim Benouamer
 - Sam Berry
+- sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
@@ -759,6 +764,7 @@ GitHub contributors:
 - Sébastien Rufer
 - Sébastien Sterckx
 - SebSept
+- sefirosweb
 - seleda
 - Serge Rivière
 - Sergey P
