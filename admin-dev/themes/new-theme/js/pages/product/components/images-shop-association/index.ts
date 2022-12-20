@@ -25,7 +25,7 @@
 import {createApp, App} from 'vue';
 import {createI18n} from 'vue-i18n';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
-import AssociationModal from './AssociationModal.vue';
+import ImageShopAssociationModal from './ImageShopAssociationModal.vue';
 
 export default function initImagesShopAssociation(buttonContainerSelector: string): App | null {
   const container = document.querySelector<HTMLElement>(buttonContainerSelector);
@@ -43,9 +43,9 @@ export default function initImagesShopAssociation(buttonContainerSelector: strin
 
   const productId = Number(container.dataset.productId);
 
-  const vueApp = createApp(AssociationModal, {
+  const vueApp = createApp(ImageShopAssociationModal, {
     el: buttonContainerSelector,
-    template: '<association-modal :productId=productId />',
+    template: '<image-shop-association-modal :productId=productId />',
     i18n,
     productId,
   }).use(i18n);
