@@ -38,6 +38,14 @@ export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<
   return $.get(imagesUrl);
 };
 
+export const getProductShopImages = async (productId: number): Promise<JQuery.jqXHR<any>> => {
+  const imagesShopUrl = router.generate('admin_products_v2_get_shop_images', {
+    productId,
+  });
+
+  return $.get(imagesShopUrl);
+};
+
 export const saveImageInformations = async (selectedFile: Record<string, any>, token: string, formName: string): Promise<JQuery.jqXHR<any>> => {
   const saveUrl = router.generate('admin_products_v2_update_image', {
     productImageId: selectedFile.image_id,

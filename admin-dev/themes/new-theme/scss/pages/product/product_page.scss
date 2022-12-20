@@ -733,6 +733,50 @@ $product-page-padding-bottom: 80px !default;
     text-align: right;
   }
 
+  #images-shop-association-modal {
+    .modal-body {
+      max-height: 70vh;
+      overflow: auto;
+    }
+
+    .images-shop-association-loading {
+      margin: 1rem 0;
+      text-align: center;
+    }
+  }
+
+  .image-shop-grid {
+    width: 100%;
+
+    tr.header-row {
+      border-bottom: 2px solid $brand-primary;
+    }
+
+    tr:not(.header-row) {
+      border-bottom: 1px solid $gray-light;
+    }
+
+    .shop-image-cell {
+      max-width: 116px;
+    }
+
+    td,
+    th {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .cover-checkbox {
+      margin-top: 17px;
+    }
+
+    .cover-label {
+      display: block;
+      font-size: 11px;
+      color: $gray-light;
+    }
+  }
+
   .nav-tabs {
     .nav-item.has-error {
       .nav-link {

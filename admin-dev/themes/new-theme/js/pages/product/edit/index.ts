@@ -44,6 +44,7 @@ import RelatedProductsManager from '@pages/product/edit/related-products-manager
 import PackedProductsManager from '@pages/product/edit/packed-products-manager';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import initDropzone from '@pages/product/components/dropzone';
+import initImagesShopAssociation from '@pages/product/components/images-shop-association';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/product-options-manager';
@@ -131,6 +132,7 @@ $(() => {
 
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
+  initImagesShopAssociation(ProductMap.manageShopImagesButtonContainer);
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();

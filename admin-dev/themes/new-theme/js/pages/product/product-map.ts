@@ -76,6 +76,8 @@ export default {
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
   dropzoneImagesContainer: '.product-image-dropzone',
+  manageShopImagesButtonContainer: '.manage-shop-images-button-container',
+  manageShopImagesButton: '.manage-shop-images-button',
   featureValues: {
     collectionContainer: '.feature-values-collection',
     collectionRowsContainer: '.feature-values-collection > .col-sm',
