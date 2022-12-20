@@ -8,6 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import loginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
@@ -16,7 +17,6 @@ const {expect} = require('chai');
 
 // Import utils
 const files = require('@utils/files');
-const loginPage = require('@pages/FO/login');
 const createAccountPage = require('@pages/FO/myAccount/add');
 const myAccountPage = require('@pages/FO/myAccount');
 const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');

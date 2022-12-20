@@ -4,6 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -11,7 +12,6 @@ const {expect} = require('chai');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
-const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 

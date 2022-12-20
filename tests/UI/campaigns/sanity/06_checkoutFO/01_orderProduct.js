@@ -4,12 +4,12 @@ import helper from '@utils/helpers';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import loginPage from '@pages/FO/login';
 
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const cartPage = require('@pages/FO/cart');
-const loginPage = require('@pages/FO/login');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 

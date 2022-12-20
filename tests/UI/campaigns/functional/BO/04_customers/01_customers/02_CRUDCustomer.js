@@ -7,6 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -17,9 +18,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
 const viewCustomerPage = require('@pages/BO/customers/view');
-
-// Import FO pages
-const foLoginPage = require('@pages/FO/login');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');

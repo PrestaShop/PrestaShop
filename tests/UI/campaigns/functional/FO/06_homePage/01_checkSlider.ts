@@ -5,16 +5,15 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const {expect} = require('chai');
-
-const baseContext = 'functional_FO_homePage_checkSlider';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_homePage_checkSlider';
 
 describe('FO - Home Page : Check slider', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

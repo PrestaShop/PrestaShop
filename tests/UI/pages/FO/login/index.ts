@@ -1,6 +1,10 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+// Import data
+import type Customer from '@data/types/customer';
+
+import type {Page} from 'playwright';
 
 /**
  * Login page, contains functions that can be used on the page
@@ -8,6 +12,28 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class Login extends FOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly loginErrorText: string;
+
+  private readonly disabledAccountErrorText: string;
+
+  private readonly loginForm: string;
+
+  private readonly emailInput: string;
+
+  private readonly passwordInput: string;
+
+  private readonly signInButton: string;
+
+  private readonly displayRegisterFormLink: string;
+
+  private readonly passwordReminderLink: string;
+
+  private readonly showPasswordButton: string;
+
+  private readonly alertDangerTextBlock: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on login page
@@ -41,7 +67,7 @@ class Login extends FOBasePage {
    * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
-  async customerLogin(page, customer, waitForNavigation = true) {
+  async customerLogin(page: Page, customer: Customer, waitForNavigation: boolean = true): Promise<void> {
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
     if (waitForNavigation) {
@@ -56,25 +82,25 @@ class Login extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getLoginError(page) {
+  async getLoginError(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertDangerTextBlock);
   }
 
   /**
    * Get password type
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getPasswordType(page) {
+  async getPasswordType(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.passwordInput, 'type');
   }
 
   /**
    * Show password
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async showPassword(page) {
+  async showPassword(page: Page): Promise<string|null> {
     await this.waitForSelectorAndClick(page, this.showPasswordButton);
 
     return this.getAttributeContent(page, this.passwordInput, 'type');
@@ -85,7 +111,7 @@ class Login extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToCreateAccountPage(page) {
+  async goToCreateAccountPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.displayRegisterFormLink);
   }
 
@@ -94,9 +120,9 @@ class Login extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToPasswordReminderPage(page) {
+  async goToPasswordReminderPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.passwordReminderLink);
   }
 }
 
-module.exports = new Login();
+export default new Login();

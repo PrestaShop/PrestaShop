@@ -1,6 +1,9 @@
-type ProductCombination = {
+type ProductCombinationColorSize = {
   color: string|null,
   size: string|null
+};
+type ProductCombinationDimension = {
+  dimension: string|null
 };
 
 type Product = {
@@ -10,15 +13,16 @@ type Product = {
   thumbImage: string
 };
 
-type ProductAttributes = {
-  size: string
-  color: string
-  dimension: string|null
+type ProductAttributesCommon = {
   quantity: number
   totalTaxInc?: number
 }
 
-type ProductDetails = ProductAttributes & {
+type ProductAttributesColorSize = ProductCombinationColorSize & ProductAttributesCommon
+
+type ProductAttributesDimension = ProductCombinationDimension & ProductAttributesCommon
+
+type ProductDetails = ProductCombinationColorSize & {
   name: string,
   price: number
   shipping: string
@@ -33,8 +37,10 @@ type ProductReview = {
 
 export {
   Product,
-  ProductAttributes,
-  ProductCombination,
+  ProductAttributesColorSize,
+  ProductAttributesDimension,
+  ProductCombinationColorSize,
+  ProductCombinationDimension,
   ProductDetails,
   ProductReview,
 };

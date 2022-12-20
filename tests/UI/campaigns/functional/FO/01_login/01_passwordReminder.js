@@ -7,6 +7,7 @@ import mailHelper from '@utils/mailHelper';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
+import loginPage from '@pages/FO/login';
 
 require('module-alias/register');
 
@@ -14,7 +15,6 @@ const {expect} = require('chai');
 
 // Import utils
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
-const loginPage = require('@pages/FO/login');
 const passwordReminderPage = require('@pages/FO/passwordReminder');
 const myAccountPage = require('@pages/FO/myAccount');
 
