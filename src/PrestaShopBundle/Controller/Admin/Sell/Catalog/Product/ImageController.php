@@ -33,7 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\DeleteProductImageCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\ProductImageSetting;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\SetProductImagesForAllShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotRemoveCoverException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
@@ -42,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopImageAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\Shop\ShopProductImagesCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
@@ -71,18 +75,34 @@ class ImageController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to update this.")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller'))", message="You do not have permission to red or update this.")
      *
      * @param int $productId
      *
      * @return JsonResponse
      */
-    public function getShopImagesAction(int $productId): JsonResponse
+    public function productShopImagesAction(int $productId, Request $request): JsonResponse
     {
-        /** @var ShopProductImagesCollection $shopImages */
-        $shopImages = $this->getQueryBus()->handle(new GetShopProductImages($productId));
+        if ($request->isMethod(Request::METHOD_POST)) {
+            try {
+                $imageAssociations = json_decode($request->request->get('image_associations'), true);
+                $command = new SetProductImagesForAllShopCommand($productId);
+                foreach ($imageAssociations as $imageAssociation) {
+                    $command->addProductSetting(new ProductImageSetting(
+                        $imageAssociation['imageId'],
+                        $imageAssociation['shops']
+                    ));
+                }
+                $this->getQueryBus()->handle($command);
+            } catch (CoreException $e) {
+                return $this->json([
+                    'status' => false,
+                    'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                ]);
+            }
+        }
 
-        return new JsonResponse($this->formatShopImages($shopImages));
+        return $this->getProductShopImagesJsonResponse($productId);
     }
 
     /**
@@ -189,6 +209,14 @@ class ImageController extends FrameworkBundleAdminController
         return $this->get('prestashop.core.form.identifiable_object.product_image_form_handler');
     }
 
+    private function getProductShopImagesJsonResponse(int $productId): JsonResponse
+    {
+        /** @var ShopProductImagesCollection $shopImages */
+        $shopImages = $this->getQueryBus()->handle(new GetShopProductImages($productId));
+
+        return new JsonResponse($this->formatShopImages($shopImages));
+    }
+
     /**
      * @param int $productImageId
      *
@@ -293,6 +321,10 @@ class ImageController extends FrameworkBundleAdminController
             ],
             CannotUnlinkImageException::class => $this->trans(
                 'Cannot delete file',
+                'Admin.Notifications.Error'
+            ),
+            CannotRemoveCoverException::class => $this->trans(
+                'Cannot remove a cover image',
                 'Admin.Notifications.Error'
             ),
         ];
