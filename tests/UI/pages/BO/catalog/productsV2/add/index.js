@@ -7,6 +7,7 @@ const detailsTab = require('@pages/BO/catalog/productsV2/add/detailsTab');
 const stocksTab = require('@pages/BO/catalog/productsV2/add/stocksTab');
 const virtualProductTab = require('@pages/BO/catalog/productsV2/add/virtualProductTab');
 const pricingTab = require('@pages/BO/catalog/productsV2/add/pricingTab');
+const packTab = require('@pages/BO/catalog/productsV2/add/packTab');
 
 /**
  * Products V2 page, contains functions that can be used on the page
@@ -89,6 +90,10 @@ class Products extends BOBasePage {
       await virtualProductTab.setVirtualProduct(page, productData);
     } else if (productData.type !== 'combinations') {
       await stocksTab.setProductStock(page, productData);
+    }
+
+    if (productData.type === 'pack') {
+      await packTab.setPackOfProducts(page, productData.pack);
     }
 
     await pricingTab.setProductPricing(page, productData);

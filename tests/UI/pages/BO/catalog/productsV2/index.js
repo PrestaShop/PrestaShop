@@ -24,6 +24,8 @@ class Products extends BOBasePage {
     this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
       + 'customers can choose.';
 
+    this.packOfProductsDescription = ' A collection of products from your catalog.';
+
     // Header selectors
     this.newProductButton = '#page-header-desc-configuration-add';
 
