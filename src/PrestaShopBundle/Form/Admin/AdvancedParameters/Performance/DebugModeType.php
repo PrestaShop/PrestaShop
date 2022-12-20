@@ -49,12 +49,12 @@ class DebugModeType extends TranslatorAwareType
             ->add('debug_mode', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Debug mode', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Enable or disable debug mode. This will enable extended error reporting, Symfony debug bar and other features.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Enable or disable debug mode. Debug mode will enable extended error reporting, display the Symfony debug bar, and other features.', 'Admin.Advparameters.Help'),
             ])
             ->add('debug_profiling', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Debug profiler', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Enable or disable debug profiling. This will display performance related information under each page. It allows to find out performance bottlenecks in your store.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('Enable or disable debug profiling. Debug profiling will display performance-related information under each page and help find performance bottlenecks in your store.', 'Admin.Advparameters.Help'),
             ]);
     }
 
