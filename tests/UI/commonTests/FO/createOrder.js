@@ -21,7 +21,7 @@ let page;
 
 /**
  * Function to create simple order by customer in FO
- * @param orderData {object} Data to set when creating the order
+ * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createOrderByCustomerTest') {

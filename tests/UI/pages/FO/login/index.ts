@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Login extends FOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly loginErrorText: string;
 
@@ -63,7 +63,7 @@ class Login extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {object} Customer's information (email and password)
+   * @param customer {Customer} Customer's information (email and password)
    * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
