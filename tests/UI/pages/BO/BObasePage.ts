@@ -11,7 +11,7 @@ import {Page} from 'playwright';
 export default class BOBasePage extends CommonPage {
   private readonly successfulCreationMessage: string;
 
-  private readonly successfulUpdateMessage: string;
+  public readonly successfulUpdateMessage: string;
 
   private readonly successfulDeleteMessage: string;
 
@@ -93,9 +93,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly stocksLink: string;
 
-  private readonly customersParentLink: string;
+  public readonly customersParentLink: string;
 
-  private readonly customersLink: string;
+  public readonly customersLink: string;
 
   private readonly addressesLink: string;
 
