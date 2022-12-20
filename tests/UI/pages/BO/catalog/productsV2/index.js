@@ -23,6 +23,7 @@ class Products extends BOBasePage {
     this.standardProductDescription = 'A physical product that needs to be shipped.';
     this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
       + 'customers can choose.';
+    this.virtualProductDescription = 'An intangible product that doesn\'t require shipping. You can also add a downloadable file.';
 
     this.packOfProductsDescription = ' A collection of products from your catalog.';
 

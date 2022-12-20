@@ -111,6 +111,15 @@ class ProductData {
       type: 'Text',
       required: true,
     };
+
+    /** @type {boolean} True to download file */
+    this.downloadFile = productToCreate.downloadFile || false;
+
+    /** @type {string} File name to put it in virtual tab */
+    this.fileName = productToCreate.fileName || 'virtual.jpg';
+
+    /** @type {number} Number of allowed downloads */
+    this.allowedDownload = productToCreate.allowedDownload || faker.datatype.number({min: 1, max: 20});
   }
 }
 
