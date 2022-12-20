@@ -18,8 +18,8 @@
         <note>Line: 28</note>
       </trans-unit>
       <trans-unit id="2377be3c2ad9b435ba277a73f0f1ca76">
-        <source>Manufacturers</source>
-        <target>Manufacturers</target>
+        <source>Brands</source>
+        <target>Brands</target>
         <note>Line: 29</note>
       </trans-unit>
       <trans-unit id="9ff0635f5737513b1a6f559ac2bff745">
@@ -148,8 +148,8 @@
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="67c2b2e2172f6d03a44c4a93adbb4845">
-        <source>Brand list</source>
-        <target>Brand list</target>
+        <source>Brands list</source>
+        <target>Brands list</target>
         <note>Line: 59</note>
       </trans-unit>
       <trans-unit id="f048e5676a4e7e45acea76628b628cf8">
@@ -163,8 +163,8 @@
         <note>Line: 63</note>
       </trans-unit>
       <trans-unit id="feb65ab262a484a24e2d6229ff42b136">
-        <source>On-sale products</source>
-        <target>On-sale products</target>
+        <source>Our special products</source>
+        <target>Our special products</target>
         <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="86791147a83e82f4bf90927c84fa3f6f">
@@ -193,8 +193,8 @@
         <note>Line: 72</note>
       </trans-unit>
       <trans-unit id="077326568c4bb9ed153c12c171827a54">
-        <source>manufacturers</source>
-        <target>manufacturers</target>
+        <source>brands</source>
+        <target>brands</target>
         <note>Line: 73</note>
       </trans-unit>
       <trans-unit id="169c4f8c3dcee7feff031dd2a73a44fb">
@@ -218,8 +218,8 @@
         <note>Line: 77</note>
       </trans-unit>
       <trans-unit id="99b0e8da24e29e4ccb5d7d76e677c2ac">
-        <source>supplier</source>
-        <target>supplier</target>
+        <source>suppliers</source>
+        <target>suppliers</target>
         <note>Line: 78</note>
       </trans-unit>
       <trans-unit id="884d9804999fc47a3c2694e49ad2536a">
