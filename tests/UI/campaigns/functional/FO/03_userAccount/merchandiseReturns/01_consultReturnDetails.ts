@@ -4,55 +4,40 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
+import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {
+  enableMerchandiseReturns,
+  disableMerchandiseReturns,
+} from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 
+// Import pages
+// Import BO pages
+import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
+import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders/index';
+import viewOrderPage from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-const {
-  enableMerchandiseReturns,
-  disableMerchandiseReturns,
-} = require('@commonTests/BO/customerService/enableDisableMerchandiseReturns');
-const myAccountPage = require('@pages/FO/myAccount');
-const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
-const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
-const foMerchandiseReturnsPage = require('@pages/FO/myAccount/merchandiseReturns');
-const returnDetailsPage = require('@pages/FO/myAccount/returnDetails');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
-const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
-const editMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns/edit');
+import myAccountPage from '@pages/FO/myAccount';
+import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Statuses} = require('@data/demo/orderStatuses');
-const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
-const {Products} = require('@data/demo/products');
+import {DefaultCustomer} from '@data/demo/customer';
+import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
+import Order from '@data/types/order';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultReturnDetails';
-
-let browserContext;
-let page;
-let orderID;
-let orderReference;
-let orderDate;
-let fileName = '#RE0000';
-
-// New order by customer data
-const orderData = {
-  customer: DefaultCustomer,
-  product: 1,
-  productQuantity: 1,
-  paymentMethod: PaymentMethods.wirePayment.moduleName,
-};
 
 /*
 Pre-condition:
@@ -66,6 +51,21 @@ Post-condition:
 - Disable merchandise returns
  */
 describe('FO - Account : Consult return details', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let orderID: number;
+  let orderReference: string;
+  let orderDate: string;
+  let fileName: string = '#RE0000';
+
+  // New order by customer data
+  const orderData: Order = {
+    customer: DefaultCustomer,
+    product: 1,
+    productQuantity: 1,
+    paymentMethod: PaymentMethods.wirePayment.moduleName,
+  };
+
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
@@ -87,6 +87,7 @@ describe('FO - Account : Consult return details', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount1', baseContext);
 
       await homePage.goToFo(page);
+
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage).to.be.true;
     });
@@ -165,14 +166,14 @@ describe('FO - Account : Consult return details', async () => {
       it('should get the created Order reference', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
-        orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+        orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
         await expect(orderReference).to.not.be.null;
       });
 
       it('should get the created Order date', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderDate', baseContext);
 
-        orderDate = await ordersPage.getTextColumn(page, 'date_add', 1);
+        orderDate = await ordersPage.getTextColumn(page, 'date_add', 1) as string;
         orderDate = orderDate.substr(0, 10);
         await expect(orderDate).to.not.be.null;
       });
@@ -221,7 +222,6 @@ describe('FO - Account : Consult return details', async () => {
 
         // Click on view my shop
         page = await viewOrderPage.viewMyShop(page);
-
         // Change FO language
         await homePage.changeLanguage(page, 'en');
 
@@ -358,7 +358,7 @@ describe('FO - Account : Consult return details', async () => {
         it('should check the existence of the merchandise returns in the table', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkExistenceOfReturns${index}`, baseContext);
 
-          await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID);
+          await boMerchandiseReturnsPage.filterMerchandiseReturnsTable(page, 'a!id_order', orderID.toString());
 
           const result = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order');
           await expect(result).to.contains(orderID);
@@ -456,7 +456,6 @@ describe('FO - Account : Consult return details', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `checkReturnDetails${index}`, baseContext);
 
           const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
-
           await expect(orderReturnInfo)
             .to.contains(`${fileName} on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
             .and.to.contains(test.args.status)

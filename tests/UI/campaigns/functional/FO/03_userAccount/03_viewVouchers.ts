@@ -3,57 +3,25 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {createCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createAccountTest} from '@commonTests/FO/createAccount';
+
 // Import FO pages
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foVouchersPage from '@pages/FO/myAccount/vouchers';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+// Import data
+import CartRuleFaker from '@data/faker/cartRule';
+import CustomerFaker from '@data/faker/customer';
 
-// Import common tests
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {createCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foVouchersPage = require('@pages/FO/myAccount/vouchers');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
-const CartRuleFaker = require('@data/faker/cartRule');
-
-const baseContext = 'functional_FO_userAccount_viewVouchers';
-
-let browserContext;
-let page;
-
-// Data to create a date format
-const pastDate = date.getDateFormat('yyyy-mm-dd', 'past');
-const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
-const expirationDate = date.getDateFormat('mm/dd/yyyy', 'future');
-
-const customerData = new CustomerFaker({});
-
-// Data to create 2 cart rules
-const firstCartRule = new CartRuleFaker(
-  {
-    code: 'promo20',
-    customer: customerData.email,
-    discountType: 'Percent',
-    discountPercent: 20,
-    dateFrom: pastDate,
-    dateTo: futureDate,
-  },
-);
-const secondCartRule = new CartRuleFaker(
-  {
-    code: 'freeShipping',
-    customer: customerData.email,
-    freeShipping: true,
-    dateFrom: pastDate,
-    dateTo: futureDate,
-  },
-);
+const baseContext: string = 'functional_FO_userAccount_viewVouchers';
 
 /*
 Pre-condition:
@@ -66,6 +34,30 @@ Post-condition:
 - Delete customer
  */
 describe('FO - Account : View vouchers', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  // Data to create a date format
+  const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
+  const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
+  const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
+  const customerData: CustomerFaker = new CustomerFaker({});
+  const firstCartRule: CartRuleFaker = new CartRuleFaker({
+    code: 'promo20',
+    customer: customerData.email,
+    discountType: 'Percent',
+    discountPercent: 20,
+    dateFrom: pastDate,
+    dateTo: futureDate,
+  });
+  const secondCartRule: CartRuleFaker = new CartRuleFaker({
+    code: 'freeShipping',
+    customer: customerData.email,
+    freeShipping: true,
+    dateFrom: pastDate,
+    dateTo: futureDate,
+  });
+
   // Pre-condition: Create new account on FO
   createAccountTest(customerData, `${baseContext}_preTest_1`);
 
@@ -98,6 +90,7 @@ describe('FO - Account : View vouchers', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -106,6 +99,7 @@ describe('FO - Account : View vouchers', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
       await foLoginPage.customerLogin(page, customerData);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -115,6 +109,7 @@ describe('FO - Account : View vouchers', async () => {
 
       await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToVouchersPage(page);
+
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);
     });

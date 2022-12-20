@@ -2,62 +2,39 @@
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-
-// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import commonTests
+import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createAccountTest} from '@commonTests/FO/createAccount';
+import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import myAccountPage from '@pages/FO/myAccount';
+import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import ordersPage from '@pages/BO/orders';
+import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
+import viewOrderTabListBlock from '@pages/BO/orders/view/tabListBlock';
+import viewOrderPage from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
-require('module-alias/register');
+// Import data
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import AddressFaker from '@data/faker/address';
+import CustomerFaker from '@data/faker/customer';
+import Order from '@data/types/order';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import common tests
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
-const viewOrderProductsBlockPage = require('@pages/BO/orders/view/productsBlock');
-const viewOrderTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-const myAccountPage = require('@pages/FO/myAccount');
-const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
-const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
-
-// Import demo data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Statuses} = require('@data/demo/orderStatuses');
-
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
-const AddressFaker = require('@data/faker/address');
-
-const baseContext = 'functional_FO_userAccount_creditSlips_consultCreditSlip';
-
-let browserContext;
-let page;
-let orderReference;
-let creditSlipID;
-let dateIssued;
-let filePath;
-
-const customerData = new CustomerFaker();
-const addressData = new AddressFaker({
-  email: customerData.email,
-  country: 'France',
-});
-const orderData = {
-  customer: customerData,
-  product: 1,
-  productQuantity: 1,
-  paymentMethod: PaymentMethods.wirePayment.moduleName,
-};
+const baseContext: string = 'functional_FO_userAccount_creditSlips_consultCreditSlip';
 
 /*
   Pre-condition:
@@ -70,6 +47,25 @@ const orderData = {
 
  */
 describe('FO - Consult credit slip list & View PDF Credit slip & View order', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let orderReference: string;
+  let creditSlipID: string;
+  let dateIssued: string;
+  let filePath: string;
+
+  const customerData: CustomerFaker = new CustomerFaker();
+  const addressData: AddressFaker = new AddressFaker({
+    email: customerData.email,
+    country: 'France',
+  });
+  const orderData: Order = {
+    customer: customerData,
+    product: 1,
+    productQuantity: 1,
+    paymentMethod: PaymentMethods.wirePayment.moduleName,
+  };
+
   // Pre-condition: Create new account on FO
   createAccountTest(customerData, `${baseContext}_preTest_1`);
   // Pre-condition: Create new address
@@ -103,6 +99,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
         await homePage.goToLoginPage(page);
+
         const pageTitle = await loginPage.getPageTitle(page);
         await expect(pageTitle).to.equal(loginPage.pageTitle);
       });
@@ -237,8 +234,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         // View my shop and init pages
         page = await viewOrderPage.viewMyShop(page);
-
         await homePage.changeLanguage(page, 'en');
+
         const isHomePage = await homePage.isHomePage(page);
         await expect(isHomePage, 'Fail to open FO home page').to.be.true;
       });

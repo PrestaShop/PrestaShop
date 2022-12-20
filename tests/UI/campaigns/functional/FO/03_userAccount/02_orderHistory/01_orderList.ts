@@ -5,22 +5,16 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import foMyAccountPage from '@pages/FO/myAccount';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
+import {DefaultCustomer} from '@data/demo/customer';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_FO_userAccount_orderHistory_orderList';
-
-let browserContext;
-let page;
-
-const numberOfDefaultOrders = 5;
 
 /*
 Sign in FO with default account
@@ -29,6 +23,11 @@ Check that number of orders is above 5 (default orders)
  */
 
 describe('FO - Account : Check number of orders in order history page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const numberOfDefaultOrders: number = 5;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,6 +41,7 @@ describe('FO - Account : Check number of orders in order history page', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
     await foHomePage.goToFo(page);
+
     const isHomePage = await foHomePage.isHomePage(page);
     await expect(isHomePage).to.be.true;
   });
@@ -59,6 +59,7 @@ describe('FO - Account : Check number of orders in order history page', async ()
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
     await foLoginPage.customerLogin(page, DefaultCustomer);
+
     const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
@@ -68,6 +69,7 @@ describe('FO - Account : Check number of orders in order history page', async ()
 
     await foHomePage.goToMyAccountPage(page);
     await foMyAccountPage.goToHistoryAndDetailsPage(page);
+
     const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
     await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
   });

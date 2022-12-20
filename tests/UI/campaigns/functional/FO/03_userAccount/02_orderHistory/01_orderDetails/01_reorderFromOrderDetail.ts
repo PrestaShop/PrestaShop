@@ -3,29 +3,25 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
-const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
+import foMyAccountPage from '@pages/FO/myAccount';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Products} = require('@data/demo/products');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_reorderFromOrderDetail';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_userAccount_orderHistory_orderDetails_reorderFromOrderDetail';
 
 /*
 Go to the FO homepage
@@ -39,9 +35,12 @@ Proceed checkout
 Go back to the order list
 Check if the reorder is displayed
 Go to the order detail
-Check if the reorder contain the same product than the "original" order
+Check if the reorder contain the same product as the "original" order
  */
 describe('FO - Account : Reorder from order detail', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,6 +56,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'openFoShop', baseContext);
 
       await foHomePage.goTo(page, global.FO.URL);
+
       const result = await foHomePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -65,6 +65,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFo', baseContext);
 
       await foHomePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -73,6 +74,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -81,6 +83,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToHomePage', baseContext);
 
       await foHomePage.goToHomePage(page);
+
       const result = await foHomePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -88,8 +91,9 @@ describe('FO - Account : Reorder from order detail', async () => {
     it('should add first product to cart and Proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      await foHomePage.addProductToCartByQuickView(page, 1, '1');
+      await foHomePage.addProductToCartByQuickView(page, 1, 1);
       await foHomePage.proceedToCheckout(page);
+
       const pageTitle = await cartPage.getPageTitle(page);
       await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
@@ -138,6 +142,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 
@@ -151,6 +156,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
+
       const pageTitle = await foMyAccountPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
     });
@@ -159,6 +165,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
+
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });
@@ -199,6 +206,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmReorder', baseContext);
 
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
       const pageTitle = await orderConfirmationPage.getPageTitle(page);
       await expect(pageTitle).to.equal(orderConfirmationPage.pageTitle);
 
@@ -212,6 +220,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToAccountPage', baseContext);
 
       await foHomePage.goToMyAccountPage(page);
+
       const pageTitle = await foMyAccountPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
     });
@@ -220,6 +229,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrderHistoryPage', baseContext);
 
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
+
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });
@@ -244,6 +254,7 @@ describe('FO - Account : Reorder from order detail', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
 
       await orderConfirmationPage.logout(page);
+
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });

@@ -2,44 +2,30 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {deleteCacheTest} from '@commonTests/BO/advancedParameters/deleteCache';
+import {createAccountTest} from '@commonTests/FO/createAccount';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+
 // Import FO pages
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
+import myAccountPage from '@pages/FO/myAccount';
+import addAddressPage from '@pages/FO/myAccount/addAddress';
+import addressesPage from '@pages/FO/myAccount/addresses';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
+// Import data
+import {Products} from '@data/demo/products';
+import CustomerFaker from '@data/faker/customer';
+import FakerAddress from '@data/faker/address';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import common tests
-const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const myAccountPage = require('@pages/FO/myAccount');
-const addressesPage = require('@pages/FO/myAccount/addresses');
-const addAddressPage = require('@pages/FO/myAccount/addAddress');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-
-// Import Faker data
-const CustomerFaker = require('@data/faker/customer');
-const FakerAddress = require('@data/faker/address');
-
-// Import demo data
-const {Products} = require('@data/demo/products');
-
-const newCustomerData = new CustomerFaker();
-const createAddressData = new FakerAddress({country: 'France'});
-const editAddressData = new FakerAddress({country: 'France'});
-const secondAddressData = new FakerAddress({country: 'France'});
-
-const baseContext = 'functional_FO_userAccount_CRUDAddress';
-
-let browserContext;
-let page;
-
-let firstAddressPosition = 0;
-let secondAddressPosition = 0;
+const baseContext: string = 'functional_FO_userAccount_CRUDAddress';
 
 /*
 Pre-condition:
@@ -57,6 +43,16 @@ Post-condition:
 - Delete customer account
  */
 describe('FO - Account : CRUD address', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let firstAddressPosition: number = 0;
+  let secondAddressPosition: number = 0;
+
+  const newCustomerData: CustomerFaker = new CustomerFaker();
+  const createAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const editAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const secondAddressData: FakerAddress = new FakerAddress({country: 'France'});
+
   // Pre-condition: Delete cache
   deleteCacheTest(baseContext);
 
@@ -78,6 +74,7 @@ describe('FO - Account : CRUD address', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoHomePage', baseContext);
 
       await homePage.goToFo(page);
+
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage).to.be.true;
     });
