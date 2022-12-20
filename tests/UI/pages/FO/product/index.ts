@@ -241,10 +241,13 @@ class Product extends FOBasePage {
   /**
    * Get product information in pack
    * @param page {Page} Browser tab
-   * @param productInList {object} Product in pack list
+   * @param productInList {number} Product in pack list
    * @returns {Promise<{image: string, quantity: number, price: string, name: string}>}
    */
-  async getProductInPackList(page: Page, productInList: number = 1) {
+  async getProductInPackList(page: Page, productInList: number = 1): Promise<{
+    image: string, quantity: number,
+    price: string, name: string
+  }> {
     return {
       image: await this.getAttributeContent(page, this.productInPackImage(productInList), 'src'),
       name: await this.getTextContent(page, this.productInPackName(productInList)),
