@@ -148,7 +148,7 @@ class Carriers extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 
