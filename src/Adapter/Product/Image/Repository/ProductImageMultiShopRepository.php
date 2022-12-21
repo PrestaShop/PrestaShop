@@ -257,6 +257,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             ->from($this->dbPrefix . 'image_shop', 'i')
             ->andWhere('i.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->addOrderBy('i.id_shop', 'ASC')
             ->addOrderBy('i.id_image', 'ASC')
             ->execute()
             ->fetchAll()
