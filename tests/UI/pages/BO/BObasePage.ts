@@ -201,7 +201,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly growlDefaultDiv: string;
 
-  private readonly growlMessageBlock: string;
+  protected growlMessageBlock: string;
 
   private readonly growlCloseButton: string;
 
@@ -213,7 +213,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly alertInfoBlock: string;
 
-  private readonly alertSuccessBlockParagraph: string;
+  protected alertSuccessBlockParagraph: string;
 
   private readonly alertDangerBlockParagraph: string;
 
