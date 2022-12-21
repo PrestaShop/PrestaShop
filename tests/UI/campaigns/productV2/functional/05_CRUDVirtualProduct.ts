@@ -1,28 +1,29 @@
-// Import utils
-import helper from '@utils/helpers';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
+
+// Import utils
+import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
+import files from '@utils/files';
 
 // Import test context
 import testContext from '@utils/testContext';
 
-// Import pages
+// Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
-import foProductPage from '@pages/FO/product';
+import ordersPage from '@pages/BO/orders/index';
+
+// Import FO pages
 import homePage from '@pages/FO/home';
-import productPage from "@pages/FO/product";
-import cartPage from "@pages/FO/cart";
-import checkoutPage from "@pages/FO/checkout";
-import orderConfirmationPage from "@pages/FO/checkout/orderConfirmation";
-import ordersPage from "@pages/BO/orders/index";
-import viewOrderPage from "@pages/BO/orders/view/viewOrderBasePage";
-import foHomePage from "@pages/FO/home";
-import foMyAccountPage from "@pages/FO/myAccount";
-import foOrderHistoryPage from "@pages/FO/myAccount/orderHistory";
-import orderDetailsPage from "@pages/FO/myAccount/orderDetails";
+import foProductPage from '@pages/FO/product';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
@@ -30,10 +31,11 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 
 // Import faker data
 import ProductFaker from '@data/faker/product';
-import files from '@utils/files';
-import {Statuses} from "@data/demo/orderStatuses";
-import {DefaultCustomer} from "@data/demo/customer";
-import {PaymentMethods} from "@data/demo/paymentMethods";
+
+// Import demo data
+import {Statuses} from '@data/demo/orderStatuses';
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';
 
@@ -47,7 +49,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
     downloadFile: true,
-    fileName: 'virtual.txt',
+    fileName: 'virtual.jpg',
     allowedDownload: 1,
     price: 15,
     taxRule: 'FR Taux standard (20%)',
@@ -67,22 +69,22 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   });
 
   // Pre-condition: Enable new product page
-  //enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    await files.generateImage('cover.jpg');
-    await files.generateImage('thumb.jpg');
-    await files.createFile('.', 'virtual.txt', 'test');
+    await files.generateImage(newProductData.coverImage);
+    await files.generateImage(newProductData.thumbImage);
+    await files.generateImage(newProductData.fileName);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('cover.jpg');
-    await files.deleteFile('thumb.jpg');
-    await files.deleteFile('virtual.txt');
+    await files.deleteFile(newProductData.coverImage);
+    await files.deleteFile(newProductData.thumbImage);
+    await files.deleteFile(newProductData.fileName);
   });
 
   // 1 - Create product
@@ -130,7 +132,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     });
 
     it('should go to new product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewProductPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewfoProductPage', baseContext);
 
       await productsPage.clickOnAddNewProduct(page);
 
@@ -146,7 +148,10 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
+  });
 
+  // 2 - View product
+  describe('View product in BO & FO', async () => {
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductHeaderDetails', baseContext);
 
@@ -166,7 +171,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
       const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal('Save and publish');
+      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublichButtonName);
     });
 
     it('should preview product', async function () {
@@ -195,182 +200,230 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       ]);
     });
 
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+    describe('Create order to check to uploaded file', async () => {
+      it('should add product to cart', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      // Add the product to the cart
-      await productPage.addProductToTheCart(page, 1);
+        // Add the product to the cart
+        await foProductPage.addProductToTheCart(page, 1);
 
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        await expect(notificationsNumber).to.be.equal(1);
+      });
+
+      it('should proceed to checkout and sign in', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
+
+        // Proceed to checkout the shopping cart
+        await cartPage.clickOnProceedToCheckout(page);
+
+        // Personal information step - Login
+        await checkoutPage.clickOnSignIn(page);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
+      });
+
+      it('should go to payment step', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
+
+        // Address step - Go to delivery step
+        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+      });
+
+      it('should pay the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
+
+        // Payment step - Choose payment step
+        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
+
+        // Check the confirmation message
+        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      });
+
+      it('should go back to BO', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO1', baseContext);
+
+        // Go back to BO
+        page = await foProductPage.closePage(browserContext, page, 0);
+
+        const pageTitle: object = await createProductsPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+      });
+
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.ordersParentLink,
+          dashboardPage.ordersLink,
+        );
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should update order status', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+        const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+        await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+      });
+
+      it('should view my shop', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
+
+        // Click on view my shop
+        page = await ordersPage.viewMyShop(page);
+
+        const isHomePage = await homePage.isHomePage(page);
+        await expect(isHomePage, 'Home page is not displayed').to.be.true;
+      });
+
+      it('should go to my account page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+
+        await homePage.goToMyAccountPage(page);
+        const pageTitle = await foMyAccountPage.getPageTitle(page);
+        await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+      });
+
+      it('should go to order history page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
+
+        await foMyAccountPage.goToHistoryAndDetailsPage(page);
+        const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
+        await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
+      });
+
+      it('should go to order details page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
+
+        await foOrderHistoryPage.goToDetailsPage(page);
+
+        const pageTitle = await orderDetailsPage.getPageTitle(page);
+        await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      });
+
+      it('should download the file', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDownloadFile', baseContext);
+
+        await orderDetailsPage.clickOnDownloadLink(page);
+
+        const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
+        await expect(doesFileExist, 'File is not downloaded!').to.be.true;
+      });
     });
+  });
 
-    it('should proceed to checkout and sign in', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Personal information step - Login
-      await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, DefaultCustomer);
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should pay the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+  // 3 - Edit product
+  describe('Edit product', async () => {
+    it('should close the FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
+
+      const pageTitle: object = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
+
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.productsLink,
+      );
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle: string = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to the first product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFirstProductPage', baseContext);
+
+      await productsPage.goToProductPage(page);
 
       const pageTitle: object = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+    it('should edit the created product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editCreatedProduct', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
-
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      const createProductMessage: string = await createProductsPage.setProduct(page, editProductData);
+      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
-    it('should update order status', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+    it('should check the product header details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
-      await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
-    });
+      const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
-    it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
-
-      // Click on view my shop
-      page = await viewOrderPage.viewMyShop(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page is not displayed').to.be.true;
-    });
-
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
-
-      await foHomePage.goToMyAccountPage(page);
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
-    });
-
-    it('should go to order history page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
-
-      await foMyAccountPage.goToHistoryAndDetailsPage(page);
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
-    });
-
-    it('should go to order details page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails', baseContext);
-
-      await foOrderHistoryPage.goToDetailsPage(page);
-
-      const pageTitle = await orderDetailsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
+      const productHeaderSummary: object = await createProductsPage.getProductHeaderSummary(page);
+      await Promise.all([
+        expect(productHeaderSummary.priceTaxExc).to.equal(`€${(editProductData.price.toFixed(2))} tax excl.`),
+        expect(productHeaderSummary.priceTaxIncl).to.equal(
+          `€${(editProductData.price + taxValue).toFixed(2)} tax incl. (tax rule: ${editProductData.tax}%)`),
+        expect(productHeaderSummary.quantity).to.equal(`${editProductData.quantity + newProductData.quantity - 1} in stock`),
+        expect(productHeaderSummary.reference).to.contains(editProductData.reference),
+      ]);
     });
   });
 
-  /* // 2 - Edit product
-   describe('Edit product', async () => {
-     it('should edit the created product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
+  // 4 - View edited product
+  describe('View edited product', async () => {
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEditedProduct', baseContext);
 
-       const createProductMessage = await createProductsPage.setProduct(page, editProductData);
-       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
-     });
+      // Click on preview button
+      page = await createProductsPage.previewProduct(page);
 
-     it('should check the product header details', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
+      await foProductPage.changeLanguage(page, 'en');
 
-       const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
+      const pageTitle: string = await foProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(editProductData.name);
+    });
 
-       const productHeaderSummary = await createProductsPage.getProductHeaderSummary(page);
-       await Promise.all([
-         expect(productHeaderSummary.priceTaxExc).to.equal(`€${(editProductData.price.toFixed(2))} tax excl.`),
-         expect(productHeaderSummary.priceTaxIncl).to.equal(
-           `€${(editProductData.price + taxValue).toFixed(2)} tax incl. (tax rule: ${editProductData.tax}%)`),
-         expect(productHeaderSummary.quantity).to.equal(`${editProductData.quantity + newProductData.quantity} in stock`),
-         expect(productHeaderSummary.reference).to.contains(editProductData.reference),
-       ]);
-     });
+    it('should check all product information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-     it('should preview product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'previewEditedProduct', baseContext);
+      const taxValue : number = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
-       // Click on preview button
-       page = await createProductsPage.previewProduct(page);
+      const result: object = await foProductPage.getProductInformation(page);
+      await Promise.all([
+        await expect(result.name).to.equal(editProductData.name),
+        await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
+        await expect(result.description).to.equal(editProductData.description),
+      ]);
+    });
 
-       await foProductPage.changeLanguage(page, 'en');
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO3', baseContext);
 
-       const pageTitle = await foProductPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(editProductData.name);
-     });
+      // Go back to BO
+      page = await foProductPage.closePage(browserContext, page, 0);
 
-     it('should check all product information', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
+      const pageTitle : string = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+  });
 
-       const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
+  // 5 - Delete product
+  describe('Delete product', async () => {
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-       const result = await foProductPage.getProductInformation(page);
-       await Promise.all([
-         await expect(result.name).to.equal(editProductData.name),
-         await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
-         await expect(result.description).to.equal(editProductData.description),
-       ]);
-     });
+      const createProductMessage : string = await createProductsPage.deleteProduct(page);
+      await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+    });
+  });
 
-     it('should go back to BO', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
-
-       // Go back to BO
-       page = await foProductPage.closePage(browserContext, page, 0);
-
-       const pageTitle = await createProductsPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
-     });
-   });
-
-   // 3 - Delete product
-   describe('Delete product', async () => {
-     it('should delete product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
-
-       const createProductMessage = await createProductsPage.deleteProduct(page);
-       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
-     });
-   });
-
-   // Post-condition: Disable new product page
-   disableNewProductPageTest(`${baseContext}_disableNewProduct`);*/
+  // Post-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 });

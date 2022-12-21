@@ -36,6 +36,7 @@ class OrderDetails extends FOBasePage {
 
     // Order product table content
     this.productName = (row, column) => `${this.tableBodyColumn(row, column)} a`;
+    this.downloadLink = (row, column) => `${this.tableBodyColumn(row, column)} a[href]`;
 
     // Add message form selectors
     this.productIdSelect = '[name=id_product]';
@@ -95,6 +96,17 @@ class OrderDetails extends FOBasePage {
    */
   getProductName(page, row = 1, column = 1) {
     return this.getTextContent(page, this.productName(row, column));
+  }
+
+  /**
+   * Click on download link
+   * @param page {Page} Browser tab
+   * @param row Number} row in orders details table
+   * @param column {Number} column in orders details table
+   * @returns {Promise<void>}
+   */
+  async clickOnDownloadLink(page, row = 1, column = 1) {
+    await this.waitForSelectorAndClick(page, this.downloadLink(row, column));
   }
 
   /**
