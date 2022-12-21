@@ -6,6 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
@@ -26,7 +27,6 @@ const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager
 const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
 const viewSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/view');
 const searchResultsPage = require('@pages/FO/searchResults');
-const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 

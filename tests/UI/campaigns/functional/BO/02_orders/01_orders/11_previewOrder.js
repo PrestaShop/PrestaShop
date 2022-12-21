@@ -6,6 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
@@ -21,7 +22,6 @@ const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const searchResultsPage = require('@pages/FO/searchResults');
-const cartPage = require('@pages/FO/cart');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const checkoutPage = require('@pages/FO/checkout');
 

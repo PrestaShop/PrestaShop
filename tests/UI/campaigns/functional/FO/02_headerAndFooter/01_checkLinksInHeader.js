@@ -3,6 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
@@ -10,7 +11,6 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 const contactUsPage = require('@pages/FO/contactUs');
-const cartPage = require('@pages/FO/cart');
 const myAccountPage = require('@pages/FO/myAccount');
 
 // Import data

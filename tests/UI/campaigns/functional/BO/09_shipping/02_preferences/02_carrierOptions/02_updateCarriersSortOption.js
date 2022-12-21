@@ -6,6 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import foCartPage from '@pages/FO/cart';
 import foHomePage from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
@@ -21,7 +22,6 @@ const basicHelper = require('@utils/basicHelper');
 const dashboardPage = require('@pages/BO/dashboard');
 const preferencesPage = require('@pages/BO/shipping/preferences');
 const carriersPage = require('@pages/BO/shipping/carriers');
-const foCartPage = require('@pages/FO/cart');
 const foCheckoutPage = require('@pages/FO/checkout');
 
 // Import data

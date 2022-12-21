@@ -7,6 +7,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
@@ -20,7 +21,6 @@ const {expect} = require('chai');
 const dashboardPage = require('@pages/BO/dashboard');
 const carriersPage = require('@pages/BO/shipping/carriers');
 const addCarrierPage = require('@pages/BO/shipping/carriers/add');
-const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Import data

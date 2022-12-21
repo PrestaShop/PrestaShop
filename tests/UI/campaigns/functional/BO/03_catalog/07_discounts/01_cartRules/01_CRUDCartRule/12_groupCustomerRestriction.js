@@ -6,6 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import foHomePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
@@ -19,7 +20,6 @@ const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRu
 const dashboardPage = require('@pages/BO/dashboard');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-const cartPage = require('@pages/FO/cart');
 
 // Import data
 const CartRuleFaker = require('@data/faker/cartRule');
