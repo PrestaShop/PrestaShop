@@ -10,14 +10,12 @@ import homePage from '@pages/FO/home';
 // Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
 const baseContext = 'sanity_installShop_installShop';
 
-let browserContext: BrowserContext;
-let page: Page;
-
 describe('Install Prestashop', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,7 +62,7 @@ describe('Install Prestashop', async () => {
     await installPage.agreeToTermsAndConditions(page);
     await installPage.nextStep(page);
 
-    if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 500))) {
+    if (!(await installPage.isThirdStepVisible(page))) {
       const stepTitle = await installPage.getStepTitle(page, 'System compatibility');
       await expect(stepTitle).to.contain(installPage.thirdStepEnTitle);
     }
@@ -73,7 +71,7 @@ describe('Install Prestashop', async () => {
   it('should click on next and go to step \'Store Information\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoreInformation', baseContext);
 
-    if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 500))) {
+    if (!(await installPage.isThirdStepVisible(page))) {
       await installPage.nextStep(page);
     }
 
@@ -84,7 +82,7 @@ describe('Install Prestashop', async () => {
   it('should fill shop Information form and go to step \'Content Configuration\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContentConfiguration', baseContext);
 
-    await installPage.elementVisible(page, installPage.fourthStepFinishedListItem, 500);
+    await installPage.waitForVisibleForthStep(page);
     await installPage.fillInformationForm(page);
     await installPage.nextStep(page);
 
@@ -96,7 +94,7 @@ describe('Install Prestashop', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseInformation', baseContext);
 
     await installPage.nextStep(page);
-    await installPage.elementVisible(page, installPage.fifthStepFinishedListItem, 500);
+    await installPage.waitForVisibleFifthStep(page);
 
     const stepTitle = await installPage.getStepTitle(page, 'System configuration');
     await expect(stepTitle).to.contain(installPage.sixthStepEnTitle);

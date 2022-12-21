@@ -1,17 +1,114 @@
 // Import pages
 import CommonPage from '@pages/commonPage';
-
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
- * Install page, contains functions used in different steps of the install
+ * Install page, contains functions used in different steps of the installation
  * @class
  * @extends CommonPage
  */
 class Install extends CommonPage {
+  // Titles
+  public readonly firstStepFrTitle: string;
+
+  public readonly firstStepEnTitle: string;
+
+  public readonly secondStepEnTitle: string;
+
+  public readonly thirdStepEnTitle: string;
+
+  public readonly fourthStepEnTitle: string;
+
+  public readonly fifthStepEnTitle: string;
+
+  public readonly sixthStepEnTitle: string;
+
+  public readonly finalStepEnTitle: string;
+
+  // Selectors
+  private readonly nextStepButton: string;
+
+  private readonly chooseLanguageStepPageTitle: string;
+
+  private readonly languageSelect: string;
+
+  private readonly licenseAgreementsStepPageTitle: string;
+
+  private readonly termsConditionsCheckbox: string;
+
+  private readonly systemCompatibilityStepPageTitle: string;
+
+  private readonly thirdStepFinishedListItem: string;
+
+  private readonly fourthStepFinishedListItem: string;
+
+  private readonly storeInformationStepPageTitle: string;
+
+  private readonly shopNameInput: string;
+
+  private readonly countryChosenSelect: string;
+
+  private readonly countryChosenSearchInput: string;
+
+  private readonly firstNameInput: string;
+
+  private readonly lastNameInput: string;
+
+  private readonly emailInput: string;
+
+  private readonly passwordInput: string;
+
+  private readonly repeatPasswordInput: string;
+
+  private readonly contentInformationStepPageTitle: string;
+
+  private readonly fifthStepFinishedListItem: string;
+
+  private readonly systemConfigurationStepPageTitle: string;
+
+  private readonly dbServerInput: string;
+
+  private readonly dbLoginInput: string;
+
+  private readonly dbNameInput: string;
+
+  private readonly dbPasswordInput: string;
+
+  private readonly dbPrefixInput: string;
+
+  private readonly testDbConnectionButton: string;
+
+  private readonly createDbButton: string;
+
+  private readonly dbResultCheckOkBlock: string;
+
+  private readonly installationProgressBar: string;
+
+  private readonly generateSettingsFileStep: string;
+
+  private readonly installDatabaseStep: string;
+
+  private readonly installDefaultDataStep: string;
+
+  private readonly populateDatabaseStep: string;
+
+  private readonly configureShopStep: string;
+
+  private readonly installModulesStep: string;
+
+  private readonly installThemeStep: string;
+
+  private readonly installFixturesStep: string;
+
+  private readonly installPostInstall: string;
+
+  private readonly installationFinishedStepPageTitle: string;
+
+  private readonly discoverFoButton: string;
+
   /**
    * @constructs
-   * Setting up titles and selectors to use on install page
+   * Setting up titles and selectors to use on installation page
    */
   constructor() {
     super();
@@ -89,7 +186,7 @@ class Install extends CommonPage {
    * @param step {string} Step to get title from
    * @returns {Promise<string>}
    */
-  async getStepTitle(page, step) {
+  async getStepTitle(page : Page, step: string): Promise<string> {
     let selector;
 
     switch (step) {
@@ -133,7 +230,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async setInstallLanguage(page) {
+  async setInstallLanguage(page: Page): Promise<void> {
     await page.selectOption(this.languageSelect, global.INSTALL.LANGUAGE);
   }
 
@@ -142,18 +239,42 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async nextStep(page) {
+  async nextStep(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.nextStepButton);
-    await page.click(this.nextStepButton, {waitUntil: 'load'});
+    await page.click(this.nextStepButton);
   }
 
   /**
-   * Click on checkbox to agree on terms and conditions if its not checked already in step 2
+   * Click on checkbox to agree on terms and conditions if it's not checked already in step 2
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async agreeToTermsAndConditions(page) {
+  async agreeToTermsAndConditions(page: Page):Promise<void> {
     await this.setChecked(page, this.termsConditionsCheckbox);
+  }
+
+  /**
+   * Return the visibility of the third step
+   * @param page {Page} Browser Tab
+   */
+  isThirdStepVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.thirdStepFinishedListItem, 500);
+  }
+
+  /**
+   * Wait for Fourth step to be visible
+   * @param page {Page} Browser Tab
+   */
+  async waitForVisibleForthStep(page: Page): Promise<void> {
+    await this.waitForVisibleSelector(page, this.fourthStepFinishedListItem, 500);
+  }
+
+  /**
+   * Wait for Fifth step to be visible
+   * @param page {Page} Browser Tab
+   */
+  async waitForVisibleFifthStep(page: Page): Promise<void> {
+    await this.waitForVisibleSelector(page, this.fifthStepFinishedListItem, 500);
   }
 
   /**
@@ -161,7 +282,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async fillInformationForm(page) {
+  async fillInformationForm(page: Page): Promise<void> {
     await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
 
     // Choosing country
@@ -181,7 +302,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async fillDatabaseForm(page) {
+  async fillDatabaseForm(page: Page): Promise<void> {
     await this.setValue(page, this.dbServerInput, global.INSTALL.DB_SERVER);
     await this.setValue(page, this.dbNameInput, global.INSTALL.DB_NAME);
     await this.setValue(page, this.dbLoginInput, global.INSTALL.DB_USER);
@@ -195,7 +316,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async isDatabaseConnected(page) {
+  async isDatabaseConnected(page: Page): Promise<boolean> {
     await page.click(this.testDbConnectionButton);
 
     // Create database 'prestashop' if not exist
@@ -211,7 +332,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isInstallationInProgress(page) {
+  isInstallationInProgress(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.installationProgressBar, 30000);
   }
 
@@ -222,7 +343,7 @@ class Install extends CommonPage {
    * @param timeout {number} Time to wait for step to finish
    * @returns {Promise<boolean>}
    */
-  async isInstallationStepFinished(page, step, timeout = 30000) {
+  async isInstallationStepFinished(page: Page, step: string, timeout = 30000): Promise<boolean> {
     let selector;
 
     switch (step) {
@@ -274,7 +395,7 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isInstallationSuccessful(page) {
+  isInstallationSuccessful(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.installationFinishedStepPageTitle, 30000);
   }
 
@@ -283,10 +404,10 @@ class Install extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<Page>}
    */
-  async goToFOAfterInstall(page) {
+  async goToFOAfterInstall(page: Page): Promise<Page> {
     await this.waitForVisibleSelector(page, this.discoverFoButton);
     return this.openLinkWithTargetBlank(page, this.discoverFoButton);
   }
 }
 
-module.exports = new Install();
+export default new Install();
