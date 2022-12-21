@@ -24,7 +24,7 @@
  *-->
 <script lang="ts" setup>
   import Modal from '@PSVue/components/Modal.vue';
-  import {ref} from 'vue';
+  import {ref, computed} from 'vue';
   import {getProductImages, getProductShopImages, updateProductShopImages} from '@pages/product/services/images';
   import ImageShopGrid from '@pages/product/components/images-shop-association/ImageShopGrid.vue';
   import ProductEventMap from '@pages/product/product-event-map';
@@ -137,6 +137,25 @@
     productShops.value = newShops;
     productImages.value = newProductImages;
   }
+
+  const hasDeletedImages = computed(() => {
+    let hasDeletedImage = false;
+    productImages.value.forEach((productImage: ProductImage) => {
+      let isImageDeleted = true;
+
+      productImage.associations.forEach((association: ProductShopImage) => {
+        if (association.isAssociated) {
+          isImageDeleted = false;
+        }
+      });
+
+      if (isImageDeleted) {
+        hasDeletedImage = true;
+      }
+    });
+
+    return hasDeletedImage;
+  });
 </script>
 
 <template>
@@ -148,60 +167,75 @@
     >
       {{ $t('button.label') }}
     </button>
-    <modal
-      id="images-shop-association-modal"
-      v-if="modalOpened"
-      :modal-title="$t('button.label')"
-      @close="closeModal"
-    >
-      <template #body>
-        <div
-          class="images-shop-association-loading"
-          v-if="loadingAssociations || productImages.length <= 0"
-        >
+    <Teleport to="body">
+      <modal
+        id="images-shop-association-modal"
+        v-if="modalOpened"
+        :modal-title="$t('button.label')"
+        @close="closeModal"
+      >
+        <template #body>
           <div
-            v-if="loadingAssociations"
-            class="spinner"
-          />
-          <div v-else>
-            {{ $t('modal.noImages') }}
+            class="images-shop-association-loading"
+            v-if="loadingAssociations || productImages.length <= 0"
+          >
+            <div
+              v-if="loadingAssociations"
+              class="spinner"
+            />
+            <div v-else>
+              {{ $t('modal.noImages') }}
+            </div>
           </div>
-        </div>
-        <image-shop-grid
-          v-if="!loadingAssociations && productImages.length > 0"
-          :product-images="productImages"
-          :product-shops="productShops"
-        />
-      </template>
+          <div
+            class="alert alert-warning"
+            role="alert"
+            v-if="!loadingAssociations && productImages.length > 0 && hasDeletedImages"
+          >
+            <p class="alert-text">
+              {{ $t('warning.deletedImages') }}
+            </p>
+          </div>
+          <div
+            :class="`image-shop-grid-container ${hasDeletedImages ? 'delete-warning' : ''}`"
+            v-if="!loadingAssociations && productImages.length > 0"
+          >
+            <image-shop-grid
+              :product-images="productImages"
+              :product-shops="productShops"
+            />
+          </div>
+        </template>
 
-      <template #footer>
-        <button
-          type="button"
-          class="btn btn-secondary btn-close"
-          @click.prevent.stop="closeModal"
-          :aria-label="$t('modal.close')"
-        >
-          {{ $t('modal.cancel') }}
-        </button>
+        <template #footer>
+          <button
+            type="button"
+            class="btn btn-secondary btn-close"
+            @click.prevent.stop="closeModal"
+            :aria-label="$t('modal.close')"
+          >
+            {{ $t('modal.cancel') }}
+          </button>
 
-        <button
-          type="button"
-          class="btn btn-primary"
-          @click.prevent.stop="saveAssociations"
-          :aria-label="$t('modal.save')"
-          :disabled="loadingAssociations || submittingAssociations || productImages.length <= 0"
-        >
-          <span v-if="!submittingAssociations">
-            {{ $t('modal.save') }}
-          </span>
-          <span
-            class="spinner-border spinner-border-sm"
-            v-if="submittingAssociations"
-            role="status"
-            aria-hidden="true"
-          />
-        </button>
-      </template>
-    </modal>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click.prevent.stop="saveAssociations"
+            :aria-label="$t('modal.save')"
+            :disabled="loadingAssociations || submittingAssociations || productImages.length <= 0"
+          >
+            <span v-if="!submittingAssociations">
+              {{ $t('modal.save') }}
+            </span>
+            <span
+              class="spinner-border spinner-border-sm"
+              v-if="submittingAssociations"
+              role="status"
+              aria-hidden="true"
+            />
+          </button>
+        </template>
+      </modal>
+    </Teleport>
   </div>
 </template>

@@ -1,6 +1,8 @@
 // Config
 // Tools
 @import "~bootstrap/scss/mixins/breakpoints";
+@import "~prestakit/scss/mixins/fonts";
+
 // Settings
 /* stylelint-disable */
 @import "@scss/config/_settings";
@@ -731,50 +733,6 @@ $product-page-padding-bottom: 80px !default;
 
   .manage-shop-images-button-container {
     text-align: right;
-  }
-
-  #images-shop-association-modal {
-    .modal-body {
-      max-height: 70vh;
-      overflow: auto;
-    }
-
-    .images-shop-association-loading {
-      margin: 1rem 0;
-      text-align: center;
-    }
-  }
-
-  .image-shop-grid {
-    width: 100%;
-
-    tr.header-row {
-      border-bottom: 2px solid $brand-primary;
-    }
-
-    tr:not(.header-row) {
-      border-bottom: 1px solid $gray-light;
-    }
-
-    .shop-image-cell {
-      max-width: 116px;
-    }
-
-    td,
-    th {
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .cover-checkbox {
-      margin-top: 17px;
-    }
-
-    .cover-label {
-      display: block;
-      font-size: 11px;
-      color: $gray-light;
-    }
   }
 
   .nav-tabs {
@@ -2475,6 +2433,82 @@ $product-page-padding-bottom: 80px !default;
     max-width: 810px;
   }
 }
+
+#images-shop-association-modal {
+  .image-shop-grid-container {
+    max-height: 70vh;
+    overflow: auto;
+
+    &.delete-warning {
+      max-height: 65vh;
+    }
+  }
+
+  .images-shop-association-loading {
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .image-shop-grid {
+    width: 100%;
+
+    tr.header-row {
+      border-bottom: 2px solid $brand-primary;
+    }
+
+    tr:not(.header-row) {
+      border-bottom: 1px solid $gray-light;
+    }
+
+    .shop-image-cell {
+      max-width: 70px;
+    }
+
+    tr.deleted-image {
+      background-color: $alert-warning-bg;
+
+      .shop-image-cell {
+        position: relative;
+
+        &::before {
+          @include use-material-icon();
+          position: absolute;
+          top: calc(50% - 0.75rem);
+          left: calc(50% - 0.75rem);
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          font-size: 1.5rem;
+          color: $warning;
+          text-align: center;
+          content: "warning";
+        }
+
+        img {
+          filter: grayscale(0.8);
+        }
+      }
+    }
+
+    td,
+    th {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .cover-checkbox {
+      margin-top: 17px;
+    }
+
+    .cover-label {
+      display: block;
+      font-size: 11px;
+      color: $gray-light;
+    }
+  }
+}
+
 
 // Create product modal
 @import "create_product_modal";

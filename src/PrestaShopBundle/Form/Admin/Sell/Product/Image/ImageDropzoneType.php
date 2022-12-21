@@ -72,13 +72,14 @@ class ImageDropzoneType extends TranslatorAwareType
                     'class' => 'manage-shop-images-button-container',
                     'data-product-id' => $options['product_id'],
                     'data-translations' => json_encode([
-                        'button.label' => $this->trans('Manage images', 'Admin.Catalog.feature'),
+                        'button.label' => $this->trans('Manage images', 'Admin.Catalog.Feature'),
                         'modal.save' => $this->trans('Save and publish', 'Admin.Actions'),
                         'modal.close' => $this->trans('Close', 'Admin.Actions'),
                         'modal.cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                        'cover.label' => $this->trans('Is Cover', 'Admin.Catalog.Feature'),
+                        'cover.label' => $this->trans('Cover', 'Admin.Catalog.Feature'),
                         'modal.noImages' => $this->trans('Product has no images.', 'Admin.Catalog.Feature'),
                         'grid.imageHeader' => $this->trans('Image', 'Admin.Catalog.Feature'),
+                        'warning.deletedImages' => $this->trans('Images will be deleted.', 'Admin.Catalog.Feature'),
                     ]),
                 ],
                 'attr' => [
