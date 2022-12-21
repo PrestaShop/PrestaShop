@@ -23,7 +23,8 @@ class Products extends BOBasePage {
     this.standardProductDescription = 'A physical product that needs to be shipped.';
     this.productWithCombinationsDescription = 'A product with different variations (size, color, etc.) from which '
       + 'customers can choose.';
-    this.virtualProductDescription = 'An intangible product that doesn\'t require shipping. You can also add a downloadable file.';
+    this.virtualProductDescription = 'An intangible product that doesn\'t require shipping. You can also add a '
+      + 'downloadable file.';
 
     this.packOfProductsDescription = ' A collection of products from your catalog.';
 
@@ -200,6 +201,16 @@ class Products extends BOBasePage {
    */
   isResetButtonVisible(page) {
     return this.elementVisible(page, this.filterResetButton, 1000);
+  }
+
+  /**
+   * Go to product page
+   * @param page {Page} Browser tab
+   * @param row {number} Row in product table
+   * @returns {Promise<void>}
+   */
+  async goToProductPage(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.productsListTableColumnName(row));
   }
 
   // Bulk delete products functions
