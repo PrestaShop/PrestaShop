@@ -3,13 +3,13 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-const cartPage = require('@pages/FO/cart');
 
 // Import data
 const {Products} = require('@data/demo/products');

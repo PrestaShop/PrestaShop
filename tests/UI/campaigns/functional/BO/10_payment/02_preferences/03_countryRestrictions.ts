@@ -9,9 +9,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import preferencesPage from '@pages/BO/payment/preferences';
+// Import FO pages
 import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
-// Import FO pages
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
