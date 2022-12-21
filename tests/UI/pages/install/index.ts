@@ -265,7 +265,7 @@ class Install extends CommonPage {
    * Wait for Fourth step to be visible
    * @param page {Page} Browser Tab
    */
-  async waitForVisibleForthStep(page: Page): Promise<void> {
+  async waitForFinishedForthStep(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.fourthStepFinishedListItem, 500);
   }
 
@@ -273,7 +273,7 @@ class Install extends CommonPage {
    * Wait for Fifth step to be visible
    * @param page {Page} Browser Tab
    */
-  async waitForVisibleFifthStep(page: Page): Promise<void> {
+  async waitForFinishedFifthStep(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.fifthStepFinishedListItem, 500);
   }
 
