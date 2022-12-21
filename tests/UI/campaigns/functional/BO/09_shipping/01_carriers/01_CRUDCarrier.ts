@@ -3,47 +3,29 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
+import addCarrierPage from '@pages/BO/shipping/carriers/add';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const carriersPage = require('@pages/BO/shipping/carriers');
-const addCarrierPage = require('@pages/BO/shipping/carriers/add');
-const checkoutPage = require('@pages/FO/checkout');
-
 // Import data
-const CarrierFaker = require('@data/faker/carrier');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import CarrierFaker from '@data/faker/carrier';
 
-const baseContext = 'functional_BO_shipping_carriers_CRUDCarrier';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfCarriers = 0;
-let carrierID = 0;
-
-const createCarrierData = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
-const editCarrierData = new CarrierFaker(
-  {
-    freeShipping: false,
-    rangeSup: 50,
-    allZones: true,
-    enable: true,
-  });
+const baseContext: string = 'functional_BO_shipping_carriers_CRUDCarrier';
 
 /*
 Create new carrier
@@ -53,6 +35,19 @@ Check the existence of the update carrier in FO
 Delete carrier
  */
 describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCarriers: number = 0;
+  let carrierID: string = '0';
+
+  const createCarrierData: CarrierFaker = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
+  const editCarrierData: CarrierFaker = new CarrierFaker({
+    freeShipping: false,
+    rangeSup: 50,
+    allZones: true,
+    enable: true,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -105,6 +100,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddCarrierPage', baseContext);
 
       await carriersPage.goToAddNewCarrierPage(page);
+
       const pageTitle = await addCarrierPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
     });
@@ -123,7 +119,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckNewCarrier', baseContext);
 
       await carriersPage.resetFilter(page);
-
       await carriersPage.filterTable(
         page,
         'input',
@@ -145,7 +140,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
-
       // Change language
       await homePage.changeLanguage(page, 'en');
 
@@ -157,6 +151,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -165,6 +160,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -174,13 +170,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -222,7 +215,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await carriersPage.resetFilter(page);
-
       await carriersPage.filterTable(
         page,
         'input',
@@ -238,6 +230,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCarrierPage', baseContext);
 
       await carriersPage.gotoEditCarrierPage(page, 1);
+
       const pageTitle = await addCarrierPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCarrierPage.pageTitleEdit);
     });
@@ -256,7 +249,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToCheckEditedCarrier', baseContext);
 
       await carriersPage.resetFilter(page);
-
       await carriersPage.filterTable(
         page,
         'input',
@@ -278,7 +270,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
-
       // Change language
       await homePage.changeLanguage(page, 'en');
 
@@ -290,6 +281,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'secondGoToLoginPageFO', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -298,6 +290,7 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -307,13 +300,10 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -355,7 +345,6 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await carriersPage.resetFilter(page);
-
       await carriersPage.filterTable(
         page,
         'input',

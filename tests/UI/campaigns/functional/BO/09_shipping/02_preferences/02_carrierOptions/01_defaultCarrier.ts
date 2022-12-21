@@ -5,30 +5,24 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import foCartPage from '@pages/FO/cart';
+import foCheckoutPage from '@pages/FO/checkout';
 import foProductPage from '@pages/FO/product';
 import foHomePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const preferencesPage = require('@pages/BO/shipping/preferences');
-const foCheckoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {Carriers} = require('@data/demo/carriers');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {Carriers} from '@data/demo/carriers';
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_BO_shipping_preferences_carrierOptions_defaultCarrier';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_shipping_preferences_carrierOptions_defaultCarrier';
 
 /*
 Go to shipping > preferences page
@@ -38,6 +32,9 @@ Reset default carrier to 'PrestaShop'
 Go to Fo and check the reset
  */
 describe('BO - Shipping - Preferences : Update default carrier and check it in FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -60,14 +57,14 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
       dashboardPage.shippingLink,
       dashboardPage.shippingPreferencesLink,
     );
-
     await preferencesPage.closeSfToolBar(page);
 
     const pageTitle = await preferencesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
-  const carriers = [
+  // @todo : Migration data/demo/carriers.js
+  const carriers: any[] = [
     Carriers.myCarrier,
     Carriers.default,
   ];
@@ -86,7 +83,6 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
 
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
-
         // Change FO language
         await foHomePage.changeLanguage(page, 'en');
 
@@ -99,10 +95,8 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
 
         // Go to the first product page
         await foHomePage.goToProductPage(page, 1);
-
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
-
         // Proceed to checkout the shopping cart
         await foCartPage.clickOnProceedToCheckout(page);
 

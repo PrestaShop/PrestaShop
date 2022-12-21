@@ -6,48 +6,31 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
+import addCarrierPage from '@pages/BO/shipping/carriers/add';
+import preferencesPage from '@pages/BO/shipping/preferences';
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
+import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
+import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
-const groupsPage = require('@pages/BO/shopParameters/customerSettings/groups');
-const addGroupPage = require('@pages/BO/shopParameters/customerSettings/groups/add');
-const preferencesPage = require('@pages/BO/shipping/preferences');
-const carriersPage = require('@pages/BO/shipping/carriers');
-const addCarrierPage = require('@pages/BO/shipping/carriers/add');
-const checkoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {groupAccess} = require('@data/demo/groupAccess');
-const {DefaultCustomer} = require('@data/demo/customer');
-const CarrierFaker = require('@data/faker/carrier');
+import {DefaultCustomer} from '@data/demo/customer';
+import {groupAccess} from '@data/demo/groupAccess';
+import CarrierFaker from '@data/faker/carrier';
 
-const baseContext = 'functional_BO_shipping_preferences_handling_handlingCharges';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-let newCarrierID = 0;
-const createCarrierData = new CarrierFaker({
-  freeShipping: false,
-  allZones: true,
-  handlingCosts: true,
-  allZonesValue: 5.00,
-  rangeSup: 50,
-});
-const priceDisplayMethod = ['Tax excluded', 'Tax included'];
-const defaultHandlingChargesValue = 2.00;
-const updateHandlingChargesValue = 4.00;
+const baseContext: string = 'functional_BO_shipping_preferences_handling_handlingCharges';
 
 /*
 Choose display tax excluded in Customer group page
@@ -60,6 +43,21 @@ Delete created carrier
 Go back to default value : tax included in Customer group page
  */
 describe('BO - Shipping - Preferences : Test handling charges for carriers in FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let newCarrierID: string = '0';
+
+  const createCarrierData: CarrierFaker = new CarrierFaker({
+    freeShipping: false,
+    allZones: true,
+    handlingCosts: true,
+    allZonesValue: 5.00,
+    rangeSup: 50,
+  });
+  const priceDisplayMethod: string[] = ['Tax excluded', 'Tax included'];
+  const defaultHandlingChargesValue: number = 2.00;
+  const updateHandlingChargesValue: number = 4.00;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -90,7 +88,6 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -184,7 +181,6 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
-
       // Change language
       await homePage.changeLanguage(page, 'en');
 
@@ -205,6 +201,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -214,13 +211,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -272,7 +266,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should update \'Handling charges\' value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges1', baseContext);
 
-      const textResult = await preferencesPage.setHandlingCharges(page, updateHandlingChargesValue);
+      const textResult = await preferencesPage.setHandlingCharges(page, updateHandlingChargesValue.toString());
       await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
     });
   });
@@ -284,7 +278,6 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       // Click on view my shop
       page = await carriersPage.viewMyShop(page);
-
       // Change language
       await homePage.changeLanguage(page, 'en');
 
@@ -296,6 +289,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstGoToLoginPageFO2', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -304,6 +298,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -313,13 +308,10 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -362,7 +354,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
     it('should update \'Handling charges\' value', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateHandlingCharges2', baseContext);
 
-      const textResult = await preferencesPage.setHandlingCharges(page, defaultHandlingChargesValue);
+      const textResult = await preferencesPage.setHandlingCharges(page, defaultHandlingChargesValue.toString());
       await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
     });
   });
@@ -386,7 +378,6 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await carriersPage.resetFilter(page);
-
       await carriersPage.filterTable(page, 'input', 'name', createCarrierData.name);
 
       const carrierName = await carriersPage.getTextColumn(page, 1, 'name');
@@ -413,7 +404,6 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);

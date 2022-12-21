@@ -1,29 +1,19 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const carriersPage = require('@pages/BO/shipping/carriers');
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
 
-const baseContext = 'functional_BO_shipping_carriers_changePosition';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_shipping_carriers_changePosition';
 
 /*
 Go to carriers page
@@ -31,6 +21,9 @@ Change first carrier position to 3
 Reset carrier position
  */
 describe('BO - Shipping - Carriers : Change carrier position', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

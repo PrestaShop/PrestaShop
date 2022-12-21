@@ -3,29 +3,21 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const carriersPage = require('@pages/BO/shipping/carriers');
-const addCarrierPage = require('@pages/BO/shipping/carriers/add');
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
+import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
 // Import data
-const CarrierFaker = require('@data/faker/carrier');
+import CarrierFaker from '@data/faker/carrier';
 
-const baseContext = 'functional_BO_shipping_carriers_quickEditAndBulkActions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfCarriers = 0;
+const baseContext: string = 'functional_BO_shipping_carriers_quickEditAndBulkActions';
 
 /*
 Create 2 new carriers
@@ -33,6 +25,10 @@ Quick edit (Enable/Disable)
 Bulk actions (Enable/Disable/Delete)
  */
 describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCarriers: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,7 +69,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
     creationTests.forEach((test, index) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const carrierData = new CarrierFaker({name: `todelete${index}`});
+      const carrierData: CarrierFaker = new CarrierFaker({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);
@@ -117,7 +113,6 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-
         await expect(textColumn).to.contains('todelete');
       }
     });
@@ -169,7 +164,6 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-
         await expect(textColumn).to.contains('todelete');
       }
     });
@@ -211,7 +205,6 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
           i,
           'name',
         );
-
         await expect(textColumn).to.contains('todelete');
       }
     });
