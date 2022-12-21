@@ -29,53 +29,68 @@
   }
 
   defineProps<ImageShopGridProps>();
+
+  function isImageDelete(productImage: ProductImage): boolean {
+    let isImageDeleted = true;
+
+    productImage.associations.forEach((association: ProductShopImage) => {
+      if (association.isAssociated) {
+        isImageDeleted = false;
+      }
+    });
+
+    return isImageDeleted;
+  }
 </script>
 <template>
-  <table class="image-shop-grid">
-    <tr class="header-row">
-      <th>
-        {{ $t('grid.imageHeader') }}
-      </th>
-      <th
-        :key="`shop-header${shop.shopId}`"
-        v-for="shop in productShops"
-      >
-        {{ shop.shopName }}
-      </th>
-    </tr>
-    <tr
-      :key="`image-row-${productImage.imageId}`"
-      v-for="productImage in productImages"
-    >
-      <td class="shop-image-cell">
-        <img
-          class="img-fluid"
-          :src="productImage.thumbnailUrl"
+  <div>
+    <table class="image-shop-grid">
+      <tr class="header-row">
+        <th>
+          {{ $t('grid.imageHeader') }}
+        </th>
+        <th
+          :key="`shop-header${shop.shopId}`"
+          v-for="shop in productShops"
         >
-      </td>
-      <td
-        :key="`image-shop-association-${productImage.imageId}_${shopAssociation.shopId}`"
-        v-for="shopAssociation in productImage.associations"
+          {{ shop.shopName }}
+        </th>
+      </tr>
+      <tr
+        :key="`image-row-${productImage.imageId}`"
+        v-for="productImage in productImages"
+        :class="`${isImageDelete(productImage) ? 'deleted-image' : ''}`"
       >
-        <div :class="`md-checkbox md-checkbox-inline ${shopAssociation.isCover ? 'cover-checkbox' : ''}`">
-          <label>
-            <input
-              :name="`shop_association_${productImage.imageId}_${shopAssociation.shopId}`"
-              type="checkbox"
-              class="form-check-input"
-              v-model="shopAssociation.isAssociated"
-              :disabled="shopAssociation.isCover"
-            >
-            <i class="md-checkbox-control" />
-          </label>
-        </div>
-        <span
-          class="cover-label"
-          v-if="shopAssociation.isCover"
+        <td class="shop-image-cell">
+          <img
+            class="img-fluid"
+            :src="productImage.thumbnailUrl"
+          >
+        </td>
+        <td
+          :key="`image-shop-association-${productImage.imageId}_${shopAssociation.shopId}`"
+          v-for="shopAssociation in productImage.associations"
         >
-          {{ $t('cover.label') }}
-        </span>
-      </td>
-    </tr>
-  </table>
+          <div :class="`md-checkbox md-checkbox-inline ${shopAssociation.isCover ? 'cover-checkbox' : ''}`">
+            <label>
+              <input
+                :name="`shop_association_${productImage.imageId}_${shopAssociation.shopId}`"
+                type="checkbox"
+                class="form-check-input"
+                v-model="shopAssociation.isAssociated"
+                :disabled="shopAssociation.isCover"
+              >
+              <i class="md-checkbox-control" />
+            </label>
+          </div>
+          <span
+            class="cover-label"
+            v-if="shopAssociation.isCover"
+          >
+            {{ $t('cover.label') }}
+          </span>
+        </td>
+      </tr>
+    </table>
+  </div>
 </template>
