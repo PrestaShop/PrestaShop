@@ -1,20 +1,21 @@
-const fs = require('fs');
-const pdfJs = require('pdfjs-dist/legacy/build/pdf.js');
-const imgGen = require('js-image-generator');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const path = require('path');
+import {createObjectCsvWriter} from 'csv-writer';
+import fs from 'fs';
+import imgGen from 'js-image-generator';
+import path from 'path';
+import {getDocument, OPS, PDFDocumentProxy} from 'pdfjs-dist/legacy/build/pdf.js';
+import {TextItem, TextMarkedContent} from 'pdfjs-dist/types/src/display/api';
 
 /**
  * @module FilesHelper
  * @description Helper to wrap functions that uses fs, pdfjs and js-image-generator libraries
  */
-module.exports = {
+export default {
   /**
    * Delete File if exist
    * @param filePath {string} Filepath to delete
    * @return {Promise<void>}
    */
-  async deleteFile(filePath) {
+  async deleteFile(filePath: string): Promise<void> {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -26,14 +27,14 @@ module.exports = {
    * @param attempt {number} Number of attempt to check for the file
    * @returns {Promise<boolean>}
    */
-  async doesFileExist(filePath, attempt = 5000) {
+  async doesFileExist(filePath: string, attempt: number = 5000): Promise<boolean> {
     let found = false;
 
     for (let i = 0; i <= attempt && !found; i += 100) {
       await (new Promise((resolve) => {
         setTimeout(resolve, 100);
       }));
-      found = await fs.existsSync(filePath);
+      found = fs.existsSync(filePath);
     }
 
     return found;
@@ -41,15 +42,15 @@ module.exports = {
 
   /**
    * Get page text from PDF
-   * @param pdf {PDFDocumentLoadingTask} PDF loaded with pdfjs
+   * @param pdf {PDFDocumentProxy} PDF loaded with pdfjs
    * @param pageNo {number} Page number of the PDF file
-   * @return {string} Text in PDF page
+   * @return {Promise<string[]>} Text in PDF page
    */
-  async getPageTextFromPdf(pdf, pageNo) {
+  async getPageTextFromPdf(pdf: PDFDocumentProxy, pageNo: number): Promise<string[]> {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
 
-    return tokenizedText.items.map((token) => token.str);
+    return tokenizedText.items.map((token: TextItem|TextMarkedContent): string => ('str' in token ? token.str : ''));
   },
 
   /**
@@ -58,8 +59,8 @@ module.exports = {
    * @param text {string} Text to check on the file
    * @returns {Promise<boolean>}
    */
-  async isTextInPDF(filePath, text) {
-    const pdf = await pdfJs.getDocument(filePath).promise;
+  async isTextInPDF(filePath: string, text: string): Promise<boolean> {
+    const pdf = await getDocument(filePath).promise;
     const maxPages = pdf.numPages;
     const pageTextPromises = [];
 
@@ -77,8 +78,8 @@ module.exports = {
    * @param filePath {string} FilePath of the PDF file
    * @return {Promise<number>}
    */
-  async getImageNumberInPDF(filePath) {
-    const pdf = await pdfJs.getDocument(filePath).promise;
+  async getImageNumberInPDF(filePath: string): Promise<number> {
+    const pdf = await getDocument(filePath).promise;
     const nbrPages = pdf.numPages;
     let imageNumber = 0;
 
@@ -87,7 +88,7 @@ module.exports = {
       /* eslint-disable no-loop-func */
       await page.getOperatorList().then(async (ops) => {
         for (let i = 0; i < ops.fnArray.length; i++) {
-          if (ops.fnArray[i] === pdfJs.OPS.paintImageXObject) {
+          if (ops.fnArray[i] === OPS.paintImageXObject) {
             imageNumber += 1;
           }
         }
@@ -101,7 +102,7 @@ module.exports = {
    * Generate report filename
    * @return {Promise<string>}
    */
-  async generateReportFilename() {
+  async generateReportFilename(): Promise<string> {
     const curDate = new Date();
 
     return `report-${
@@ -115,7 +116,7 @@ module.exports = {
    * @param path {string} Path of the directory to create
    * @return {Promise<void>}
    */
-  async createDirectory(path) {
+  async createDirectory(path: string): Promise<void> {
     if (!fs.existsSync(path)) await fs.mkdirSync(path);
   },
   /**
@@ -125,10 +126,10 @@ module.exports = {
    * @param content {string} Content to write on the file
    * @return {Promise<void>}
    */
-  async createFile(path, filename, content) {
-    await fs.writeFile(`${path}/${filename}`, content, (err) => {
+  async createFile(path: string, filename: string, content: string): Promise<void> {
+    await fs.writeFile(`${path}/${filename}`, content, (err: Error|null) => {
       if (err) {
-        throw new Error(err);
+        throw err;
       }
     });
   },
@@ -141,17 +142,25 @@ module.exports = {
    * @param encoding {string} Encoding for the file
    * @return {Promise<boolean>}
    */
-  async isTextInFile(filePath, textToCheckWith, ignoreSpaces = false, ignoreTimeZone = false, encoding = 'utf8') {
-    let fileText = await fs.readFileSync(filePath, encoding);
-    let text = textToCheckWith;
+  async isTextInFile(
+    filePath: string,
+    textToCheckWith: string,
+    ignoreSpaces: boolean = false,
+    ignoreTimeZone: boolean = false,
+    encoding: BufferEncoding = 'utf8',
+  ): Promise<boolean> {
+    let fileText: string = await fs.readFileSync(filePath, {
+      encoding,
+    });
+    let text: string = textToCheckWith;
 
     if (ignoreSpaces) {
-      fileText = await fileText.replace(/\s/g, '');
-      text = await text.replace(/\s/g, '');
+      fileText = fileText.replace(/\s/g, '');
+      text = text.replace(/\s/g, '');
     }
     if (ignoreTimeZone) {
-      fileText = await fileText.replace(/\?time=\d+/g, '', '');
-      text = await text.replace(/\?time=\d+/g, '', '');
+      fileText = fileText.replace(/\?time=\d+/g, '');
+      text = text.replace(/\?time=\d+/g, '');
     }
     return fileText.includes(text);
   },
@@ -164,9 +173,11 @@ module.exports = {
    * @param quality {number} Quality chosen for the image
    * @return {Promise<void>}
    */
-  async generateImage(imageName, width = 200, height = 200, quality = 1) {
-    await imgGen.generateImage(width, height, quality, (err, image) => {
-      fs.writeFileSync(imageName, image.data);
+  async generateImage(imageName: string, width: number = 200, height: number = 200, quality:number = 1): Promise<void> {
+    await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
+      if ('data' in image) {
+        fs.writeFileSync(imageName, image.data);
+      }
     });
   },
 
@@ -176,7 +187,7 @@ module.exports = {
    * @param newPath {string} New path of the file
    * @return {Promise<void>}
    */
-  async renameFile(oldPath, newPath) {
+  async renameFile(oldPath: string, newPath: string): Promise<void> {
     await fs.rename(oldPath, newPath, (err) => {
       if (err) throw err;
     });
@@ -189,10 +200,12 @@ module.exports = {
    * @param data {Object} Data to create csv file
    * @returns {Promise<void>}
    */
-  async createCSVFile(path, fileName, data) {
+  async createCSVFile(path: string, fileName: string, data: object): Promise<void> {
     await this.createFile(path, fileName, '');
-    const csvWriter = await createCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
-    await csvWriter.writeRecords(data.records);
+    if ('header' in data && 'records' in data) {
+      const csvWriter = createObjectCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
+      await csvWriter.writeRecords(data.records);
+    }
   },
 
   /**
@@ -201,7 +214,7 @@ module.exports = {
    * @param fileName {string} Name of the file to create
    * @returns {Promise<void>}
    */
-  async createSVGFile(path, fileName) {
+  async createSVGFile(path: string, fileName: string): Promise<void> {
     const centerX = Math.floor(Math.random() * 15);
     const centerY = Math.floor(Math.random() * 15);
     const radius = Math.floor(Math.random() * 10);
@@ -228,7 +241,7 @@ module.exports = {
    * @param filename {string} Path of the file automatically created
    * @returns {Promise<string>}
    */
-  async getFilePathAutomaticallyGenerated(folderPath, filename) {
+  async getFilePathAutomaticallyGenerated(folderPath: string, filename: string): Promise<string> {
     return path.resolve(__dirname, '../../../', folderPath, filename);
   },
 };

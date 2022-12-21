@@ -1,7 +1,6 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import login steps
@@ -14,7 +13,6 @@ const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-const files = require('@utils/files');
 
 // Import data
 const FileFaker = require('@data/faker/file');

@@ -1,4 +1,5 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -6,9 +7,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
-
-// Import utils
-const files = require('@utils/files');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

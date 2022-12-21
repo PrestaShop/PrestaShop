@@ -1,7 +1,6 @@
 // Import utils
+import files from '@utils/files';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Common tests login BO
@@ -14,7 +13,6 @@ const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-const files = require('@utils/files');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

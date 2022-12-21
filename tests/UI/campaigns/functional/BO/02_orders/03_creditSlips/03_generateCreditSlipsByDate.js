@@ -1,5 +1,6 @@
 // Import utils
 import date from '@utils/date';
+import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -7,9 +8,6 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
-
-// Import utils
-const files = require('@utils/files');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
