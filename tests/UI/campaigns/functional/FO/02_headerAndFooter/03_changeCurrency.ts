@@ -4,35 +4,26 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
+import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import currenciesPage from '@pages/BO/international/currencies';
+import localizationPage from '@pages/BO/international/localization';
 // Import FO pages
 import homePage from '@pages/FO/home';
+import searchResultsPage from '@pages/FO/searchResults';
 
-require('module-alias/register');
+// Import data
+import {Currencies} from '@data/demo/currencies';
+import {Products} from '@data/demo/products';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import common tests
-const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/international/createDeleteCurrency');
-
-// Import Data
-const {Currencies} = require('@data/demo/currencies');
-const {Products} = require('@data/demo/products');
-
-// Import pages
-// BO
-const currenciesPage = require('@pages/BO/international/currencies');
-const localizationPage = require('@pages/BO/international/localization');
-const dashboardPage = require('@pages/BO/dashboard');
-const searchResultsPage = require('@pages/FO/searchResults');
-
-const baseContext = 'functional_FO_headerAndFooter_changeCurrency';
-
-let browserContext;
-let page;
-let filePath;
-let exchangeRateValue = 0;
+const baseContext: string = 'functional_FO_headerAndFooter_changeCurrency';
 
 /*
 Pre-condition: Check the block currencies is not displayed in header of FO
@@ -48,6 +39,11 @@ Post-condition:
 */
 
 describe('FO - Header and Footer : Change currency', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let filePath: string;
+  let exchangeRateValue: number = 0;
+
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -93,7 +89,6 @@ describe('FO - Header and Footer : Change currency', async () => {
         dashboardPage.internationalParentLink,
         dashboardPage.localizationLink,
       );
-
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
@@ -104,6 +99,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
+
       const pageTitle = await currenciesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });
@@ -135,6 +131,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
       // Check currency
       await homePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
+
       const shopCurrency = await homePage.getDefaultCurrency(page);
       await expect(shopCurrency).to.contains(Currencies.mad.isoCode);
     });
@@ -152,6 +149,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice', baseContext);
 
       const newExchangeRateValue = (exchangeRateValue * Products.demo_11.finalPrice).toFixed(Currencies.mad.decimals);
+
       const productPrice = await searchResultsPage.getProductPrice(page);
       await expect(productPrice).to.contains(`${Currencies.mad.symbol}${newExchangeRateValue}`);
     });
@@ -166,6 +164,7 @@ describe('FO - Header and Footer : Change currency', async () => {
 
       // Check currency
       await homePage.changeCurrency(page, Currencies.euro.isoCode, Currencies.euro.symbol);
+
       const shopCurrency = await homePage.getDefaultCurrency(page);
       await expect(shopCurrency).to.contains(Currencies.euro.isoCode);
     });
@@ -174,6 +173,7 @@ describe('FO - Header and Footer : Change currency', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductPrice2', baseContext);
 
       const exchangeRate = Math.round(Currencies.euro.exchangeRate * Products.demo_11.finalPrice);
+
       const productPrice = await searchResultsPage.getProductPrice(page);
       await expect(productPrice).to.contains(`${Currencies.euro.symbol}${exchangeRate}`);
     });
