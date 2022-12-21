@@ -2,53 +2,44 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {deleteCacheTest} from '@commonTests/BO/advancedParameters/deleteCache';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createAccountTest} from '@commonTests/FO/createAccount';
+
+// Import pages
+// Import BO pages
 // Import FO pages
+import aboutUsPage from '@pages/FO/aboutUs';
+import bestSalesPage from '@pages/FO/bestSales';
+import contactUsPage from '@pages/FO/contactUs';
+import deliveryPage from '@pages/FO/delivery';
 import homePage from '@pages/FO/home';
+import legalNoticePage from '@pages/FO/legalNotice';
 import loginPage from '@pages/FO/login';
+import createAccountPage from '@pages/FO/myAccount/add';
+import addAddressPage from '@pages/FO/myAccount/addAddress';
+import addressesPage from '@pages/FO/myAccount/addresses';
+import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
+import personalInfoPage from '@pages/FO/myAccount/identity';
+import myWishlistPage from '@pages/FO/myAccount/myWishlists';
+import ordersPage from '@pages/FO/myAccount/orderHistory';
+import guestOrderTrackingPage from '@pages/FO/orderTracking/guestOrderTracking';
+import newProductsPage from '@pages/FO/newProducts';
+import pricesDropPage from '@pages/FO/pricesDrop';
+import securePaymentPage from '@pages/FO/securePayment';
+import siteMapPage from '@pages/FO/siteMap';
+import storesPage from '@pages/FO/stores';
+import termsAndConditionsOfUsePage from '@pages/FO/termsAndConditionsOfUse';
 
-require('module-alias/register');
+// Import data
+import {DefaultCustomer} from '@data/demo/customer';
+import CustomerFaker from '@data/faker/customer';
 
-const {expect} = require('chai');
-
-// Import common tests
-const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const pricesDropPage = require('@pages/FO/pricesDrop');
-const newProductsPage = require('@pages/FO/newProducts');
-const bestSalesPage = require('@pages/FO/bestSales');
-const deliveryPage = require('@pages/FO/delivery');
-const legalNoticePage = require('@pages/FO/legalNotice');
-const termsAndConditionsOfUsePage = require('@pages/FO/termsAndConditionsOfUse');
-const aboutUsPage = require('@pages/FO/aboutUs');
-const securePaymentPage = require('@pages/FO/securePayment');
-const contactUsPage = require('@pages/FO/contactUs');
-const siteMapPage = require('@pages/FO/siteMap');
-const storesPage = require('@pages/FO/stores');
-const personalInfoPage = require('@pages/FO/myAccount/identity');
-const ordersPage = require('@pages/FO/myAccount/orderHistory');
-const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
-const addressesPage = require('@pages/FO/myAccount/addresses');
-const addAddressPage = require('@pages/FO/myAccount/addAddress');
-const createAccountPage = require('@pages/FO/myAccount/add');
-const guestOrderTrackingPage = require('@pages/FO/orderTracking/guestOrderTracking');
-const myWishlistPage = require('@pages/FO/myAccount/myWishlists');
-
-// Import demo data
-const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_FO_headerAndFooter_checkLinksInFooter';
-
-let browserContext;
-let page;
-
-const today = new Date();
-const currentYear = today.getFullYear().toString();
-
-const createCustomerData = new CustomerFaker();
 
 /*
 Pre-condition:
@@ -66,6 +57,14 @@ Post-condition:
 - Delete created customer
  */
 describe('FO - Header and Footer : Check links in footer page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let pageTitle: string;
+
+  const today: Date = new Date();
+  const currentYear: string = today.getFullYear().toString();
+  const createCustomerData: CustomerFaker = new CustomerFaker();
+
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest1`);
 
@@ -144,8 +143,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        let pageTitle;
-
         if (args.linkSelector === 'Create account') {
           pageTitle = await createAccountPage.getHeaderTitle(page);
         } else {
@@ -180,8 +177,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
-
-        let pageTitle = '';
 
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await myWishlistPage.getPageTitle(page);
@@ -220,8 +215,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
-
-        let pageTitle = '';
 
         if (args.linkSelector === 'Wishlist') {
           pageTitle = await myWishlistPage.getPageTitle(page);
