@@ -19,14 +19,11 @@ jobs:
         BRANCH:
           - develop
           - 8.0.x
-          - 1.7.8.x
         include:
           - BRANCH: develop
             node: 16
           - BRANCH: 8.0.x
             node: 16
-          - BRANCH: 1.7.8.x
-            node: 14
 
     env:
       PHP_VERSION: '7.4'
