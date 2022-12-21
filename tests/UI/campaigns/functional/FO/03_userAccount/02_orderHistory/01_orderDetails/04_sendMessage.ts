@@ -1,43 +1,37 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
+
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customerServicePage from '@pages/BO/customerService/customerService';
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders/index';
 // Import FO pages
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import orderDetails from '@pages/FO/myAccount/orderDetails';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-const {Statuses} = require('@data/demo/orderStatuses');
-const {faker} = require('@faker-js/faker');
-
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Products} = require('@data/demo/products');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
 
-const messageSend = faker.lorem.sentence().substring(0, 35).trim();
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const orderDetails = require('@pages/FO/myAccount/orderDetails');
+import {expect} from 'chai';
+import {faker} from '@faker-js/faker';
+import type {BrowserContext, Page} from 'playwright';
 
-// BO
-const dashboardPage = require('@pages/BO/dashboard');
-const ordersPage = require('@pages/BO/orders/index');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-
-const baseContext = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
-const messageOption = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes.size[0]} `
-  + `- Color: ${Products.demo_1.attributes.color[0]})`;
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_userAccount_orderHistory_orderDetails_sendMessage';
 
 /*
 Go to FO and connect to an account
@@ -50,6 +44,13 @@ Go to BO, Customers service, customers service, the message is displayed
  */
 
 describe('FO - Account : Send a message with an ordered product', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
+  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes.size[0]} `
+    + `- Color: ${Products.demo_1.attributes.color[0]})`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -75,6 +76,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToOrder', baseContext);
 
       await foHomePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -83,6 +85,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -92,13 +95,10 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await foHomePage.goToProductPage(page, 1);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -122,6 +122,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
       await orderConfirmationPage.logout(page);
+
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
@@ -172,6 +173,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
       await foHomePage.goToFo(page);
+
       const isHomePage = await foHomePage.isHomePage(page);
       await expect(isHomePage).to.be.true;
     });
@@ -189,6 +191,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -198,6 +201,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
 
       await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
+
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });

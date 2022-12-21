@@ -2,47 +2,23 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {createAccountTest} from '@commonTests/FO/createAccount';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import common tests
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+import myAccountPage from '@pages/FO/myAccount';
+import accountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
-const CustomerFaker = require('@data/faker/customer');
-const myAccountPage = require('@pages/FO/myAccount');
-const accountIdentityPage = require('@pages/FO/myAccount/identity');
+import CustomerFaker from '@data/faker/customer';
 
-const baseContext = 'functional_FO_userAccount_editInformation';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-const createCustomerData = new CustomerFaker();
-// New customer data with empty new password
-const editCustomerData1 = new CustomerFaker({password: ''});
-// New customer data with repeated letters
-const editCustomerData2 = new CustomerFaker({password: 'abcabcabc'});
-// New customer data with password below 8
-const editCustomerData3 = new CustomerFaker({password: 'presta'});
-// New customer data with an old similar password
-const editCustomerData4 = new CustomerFaker({password: 'testoune'});
-// New customer data with simple characters password
-const editCustomerData5 = new CustomerFaker({password: 'prestash'});
-// New customer data with common password
-const editCustomerData6 = new CustomerFaker({password: 'azerty123'});
-// New customer data with top 10 common password
-const editCustomerData7 = new CustomerFaker({password: '123456789'});
-// New customer data with same characters
-const editCustomerData8 = new CustomerFaker({password: 'aaaaaaaaa'});
-// New customer data with good password
-const editCustomerData9 = new CustomerFaker({password: 'test edit information'});
+const baseContext: string = 'functional_FO_userAccount_editInformation';
 
 /*
 Pre-condition:
@@ -62,6 +38,29 @@ Post condition:
 - Delete the created account in BO
  */
 describe('FO - Account : Edit information', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const createCustomerData: CustomerFaker = new CustomerFaker();
+  // New customer data with empty new password
+  const editCustomerData1: CustomerFaker = new CustomerFaker({password: ''});
+  // New customer data with repeated letters
+  const editCustomerData2: CustomerFaker = new CustomerFaker({password: 'abcabcabc'});
+  // New customer data with password below 8
+  const editCustomerData3: CustomerFaker = new CustomerFaker({password: 'presta'});
+  // New customer data with an old similar password
+  const editCustomerData4: CustomerFaker = new CustomerFaker({password: 'testoune'});
+  // New customer data with simple characters password
+  const editCustomerData5: CustomerFaker = new CustomerFaker({password: 'prestash'});
+  // New customer data with common password
+  const editCustomerData6: CustomerFaker = new CustomerFaker({password: 'azerty123'});
+  // New customer data with top 10 common password
+  const editCustomerData7: CustomerFaker = new CustomerFaker({password: '123456789'});
+  // New customer data with same characters
+  const editCustomerData8: CustomerFaker = new CustomerFaker({password: 'aaaaaaaaa'});
+  // New customer data with good password
+  const editCustomerData9: CustomerFaker = new CustomerFaker({password: 'test edit information'});
+
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest`);
 
@@ -89,6 +88,7 @@ describe('FO - Account : Edit information', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await loginPage.getPageTitle(page);
       await expect(pageTitle).to.equal(loginPage.pageTitle);
     });

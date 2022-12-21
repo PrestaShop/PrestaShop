@@ -1,6 +1,10 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+// Import data
+import type {ProductCombinationColorSize} from '@data/types/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Cart page, contains functions that can be used on the page
@@ -8,6 +12,72 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class Cart extends FOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly cartRuleAlreadyUsedErrorText: string;
+
+  private readonly cartRuleAlertMessageText: string;
+
+  private readonly alertChooseDeliveryAddressWarningtext: string;
+
+  private readonly productItem: (number: number) => string;
+
+  private readonly productName: (number: number) => string;
+
+  private readonly productRegularPrice: (number: number) => string;
+
+  private readonly productDiscountPercentage: (number: number) => string;
+
+  private readonly productPrice: (number: number) => string;
+
+  private readonly productTotalPrice: (number: number) => string;
+
+  private readonly productQuantity: (number: number) => string;
+
+  private readonly productSize: (number: number) => string;
+
+  private readonly productColor: (number: number) => string;
+
+  private readonly productImage: (number: number) => string;
+
+  private readonly deleteIcon: (number: number) => string;
+
+  private readonly itemsNumber: string;
+
+  private readonly subtotalDiscountValueSpan: string;
+
+  private readonly cartTotalATI: string;
+
+  private readonly blockPromoDiv: string;
+
+  private readonly cartSummaryLine: (line: number) => string;
+
+  private readonly cartRuleName: (line: number) => string;
+
+  private readonly discountValue: (line: number) => string;
+
+  private readonly promoCodeLink: string;
+
+  private readonly promoInput: string;
+
+  private readonly addPromoCodeButton: string;
+
+  private readonly promoCodeRemoveIcon: (line: number) => string;
+
+  private readonly cartRuleAlertMessage: string;
+
+  private readonly cartRuleChooseCarrierAlertMessageText: string;
+
+  private readonly cartRuleCannotUseVoucherAlertMessageText: string;
+
+  private readonly alertWarning: string;
+
+  private readonly proceedToCheckoutButton: string;
+
+  private readonly disabledProceedToCheckoutButton: string;
+
+  private readonly alertPromoCode: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on cart page
@@ -23,32 +93,32 @@ class Cart extends FOBasePage {
 
     // Selectors for cart page
     // Shopping cart block selectors
-    this.productItem = (number) => `#main li:nth-of-type(${number})`;
-    this.productName = (number) => `${this.productItem(number)} div.product-line-info a`;
-    this.productRegularPrice = (number) => `${this.productItem(number)} span.regular-price`;
-    this.productDiscountPercentage = (number) => `${this.productItem(number)} span.discount-percentage`;
-    this.productPrice = (number) => `${this.productItem(number)} div.current-price span`;
-    this.productTotalPrice = (number) => `${this.productItem(number)} span.product-price`;
-    this.productQuantity = (number) => `${this.productItem(number)} div.input-group `
+    this.productItem = (number: number) => `#main li:nth-of-type(${number})`;
+    this.productName = (number: number) => `${this.productItem(number)} div.product-line-info a`;
+    this.productRegularPrice = (number: number) => `${this.productItem(number)} span.regular-price`;
+    this.productDiscountPercentage = (number: number) => `${this.productItem(number)} span.discount-percentage`;
+    this.productPrice = (number: number) => `${this.productItem(number)} div.current-price span`;
+    this.productTotalPrice = (number: number) => `${this.productItem(number)} span.product-price`;
+    this.productQuantity = (number: number) => `${this.productItem(number)} div.input-group `
       + 'input.js-cart-line-product-quantity';
-    this.productSize = (number) => `${this.productItem(number)} div.product-line-info.size span.value`;
-    this.productColor = (number) => `${this.productItem(number)} div.product-line-info.color span.value`;
-    this.productImage = (number) => `${this.productItem(number)} span.product-image img`;
-    this.deleteIcon = (number) => `${this.productItem(number)} .remove-from-cart`;
+    this.productSize = (number: number) => `${this.productItem(number)} div.product-line-info.size span.value`;
+    this.productColor = (number: number) => `${this.productItem(number)} div.product-line-info.color span.value`;
+    this.productImage = (number: number) => `${this.productItem(number)} span.product-image img`;
+    this.deleteIcon = (number: number) => `${this.productItem(number)} .remove-from-cart`;
 
     // Cart summary block selectors
     this.itemsNumber = '#cart-subtotal-products span.label.js-subtotal';
     this.subtotalDiscountValueSpan = '#cart-subtotal-discount span.value';
     this.cartTotalATI = '.cart-summary-totals span.value';
     this.blockPromoDiv = '.block-promo';
-    this.cartSummaryLine = (line) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
-    this.cartRuleName = (line) => `${this.cartSummaryLine(line)} span.label`;
-    this.discountValue = (line) => `${this.cartSummaryLine(line)} div span`;
+    this.cartSummaryLine = (line: number) => `${this.blockPromoDiv} li:nth-child(${line}).cart-summary-line`;
+    this.cartRuleName = (line: number) => `${this.cartSummaryLine(line)} span.label`;
+    this.discountValue = (line: number) => `${this.cartSummaryLine(line)} div span`;
 
     this.promoCodeLink = '#main div.block-promo a[href=\'#promo-code\']';
     this.promoInput = '#promo-code input.promo-input';
     this.addPromoCodeButton = '#promo-code button.btn-primary';
-    this.promoCodeRemoveIcon = (line) => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
+    this.promoCodeRemoveIcon = (line: number) => `${this.cartSummaryLine(line)} a[data-link-action='remove-voucher']`;
     this.cartRuleAlertMessage = '#promo-code div.alert-danger span.js-error-text';
     this.cartRuleChooseCarrierAlertMessageText = 'You must choose a carrier before applying this voucher to your order';
     this.cartRuleCannotUseVoucherAlertMessageText = 'You cannot use this voucher with this carrier';
@@ -65,17 +135,25 @@ class Cart extends FOBasePage {
    * Get Product detail from cart
    * @param page {Page} Browser tab
    * @param row {number} Row number in the table
-   * @returns {Promise<{discountPercentage: *, image: *, quantity: number, size: *, color: *, totalPrice: *,
-   * price: number, regularPrice: number, name: *}>}
+   * @returns {Promise<{discountPercentage: string, image: string|null, quantity: number, totalPrice: number,
+   *     price: number, regularPrice: number, name: string}>}
    */
-  async getProductDetail(page, row) {
+  async getProductDetail(page: Page, row: number): Promise<{
+    discountPercentage: string,
+    image: string|null,
+    quantity: number,
+    totalPrice: number,
+    price: number,
+    regularPrice: number,
+    name: string,
+  }> {
     return {
       name: await this.getTextContent(page, this.productName(row)),
       regularPrice: await this.getPriceFromText(page, this.productRegularPrice(row)),
       price: await this.getPriceFromText(page, this.productPrice(row)),
       discountPercentage: await this.getTextContent(page, this.productDiscountPercentage(row)),
       image: await this.getAttributeContent(page, this.productImage(row), 'src'),
-      quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value')),
+      quantity: parseFloat(await this.getAttributeContent(page, this.productQuantity(row), 'value') ?? ''),
       totalPrice: await this.getPriceFromText(page, this.productTotalPrice(row)),
     };
   }
@@ -84,9 +162,9 @@ class Cart extends FOBasePage {
    * Get product attributes
    * @param page {Page} Browser tab
    * @param row {number} Row number in the table
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<ProductCombinationColorSize>}
    */
-  async getProductAttributes(page, row) {
+  async getProductAttributes(page: Page, row: number): Promise<ProductCombinationColorSize> {
     return {
       size: await this.getTextContent(page, this.productSize(row)),
       color: await this.getTextContent(page, this.productColor(row)),
@@ -98,7 +176,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnProceedToCheckout(page) {
+  async clickOnProceedToCheckout(page: Page): Promise<void> {
     await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
     await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
   }
@@ -110,7 +188,7 @@ class Cart extends FOBasePage {
    * @param quantity {number} New quantity of the product
    * @returns {Promise<void>}
    */
-  async editProductQuantity(page, productID, quantity) {
+  async editProductQuantity(page: Page, productID: number, quantity: number): Promise<void> {
     await this.setValue(page, this.productQuantity(productID), quantity.toString());
     // click on price to see that its changed
     await page.click(this.productPrice(productID));
@@ -122,7 +200,7 @@ class Cart extends FOBasePage {
    * @param productID {number} ID of the product
    * @returns {Promise<void>}
    */
-  async deleteProduct(page, productID) {
+  async deleteProduct(page: Page, productID: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.deleteIcon(productID));
   }
 
@@ -131,7 +209,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getATIPrice(page) {
+  getATIPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotalATI, 2000);
   }
 
@@ -140,7 +218,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getSubtotalDiscountValue(page) {
+  getSubtotalDiscountValue(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.subtotalDiscountValueSpan, 2000);
   }
 
@@ -149,7 +227,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isProceedToCheckoutButtonDisabled(page) {
+  isProceedToCheckoutButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.disabledProceedToCheckoutButton, 1000);
   }
 
@@ -158,7 +236,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isAlertWarningForMinimumPurchaseVisible(page) {
+  isAlertWarningForMinimumPurchaseVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.alertWarning, 1000);
   }
 
@@ -167,7 +245,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertWarning(page) {
+  getAlertWarning(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertWarning);
   }
 
@@ -176,7 +254,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertWarningForPromoCode(page) {
+  getAlertWarningForPromoCode(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertPromoCode);
   }
 
@@ -187,7 +265,7 @@ class Cart extends FOBasePage {
    * @param clickOnPromoCodeLink {boolean} True if we need to click on promo code link
    * @returns {Promise<void>}
    */
-  async addPromoCode(page, code, clickOnPromoCodeLink = true) {
+  async addPromoCode(page: Page, code: string, clickOnPromoCodeLink: boolean = true): Promise<void> {
     if (clickOnPromoCodeLink) {
       await page.click(this.promoCodeLink);
     }
@@ -201,8 +279,8 @@ class Cart extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<number>}
    */
-  getCartRuleName(page, line = 1) {
-    return this.getTextContent(page, this.cartRuleName(line), 2000);
+  getCartRuleName(page: Page, line: number = 1): Promise<string> {
+    return this.getTextContent(page, this.cartRuleName(line));
   }
 
   /**
@@ -210,7 +288,7 @@ class Cart extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCartRuleErrorMessage(page) {
+  async getCartRuleErrorMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.cartRuleAlertMessage);
   }
 
@@ -220,7 +298,7 @@ class Cart extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<number>}
    */
-  getDiscountValue(page, line = 1) {
+  getDiscountValue(page: Page, line: number = 1): Promise<number> {
     return this.getPriceFromText(page, this.discountValue(line), 2000);
   }
 
@@ -230,10 +308,10 @@ class Cart extends FOBasePage {
    * @param line {number} Cart summary line
    * @returns {Promise<void>}
    */
-  async removeVoucher(page, line = 1) {
+  async removeVoucher(page: Page, line: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.promoCodeRemoveIcon(line));
     await this.waitForHiddenSelector(page, this.promoCodeRemoveIcon(line));
   }
 }
 
-module.exports = new Cart();
+export default new Cart();

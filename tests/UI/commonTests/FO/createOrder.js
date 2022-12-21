@@ -3,13 +3,13 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import FO pages
+import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 require('module-alias/register');
 const searchResultsPage = require('@pages/FO/searchResults');
-const cartPage = require('@pages/FO/cart');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const checkoutPage = require('@pages/FO/checkout');
 
@@ -21,7 +21,7 @@ let page;
 
 /**
  * Function to create simple order by customer in FO
- * @param orderData {object} Data to set when creating the order
+ * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createOrderByCustomerTest') {

@@ -6,46 +6,41 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customerServicePage from '@pages/BO/customerService/customerService';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
+import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import FO pages
-const myAccountPage = require('@pages/FO/myAccount');
-const gdprPersonalDataPage = require('@pages/FO/myAccount/gdprPersonalData');
-const contactUsPage = require('@pages/FO/contactUs');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
+import myAccountPage from '@pages/FO/myAccount';
+import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 
 // Import demo data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Orders} = require('@data/demo/orders');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Orders} from '@data/demo/orders';
+import ContactUsFakerData from '@data/faker/contactUs';
 
-// Import faker data
-const ContactUsFakerData = require('@data/faker/contactUs');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_userAccount_contactUsOnGDPRPage';
-
-let browserContext;
-let page;
-
-const contactUsData = new ContactUsFakerData(
-  {
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
-    subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
-    reference: Orders.firstOrder.ref,
-  },
-);
+const baseContext: string = 'functional_FO_userAccount_contactUsOnGDPRPage';
 
 describe('FO - Account : Contact us on GDPR page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData(
+    {
+      firstName: DefaultCustomer.firstName,
+      lastName: DefaultCustomer.lastName,
+      subject: 'Customer service',
+      emailAddress: DefaultCustomer.email,
+      reference: Orders.firstOrder.ref,
+    },
+  );
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -82,6 +77,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
     await loginPage.customerLogin(page, DefaultCustomer);
+
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
@@ -117,6 +113,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'sendMessage', baseContext);
 
     await contactUsPage.sendMessage(page, contactUsData, `${contactUsData.fileName}.txt`);
+
     const validationMessage = await contactUsPage.getAlertSuccess(page);
     await expect(validationMessage).to.equal(contactUsPage.validationMessage);
   });
