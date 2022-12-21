@@ -160,6 +160,11 @@ abstract class ControllerCore
     protected $container;
 
     /**
+     * @var Module|null
+     */
+    public $module;
+
+    /**
      * Check if the controller is available for the current user/visitor.
      */
     abstract public function checkAccess();

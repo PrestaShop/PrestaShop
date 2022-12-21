@@ -2588,9 +2588,6 @@ class AdminControllerCore extends Controller
             $helper->bulk_actions = $this->bulk_actions;
         }
         $helper->currentIndex = self::$currentIndex;
-        if ($helper->className === null) {
-            $helper->className = $this->className;
-        }
         $helper->table = $this->table;
         if ($helper->name_controller === null) {
             $helper->name_controller = Tools::getValue('controller');
@@ -2603,9 +2600,6 @@ class AdminControllerCore extends Controller
         }
         if (isset($helper->listTotal)) {
             $helper->listTotal = $this->_listTotal;
-        }
-        if ($helper->shopLink === null) {
-            $helper->shopLink = $this->shopLink;
         }
         if (isset($helper->shopLinkType)) {
             $helper->shopLinkType = $this->shopLinkType;
@@ -2636,9 +2630,6 @@ class AdminControllerCore extends Controller
         }
         if ($helper->allow_employee_form_lang === null) {
             $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-        }
-        if ($helper->multiple_fieldsets === null) {
-            $helper->multiple_fieldsets = $this->multiple_fieldsets;
         }
         if (isset($helper->row_hover)) {
             $helper->row_hover = $this->row_hover;

@@ -154,7 +154,7 @@ abstract class ModuleCore implements ModuleInterface
     public $onclick_option = false;
 
     /** @var string|null */
-    public $addons_buy_url = false;
+    public $addons_buy_url = null;
 
     /** @var string|null */
     public $url = null;
