@@ -43,19 +43,19 @@
   }
   const props = defineProps<ImagesShopAssociationProps>();
 
-  function closeModal(): void {
+  const closeModal = (): void => {
     modalOpened.value = false;
-  }
-  function openModal(): void {
+  };
+  const openModal = (): void => {
     if (modalOpened.value) {
       return;
     }
 
     modalOpened.value = true;
     loadAssociations();
-  }
+  };
 
-  async function loadAssociations(): Promise<void> {
+  const loadAssociations = async (): Promise<void> => {
     if (loadingAssociations.value) {
       return;
     }
@@ -68,9 +68,9 @@
     await updateImages(shopImages);
 
     loadingAssociations.value = false;
-  }
+  };
 
-  async function saveAssociations(): Promise<void> {
+  const saveAssociations = async (): Promise<void> => {
     if (submittingAssociations.value) {
       return;
     }
@@ -81,8 +81,13 @@
     const formattedAssociations = productImages.value.map((productImage: ProductImage) => ({
       imageId: productImage.imageId,
       shops: productImage.associations
-        .filter((association: ProductShopImage) => association.isAssociated)
-        .map((association: ProductShopImage) => association.shopId),
+        .reduce((filteredShops: number[], association: ProductShopImage) => {
+          if (association.isAssociated) {
+            filteredShops.push(association.shopId);
+          }
+
+          return filteredShops;
+        }, []),
     }));
 
     const newImagesResponse = await updateProductShopImages(props.productId, formattedAssociations);
@@ -96,9 +101,9 @@
     }
 
     submittingAssociations.value = false;
-  }
+  };
 
-  async function updateImages(shopImages: any[]): Promise<void> {
+  const updateImages = async (shopImages: any[]): Promise<void> => {
     // Reformat data for product images
     const newProductImages: ProductImage[] = [];
     const images = await getProductImages(props.productId);
@@ -136,7 +141,7 @@
     // Update references
     productShops.value = newShops;
     productImages.value = newProductImages;
-  }
+  };
 
   const hasDeletedImages = computed(() => {
     let hasDeletedImage = false;

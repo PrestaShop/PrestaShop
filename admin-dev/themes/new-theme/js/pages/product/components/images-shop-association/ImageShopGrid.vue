@@ -30,7 +30,7 @@
 
   defineProps<ImageShopGridProps>();
 
-  function isImageDelete(productImage: ProductImage): boolean {
+  const isImageDelete = (productImage: ProductImage): boolean => {
     let isImageDeleted = true;
 
     productImage.associations.forEach((association: ProductShopImage) => {
@@ -40,7 +40,7 @@
     });
 
     return isImageDeleted;
-  }
+  };
 </script>
 <template>
   <div>
