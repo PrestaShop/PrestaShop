@@ -5,41 +5,38 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import customersPage from '@pages/BO/customers';
+import addCustomerPage from '@pages/BO/customers/add';
+import preferencesPage from '@pages/BO/payment/preferences';
 // Import FO pages
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
-const preferencesPage = require('@pages/BO/payment/preferences');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const AddressData = require('@data/faker/address');
-const CustomerFaker = require('@data/faker/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import AddressData from '@data/faker/address';
+import CustomerFaker from '@data/faker/customer';
 
-const baseContext = 'functional_BO_payment_preferences_groupRestrictions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfCustomers = 0;
-
-// Init data
-const address = new AddressData({city: 'Paris', country: 'France'});
-const visitorData = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
-const guestData = new CustomerFaker({defaultCustomerGroup: 'Guest'});
+const baseContext: string = 'functional_BO_payment_preferences_groupRestrictions';
 
 describe('BO - Payment - Preferences : Configure group restrictions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  let numberOfCustomers: number = 0;
+
+  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
+  const visitorData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
+  const guestData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Guest'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +60,6 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         dashboardPage.customersParentLink,
         dashboardPage.customersLink,
       );
-
       await customersPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
@@ -85,6 +81,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCustomerPage${index}`, baseContext);
 
         await customersPage.goToAddNewCustomerPage(page);
+
         const pageTitle = await addCustomerPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });
@@ -118,9 +115,9 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     });
 
     [
-      {args: {groupName: 'Visitor', id: 0, customer: visitorData}},
-      {args: {groupName: 'Guest', id: 1, customer: guestData}},
-      {args: {groupName: 'Customer', id: 2, customer: DefaultCustomer}},
+      {args: {groupName: 'Visitor', id: '0', customer: visitorData}},
+      {args: {groupName: 'Guest', id: '1', customer: guestData}},
+      {args: {groupName: 'Customer', id: '2', customer: DefaultCustomer}},
     ].forEach((group, groupIndex) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [
@@ -181,7 +178,6 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               test.args.paymentModuleToEdit,
               test.args.check,
             );
-
             await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
           });
 
@@ -190,12 +186,10 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
             // Click on view my shop
             page = await preferencesPage.viewMyShop(page);
-
             // Logout if already login
             if (index === 0 && groupIndex !== 0) {
               await homePage.logout(page);
             }
-
             // Change FO language
             await homePage.changeLanguage(page, 'en');
 
@@ -213,10 +207,8 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
 
             // Go to the first product page
             await homePage.goToProductPage(page, 1);
-
             // Add the product to the cart
             await productPage.addProductToTheCart(page);
-
             // Proceed to checkout the shopping cart
             await cartPage.clickOnProceedToCheckout(page);
 
@@ -235,6 +227,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
               );
 
               await checkoutPage.clickOnSignIn(page);
+
               const isStepLoginComplete = await checkoutPage.customerLogin(page, group.args.customer);
               await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
             });
@@ -287,7 +280,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             let isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.paymentModuleToEdit);
             await expect(isVisible).to.be.equal(test.args.wirePaymentExist);
 
-            // Check check Payment block
+            // Check Payment block
             isVisible = await checkoutPage.isPaymentMethodExist(page, test.args.defaultPaymentModule);
             await expect(isVisible).to.be.equal(test.args.checkPaymentExist);
           });
@@ -296,7 +289,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
             await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}${groupIndex}`, baseContext);
 
             // Close current tab
-            page = await homePage.closePage(browserContext, page, 0);
+            page = await homePage.closePage(browserContext, page, 0) as Page;
 
             const pageTitle = await preferencesPage.getPageTitle(page);
             await expect(pageTitle).to.contains(preferencesPage.pageTitle);

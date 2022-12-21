@@ -5,32 +5,30 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import preferencesPage from '@pages/BO/payment/preferences';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const preferencesPage = require('@pages/BO/payment/preferences');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_BO_payment_preferences_countryRestrictions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-const countryID = 74;
+const baseContext: string = 'functional_BO_payment_preferences_countryRestrictions';
 
 describe('BO - Payment - Preferences : Configure country restrictions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const countryID: number = 74;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,7 +51,6 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       dashboardPage.paymentParentLink,
       dashboardPage.preferencesLink,
     );
-
     await preferencesPage.closeSfToolBar(page);
 
     const pageTitle = await preferencesPage.getPageTitle(page);
@@ -75,7 +72,6 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
         test.args.paymentModule,
         test.args.exist,
       );
-
       await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
     });
 
@@ -84,7 +80,6 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       // Click on view my shop
       page = await preferencesPage.viewMyShop(page);
-
       // Change language in FO
       await homePage.changeLanguage(page, 'en');
 
@@ -102,10 +97,8 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -120,6 +113,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
+
         const isStepLoginComplete = await checkoutPage.customerLogin(page, DefaultCustomer);
         await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
       }
@@ -149,7 +143,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
       // Close current tab
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await homePage.closePage(browserContext, page, 0) as Page;
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(preferencesPage.pageTitle);

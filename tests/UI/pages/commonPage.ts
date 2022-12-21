@@ -260,11 +260,11 @@ export default class CommonPage {
    * @param browserContext {BrowserContext} Context of the page
    * @param page {Page} Browser tab
    * @param tabId {number} Tab to get focus on after closing the other tab
-   * @return {Promise<Page>}
+   * @return {Promise<Page|undefined>}
    */
   async closePage(browserContext: BrowserContext, page: Page, tabId: number = -1): Promise<Page|undefined> {
     await page.close();
-    let focusedPage;
+    let focusedPage: Page|undefined;
 
     if (tabId !== -1) {
       focusedPage = (browserContext.pages())[tabId];

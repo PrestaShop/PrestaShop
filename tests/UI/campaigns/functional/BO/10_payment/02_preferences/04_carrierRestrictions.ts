@@ -5,31 +5,29 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import preferencesPage from '@pages/BO/payment/preferences';
+import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const preferencesPage = require('@pages/BO/payment/preferences');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_BO_payment_preferences_carrierRestrictions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_payment_preferences_carrierRestrictions';
 
 describe('BO - Payment - Preferences : Configure carrier restrictions and check FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -55,6 +53,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
@@ -63,6 +62,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -81,7 +81,6 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         dashboardPage.paymentParentLink,
         dashboardPage.preferencesLink,
       );
-
       await preferencesPage.closeSfToolBar(page);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
@@ -108,7 +107,6 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
           test.args.paymentModule,
           test.args.exist,
         );
-
         await expect(result).to.contains(preferencesPage.successfulUpdateMessage);
       });
 
@@ -117,7 +115,6 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
 
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
-
         // Change language in FO
         await homePage.changeLanguage(page, 'en');
 
@@ -130,10 +127,8 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
 
         // Go to the first product page
         await homePage.goToProductPage(page, 1);
-
         // Add the product to the cart
         await productPage.addProductToTheCart(page);
-
         // Proceed to checkout the shopping cart
         await cartPage.clickOnProceedToCheckout(page);
 
@@ -165,7 +160,7 @@ describe('BO - Payment - Preferences : Configure carrier restrictions and check 
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBo${index}`, baseContext);
 
         // Close current tab
-        page = await homePage.closePage(browserContext, page, 0);
+        page = await homePage.closePage(browserContext, page, 0) as Page;
 
         const pageTitle = await preferencesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(preferencesPage.pageTitle);
