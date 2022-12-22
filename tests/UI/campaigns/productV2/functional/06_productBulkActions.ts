@@ -195,14 +195,14 @@ describe('BO - Catalog - Products : Enable, disable, duplicate and Delete produc
   ].forEach((test, index) => {
     describe(`Bulk ${test.args.action} created products`, async () => {
       it('should select the 2 products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `selectProducts${index}`, baseContext);
 
         const isBulkDeleteButtonEnabled: boolean = await productsPage.bulkSelectProducts(page);
         await expect(isBulkDeleteButtonEnabled).to.be.true;
       });
 
       it('should click on bulk actions button', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnBulkDeleteButton', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `clickOnBulkActionsButton${index}`, baseContext);
 
         const textMessage: string = await productsPage.clickOnBulkActionsProducts(page, test.args.action);
         await expect(textMessage).to.equal(`${test.args.message} ${test.args.productsNumber} products`);
