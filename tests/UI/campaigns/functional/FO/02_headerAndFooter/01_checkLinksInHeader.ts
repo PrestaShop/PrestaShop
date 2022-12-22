@@ -4,22 +4,18 @@ import testContext from '@utils/testContext';
 
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const contactUsPage = require('@pages/FO/contactUs');
-const myAccountPage = require('@pages/FO/myAccount');
+import myAccountPage from '@pages/FO/myAccount';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_FO_headerAndFooter_checkLinksInHeader';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_headerAndFooter_checkLinksInHeader';
 
 /*
 Go to FO
@@ -32,6 +28,9 @@ Check header links:
 - Logo
  */
 describe('FO - Header and Footer : Check links in header page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -94,7 +93,6 @@ describe('FO - Header and Footer : Check links in header page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     await loginPage.goToHomePage(page);
-
     // Add product to cart by quick view
     await homePage.addProductToCartByQuickView(page, 1, 3);
 

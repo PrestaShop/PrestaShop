@@ -1,6 +1,10 @@
+// Import FO pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+// Import data
+import type ContactUsFakerData from '@data/faker/contactUs';
+
+import type {Page} from 'playwright';
 
 /**
  * Contact us page, contains functions that can be used on the page
@@ -8,6 +12,34 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class ContactUs extends FOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly validationMessage: string;
+
+  private readonly invalidEmail: string;
+
+  private readonly invalidContent: string;
+
+  private readonly badFileExtensionErrorMessage: string;
+
+  private readonly emailUsLink: string;
+
+  private readonly subjectSelect: string;
+
+  private readonly emailAddressInput: string;
+
+  private readonly attachmentLabel: string;
+
+  private readonly orderReferenceSelect: string;
+
+  private readonly messageTextarea: string;
+
+  private readonly sendButton: string;
+
+  private readonly alertSuccessDiv: string;
+
+  private readonly alertDangerTextBlock: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on contact us page
@@ -41,9 +73,9 @@ class ContactUs extends FOBasePage {
   /**
    * Get email us link href
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getEmailUsLink(page) {
+  getEmailUsLink(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.emailUsLink, 'href');
   }
 
@@ -52,9 +84,9 @@ class ContactUs extends FOBasePage {
    * @param page {Page} Browser tab
    * @param contactUsData {object} The data for fill the form
    * @param file {string|null} The path of the file to upload
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async sendMessage(page, contactUsData, file = null) {
+  async sendMessage(page: Page, contactUsData: ContactUsFakerData, file: string|null = null): Promise<void> {
     await this.selectByVisibleText(page, this.subjectSelect, contactUsData.subject);
     await this.setValue(page, this.emailAddressInput, contactUsData.emailAddress);
 
@@ -75,7 +107,7 @@ class ContactUs extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccess(page) {
+  async getAlertSuccess(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertSuccessDiv);
   }
 
@@ -84,16 +116,16 @@ class ContactUs extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertError(page) {
+  async getAlertError(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertDangerTextBlock);
   }
 
   /**
    * Get and return the content of the email input
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getEmailFieldValue(page) {
+  async getEmailFieldValue(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.emailAddressInput, 'value');
   }
 
@@ -102,9 +134,9 @@ class ContactUs extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAttachmentInputVisible(page) {
+  isAttachmentInputVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.attachmentLabel, 1000);
   }
 }
 
-module.exports = new ContactUs();
+export default new ContactUs();

@@ -7,6 +7,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
+import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 
 require('module-alias/register');
@@ -18,7 +19,6 @@ const {expect} = require('chai');
 const dashboardPage = require('@pages/BO/dashboard');
 const customerServicePage = require('@pages/BO/customerService/customerService');
 const viewPage = require('@pages/BO/customerService/customerService/view');
-const contactUsPage = require('@pages/FO/contactUs');
 
 // Import data
 const ContactUsFakerData = require('@data/faker/contactUs');

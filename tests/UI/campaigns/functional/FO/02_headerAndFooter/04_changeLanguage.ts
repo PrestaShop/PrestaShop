@@ -5,25 +5,21 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import localizationPage from '@pages/BO/international/localization';
+import languagesPage from '@pages/BO/international/languages';
 // Import FO pages
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const localizationPage = require('@pages/BO/international/localization');
-const languagesPage = require('@pages/BO/international/languages');
-
 // Import data
-const {Languages} = require('@data/demo/languages');
+import {Languages} from '@data/demo/languages';
 
-const baseContext = 'functional_FO_headerAndFooter_changeLanguage';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_headerAndFooter_changeLanguage';
 
 /*
 Scenario:
@@ -33,6 +29,9 @@ Scenario:
 - Go to Fo and change language
  */
 describe('FO - Header and Footer : Change language', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +56,6 @@ describe('FO - Header and Footer : Change language', async () => {
         dashboardPage.internationalParentLink,
         dashboardPage.localizationLink,
       );
-
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
@@ -68,6 +66,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage1', baseContext);
 
       await localizationPage.goToSubTabLanguages(page);
+
       const pageTitle = await languagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(languagesPage.pageTitle);
     });
@@ -159,7 +158,6 @@ describe('FO - Header and Footer : Change language', async () => {
         dashboardPage.internationalParentLink,
         dashboardPage.localizationLink,
       );
-
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
@@ -170,6 +168,7 @@ describe('FO - Header and Footer : Change language', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage2', baseContext);
 
       await localizationPage.goToSubTabLanguages(page);
+
       const pageTitle = await languagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(languagesPage.pageTitle);
     });

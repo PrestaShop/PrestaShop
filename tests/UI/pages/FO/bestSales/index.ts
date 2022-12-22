@@ -1,13 +1,13 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
-
 /**
  * Best sales page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
 class BestSales extends FOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on best sales page
@@ -19,4 +19,4 @@ class BestSales extends FOBasePage {
   }
 }
 
-module.exports = new BestSales();
+export default new BestSales();

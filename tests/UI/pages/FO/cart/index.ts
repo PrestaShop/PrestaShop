@@ -12,7 +12,7 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class Cart extends FOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly cartRuleAlreadyUsedErrorText: string;
 
