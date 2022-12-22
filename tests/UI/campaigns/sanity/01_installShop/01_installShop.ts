@@ -82,7 +82,6 @@ describe('Install Prestashop', async () => {
   it('should fill shop Information form and go to step \'Content Configuration\'', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContentConfiguration', baseContext);
 
-
     await installPage.fillInformationForm(page);
     await installPage.nextStep(page);
     await installPage.waitForFinishedForthStep(page);
