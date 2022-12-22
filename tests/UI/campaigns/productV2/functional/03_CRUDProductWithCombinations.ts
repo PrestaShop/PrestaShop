@@ -365,21 +365,21 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
+        const nonSortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
 
         await combinationsTab.sortTable(page, test.args.sortBy, test.args.column, test.args.sortDirection);
 
-        let sortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
+        const sortedTable = await combinationsTab.getAllRowsColumnContent(page, 40, test.args.sortBy);
 
-        nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-        sortedTable = await sortedTable.map((text) => parseFloat(text));
+        const nonSortedTableFloat = await nonSortedTable.map((text: string): number => parseFloat(text));
+        const sortedTableFloat = await sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
+        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          await expect(sortedTableFloat).to.deep.equal(expectedResult);
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
         }
       });
     });

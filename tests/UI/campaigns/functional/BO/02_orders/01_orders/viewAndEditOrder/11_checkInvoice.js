@@ -1,4 +1,5 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import date from '@utils/date';
 import files from '@utils/files';
 import helper from '@utils/helpers';
@@ -10,7 +11,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 require('module-alias/register');
 
 const {expect} = require('chai');
-const basicHelper = require('@utils/basicHelper');
 const {createOrderByCustomerTest, createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');

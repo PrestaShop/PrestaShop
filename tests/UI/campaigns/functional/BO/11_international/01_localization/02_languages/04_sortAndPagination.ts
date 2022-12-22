@@ -109,24 +109,31 @@ describe('BO - International - Languages : Sort and pagination', async () => {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         // Get non sorted elements
-        let nonSortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
         await languagesPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         // Get sorted elements
-        let sortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await languagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
-        }
+          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-        // Sort non sorted array
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });

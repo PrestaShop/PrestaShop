@@ -191,7 +191,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
-          const expectedResult = await basicHelper.sortArray(sortedCarriers, true);
+          const expectedResult = await basicHelper.sortArrayNumber(sortedCarriers);
 
           if (test.args.orderBy === 'Ascending') {
             await expect(sortedCarriers).to.deep.equal(expectedResult);
