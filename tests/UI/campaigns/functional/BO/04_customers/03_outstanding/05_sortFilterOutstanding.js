@@ -1,4 +1,5 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -9,9 +10,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 
 // Import Common tests
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
@@ -289,21 +287,31 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       it(`should sort by outstanding allowance ${test.args.sortDirection}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+        const nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
         await outstandingPage.sortTable(page, 'outstanding_allow_amount', test.args.sortDirection);
 
-        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+        const sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
-        nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-        sortedTable = await sortedTable.map((text) => parseFloat(text));
+        if (test.args.isFloat) {
+          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });
@@ -346,23 +354,31 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
-        }
+          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'asc') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });

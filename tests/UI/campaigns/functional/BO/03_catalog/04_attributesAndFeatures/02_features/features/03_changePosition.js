@@ -1,16 +1,12 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Common tests login BO
 import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -83,7 +79,7 @@ describe('BO - Catalog - Attributes & Features : Change feature position', async
     nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
     sortedTable = await sortedTable.map((text) => parseFloat(text));
 
-    const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
+    const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
 
     await expect(sortedTable).to.deep.equal(expectedResult);
   });

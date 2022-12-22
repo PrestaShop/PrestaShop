@@ -259,22 +259,30 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
         await shopsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await shopsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = nonSortedTable.map((text: string): number => parseFloat(text));
-          sortedTable = sortedTable.map((text: string): number => parseFloat(text));
-        }
+          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat ?? false);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'up') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });
