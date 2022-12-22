@@ -246,17 +246,21 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
+        $pngActivated = Configuration::get('PS_ADDITIONAL_IMAGE_PNG');
+        $webpActivated = Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
+
+
         // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if ((Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
+        if (($pngActivated && $type == IMAGETYPE_PNG) && !$forceType) {
             $fileType = 'png';
         }
 
         // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
         // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
         // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if ((Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
+        if (($webpActivated && $type == IMAGETYPE_WEBP) && !$forceType) {
             $fileType = 'webp';
         }
 

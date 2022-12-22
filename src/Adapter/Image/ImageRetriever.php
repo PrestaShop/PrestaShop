@@ -192,9 +192,9 @@ class ImageRetriever
                 );
             }
 
-            $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
+            $isWebpWanted = Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
 
-            if ($generateAdditionalWebP) {
+            if ($isWebpWanted) {
                 $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     sprintf('%s-%s.webp', $id_image, $image_type['name']),
@@ -214,9 +214,8 @@ class ImageRetriever
                 $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
             }
 
-            $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
-
-            if ($generateAdditionalAvif) {
+            $isAvifWanted = Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
+            if ($isAvifWanted) {
                 $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     sprintf('%s-%s.avif', $id_image, $image_type['name']),
