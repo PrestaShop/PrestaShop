@@ -71,7 +71,7 @@ const getters = {
   catalog(rootState: Record<string, any>) {
     return rootState.catalog;
   },
-  domainsTree(): Array<Record<string, any>> {
+  domainsTree(rootState: Record<string, any>): Array<Record<string, any>> {
     function convert(domains: Array<Record<string, any>>): Array<Record<string, any>> {
       domains.forEach((domain: Record<string, any>) => {
         /* eslint-disable */
@@ -87,7 +87,7 @@ const getters = {
       return domains;
     }
 
-    return convert(state.domainsTree);
+    return convert(rootState.domainsTree);
   },
   isReady(rootState: Record<string, any>): boolean {
     return rootState.isReady;
