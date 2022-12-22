@@ -612,6 +612,7 @@ class AdminImagesControllerCore extends AdminController
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
         $generateAdditionalWebP = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
+        $generateAdditionalAvif = (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
@@ -639,7 +640,7 @@ class AdminImagesControllerCore extends AdminController
                                 ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
                             }
 
-                            if ($this->canGenerateAvif) {
+                            if ($generateAdditionalAvif) {
                                 ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int) $imageType['width'], (int) $imageType['height'], 'avif', true);
                             }
 
@@ -650,7 +651,7 @@ class AdminImagesControllerCore extends AdminController
                                 if ($generateAdditionalWebP) {
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.webp', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'webp', true);
                                 }
-                                if ($this->canGenerateAvif) {
+                                if ($generateAdditionalAvif) {
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'avif', true);
                                 }
                             }
