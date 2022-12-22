@@ -10,7 +10,7 @@ import homePage from '@pages/FO/home';
 // Import test context
 import testContext from '@utils/testContext';
 
-const baseContext = 'sanity_installShop_installShop';
+const baseContext: string = 'sanity_installShop_installShop';
 
 describe('Install Prestashop', async () => {
   let browserContext: BrowserContext;

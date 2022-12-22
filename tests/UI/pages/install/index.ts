@@ -1,6 +1,7 @@
+import type {Page} from 'playwright';
+
 // Import pages
 import CommonPage from '@pages/commonPage';
-import type {Page} from 'playwright';
 
 /**
  * Install page, contains functions used in different steps of the installation
@@ -343,7 +344,7 @@ class Install extends CommonPage {
    * @param timeout {number} Time to wait for step to finish
    * @returns {Promise<boolean>}
    */
-  async isInstallationStepFinished(page: Page, step: string, timeout = 30000): Promise<boolean> {
+  async isInstallationStepFinished(page: Page, step: string, timeout: number = 30000): Promise<boolean> {
     let selector;
 
     switch (step) {
