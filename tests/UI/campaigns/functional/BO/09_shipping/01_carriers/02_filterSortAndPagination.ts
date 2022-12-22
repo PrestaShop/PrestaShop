@@ -1,37 +1,33 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const carriersPage = require('@pages/BO/shipping/carriers');
-const addCarrierPage = require('@pages/BO/shipping/carriers/add');
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
+import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
 // Import data
-const CarrierFaker = require('@data/faker/carrier');
-const {Carriers} = require('@data/demo/carriers');
+import {Carriers} from '@data/demo/carriers';
+import CarrierFaker from '@data/faker/carrier';
 
-const baseContext = 'functional_BO_shipping_carriers_filterSortAndPagination';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext: string = 'functional_BO_shipping_carriers_filterSortAndPagination';
 
 // Browser and tab
-let browserContext;
-let page;
-
-let numberOfCarriers = 0;
 
 describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCarriers: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -75,7 +71,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_carrier',
-            filterValue: Carriers.cheapCarrier.id,
+            filterValue: Carriers.cheapCarrier.id.toString(),
           },
       },
       {
@@ -102,7 +98,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByStatus',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Carriers.default.status,
+            filterValue: Carriers.default.status ? '1' : '0',
           },
         expected: 'Enabled',
       },
@@ -112,7 +108,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByFreeShipping',
             filterType: 'select',
             filterBy: 'is_free',
-            filterValue: Carriers.lightCarrier.freeShipping,
+            filterValue: Carriers.lightCarrier.freeShipping ? '1' : '0',
           },
         expected: 'Disabled',
       },
@@ -122,7 +118,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'a!position',
-            filterValue: Carriers.lightCarrier.position,
+            filterValue: Carriers.lightCarrier.position.toString(),
           },
       },
     ];
@@ -257,7 +253,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await carriersPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await carriersPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
@@ -278,7 +274,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await carriersPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await carriersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -303,7 +299,6 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           i,
           'name',
         );
-
         await expect(textColumn).to.contains('todelete');
       }
     });

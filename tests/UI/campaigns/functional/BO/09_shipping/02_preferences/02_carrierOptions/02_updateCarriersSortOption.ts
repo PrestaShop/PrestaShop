@@ -1,40 +1,30 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import carriersPage from '@pages/BO/shipping/carriers';
+import preferencesPage from '@pages/BO/shipping/preferences';
 // Import FO pages
 import foCartPage from '@pages/FO/cart';
+import foCheckoutPage from '@pages/FO/checkout';
 import foHomePage from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const preferencesPage = require('@pages/BO/shipping/preferences');
-const carriersPage = require('@pages/BO/shipping/carriers');
-const foCheckoutPage = require('@pages/FO/checkout');
-
 // Import data
-const {Carriers} = require('@data/demo/carriers');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {Carriers} from '@data/demo/carriers';
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_BO_shipping_preferences_carrierOptions_updateCarriersSortOption';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfCarriers = 0;
+const baseContext: string = 'functional_BO_shipping_preferences_carrierOptions_updateCarriersSortOption';
 
 /*
 Go to shipping > Carriers page
@@ -48,6 +38,10 @@ Go back to BO > shipping > Carriers
 Disable the 2 carriers 'My cheap carrier' and 'My light carrier'
  */
 describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order carriers by\'', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCarriers: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -75,7 +69,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
     await expect(pageTitle).to.contains(carriersPage.pageTitle);
   });
 
-  const carriersNames = [
+  const carriersNames: string[] = [
     Carriers.cheapCarrier.name,
     Carriers.lightCarrier.name,
   ];
@@ -134,14 +128,13 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         dashboardPage.shippingLink,
         dashboardPage.shippingPreferencesLink,
       );
-
       await preferencesPage.closeSfToolBar(page);
 
       const pageTitle = await preferencesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(preferencesPage.pageTitle);
     });
 
-    const sortByPosition = [
+    const sortByPosition: string[] = [
       Carriers.default.name,
       Carriers.myCarrier.name,
       Carriers.cheapCarrier.name,
@@ -165,7 +158,6 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         // Click on view my shop
         page = await preferencesPage.viewMyShop(page);
-
         // Change FO language
         await foHomePage.changeLanguage(page, 'en');
 
@@ -178,13 +170,10 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         // Go to the first product page
         await foHomePage.goToProductPage(page, 1);
-
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page);
-
         // Proceed to checkout the shopping cart
         await foCartPage.clickOnProceedToCheckout(page);
-
         // Checkout the order
         if (index === 0) {
           // Personal information step - Login
