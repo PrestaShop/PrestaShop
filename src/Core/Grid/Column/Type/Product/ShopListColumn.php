@@ -58,7 +58,7 @@ final class ShopListColumn extends AbstractColumn
             ])
             ->setDefaults([
                 'sortable' => false,
-                'clickable' => true,
+                'clickable' => false,
                 'max_displayed_characters' => 0,
             ])
             ->setAllowedTypes('field', 'string')

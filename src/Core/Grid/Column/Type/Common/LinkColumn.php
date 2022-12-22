@@ -47,15 +47,14 @@ final class LinkColumn extends AbstractColumn
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'sortable' => true,
                 'icon' => null,
                 'route_fragment' => null,
                 'button_template' => false,
                 'color_template' => 'primary',
                 'color_template_field' => null,
-                'clickable' => false,
             ])
             ->setRequired([
                 'field',
@@ -90,7 +89,6 @@ final class LinkColumn extends AbstractColumn
                 'outline',
                 'normal',
             ])
-
         ;
     }
 }

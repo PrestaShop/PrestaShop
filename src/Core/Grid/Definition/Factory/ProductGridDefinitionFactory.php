@@ -107,6 +107,14 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            $editAttributes = [
+                'class' => 'multi-shop-edit-product',
+            ];
+        } else {
+            $editAttributes = [];
+        }
+
         $columns = (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
@@ -137,6 +145,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
+                        'attr' => $editAttributes,
                     ])
             )
             ->add(
@@ -148,6 +157,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_specifications-tab',
+                        'attr' => $editAttributes,
                     ])
             )
             ->add(
@@ -166,6 +176,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
+                        'attr' => $editAttributes,
                     ])
             )
             ->add(
@@ -178,6 +189,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_pricing-tab',
+                        'attr' => $editAttributes,
                     ])
             )
             ->add(
@@ -227,6 +239,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
                         'route_fragment' => 'tab-product_stock-tab',
+                        'attr' => $editAttributes,
                     ])
             );
         }
@@ -246,17 +259,22 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 
     protected function getRowActions(): RowActionCollection
     {
+        $editOptions = [
+            'route' => 'admin_products_v2_edit',
+            'route_param_name' => 'productId',
+            'route_param_field' => 'id_product',
+            'clickable_row' => true,
+        ];
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            $editOptions['attr']['class'] = 'multi-shop-edit-product';
+        }
+
         $rowActions = new RowActionCollection();
         $rowActions
             ->add((new LinkRowAction('edit'))
             ->setName($this->trans('Edit', [], 'Admin.Actions'))
             ->setIcon('edit')
-            ->setOptions([
-                'route' => 'admin_products_v2_edit',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'clickable_row' => true,
-            ])
+            ->setOptions($editOptions)
             )
             ->add((new LinkRowAction('preview'))
             ->setName($this->trans('Preview', [], 'Admin.Actions'))
