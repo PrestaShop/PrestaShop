@@ -197,7 +197,29 @@ class Products extends BOBasePage {
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
-    this.bulkActionsDeleteSelectionLink = '#product_grid_bulk_action_bulk_delete_ajax';
+    this.bulkActionsSelectionLink = (action) => `#product_grid_bulk_action_${action}_ajax`;
+
+    // Modal dialog
+    this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
+    this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
+    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
+
+    // Modal bulk actions products selectors
+    this.modalBulkActionsProducts = (action) => `#product-ajax-${action}_ajax-confirm-modal`;
+    this.modalBulkActionsProductsBody = (action) => `${this.modalBulkActionsProducts(action)} div.modal-body`;
+    this.modalBulkActionsProductsFooter = (action) => `${this.modalBulkActionsProducts(action)} div.modal-footer`;
+    this.modalDialogBulkActionButton = (action) => `${this.modalBulkActionsProductsFooter(action)} `
+      + 'button.btn-confirm-submit';
+    this.modalBulkActionsProductsProgress = (action) => `#product-ajax-${action}_ajax-progress-modal`;
+    this.modalBulkActionsProductsProgressBody = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+      + 'div.modal-body';
+    this.modalBulkActionsProgressSuccessMessage = (action) => `${this.modalBulkActionsProductsProgressBody(action)} `
+      + 'div.progress-message';
+    this.modalBulkActionsProductsProgressFooter = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+      + 'div.modal-footer';
+    this.modalBulkActionsProductsProgressBarDone = '#modal_progressbar_done';
+    this.modalBulkActionsProductsCloseButton = (action) => `${this.modalBulkActionsProductsProgressFooter(action)} `
+      + 'button.close-modal-button';
 
     // Products table selectors
     this.productGridTable = '#product_grid_table';
@@ -365,7 +387,7 @@ class Products extends BOBasePage {
   /**
    * Bulk select products
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async bulkSelectProducts(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.selectAllProductsCheckbox);
@@ -376,41 +398,80 @@ class Products extends BOBasePage {
   /**
    * Click on bulk delete products
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<string>}
    */
-  async clickOnBulkDeleteProducts(page: Page): Promise<string> {
+  async clickOnBulkActionsProducts(page, action) {
+    let textResult;
     await Promise.all([
       await this.waitForSelectorAndClick(page, this.productBulkMenuButton),
       await this.waitForVisibleSelector(page, this.bulkActionsDropDownMenu),
     ]);
-    await this.waitForSelectorAndClick(page, this.bulkActionsDeleteSelectionLink);
-    await this.waitForVisibleSelector(page, this.modalBulkDeleteProducts);
 
-    return this.getTextContent(page, this.modalBulkDeleteProductsBody);
+    if (action === 'enable' || action === 'disable') {
+      await this.waitForSelectorAndClick(page, this.bulkActionsSelectionLink(`${action}_selection`));
+      await this.waitForVisibleSelector(page, this.modalBulkActionsProducts(`${action}_selection`));
+      textResult = await this.getTextContent(page, this.modalBulkActionsProductsBody(`${action}_selection`));
+    } else {
+      await this.waitForSelectorAndClick(page, this.bulkActionsSelectionLink(`bulk_${action}`));
+      await this.waitForVisibleSelector(page, this.modalBulkActionsProducts(`bulk_${action}`));
+      textResult = await this.getTextContent(page, this.modalBulkActionsProductsBody(`bulk_${action}`));
+    }
+
+    return textResult;
   }
 
   /**
    * Bulk delete products
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<string>}
    */
-  async bulkDeleteProduct(page: Page): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.modalDialogBulkDeleteButton);
+  async bulkActionsProduct(page, action) {
+    let textMessage;
 
-    await this.waitForVisibleSelector(page, this.modalBulkDeleteProductsProgressBarDone);
+    if (action === 'enable' || action === 'disable') {
+      await this.waitForSelectorAndClick(page, this.modalDialogBulkActionButton(`${action}_selection`));
+      await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
+      textMessage = this.getTextContent(
+        page,
+        this.modalBulkActionsProgressSuccessMessage(`${action}_selection`),
+      );
+    } else {
+      await this.waitForSelectorAndClick(page, this.modalDialogBulkActionButton(`bulk_${action}`));
+      await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
+      textMessage = this.getTextContent(page, this.modalBulkActionsProgressSuccessMessage(`bulk_${action}`));
+    }
 
-    return this.getTextContent(page, this.modalBulkDeleteProductsProgressSuccessMessage);
+    return textMessage;
   }
 
   /**
-   * Close bulk delete progress modal
+   * Close bulk actions progress modal
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<boolean>}
    */
-  async closeBulkDeleteProgressModal(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.modalBulkDeleteProductsCloseButton);
+  async closeBulkActionsProgressModal(page, action) {
+    let isNotVisible;
 
-    return this.elementNotVisible(page, this.modalBulkDeleteProductsProgress, 1000);
+    if (action === 'enable' || action === 'disable') {
+      await this.clickAndWaitForNavigation(page, this.modalBulkActionsProductsCloseButton(`${action}_selection`));
+      isNotVisible = await this.elementNotVisible(
+        page,
+        this.modalBulkActionsProductsProgress(`${action}_selection`),
+        1000,
+      );
+    } else {
+      await this.clickAndWaitForNavigation(page, this.modalBulkActionsProductsCloseButton(`bulk_${action}`));
+      isNotVisible = await this.elementNotVisible(
+        page,
+        this.modalBulkActionsProductsProgress(`bulk_${action}`),
+        1000,
+      );
+    }
+
+    return isNotVisible;
   }
 
   // Filter products table methods
