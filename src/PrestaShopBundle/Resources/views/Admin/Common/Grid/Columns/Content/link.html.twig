@@ -39,6 +39,8 @@
   {% endif %}
 {% endif %}
 
+{% set class = (class ~ ' ' ~ column.options.attr.class|default(''))|trim %}
+
 {% block link %}
 <a
   class="{{ class }} text-nowrap"
