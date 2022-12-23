@@ -4,7 +4,7 @@ import MailDev from 'maildev';
  * @module MailDevHelper
  * @description Helper to wrap Maildev functions
  */
-module.exports = {
+export default {
 
   /**
    * Create a Maildev server instance (the default smtp port is 1025)

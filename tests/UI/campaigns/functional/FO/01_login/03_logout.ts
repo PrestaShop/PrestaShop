@@ -5,21 +5,20 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const myAccountPage = require('@pages/FO/myAccount');
+import myAccountPage from '@pages/FO/myAccount';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_FO_login_logout';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_FO_login_logout';
 
 describe('FO - Login : Logout from FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
