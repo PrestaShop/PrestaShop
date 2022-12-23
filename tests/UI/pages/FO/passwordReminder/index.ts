@@ -8,9 +8,9 @@ import type {Page} from 'playwright';
  * @extends FOBasePage
  */
 class PasswordReminder extends FOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
-  private readonly errorMessage: string;
+  public readonly errorMessage: string;
 
   private readonly emailFormField: string;
 
