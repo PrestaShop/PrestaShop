@@ -65,7 +65,7 @@ const orderByCustomerData = {
 // New order by guest data
 const orderByGuestData = {
   customer: customerData,
-  product: 4,
+  productId: 4,
   productQuantity: 1,
   address: addressData,
   paymentMethod: PaymentMethods.wirePayment.moduleName,

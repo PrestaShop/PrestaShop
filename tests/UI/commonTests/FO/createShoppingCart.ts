@@ -7,22 +7,22 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import searchResultsPage from '@pages/FO/searchResults';
 
-require('module-alias/register');
-const searchResultsPage = require('@pages/FO/searchResults');
+import Order from '@data/types/order';
 
-// Import expect from chai
-const {expect} = require('chai');
-
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 /**
  * Function to Create a non-ordered shopping cart connected in the FO
  * @param orderData {object} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createShoppingCart(orderData, baseContext = 'commonTests-createShoppingCart') {
+function createShoppingCart(orderData: Order, baseContext: string = 'commonTests-createShoppingCart'): void {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   describe('PRE-TEST: Create a non-ordered shopping cart being connected in the FO', async () => {
     // before and after functions
     before(async function () {
@@ -39,7 +39,6 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
 
       // Go to FO and change language
       await homePage.goToFo(page);
-
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -59,6 +58,7 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, orderData.customer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -76,7 +76,6 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await searchResultsPage.goToProductPage(page, 1);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);
 
@@ -98,4 +97,4 @@ function createShoppingCart(orderData, baseContext = 'commonTests-createShopping
   });
 }
 
-module.exports = {createShoppingCart};
+export default {createShoppingCart};

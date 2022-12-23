@@ -4,12 +4,12 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
+import {createShoppingCart} from '@commonTests/FO/createShoppingCart';
 
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-const {createShoppingCart} = require('@commonTests/FO/createShoppingCart');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

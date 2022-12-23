@@ -49,7 +49,7 @@ let addressID = 0;
 // New order by customer data
 const orderData = {
   customer: customerData,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
