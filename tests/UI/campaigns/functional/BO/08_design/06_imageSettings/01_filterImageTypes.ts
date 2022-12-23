@@ -1,36 +1,30 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import'Design > Image Settings' pages
-const dashboardPage = require('@pages/BO/dashboard');
-const imageSettingsPage = require('@pages/BO/design/imageSettings');
+// Import BO Pages
+import dashboardPage from '@pages/BO/dashboard';
+import imageSettingsPage from '@pages/BO/design/imageSettings';
 
 // Import data
-const {imageTypes} = require('@data/demo/imageTypes');
+import {imageTypes} from '@data/demo/imageTypes';
 
-const baseContext = 'functional_BO_design_imageSettings_filterImageTypes';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfImageTypes = 0;
+const baseContext: string = 'functional_BO_design_imageSettings_filterImageTypes';
 
 /*
 Filter image types table by ID, name, Width, Height, Products, Categories, Brands, Suppliers and Stores
  */
 describe('BO - Design - Positions : Filter image types table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfImageTypes: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,7 +47,6 @@ describe('BO - Design - Positions : Filter image types table', async () => {
       dashboardPage.designParentLink,
       dashboardPage.imageSettingsLink,
     );
-
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
@@ -75,7 +68,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_image_type',
-            filterValue: imageTypes.first.id,
+            filterValue: imageTypes.first.id.toString(),
           },
       },
       {
@@ -93,7 +86,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterWidth',
             filterType: 'input',
             filterBy: 'width',
-            filterValue: imageTypes.first.width,
+            filterValue: imageTypes.first.width.toString(),
           },
       },
       {
@@ -102,7 +95,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterHeight',
             filterType: 'input',
             filterBy: 'height',
-            filterValue: imageTypes.first.height,
+            filterValue: imageTypes.first.height.toString(),
           },
       },
       {
@@ -111,7 +104,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterProducts',
             filterType: 'select',
             filterBy: 'products',
-            filterValue: imageTypes.first.productsStatus,
+            filterValue: imageTypes.first.productsStatus ? '1' : '0',
           },
       },
       {
@@ -120,7 +113,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterCategories',
             filterType: 'select',
             filterBy: 'categories',
-            filterValue: imageTypes.first.categoriesStatus,
+            filterValue: imageTypes.first.categoriesStatus ? '1' : '0',
           },
       },
       {
@@ -129,7 +122,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterManufacturers',
             filterType: 'select',
             filterBy: 'manufacturers',
-            filterValue: imageTypes.first.manufacturersStatus,
+            filterValue: imageTypes.first.manufacturersStatus ? '1' : '0',
           },
       },
       {
@@ -138,7 +131,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterSuppliers',
             filterType: 'select',
             filterBy: 'suppliers',
-            filterValue: imageTypes.first.suppliersStatus,
+            filterValue: imageTypes.first.suppliersStatus ? '1' : '0',
           },
       },
       {
@@ -147,7 +140,7 @@ describe('BO - Design - Positions : Filter image types table', async () => {
             testIdentifier: 'filterStores',
             filterType: 'select',
             filterBy: 'stores',
-            filterValue: imageTypes.first.storesStatus,
+            filterValue: imageTypes.first.storesStatus ? '1' : '0',
           },
       },
     ];
@@ -167,16 +160,15 @@ describe('BO - Design - Positions : Filter image types table', async () => {
         await expect(numberOfImageTypesAfterFilter).to.be.at.most(numberOfImageTypes);
 
         for (let row = 1; row <= numberOfImageTypesAfterFilter; row++) {
-          if (typeof test.args.filterValue === 'boolean') {
+          if (test.args.filterType === 'select') {
             const status = await imageSettingsPage.getImageTypeStatus(page, row, test.args.filterBy);
-            await expect(status).to.equal(test.args.filterValue);
+            await expect(status).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await imageSettingsPage.getTextColumn(
               page,
               row,
               test.args.filterBy,
             );
-
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }

@@ -5,43 +5,25 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import addPagePage from '@pages/BO/design/pages/add';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
+import cmsPage from '@pages/FO/cms';
 import foHomePage from '@pages/FO/home';
-
-require('module-alias/register');
-
-// Using chai
-const {expect} = require('chai');
+import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
-const CategoryPageFaker = require('@data/faker/CMScategory');
-const PageFaker = require('@data/faker/CMSpage');
+import CategoryPageFaker from '@data/faker/CMScategory';
+import PageFaker from '@data/faker/CMSpage';
 
-// Importing BO pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
-const addPagePage = require('@pages/BO/design/pages/add');
-const siteMapPage = require('@pages/FO/siteMap');
-const cmsPage = require('@pages/FO/cms');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_CRUDPageCategory';
-
-let browserContext;
-let page;
-let numberOfCategories = 0;
-let numberOfPages = 0;
-
-const createCategoryData = new CategoryPageFaker();
-const editCategoryData = new CategoryPageFaker({name: `update${createCategoryData.name}`});
-const createPageData = new PageFaker();
-const editPageData = new PageFaker({
-  displayed: false,
-  title: `update${createPageData.title}`,
-});
-let categoryID = 0;
-const categoriesTableName = 'cms_page_category';
-const pagesTableName = 'cms_page';
+const baseContext: string = 'functional_BO_design_pages_CRUDPageCategory';
 
 /*
 Create category and check it in FO
@@ -51,6 +33,22 @@ Update page and check it in FO
 Delete page and category from BO
  */
 describe('BO - Design - Pages : CRUD category and page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCategories: number = 0;
+  let numberOfPages: number = 0;
+  let categoryID: string = '0';
+
+  const createCategoryData: CategoryPageFaker = new CategoryPageFaker();
+  const editCategoryData: CategoryPageFaker = new CategoryPageFaker({name: `update${createCategoryData.name}`});
+  const createPageData: PageFaker = new PageFaker();
+  const editPageData: PageFaker = new PageFaker({
+    displayed: false,
+    title: `update${createPageData.title}`,
+  });
+  const categoriesTableName: string = 'cms_page_category';
+  const pagesTableName: string = 'cms_page';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,7 +71,6 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -93,6 +90,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewPageCategoryPage', baseContext);
 
       await pagesPage.goToAddNewPageCategory(page);
+
       const pageTitle = await addPageCategoryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
     });
@@ -108,6 +106,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterCreation', baseContext);
 
       await pagesPage.backToList(page);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -301,7 +300,6 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop2', baseContext);
 
       page = await pagesPage.viewMyShop(page);
-
       await foHomePage.changeLanguage(page, 'en');
 
       const pageTitle = await foHomePage.getPageTitle(page);
@@ -340,6 +338,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedCategory', baseContext);
 
       await pagesPage.viewCategory(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -357,6 +356,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedPageForUpdate', baseContext);
 
       await pagesPage.goToEditPage(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -381,6 +381,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToUpdatedPageForPreview', baseContext);
 
       await pagesPage.goToEditPage(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -407,6 +408,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelUpdatedPageEdition', baseContext);
 
       await addPagePage.cancelPage(page);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -418,6 +420,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCategoryForDelete', baseContext);
 
       await pagesPage.viewCategory(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -455,6 +458,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterDelete', baseContext);
 
       await pagesPage.backToList(page);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
