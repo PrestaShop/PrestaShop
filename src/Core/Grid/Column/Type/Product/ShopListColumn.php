@@ -55,6 +55,7 @@ final class ShopListColumn extends AbstractColumn
         $resolver
             ->setRequired([
                 'field',
+                'ids_field',
             ])
             ->setDefaults([
                 'sortable' => false,

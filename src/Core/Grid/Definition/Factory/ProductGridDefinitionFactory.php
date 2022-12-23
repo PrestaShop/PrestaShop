@@ -54,8 +54,10 @@ use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
@@ -76,14 +78,21 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $multiStoreContext;
 
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ConfigurationInterface $configuration,
-        MultistoreContextCheckerInterface $multiStoreContext
+        MultistoreContextCheckerInterface $multiStoreContext,
+        FormFactoryInterface $formFactory
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
         $this->multiStoreContext = $multiStoreContext;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -110,6 +119,8 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
             $editAttributes = [
                 'class' => 'multi-shop-edit-product',
+                'data-modal-title' => $this->trans('Select a shop', [], 'Admin.Catalog.Feature'),
+                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
             ];
         } else {
             $editAttributes = [];
@@ -249,6 +260,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setName($this->trans('Store(s)', [], 'Admin.Global'))
                 ->setOptions([
                     'field' => 'associated_shops',
+                    'ids_field' => 'associated_shops_ids',
                     'max_displayed_characters' => 35,
                 ])
             );
@@ -266,7 +278,11 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             'clickable_row' => true,
         ];
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
-            $editOptions['attr']['class'] = 'multi-shop-edit-product';
+            $editOptions['attr'] = [
+                'class' => 'multi-shop-edit-product',
+                'data-modal-title' => $this->trans('Select a shop', [], 'Admin.Catalog.Feature'),
+                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
+            ];
         }
 
         $rowActions = new RowActionCollection();
