@@ -1,43 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
-import testContext from '@utils/testContext';
 import mailHelper from '@utils/mailHelper';
+import testContext from '@utils/testContext';
+
+// Import commonTests
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/configSMTP';
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createAccountTest} from '@commonTests/FO/createAccount';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
+import myAccountPage from '@pages/FO/myAccount';
+import passwordReminderPage from '@pages/FO/passwordReminder';
 
-require('module-alias/register');
+// Import data
+import CustomerFaker from '@data/faker/customer';
+import MailDevEmail from '@data/types/maildev';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type MailDev from 'maildev';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import utils
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
-const passwordReminderPage = require('@pages/FO/passwordReminder');
-const myAccountPage = require('@pages/FO/myAccount');
-
-// Import common tests
-const {createAccountTest} = require('@commonTests/FO/createAccount');
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
-
-const baseContext = 'functional_FO_login_passwordReminder';
-
-let browserContext;
-let page;
-let newMail;
-const resetPasswordMailSubject = 'Password query confirmation';
-
-// mailListener
-let mailListener;
-
-const customerData = new CustomerFaker();
-const newPassword = 'new test password';
-const customerNewPassword = {email: customerData.email, password: newPassword};
+const baseContext: string = 'functional_FO_login_passwordReminder';
 
 /*
 Pre-condition:
@@ -53,6 +38,18 @@ Post-condition:
 - Go back to default smtp config
  */
 describe('FO - Login : Password reminder', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
+
+  const resetPasswordMailSubject: string = 'Password query confirmation';
+  const customerData: CustomerFaker = new CustomerFaker();
+  const newPassword: string = 'new test password';
+  const customerNewPassword: CustomerFaker = new CustomerFaker();
+  customerNewPassword.email = customerData.email;
+  customerNewPassword.password = newPassword;
+
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
@@ -67,7 +64,7 @@ describe('FO - Login : Password reminder', async () => {
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
     // Handle every new email
-    mailListener.on('new', (email) => {
+    mailListener.on('new', (email: MailDevEmail) => {
       newMail = email;
     });
   });
@@ -82,6 +79,7 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
       await homePage.goTo(page, global.FO.URL);
+
       const result = await homePage.isHomePage(page);
       await expect(result).to.be.true;
     });
@@ -90,6 +88,7 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await loginPage.getPageTitle(page);
       await expect(pageTitle).to.equal(loginPage.pageTitle);
     });
@@ -98,6 +97,7 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToPasswordReminderPage', baseContext);
 
       await loginPage.goToPasswordReminderPage(page);
+
       const pageTitle = await passwordReminderPage.getPageTitle(page);
       await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
     });
@@ -163,6 +163,7 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await loginPage.customerLogin(page, customerNewPassword);
+
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -171,6 +172,7 @@ describe('FO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
 
       await myAccountPage.logout(page);
+
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });

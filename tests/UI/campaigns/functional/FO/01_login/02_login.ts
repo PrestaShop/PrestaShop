@@ -6,24 +6,23 @@ import testContext from '@utils/testContext';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const CustomerFaker = require('@data/faker/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import CustomerFaker from '@data/faker/customer';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_FO_login_login';
 
-let browserContext;
-let page;
-
-const firstCredentialsData = new CustomerFaker();
-const secondCredentialsData = new CustomerFaker({password: DefaultCustomer.password});
-const thirdCredentialsData = new CustomerFaker({email: DefaultCustomer.email});
-
 describe('FO - Login : Login in FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const firstCredentialsData: CustomerFaker = new CustomerFaker();
+  const secondCredentialsData: CustomerFaker = new CustomerFaker({password: DefaultCustomer.password});
+  const thirdCredentialsData: CustomerFaker = new CustomerFaker({email: DefaultCustomer.email});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
