@@ -444,6 +444,12 @@ class AdminImagesControllerCore extends AdminController
         }
     }
 
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia();
+        $this->addJs(_PS_JS_DIR_ . 'admin/image.js');
+    }
+
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
