@@ -79,6 +79,7 @@ class ShopSelectorType extends ChoiceType
             'choice_value' => 'id',
             'block_prefix' => 'shop_selector',
             'label' => false,
+            'form_theme' => '@PrestaShop/Admin/TwigTemplateForm/multishop.html.twig',
         ]);
     }
 

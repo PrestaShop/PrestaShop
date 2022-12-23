@@ -25,9 +25,6 @@
 {% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
-{% form_theme productShopsForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
-
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
 {% endblock %}
