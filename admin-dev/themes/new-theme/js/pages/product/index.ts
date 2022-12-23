@@ -24,7 +24,8 @@
  */
 
 import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
-import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import ProductMap from '@pages/product/product-map';
+import selectShopForEdition from '@pages/product/components/select-shop-modal';
 
 const {$} = window;
 
@@ -41,9 +42,26 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
-  grid.addExtension(new LinkRowActionExtension());
-
   grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
+
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension((button: HTMLElement) => {
+    if (button.classList.contains(ProductMap.shops.editProductClass)) {
+      selectShopForEdition(button);
+    } else {
+      document.location.href = <string> button.getAttribute('href');
+    }
+  }));
+
+  document.querySelectorAll<HTMLElement>(`.${ProductMap.shops.editProductClass}`).forEach((link: HTMLElement) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (link.classList.contains(ProductMap.shops.editProductClass)) {
+        selectShopForEdition(link);
+      } else {
+        document.location.href = <string> link.getAttribute('href');
+      }
+    });
+  });
 
   new CategoryTreeFilter();
 });
