@@ -26,42 +26,36 @@
 $(function(){
   const checkboxName = 'PS_IMAGE_FORMAT[]';
   const formId = 'image_type_form';
+  const checkedCheckboxes = `input[name="${checkboxName}"]:checked`
 
-  initCheckboxDisable();
-  disableCheckboxesOnChange();
-  reEnableCheckboxBeforeSubmit();
-
-  function initCheckboxDisable() {
-    if (document.querySelectorAll('input[name="${checkboxName}"]:checked').length === 1) {
-      document.querySelector('input[name="${checkboxName}"]:checked').disabled = true;
-    }
+  // on page load, disable checkbox if there is only one checked
+  if (document.querySelectorAll(checkedCheckboxes).length === 1) {
+    document.querySelector(checkedCheckboxes).disabled = true;
   }
 
-  function disableCheckboxesOnChange() {
-    const checkboxes = document.querySelectorAll('input[name="${checkboxName}"]');
-    checkboxes.forEach((checkbox) => {
-      checkbox.addEventListener('change', function(event){
-        const checkedCount = document.querySelectorAll('input[name="${checkboxName}"]:checked').length;
+  // on change, if only one checkbox is checked, disable it
+  const checkboxes = document.querySelectorAll(`input[name="${checkboxName}"]`);
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function(event){
+      const checkedCount = document.querySelectorAll(checkedCheckboxes).length;
 
-        if (checkedCount === 1) {
-          checkedCheckbox = document.querySelector(`input[name="${checkboxName}"]:checked`);
-          checkedCheckbox.disabled = true;
-        } else if (checkedCount === 2) {
-          disabledCheckbox = document.querySelector('input[name="${checkboxName}"]:disabled');
-          disabledCheckbox.disabled = false;
-        }
-      });
+      if (checkedCount === 1) {
+        checkedCheckbox = document.querySelector(checkedCheckboxes);
+        checkedCheckbox.disabled = true;
+      } else if (checkedCount === 2) {
+        disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
+        disabledCheckbox.disabled = false;
+      }
     });
-  }
+  });
 
-  function reEnableCheckboxBeforeSubmit() {
-    const form = document.getElementById('image_type_form');
-    form.onsubmit = () => {
-      const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+  // on submit, re-enable disabled checkbox so that it is properly sent to backend
+  const form = document.getElementById('image_type_form');
+  form.onsubmit = () => {
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
 
-      checkboxes.forEach(checkbox => {
-        checkbox.disabled = false;
-      });
-    };
-  }
+    checkboxes.forEach(checkbox => {
+      checkbox.disabled = false;
+    });
+  };
 });
