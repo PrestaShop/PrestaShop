@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Password reminder page, contains functions that can be used on the page
@@ -8,6 +8,28 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class PasswordReminder extends FOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly errorMessage: string;
+
+  private readonly emailFormField: string;
+
+  private readonly backToLoginLink: string;
+
+  private readonly sendResetLinkButton: string;
+
+  private readonly emailAddressText: string;
+
+  private readonly newPasswordInput: string;
+
+  private readonly confirmationPasswoedInput: string;
+
+  private readonly submitButton: string;
+
+  private readonly sendResetLinkSuccessAlert: string;
+
+  private readonly errorMessageAlert: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on password reminder page
@@ -43,7 +65,7 @@ class PasswordReminder extends FOBasePage {
    * @param email {string} Account's email to fill on input
    * @returns {Promise<void>}
    */
-  async sendResetPasswordLink(page, email) {
+  async sendResetPasswordLink(page: Page, email: string): Promise<void> {
     await this.setValue(page, this.emailFormField, email);
     await this.clickAndWaitForNavigation(page, this.sendResetLinkButton);
   }
@@ -51,9 +73,9 @@ class PasswordReminder extends FOBasePage {
   /**
    * Check that the success alert message is visible
    * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
+   * @returns {Promise<string>}
    */
-  async checkResetLinkSuccess(page) {
+  async checkResetLinkSuccess(page: Page): Promise<string> {
     return this.getTextContent(page, this.sendResetLinkSuccessAlert);
   }
 
@@ -63,7 +85,7 @@ class PasswordReminder extends FOBasePage {
    * @param emailBody {string} Text body in the mail
    * @returns {Promise<void>}
    */
-  async openForgotPasswordPage(page, emailBody) {
+  async openForgotPasswordPage(page: Page, emailBody: string): Promise<void> {
     // To get reset email password from received email
     const resetPasswordURL = emailBody.split(/(.*)(http.*password-recovery\\?.*)/)[2];
     await this.goTo(page, resetPasswordURL);
@@ -74,7 +96,7 @@ class PasswordReminder extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getEmailAddressToReset(page) {
+  getEmailAddressToReset(page: Page): Promise<string> {
     return this.getTextContent(page, this.emailAddressText);
   }
 
@@ -84,7 +106,7 @@ class PasswordReminder extends FOBasePage {
    * @param password {string} New password to set
    * @returns {Promise<void>}
    */
-  async setNewPassword(page, password) {
+  async setNewPassword(page: Page, password: string): Promise<void> {
     await this.setValue(page, this.newPasswordInput, password);
     await this.setValue(page, this.confirmationPasswoedInput, password);
     await page.click(this.submitButton);
@@ -95,9 +117,9 @@ class PasswordReminder extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getErrorMessage(page) {
+  getErrorMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.errorMessageAlert);
   }
 }
 
-module.exports = new PasswordReminder();
+export default new PasswordReminder();
