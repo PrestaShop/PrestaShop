@@ -1,7 +1,6 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Common tests login BO
@@ -11,9 +10,6 @@ require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -178,23 +174,31 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const nonSortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         await imageSettingsPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
-        let sortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
+        const sortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
-        }
+          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'up') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });

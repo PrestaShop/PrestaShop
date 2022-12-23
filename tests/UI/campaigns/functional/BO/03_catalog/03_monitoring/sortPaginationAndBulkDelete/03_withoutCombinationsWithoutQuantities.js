@@ -1,4 +1,5 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -8,9 +9,6 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
@@ -107,42 +105,50 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
       },
     ];
 
-    sortTests.forEach((testSort) => {
+    sortTests.forEach((test) => {
       it(
-        `should sort by '${testSort.args.sortBy}' '${testSort.args.sortDirection}' and check result`,
+        `should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`,
         async function () {
-          await testContext.addContextItem(this, 'testIdentifier', testSort.args.testIdentifier, baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-          let nonSortedTable = await monitoringPage.getAllRowsColumnContent(
+          const nonSortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
             tableName,
-            testSort.args.sortBy,
+            test.args.sortBy,
           );
 
           await monitoringPage.sortTable(
             page,
             tableName,
-            testSort.args.sortBy,
-            testSort.args.sortDirection,
+            test.args.sortBy,
+            test.args.sortDirection,
           );
 
-          let sortedTable = await monitoringPage.getAllRowsColumnContent(
+          const sortedTable = await monitoringPage.getAllRowsColumnContent(
             page,
             tableName,
-            testSort.args.sortBy,
+            test.args.sortBy,
           );
 
-          if (testSort.args.isFloat) {
-            nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-            sortedTable = await sortedTable.map((text) => parseFloat(text));
-          }
+          if (test.args.isFloat) {
+            const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
+            const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArray(nonSortedTable, testSort.args.isFloat);
+            const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-          if (testSort.args.sortDirection === 'asc') {
-            await expect(sortedTable).to.deep.equal(expectedResult);
+            if (test.args.sortDirection === 'asc') {
+              await expect(sortedTableFloat).to.deep.equal(expectedResult);
+            } else {
+              await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+            }
           } else {
-            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+            if (test.args.sortDirection === 'asc') {
+              await expect(sortedTable).to.deep.equal(expectedResult);
+            } else {
+              await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+            }
           }
         },
       );

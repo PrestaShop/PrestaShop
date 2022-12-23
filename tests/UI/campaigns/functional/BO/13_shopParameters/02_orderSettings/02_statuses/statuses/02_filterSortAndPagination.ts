@@ -228,7 +228,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
-        let nonSortedTable = await statusesPage.getAllRowsColumnContent(
+        const nonSortedTable = await statusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
@@ -236,23 +236,31 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
 
         await statusesPage.sortTable(page, tableName, test.args.sortBy, test.args.columnID, test.args.sortDirection);
 
-        let sortedTable = await statusesPage.getAllRowsColumnContent(
+        const sortedTable = await statusesPage.getAllRowsColumnContent(
           page,
           tableName,
           test.args.sortBy,
         );
 
         if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map((text) => parseFloat(text));
-          sortedTable = await sortedTable.map((text) => parseFloat(text));
-        }
+          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
-        if (test.args.sortDirection === 'up') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
+          }
         } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+
+          if (test.args.sortDirection === 'up') {
+            await expect(sortedTable).to.deep.equal(expectedResult);
+          } else {
+            await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+          }
         }
       });
     });

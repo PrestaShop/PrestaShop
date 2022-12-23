@@ -1,17 +1,15 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
 
 // Import test context
-import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -73,7 +71,7 @@ describe('BO - Catalog - Categories : Change category position', async () => {
 
     sortedTable = await sortedTable.map((text) => parseFloat(text));
 
-    const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
+    const expectedResult = await basicHelper.sortArrayNumber(nonSortedTable);
     await expect(sortedTable).to.deep.equal(expectedResult);
   });
 

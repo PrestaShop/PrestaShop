@@ -1,4 +1,5 @@
 // Import utils
+import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -12,9 +13,6 @@ import foProductPage from '@pages/FO/product';
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
-
-// Import utils
-const basicHelper = require('@utils/basicHelper');
 const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
 
 // Import BO pages
