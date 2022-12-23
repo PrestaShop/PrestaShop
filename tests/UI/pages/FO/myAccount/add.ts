@@ -1,6 +1,10 @@
+// Import FO pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+// Import data
+import CustomerData from '@data/faker/customer';
+
+import type {Page} from 'playwright';
 
 /**
  * Create account page, contains functions that can be used on the page
@@ -8,6 +12,36 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class CreateAccount extends FOBasePage {
+  private readonly pageTitle: string;
+
+  public readonly formTitle: string;
+
+  private readonly pageHeaderTitle: string;
+
+  private readonly createAccountForm: string;
+
+  private readonly genderRadioButton: (id: number) => string;
+
+  private readonly firstNameInput: string;
+
+  private readonly lastNameInput: string;
+
+  private readonly newEmailInput: string;
+
+  private readonly newPasswordInput: string;
+
+  private readonly birthdateInput: string;
+
+  private readonly customerPrivacyCheckbox: string;
+
+  private readonly psgdprCheckbox: string;
+
+  private readonly partnerOfferCheckbox: string;
+
+  private readonly companyInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on create account page
@@ -21,7 +55,7 @@ class CreateAccount extends FOBasePage {
     // Selectors
     this.pageHeaderTitle = '#main .page-header h1';
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = (id) => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
+    this.genderRadioButton = (id: number) => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
     this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
     this.lastNameInput = `${this.createAccountForm} input[name='lastname']`;
     this.newEmailInput = `${this.createAccountForm} input[name='email']`;
@@ -43,7 +77,7 @@ class CreateAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getHeaderTitle(page) {
+  getHeaderTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeaderTitle);
   }
 
@@ -53,7 +87,7 @@ class CreateAccount extends FOBasePage {
    * @param customer {object} Customer's information (email and password)
    * @returns {Promise<void>}
    */
-  async createAccount(page, customer) {
+  async createAccount(page: Page, customer: CustomerData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
@@ -78,16 +112,16 @@ class CreateAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isPartnerOfferRequired(page) {
+  async isPartnerOfferRequired(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.partnerOfferCheckbox}:required`, 1000);
   }
 
   /**
-   * Is birth date input visible
+   * Is birthdate input visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isBirthDateVisible(page) {
+  async isBirthDateVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.birthdateInput, 1000);
   }
 
@@ -96,7 +130,7 @@ class CreateAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isPartnerOfferVisible(page) {
+  async isPartnerOfferVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.partnerOfferCheckbox, 1000);
   }
 
@@ -105,9 +139,9 @@ class CreateAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isCompanyInputVisible(page) {
+  async isCompanyInputVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.companyInput, 1000);
   }
 }
 
-module.exports = new CreateAccount();
+export default new CreateAccount();
