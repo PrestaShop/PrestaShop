@@ -86,6 +86,8 @@ class ProductShopsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => false,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
+            'use_default_themes' => false,
         ]);
     }
 }

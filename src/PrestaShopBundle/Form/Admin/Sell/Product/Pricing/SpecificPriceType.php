@@ -169,6 +169,7 @@ class SpecificPriceType extends TranslatorAwareType
             'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h4',
             'required' => false,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/FormTheme/specific_price.html.twig',
         ]);
     }
 }

@@ -98,6 +98,7 @@ class CategoryFilterType extends AbstractType
             'required' => false,
             'choice_label' => 'name',
             'choice_value' => 'category_id',
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig',
         ]);
     }
 
