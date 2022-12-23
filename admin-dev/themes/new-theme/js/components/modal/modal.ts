@@ -203,7 +203,7 @@ export class Modal implements ModalType {
     document.body.appendChild(this.modal.container);
   }
 
-  setTitle(modalTitle: string): void {
+  setTitle(modalTitle: string): this {
     if (!this.modal.title) {
       this.modal.title = document.createElement('h4');
       this.modal.title.classList.add('modal-title');
@@ -215,23 +215,31 @@ export class Modal implements ModalType {
     }
 
     this.modal.title.innerHTML = modalTitle;
+
+    return this;
   }
 
-  render(content: string): void {
+  render(content: string): this {
     this.modal.message.innerHTML = content;
+
+    return this;
   }
 
-  show(): void {
+  show(): this {
     this.$modal.modal('show');
+
+    return this;
   }
 
-  hide(): void {
+  hide(): this {
     this.$modal.modal('hide');
     // Sometimes modal animation is still in progress and hiding fails, so we attach event listener for that case.
     this.$modal.on('shown.bs.modal', () => {
       this.$modal.modal('hide');
       this.$modal.off('shown.bs.modal');
     });
+
+    return this;
   }
 }
 
