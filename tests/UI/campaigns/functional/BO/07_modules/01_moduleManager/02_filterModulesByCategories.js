@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import BO pages
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 require('module-alias/register');
 
@@ -17,7 +18,6 @@ const {moduleCategories} = require('@data/demo/moduleCategories');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
 const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategories';
 

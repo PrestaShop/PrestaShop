@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import BO pages
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 require('module-alias/register');
 
@@ -14,7 +15,6 @@ const {expect} = require('chai');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
 const baseContext = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 
@@ -44,7 +44,6 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
       dashboardPage.modulesParentLink,
       dashboardPage.moduleManagerLink,
     );
-
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
