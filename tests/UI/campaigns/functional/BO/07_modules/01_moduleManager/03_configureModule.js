@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import BO pages
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 require('module-alias/register');
 
@@ -14,7 +15,6 @@ const {expect} = require('chai');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 const moduleConfigurationPage = require('@pages/BO/modules/moduleConfiguration');
 
 // Import data
@@ -48,7 +48,6 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
       dashboardPage.modulesParentLink,
       dashboardPage.moduleManagerLink,
     );
-
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
@@ -66,6 +65,7 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
     await moduleManagerPage.goToConfigurationPage(page, contactForm.name);
+
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
     await expect(pageSubtitle).to.contains(contactForm.name);
   });
