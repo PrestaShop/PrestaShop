@@ -24,9 +24,10 @@
  *#}
 
 {# The first shop is always displayed entirely and in bold #}
+{% set shopsIds = record[column.options.ids_field] %}
 {% set shops = record[column.options.field] %}
 {% set allShops = shops|join(', ') %}
-<span class="product-shop-list" title="{{ allShops }}">
+<span class="product-shop-list" title="{{ allShops }}" data-shop-ids="{{ shopsIds|join(',') }}">
   {% set firstShop = shops[0] %}
   <strong>{{ firstShop }}</strong>
   {%- if shops|length > 1 -%}
