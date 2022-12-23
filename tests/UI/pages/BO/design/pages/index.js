@@ -89,7 +89,7 @@ class Pages extends BOBasePage {
    * Reset input filters
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to reset and get number of lines
-   * @return {Promise<void>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page, tableName) {
     const resetButton = this.filterResetButton(tableName);
@@ -115,7 +115,7 @@ class Pages extends BOBasePage {
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing

@@ -1,37 +1,33 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import pagesPage from '@pages/BO/design/pages/index';
 
 // Import data
-const {Pages} = require('@data/demo/CMSpage');
+import {Pages} from '@data/demo/CMSpage';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_pages_filterAndQuickEditPages';
-
-let browserContext;
-let page;
-let numberOfPages = 0;
-
-const pagesTableName = 'cms_page';
+const baseContext: string = 'functional_BO_design_pages_pages_filterAndQuickEditPages';
 
 /*
 Filter pages table by : ID, Link, Meta title, Position and Displayed
 Enable/Disable page status by quick edit
  */
 describe('BO - Design - Pages : Filter and quick edit pages table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfPages: number = 0;
+
+  const pagesTableName: string = 'cms_page';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +50,6 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -77,7 +72,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_cms',
-            filterValue: Pages.delivery.id,
+            filterValue: Pages.delivery.id.toString(),
           },
       },
       {
@@ -104,7 +99,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'position',
-            filterValue: Pages.securePayment.position,
+            filterValue: Pages.securePayment.position.toString(),
           },
       },
       {
@@ -113,7 +108,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Pages.securePayment.displayed,
+            filterValue: Pages.securePayment.displayed ? '1' : '0',
           },
       },
     ];
@@ -136,7 +131,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
         for (let i = 1; i <= numberOfPagesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const pagesStatus = await pagesPage.getStatus(page, pagesTableName, i);
-            await expect(pagesStatus).to.equal(test.args.filterValue);
+            await expect(pagesStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);

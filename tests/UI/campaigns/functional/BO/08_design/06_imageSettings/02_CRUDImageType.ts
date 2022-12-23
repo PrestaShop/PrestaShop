@@ -1,35 +1,22 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const imageSettingsPage = require('@pages/BO/design/imageSettings');
-const addImageTypePage = require('@pages/BO/design/imageSettings/add');
+import dashboardPage from '@pages/BO/dashboard';
+import imageSettingsPage from '@pages/BO/design/imageSettings';
+import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-const ImageTypeFaker = require('@data/faker/imageType');
+import ImageTypeFaker from '@data/faker/imageType';
 
-const baseContext = 'functional_BO_design_imageSettings_CRUDImageType';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfImageTypes = 0;
-
-const createImageTypeData = new ImageTypeFaker();
-const editImageTypeData = new ImageTypeFaker();
+const baseContext: string = 'functional_BO_design_imageSettings_CRUDImageType';
 
 /*
 Create image type
@@ -37,6 +24,13 @@ Update image type
 Delete image type
  */
 describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfImageTypes: number = 0;
+
+  const createImageTypeData: ImageTypeFaker = new ImageTypeFaker();
+  const editImageTypeData: ImageTypeFaker = new ImageTypeFaker();
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,7 +53,6 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       dashboardPage.designParentLink,
       dashboardPage.imageSettingsLink,
     );
-
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
@@ -79,6 +72,7 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddImageTypePage', baseContext);
 
       await imageSettingsPage.goToNewImageTypePage(page);
+
       const pageTitle = await addImageTypePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
     });
@@ -100,7 +94,6 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await imageSettingsPage.resetFilter(page);
-
       await imageSettingsPage.filterTable(
         page,
         'input',
@@ -116,6 +109,7 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditImageTypePage', baseContext);
 
       await imageSettingsPage.gotoEditImageTypePage(page, 1);
+
       const pageTitle = await addImageTypePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addImageTypePage.pageTitleEdit);
     });

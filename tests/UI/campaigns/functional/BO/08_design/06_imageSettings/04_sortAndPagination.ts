@@ -3,27 +3,20 @@ import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const imageSettingsPage = require('@pages/BO/design/imageSettings');
-const addImageTypePage = require('@pages/BO/design/imageSettings/add');
+import dashboardPage from '@pages/BO/dashboard';
+import imageSettingsPage from '@pages/BO/design/imageSettings';
+import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-const ImageTypeFaker = require('@data/faker/imageType');
+import ImageTypeFaker from '@data/faker/imageType';
 
-const baseContext = 'functional_BO_design_imageSettings_sortAndPagination';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfImageTypes = 0;
+const baseContext: string = 'functional_BO_design_imageSettings_sortAndPagination';
 
 /*
 Create 15 image settings
@@ -32,6 +25,10 @@ Sort image settings table by ID, Name, Width and Height
 Delete image settings with bulk actions
  */
 describe('BO - Design - Image Settings : Pagination and sort image settings', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfImageTypes: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +51,6 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
       dashboardPage.designParentLink,
       dashboardPage.imageSettingsLink,
     );
-
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
@@ -70,14 +66,15 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
 
   // 1 : Create 15 new image types
   describe('Create 15 image types', async () => {
-    const creationTests = new Array(15).fill(0, 0, 15);
-    creationTests.forEach((test, index) => {
+    const creationTests: number[] = new Array(15).fill(0, 0, 15);
+    creationTests.forEach((test: number, index: number) => {
       const createImageTypeData = new ImageTypeFaker({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddImageTypePage${index}`, baseContext);
 
         await imageSettingsPage.goToNewImageTypePage(page);
+
         const pageTitle = await addImageTypePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });
@@ -99,7 +96,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
-      const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.equal('1');
     });
 
@@ -120,7 +117,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -181,8 +178,8 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
         const sortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

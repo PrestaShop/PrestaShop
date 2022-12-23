@@ -1,43 +1,37 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Common tests login BO
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const imageSettingsPage = require('@pages/BO/design/imageSettings');
-const addImageTypePage = require('@pages/BO/design/imageSettings/add');
+import dashboardPage from '@pages/BO/dashboard';
+import imageSettingsPage from '@pages/BO/design/imageSettings';
+import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-const ImageTypeFaker = require('@data/faker/imageType');
+import ImageTypeFaker from '@data/faker/imageType';
 
-const baseContext = 'functional_BO_design_imageSettings_bulkDeleteImageTypes';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Browser and tab
-let browserContext;
-let page;
-
-let numberOfImageTypes = 0;
-
-const ImageTypesToCreate = [
-  new ImageTypeFaker({name: 'todelete1'}),
-  new ImageTypeFaker({name: 'todelete2'}),
-];
+const baseContext: string = 'functional_BO_design_imageSettings_bulkDeleteImageTypes';
 
 /*
 Create 2 image types
 Delete image types by bulk actions
  */
 describe('BO - Design - Image Settings : Bulk delete image types', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfImageTypes: number = 0;
+
+  const ImageTypesToCreate: ImageTypeFaker[] = [
+    new ImageTypeFaker({name: 'todelete1'}),
+    new ImageTypeFaker({name: 'todelete2'}),
+  ];
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -60,7 +54,6 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
       dashboardPage.designParentLink,
       dashboardPage.imageSettingsLink,
     );
-
     await imageSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await imageSettingsPage.getPageTitle(page);
@@ -80,6 +73,7 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewImageTypePage${index + 1}`, baseContext);
 
         await imageSettingsPage.goToNewImageTypePage(page);
+
         const pageTitle = await addImageTypePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });

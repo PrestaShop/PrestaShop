@@ -6,35 +6,21 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import advancedCustomizationPage from '@pages/BO/design/themeAndLogo/advancedCustomization';
+import themeAndLogoPage from '@pages/BO/design/themeAndLogo/themeAndLogo';
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
 // Import FO pages
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
+// Import data
+import {themeCustomization} from '@data/demo/modules';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const themeAndLogoPage = require('@pages/BO/design/themeAndLogo/themeAndLogo');
-const advancedCustomizationPage = require('@pages/BO/design/themeAndLogo/advancedCustomization');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
-
-// Import demo data
-const {themeCustomization} = require('@data/demo/modules');
-
-const baseContext = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
-
-let browserContext;
-let page;
-
-// Variable used to create temporary theme file
-let filePath;
-
-// Variable used to create child_classic.zip file
-const renamedFilePath = 'child_classic.zip';
-
-// Variable used for the themes folder
-const themesPath = 'themes/';
+const baseContext: string = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
 
 /*
 Pre-condition:
@@ -47,6 +33,16 @@ Scenario:
  */
 
 describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  // Variable used to create temporary theme file
+  let filePath: string;
+
+  // Variable used to create child_classic.zip file
+  const renamedFilePath: string = 'child_classic.zip';
+  // Variable used for the themes folder
+  const themesPath: string = 'themes/';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +50,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
   });
 
   after(async () => {
-    browserContext = await helper.closeBrowserContext(browserContext);
+    await helper.closeBrowserContext(browserContext);
   });
 
   it('should login in BO', async function () {
@@ -99,7 +95,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
         dashboardPage.designParentLink,
         dashboardPage.themeAndLogoParentLink,
       );
-
       await themeAndLogoPage.closeSfToolBar(page);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
@@ -119,6 +114,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadTheme', baseContext);
 
       filePath = await advancedCustomizationPage.downloadTheme(page);
+
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'Theme was not downloaded').to.be.true;
     });
@@ -135,6 +131,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'uploadChildTheme', baseContext);
 
       await files.renameFile(filePath, renamedFilePath);
+
       const uploadTheme = await advancedCustomizationPage.uploadTheme(page, renamedFilePath);
       await expect(uploadTheme, 'Child theme is not uploaded')
         .to.contains('The child theme has been added successfully.');
@@ -180,7 +177,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
         dashboardPage.designParentLink,
         dashboardPage.themeAndLogoParentLink,
       );
-
       await themeAndLogoPage.closeSfToolBar(page);
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
@@ -198,7 +194,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewMyShop', baseContext);
 
       page = await themeAndLogoPage.viewMyShop(page);
-
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -208,7 +203,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      page = await homePage.closePage(browserContext, page, 0);
+      page = await homePage.closePage(browserContext, page, 0) as Page;
 
       const pageTitle = await themeAndLogoPage.getPageTitle(page);
       await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);

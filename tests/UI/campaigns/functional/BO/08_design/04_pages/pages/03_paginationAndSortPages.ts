@@ -3,27 +3,21 @@ import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPagePage from '@pages/BO/design/pages/add';
 
 // Import data
-const PageFaker = require('@data/faker/CMSpage');
+import PageFaker from '@data/faker/CMSpage';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPagePage = require('@pages/BO/design/pages/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_pages_paginationAndSortPages';
-
-let browserContext;
-let page;
-let numberOfPages = 0;
+const baseContext: string = 'functional_BO_design_pages_pages_paginationAndSortPages';
 
 /*
 Create 11 pages
@@ -32,6 +26,10 @@ Sort pages table by id, url, title, position
 Delete pages with bulk actions
  */
 describe('BO - design - Pages : Pagination and sort Pages table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfPages: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +52,6 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -80,6 +77,7 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${index}`, baseContext);
 
         await pagesPage.goToAddNewPage(page);
+
         const pageTitle = await addPagePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
       });
@@ -105,7 +103,7 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '10');
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
@@ -126,7 +124,7 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, '50');
+      const paginationNumber = await pagesPage.selectPagesPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
@@ -176,10 +174,10 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
         const sortedTable = await pagesPage.getAllRowsColumnContentTableCmsPage(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);

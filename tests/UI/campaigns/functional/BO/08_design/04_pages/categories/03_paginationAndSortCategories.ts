@@ -3,29 +3,21 @@ import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-const CategoryPageFaker = require('@data/faker/CMScategory');
+import CategoryPageFaker from '@data/faker/CMScategory';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_categories_paginationAndSortCategories';
-
-let browserContext;
-let page;
-let numberOfCategories = 0;
-
-const categoriesTableName = 'cms_page_category';
+const baseContext: string = 'functional_BO_design_pages_categories_paginationAndSortCategories';
 
 /*
 Create 11 categories
@@ -34,6 +26,12 @@ Sort categories table by id, name, description, position
 Delete categories with bulk actions
  */
 describe('BO - Design - Pages : Pagination and sort categories table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCategories: number = 0;
+
+  const categoriesTableName: string = 'cms_page_category';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +55,6 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -73,8 +70,8 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
 
   // 1 : Create 11 categories
   describe('Create 11 categories in BO', async () => {
-    const tests = new Array(11).fill(0, 0, 11);
-    tests.forEach((test, index) => {
+    const tests: number[] = new Array(11).fill(0, 0, 11);
+    tests.forEach((test: number, index: number) => {
       const createCategoryData = new CategoryPageFaker({name: `todelete${index}`});
 
       it('should go to add new page category', async function () {
@@ -118,7 +115,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, '10');
+      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
@@ -139,7 +136,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, '50');
+      const paginationNumber = await pagesPage.selectCategoryPaginationLimit(page, 50);
       expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
@@ -195,10 +192,10 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
         );
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);

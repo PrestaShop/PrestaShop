@@ -1,42 +1,37 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import addPagePage from '@pages/BO/design/pages/add';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-const PageFaker = require('@data/faker/CMSpage');
+import PageFaker from '@data/faker/CMSpage';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
-const addPagePage = require('@pages/BO/design/pages/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_pages_pagesBulkActions';
-
-let browserContext;
-let page;
-let numberOfPages = 0;
-
-const firstPageData = new PageFaker({title: 'todelete'});
-const secondPageData = new PageFaker({title: 'todelete'});
-
-const pagesTable = 'cms_page';
+const baseContext: string = 'functional_BO_design_pages_pages_pagesBulkActions';
 
 /*
 Create 2 new pages
 Enable/Disable/Delete pages by bulk actions
  */
 describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfPages: number = 0;
+
+  const firstPageData: PageFaker = new PageFaker({title: 'todelete'});
+  const secondPageData: PageFaker = new PageFaker({title: 'todelete'});
+  const pagesTable: string = 'cms_page';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,7 +54,6 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -80,6 +74,7 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
         await testContext.addContextItem(this, 'testIdentifier', `goToAddPage${index + 1}`, baseContext);
 
         await pagesPage.goToAddNewPage(page);
+
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
@@ -118,7 +113,7 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
         await expect(numberOfPagesInGrid).to.be.at.most(numberOfPages);
 
         for (let i = 1; i <= numberOfPagesInGrid; i++) {
-          const textColumn = await pagesPage.getStatus(page, pagesTable, i, 'active');
+          const textColumn = await pagesPage.getStatus(page, pagesTable, i);
           await expect(textColumn).to.equal(pageStatus.args.enable);
         }
       });
