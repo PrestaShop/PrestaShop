@@ -26,13 +26,11 @@ import {Modal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import {isUndefined} from '@PSTypes/typeguard';
 
-export default function selectShopForEdition(editButton: HTMLElement): void {
+export default function selectShopForEdition(editButton: HTMLElement, shopIds: string[]): void {
   if (isUndefined(editButton.dataset.modalTitle) || isUndefined(editButton.dataset.shopSelector)) {
     return;
   }
 
-  const shopIds: string[] = editButton.closest('tr')?.querySelector<HTMLElement>(ProductMap.shops.shopListCell)
-    ?.dataset?.shopIds?.split(',') ?? [];
   const modal = new Modal({
     id: 'select-shop-for-edition-modal',
     modalTitle: editButton.dataset.modalTitle,

@@ -118,6 +118,7 @@ module.exports = {
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     product_shops: './js/pages/product/shops',
+    pre_select_product_shop: './js/pages/product/pre-select-product-shop',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
     security: './js/pages/security',
