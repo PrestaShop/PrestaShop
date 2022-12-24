@@ -1009,7 +1009,7 @@ class ProductController extends FrameworkBundleAdminController
             $productId,
             $this->trans(
                 'This page is only compatible in a single store context. Please select a store in the multistore header',
-                'Admin.Notifications.Info',
+                'Admin.Notifications.Info'
             )
         );
     }
