@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -62,6 +63,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
+use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -255,7 +257,7 @@ class ProductController extends FrameworkBundleAdminController
     public function selectProductShopsAction(Request $request, int $productId): Response
     {
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
-            return $this->renderDisableMultistorePage($productId);
+            return $this->renderIncompatibleContext($productId);
         }
 
         $productShopsForm = $this->getProductShopsFormBuilder()->getFormFor($productId);
@@ -343,7 +345,7 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
-            return $this->renderDisableMultistorePage($productId);
+            return $this->renderIncompatibleContext($productId);
         }
 
         try {
@@ -987,35 +989,47 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderMissingAssociation(int $productId): Response
     {
-        //@todo this error message should be improved to indicate which shop can/should be used for this product and/or how to associate it to the current context
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
-            'errorMessage' => $this->trans(
+        return $this->renderPreSelectShopPage(
+            $productId,
+            $this->trans(
                 'This product is not associated with the store selected in the multistore header, please select another one.',
                 'Admin.Notifications.Info'
-            ),
-            'standardPageUrl' => $this->generateUrl(
-                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
-                !empty($productId) ? ['id' => $productId] : []
-            ),
-        ]);
+            )
+        );
     }
 
     /**
-     * @param int|null $productId
+     * @param int $productId
      *
      * @return Response
      */
-    private function renderDisableMultistorePage(int $productId = null): Response
+    private function renderIncompatibleContext(int $productId): Response
     {
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
-            'errorMessage' => $this->trans(
-                'This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
+        return $this->renderPreSelectShopPage(
+            $productId,
+            $this->trans(
+                'This page is only compatible in a single store context. Please select a store in the multistore header',
                 'Admin.Notifications.Info',
-                [
-                    '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
-                    '[/1]' => '</a>',
-                ]
-            ),
+            )
+        );
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return Response
+     */
+    private function renderPreSelectShopPage(int $productId, string $warningMessage): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/pre_select_shop.html.twig', [
+            'warningMessage' => $warningMessage,
+            'showContentHeader' => false,
+            'modalTitle' => $this->trans('Select a store', 'Admin.Catalog.Feature'),
+            'shopSelector' => $this->createForm(ShopSelectorType::class),
+            'productId' => $productId,
+            'productShopIds' => array_map(static function (ShopId $shopId) {
+                return $shopId->getValue();
+            }, $this->get('prestashop.adapter.product.repository.product_multi_shop_repository')->getAssociatedShopIds(new ProductId($productId))),
         ]);
     }
 

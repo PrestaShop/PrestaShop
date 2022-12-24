@@ -70,6 +70,7 @@ export default {
     shopItemClass: 'shop-selector-shop-item',
     groupShopItemClass: 'shop-selector-group-item',
     shopListCell: '.column-associated_shops .product-shop-list',
+    contextWarning: '.multi-shop-context-warning',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',

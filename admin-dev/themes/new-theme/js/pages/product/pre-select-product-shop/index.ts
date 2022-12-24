@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{% block content %}
-<div class="alert alert-danger d-print-none" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true"><i class="material-icons">close</i></span>
-  </button>
-  <div class="alert-text">
-    <p>{{ errorMessage|raw }}</p>
-  </div>
-</div>
-{% endblock %}
+import ProductMap from '@pages/product/product-map';
+import selectShopForEdition from '@pages/product/components/select-shop-modal';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const warning = document.querySelector<HTMLElement>(ProductMap.shops.contextWarning);
+
+  if (warning) {
+    selectShopForEdition(warning, warning.dataset?.shopIds?.split(',') ?? []);
+  }
+});

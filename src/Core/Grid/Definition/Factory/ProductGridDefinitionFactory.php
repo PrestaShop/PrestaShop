@@ -119,7 +119,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
             $editAttributes = [
                 'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a shop', [], 'Admin.Catalog.Feature'),
+                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
                 'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
             ];
         } else {
@@ -280,7 +280,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
             $editOptions['attr'] = [
                 'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a shop', [], 'Admin.Catalog.Feature'),
+                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
                 'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
             ];
         }

@@ -46,7 +46,9 @@ $(() => {
 
   grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension((button: HTMLElement) => {
     if (button.classList.contains(ProductMap.shops.editProductClass)) {
-      selectShopForEdition(button);
+      const shopIds: string[] = button.closest('tr')?.querySelector<HTMLElement>(ProductMap.shops.shopListCell)
+        ?.dataset?.shopIds?.split(',') ?? [];
+      selectShopForEdition(button, shopIds);
     } else {
       document.location.href = <string> button.getAttribute('href');
     }
@@ -56,7 +58,9 @@ $(() => {
     link.addEventListener('click', (event) => {
       event.preventDefault();
       if (link.classList.contains(ProductMap.shops.editProductClass)) {
-        selectShopForEdition(link);
+        const shopIds: string[] = link.closest('tr')?.querySelector<HTMLElement>(ProductMap.shops.shopListCell)
+          ?.dataset?.shopIds?.split(',') ?? [];
+        selectShopForEdition(link, shopIds);
       } else {
         document.location.href = <string> link.getAttribute('href');
       }
