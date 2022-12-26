@@ -304,6 +304,15 @@ services:
       - '@form.factory'
     public: true
 
+  prestashop.core.grid.definition.factory.product.shops:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductShopsGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@form.factory'
+    public: true
+
   prestashop.core.grid.definition.factory.product_light:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductLightGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'

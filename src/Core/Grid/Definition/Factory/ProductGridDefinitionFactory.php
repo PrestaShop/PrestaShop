@@ -62,7 +62,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
  */
-final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
+class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
 
@@ -71,17 +71,17 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @var ConfigurationInterface
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @var MultistoreContextCheckerInterface
      */
-    private $multiStoreContext;
+    protected $multiStoreContext;
 
     /**
      * @var FormFactoryInterface
      */
-    private $formFactory;
+    protected $formFactory;
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
@@ -261,6 +261,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'associated_shops',
                     'ids_field' => 'associated_shops_ids',
+                    'product_id_field' => 'id_product',
                     'max_displayed_characters' => 35,
                 ])
             );

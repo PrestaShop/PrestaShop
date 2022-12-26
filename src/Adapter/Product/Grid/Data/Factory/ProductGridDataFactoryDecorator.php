@@ -53,8 +53,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Decorates original grid data and returns modified prices for grid display as well as calculated price with taxes.
  */
-final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
+class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
 {
+    /**
+     * @var ShopRepository
+     */
+    protected $shopRepository;
+
+    /**
+     * @var ProductMultiShopRepository
+     */
+    protected $productMultiShopRepository;
+
     /**
      * @var GridDataFactoryInterface
      */
@@ -104,16 +114,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      * @var int
      */
     private $ecoTaxGroupId;
-
-    /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
-
-    /**
-     * @var ProductMultiShopRepository
-     */
-    private $productMultiShopRepository;
 
     /**
      * Use as cache for shop names.
@@ -182,7 +182,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      *
      * @return array
      */
-    private function applyModification(array $products, ShopSearchCriteriaInterface $searchCriteria): array
+    protected function applyModification(array $products, ShopSearchCriteriaInterface $searchCriteria): array
     {
         $currency = new Currency($this->defaultCurrencyId);
         foreach ($products as $i => $product) {
@@ -237,7 +237,14 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                 (string) $priceTaxIncluded,
                 $currency->iso_code
             );
+        }
 
+        return $this->applyShopModifications($products, $searchCriteria);
+    }
+
+    protected function applyShopModifications(array $products, ShopSearchCriteriaInterface $searchCriteria): array
+    {
+        foreach ($products as $i => $product) {
             // Transform list of IDs into list of names
             if ($searchCriteria->getShopConstraint()->forAllShops() || null !== $searchCriteria->getShopConstraint()->getShopGroupId()) {
                 $shopIds = $this->productMultiShopRepository->getAssociatedShopIds(new ProductId((int) $product['id_product']));
