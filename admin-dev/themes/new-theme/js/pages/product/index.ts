@@ -26,6 +26,7 @@
 import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
 import ProductMap from '@pages/product/product-map';
 import selectShopForEdition from '@pages/product/components/select-shop-modal';
+import initGridShopPreviews from '@pages/product/components/grid-shop-previews';
 
 const {$} = window;
 
@@ -66,6 +67,7 @@ $(() => {
       }
     });
   });
+  initGridShopPreviews();
 
   new CategoryTreeFilter();
 });

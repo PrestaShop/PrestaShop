@@ -30,6 +30,7 @@ const isSelectedCombinationClass = 'combination-is-selected';
 const commonBulkSelectAllClass = 'bulk-select-all';
 const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
+const shopPreviewRowClass = 'shop-preview-row';
 
 export default {
   productForm: 'form[name=product]',
@@ -71,6 +72,13 @@ export default {
     groupShopItemClass: 'shop-selector-group-item',
     shopListCell: '.column-associated_shops .product-shop-list',
     contextWarning: '.multi-shop-context-warning',
+    shopPreviews: {
+      toggleButtons: '.product-shop-details-toggle',
+      loadingRowClass: 'loading-shop-row',
+      expandedShopRowClass: 'expanded-shop-row',
+      shopPreviewRowClass,
+      productPreviewsSelector: (productId: string): string => `.${shopPreviewRowClass}[data-product-id="${productId}"]`,
+    },
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
