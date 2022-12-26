@@ -26,6 +26,7 @@
 {# The first shop is always displayed entirely and in bold #}
 {% set shopsIds = record[column.options.ids_field] %}
 {% set shops = record[column.options.field] %}
+{% set productId = record[column.options.product_id_field] %}
 {% set allShops = shops|join(', ') %}
 <span class="product-shop-list" title="{{ allShops }}" data-shop-ids="{{ shopsIds|join(',') }}">
   {% set firstShop = shops[0] %}
@@ -39,5 +40,11 @@
     {% else %}
       {{ otherShops }}
     {% endif %}
+    <span
+      class="product-shop-details-toggle"
+      data-product-id="{{ productId }}"
+      data-shop-previews-url="{{ path('admin_products_grid_shop_previews', {productId: productId}) }}"
+    >
+    </span>
   {%- endif -%}
 </span>

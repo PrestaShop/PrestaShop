@@ -32,17 +32,16 @@ use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Display a list of shops, the first shop is highlighted as bold and the rest are truncated if
- * max_displayed_characters is set.
+ * Display the detail of a shop with its name and associated color.
  */
-final class ShopListColumn extends AbstractColumn
+class ShopNameColumn extends AbstractColumn
 {
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'shop_list';
+        return 'shop_name';
     }
 
     /**
@@ -55,18 +54,14 @@ final class ShopListColumn extends AbstractColumn
         $resolver
             ->setRequired([
                 'field',
-                'ids_field',
-                'product_id_field',
+                'color_field',
             ])
             ->setDefaults([
                 'sortable' => false,
                 'clickable' => false,
-                'max_displayed_characters' => 0,
             ])
             ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('ids_field', 'string')
-            ->setAllowedTypes('product_id_field', 'string')
-            ->setAllowedTypes('max_displayed_characters', 'int')
+            ->setAllowedTypes('color_field', 'string')
         ;
     }
 }
