@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 /**
  * Defines all required sql statements to render products list.
  */
-final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
+class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -319,7 +319,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    private function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
+    protected function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
     {
         if ($shopId) {
             // Single shop context simple left join on a single shopId
