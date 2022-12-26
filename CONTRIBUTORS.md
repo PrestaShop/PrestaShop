@@ -8,7 +8,6 @@ GitHub contributors:
 - 23b
 - Abdelaziz JRIBI
 - Abdullah
-- abrfra
 - Adam
 - Adib Aroui
 - Adonis Karavokyros
@@ -749,7 +748,6 @@ GitHub contributors:
 - Samuel Marchal
 - Samy Rabih
 - Sandu Velea
-- Sarah Dib
 - Sarah Lorenzini
 - Šarūnas Jonušas
 - Sauli Maijala
