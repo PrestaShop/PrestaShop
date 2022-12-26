@@ -55,10 +55,11 @@ final class ShopListColumn extends AbstractColumn
         $resolver
             ->setRequired([
                 'field',
+                'ids_field',
             ])
             ->setDefaults([
                 'sortable' => false,
-                'clickable' => true,
+                'clickable' => false,
                 'max_displayed_characters' => 0,
             ])
             ->setAllowedTypes('field', 'string')

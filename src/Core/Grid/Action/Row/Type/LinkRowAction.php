@@ -61,6 +61,7 @@ final class LinkRowAction extends AbstractRowAction
                 'extra_route_params' => [],
                 'clickable_row' => false,
                 'target' => '',
+                'attr' => [],
             ])
             ->setAllowedTypes('route', 'string')
             ->setAllowedTypes('route_param_name', 'string')
@@ -70,6 +71,7 @@ final class LinkRowAction extends AbstractRowAction
             ->setAllowedTypes('accessibility_checker', [AccessibilityCheckerInterface::class, 'callable', 'null'])
             ->setAllowedTypes('clickable_row', 'boolean')
             ->setAllowedTypes('target', 'string')
+            ->setAllowedTypes('attr', 'array')
         ;
     }
 

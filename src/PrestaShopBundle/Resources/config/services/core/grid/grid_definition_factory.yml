@@ -301,6 +301,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
+      - '@form.factory'
     public: true
 
   prestashop.core.grid.definition.factory.product_light:
