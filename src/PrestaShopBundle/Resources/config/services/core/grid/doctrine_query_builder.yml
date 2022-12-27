@@ -39,15 +39,8 @@ services:
 
   prestashop.core.grid.query_builder.product.shops:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductShopsQueryBuilder'
-    parent: 'prestashop.core.grid.abstract_query_builder'
-    arguments:
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.repository.shop_group_repository'
-      - '@prestashop.adapter.shop.context'
-    public: true
+    parent: 'prestashop.core.grid.query_builder.product'
+    public: false
 
   prestashop.core.grid.query_builder.product_light:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductLightQueryBuilder'

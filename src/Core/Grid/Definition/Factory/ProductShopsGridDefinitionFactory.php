@@ -67,6 +67,8 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             ])
         );
 
+        // @todo: adapt toggle column to handle specific shop
+
         return $columns;
     }
 

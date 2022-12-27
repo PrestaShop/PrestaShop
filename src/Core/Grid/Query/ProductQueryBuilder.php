@@ -176,6 +176,8 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'ps',
                 $this->addShopCondition('ps.`id_product` = p.`id_product`', 'ps', $shopId, $filteredShopGroupId)
             )
+            // This join is only useful in multishop mode, but it's too complicated to handle this in ProductShopsQueryBuilder since
+            // it must be called precisely here
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'shop',
