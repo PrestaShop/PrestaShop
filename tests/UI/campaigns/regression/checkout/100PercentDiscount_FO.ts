@@ -5,46 +5,26 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import BO pages
+import cartRulesPage from '@pages/BO/catalog/discounts';
+import addCartRulePage from '@pages/BO/catalog/discounts/add';
+import dashboardPage from '@pages/BO/dashboard';
+import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
+// Import data
+import CartRuleFaker from '@data/faker/cartRule';
+import CustomerFaker from '@data/faker/customer';
+import AddressFaker from '@data/faker/address';
 
-// Import pages
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
-const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import faker data
-const CartRuleFaker = require('@data/faker/cartRule');
-const CustomerFaker = require('@data/faker/customer');
-const AddressFaker = require('@data/faker/address');
-
-const percentCartRule = new CartRuleFaker({
-  name: 'discount100',
-  code: 'discount100',
-  discountType: 'Percent',
-  discountPercent: 100,
-  freeShipping: true,
-});
-
-const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker({country: 'France'});
-
-const baseContext = 'regression_checkout_100PercentDiscount_FO';
-
-// Browser and tab
-let browserContext;
-let page;
+const baseContext: string = 'regression_checkout_100PercentDiscount_FO';
 
 /**
  * https://github.com/PrestaShop/PrestaShop/issues/9927
@@ -58,6 +38,19 @@ let page;
  * Change terms and conditions setting
  */
 describe('Regression - Checkout: Create 100% discount with free shipping discount code', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const percentCartRule: CartRuleFaker = new CartRuleFaker({
+    name: 'discount100',
+    code: 'discount100',
+    discountType: 'Percent',
+    discountPercent: 100,
+    freeShipping: true,
+  });
+  const customerData: CustomerFaker = new CustomerFaker({password: ''});
+  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -104,6 +97,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         );
 
         await cartRulesPage.goToAddNewCartRulesPage(page);
+
         const pageTitle = await addCartRulePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
       });
@@ -120,7 +114,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           page,
           percentCartRule,
         );
-
         await expect(validationMessage).to.contains(
           addCartRulePage.successfulCreationMessage,
         );
@@ -176,6 +169,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       );
 
       page = await cartRulesPage.viewMyShop(page);
+
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
@@ -188,8 +182,9 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         baseContext,
       );
 
-      await homePage.addProductToCartByQuickView(page, 1, '1');
+      await homePage.addProductToCartByQuickView(page, 1, 1);
       await homePage.proceedToCheckout(page);
+
       const pageTitle = await cartPage.getPageTitle(page);
       await expect(pageTitle).to.equal(cartPage.pageTitle);
     });
@@ -202,7 +197,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         baseContext,
       );
 
-      await cartPage.addPromoCode(page, percentCartRule.code);
+      await cartPage.addPromoCode(page, percentCartRule.code as string);
 
       const totalPrice = await cartPage.getATIPrice(page);
       await expect(totalPrice, 'Order total price is incorrect').to.equal(0);
@@ -217,6 +212,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       );
 
       await cartPage.clickOnProceedToCheckout(page);
+
       const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
       await expect(isCheckoutPage).to.be.true;
     });
@@ -251,7 +247,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
         page,
         addressData,
       );
-
       await expect(isStepAddressComplete, 'Step Address is not complete')
         .to.be.true;
     });
@@ -279,7 +274,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       );
 
       const noPaymentNeededText = await checkoutPage.getNoPaymentNeededBlockContent(page);
-
       await expect(noPaymentNeededText).to.contains(checkoutPage.noPaymentNeededText);
     });
 
@@ -294,7 +288,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       const confirmButtonVisible = await checkoutPage.isPaymentConfirmationButtonVisibleAndEnabled(
         page,
       );
-
       await expect(confirmButtonVisible, 'Confirm button visible').to.be.true;
     });
 
@@ -313,7 +306,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(
         page,
       );
-
       await expect(cardTitle).to.contains(
         orderConfirmationPage.orderConfirmationCardTitle,
       );
@@ -406,7 +398,6 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
           true,
           'Terms and conditions of use',
         );
-
         await expect(result).to.contains(
           orderSettingsPage.successfulUpdateMessage,
         );
