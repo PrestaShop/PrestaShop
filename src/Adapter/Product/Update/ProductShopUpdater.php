@@ -245,14 +245,8 @@ class ProductShopUpdater
         }
 
         foreach ($shopCombinationIds as $shopCombinationId) {
-            $wasAssociated = $this->combinationRepository->isAssociatedWithShop($shopCombinationId, $targetShopId);
-            // Copy values from one shop to another
+            // Copy values from one shop to another, only copy data from Combination, the stock will be handled in copyCombinationsStockToShop
             $this->combinationRepository->copyToShop($shopCombinationId, $sourceShopId, $targetShopId);
-
-            if (!$wasAssociated) {
-                // create dedicated stock_available for combination in related shop
-                $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId, $shopCombinationId);
-            }
         }
 
         if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $targetShopId)) {

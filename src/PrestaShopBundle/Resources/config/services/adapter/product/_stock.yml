@@ -20,6 +20,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.stock.validate.stock_available_validator'
+      - '@prestashop.adapter.shop.repository.shop_group_repository'
 
   prestashop.adapter.product.stock.repository.stock_movement_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository

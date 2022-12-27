@@ -498,7 +498,12 @@ class StockAvailableCore extends ObjectModel
             return true;
         }
 
-        $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
+        // If shop list was explicitly set we ignore the shop context
+        if (count($this->id_shop_list)) {
+            $id_shop = reset($this->id_shop_list);
+        } else {
+            $id_shop = (Shop::getContext() != Shop::CONTEXT_GROUP && $this->id_shop ? $this->id_shop : null);
+        }
 
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
             $combination = new Combination((int) $this->id_product_attribute);
