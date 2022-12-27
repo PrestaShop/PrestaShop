@@ -347,9 +347,11 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function delete(CombinationId $combinationId, ShopConstraint $shopConstraint, int $errorCode = 0): void
     {
+        $removedShops = $this->getShopIdsByConstraint($combinationId, $shopConstraint);
         $this->deleteObjectModelFromShops(
-            $this->getByShopConstraint($combinationId, $shopConstraint),
-            $this->getShopIdsByConstraint($combinationId, $shopConstraint),
+            // We get the combination any of the removed ones, it doesn't change much so the first is fine
+            $this->get($combinationId, reset($removedShops)),
+            $removedShops,
             CannotDeleteCombinationException::class,
             $errorCode
         );
