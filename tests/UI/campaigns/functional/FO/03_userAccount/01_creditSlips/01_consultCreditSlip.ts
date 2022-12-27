@@ -61,7 +61,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   });
   const orderData: Order = {
     customer: customerData,
-    product: 1,
+    productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };

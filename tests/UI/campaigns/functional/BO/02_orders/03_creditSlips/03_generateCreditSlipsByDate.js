@@ -34,7 +34,7 @@ const futureDate = date.getDateFormat('yyyy-mm-dd', 'future');
 const creditSlipDocumentName = 'Credit slip';
 const orderByCustomerData = {
   customer: DefaultCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 5,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };

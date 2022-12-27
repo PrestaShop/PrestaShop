@@ -35,7 +35,7 @@ const todayDate = date.getDateFormat('yyyy-mm-dd');
 const todayDateToCheck = date.getDateFormat('mm/dd/yyyy');
 const orderByCustomerData = {
   customer: DefaultCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 5,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };

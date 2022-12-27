@@ -61,7 +61,7 @@ describe('FO - Account : Consult return details', async () => {
   // New order by customer data
   const orderData: Order = {
     customer: DefaultCustomer,
-    product: 1,
+    productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };

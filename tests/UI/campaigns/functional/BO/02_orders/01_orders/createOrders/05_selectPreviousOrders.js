@@ -46,7 +46,7 @@ const newAddress = new AddressFaker({
 });
 const orderData = {
   customer: newCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
