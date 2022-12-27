@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\EmptyColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Product\ShopNameColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -38,11 +40,17 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
  */
 class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
 {
+    /**
+     * We change the columns a little to adapt to the shop preview, mostly change shop list to shop name and
+     * remove bulk action.
+     *
+     * {@inheritDoc}
+     */
     protected function getColumns()
     {
         $columns = parent::getColumns();
 
-        // No bulk column for shop details
+        // No bulk column for shop previews
         $columns
             ->remove('bulk')
             ->addBefore('id_product', new EmptyColumn('bulk'))
@@ -63,7 +71,63 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
     }
 
     /**
-     * {@inheritdoc}
+     * Adapt the action which target multiple shop on the initial row, they here have to be shop specific.
+     *
+     * @return RowActionCollection
+     */
+    protected function getRowActions(): RowActionCollection
+    {
+        $rowActions = new RowActionCollection();
+        $rowActions
+            ->add((new LinkRowAction('edit'))
+            ->setName($this->trans('Edit', [], 'Admin.Actions'))
+            ->setIcon('edit')
+            ->setOptions([
+                'route' => 'admin_products_v2_edit',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                // @todo: Clickable row will be handled later (if it doesn't impact the UX negatively)
+                // 'clickable_row' => true,
+                'extra_route_params' => [
+                    'switchToShop' => 'id_shop',
+                ],
+            ])
+            )
+            // @todo: individual action will be handled later
+            /*->add((new LinkRowAction('preview'))
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_v2_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                ])
+            )
+            ->add(
+                $this->buildDeleteAction(
+                    'admin_products_v2_delete',
+                    'productId',
+                    'id_product'
+                )
+            )*/
+        ;
+
+        return $rowActions;
+    }
+
+    /**
+     * Edit attributes are only used to hanlde the shop selection modal, not needed in a shop row.
+     *
+     * @return array
+     */
+    protected function getEditColumnAttributes(): array
+    {
+        return [];
+    }
+
+    /**
+     * We don't perform any filtering on the shop, so no need to define them.
      */
     protected function getFilters()
     {

@@ -116,15 +116,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
-            $editAttributes = [
-                'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
-                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
-            ];
-        } else {
-            $editAttributes = [];
-        }
+        $editAttributes = $this->getEditColumnAttributes();
 
         $columns = (new ColumnCollection())
             ->add(
@@ -268,6 +260,19 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
+    }
+
+    protected function getEditColumnAttributes(): array
+    {
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            return [
+                'class' => 'multi-shop-edit-product',
+                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
+                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
+            ];
+        }
+
+        return [];
     }
 
     protected function getRowActions(): RowActionCollection
