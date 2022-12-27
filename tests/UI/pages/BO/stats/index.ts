@@ -1,5 +1,4 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Stats page, contains functions that can be used on the page
@@ -7,6 +6,8 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Stats extends BOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on stats page
@@ -24,4 +25,4 @@ class Stats extends BOBasePage {
    */
 }
 
-module.exports = new Stats();
+export default new Stats();
