@@ -23,12 +23,16 @@ type ProductAttributesColorSize = ProductCombinationColorSize & ProductAttribute
 
 type ProductAttributesDimension = ProductCombinationDimension & ProductAttributesCommon
 
-type ProductDetails = ProductCombinationColorSize & {
-  name: string,
+type ProductDetailsBasic = {
+  name: string
   price: number
-  shipping: string
+  shortDescription: string
+  description: string
+  shipping?: string
   subtotal?: number
-};
+}
+
+type ProductDetails = ProductCombinationColorSize & ProductDetailsBasic;
 
 type ProductReview = {
   reviewTitle?: string;
@@ -43,5 +47,6 @@ export {
   ProductCombinationColorSize,
   ProductCombinationDimension,
   ProductDetails,
+  ProductDetailsBasic,
   ProductReview,
 };

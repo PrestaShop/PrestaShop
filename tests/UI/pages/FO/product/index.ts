@@ -1,7 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import ProductReviewData from '@data/faker/productReview';
-import {ProductCombinationColorSize} from '@data/types/product';
+import {ProductCombinationColorSize, ProductDetailsBasic} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -229,7 +229,7 @@ class Product extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
    */
-  async getProductInformation(page: Page) {
+  async getProductInformation(page: Page): Promise<ProductDetailsBasic> {
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),

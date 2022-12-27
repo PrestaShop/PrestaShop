@@ -5,28 +5,27 @@ import helper from '@utils/helpers';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/products';
 
 // Import data
-const {Products} = require('@data/demo/products');
-const {Categories} = require('@data/demo/categories');
-const {DefaultFrTax} = require('@data/demo/tax');
+import {Categories} from '@data/demo/categories';
+import {Products} from '@data/demo/products';
+import {DefaultFrTax} from '@data/demo/tax';
 
-const baseContext = 'sanity_productsBO_filterProducts';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfProducts = 0;
-let numberOfProductsOnPage = 0;
+const baseContext: string = 'sanity_productsBO_filterProducts';
 
 // Test of filters in products page
 describe('BO - Catalog - Products : Filter in Products Page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfProducts: number = 0;
+  let numberOfProductsOnPage: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,6 +58,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
     await productsPage.resetFilterCategory(page);
+
     numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
 
@@ -73,8 +73,8 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
       const productPrice = await productsPage.getProductPriceFromList(page, i, false);
       const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
-      const conversionRate = (100 + parseInt(DefaultFrTax.rate, 10)) / 100;
-      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
+      const conversionRate = (100 + DefaultFrTax.rate) / 100;
+      await expect(productPrice).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
     }
   });
 
@@ -83,7 +83,6 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     {args: {identifier: 'filterReference', filterBy: 'reference', filterValue: Products.demo_1.reference}},
     {args: {identifier: 'filterCategory', filterBy: 'category', filterValue: Categories.men.name}},
   ];
-
   tests.forEach((test) => {
     it(`should filter list by ${test.args.filterBy} and check result`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterBy_${test.args.identifier}`, baseContext);

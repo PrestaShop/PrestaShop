@@ -6,23 +6,22 @@ import testContext from '@utils/testContext';
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
 // Import data
-const {Products} = require('@data/demo/products');
+import {Products} from '@data/demo/products';
 
-const baseContext = 'sanity_catalogFO_checkProduct';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'sanity_catalogFO_checkProduct';
 
 /*
   Open the FO home page
   Check the first product page
  */
 describe('FO - Catalog : Check the Product page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -38,6 +37,7 @@ describe('FO - Catalog : Check the Product page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
     await homePage.goTo(page, global.FO.URL);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
@@ -46,6 +46,7 @@ describe('FO - Catalog : Check the Product page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductPage', baseContext);
 
     await homePage.goToProductPage(page, 1);
+
     const pageTitle = await productPage.getPageTitle(page);
     await expect(pageTitle).to.contains(Products.demo_1.name);
   });

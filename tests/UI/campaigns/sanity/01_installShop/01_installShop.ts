@@ -1,14 +1,13 @@
+// Import utils
 import helper from '@utils/helpers';
-import type {BrowserContext, Page} from 'playwright';
-
-import {expect} from 'chai';
+import testContext from '@utils/testContext';
 
 // Import pages
 import installPage from '@pages/install';
 import homePage from '@pages/FO/home';
 
-// Import test context
-import testContext from '@utils/testContext';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'sanity_installShop_installShop';
 
@@ -209,7 +208,6 @@ describe('Install Prestashop', async () => {
         test.args.step.name,
         test.args.step.timeout,
       );
-
       await expect(stepFinished, `Fail to finish the step ${test.args.step.name}`).to.be.true;
     });
   });
@@ -228,6 +226,7 @@ describe('Install Prestashop', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkPrestashopFO', baseContext);
 
     page = await installPage.goToFOAfterInstall(page);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });

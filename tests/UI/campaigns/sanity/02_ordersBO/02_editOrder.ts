@@ -1,24 +1,22 @@
-import type {BrowserContext, Page} from 'playwright';
-// Using chai
-import {expect} from 'chai';
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-// Import login steps
+
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
+
 // Import data
 import {Statuses} from '@data/demo/orderStatuses';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'sanity_ordersBO_editOrder';
-
-let browserContext: BrowserContext;
-let page: Page;
+const baseContext: string = 'sanity_ordersBO_editOrder';
 
 /*
   Connect to the BO
@@ -26,6 +24,9 @@ let page: Page;
   Logout from the BO
  */
 describe('BO - Orders - Orders : Edit Order BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +50,6 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
       dashboardPage.ordersParentLink,
       dashboardPage.ordersLink,
     );
-
     await ordersPage.closeSfToolBar(page);
 
     const pageTitle = await ordersPage.getPageTitle(page);
@@ -60,6 +60,7 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrder', baseContext);
 
     await ordersPage.goToOrder(page, 1);
+
     const pageTitle = await orderPageProductsBlock.getPageTitle(page);
     await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
   });

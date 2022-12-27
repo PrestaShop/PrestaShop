@@ -5,18 +5,13 @@ import helper from '@utils/helpers';
 // Import FO pages
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
 // Import data
-const {Categories} = require('@data/demo/categories');
+import {Categories} from '@data/demo/categories';
 
-const baseContext = 'sanity_catalogFO_filterProducts';
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let allProductsNumber = 0;
+const baseContext: string = 'sanity_catalogFO_filterProducts';
 
 /*
   Open the FO home page
@@ -25,6 +20,10 @@ let allProductsNumber = 0;
   Filter products by a subcategory
  */
 describe('FO - Catalog : Filter Products by categories in Home page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let allProductsNumber: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,6 +39,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
     await homePage.goTo(page, global.FO.URL);
+
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
   });
@@ -48,6 +48,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
     await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
+
     allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
@@ -56,6 +57,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
 
     await homePage.goToCategory(page, Categories.accessories.id);
+
     const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
@@ -64,6 +66,7 @@ describe('FO - Catalog : Filter Products by categories in Home page', async () =
     await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
 
     await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
+
     const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });

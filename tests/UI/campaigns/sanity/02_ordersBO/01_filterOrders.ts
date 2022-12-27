@@ -1,12 +1,8 @@
-import helper from '@utils/helpers';
-import type {BrowserContext, Page} from 'playwright';
-// Using chai
-import {expect} from 'chai';
-
 // Import utils
+import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -16,12 +12,10 @@ import ordersPage from '@pages/BO/orders';
 // Import data
 import {Orders} from '@data/demo/orders';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'sanity_ordersBO_filterOrders';
-let numberOfOrders: number;
-let browserContext: BrowserContext;
-let page: Page;
+const baseContext: string = 'sanity_ordersBO_filterOrders';
 
 /*
   Connect to the BO
@@ -29,6 +23,10 @@ let page: Page;
   Logout from the BO
  */
 describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATUS', () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfOrders: number;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -71,7 +69,7 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
           identifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_order',
-          filterValue: Orders.firstOrder.id,
+          filterValue: Orders.firstOrder.id.toString(),
         },
     },
     {
@@ -106,7 +104,12 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
       );
 
       const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
-      await expect(textColumn).to.equal(test.args.filterValue);
+
+      if (test.args.filterBy === 'id_order') {
+        await expect(textColumn.toString()).to.equal(test.args.filterValue);
+      } else {
+        await expect(textColumn).to.equal(test.args.filterValue);
+      }
     });
 
     it('should reset all filters', async function () {

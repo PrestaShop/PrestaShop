@@ -7,19 +7,13 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
 // Import data
-const {Products} = require('@data/demo/products');
+import {Products} from '@data/demo/products';
 
-const baseContext = 'sanity_cartFO_editCheckCart';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let totalATI = 0;
-let itemsNumber = 0;
+const baseContext: string = 'sanity_cartFO_editCheckCart';
 
 /*
   Open the FO home page
@@ -29,6 +23,11 @@ let itemsNumber = 0;
   Edit the cart and check it
  */
 describe('FO - Cart : Check Cart in FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let totalATI: number = 0;
+  let itemsNumber: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -141,7 +140,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
   it('should edit the quantity of the first product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity1', baseContext);
 
-    await cartPage.editProductQuantity(page, '1', '3');
+    await cartPage.editProductQuantity(page, 1, 3);
 
     // getNumberFromText is used to get the new price ATI
     const totalPrice = await cartPage.getATIPrice(page);
@@ -155,7 +154,7 @@ describe('FO - Cart : Check Cart in FO', async () => {
   it('should edit the quantity of the second product ordered', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProductQuantity2', baseContext);
 
-    await cartPage.editProductQuantity(page, '2', '2');
+    await cartPage.editProductQuantity(page, 2, 2);
 
     // getNumberFromText is used to get the new price ATI
     const totalPrice = await cartPage.getATIPrice(page);
