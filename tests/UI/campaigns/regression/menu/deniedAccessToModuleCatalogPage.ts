@@ -1,28 +1,26 @@
 // Import utils
-import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
 
-// Import utils
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
+import moduleCatalogPage from '@pages/BO/modules/moduleCatalog';
 
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Importing pages
-const dashboardPage = require('@pages/BO/dashboard');
-const moduleCatalogPage = require('@pages/BO/modules/moduleCatalog');
-
-// Setup data
-const pageLegacyUrl = `${global.BO.URL}index.php?controller=AdminModulesCatalog`;
-const pageSymfonyUrl = `${global.BO.URL}index.php/modules/addons/modules/catalog`;
-
-const baseContext = 'regression_menu_deniedAccessToModuleCatalogPage';
-
-let browserContext;
-let page;
+const baseContext: string = 'regression_menu_deniedAccessToModuleCatalogPage';
 
 describe('Regression : Access to Module catalog is denied with neither left menu and Url', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const pageLegacyUrl: string = `${global.BO.URL}index.php?controller=AdminModulesCatalog`;
+  const pageSymfonyUrl: string = `${global.BO.URL}index.php/modules/addons/modules/catalog`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +43,6 @@ describe('Regression : Access to Module catalog is denied with neither left menu
       dashboardPage.modulesParentLink,
       dashboardPage.moduleCatalogueLink,
     );
-
     await expect(isMenuTabVisible, 'The Menu tab is still visible').to.be.false;
   });
 

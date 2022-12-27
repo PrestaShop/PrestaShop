@@ -1,29 +1,25 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import utils
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
+// Import pages
+import menuTabPage from '@pages/BO/advancedParameters/menuTab';
+import dashboardPage from '@pages/BO/dashboard';
 
-const {expect} = require('chai');
-
-// Importing pages
-const dashboardPage = require('@pages/BO/dashboard');
-const menuTabPage = require('@pages/BO/advancedParameters/menuTab');
-
-// Setup data
-const pageUrl = `${global.BO.URL}index.php?controller=AdminTabs`;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'regression_menu_deniedAccessToMenuTab';
 
-let browserContext;
-let page;
-
 describe('Regression : Access to Menu tab is denied with neither left menu and Url', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const pageUrl: string = `${global.BO.URL}index.php?controller=AdminTabs`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +42,6 @@ describe('Regression : Access to Menu tab is denied with neither left menu and U
       dashboardPage.advancedParametersLink,
       dashboardPage.menuTabLink,
     );
-
     await expect(isMenuTabVisible, 'The Menu tab is still visible').to.be.false;
   });
 
