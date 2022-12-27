@@ -1,5 +1,5 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+import type {Page} from 'playwright';
 
 /**
  * Search page, contains functions that can be used on the page
@@ -7,6 +7,35 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class SearchResults extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly contentDiv: string;
+
+  private readonly headerTitle: string;
+
+  private readonly typeDiv: (type: string) => string;
+
+  private readonly typeTable: (type: string) => string;
+
+  private readonly typeTableColumn: (type: string, row: number, column: number) => string;
+
+  private readonly typeHeaderTitle: (type: string) => string;
+
+  private readonly searchPanels: string;
+
+  private readonly searchPanelsLinks: string;
+
+  private readonly searchPanelsLink: (nth: number) => string;
+
+  private readonly allowedTypes: {
+    categories: RegExp,
+    customers: RegExp,
+    features: RegExp,
+    modules: RegExp,
+    orders: RegExp,
+    products: RegExp,
+  };
+
   /**
    * @constructs
    * Setting up texts and selectors to use on search page
@@ -19,14 +48,14 @@ class SearchResults extends BOBasePage {
     // Selectors
     this.contentDiv = '#content';
     this.headerTitle = `${this.contentDiv} h2`;
-    this.typeDiv = (type) => `${this.contentDiv} div.panel[data-role="${type}"]`;
-    this.typeTable = (type) => `${this.typeDiv(type)} table`;
-    this.typeTableColumn = (type, row, column) => `${this.typeTable(type)} tbody tr:nth-of-type(${row}) `
+    this.typeDiv = (type: string) => `${this.contentDiv} div.panel[data-role="${type}"]`;
+    this.typeTable = (type: string) => `${this.typeDiv(type)} table`;
+    this.typeTableColumn = (type: string, row: number, column: number) => `${this.typeTable(type)} tbody tr:nth-of-type(${row}) `
       + `td:nth-of-type(${column})`;
-    this.typeHeaderTitle = (type) => `${this.typeDiv(type)} h3`;
+    this.typeHeaderTitle = (type: string) => `${this.typeDiv(type)} h3`;
     this.searchPanels = `${this.contentDiv} div[data-role="search-panels"]`;
     this.searchPanelsLinks = `${this.searchPanels} a`;
-    this.searchPanelsLink = (nth) => `${this.searchPanelsLinks}:nth-of-type(${nth})`;
+    this.searchPanelsLink = (nth: number) => `${this.searchPanelsLinks}:nth-of-type(${nth})`;
 
     /**
      * @private
@@ -54,44 +83,52 @@ class SearchResults extends BOBasePage {
    * Get number of results (in global or in a specific type)
    * @param page {Page} Browser tab
    * @param type {string} Type of results wanted
-   * @returns {Promise<int>}
+   * @returns {Promise<number>}
    */
-  async getNumberResults(page, type = '') {
+  async getNumberResults(page: Page, type: string = ''): Promise<number> {
     if (type === '') {
       const headerTitle = await this.getTextContent(page, this.headerTitle);
-      const results = /\d+/g.exec(headerTitle.match(/([0-9]+) result[s]{0,1} match[es]{0,2} your query /));
-      const numberResults = results === null ? 0 : results.toString();
+      const regexpResultsHeader: RegExpMatchArray|null = headerTitle.match(/([0-9]+) result[s]{0,1} match[es]{0,2} your query /);
+      const resultsHeader: RegExpExecArray|null = /\d+/g.exec(regexpResultsHeader ? regexpResultsHeader[0] : '');
+      const numberResultsHeader = resultsHeader === null ? '0' : resultsHeader.toString();
 
-      return parseInt(numberResults, 10);
+      return parseInt(numberResultsHeader, 10);
     }
 
     if (!Object.keys(this.allowedTypes).includes(type)) {
       throw new Error(`${type} has not been found in allowed types : ${Object.keys(this.allowedTypes).join(', ')}`);
     }
+    // @ts-ignore
+    const typeHeader = this.allowedTypes[type];
+
+    if (!(typeHeader instanceof RegExp)) {
+      throw new Error(`${type} is not a RegExp`);
+    }
 
     const typeHeaderTitle = await this.getTextContent(page, this.typeHeaderTitle(type));
-    const results = /\d+/g.exec(typeHeaderTitle.match(this.allowedTypes[type]));
-    const numberResults = results === null ? 0 : results.toString();
+    const regexpResultsTypeHeader: RegExpMatchArray|null = typeHeaderTitle.match(typeHeader);
+    const resultsTypeHeader: RegExpExecArray|null = /\d+/g.exec(regexpResultsTypeHeader ? regexpResultsTypeHeader[0] : '');
+    const numberResultsTypeHeader = resultsTypeHeader === null ? '0' : resultsTypeHeader.toString();
 
-    return parseInt(numberResults, 10);
+    return parseInt(numberResultsTypeHeader, 10);
   }
 
   /**
    *
    * @param page {Page} Browser tab
-   * @returns {Promise<*>}
+   * @returns {Promise<number>}
    */
-  async getSearchPanelsLinksNumber(page) {
+  async getSearchPanelsLinksNumber(page: Page): Promise<number> {
     return (await page.$$(this.searchPanelsLinks)).length;
   }
 
   /**
    * Return the link URL in Search panels
    * @param page {Page} Browser tab
-   * @param nthLink {int} Nth link
-   * @returns {Promise<string>}
+   * @param nthLink {number} Nth link
+   * @returns {Promise<string|null>}
    */
-  async getSearchPanelsLinkURL(page, nthLink) {
+  async getSearchPanelsLinkURL(page: Page, nthLink: number): Promise<string|null> {
     return this.getAttributeContent(page, this.searchPanelsLink(nthLink), 'href');
   }
 
@@ -101,7 +138,7 @@ class SearchResults extends BOBasePage {
    * @param nthLink {int} Nth link
    * @returns {Promise<string>}
    */
-  async getSearchPanelsLinkText(page, nthLink) {
+  async getSearchPanelsLinkText(page: Page, nthLink: number): Promise<string> {
     return this.getTextContent(page, this.searchPanelsLink(nthLink));
   }
 
@@ -113,7 +150,7 @@ class SearchResults extends BOBasePage {
    * @param columnName {string} Column name in the table
    * @return {Promise<string>}
    */
-  async getTextColumn(page, type, row, columnName) {
+  async getTextColumn(page: Page, type: string, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (type) {
@@ -137,4 +174,4 @@ class SearchResults extends BOBasePage {
   }
 }
 
-module.exports = new SearchResults();
+export default new SearchResults();
