@@ -178,6 +178,12 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             )
             ->leftJoin(
                 'p',
+                $this->dbPrefix . 'shop',
+                's',
+                's.`id_shop` = ps.`id_shop`'
+            )
+            ->leftJoin(
+                'p',
                 $this->dbPrefix . 'product_lang',
                 'pl',
                 $this->addShopCondition('pl.`id_product` = p.`id_product` AND pl.`id_lang` = :langId', 'pl', $shopId, $filteredShopGroupId)
@@ -220,18 +226,9 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
 
         if ($isStockManagementEnabled) {
-            $stockOnCondition =
-                'sa.`id_product` = p.`id_product`
-                    AND sa.`id_product_attribute` = 0
-                ';
-
+            $stockOnCondition = $this->getStockOnCondition($sharedStockGroupId, $shopId, $filteredShopGroupId);
             if ($sharedStockGroupId) {
-                $stockOnCondition .= '
-                     AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId
-                ';
                 $qb->setParameter('sharedShopGroupId', $sharedStockGroupId);
-            } else {
-                $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
             }
 
             $qb->leftJoin(
@@ -334,6 +331,22 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         // All shops context left join on the product's default shop
         return $sql . ' AND ' . $tableAlias . '.`id_shop` = p.id_shop_default';
+    }
+
+    protected function getStockOnCondition(?int $sharedStockGroupId, ?int $shopId, ?int $filteredShopGroupId): string
+    {
+        $stockOnCondition =
+            'sa.`id_product` = p.`id_product`
+            AND sa.`id_product_attribute` = 0
+        ';
+
+        if ($sharedStockGroupId) {
+            $stockOnCondition .= 'AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId';
+        } else {
+            $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
+        }
+
+        return $stockOnCondition;
     }
 
     private function getFilteredCategoryId(array $filterValues): ?int
