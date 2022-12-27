@@ -676,10 +676,11 @@ class CustomerCore extends ObjectModel
      * Get simplified Addresses arrays.
      *
      * @param int|null $idLang Language ID
+     * @param bool $useCache use cache
      *
      * @return array
      */
-    public function getSimpleAddresses($idLang = null)
+    public function getSimpleAddresses($idLang = null, bool $useCache = true)
     {
         if (!$this->id) {
             return [];
@@ -690,7 +691,7 @@ class CustomerCore extends ObjectModel
         }
 
         $sql = $this->getSimpleAddressSql(null, $idLang);
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, $useCache);
         $addresses = [];
         foreach ($result as $addr) {
             $addresses[$addr['id']] = $addr;
