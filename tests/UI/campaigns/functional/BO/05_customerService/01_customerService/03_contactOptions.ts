@@ -6,28 +6,21 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import BO pages
+import customerServicePage from '@pages/BO/customerService/customerService';
+import viewPage from '@pages/BO/customerService/customerService/view';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const viewPage = require('@pages/BO/customerService/customerService/view');
-
 // Import data
-const ContactUsFakerData = require('@data/faker/contactUs');
+import ContactUsFakerData from '@data/faker/contactUs';
 
-const baseContext = 'functional_BO_customerService_customerService_contactOptions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-const contactUsData = new ContactUsFakerData({subject: 'Customer service', reference: ''});
+const baseContext: string = 'functional_BO_customerService_customerService_contactOptions';
 
 /*
 Disable Allow file uploading
@@ -35,6 +28,11 @@ Enable Allow file uploading
 Update default message
  */
 describe('BO - Customer Service : Contact options', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData({subject: 'Customer service', reference: ''});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -106,7 +104,7 @@ describe('BO - Customer Service : Contact options', async () => {
       it('should go back to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
-        page = await contactUsPage.closePage(browserContext, page, 0);
+        page = await contactUsPage.closePage(browserContext, page, 0) as Page;
 
         const pageTitle = await customerServicePage.getPageTitle(page);
         await expect(pageTitle).to.contains(customerServicePage.pageTitle);
@@ -142,7 +140,7 @@ describe('BO - Customer Service : Contact options', async () => {
       const validationMessage = await contactUsPage.getAlertSuccess(page);
       await expect(validationMessage).to.equal(contactUsPage.validationMessage);
 
-      page = await contactUsPage.closePage(browserContext, page, 0);
+      page = await contactUsPage.closePage(browserContext, page, 0) as Page;
     });
 
     it('should update default message', async function () {

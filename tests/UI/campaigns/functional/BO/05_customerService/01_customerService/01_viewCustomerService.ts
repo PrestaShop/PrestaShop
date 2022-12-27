@@ -6,36 +6,35 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customerServicePage from '@pages/BO/customerService/customerService';
+import viewPage from '@pages/BO/customerService/customerService/view';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const viewPage = require('@pages/BO/customerService/customerService/view');
-
-const baseContext = 'functional_BO_customerService_customerService_viewCustomerService';
-
 // Import data
-const ContactUsFakerData = require('@data/faker/contactUs');
+import ContactUsFakerData from '@data/faker/contactUs';
 
-let browserContext;
-let page;
-const contactUsData = new ContactUsFakerData({subject: 'Customer service'});
-let idCustomer = 0;
-let messageDateTime = '';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext: string = 'functional_BO_customerService_customerService_viewCustomerService';
 
 /*
 Send message by customer to customer service in FO
 View customer message in BO
  */
 describe('BO - Customer Service : View messages', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let idCustomer: string = '0';
+  let messageDateTime: string = '';
+
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData({subject: 'Customer service'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

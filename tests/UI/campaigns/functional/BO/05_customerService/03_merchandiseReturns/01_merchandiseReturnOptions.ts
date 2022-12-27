@@ -5,40 +5,33 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders/index';
+import viewOrderPage from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import myAccountPage from '@pages/FO/myAccount';
+import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
-const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const checkoutPage = require('@pages/FO/checkout');
-const myAccountPage = require('@pages/FO/myAccount');
-const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
-const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
-const foMerchandiseReturnsPage = require('@pages/FO/myAccount/merchandiseReturns');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Statuses} = require('@data/demo/orderStatuses');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
+import {DefaultCustomer} from '@data/demo/customer';
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
 
-// Import test context
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customerService_merchandiseReturns_merchandiseReturnOptions';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_customerService_merchandiseReturns_merchandiseReturnOptions';
 
 /*
 Create order in FO
@@ -51,6 +44,9 @@ Check the existence of product return form
 Create a merchandise returns then check the file prefix
  */
 describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA) options', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -66,7 +62,6 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
     // Go to FO and change language
     await homePage.goToFo(page);
-
     await homePage.changeLanguage(page, 'en');
 
     const isHomePage = await homePage.isHomePage(page);
@@ -77,6 +72,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
     await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
 
     await homePage.goToLoginPage(page);
+
     const pageTitle = await foLoginPage.getPageTitle(page);
     await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
   });
@@ -85,6 +81,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
     await foLoginPage.customerLogin(page, DefaultCustomer);
+
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
@@ -94,10 +91,8 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
     // Go to home page
     await foLoginPage.goToHomePage(page);
-
     // Go to the first product page
     await homePage.goToProductPage(page, 1);
-
     // Add the product to the cart
     await productPage.addProductToTheCart(page);
 
@@ -139,6 +134,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
     await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
     await orderConfirmationPage.logout(page);
+
     const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is connected').to.be.false;
   });
@@ -159,7 +155,6 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         dashboardPage.customerServiceParentLink,
         dashboardPage.merchandiseReturnsLink,
       );
-
       await boMerchandiseReturnsPage.closeSfToolBar(page);
 
       const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
@@ -231,7 +226,6 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
 
       // Click on view my shop
       page = await viewOrderPage.viewMyShop(page);
-
       // Change FO language
       await homePage.changeLanguage(page, 'en');
 
@@ -251,6 +245,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await expect(isCustomerConnected).to.be.true;
 
         await homePage.goToMyAccountPage(page);
+
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);
       });
