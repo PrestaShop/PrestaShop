@@ -71,17 +71,17 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @var ConfigurationInterface
      */
-    protected $configuration;
+    private $configuration;
 
     /**
      * @var MultistoreContextCheckerInterface
      */
-    protected $multiStoreContext;
+    private $multiStoreContext;
 
     /**
      * @var FormFactoryInterface
      */
-    protected $formFactory;
+    private $formFactory;
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher,

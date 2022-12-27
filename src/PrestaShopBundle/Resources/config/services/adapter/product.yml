@@ -99,20 +99,10 @@ services:
 
   prestashop.adapter.product.grid.data.factory.product_shops_grid_data_factory_decorator:
     class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator'
+    parent: 'prestashop.adapter.product.grid.data.factory.product_grid_data_factory_decorator'
     arguments:
-      - '@prestashop.core.grid.data.factory.product.shops'
-      - '@prestashop.core.localization.locale.repository'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      - '@prestashop.adapter.tax.tax_computer'
-      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
-      - '@translator'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
-      - "@prestashop.adapter.shop.repository.shop_repository"
-      - "@prestashop.adapter.product.repository.product_multi_shop_repository"
+      $productGridDataFactory: '@prestashop.core.grid.data.factory.product.shops'
+    public: false
 
   prestashop.adapter.product.grid.data.factory.product_light_grid_data_factory_decorator:
     class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductLightGridDataFactoryDecorator'

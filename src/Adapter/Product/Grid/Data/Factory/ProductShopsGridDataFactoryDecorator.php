@@ -42,7 +42,7 @@ class ProductShopsGridDataFactoryDecorator extends ProductGridDataFactoryDecorat
     {
         foreach ($products as $i => $product) {
             // Transform list of IDs into list of names
-            if ($searchCriteria->getShopConstraint()->forAllShops() || null !== $searchCriteria->getShopConstraint()->getShopGroupId()) {
+            if (!empty($product['id_shop'])) {
                 $shop = $this->shopRepository->get(new ShopId((int) $product['id_shop']));
                 $products[$i]['shop_name'] = $shop->name;
                 $products[$i]['shop_color'] = $shop->color;

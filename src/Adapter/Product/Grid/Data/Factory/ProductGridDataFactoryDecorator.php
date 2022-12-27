@@ -182,7 +182,7 @@ class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      *
      * @return array
      */
-    protected function applyModification(array $products, ShopSearchCriteriaInterface $searchCriteria): array
+    private function applyModification(array $products, ShopSearchCriteriaInterface $searchCriteria): array
     {
         $currency = new Currency($this->defaultCurrencyId);
         foreach ($products as $i => $product) {
