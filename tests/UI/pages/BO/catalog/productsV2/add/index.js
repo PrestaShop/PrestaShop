@@ -1,3 +1,5 @@
+import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
+
 require('module-alias/register');
 // Importing page
 const BOBasePage = require('@pages/BO/BObasePage');
@@ -5,7 +7,6 @@ const productsPage = require('@pages/BO/catalog/productsV2');
 const descriptionTab = require('@pages/BO/catalog/productsV2/add/descriptionTab');
 const detailsTab = require('@pages/BO/catalog/productsV2/add/detailsTab');
 const stocksTab = require('@pages/BO/catalog/productsV2/add/stocksTab');
-import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
 const pricingTab = require('@pages/BO/catalog/productsV2/add/pricingTab');
 const packTab = require('@pages/BO/catalog/productsV2/add/packTab');
 
