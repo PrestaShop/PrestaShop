@@ -29,13 +29,11 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import faker data
-import ProductFaker from '@data/faker/product';
-
-// Import demo data
+// Import data
 import {Statuses} from '@data/demo/orderStatuses';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
+import ProductFaker from '@data/faker/product';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';
 
@@ -393,7 +391,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      const taxValue : number = await basicHelper.percentage(editProductData.price, editProductData.tax);
+      const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
       const result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
@@ -409,7 +407,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle : string = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
@@ -419,7 +417,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage : string = await createProductsPage.deleteProduct(page);
+      const createProductMessage: string = await createProductsPage.deleteProduct(page);
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });

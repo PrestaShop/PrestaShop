@@ -1,8 +1,10 @@
+import type {Page} from 'playwright';
+
 // Import page
 import BOBasePage from '@pages/BO/BObasePage';
-import ProductFaker from '@data/faker/product';
 
-import type {Page} from 'playwright';
+// Import data
+import ProductFaker from '@data/faker/product';
 
 /**
  * Virtual product tab on new product V2 page, contains functions that can be used on the page
