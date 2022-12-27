@@ -24,6 +24,125 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Changelog for PrestaShop 8
 
 ####################################
+#   v8.0.1 - (2022-12-27)
+####################################
+
+- Back Office:
+  - New feature:
+    - #29039: Product list preview in product list V2 (by @jolelievre)
+  - Improvement:
+    - #29695: Do not clear system cache on bulk install,remove,upgrade module (by @mflasquin)
+    - #29783: Migrate node-sass to sass-embedded on default theme (by @NeOMakinG)
+    - #29574: Remove product image dropzone flex that was adding space (by @margud)
+    - #29021: Add webP to allowed format on the DropZone help (by @PrestaEdit)
+  - Bug fix:
+    - #30511: Save settings before generating htaccess (by @atomiix)
+    - #30512: Allow negative number for attribute quantity (by @atomiix)
+    - #30326: Force AbstractColumn::name to never be null (by @jolelievre)
+    - #30362: Fix filemanager undefined translations (by @Hlavtox)
+    - #29132: Fix stock policy propagation on product combination (by @FabienPapet)
+    - #29693: Update material icons lib to fix the slow npm installation (by @NeOMakinG)
+    - #29084: 27054: fixed taxes for wrong countries (by @margud)
+    - #29465: Add available_now & available_later labels constraints (by @zuk3975)
+    - #29372: Hide suppliers if there are no suppliers on product v2 (by @NeOMakinG)
+    - #29066: Fix combination deletion error (by @margud)
+    - #29859: Fix update status button responsive on order page (by @NeOMakinG)
+    - #29846: Fix 29341 - Rate impact calculation (by @FabienPapet)
+    - #29587: Replace exception message by custom error message when uploading avatar with invalid extension (by @lartist)
+    - #29554: Replace exception message by custom message on invalid avatar on employee page (by @lartist)
+    - #29942: Fix alert spacing inside modal content of product page v2 (by @NeOMakinG)
+    - #29047: Fix ordering by product name + add ordering by product id (movements page) (by @marsaldev)
+    - #29791: Fix form layout in Advanced Parameters > Security > Password policy (by @eternoendless)
+    - #29847: Fix product page v1 footer responsive (by @NeOMakinG)
+    - #29584: Fix duplicate / wrongly pluralized error message on field length in BO (by @yanmakouf)
+    - #29224: Fix subcategories for multishop (by @MeKeyCool)
+    - #29553: Add min height on alert to center icons vertically (by @lartist)
+- Front Office:
+  - Bug fix:
+    - #28838: Update AbstractForm.php for Multilanguage fields (by @panariga)
+    - #30084: Added check to see if delivery option is an array (by @nicosomb)
+    - #30093: Add install fixtures for new registration page. (by @Hlavtox)
+    - #30252: Do not return customization values if cart is not set (by @Prestaworks)
+    - #29715: Fix discount detail in cart when a product has en ecotax with applied tax (by @mflasquin)
+    - #29619: Remove inifinite loop on actionObjectUpdateAfter hook (by @lartist)
+    - #29910: Fix image size when zooming on tablet (by @NeOMakinG)
+    - #29665: Fix bad selector to fix checkbox issues on RMA (by @mflasquin)
+    - #29632: Select new invoice address automatically (by @lartist)
+- Core:
+  - Improvement:
+    - #30676: Upgraded classic theme and ps_contactinfo module (by @nicosomb)
+    - #30454: Update composer dependencies (by @mflasquin)
+    - #30437: Upgraded to latest symfony 4.4.x (by @nicosomb)
+    - #30230: Upgrade cancel-workflow-action so that previous AND next same jobs are canceled except the last one (by @lartist)
+    - #29586: [BC Break] Disable execution of multiple statements in a single SQL query (by @atomiix)
+    - #29636: Upgrade Smarty to 3.1.47 (by @mflasquin)
+    - #29235: Update prestashop 1.7.8.x composer dependencies (by @matks)
+    - #29831: Convert 1.7.9 to 8.0.0 in deprecation message (by @matks)
+  - Bug fix:
+    - #30465: fix(Cart): fix notice saving customization when customer field is empty and not required (by @davidglezz)
+    - GHSA-9qgp-9wwc-v29r: Potential Information exposure in the upload directory (by @atomiix)
+    - #30273: Test id_manufacturer index before accessing it (by @Hlavtox)
+    - #30114: Do not build a domain from the module name (Cherry pick of #30080) (by @atomiix)
+    - #29079: Change default assignation of Product::pack_stock_type (by @abramofranchetti)
+- Installer:
+  - Improvement:
+    - #29616: Remove prestashop/prestashop-git from development environment (by @FabienPapet)
+  - Bug fix:
+    - #30099: Fix issue on fresh installation with docker in branch 1.7.8.x (by @sefirosweb)
+    - #29615: Fixed installation screen when some config keys were missing (by @nicosomb)
+- Web Services:
+  - Bug fix:
+    - #29756: Fix error on patch method because of php 8.0 throw a fatal error (by @mflasquin)
+- Localization:
+  - Improvement:
+    - #30521: Fix translations (by @atomiix)
+  - Bug fix:
+    - #30107: Add missing trans method instead of hard-coded wording (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #30451: Functional Tests : Split Tests (by @Progi1984)
+    - #30191: Replace deprecated usage of ::set-output in Github actions (by @jolelievre)
+    - #30222: BO - Orders - Credit Slips - Sort & Pagination Credit Slips (by @cfarhani06)
+    - #30057: Remove Aria-label attribute to improve BO pagination selectors (by @boubkerbribri)
+    - #29785: Functional Tests : FO - Consult credit slip list & View PDF Credit slip & View order (by @Progi1984)
+    - #29960: Functional Tests : BO - Search bar (by @Progi1984)
+    - #29954: Functional Tests : BO - View my shop (by @Progi1984)
+    - #29898: Functional Tests : BO - Orders - Shopping carts - View carts (by @Progi1984)
+    - #29657: Functional tests : BO - My Profile (by @Progi1984)
+  - Bug fix:
+    - #30395: Fix CI for ubuntu-22.04 (by @atomiix)
+    - #29992: Better escape PR description for the Pull Request Validator Github action (by @atomiix)
+    - #30048: Fix linkchecker script for UI tests (by @boubkerbribri)
+    - #29980: Functional Tests : Nightly - Fixed the successful message for the My Profile Page (by @Progi1984)
+    - #29912: Delete run on label 'TE' for UI code checks (by @sarahdib)
+    - #29844: Functional Tests : Fixed errors from the script `check:step-identifiers` (by @Progi1984)
+    - #29698: Disable apache mpm_event module in the CI (cherry-pick) (by @atomiix)
+  - Refactoring:
+    - #30328: Remove multi statement SQL queries from integration tests (by @jolelievre)
+    - #30265: Backport #30257 - Fix random errors 10-11 (by @nesrineabdmouleh)
+    - #29802: Functional tests - Refacto BO - bulk duplicate products (by @khouloudbelguith)
+    - #30188: Functional tests  - Fix invalid format image error message (by @nesrineabdmouleh)
+    - #30184: Functional test - Fix errors in Nightly 02-11-2022 (by @nesrineabdmouleh)
+    - #30066: Functional tests - Refacto BO - Catalog - crud category (by @khouloudbelguith)
+    - #29872: Functional tests - Add new test 'BO > Catalog > Cart rules customer group restriction (by @cfarhani06)
+    - #30082: Functional tests - Refacto (Rename combinations by attributes in all project) (by @nesrineabdmouleh)
+    - #30068: Functional tests - Fix nightly 19/10 (Fix FO > send message test) (by @nesrineabdmouleh)
+    - #30049: Functional Tests : BO - Cart rules - Case 10 - Country Restriction (by @cfarhani06)
+    - #30037: Functional tests - Fix 'BO > Orders > Preview order' test (by @nesrineabdmouleh)
+    - #29860: Functional tests - Add new test 'FO > Quick view product' (by @nesrineabdmouleh)
+    - #29956: Functional tests - Fix nightly 10/10/2022 (by @nesrineabdmouleh)
+    - #29928: Refacto tests - Delete 'Data>FO' & fix nightly (by @nesrineabdmouleh)
+    - #29805: Functional tests - Add new test 'BO > Catalog > Cart rules carrier restriction' (by @cfarhani06)
+    - #29896: Functional tests - Add new test 'FO > Marchandise returns > check order return PDF' (by @nesrineabdmouleh)
+    - #29864: Fix nightly 04/10/2022 - Fix  'BO > Header > My profile' test (by @nesrineabdmouleh)
+    - #29855: Refacto UI tests login page to simplify usage (by @boubkerbribri)
+    - #29835: Functional tests - Add new test 'FO > Check slider' (by @nesrineabdmouleh)
+    - #29823: Functional tests - Fix nightly 30-09-2022 (FO > User account > Get data in CSV file ) (by @nesrineabdmouleh)
+    - #29757: Functional  tests - Add new test 'FO > Consult merchandise returns details' (by @nesrineabdmouleh)
+    - #29726: Functional tests - Add new test 'FO > User account > Get GDPR data in csv' (by @nesrineabdmouleh)
+    - #29800: Functional tests - Add new test 'FO > Contact us > Add attachment' (by @nesrineabdmouleh)
+
+####################################
 #   v8.0.0 - (2022-10-26)
 ####################################
 
