@@ -4,29 +4,28 @@ import helper from '@utils/helpers';
 
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Products} = require('@data/demo/products');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
 
-const baseContext = 'sanity_checkoutFO_orderProduct';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'sanity_checkoutFO_orderProduct';
 
 /*
   Order a product and check order confirmation
  */
 describe('BO - Checkout : Order a product and check order confirmation', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -77,7 +76,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should add first product to cart and Proceed to checkout', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-    await homePage.addProductToCartByQuickView(page, 1, '1');
+    await homePage.addProductToCartByQuickView(page, 1, 1);
     await homePage.proceedToCheckout(page);
 
     const pageTitle = await cartPage.getPageTitle(page);

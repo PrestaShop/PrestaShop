@@ -17,7 +17,7 @@ export default class FOBasePage extends CommonPage {
 
   private readonly breadCrumbLink: (link: string) => string;
 
-  private readonly cartProductsCount: string;
+  public readonly cartProductsCount: string;
 
   private readonly cartLink: string;
 

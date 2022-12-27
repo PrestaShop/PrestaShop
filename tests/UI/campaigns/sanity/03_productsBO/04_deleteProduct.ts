@@ -5,31 +5,29 @@ import helper from '@utils/helpers';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
+import productsPage from '@pages/BO/catalog/products';
+import addProductPage from '@pages/BO/catalog/products/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const ProductFaker = require('@data/faker/product');
+import ProductFaker from '@data/faker/product';
 
-const baseContext = 'sanity_productsBO_deleteProduct';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const productToCreate = {
-  type: 'Standard product',
-  productHasCombinations: false,
-};
-const productData = new ProductFaker(productToCreate);
-
-let browserContext;
-let page;
+const baseContext: string = 'sanity_productsBO_deleteProduct';
 
 // Create Standard product in BO and Delete it with DropDown Menu
 describe('BO - Catalog - Products : Create Standard product in BO and Delete it with DropDown Menu', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const productData: ProductFaker = new ProductFaker({
+    type: 'Standard product',
+    productHasCombinations: false,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,6 +60,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters1', baseContext);
 
     await productsPage.resetFilterCategory(page);
+
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -70,6 +69,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
+
     const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
@@ -98,6 +98,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters2', baseContext);
 
     await productsPage.resetFilterCategory(page);
+
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
