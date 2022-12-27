@@ -376,6 +376,16 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
         }
 
+        if ($request->query->get('switchToShop')) {
+            $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_products_v2_edit', [
+                'productId' => $productId,
+                // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
+                'setShopContext' => 's-' . $request->query->get('switchToShop'),
+            ]);
+        }
+
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderIncompatibleContext($productId);
         }
