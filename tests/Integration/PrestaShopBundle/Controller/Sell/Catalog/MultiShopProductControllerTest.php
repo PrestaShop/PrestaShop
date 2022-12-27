@@ -65,7 +65,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
 
     protected const ALL_SHOPS_PRODUCT_DATA = [
         self::DEFAULT_SHOP_NAME => [
-            'name' => 'All shops Product',
+            'name' => 'All shops Product - Default',
             'reference' => 'product-all-shops',
             'price_tax_excluded' => '$51.00',
             'quantity' => 51,
@@ -92,7 +92,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
 
     protected const PARTIAL_SHOPS_PRODUCT_DATA = [
         self::DEFAULT_SHOP_NAME => [
-            'name' => 'Partial shops Product',
+            'name' => 'Partial shops Product - Default',
             'reference' => 'product-partial-shops',
             'price_tax_excluded' => '$99.00',
             'quantity' => 99,
@@ -332,12 +332,123 @@ class MultiShopProductControllerTest extends GridControllerTestCase
     }
 
     /**
+     * @dataProvider getProductShopPreviewsParameters
+     */
+    public function testProductShopPreviews(array $shopContext, array $listFilters, array $shopPreviews): void
+    {
+        if (!empty($shopContext['shop_name'])) {
+            Shop::setContext(Shop::CONTEXT_SHOP, Shop::getIdByName($shopContext['shop_name']));
+        } elseif (!empty($shopContext['group_shop_name'])) {
+            Shop::setContext(Shop::CONTEXT_GROUP, ShopGroup::getIdByName($shopContext['group_shop_name']));
+        } else {
+            Shop::setContext(Shop::CONTEXT_ALL);
+        }
+
+        $products = $this->getFilteredEntitiesFromGrid($listFilters);
+        $this->assertEquals(1, $products->count(), 'Provided filters must match one product only');
+        /** @var TestEntityDTO $filteredProduct */
+        $filteredProduct = $products->get(0);
+
+        $shopPreviewsUrl = $this->router->generate('admin_products_grid_shop_previews', ['productId' => $filteredProduct->getId()]);
+        $crawler = $this->client->request('GET', $shopPreviewsUrl);
+        $entitiesRows = $crawler->filter('tr:not(.empty_row)');
+        $productShopPreviews = $this->parseEntitiesFromRows($entitiesRows);
+
+        foreach ($shopPreviews as $shopPreviewIndex => $shopPreviewData) {
+            /** @var TestEntityDTO $productShopPreview */
+            $productShopPreview = $productShopPreviews->get($shopPreviewIndex);
+            $this->assertNotNull($productShopPreview, sprintf('Expected shop preview at index %d', $shopPreviewIndex));
+            // The check at the shop preview values
+            foreach ($shopPreviewData as $variableName => $variableValue) {
+                $this->assertEquals($variableValue, $productShopPreview->getVariable($variableName));
+            }
+        }
+    }
+
+    public function getProductShopPreviewsParameters(): iterable
+    {
+        $testVariants = [
+            [
+                'shop_context' => [],
+                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            ],
+            [
+                'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
+                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            ],
+            [
+                'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
+                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME]['name']],
+            ],
+        ];
+
+        foreach ($testVariants as $testVariant) {
+            yield 'test previews for product on all shops with shop context: ' . var_export($testVariant, true) => [
+                'shop_context' => $testVariant['shop_context'],
+                'filters' => $testVariant['filters'],
+                'shop_previews' => [
+                    0 => array_merge(
+                        static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                        ['shop_name' => static::DEFAULT_SHOP_NAME]
+                    ),
+                    1 => array_merge(
+                        static::ALL_SHOPS_PRODUCT_DATA[static::INDEPENDENT_SHOP_NAME],
+                        ['shop_name' => static::INDEPENDENT_SHOP_NAME]
+                    ),
+                    2 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                        ['shop_name' => static::SHARED_SHOP_NAME, 'quantity' => 42]
+                    ),
+                    3 => array_merge(
+                        static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                        ['shop_name' => static::SECOND_SHARED_SHOP_NAME, 'quantity' => 42]
+                    ),
+                ],
+            ];
+        }
+
+        $testVariants = [
+            [
+                'shop_context' => [],
+                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            ],
+            [
+                'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
+                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            ],
+            [
+                'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
+                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME]['name']],
+            ],
+        ];
+
+        foreach ($testVariants as $testVariant) {
+            yield 'test previews for partial product with shop context: ' . var_export($testVariant, true) => [
+                'shop_context' => $testVariant['shop_context'],
+                'filters' => $testVariant['filters'],
+                'shop_previews' => [
+                    0 => array_merge(
+                        static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                        ['shop_name' => static::DEFAULT_SHOP_NAME]
+                    ),
+                    1 => array_merge(
+                        static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                        ['shop_name' => static::SECOND_SHARED_SHOP_NAME]
+                    ),
+                ],
+            ];
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function parseEntityFromRow(Crawler $tr, int $i): TestEntityDTO
     {
         $shopListNode = $tr->filter('.column-associated_shops .product-shop-list');
         $associatedShops = $shopListNode->count() ? $shopListNode->attr('title') : '';
+
+        $shopNameNode = $tr->filter('.column-shop_name .shop-name-text');
+        $shopName = $shopNameNode->count() ? $shopNameNode->text() : '';
 
         return new TestEntityDTO(
             (int) trim($tr->filter('.column-id_product')->text()),
@@ -349,6 +460,7 @@ class MultiShopProductControllerTest extends GridControllerTestCase
                 'price_tax_included' => trim($tr->filter('.column-price_tax_included')->text()),
                 'quantity' => (int) trim($tr->filter('.column-quantity')->text()),
                 'associated_shops' => $associatedShops,
+                'shop_name' => $shopName,
             ]
         );
     }
