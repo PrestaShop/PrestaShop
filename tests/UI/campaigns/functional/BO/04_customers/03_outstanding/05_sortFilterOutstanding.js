@@ -88,7 +88,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       });
       const orderByCustomerData = {
         customer: customerData,
-        product: 1,
+        productId: 1,
         productQuantity: 1,
         address: addressData,
         paymentMethod: PaymentMethods.wirePayment.moduleName,
