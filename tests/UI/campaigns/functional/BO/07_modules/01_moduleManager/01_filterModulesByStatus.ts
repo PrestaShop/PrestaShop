@@ -5,23 +5,19 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import {BrowserContext, Page} from 'playwright';
 
-// Using chai
-const {expect} = require('chai');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-
-const baseContext = 'functional_BO_modules_moduleManager_filterModulesByStatus';
-
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_modules_moduleManager_filterModulesByStatus';
 
 describe('BO - Modules - Module Manager : Filter modules by status', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +54,6 @@ describe('BO - Modules - Module Manager : Filter modules by status', async () =>
         await moduleManagerPage.filterByStatus(page, status);
 
         const modules = await moduleManagerPage.getAllModulesStatus(page);
-
         modules.map(
           (module) => expect(
             module.status,

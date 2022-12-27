@@ -2,30 +2,26 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
+import moduleConfigurationPage from '@pages/BO/modules/moduleConfiguration';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
-require('module-alias/register');
-
-// Using chai
-const {expect} = require('chai');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const moduleConfigurationPage = require('@pages/BO/modules/moduleConfiguration');
-
 // Import data
-const {contactForm} = require('@data/demo/modules');
+import {contactForm} from '@data/demo/modules';
 
-const baseContext = 'functional_BO_modules_moduleManager_configureModule';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_modules_moduleManager_configureModule';
 
 describe('BO - Modules - Module Manager : Configure module', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

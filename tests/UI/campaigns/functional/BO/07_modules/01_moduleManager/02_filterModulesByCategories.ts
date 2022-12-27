@@ -5,26 +5,22 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import BO pages
+// Import pages
+import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
-require('module-alias/register');
-
-// Using chai
-const {expect} = require('chai');
-
 // Import data
-const {moduleCategories} = require('@data/demo/moduleCategories');
+import {moduleCategories} from '@data/demo/moduleCategories';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategories';
 
-let browserContext;
-let page;
-
 describe('BO - Modules - Module Manager : Filter modules by Categories', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +43,6 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
       dashboardPage.modulesParentLink,
       dashboardPage.moduleManagerLink,
     );
-
     await moduleManagerPage.closeSfToolBar(page);
 
     const pageTitle = await moduleManagerPage.getPageTitle(page);
