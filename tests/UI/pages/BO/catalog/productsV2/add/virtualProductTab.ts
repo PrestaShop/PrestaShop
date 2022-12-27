@@ -9,7 +9,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends BOBasePage
  */
-export default class VirtualProductTab extends BOBasePage {
+class VirtualProductTab extends BOBasePage {
   private readonly virtualProductTabLink: string;
 
   private readonly productQuantityInput: string;
@@ -65,4 +65,4 @@ export default class VirtualProductTab extends BOBasePage {
   }
 }
 
-module.exports = new VirtualProductTab();
+export default new VirtualProductTab();
