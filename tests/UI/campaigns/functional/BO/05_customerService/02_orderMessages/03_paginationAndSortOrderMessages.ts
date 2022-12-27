@@ -3,27 +3,21 @@ import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import orderMessagesPage from '@pages/BO/customerService/orderMessages';
+import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const OrderMessageFaker = require('@data/faker/orderMessage');
+import OrderMessageFaker from '@data/faker/orderMessage';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
-const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
-
-let browserContext;
-let page;
-let numberOfOrderMessages = 0;
+const baseContext: string = 'functional_BO_customerService_orderMessages_paginationAndSortOrderMessages';
 
 /*
 Create 11 order messages
@@ -32,6 +26,10 @@ Sort order messages table
 Delete order messages with bulk actions
  */
 describe('BO - Customer Service - Order Messages : Pagination and sort order messages', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfOrderMessages: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +52,6 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
       dashboardPage.customerServiceParentLink,
       dashboardPage.orderMessagesLink,
     );
-
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await orderMessagesPage.getPageTitle(page);
@@ -77,6 +74,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);
 
         await orderMessagesPage.goToAddNewOrderMessagePage(page);
+
         const pageTitle = await addOrderMessagePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
       });
@@ -101,7 +99,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -122,7 +120,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await orderMessagesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -156,8 +154,8 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
         const sortedTable = await orderMessagesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

@@ -6,36 +6,35 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customerServicePage from '@pages/BO/customerService/customerService';
+import viewPage from '@pages/BO/customerService/customerService/view';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customerServicePage = require('@pages/BO/customerService/customerService');
-const viewPage = require('@pages/BO/customerService/customerService/view');
-
 // Import data
-const ContactUsFakerData = require('@data/faker/contactUs');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
+import ContactUsFakerData from '@data/faker/contactUs';
 
-const baseContext = 'functional_BO_customerService_customerService_changeStatus';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-const contactUsData = new ContactUsFakerData({subject: 'Customer service', reference: 'OHSATSERP'});
+const baseContext: string = 'functional_BO_customerService_customerService_changeStatus';
 
 /*
 Send message by customer to customer service in FO
 Change message status in BO
  */
 describe('BO - Customer Service : Change status', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const contactUsData: ContactUsFakerData = new ContactUsFakerData({subject: 'Customer service', reference: 'OHSATSERP'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,6 +63,7 @@ describe('BO - Customer Service : Change status', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
 
       await homePage.goToLoginPage(page);
+
       const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });

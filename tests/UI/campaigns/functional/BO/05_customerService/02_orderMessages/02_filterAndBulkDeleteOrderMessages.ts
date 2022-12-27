@@ -1,34 +1,22 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import orderMessagesPage from '@pages/BO/customerService/orderMessages';
+import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const OrderMessageFaker = require('@data/faker/orderMessage');
+import OrderMessageFaker from '@data/faker/orderMessage';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
-const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
-
-let browserContext;
-let page;
-
-const firstOrderMessageData = new OrderMessageFaker({name: 'todelete'});
-const secondOrderMessageData = new OrderMessageFaker({name: 'todelete2'});
-
-let numberOfOrderMessages = 0;
+const baseContext: string = 'functional_BO_customerService_orderMessages_filterAndBulkDeleteOrderMessages';
 
 /*
 Create 2 order messages
@@ -36,6 +24,13 @@ Filter by name and message and check result
 Delete order messages with bulk actions
  */
 describe('BO - Customer Service - Order Messages : Filter and bulk delete order messages', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfOrderMessages: number = 0;
+
+  const firstOrderMessageData: OrderMessageFaker = new OrderMessageFaker({name: 'todelete'});
+  const secondOrderMessageData: OrderMessageFaker = new OrderMessageFaker({name: 'todelete2'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +53,6 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
       dashboardPage.customerServiceParentLink,
       dashboardPage.orderMessagesLink,
     );
-
     await orderMessagesPage.closeSfToolBar(page);
 
     const pageTitle = await orderMessagesPage.getPageTitle(page);
@@ -82,6 +76,7 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index + 1}`, baseContext);
 
         await orderMessagesPage.goToAddNewOrderMessagePage(page);
+
         const pageTitle = await addOrderMessagePage.getPageTitle(page);
         await expect(pageTitle).to.contains(addOrderMessagePage.pageTitle);
       });
