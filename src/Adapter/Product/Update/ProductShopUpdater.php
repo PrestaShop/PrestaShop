@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
@@ -88,6 +89,11 @@ class ProductShopUpdater
      */
     private $combinationStockUpdater;
 
+    /**
+     * @var DefaultCombinationUpdater
+     */
+    private $defaultCombinationUpdater;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
@@ -95,7 +101,8 @@ class ProductShopUpdater
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         ProductStockUpdater $productStockUpdater,
         CombinationMultiShopRepository $combinationMultiShopRepository,
-        CombinationStockUpdater $combinationStockUpdater
+        CombinationStockUpdater $combinationStockUpdater,
+        DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
@@ -104,6 +111,7 @@ class ProductShopUpdater
         $this->productStockUpdater = $productStockUpdater;
         $this->combinationRepository = $combinationMultiShopRepository;
         $this->combinationStockUpdater = $combinationStockUpdater;
+        $this->defaultCombinationUpdater = $defaultCombinationUpdater;
     }
 
     /**
@@ -124,6 +132,8 @@ class ProductShopUpdater
             CannotUpdateProductException::FAILED_SHOP_COPY
         );
 
+        // First copy combinations so that stock can be copied after
+        $this->copyCombinations($productId, $sourceShopId, $targetShopId);
         $this->copyStockToShop($productId, $sourceShopId, $targetShopId, $sourceProduct->getProductType());
         $this->copyCarriersToShop($sourceProduct, $targetShopId);
         $this->copyImageAssociations($productId, $sourceShopId, $targetShopId);
@@ -224,6 +234,31 @@ class ProductShopUpdater
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
         foreach ($imagesFromSourceShop as $image) {
             $image->associateTo($targetShopId->getValue(), $productId->getValue());
+        }
+    }
+
+    private function copyCombinations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
+    {
+        $shopCombinationIds = $this->combinationRepository->getCombinationIds($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        if (empty($shopCombinationIds)) {
+            return;
+        }
+
+        foreach ($shopCombinationIds as $shopCombinationId) {
+            $wasAssociated = $this->combinationRepository->isAssociatedWithShop($shopCombinationId, $targetShopId);
+            // Copy values from one shop to another
+            $this->combinationRepository->copyToShop($shopCombinationId, $sourceShopId, $targetShopId);
+
+            if (!$wasAssociated) {
+                // create dedicated stock_available for combination in related shop
+                $this->stockAvailableRepository->createStockAvailable($productId, $targetShopId, $shopCombinationId);
+            }
+        }
+
+        if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $targetShopId)) {
+            $shopConstraint = ShopConstraint::shop($targetShopId->getValue());
+            $firstCombinationId = $this->combinationRepository->findFirstCombinationId($productId, $shopConstraint);
+            $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
         }
     }
 }
