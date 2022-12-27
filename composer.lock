@@ -5462,20 +5462,23 @@
         },
         {
             "name": "prestashop/ps_contactinfo",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_contactinfo.git",
-                "reference": "1c74f18a12118cbb7622e79044c48aaa55ce93c3"
+                "reference": "5b870ec0cb15ca11f2863b7a77fe055c3c1a71c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/1c74f18a12118cbb7622e79044c48aaa55ce93c3",
-                "reference": "1c74f18a12118cbb7622e79044c48aaa55ce93c3",
+                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/5b870ec0cb15ca11f2863b7a77fe055c3c1a71c6",
+                "reference": "5b870ec0cb15ca11f2863b7a77fe055c3c1a71c6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
             },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
@@ -5491,9 +5494,9 @@
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_contactinfo/tree/master"
+                "source": "https://github.com/PrestaShop/ps_contactinfo/tree/v3.3.1"
             },
-            "time": "2020-05-28T12:57:52+00:00"
+            "time": "2022-12-26T17:10:23+00:00"
         },
         {
             "name": "prestashop/ps_crossselling",
