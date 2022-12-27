@@ -8,7 +8,7 @@ GitHub contributors:
 - 23b
 - Abdelaziz JRIBI
 - Abdullah
-- abrfra
+- Abramo Franchetti
 - Adam
 - Adib Aroui
 - Adonis Karavokyros
