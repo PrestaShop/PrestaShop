@@ -257,6 +257,19 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * Copy combination data from one shop to another.
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $sourceId
+     * @param ShopId $targetId
+     */
+    public function copyToShop(CombinationId $combinationId, ShopId $sourceId, ShopId $targetId): void
+    {
+        $combination = $this->get($combinationId, $sourceId);
+        $this->updateObjectModelForShops($combination, [$targetId], CannotUpdateCombinationException::class);
+    }
+
+    /**
      * @param CombinationId $combinationId
      * @param ShopConstraint $shopConstraint
      *

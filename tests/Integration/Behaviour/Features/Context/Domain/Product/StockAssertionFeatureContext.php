@@ -149,18 +149,20 @@ class StockAssertionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then combination :combinationReference last stock movements for shop :shopReference should be:
+     * @Then combination :combinationReference last stock movements for shop :shopReferences should be:
      */
     public function assertCombinationLastStockMovementsForSpecificShop(
         string $combinationReference,
-        string $shopReference,
+        string $shopReferences,
         TableNode $table
     ): void {
-        $this->assertLastStockMovementsForCombination(
-            $combinationReference,
-            $this->getSharedStorage()->get(trim($shopReference)),
-            $table
-        );
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertLastStockMovementsForCombination(
+                $combinationReference,
+                $shopId,
+                $table
+            );
+        }
     }
 
     /**
