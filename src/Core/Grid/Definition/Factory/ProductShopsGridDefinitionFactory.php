@@ -51,7 +51,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
         // Replace associated shops list with single shop details
         $columns
             ->remove('associated_shops')
-            ->addBefore('image', (new ShopNameColumn('shop_detail'))
+            ->addBefore('image', (new ShopNameColumn('shop_name'))
             ->setName($this->trans('Store(s)', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'shop_name',
