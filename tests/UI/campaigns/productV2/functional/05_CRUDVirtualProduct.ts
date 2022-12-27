@@ -200,7 +200,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       ]);
     });
 
-    describe('Create order to check to uploaded file', async () => {
+    describe('Create order to check uploaded file', async () => {
       it('should add product to cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
