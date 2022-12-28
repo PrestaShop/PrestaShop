@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+
 /**
  * Class ImageManagerCore.
  *
@@ -246,23 +248,26 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        $pngActivated = Configuration::get('PS_ADDITIONAL_IMAGE_PNG');
-        $webpActivated = Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
+        $isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
 
+        if (!$isMultipleImageFormatFeatureActive) {
+            // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
+            // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+            // because JPG reencoding by GD, even with max quality setting, degrades the image.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
+                || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
+                $fileType = 'png';
+            }
 
-        // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
-        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-        // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if (($pngActivated && $type == IMAGETYPE_PNG) && !$forceType) {
-            $fileType = 'png';
+            // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
+            // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+            // because JPG reencoding by GD, even with max quality setting, degrades the image.
+            if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
+                || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
+                $fileType = 'webp';
+            }
         }
 
-        // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
-        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-        // because JPG reencoding by GD, even with max quality setting, degrades the image.
-        if (($webpActivated && $type == IMAGETYPE_WEBP) && !$forceType) {
-            $fileType = 'webp';
-        }
 
         if (!$sourceWidth) {
             $error = self::ERROR_FILE_WIDTH;
@@ -656,6 +661,7 @@ class ImageManagerCore
         static $psPngQuality = null;
         static $psJpegQuality = null;
         static $psWebpQuality = null;
+        static $avifWebpQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -667,6 +673,10 @@ class ImageManagerCore
 
         if ($psWebpQuality === null) {
             $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
+        }
+
+        if ($avifWebpQuality === null) {
+            $avifWebpQuality = Configuration::get('PS_AVIF_QUALITY');
         }
 
         switch ($type) {
@@ -691,8 +701,10 @@ class ImageManagerCore
                 break;
 
             case 'avif':
-                // @phpstan-ignore-next-line
-                $success = imageavif($resource, $filename, Configuration::get('PS_ADDITIONAL_IMAGE_AVIF_QUALITY'));
+                if (function_exists('imageavif')) {
+                    $quality = ($avifWebpQuality === false ? 80 : $avifWebpQuality);
+                    $success = imageavif($resource, $filename, $quality);
+                }
 
                 break;
 

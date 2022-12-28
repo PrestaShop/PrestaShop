@@ -28,11 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Image;
 
 use Category;
 use Configuration;
+use FeatureFlag;
 use Image;
 use ImageManager;
 use ImageType;
 use Language;
 use Link;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 use Product;
@@ -48,9 +50,12 @@ class ImageRetriever
      */
     private $link;
 
+    private $isMultipleImageFormatFeatureActive;
+
     public function __construct(Link $link)
     {
         $this->link = $link;
+        $this->isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
     }
 
     /**
@@ -165,73 +170,34 @@ class ImageRetriever
         $urls = [];
         $image_types = ImageType::getImagesTypes($type, true);
         $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
-        $ext = 'jpg';
 
-        // Get path of original uploaded image we will use to get thumbnails
+        // Get path of original uploaded image we will use to get thumbnails (original image is always .jpg)
         $originalImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
-            $id_image . '.' . $ext,
+            $id_image . '.jpg',
         ]);
 
         $rewriteLink = !empty($object->link_rewrite) ? $object->link_rewrite : $object->name;
         foreach ($image_types as $image_type) {
             $additionalSources = [];
-            // Final path thumbnail in our size
-            $thumbnailPath = implode(DIRECTORY_SEPARATOR, [
-                $imageFolderPath,
-                $id_image . '-' . $image_type['name'] . '.' . $ext,
-            ]);
 
-            // Check if the thumbnail exists, if not, create it automatically on the fly
-            if (!file_exists($thumbnailPath)) {
-                ImageManager::resize(
-                    $originalImagePath,
-                    $thumbnailPath,
-                    (int) $image_type['width'],
-                    (int) $image_type['height']
-                );
+            if (!$this->isMultipleImageFormatFeatureActive || Configuration::get('PS_ADDITIONAL_IMAGE_JPG')) {
+                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
+                $additionalSources['jpg'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.jpg');
             }
 
-            $isWebpWanted = Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
+            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_PNG')) {
+                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'png');
+                $additionalSources['png'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.png');
+            }
 
-            if ($isWebpWanted) {
-                $resizedImagePathWebP = implode(DIRECTORY_SEPARATOR, [
-                    $imageFolderPath,
-                    sprintf('%s-%s.webp', $id_image, $image_type['name']),
-                ]);
-
-                if (!file_exists($resizedImagePathWebP)) {
-                    ImageManager::resize(
-                        $originalImagePath,
-                        $thumbnailPath,
-                        (int) $image_type['width'],
-                        (int) $image_type['height'],
-                        'webp',
-                        true
-                    );
-                }
-
+            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_WEBP')) {
+                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'webp');
                 $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
             }
 
-            $isAvifWanted = Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
-            if ($isAvifWanted) {
-                $resizedImagePathAvif = implode(DIRECTORY_SEPARATOR, [
-                    $imageFolderPath,
-                    sprintf('%s-%s.avif', $id_image, $image_type['name']),
-                ]);
-
-                if (!file_exists($resizedImagePathAvif)) {
-                    ImageManager::resize(
-                        $originalImagePath,
-                        $thumbnailPath,
-                        (int) $image_type['width'],
-                        (int) $image_type['height'],
-                        'avif',
-                        true
-                    );
-                }
-
+            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_AVIF')) {
+                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'avif');
                 $additionalSources['avif'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.avif');
             }
 
@@ -240,17 +206,20 @@ class ImageRetriever
             * double the size, so it can be used in src-sets.
             */
             if ($generateHighDpiImages) {
-                $thumbnailPathHighDpi = implode(DIRECTORY_SEPARATOR, [
-                    $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . '2x.' . $ext,
-                ]);
-                if (!file_exists($thumbnailPathHighDpi)) {
-                    ImageManager::resize(
-                        $originalImagePath,
-                        $thumbnailPathHighDpi,
-                        (int) $image_type['width'] * 2,
-                        (int) $image_type['height'] * 2
-                    );
+                if (!$this->isMultipleImageFormatFeatureActive || ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_JPG'))) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
+                }
+
+                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_PNG')) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'png', true);
+                }
+
+                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_WEBP')) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'webp', true);
+                }
+
+                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_AVIF')) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'avif', true);
                 }
             }
 
@@ -299,6 +268,61 @@ class ImageRetriever
             'legend' => !empty($object->meta_title) ? $object->meta_title : $object->name,
             'id_image' => $id_image,
         ];
+    }
+
+    /**
+     * @param $originalImagePath
+     * @param $imageFolderPath
+     * @param $idImage
+     * @param $imageTypeData
+     * @param $ext
+     * @param $hdpi
+     *
+     * @return void
+     */
+    private function generateImageType($originalImagePath, $imageFolderPath, $idImage, $imageTypeData, $ext , $hdpi = false)
+    {
+        $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
+
+        if ($hdpi) {
+            sprintf('%s-%s2x%s', $idImage, $imageTypeData['name'], $ext);
+            $fileName = $idImage . '-' . $imageTypeData['name'] . '2x.' . $ext;
+            $imageTypeData['width'] *= 2;
+            $imageTypeData['height'] *= 2;
+        }
+
+        $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+            $imageFolderPath,
+            $fileName,
+        ]);
+
+        if (!file_exists($resizedImagePath)) {
+            ImageManager::resize(
+                $originalImagePath,
+                $this->makeResizedDestinationPath($imageFolderPath, $idImage, $imageTypeData['name'], $ext, $hdpi),
+                (int) $imageTypeData['width'],
+                (int) $imageTypeData['height'],
+                $ext,
+                true
+            );
+        }
+    }
+
+    /**
+     * @param string $imageFolderPath
+     * @param $idImage
+     * @param string $imageType
+     * @param string $extension
+     * @param $hdpi
+     *
+     * @return string
+     */
+    private function makeResizedDestinationPath(string $imageFolderPath, $idImage, string $imageType, string $extension, $hdpi = false): string
+    {
+        return implode(DIRECTORY_SEPARATOR, [
+            $imageFolderPath,
+            sprintf('%s-%s%s.%s', $idImage, $imageType, $hdpi ? '2x': '', $extension),
+        ]);
     }
 
     /**
