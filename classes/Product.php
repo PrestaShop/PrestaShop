@@ -455,9 +455,7 @@ class ProductCore extends ObjectModel
             /* Classic fields */
             'id_shop_default' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_manufacturer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'id_supplier' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => Reference::MAX_LENGTH],
-            'supplier_reference' => ['type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64],
             'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'width' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
             'height' => ['type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'],
@@ -501,6 +499,8 @@ class ProductCore extends ObjectModel
             ],
 
             /* Shop fields */
+            'id_supplier' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'],
+            'supplier_reference' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isReference', 'size' => 64],
             'id_category_default' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'],
             'id_tax_rules_group' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'],
             'on_sale' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],

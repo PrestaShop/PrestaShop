@@ -1637,7 +1637,7 @@ CREATE TABLE `PREFIX_product` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1677,6 +1677,7 @@ CREATE TABLE `PREFIX_product` (
 CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `id_product` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL,
+  `id_supplier` int(10) unsigned DEFAULT NULL,
   `id_category_default` int(10) unsigned DEFAULT NULL,
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1686,6 +1687,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
+  `supplier_reference` varchar(64) DEFAULT NULL,
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `unity` varchar(255) DEFAULT NULL,
   `unit_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
@@ -1697,7 +1699,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category', '200-displayed', 
+    '301-category', '302-category', '200-displayed',
     '404-displayed', '410-displayed', 'default'
   ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1716,6 +1718,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_upd` datetime NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
+  INDEX supplier_reference_idx(`supplier_reference`),
+  KEY `product_supplier` (`id_supplier`),
   KEY `id_category_default` (`id_category_default`),
   KEY `date_add` (
     `date_add`, `active`, `visibility`
