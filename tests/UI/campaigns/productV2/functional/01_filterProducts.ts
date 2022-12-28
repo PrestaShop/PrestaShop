@@ -1,9 +1,8 @@
-// Import utils
-import helper from '@utils/helpers';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-// Import test context
+// Import utils
+import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
@@ -210,7 +209,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       });
     });
 
-    it('should filter list by \'Status \' No and check result', async function () {
+    it('should filter list by \'Status\' No and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByStatusNo', baseContext);
 
       await productsPage.filterProducts(page, 'active', false, 'select');
