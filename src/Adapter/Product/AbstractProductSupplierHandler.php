@@ -28,10 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use ProductSupplier;
 
 /**
@@ -55,14 +56,15 @@ abstract class AbstractProductSupplierHandler
 
     /**
      * @param ProductId $productId
-     * @param CombinationId|null $combinationId
+     * @param CombinationIdInterface $combinationId
+     * @param ShopId $shopId
      *
      * @return array<int, ProductSupplierForEditing>
      */
-    protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
+    protected function getProductSuppliersInfo(ProductId $productId, CombinationIdInterface $combinationId, ShopId $shopId): array
     {
         $hasDuplicatedSupplierNames = $this->productSupplierRepository->hasDuplicateSuppliersName();
-        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
+        $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId, $shopId);
 
         $productSuppliers = [];
         foreach ($productSuppliersInfo as $productSupplierInfo) {

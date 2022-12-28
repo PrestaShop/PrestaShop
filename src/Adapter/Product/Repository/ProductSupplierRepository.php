@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\SupplierAssociationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use ProductSupplier;
@@ -176,18 +177,19 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Returns the ID of the Supplier set as default for this product, data comes from product table
+     * Returns the ID of the Supplier set as default for this product, data comes from product_shop table
      * but is only returned if the association is present in product_supplier relation table.
      *
      * @param ProductId $productId
+     * @param ShopId $shopId
      *
      * @return SupplierId|null
      */
-    public function getDefaultSupplierId(ProductId $productId): ?SupplierId
+    public function getDefaultSupplierId(ProductId $productId, ShopId $shopId): ?SupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_supplier AS default_supplier_id')
-            ->from($this->dbPrefix . 'product', 'p')
+            ->from($this->dbPrefix . 'product_shop', 'p')
             // Right join association matching the default supplier, it must be present since it is a right join
             ->rightJoin(
                 'p',
@@ -195,8 +197,10 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
                 'ps',
                 'ps.id_product = p.id_product AND ps.id_supplier = p.id_supplier'
             )
+            ->andWhere('p.id_product = :productId')
+            ->andWhere('p.id_shop = :shopId')
             ->setParameter('productId', $productId->getValue())
-            ->where('p.id_product = :productId')
+            ->setParameter('shopId', $shopId->getValue())
         ;
 
         $result = $qb->execute()->fetchAssociative();
@@ -276,16 +280,20 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ShopId $shopId
      *
      * @return SupplierId[]
      */
-    public function getAssociatedSupplierIds(ProductId $productId): array
+    public function getAssociatedSupplierIds(ProductId $productId, ShopId $shopId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->leftJoin('ps', $this->dbPrefix . 'supplier_shop', 'ss', 'ps.id_supplier = ss.id_supplier')
             ->andWhere('ps.id_product = :productId')
+            ->andWhere('ss.id_shop = :shopId')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
             ->groupBy('ps.id_supplier')
         ;
 
@@ -365,14 +373,15 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param CombinationIdInterface|null $combinationId
+     * @param CombinationIdInterface $combinationId
+     * @param ShopId $shopId
      *
      * @return array
      */
-    public function getProductSuppliersInfo(ProductId $productId, ?CombinationIdInterface $combinationId = null): array
+    public function getProductSuppliersInfo(ProductId $productId, CombinationIdInterface $combinationId, ShopId $shopId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('*')
+        $qb->select('ps.*, s.*')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->leftJoin(
                 'ps',
@@ -380,17 +389,21 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
                 's',
                 'ps.id_supplier = s.id_supplier'
             )
-            ->where('ps.id_product = :productId')
+            ->leftJoin(
+                'ps',
+                $this->dbPrefix . 'supplier_shop',
+                'ss',
+                'ss.id_supplier = ps.id_supplier'
+            )
+            ->andWhere('ps.id_product = :productId')
+            ->andWhere('ss.id_shop = :shopId')
+            ->andWhere('ps.id_product_attribute = :combinationId')
             ->addOrderBy('s.name', 'ASC')
             ->addOrderBy('s.id_supplier', 'ASC')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
         ;
-
-        if ($combinationId) {
-            $qb->andWhere('ps.id_product_attribute = :combinationId')
-                ->setParameter('combinationId', $combinationId->getValue())
-            ;
-        }
 
         return $qb->execute()->fetchAll();
     }
@@ -422,14 +435,17 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Returns the list of ProductSupplierId which don't match the expected suppliers.
+     * Returns the list of ProductSupplierId which don't match the expected suppliers for the specified
+     * shop only, meaning suppliers that are NOT associated with specified won't be returned as they
+     * shouldn't be removed.
      *
      * @param ProductId $productId
      * @param array $expectedSuppliersId
+     * @param ShopId $shopId
      *
      * @return ProductSupplierId[]
      */
-    public function getUselessProductSupplierIds(ProductId $productId, array $expectedSuppliersId): array
+    public function getUselessProductSupplierIds(ProductId $productId, array $expectedSuppliersId, ShopId $shopId): array
     {
         $supplierIds = array_map(function (SupplierId $supplierId) {
             return (string) $supplierId->getValue();
@@ -439,9 +455,16 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         $qb
             ->select('ps.id_product_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->leftJoin(
+                'ps',
+                $this->dbPrefix . 'supplier_shop',
+                'ss',
+                'ss.id_supplier = ps.id_supplier'
+            )
             ->where($qb->expr()->and(
                 $qb->expr()->eq('id_product', $productId->getValue()),
-                $qb->expr()->notIn('id_supplier', $supplierIds)
+                $qb->expr()->eq('ss.id_shop', $shopId->getValue()),
+                $qb->expr()->notIn('ps.id_supplier', $supplierIds)
             ))
         ;
 

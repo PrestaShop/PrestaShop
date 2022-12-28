@@ -56,8 +56,8 @@ class GetAssociatedSuppliersHandler implements GetAssociatedSuppliersHandlerInte
      */
     public function handle(GetAssociatedSuppliers $query): AssociatedSuppliers
     {
-        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId());
-        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId());
+        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId(), $query->getShopConstraint()->getShopId());
+        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId(), $query->getShopConstraint()->getShopId());
 
         return new AssociatedSuppliers(
             $defaultSupplier ? $defaultSupplier->getValue() : NoSupplierId::NO_SUPPLIER_ID,

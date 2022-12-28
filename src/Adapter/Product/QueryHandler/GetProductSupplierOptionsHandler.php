@@ -29,8 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
@@ -43,17 +44,17 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
     /**
      * @param ProductSupplierRepository $productSupplierRepository
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         ProductSupplierRepository $productSupplierRepository,
-        ProductRepository $productRepository
+        ProductMultiShopRepository $productRepository
     ) {
         parent::__construct($productSupplierRepository);
         $this->productRepository = $productRepository;
@@ -66,12 +67,12 @@ class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler im
      */
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
-        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId());
-        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId());
+        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId(), $query->getShopConstraint()->getShopId());
+        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId(), $query->getShopConstraint()->getShopId());
         $productType = $this->productRepository->getProductType($query->getProductId());
         $productSuppliers = [];
         if ($productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
-            $productSuppliers = $this->getProductSuppliersInfo($query->getProductId());
+            $productSuppliers = $this->getProductSuppliersInfo($query->getProductId(), new NoCombinationId(), $query->getShopConstraint()->getShopId());
         }
         $supplierIntIds = array_map(function (SupplierId $supplierId) {
             return $supplierId->getValue();
