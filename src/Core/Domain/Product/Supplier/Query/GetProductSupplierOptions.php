@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Provides product supplier options
@@ -41,11 +43,16 @@ class GetProductSupplierOptions
     private $productId;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
-    {
+    private $shopConstraint;
+
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -54,5 +61,21 @@ class GetProductSupplierOptions
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    private function setShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
+        }
+        $this->shopConstraint = $shopConstraint;
     }
 }

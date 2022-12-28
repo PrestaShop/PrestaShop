@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
 class SetProductDefaultSupplierCommand
@@ -44,13 +46,18 @@ class SetProductDefaultSupplierCommand
     private $defaultSupplierId;
 
     /**
-     * @param int $productId
-     * @param int $defaultSupplierId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId, int $defaultSupplierId)
-    {
+    private $shopConstraint;
+
+    public function __construct(
+        int $productId,
+        int $defaultSupplierId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
         $this->defaultSupplierId = new SupplierId($defaultSupplierId);
+        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -67,5 +74,21 @@ class SetProductDefaultSupplierCommand
     public function getDefaultSupplierId(): SupplierId
     {
         return $this->defaultSupplierId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    private function setShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
+        }
+        $this->shopConstraint = $shopConstraint;
     }
 }

@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Retrieves data for product combination supplier
@@ -43,12 +45,16 @@ class GetCombinationSuppliers
     private $combinationId;
 
     /**
-     * @param int $combinationId
+     * @var ShopConstraint
      */
+    private $shopConstraint;
+
     public function __construct(
-        int $combinationId
+        int $combinationId,
+        ShopConstraint $shopConstraint
     ) {
         $this->combinationId = new CombinationId($combinationId);
+        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -57,5 +63,21 @@ class GetCombinationSuppliers
     public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    private function setShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
+        }
+        $this->shopConstraint = $shopConstraint;
     }
 }

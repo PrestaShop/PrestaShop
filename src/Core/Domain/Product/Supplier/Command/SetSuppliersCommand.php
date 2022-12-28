@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
@@ -54,13 +56,18 @@ class SetSuppliersCommand
     private $supplierIds;
 
     /**
-     * @param int $productId
-     * @param array $supplierIds
+     * @var ShopConstraint
      */
-    public function __construct(int $productId, array $supplierIds)
-    {
+    private $shopConstraint;
+
+    public function __construct(
+        int $productId,
+        array $supplierIds,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
         $this->setSupplierIds($supplierIds);
+        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -79,6 +86,14 @@ class SetSuppliersCommand
         return $this->supplierIds;
     }
 
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
     private function setSupplierIds(array $supplierIds): void
     {
         if (empty($supplierIds)) {
@@ -93,5 +108,13 @@ class SetSuppliersCommand
         foreach ($supplierIds as $supplierId) {
             $this->supplierIds[] = new SupplierId($supplierId);
         }
+    }
+
+    private function setShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
+        }
+        $this->shopConstraint = $shopConstraint;
     }
 }
