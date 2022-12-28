@@ -409,6 +409,25 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param ProductId $productId
+     *
+     * @return ProductSupplierId[]
+     */
+    public function getProductSuppliersIds(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_supplier')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->andWhere('ps.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        return array_map(static function (array $productSupplier) {
+            return new ProductSupplierId($productSupplier['id_product_supplier']);
+        }, $qb->execute()->fetchAllAssociative());
+    }
+
+    /**
      * Returns true if some suppliers have identical names, in which case we integrate the ID into the name to avoid confusion.
      *
      * @return bool

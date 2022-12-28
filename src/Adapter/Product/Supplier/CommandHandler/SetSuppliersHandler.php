@@ -56,6 +56,10 @@ class SetSuppliersHandler implements SetSuppliersHandlerInterface
      */
     public function handle(SetSuppliersCommand $command): array
     {
-        return $this->productSupplierUpdater->associateSuppliers($command->getProductId(), $command->getSupplierIds());
+        return $this->productSupplierUpdater->associateSuppliers(
+            $command->getProductId(),
+            $command->getSupplierIds(),
+            $command->getShopConstraint()->getShopId()
+        );
     }
 }

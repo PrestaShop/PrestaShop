@@ -28,15 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\Repository;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use Supplier;
 
 /**
  * Methods to access Supplier data source
  */
-class SupplierRepository extends AbstractObjectModelRepository
+class SupplierRepository extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @param SupplierId $supplierId
@@ -65,5 +67,16 @@ class SupplierRepository extends AbstractObjectModelRepository
         );
 
         return $supplier;
+    }
+
+    /**
+     * @param SupplierId $supplierId
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertShopAssociation(SupplierId $supplierId, ShopId $shopId): void
+    {
+        $this->checkShopAssociation($supplierId->getValue(), Supplier::class, $shopId);
     }
 }
