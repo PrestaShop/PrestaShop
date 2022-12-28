@@ -73,13 +73,30 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $defaultSupplierReference
      */
-    public function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference): void
+    public function updateProductDefaultSupplierForDefaultShop(string $productReference, string $defaultSupplierReference): void
+    {
+        $this->updateProductDefaultSupplier($productReference, $defaultSupplierReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @When I set product :productReference default supplier to :defaultSupplierReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $defaultSupplierReference
+     * @param string $shopReference
+     */
+    public function updateProductDefaultSupplierForSpecificShop(string $productReference, string $defaultSupplierReference, string $shopReference): void
+    {
+        $this->updateProductDefaultSupplier($productReference, $defaultSupplierReference, (int) $this->getSharedStorage()->get($shopReference));
+    }
+
+    private function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference, int $shopId): void
     {
         try {
             $command = new SetProductDefaultSupplierCommand(
                 $this->getSharedStorage()->get($productReference),
                 $this->getSharedStorage()->get($defaultSupplierReference),
-                ShopConstraint::shop($this->getDefaultShopId())
+                ShopConstraint::shop($shopId)
             );
 
             $this->getCommandBus()->handle($command);
@@ -116,7 +133,23 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
+    public function updateProductSuppliersForDefaultShop(string $productReference, TableNode $tableNode): void
+    {
+        $this->updateProductSuppliers($productReference, $tableNode, $this->getDefaultShopId());
+    }
+
+    /**
+     * @When I update product :productReference suppliers for shop :shopReference:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function updateProductSuppliersForSpecificShop(string $productReference, TableNode $tableNode, string $shopReference): void
+    {
+        $this->updateProductSuppliers($productReference, $tableNode, (int) $this->getSharedStorage()->get($shopReference));
+    }
+
+    private function updateProductSuppliers(string $productReference, TableNode $tableNode, int $shopId): void
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
@@ -145,7 +178,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $command = new UpdateProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference),
                 $productSuppliers,
-                ShopConstraint::shop($this->getDefaultShopId())
+                ShopConstraint::shop($shopId)
             );
 
             $productSupplierAssociations = $this->getCommandBus()->handle($command);
@@ -234,7 +267,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference): void
     {
-        $this->assertDefaultSupplierReference($productReference, '');
+        $this->assertDefaultSupplierReference($productReference, '', $this->getDefaultShopId());
     }
 
     /**
@@ -432,7 +465,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['default supplier reference'])) {
-            $this->assertDefaultSupplierReference($productReference, $data['default supplier reference']);
+            $this->assertDefaultSupplierReference($productReference, $data['default supplier reference'], $shopId);
             unset($data['default supplier reference']);
         }
 
@@ -480,11 +513,12 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      * @param string $expectedValue
+     * @param int $shopId
      */
-    private function assertDefaultSupplierReference(string $productReference, string $expectedValue): void
+    private function assertDefaultSupplierReference(string $productReference, string $expectedValue, int $shopId): void
     {
         $productId = $this->getSharedStorage()->get($productReference);
-        $product = new Product($productId);
+        $product = new Product($productId, false, null, $shopId);
 
         Assert::assertEquals(
             $expectedValue,

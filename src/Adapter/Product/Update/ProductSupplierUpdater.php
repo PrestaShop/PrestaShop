@@ -228,7 +228,7 @@ class ProductSupplierUpdater
         array $productSuppliers,
         ShopId $shopId
     ): array {
-        $product = $this->productRepository->get($productId, $this->productRepository->getProductDefaultShopId($productId));
+        $product = $this->productRepository->get($productId, $shopId);
 
         if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
             $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
@@ -276,6 +276,9 @@ class ProductSupplierUpdater
      */
     public function updateProductDefaultSupplier(ProductId $productId, SupplierId $defaultSupplierId, ShopId $shopId): void
     {
+        $this->supplierRepository->assertSupplierExists($defaultSupplierId);
+        $this->supplierRepository->assertShopAssociation($defaultSupplierId, $shopId);
+
         $productType = $this->productRepository->getProductType($productId);
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
             // Product must always be updated even for product with combinations, we use the default combination as the reference

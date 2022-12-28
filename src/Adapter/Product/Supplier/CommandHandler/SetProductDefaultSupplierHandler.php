@@ -56,6 +56,10 @@ class SetProductDefaultSupplierHandler implements SetProductDefaultSupplierHandl
      */
     public function handle(SetProductDefaultSupplierCommand $command): void
     {
-        $this->productSupplierUpdater->updateProductDefaultSupplier($command->getProductId(), $command->getDefaultSupplierId());
+        $this->productSupplierUpdater->updateProductDefaultSupplier(
+            $command->getProductId(),
+            $command->getDefaultSupplierId(),
+            $command->getShopConstraint()->getShopId()
+        );
     }
 }

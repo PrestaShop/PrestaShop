@@ -70,7 +70,8 @@ final class UpdateProductSuppliersHandler extends AbstractProductSupplierHandler
 
         return $this->productSupplierUpdater->updateSuppliersForProduct(
             $productId,
-            $productSuppliers
+            $productSuppliers,
+            $command->getShopConstraint()->getShopId()
         );
     }
 }
