@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 
 class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
@@ -77,7 +78,8 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         try {
             $command = new SetProductDefaultSupplierCommand(
                 $this->getSharedStorage()->get($productReference),
-                $this->getSharedStorage()->get($defaultSupplierReference)
+                $this->getSharedStorage()->get($defaultSupplierReference),
+                ShopConstraint::shop($this->getDefaultShopId())
             );
 
             $this->getCommandBus()->handle($command);
@@ -92,49 +94,20 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function associateSupplier(string $productReference, TableNode $tableNode): void
+    public function associateSuppliersForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $data = $tableNode->getColumnsHash();
-        $supplierIds = [];
-        foreach ($data as $row) {
-            $supplierIds[] = $this->getSharedStorage()->get($row['supplier']);
-        }
+        $this->associateSuppliers($productReference, $tableNode, $this->getDefaultShopId());
+    }
 
-        $productSupplierAssociations = $this->getCommandBus()->handle(new SetSuppliersCommand(
-            $this->getSharedStorage()->get($productReference),
-            $supplierIds
-        ));
-
-        // Reorganize input data so that they are easier to access and help to assign the references
-        $productSuppliersReferences = [];
-        foreach ($data as $supplierRow) {
-            $supplierId = (int) $this->getSharedStorage()->get($supplierRow['supplier']);
-
-            if (!empty($supplierRow['product_supplier'])) {
-                $productSuppliersReferences[$supplierId][NoCombinationId::NO_COMBINATION_ID] = $supplierRow['product_supplier'];
-            } elseif (!empty($supplierRow['combination_suppliers'])) {
-                $combinationReferences = explode(';', $supplierRow['combination_suppliers']);
-                foreach ($combinationReferences as $combinationReference) {
-                    list($combinationReference, $productSupplierReference) = explode(':', $combinationReference);
-                    $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
-                    $productSuppliersReferences[$supplierId][$combinationId] = $productSupplierReference;
-                }
-            }
-        }
-
-        /** @var ProductSupplierAssociation $productSupplierAssociation */
-        foreach ($productSupplierAssociations as $productSupplierAssociation) {
-            if (isset($productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()])) {
-                $referencesForSupplier = $productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()];
-
-                if (isset($referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()])) {
-                    $this->getSharedStorage()->set(
-                        $referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()],
-                        $productSupplierAssociation->getProductSupplierId()->getValue()
-                    );
-                }
-            }
-        }
+    /**
+     * @When I associate suppliers to product :productReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function associateSuppliersForSpecificShop(string $productReference, string $shopReference, TableNode $tableNode): void
+    {
+        $this->associateSuppliers($productReference, $tableNode, (int) $this->getSharedStorage()->get($shopReference));
     }
 
     /**
@@ -171,7 +144,8 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         try {
             $command = new UpdateProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference),
-                $productSuppliers
+                $productSuppliers,
+                ShopConstraint::shop($this->getDefaultShopId())
             );
 
             $productSupplierAssociations = $this->getCommandBus()->handle($command);
@@ -192,11 +166,31 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertProductSuppliers(string $productReference, TableNode $table): void
+    public function assertProductSuppliersForDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->assertProductSuppliers($productReference, $table, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have following suppliers for shop(s) :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $table
+     */
+    public function assertProductSuppliersForSpecificShops(string $productReference, string $shopReferences, TableNode $table): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductSuppliers($productReference, $table, $shopId);
+        }
+    }
+
+    private function assertProductSuppliers(string $productReference, TableNode $table, int $shopId): void
     {
         $expectedProductSuppliers = $table->getColumnsHash();
-        $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
+        $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference, $shopId);
 
+        // Reformat expected data
         $checkProductSuppliers = false;
         foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
             $expectedProductSupplier['combination'] = NoCombinationId::NO_COMBINATION_ID;
@@ -210,6 +204,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         $actualProductSuppliers = [];
+        // Format actual data
         foreach ($actualProductSupplierOptions->getProductSuppliers() as $productSupplierForEditing) {
             $productSupplierData = [
                 'reference' => $productSupplierForEditing->getReference(),
@@ -224,6 +219,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $actualProductSuppliers[] = $productSupplierData;
         }
 
+        // Compare data
         Assert::assertEquals(
             $expectedProductSuppliers,
             $actualProductSuppliers,
@@ -246,10 +242,27 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoSuppliers(string $productReference): void
+    public function assertProductHasNoSuppliersForDefaultShop(string $productReference): void
+    {
+        $this->assertProductHasNoSuppliers($productReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should not have any suppliers assigned for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoSuppliersForSpecificShops(string $productReference, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductHasNoSuppliers($productReference, $shopId);
+        }
+    }
+
+    private function assertProductHasNoSuppliers(string $productReference, int $shopId): void
     {
         Assert::assertEmpty(
-            $this->getAssociatedSuppliers($productReference)->getSupplierIds(),
+            $this->getAssociatedSuppliers($productReference, $shopId)->getSupplierIds(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }
@@ -259,10 +272,28 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoSuppliersInfo(string $productReference): void
+    public function assertProductHasNoSuppliersInfoForDefaultShop(string $productReference): void
+    {
+        $this->assertProductHasNoSuppliersInfo($productReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should not have suppliers infos for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductHasNoSuppliersInfoForSpecificShops(string $productReference, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductHasNoSuppliersInfo($productReference, $shopId);
+        }
+    }
+
+    private function assertProductHasNoSuppliersInfo(string $productReference, int $shopId): void
     {
         Assert::assertEmpty(
-            $this->getProductSupplierOptions($productReference)->getProductSuppliers(),
+            $this->getProductSupplierOptions($productReference, $shopId)->getProductSuppliers(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }
@@ -271,10 +302,30 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @Then product :productReference should have the following suppliers assigned:
      *
      * @param string $productReference
+     * @param TableNode $tableNode
      */
-    public function assertAssignedSuppliers(string $productReference, TableNode $tableNode): void
+    public function assertAssignedSuppliersForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $supplierIds = $this->getAssociatedSuppliers($productReference)->getSupplierIds();
+        $this->assertAssignedSuppliers($productReference, $tableNode, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have the following suppliers assigned for shop(s) :shopReferences:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param string $shopReferences
+     */
+    public function assertAssignedSuppliersForSpecificShops(string $productReference, TableNode $tableNode, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertAssignedSuppliers($productReference, $tableNode, $shopId);
+        }
+    }
+
+    private function assertAssignedSuppliers(string $productReference, TableNode $tableNode, int $shopId): void
+    {
+        $supplierIds = $this->getAssociatedSuppliers($productReference, $shopId)->getSupplierIds();
         $expectedSupplierIds = [];
         foreach ($tableNode->getRows() as $row) {
             $expectedSupplierIds[] = $this->getSharedStorage()->get($row[0]);
@@ -313,9 +364,27 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertProductHasNoDefaultSupplier(string $productReference): void
+    public function assertProductHasNoDefaultSupplierForDefaultShop(string $productReference): void
     {
-        $defaultSupplierId = $this->getAssociatedSuppliers($productReference)->getDefaultSupplierId();
+        $this->assertProductHasNoDefaultSupplier($productReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should not have a default supplier for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     */
+    public function assertProductHasNoDefaultSupplierForSpecificShops(string $productReference, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductHasNoDefaultSupplier($productReference, $shopId);
+        }
+    }
+
+    private function assertProductHasNoDefaultSupplier(string $productReference, int $shopId): void
+    {
+        $defaultSupplierId = $this->getAssociatedSuppliers($productReference, $shopId)->getDefaultSupplierId();
 
         Assert::assertEmpty(
             $defaultSupplierId,
@@ -329,10 +398,28 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertDefaultSupplier(string $productReference, TableNode $tableNode): void
+    public function assertDefaultSupplierForDefaultShop(string $productReference, TableNode $tableNode): void
+    {
+        $this->assertDefaultSupplier($productReference, $tableNode, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have following supplier values for shop(s) :shopReferences:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function assertDefaultSupplierForSpecificShops(string $productReference, TableNode $tableNode, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertDefaultSupplier($productReference, $tableNode, $shopId);
+        }
+    }
+
+    private function assertDefaultSupplier(string $productReference, TableNode $tableNode, int $shopId): void
     {
         $data = $tableNode->getRowsHash();
-        $associatedSuppliers = $this->getAssociatedSuppliers($productReference);
+        $associatedSuppliers = $this->getAssociatedSuppliers($productReference, $shopId);
 
         if (isset($data['default supplier'])) {
             $defaultSupplierId = !empty($data['default supplier']) ? $this->getSharedStorage()->get($data['default supplier']) : 0;
@@ -365,22 +452,25 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @return AssociatedSuppliers
      */
-    private function getAssociatedSuppliers(string $productReference): AssociatedSuppliers
+    private function getAssociatedSuppliers(string $productReference, int $shopId): AssociatedSuppliers
     {
         return $this->getQueryBus()->handle(new GetAssociatedSuppliers(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($shopId)
         ));
     }
 
     /**
      * @param string $productReference
+     * @param int $shopId
      *
      * @return ProductSupplierOptions
      */
-    private function getProductSupplierOptions(string $productReference): ProductSupplierOptions
+    private function getProductSupplierOptions(string $productReference, int $shopId): ProductSupplierOptions
     {
         return $this->getQueryBus()->handle(new GetProductSupplierOptions(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($shopId)
         ));
     }
 
@@ -401,5 +491,51 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $product->supplier_reference,
             'Unexpected product default supplier reference'
         );
+    }
+
+    private function associateSuppliers(string $productReference, TableNode $tableNode, int $shopId): void
+    {
+        $data = $tableNode->getColumnsHash();
+        $supplierIds = [];
+        foreach ($data as $row) {
+            $supplierIds[] = $this->getSharedStorage()->get($row['supplier']);
+        }
+
+        $productSupplierAssociations = $this->getCommandBus()->handle(new SetSuppliersCommand(
+            $this->getSharedStorage()->get($productReference),
+            $supplierIds,
+            ShopConstraint::shop($shopId)
+        ));
+
+        // Reorganize input data so that they are easier to access and help to assign the references
+        $productSuppliersReferences = [];
+        foreach ($data as $supplierRow) {
+            $supplierId = (int) $this->getSharedStorage()->get($supplierRow['supplier']);
+
+            if (!empty($supplierRow['product_supplier'])) {
+                $productSuppliersReferences[$supplierId][NoCombinationId::NO_COMBINATION_ID] = $supplierRow['product_supplier'];
+            } elseif (!empty($supplierRow['combination_suppliers'])) {
+                $combinationReferences = explode(';', $supplierRow['combination_suppliers']);
+                foreach ($combinationReferences as $combinationReference) {
+                    list($combinationReference, $productSupplierReference) = explode(':', $combinationReference);
+                    $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
+                    $productSuppliersReferences[$supplierId][$combinationId] = $productSupplierReference;
+                }
+            }
+        }
+
+        /** @var ProductSupplierAssociation $productSupplierAssociation */
+        foreach ($productSupplierAssociations as $productSupplierAssociation) {
+            if (isset($productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()])) {
+                $referencesForSupplier = $productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()];
+
+                if (isset($referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()])) {
+                    $this->getSharedStorage()->set(
+                        $referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()],
+                        $productSupplierAssociation->getProductSupplierId()->getValue()
+                    );
+                }
+            }
+        }
     }
 }
