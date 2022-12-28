@@ -4284,5 +4284,10 @@
       <title>Add or remove links on sitemap page</title>
       <description>This hook allows to modify links on sitemap page of your shop. Useful to improve indexation of your modules.</description>
     </hook>
+    <hook id="displayAddressSelectorBottom">
+      <name>displayAddressSelectorBottom</name>
+      <title>After address selection on checkout page</title>
+      <description>This hook is displayed after the address selection in checkout step.</description>
+    </hook>
   </entities>
 </entity_hook>
