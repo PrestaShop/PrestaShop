@@ -1,9 +1,8 @@
-// Import utils
-import helper from '@utils/helpers';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
-// Import test context
+// Import utils
+import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 import date from '@utils/date';
 import files from '@utils/files';
@@ -21,14 +20,12 @@ import foProductPage from '@pages/FO/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import faker data
+// Import data
 import ProductFaker from '@data/faker/product';
-
-// Import demo data
 import {DefaultEmployee} from '@data/demo/employees';
 import {Products} from '@data/demo/products';
 
-const baseContext = 'productV2_functional_CRUDPackOfProducts';
+const baseContext: string = 'productV2_functional_CRUDPackOfProducts';
 
 describe('BO - Catalog - Products : CRUD pack of products', async () => {
   let browserContext: BrowserContext;
@@ -78,14 +75,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    await files.generateImage('cover.jpg');
-    await files.generateImage('thumb.jpg');
+    await files.generateImage(newProductData.coverImage);
+    await files.generateImage(newProductData.thumbImage);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile('cover.jpg');
-    await files.deleteFile('thumb.jpg');
+    await files.deleteFile(newProductData.coverImage);
+    await files.deleteFile(newProductData.thumbImage);
   });
 
   // 1 - Create product

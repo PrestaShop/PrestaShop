@@ -5,8 +5,6 @@ import {expect} from 'chai';
 import helper from '@utils/helpers';
 import basicHelper from '@utils/basicHelper';
 import files from '@utils/files';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 // Import BO pages
@@ -205,7 +203,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Add the product to the cart
         await foProductPage.addProductToTheCart(page, 1);
 
-        const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+        const notificationsNumber: number = await cartPage.getCartNotificationsNumber(page);
         await expect(notificationsNumber).to.be.equal(1);
       });
 
@@ -224,7 +222,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
         // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+        const isStepAddressComplete: string = await checkoutPage.goToDeliveryStep(page);
         await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
       });
 
@@ -235,7 +233,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
 
         // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        const cardTitle: string = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
         await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
       });
 
@@ -258,14 +256,14 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
           dashboardPage.ordersLink,
         );
 
-        const pageTitle = await ordersPage.getPageTitle(page);
+        const pageTitle: string = await ordersPage.getPageTitle(page);
         await expect(pageTitle).to.contains(ordersPage.pageTitle);
       });
 
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+        const textResult: string = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
         await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 
@@ -275,7 +273,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         // Click on view my shop
         page = await ordersPage.viewMyShop(page);
 
-        const isHomePage = await homePage.isHomePage(page);
+        const isHomePage: boolean = await homePage.isHomePage(page);
         await expect(isHomePage, 'Home page is not displayed').to.be.true;
       });
 
@@ -283,7 +281,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
 
         await homePage.goToMyAccountPage(page);
-        const pageTitle = await foMyAccountPage.getPageTitle(page);
+        const pageTitle: string = await foMyAccountPage.getPageTitle(page);
         await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
       });
 
@@ -291,7 +289,8 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
         await foMyAccountPage.goToHistoryAndDetailsPage(page);
-        const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
+
+        const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
         await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
       });
 
@@ -300,7 +299,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await foOrderHistoryPage.goToDetailsPage(page);
 
-        const pageTitle = await orderDetailsPage.getPageTitle(page);
+        const pageTitle: string = await orderDetailsPage.getPageTitle(page);
         await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
       });
 
@@ -309,7 +308,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         await orderDetailsPage.clickOnDownloadLink(page);
 
-        const doesFileExist = await files.doesFileExist(newProductData.fileName, 5000);
+        const doesFileExist: boolean = await files.doesFileExist(newProductData.fileName, 5000);
         await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
@@ -323,7 +322,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle: object = await ordersPage.getPageTitle(page);
+      const pageTitle: string = await ordersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
@@ -347,7 +346,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
       await productsPage.goToProductPage(page);
 
-      const pageTitle: object = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -361,7 +360,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     it('should check the product header details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductHeaderDetails', baseContext);
 
-      const taxValue = await basicHelper.percentage(editProductData.price, editProductData.tax);
+      const taxValue: number = await basicHelper.percentage(editProductData.price, editProductData.tax);
 
       const productHeaderSummary: object = await createProductsPage.getProductHeaderSummary(page);
       await Promise.all([
