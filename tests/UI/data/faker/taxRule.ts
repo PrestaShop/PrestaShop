@@ -1,6 +1,6 @@
 // Import data
 import {countries} from '@data/demo/countries';
-import {tax} from '@data/demo/tax';
+import tax from '@data/demo/tax';
 import {behaviour} from '@data/demo/taxRule';
 import TaxRuleCreator from '@data/types/taxRule';
 

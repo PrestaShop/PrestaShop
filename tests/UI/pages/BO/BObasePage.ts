@@ -75,9 +75,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly shoppingCartsLink: string;
 
-  private readonly catalogParentLink: string;
+  public readonly catalogParentLink: string;
 
-  private readonly productsLink: string;
+  public readonly productsLink: string;
 
   private readonly categoriesLink: string;
 

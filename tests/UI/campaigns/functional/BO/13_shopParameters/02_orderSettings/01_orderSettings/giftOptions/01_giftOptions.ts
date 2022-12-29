@@ -22,7 +22,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {DefaultFrTax} from '@data/demo/tax';
+import tax from '@data/demo/tax';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
@@ -87,7 +87,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 1,
           isGiftWrappingTax: 'FR Taux standard (20%)',
-          taxValue: DefaultFrTax.rate / 100,
+          taxValue: parseInt(tax.DefaultFrTax.rate, 10) / 100,
           isRecycledPackaging: false,
         },
     },
