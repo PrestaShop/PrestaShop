@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 
 // Import data
-import {DefaultFrTax, VatUkTax} from '@data/demo/tax';
+import tax from '@data/demo/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -65,12 +65,12 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     const tests = [
       {
         args: {
-          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: DefaultFrTax.id.toString(),
+          testIdentifier: 'filterId', filterType: 'input', filterBy: 'id_tax', filterValue: tax.DefaultFrTax.id.toString(),
         },
       },
       {
         args: {
-          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: DefaultFrTax.name,
+          testIdentifier: 'filterName', filterType: 'input', filterBy: 'name', filterValue: tax.DefaultFrTax.name,
         },
       },
       {
@@ -79,7 +79,7 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
             testIdentifier: 'filterRate',
             filterType: 'input',
             filterBy: 'rate',
-            filterValue: DefaultFrTax.rate.toString(),
+            filterValue: tax.DefaultFrTax.rate,
           },
       },
       {
@@ -88,7 +88,7 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: DefaultFrTax.enabled ? '1' : '0',
+            filterValue: tax.DefaultFrTax.enabled ? '1' : '0',
           },
       },
     ];
@@ -129,13 +129,13 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     it('should filter by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await taxesPage.filterTaxes(page, 'input', 'name', VatUkTax.name);
+      await taxesPage.filterTaxes(page, 'input', 'name', tax.VatUkTax.name);
 
       const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
       const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      await expect(textColumn).to.contains(VatUkTax.name);
+      await expect(textColumn).to.contains(tax.VatUkTax.name);
     });
 
     [

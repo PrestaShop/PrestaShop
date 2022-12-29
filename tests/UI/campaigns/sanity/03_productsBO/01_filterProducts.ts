@@ -2,7 +2,7 @@
 import testContext from '@utils/testContext';
 import helper from '@utils/helpers';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -12,7 +12,7 @@ import productsPage from '@pages/BO/catalog/products';
 // Import data
 import {Categories} from '@data/demo/categories';
 import {Products} from '@data/demo/products';
-import {DefaultFrTax} from '@data/demo/tax';
+import tax from '@data/demo/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -73,8 +73,8 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     for (let i = 1; i <= numberOfProducts && i <= numberOfProductsOnPage; i++) {
       const productPrice = await productsPage.getProductPriceFromList(page, i, false);
       const productPriceATI = await productsPage.getProductPriceFromList(page, i, true);
-      const conversionRate = (100 + DefaultFrTax.rate) / 100;
-      await expect(productPrice).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
+      const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
+      await expect(parseFloat(productPrice)).to.equal(parseFloat((productPriceATI / conversionRate).toFixed(2)));
     }
   });
 

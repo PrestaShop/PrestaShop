@@ -13,7 +13,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {DefaultFrTax} from '@data/demo/tax';
+import tax from '@data/demo/tax';
 import ProductFaker from '@data/faker/product';
 import {ProductDetailsBasic} from '@data/types/product';
 
@@ -177,9 +177,10 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
 
     const productPrice = await productsPage.getProductPriceFromList(page, 1, false);
     const productPriceATI = await productsPage.getProductPriceFromList(page, 1, true);
-    const conversionRate = (100 + DefaultFrTax.rate) / 100;
-    await expect(productPrice).to.equal(parseFloat((parseFloat(editedProductData.price) / conversionRate).toFixed(2)));
-    await expect(productPriceATI).to.equal(parseFloat(editedProductData.price));
+
+    const conversionRate = (100 + parseInt(tax.DefaultFrTax.rate, 10)) / 100;
+    await expect(parseFloat(productPrice)).to.equal(parseFloat((editedProductData.price / conversionRate).toFixed(2)));
+    await expect(parseFloat(productPriceATI)).to.equal(parseFloat(editedProductData.price));
   });
 
   it('should go to edit product page', async function () {
