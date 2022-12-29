@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\RemoveAllAssociatedProductSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Removes all product suppliers for specified product without combinations
@@ -44,11 +46,16 @@ class RemoveAllAssociatedProductSuppliersCommand
     private $productId;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
-    {
+    private $shopConstraint;
+
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -57,5 +64,21 @@ class RemoveAllAssociatedProductSuppliersCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    private function setShopConstraint(ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
+        }
+        $this->shopConstraint = $shopConstraint;
     }
 }

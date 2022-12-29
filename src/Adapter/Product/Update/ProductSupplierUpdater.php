@@ -257,13 +257,23 @@ class ProductSupplierUpdater
      * Removes all product suppliers associated to specified product without combinations
      *
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      */
-    public function removeAllForProduct(ProductId $productId): void
+    public function removeAllForProduct(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $productSupplierIds = $this->productSupplierRepository->getProductSuppliersIds($productId);
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException(sprintf('%s::%s cannot handle group shop constraint', self::class, __FUNCTION__));
+        }
+
+        $productSupplierIds = $this->productSupplierRepository->getProductSuppliersIds($productId, $shopConstraint);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
+
+        // Even removing a supplier for a single shop can imapct any other, in case it was its last one left, so we need to check each associated shop and reset it if needed
         foreach ($this->productRepository->getAssociatedShopIds($productId) as $shopId) {
-            $this->resetDefaultSupplier($productId, $shopId);
+            $productSupplierLeft = $this->productSupplierRepository->getProductSuppliersIds($productId, ShopConstraint::shop($shopId->getValue()));
+            if (empty($productSupplierLeft)) {
+                $this->resetDefaultSupplier($productId, $shopId);
+            }
         }
     }
 

@@ -111,7 +111,7 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should have following supplier values:
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
-    # Associate only ywo suppliers meaning one is removed
+    # Associate only two suppliers meaning one is removed
     When I associate suppliers to product "product1"
       | supplier  | product_supplier  |
       | supplier1 | product1supplier1 |

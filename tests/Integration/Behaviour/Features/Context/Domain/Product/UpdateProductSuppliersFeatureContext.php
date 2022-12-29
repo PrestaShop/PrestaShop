@@ -56,12 +56,38 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function removeAssociatedProductSuppliers(string $productReference): void
+    public function removeAssociatedProductSuppliersForDefaultShop(string $productReference): void
+    {
+        $this->removeAssociatedProductSuppliers($productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I remove all associated product :productReference suppliers for shop :shopReference
+     *
+     * @param string $productReference
+     */
+    public function removeAssociatedProductSuppliersForSpecificShop(string $productReference, string $shopReference): void
+    {
+        $this->removeAssociatedProductSuppliers($productReference, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I remove all associated product :productReference suppliers for all shops
+     *
+     * @param string $productReference
+     */
+    public function removeAssociatedProductSuppliersForAllShops(string $productReference): void
+    {
+        $this->removeAssociatedProductSuppliers($productReference, ShopConstraint::allShops());
+    }
+
+    private function removeAssociatedProductSuppliers(string $productReference, ShopConstraint $shopConstraint): void
     {
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
-                $this->getSharedStorage()->get($productReference))
-            );
+                (int) $this->getSharedStorage()->get($productReference),
+                $shopConstraint
+            ));
         } catch (ProductSupplierException $e) {
             $this->setLastException($e);
         }
@@ -268,6 +294,18 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertProductDefaultSupplierReferenceIsEmpty(string $productReference): void
     {
         $this->assertDefaultSupplierReference($productReference, '', $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference default supplier reference should be empty for shop(s) :shopReferences
+     *
+     * @param string $productReference
+     */
+    public function assertProductDefaultSupplierReferenceIsEmptyForSpecificShops(string $productReference, string $shopReferences): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertDefaultSupplierReference($productReference, '', $shopId);
+        }
     }
 
     /**

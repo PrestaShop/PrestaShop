@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\SupplierAssociationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -410,17 +412,35 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return ProductSupplierId[]
      */
-    public function getProductSuppliersIds(ProductId $productId): array
+    public function getProductSuppliersIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException(sprintf('%s::%s cannot handle group shop constraint', self::class, __FUNCTION__));
+        }
+
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_product_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->andWhere('ps.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
         ;
+
+        if ($shopConstraint->getShopId()) {
+            $qb
+                ->leftJoin(
+                    'ps',
+                    $this->dbPrefix . 'supplier_shop',
+                    'ss',
+                    'ss.id_supplier = ps.id_supplier'
+                )
+                ->andWhere('ss.id_shop = :shopId')
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        }
 
         return array_map(static function (array $productSupplier) {
             return new ProductSupplierId($productSupplier['id_product_supplier']);

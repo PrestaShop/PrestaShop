@@ -149,8 +149,15 @@ Feature: Copy product from shop to shop.
 
   Scenario: I can update the product suppliers, their data is shared on all the shops (especially the one common to all shops)
     When I update product product1 suppliers for shop shop1:
+      | product_supplier       | supplier       | reference                      | currency | price_tax_excluded |
+      | product1supplier1      | supplier1      | my first supplier for product1 | USD      | 42                 |
+      | product1multiSupplier1 | multiSupplier1 | temporary modif                | USD      | 10                 |
+    And I update product product1 suppliers for shop shop2:
+      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
+      | product1supplier2 | supplier2 | my second supplier for product1 | USD      | 69                 |
+    And I update product product1 suppliers for shop shop3:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
-      | product1supplier1      | supplier1      | my first supplier for product1  | USD      | 42                 |
+      | product1supplier3      | supplier3      | my third supplier for product1  | USD      | 99                 |
       | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
     Then product product1 should have following suppliers for shop shop1:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
@@ -159,11 +166,11 @@ Feature: Copy product from shop to shop.
     And product product1 should have following suppliers for shop shop2:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
       | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
-      | product1supplier2      | supplier2      |                                 | USD      | 0                  |
+      | product1supplier2      | supplier2      | my second supplier for product1 | USD      | 69                 |
     And product product1 should have following suppliers for shop shop3:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
       | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
-      | product1supplier3      | supplier3      |                                 | USD      | 0                  |
+      | product1supplier3      | supplier3      | my third supplier for product1  | USD      | 99                 |
     And product product1 should have following suppliers for shop shop4:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
       | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
@@ -174,11 +181,94 @@ Feature: Copy product from shop to shop.
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product1 |
     And product product1 should have following supplier values for shop shop2:
-      | default supplier           | supplier2 |
-      | default supplier reference |           |
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
     And product product1 should have following supplier values for shop shop3:
       | default supplier           | multiSupplier1                  |
       | default supplier reference | multishop supplier for product1 |
     And product product1 should have following supplier values for shop shop4:
       | default supplier           | supplier4 |
       | default supplier reference |           |
+
+  Scenario: Remove one of product suppliers
+    # Remove association of supplier1
+    When I associate suppliers to product "product1" for shop shop1
+      | supplier       | product_supplier       |
+      | multiSupplier1 | product1multiSupplier1 |
+    Then product product1 should have the following suppliers assigned for shop shop1:
+      | multiSupplier1 |
+    And product product1 should have the following suppliers assigned for shop shop2:
+      | supplier2      |
+      | multiSupplier1 |
+    And product product1 should have the following suppliers assigned for shop shop3:
+      | supplier3      |
+      | multiSupplier1 |
+    And product product1 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    Then product product1 should have following suppliers for shop shop1:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
+    And product product1 should have following suppliers for shop shop2:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
+      | product1supplier2      | supplier2      | my second supplier for product1 | USD      | 69                 |
+    And product product1 should have following suppliers for shop shop3:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
+      | product1supplier3      | supplier3      | my third supplier for product1  | USD      | 99                 |
+    And product product1 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
+      | product1supplier4      | supplier4      |                                 | USD      | 0                  |
+    # Check that default supplier has been updated on shop 1
+    And product product1 should have following supplier values for shop shop1:
+      | default supplier           | multiSupplier1                  |
+      | default supplier reference | multishop supplier for product1 |
+    And product product1 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
+    And product product1 should have following supplier values for shop shop3:
+      | default supplier           | multiSupplier1                  |
+      | default supplier reference | multishop supplier for product1 |
+    And product product1 should have following supplier values for shop shop4:
+      | default supplier           | supplier4 |
+      | default supplier reference |           |
+
+  Scenario: Remove all associated product suppliers
+    # By removing all suppliers for shop3 we remove the association on multiSupplier1 for all shops
+    When I remove all associated product product1 suppliers for shop shop3
+    # No more suppliers assigned for shop1 since it only had multiSupplier1 left
+    Then product product1 should not have any suppliers assigned for shop shop1
+    And product product1 should have the following suppliers assigned for shop shop2:
+      | supplier2      |
+    # No more suppliers assigned for shop3
+    And product product1 should not have any suppliers assigned for shop shop3
+    And product product1 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+    # No more suppliers details dor shop1
+    And product product1 should not have suppliers infos for shop shop1
+    And product product1 should have following suppliers for shop shop2:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1supplier2      | supplier2      | my second supplier for product1 | USD      | 69                 |
+    # No more suppliers details dor shop3
+    And product product1 should not have suppliers infos for shop shop3
+    And product product1 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1supplier4      | supplier4      |                                 | USD      | 0                  |
+    And product product1 should not have a default supplier for shop shop1
+    And product product1 default supplier reference should be empty for shop shop1
+    And product product1 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product1 |
+    And product product1 should not have a default supplier for shop shop3
+    And product product1 default supplier reference should be empty for shop shop3
+    And product product1 should have following supplier values for shop shop4:
+      | default supplier           | supplier4 |
+      | default supplier reference |           |
+    # Now remove all suppliers for all shops
+    When I remove all associated product product1 suppliers for all shops
+    Then product product1 should not have any suppliers assigned for shops "shop1,shop2,shop3,shop4"
+    And product product1 should not have suppliers infos for shops "shop1,shop2,shop3,shop4"
+    And product product1 should not have a default supplier for shops "shop1,shop2,shop3,shop4"
+    And product product1 default supplier reference should be empty for shops "shop1,shop2,shop3,shop4"
