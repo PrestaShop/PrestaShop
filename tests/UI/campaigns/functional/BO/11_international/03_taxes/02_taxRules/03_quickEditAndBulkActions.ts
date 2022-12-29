@@ -12,7 +12,7 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
-import TaxRuleFaker from '@data/faker/taxRuleGroup';
+import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +29,8 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
   let page: Page;
   let numberOfTaxRules: number = 0;
 
-  const firstTaxRuleData: TaxRuleFaker = new TaxRuleFaker({name: 'toDelete1'});
-  const secondTaxRuleData: TaxRuleFaker = new TaxRuleFaker({name: 'toDelete2', enabledValue: false});
+  const firstTaxRuleData: TaxRulesGroupData = new TaxRulesGroupData({name: 'toDelete1'});
+  const secondTaxRuleData: TaxRulesGroupData = new TaxRulesGroupData({name: 'toDelete2', enabled: false});
 
   // before and after functions
   before(async function () {

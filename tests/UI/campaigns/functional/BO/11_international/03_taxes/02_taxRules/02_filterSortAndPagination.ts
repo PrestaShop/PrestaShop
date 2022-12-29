@@ -14,7 +14,7 @@ import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
 import {taxRules} from '@data/demo/taxRule';
-import TaxRuleGroupFaker from '@data/faker/taxRuleGroup';
+import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -207,7 +207,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create tax rule n°${index + 1} in BO`, async () => {
-      const taxRuleData = new TaxRuleGroupFaker({name: `todelete${index}`});
+      const taxRuleData = new TaxRulesGroupData({name: `todelete${index}`});
 
       it('should go to add new tax rule group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTaxRuleGroupPage${index}`, baseContext);

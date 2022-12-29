@@ -1,15 +1,22 @@
-const {faker} = require('@faker-js/faker');
+// Import data
+import TaxRulesGroupCreator from '@data/types/taxRulesGroup';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new tax rules group to use on tax rules group form on BO
  * @class
  */
-class TaxRulesGroupData {
+export default class TaxRulesGroupData {
+  public readonly name: string;
+
+  public readonly enabled: boolean;
+
   /**
    * Constructor for class TaxRulesGroupData
    * @param taxRulesGroupToCreate {Object} Could be used to force the value of some members
    */
-  constructor(taxRulesGroupToCreate = {}) {
+  constructor(taxRulesGroupToCreate: TaxRulesGroupCreator = {}) {
     /** @type {string} Name of the tax rules group */
     this.name = (taxRulesGroupToCreate.name || `FR tax Rule ${faker.random.word()}`).substring(0, 30).trim();
 
@@ -17,5 +24,3 @@ class TaxRulesGroupData {
     this.enabled = taxRulesGroupToCreate.enabled === undefined ? true : taxRulesGroupToCreate.enabled;
   }
 }
-
-module.exports = TaxRulesGroupData;
