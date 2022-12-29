@@ -11,7 +11,7 @@ import zonesPage from '@pages/BO/international/locations';
 import addZonePage from '@pages/BO/international/locations/add';
 
 // Import data
-import ZoneFaker from '@data/faker/zone';
+import ZoneData from '@data/faker/zone';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,8 +23,8 @@ describe('BO - International - Zones : CRUD zone', async () => {
   let page: Page;
   let numberOfZones: number = 0;
 
-  const createZoneData: ZoneFaker = new ZoneFaker();
-  const editZoneData: ZoneFaker = new ZoneFaker();
+  const createZoneData: ZoneData = new ZoneData();
+  const editZoneData: ZoneData = new ZoneData();
 
   // before and after functions
   before(async function () {
