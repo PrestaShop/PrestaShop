@@ -1,5 +1,6 @@
+import Zones from '@data/demo/zones';
+
 const {faker} = require('@faker-js/faker');
-const {Zones} = require('@data/demo/zones');
 
 const zones = Object.values(Zones).map((zone) => zone.name);
 const countriesWithState = [
