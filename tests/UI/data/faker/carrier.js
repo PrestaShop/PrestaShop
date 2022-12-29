@@ -1,8 +1,8 @@
+// Import data
+import {taxRules} from '@data/demo/taxRule';
 import Zones from '@data/demo/zones';
 
 const {faker} = require('@faker-js/faker');
-
-const {taxRules} = require('@data/demo/taxRule');
 
 const taxes = Object.values(taxRules).map((tax) => tax.name);
 const zonesID = Object.values(Zones).map((zone) => zone.id);
