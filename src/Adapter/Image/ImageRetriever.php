@@ -206,7 +206,7 @@ class ImageRetriever
             * double the size, so it can be used in src-sets.
             */
             if ($generateHighDpiImages) {
-                if (!$this->isMultipleImageFormatFeatureActive || ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_JPG'))) {
+                if (!$this->isMultipleImageFormatFeatureActive || Configuration::get('PS_ADDITIONAL_IMAGE_JPG')) {
                     $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
                 }
 
@@ -285,8 +285,7 @@ class ImageRetriever
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
 
         if ($hdpi) {
-            sprintf('%s-%s2x%s', $idImage, $imageTypeData['name'], $ext);
-            $fileName = $idImage . '-' . $imageTypeData['name'] . '2x.' . $ext;
+            $fileName = sprintf('%s-%s2x%s', $idImage, $imageTypeData['name'], $ext);
             $imageTypeData['width'] *= 2;
             $imageTypeData['height'] *= 2;
         }

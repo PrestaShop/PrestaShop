@@ -424,6 +424,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         if ($this->isMultipleImageFormatFeatureEnabled && !$this->errors && $value) {
+            Configuration::updateValue('PS_ADDITIONAL_IMAGE_JPG', in_array('jpg', $value));
             Configuration::updateValue('PS_ADDITIONAL_IMAGE_PNG', in_array('png', $value));
             Configuration::updateValue('PS_ADDITIONAL_IMAGE_WEBP', in_array('webp', $value));
             Configuration::updateValue('PS_ADDITIONAL_IMAGE_AVIF', in_array('avif', $value));
@@ -930,7 +931,7 @@ class AdminImagesControllerCore extends AdminController
 
     public function processDelete()
     {
-        $imageType = ImageType::getImageTypeById((int)Tools::getValue('id_image_type'));
+        $imageType = ImageType::getImageTypeById((int) Tools::getValue('id_image_type'));
 
         // We will remove the images linked to this image setting
         if (Tools::getValue('delete_linked_images', 0) === 'true') {
@@ -979,7 +980,7 @@ class AdminImagesControllerCore extends AdminController
                     'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
                 ],
                 'value_multiple' => [
-                    'jpeg' => true,
+                    'jpeg' => Configuration::get('PS_ADDITIONAL_IMAGE_JPG'),
                     'png' => Configuration::get('PS_ADDITIONAL_IMAGE_PNG'),
                     'webp' => Configuration::get('PS_ADDITIONAL_IMAGE_WEBP'),
                     'avif' => Configuration::get('PS_ADDITIONAL_IMAGE_AVIF'),

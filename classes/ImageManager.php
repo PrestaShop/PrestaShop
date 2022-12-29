@@ -650,7 +650,7 @@ class ImageManagerCore
      * Generate and write image.
      *
      * @param string $type
-     * @param resource $resource
+     * @param $resource
      * @param string $filename
      *
      * @return bool
@@ -660,7 +660,7 @@ class ImageManagerCore
         static $psPngQuality = null;
         static $psJpegQuality = null;
         static $psWebpQuality = null;
-        static $avifWebpQuality = null;
+        static $pasAvifQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -674,10 +674,11 @@ class ImageManagerCore
             $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
         }
 
-        if ($avifWebpQuality === null) {
-            $avifWebpQuality = Configuration::get('PS_AVIF_QUALITY');
+        if ($pasAvifQuality === null) {
+            $pasAvifQuality = Configuration::get('PS_AVIF_QUALITY');
         }
 
+        $success = false;
         switch ($type) {
             case 'gif':
                 // @phpstan-ignore-next-line
@@ -701,7 +702,7 @@ class ImageManagerCore
 
             case 'avif':
                 if (function_exists('imageavif')) {
-                    $quality = ($avifWebpQuality === false ? 80 : $avifWebpQuality);
+                    $quality = ($pasAvifQuality === false ? 80 : $pasAvifQuality);
                     $success = imageavif($resource, $filename, $quality);
                 }
 
