@@ -94,7 +94,8 @@ class FeatureFlagCore extends ObjectModel
         ],
     ];
 
-    public static function isEnabled(string $name): bool {
+    public static function isEnabled(string $name): bool
+    {
         $query = sprintf(
             "SELECT state FROM %sfeature_flag WHERE name = '%s'",
             _DB_PREFIX_,

@@ -34,6 +34,10 @@ class AdminImagesControllerCore extends AdminController
     protected $start_time = 0;
     protected $max_execution_time = 7200;
     protected $display_move;
+
+    /**
+     * @var bool
+     */
     protected $canGenerateAvif;
 
     protected $isMultipleImageFormatFeatureEnabled;
@@ -413,7 +417,7 @@ class AdminImagesControllerCore extends AdminController
         ];
     }
 
-    public function updateOptionPsImageFormat($value)
+    public function updateOptionPsImageFormat($value): void
     {
         if ($this->access('edit') != '1') {
             throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
@@ -424,8 +428,6 @@ class AdminImagesControllerCore extends AdminController
             Configuration::updateValue('PS_ADDITIONAL_IMAGE_WEBP', in_array('webp', $value));
             Configuration::updateValue('PS_ADDITIONAL_IMAGE_AVIF', in_array('avif', $value));
         }
-
-        // todoimage deal with legacy way
     }
 
     public function setMedia($isNewTheme = false)
@@ -954,7 +956,8 @@ class AdminImagesControllerCore extends AdminController
         return parent::processDelete();
     }
 
-    private function getImageFormatForm(array $fields): array {
+    public function getImageFormatForm(array $fields): array
+    {
         if ($this->isMultipleImageFormatFeatureEnabled) {
             $imageFormatsDisabled = [];
 

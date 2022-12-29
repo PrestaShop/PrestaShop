@@ -986,7 +986,7 @@ class LinkCore
      *
      * @return string
      */
-    public function getImageLink($name, $ids, $type = null, $extension = '.jpg')
+    public function getImageLink($name, $ids, $type = null, string $extension = '.jpg')
     {
         $notDefault = false;
         $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');

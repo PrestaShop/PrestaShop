@@ -268,7 +268,6 @@ class ImageManagerCore
             }
         }
 
-
         if (!$sourceWidth) {
             $error = self::ERROR_FILE_WIDTH;
 

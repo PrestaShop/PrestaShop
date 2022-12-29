@@ -280,7 +280,7 @@ class ImageRetriever
      *
      * @return void
      */
-    private function generateImageType($originalImagePath, $imageFolderPath, $idImage, $imageTypeData, $ext , $hdpi = false)
+    private function generateImageType($originalImagePath, $imageFolderPath, $idImage, $imageTypeData, $ext, $hdpi = false)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
 
@@ -321,7 +321,7 @@ class ImageRetriever
     {
         return implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
-            sprintf('%s-%s%s.%s', $idImage, $imageType, $hdpi ? '2x': '', $extension),
+            sprintf('%s-%s%s.%s', $idImage, $imageType, $hdpi ? '2x' : '', $extension),
         ]);
     }
 

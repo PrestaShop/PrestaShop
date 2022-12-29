@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Configuration;
 
 use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
@@ -33,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
  */
 class AvifExtensionChecker
 {
-    public function isAvailable()
+    public function isAvailable(): bool
     {
         $isAvailable = extension_loaded('gd') && /* @phpstan-ignore-line */
             version_compare(PHP_VERSION, '8.1') >= 0 &&
