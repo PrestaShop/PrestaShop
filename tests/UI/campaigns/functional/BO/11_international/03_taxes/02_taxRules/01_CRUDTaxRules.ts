@@ -12,7 +12,7 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
-import TaxRuleGroupFaker from '@data/faker/taxRuleGroup';
+import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,8 +25,8 @@ describe('BO - International - Tax rules : Create, Update and Delete Tax rule', 
   let page: Page;
   let numberOfTaxRules: number = 0;
 
-  const taxRuleDataToCreate: TaxRuleGroupFaker = new TaxRuleGroupFaker();
-  const taxRuleDataToEdit: TaxRuleGroupFaker = new TaxRuleGroupFaker({enabled: 'No'});
+  const taxRuleDataToCreate: TaxRulesGroupData = new TaxRulesGroupData();
+  const taxRuleDataToEdit: TaxRulesGroupData = new TaxRulesGroupData({enabled: false});
 
   // before and after functions
   before(async function () {
