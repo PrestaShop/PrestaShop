@@ -1,15 +1,24 @@
-const {faker} = require('@faker-js/faker');
+// Import data
+import WebserviceCreator from '@data/types/webservice';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new webservice to use on webservice form on BO
  * @class
  */
-class WebserviceData {
+export default class WebserviceData {
+  public readonly key: string;
+
+  public readonly keyDescription: string;
+
+  public readonly status: boolean;
+
   /**
    * Constructor for class WebserviceData
-   * @param webserviceToCreate {Object} Could be used to force the value of some members
+   * @param webserviceToCreate {WebserviceCreator} Could be used to force the value of some members
    */
-  constructor(webserviceToCreate = {}) {
+  constructor(webserviceToCreate: WebserviceCreator = {}) {
     /** @type {string} Key of the webservice */
     this.key = webserviceToCreate.key || faker.datatype.uuid().substring(0, 32);
 
@@ -20,5 +29,3 @@ class WebserviceData {
     this.status = webserviceToCreate.status === undefined ? true : webserviceToCreate.status;
   }
 }
-
-module.exports = WebserviceData;

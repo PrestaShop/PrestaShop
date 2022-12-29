@@ -1,3 +1,4 @@
+// Import data
 import ZoneCreator from '@data/types/zone';
 
 import {faker} from '@faker-js/faker';

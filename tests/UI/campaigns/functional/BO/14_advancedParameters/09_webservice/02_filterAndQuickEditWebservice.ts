@@ -11,7 +11,7 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 // Import data
-import WebserviceFaker from '@data/faker/webservice';
+import WebserviceData from '@data/faker/webservice';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
 
   let numberOfWebserviceKeys: number = 0;
 
-  const firstWebServiceData: WebserviceFaker = new WebserviceFaker();
-  const secondWebServiceData: WebserviceFaker = new WebserviceFaker();
+  const firstWebServiceData: WebserviceData = new WebserviceData();
+  const secondWebServiceData: WebserviceData = new WebserviceData();
 
   // before and after functions
   before(async function () {
@@ -68,7 +68,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     {args: {webserviceToCreate: secondWebServiceData}},
   ];
 
-  tests.forEach((test: {args: {webserviceToCreate: WebserviceFaker}}, index) => {
+  tests.forEach((test: {args: {webserviceToCreate: WebserviceData}}, index) => {
     it('should go to add new webservice key page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToAddNewWebserviceKeyPage_${index}`, baseContext);
 
@@ -86,7 +86,6 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
         test.args.webserviceToCreate,
         false,
       );
-
       await expect(textResult).to.equal(addWebservicePage.successfulCreationMessage);
 
       const numberOfWebserviceKeysAfterCreation = await webservicePage.getNumberOfElementInGrid(page);

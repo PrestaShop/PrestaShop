@@ -12,7 +12,7 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import addWebservicePage from '@pages/BO/advancedParameters/webservice/add';
 
 // Import data
-import WebserviceFaker from '@data/faker/webservice';
+import WebserviceData from '@data/faker/webservice';
 
 import type {BrowserContext, Page} from 'playwright';
 
@@ -25,8 +25,8 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
 
   let numberOfWebserviceKeys: number = 0;
 
-  const createWebserviceData: WebserviceFaker = new WebserviceFaker({});
-  const editWebserviceData: WebserviceFaker = new WebserviceFaker({});
+  const createWebserviceData: WebserviceData = new WebserviceData({});
+  const editWebserviceData: WebserviceData = new WebserviceData({});
 
   // before and after functions
   before(async function () {
