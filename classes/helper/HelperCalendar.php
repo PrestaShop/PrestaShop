@@ -148,7 +148,7 @@ class HelperCalendarCore extends Helper
     public function setDateFrom($value = '')
     {
         if (empty($value)) {
-            $value = strtotime('-31 days');
+            $value = '-31 days';
         }
 
         if (!is_string($value)) {
@@ -172,7 +172,7 @@ class HelperCalendarCore extends Helper
     public function setDateTo($value = '')
     {
         if (empty($value)) {
-            $value = strtotime('-31 days');
+            $value = '-31 days';
         }
 
         if (!is_string($value)) {
