@@ -1,17 +1,37 @@
-const {faker} = require('@faker-js/faker');
+// Import data
+import TitleCreator from '@data/types/title';
 
-const genders = ['Male', 'Female', 'Neutral'];
+import {faker} from '@faker-js/faker';
+
+const genders: string[] = ['Male', 'Female', 'Neutral'];
 
 /**
  * Create new title to use on title form on BO
  * @class
  */
-class TitleData {
+export default class TitleData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly frName: string;
+
+  public readonly gender: string;
+
+  public readonly imageName: string;
+
+  public readonly imageWidth: number;
+
+  public readonly imageHeight: number;
+
   /**
    * Constructor for class TitleData
-   * @param titleToCreate {Object} Could be used to force the value of some members
+   * @param titleToCreate {TitleCreator} Could be used to force the value of some members
    */
-  constructor(titleToCreate = {}) {
+  constructor(titleToCreate: TitleCreator = {}) {
+    /** @type {number} ID of the title */
+    this.id = titleToCreate.id || 0;
+
     // Title name should contain at most 20 characters
     /** @type {string} Name of the title */
     this.name = titleToCreate.name || (faker.random.word()).substring(0, 19).trim();
@@ -32,5 +52,3 @@ class TitleData {
     this.imageHeight = titleToCreate.imageHeight || 16;
   }
 }
-
-module.exports = TitleData;

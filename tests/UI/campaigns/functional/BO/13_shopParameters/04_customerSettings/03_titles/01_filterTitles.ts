@@ -11,7 +11,7 @@ import customerSettingPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 
 // Import data
-import {Titles} from '@data/demo/titles';
+import Titles from '@data/demo/titles';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

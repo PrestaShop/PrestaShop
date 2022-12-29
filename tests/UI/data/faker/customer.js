@@ -1,6 +1,7 @@
+import Titles from '@data/demo/titles';
+
 const {faker} = require('@faker-js/faker');
 
-const {Titles} = require('@data/demo/titles');
 const {groupAccess} = require('@data/demo/groupAccess');
 
 const genders = Object.values(Titles).map((title) => title.name);
