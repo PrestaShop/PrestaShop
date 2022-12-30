@@ -59,7 +59,7 @@ class AdminImagesControllerCore extends AdminController
 
         parent::init();
 
-        $this->canGenerateAvif = $this->get('prestashop.core.configuration.avif_extension_checker')->isAvailable();
+        $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
 
         $fields = [
             'PS_JPEG_QUALITY' => [

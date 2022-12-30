@@ -8,6 +8,4 @@ services:
   prestashop.core.image.file_deleter:
     class: 'PrestaShop\PrestaShop\Core\Image\Deleter\ImageFileDeleter'
 
-  prestashop.core.image.avif_extension_checker:
-    class: 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker'
-    public: true
+  PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker: ~
