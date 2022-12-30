@@ -48,13 +48,12 @@ class AdminImagesControllerCore extends AdminController
         $this->table = 'image_type';
         $this->className = 'ImageType';
 
-        $this->isMultipleImageFormatFeatureEnabled = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
-
         parent::__construct();
     }
 
     public function init()
     {
+        $this->isMultipleImageFormatFeatureEnabled = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
@@ -472,12 +471,12 @@ class AdminImagesControllerCore extends AdminController
                     || (int) Tools::getValue('PS_WEBP_QUALITY') > 100) {
                     $this->errors[] = $this->trans('Incorrect value for the selected WebP image compression.', [], 'Admin.Design.Notification');
                 }
-                /*elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
+                elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
                     || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))
                     || !Configuration::updateValue('PS_WEBP_QUALITY', Tools::getValue('PS_WEBP_QUALITY'))) {
                     $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
-                } */
+                }
                 else {
                     $this->confirmations[] = $this->_conf[6];
                 }
@@ -957,7 +956,7 @@ class AdminImagesControllerCore extends AdminController
         return parent::processDelete();
     }
 
-    public function getImageFormatForm(array $fields): array
+    private function getImageFormatForm(array $fields): array
     {
         if ($this->isMultipleImageFormatFeatureEnabled) {
             $imageFormatsDisabled = [];
@@ -970,7 +969,7 @@ class AdminImagesControllerCore extends AdminController
                 'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
                 'show' => true,
                 'required' => true,
-                'skipIsCleanHtml' => true,
+                'skip_clean_html' => true,
                 'type' => 'checkbox',
                 'multiple' => true,
                 'choices' => [

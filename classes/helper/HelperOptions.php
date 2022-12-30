@@ -314,7 +314,7 @@ class HelperOptionsCore extends Helper
     {
         $value = Tools::getValue($key, Configuration::get($key));
 
-        if (!empty($field['skipIsCleanHtml'])) {
+        if (!empty($field['skip_clean_html'])) {
             return $value;
         }
 

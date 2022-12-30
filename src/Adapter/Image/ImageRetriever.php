@@ -181,6 +181,7 @@ class ImageRetriever
         foreach ($image_types as $image_type) {
             $additionalSources = [];
 
+            // in legacy, jpg image is always generated
             if (!$this->isMultipleImageFormatFeatureActive || Configuration::get('PS_ADDITIONAL_IMAGE_JPG')) {
                 $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
                 $additionalSources['jpg'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.jpg');

@@ -650,7 +650,7 @@ class ImageManagerCore
      * Generate and write image.
      *
      * @param string $type
-     * @param $resource
+     * @param resource $resource
      * @param string $filename
      *
      * @return bool
@@ -701,10 +701,9 @@ class ImageManagerCore
                 break;
 
             case 'avif':
-                if (function_exists('imageavif')) {
-                    $quality = ($pasAvifQuality === false ? 80 : $pasAvifQuality);
-                    $success = imageavif($resource, $filename, $quality);
-                }
+                $quality = ($pasAvifQuality === false ? 80 : $pasAvifQuality);
+                // @phpstan-ignore-next-line
+                $success = imageavif($resource, $filename, $quality);
 
                 break;
 

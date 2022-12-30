@@ -39,18 +39,18 @@ $(function(){
     checkbox.addEventListener('change', function(event){
       const checkedCount = document.querySelectorAll(checkedCheckboxes).length;
 
-      if (checkedCount === 1) {
-        checkedCheckbox = document.querySelector(checkedCheckboxes);
-        checkedCheckbox.disabled = true;
-      } else if (checkedCount === 2) {
+      if (checkedCount > 1) {
         disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
         disabledCheckbox.disabled = false;
+      } else {
+        checkedCheckbox = document.querySelector(checkedCheckboxes);
+        checkedCheckbox.disabled = true;
       }
     });
   });
 
   // on submit, re-enable disabled checkbox so that it is properly sent to backend
-  const form = document.getElementById('image_type_form');
+  const form = document.getElementById(formId);
   form.onsubmit = () => {
     const checkboxes = form.querySelectorAll('input[type="checkbox"]');
 
