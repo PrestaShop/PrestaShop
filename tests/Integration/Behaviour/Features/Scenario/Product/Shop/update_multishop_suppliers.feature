@@ -634,3 +634,297 @@ Feature: Copy product from shop to shop.
       | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
       | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
       | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplier1                      |
+      | default supplier reference | my first supplier for product4 |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product4 |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplier3                      |
+      | default supplier reference | my third supplier for product4 |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4                       |
+      | default supplier reference | my fourth supplier for product4 |
+
+  Scenario: I delete a supplier the suppliers are updated for associated products (including default ones)
+    Given I add new supplier supplierToDelete with the following properties:
+      | name                    | my soon deleted supplier |
+      | address                 | Donelaicio st. any       |
+      | city                    | Kaunas                   |
+      | country                 | Lithuania                |
+      | enabled                 | true                     |
+      | description[en-US]      | just a tmp supplier      |
+      | meta title[en-US]       | my tmp supplier          |
+      | meta description[en-US] |                          |
+      | meta keywords[en-US]    | sup,tmp                  |
+      | shops                   | [shop1,shop2,shop3]      |
+    When I associate suppliers to product "product4" for shop shop1
+      | supplier         | product_supplier         |
+      | supplier1        | product4supplier1        |
+      | multiSupplier1   | product4multiSupplier1   |
+      | supplierToDelete | product4supplierToDelete |
+    When I set product product4 default supplier to supplierToDelete for shop shop1
+    When I set product product4 default supplier to supplierToDelete for shop shop3
+    When I update product product4 suppliers:
+      | supplier         | reference                      | currency | price_tax_excluded |
+      | supplierToDelete | my soon to be deleted supplier | USD      | 99                 |
+    Then product product4 should have the following suppliers assigned for shop shop1:
+      | supplier1        |
+      | multiSupplier1   |
+      | supplierToDelete |
+    And product product4 should have the following suppliers assigned for shop shop2:
+      | supplier2        |
+      | multiSupplier1   |
+      | supplierToDelete |
+    And product product4 should have the following suppliers assigned for shop shop3:
+      | supplier3        |
+      | multiSupplier1   |
+      | supplierToDelete |
+    And product product4 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    # Now we can check that each shop product supplier has been correctly updated
+    And product product4 should have following suppliers for shop shop1:
+      | product_supplier         | supplier         | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1   | multiSupplier1   | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDelete | supplierToDelete | my soon to be deleted supplier     | USD      | 99                 |
+      | product4supplier1        | supplier1        | my first supplier for product4     | USD      | 11                 |
+    And product product4 should have following suppliers for shop shop2:
+      | product_supplier         | supplier         | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1   | multiSupplier1   | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDelete | supplierToDelete | my soon to be deleted supplier     | USD      | 99                 |
+      | product4supplier2        | supplier2        | my second supplier for product4    | USD      | 12                 |
+    And product product4 should have following suppliers for shop shop3:
+      | product_supplier         | supplier         | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1   | multiSupplier1   | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDelete | supplierToDelete | my soon to be deleted supplier     | USD      | 99                 |
+      | product4supplier3        | supplier3        | my third supplier for product4     | USD      | 13                 |
+    And product product4 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplierToDelete               |
+      | default supplier reference | my soon to be deleted supplier |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product4 |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplierToDelete               |
+      | default supplier reference | my soon to be deleted supplier |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4                       |
+      | default supplier reference | my fourth supplier for product4 |
+    # Create another product which will only have one supplier
+    Given I add product "productWithOneSupplier" to shop shop2 with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product productWithOneSupplier type should be standard for shop shop2
+    And product productWithOneSupplier should not have any suppliers assigned for shop shop2
+    When I associate suppliers to product "productWithOneSupplier" for shop shop2
+      | supplier         | product_supplier                       |
+      | supplierToDelete | productWithOneSuppliersupplierToDelete |
+    And I update product productWithOneSupplier suppliers:
+      | product_supplier                       | supplier         | reference                     | currency | price_tax_excluded |
+      | productWithOneSuppliersupplierToDelete | supplierToDelete | single supplier to be deleted | USD      | 11                 |
+    Then product productWithOneSupplier should have the following suppliers assigned for shop shop2:
+      | supplierToDelete |
+    And product productWithOneSupplier should have following suppliers for shop shop2:
+      | product_supplier                       | supplier         | reference                     | currency | price_tax_excluded |
+      | productWithOneSuppliersupplierToDelete | supplierToDelete | single supplier to be deleted | USD      | 11                 |
+    And product productWithOneSupplier should have following supplier values for shop shop2:
+      | default supplier           | supplierToDelete              |
+      | default supplier reference | single supplier to be deleted |
+    # Now delete the supplier both products should be updated accordingly in each shop
+    When I delete supplier supplierToDelete
+    # Check that suppliers are correctly updated on all shops including the default ones
+    Then product product4 should have the following suppliers assigned for shop shop1:
+      | supplier1      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop2:
+      | supplier2      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop3:
+      | supplier3      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    And product product4 should have following suppliers for shop shop1:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier1      | supplier1      | my first supplier for product4     | USD      | 11                 |
+    And product product4 should have following suppliers for shop shop2:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier2      | supplier2      | my second supplier for product4    | USD      | 12                 |
+    And product product4 should have following suppliers for shop shop3:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier3      | supplier3      | my third supplier for product4     | USD      | 13                 |
+    And product product4 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplier1                      |
+      | default supplier reference | my first supplier for product4 |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product4 |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplier3                      |
+      | default supplier reference | my third supplier for product4 |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4                       |
+      | default supplier reference | my fourth supplier for product4 |
+    # Product without suppliers is easier to check
+    And product productWithOneSupplier should not have any suppliers assigned for shop shop2
+    And product productWithOneSupplier should have following supplier values for shop shop2:
+      | default supplier           |  |
+      | default supplier reference |  |
+
+  Scenario: I disable a supplier the suppliers are updated for associated products (including default ones)
+    Given I add new supplier supplierToDisable with the following properties:
+      | name                    | my soon disabled supplier |
+      | address                 | Donelaicio st. any        |
+      | city                    | Kaunas                    |
+      | country                 | Lithuania                 |
+      | enabled                 | true                      |
+      | description[en-US]      | just a tmp supplier       |
+      | meta title[en-US]       | my tmp supplier           |
+      | meta description[en-US] |                           |
+      | meta keywords[en-US]    | sup,tmp                   |
+      | shops                   | [shop1,shop2,shop3]       |
+    When I associate suppliers to product "product4" for shop shop1
+      | supplier          | product_supplier          |
+      | supplier1         | product4supplier1         |
+      | multiSupplier1    | product4multiSupplier1    |
+      | supplierToDisable | product4supplierToDisable |
+    When I set product product4 default supplier to supplierToDisable for shop shop1
+    When I set product product4 default supplier to supplierToDisable for shop shop3
+    When I update product product4 suppliers:
+      | supplier          | reference                       | currency | price_tax_excluded |
+      | supplierToDisable | my soon to be disabled supplier | USD      | 99                 |
+    Then product product4 should have the following suppliers assigned for shop shop1:
+      | supplier1         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop2:
+      | supplier2         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop3:
+      | supplier3         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    # Now we can check that each shop product supplier has been correctly updated
+    And product product4 should have following suppliers for shop shop1:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier1         | supplier1         | my first supplier for product4     | USD      | 11                 |
+    And product product4 should have following suppliers for shop shop2:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier2         | supplier2         | my second supplier for product4    | USD      | 12                 |
+    And product product4 should have following suppliers for shop shop3:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier3         | supplier3         | my third supplier for product4     | USD      | 13                 |
+    And product product4 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplierToDisable               |
+      | default supplier reference | my soon to be disabled supplier |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product4 |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplierToDisable               |
+      | default supplier reference | my soon to be disabled supplier |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4                       |
+      | default supplier reference | my fourth supplier for product4 |
+    # Associate the supplier to productWithOneSupplier
+    When I associate suppliers to product "productWithOneSupplier" for shop shop2
+      | supplier          | product_supplier                        |
+      | supplierToDisable | productWithOneSuppliersupplierToDisable |
+    And I update product productWithOneSupplier suppliers:
+      | product_supplier                        | supplier          | reference                      | currency | price_tax_excluded |
+      | productWithOneSuppliersupplierToDisable | supplierToDisable | single supplier to be disabled | USD      | 11                 |
+    Then product productWithOneSupplier should have the following suppliers assigned for shop shop2:
+      | supplierToDisable |
+    And product productWithOneSupplier should have following suppliers for shop shop2:
+      | product_supplier                        | supplier          | reference                      | currency | price_tax_excluded |
+      | productWithOneSuppliersupplierToDisable | supplierToDisable | single supplier to be disabled | USD      | 11                 |
+    And product productWithOneSupplier should have following supplier values for shop shop2:
+      | default supplier           | supplierToDisable              |
+      | default supplier reference | single supplier to be disabled |
+    # Now disable the supplier both products should be updated accordingly in each shop
+    When I toggle status for supplier supplierToDisable
+    # Simply disabling a supplier doesn't change the data
+    Then product product4 should have the following suppliers assigned for shop shop1:
+      | supplier1         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop2:
+      | supplier2         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop3:
+      | supplier3         |
+      | multiSupplier1    |
+      | supplierToDisable |
+    And product product4 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    # Now we can check that each shop product supplier has been correctly updated
+    And product product4 should have following suppliers for shop shop1:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier1         | supplier1         | my first supplier for product4     | USD      | 11                 |
+    And product product4 should have following suppliers for shop shop2:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier2         | supplier2         | my second supplier for product4    | USD      | 12                 |
+    And product product4 should have following suppliers for shop shop3:
+      | product_supplier          | supplier          | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1    | multiSupplier1    | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplierToDisable | supplierToDisable | my soon to be disabled supplier    | USD      | 99                 |
+      | product4supplier3         | supplier3         | my third supplier for product4     | USD      | 13                 |
+    And product product4 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplierToDisable               |
+      | default supplier reference | my soon to be disabled supplier |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product4 |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplierToDisable               |
+      | default supplier reference | my soon to be disabled supplier |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4                       |
+      | default supplier reference | my fourth supplier for product4 |
+    # Same for product with one supplier
+    Then product productWithOneSupplier should have the following suppliers assigned for shop shop2:
+      | supplierToDisable |
+    And product productWithOneSupplier should have following suppliers for shop shop2:
+      | product_supplier                        | supplier          | reference                      | currency | price_tax_excluded |
+      | productWithOneSuppliersupplierToDisable | supplierToDisable | single supplier to be disabled | USD      | 11                 |
+    And product productWithOneSupplier should have following supplier values for shop shop2:
+      | default supplier           | supplierToDisable              |
+      | default supplier reference | single supplier to be disabled |

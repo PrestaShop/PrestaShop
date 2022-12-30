@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierAddressException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\CannotDeleteSupplierProductRelationException;
@@ -151,15 +152,17 @@ abstract class AbstractDeleteSupplierHandler
         $removedRelations = Db::getInstance()->execute($sql);
 
         // Fetch all products which had this supplier as default
-        $sql = 'SELECT id_product FROM `' . $this->dbPrefix . 'product` WHERE `id_supplier` = ' . $supplierId->getValue();
+        $sql = 'SELECT id_product, id_shop FROM `' . $this->dbPrefix . 'product_shop` WHERE `id_supplier` = ' . $supplierId->getValue();
         $result = Db::getInstance()->executeS($sql);
         if (!empty($result)) {
             $orphanProductIds = [];
             foreach ($result as $product) {
-                $orphanProductIds[] = new ProductId((int) $product['id_product']);
+                $orphanProductIds[(int) $product['id_shop']][] = new ProductId((int) $product['id_product']);
             }
 
-            $this->productSupplierUpdater->resetSupplierAssociations($orphanProductIds);
+            foreach ($orphanProductIds as $shopId => $productIds) {
+                $this->productSupplierUpdater->resetSupplierAssociations($productIds, new ShopId($shopId));
+            }
         }
 
         return $removedRelations;
