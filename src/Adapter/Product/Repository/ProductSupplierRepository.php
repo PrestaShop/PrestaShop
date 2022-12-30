@@ -69,11 +69,6 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      */
     private $productSupplierValidator;
 
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param ProductSupplierValidator $productSupplierValidator
-     */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
@@ -187,7 +182,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @return SupplierId|null
      */
-    public function getDefaultSupplierId(ProductId $productId, ShopId $shopId): ?SupplierId
+    public function getAssociatedDefaultSupplierId(ProductId $productId, ShopId $shopId): ?SupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_supplier AS default_supplier_id')
@@ -218,26 +213,28 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      * Returns the ProductSupplier associated to a product as its default one.
      *
      * @param ProductId $productId
+     * @param ShopId $shopId
      *
      * @return ProductSupplierId|null
      */
-    public function getDefaultProductSupplierId(ProductId $productId): ?ProductSupplierId
+    public function getDefaultProductSupplierId(ProductId $productId, ShopId $shopId): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_product_supplier AS default_supplier_id')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->innerJoin(
                 'ps',
-                $this->dbPrefix . 'product',
+                $this->dbPrefix . 'product_shop',
                 'p',
-                'ps.id_supplier = p.id_supplier'
+                'ps.id_supplier = p.id_supplier AND p.id_shop = :shopId'
             )
             ->where('ps.id_product = :productId')
             ->andWhere('ps.id_supplier = p.id_supplier')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
         ;
 
-        $result = $qb->execute()->fetch();
+        $result = $qb->execute()->fetchAssociative();
 
         if (empty($result['default_supplier_id'])) {
             return null;
@@ -281,6 +278,8 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Return the associated suppliers of a product for a specific shop order by supplier IDs
+     *
      * @param ProductId $productId
      * @param ShopId $shopId
      *
@@ -297,6 +296,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
             ->setParameter('shopId', $shopId->getValue())
             ->groupBy('ps.id_supplier')
+            ->addOrderBy('ps.id_supplier', 'ASC')
         ;
 
         $results = $qb->execute()->fetchAllAssociative();
@@ -308,6 +308,34 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         return array_map(static function (array $row): SupplierId {
             return new SupplierId((int) $row['id_supplier']);
         }, $results);
+    }
+
+    /**
+     * Return the first associated supplier to a product in the given shop
+     *
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return SupplierId|null
+     */
+    public function getFirstAssociatedSupplierId(ProductId $productId, ShopId $shopId): ?SupplierId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_supplier')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->leftJoin('ps', $this->dbPrefix . 'supplier_shop', 'ss', 'ps.id_supplier = ss.id_supplier')
+            ->andWhere('ps.id_product = :productId')
+            ->andWhere('ss.id_shop = :shopId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            // Order by product supplier creation
+            ->addOrderBy('ps.id_product_supplier', 'ASC')
+            ->setMaxResults(1)
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        return !empty($result['id_supplier']) ? new SupplierId($result['id_supplier']) : null;
     }
 
     /**
@@ -407,7 +435,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->setParameter('shopId', $shopId->getValue())
         ;
 
-        return $qb->execute()->fetchAll();
+        return $qb->execute()->fetchAllAssociative();
     }
 
     /**

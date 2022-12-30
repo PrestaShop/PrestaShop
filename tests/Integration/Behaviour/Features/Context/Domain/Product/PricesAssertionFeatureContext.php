@@ -42,7 +42,7 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class PricesAssertionFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @Then product :productReference should have following prices information for shops :shopReference:
+     * @Then product :productReference should have following prices information for shop(s) :shopReference:
      *
      * @param string $productReference
      * @param string $shopReferences

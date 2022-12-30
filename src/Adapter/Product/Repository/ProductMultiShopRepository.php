@@ -98,14 +98,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     private $manufacturerRepository;
 
-    /**
-     * @param Connection $connection
-     * @param string $dbPrefix
-     * @param ProductValidator $productValidator
-     * @param int $defaultCategoryId
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
-     * @param ManufacturerRepository $manufacturerRepository
-     */
     public function __construct(
         Connection $connection,
         string $dbPrefix,

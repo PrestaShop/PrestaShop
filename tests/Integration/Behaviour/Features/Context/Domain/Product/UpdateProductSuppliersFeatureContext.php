@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 
@@ -126,7 +127,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             );
 
             $this->getCommandBus()->handle($command);
-        } catch (ProductSupplierNotAssociatedException|InvalidProductTypeException $e) {
+        } catch (ProductSupplierNotAssociatedException|InvalidProductTypeException|ShopAssociationNotFound $e) {
             $this->setLastException($e);
         }
     }
@@ -423,6 +424,14 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that supplier is not associated with shop
+     */
+    public function assertFailedUpdateSupplierNotAssignedToShop(): void
+    {
+        $this->assertLastErrorIs(ShopAssociationNotFound::class);
+    }
+
+    /**
      * @Then I should get error that an invalid association has been used
      */
     public function assertInvalidProductSupplierAssociation(): void
@@ -573,11 +582,17 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $supplierIds[] = $this->getSharedStorage()->get($row['supplier']);
         }
 
-        $productSupplierAssociations = $this->getCommandBus()->handle(new SetSuppliersCommand(
-            $this->getSharedStorage()->get($productReference),
-            $supplierIds,
-            ShopConstraint::shop($shopId)
-        ));
+        try {
+            $productSupplierAssociations = $this->getCommandBus()->handle(new SetSuppliersCommand(
+                $this->getSharedStorage()->get($productReference),
+                $supplierIds,
+                ShopConstraint::shop($shopId)
+            ));
+        } catch (ShopAssociationNotFound $e) {
+            $this->setLastException($e);
+
+            return;
+        }
 
         // Reorganize input data so that they are easier to access and help to assign the references
         $productSuppliersReferences = [];

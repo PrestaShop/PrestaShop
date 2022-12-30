@@ -70,6 +70,7 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
 
     /**
      * @When I update product ":productReference" for shop :shopReference with following values:
+     * @When I update product ":productReference" with following values for shop :shopReference:
      *
      * @param string $productReference
      * @param TableNode $table

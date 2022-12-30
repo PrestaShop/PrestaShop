@@ -27,15 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFillerInterface;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles the @see UpdateProductCommand using legacy object model
@@ -58,26 +56,20 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
     private $productIndexationUpdater;
 
     /**
-     * @var ProductSupplierRepository
+     * @var ProductSupplierUpdater
      */
-    private $productSupplierRepository;
+    private $productSupplierUpdater;
 
-    /**
-     * @param ProductFillerInterface $productUpdatablePropertyFiller
-     * @param ProductMultiShopRepository $productRepository
-     * @param ProductIndexationUpdater $productIndexationUpdater
-     * @param ProductSupplierRepository $productSupplierRepository
-     */
     public function __construct(
         ProductFillerInterface $productUpdatablePropertyFiller,
         ProductMultiShopRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater,
-        ProductSupplierRepository $productSupplierRepository
+        ProductSupplierUpdater $productSupplierUpdater
     ) {
         $this->productUpdatablePropertyFiller = $productUpdatablePropertyFiller;
         $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
-        $this->productSupplierRepository = $productSupplierRepository;
+        $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
@@ -112,7 +104,7 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         );
 
         if (null !== $command->getWholesalePrice()) {
-            $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
+            $this->productSupplierUpdater->synchronizeDefaultSuppliersPrice($command->getProductId(), $command->getWholesalePrice(), $command->getShopConstraint());
         }
 
         // Reindexing is costly operation, so we check if properties impacting indexation have changed and then reindex if needed.
@@ -121,20 +113,6 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
             || $wasActive !== (bool) $product->active
         ) {
             $this->productIndexationUpdater->updateIndexation($product);
-        }
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param DecimalNumber $wholesalePrice
-     */
-    private function updateDefaultSupplier(ProductId $productId, DecimalNumber $wholesalePrice): void
-    {
-        $defaultSupplierId = $this->productSupplierRepository->getDefaultProductSupplierId($productId);
-        if (null !== $defaultSupplierId) {
-            $defaultProductSupplier = $this->productSupplierRepository->get($defaultSupplierId);
-            $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
-            $this->productSupplierRepository->update($defaultProductSupplier);
         }
     }
 }

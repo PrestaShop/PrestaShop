@@ -67,7 +67,7 @@ class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler im
      */
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
-        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId(), $query->getShopConstraint()->getShopId());
+        $defaultSupplier = $this->productSupplierRepository->getAssociatedDefaultSupplierId($query->getProductId(), $query->getShopConstraint()->getShopId());
         $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId(), $query->getShopConstraint()->getShopId());
         $productType = $this->productRepository->getProductType($query->getProductId());
         $productSuppliers = [];
