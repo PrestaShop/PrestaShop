@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Configuration;
+namespace PrestaShop\PrestaShop\Core\Image;
 
 use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
 
