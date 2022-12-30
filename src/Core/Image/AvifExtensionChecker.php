@@ -35,9 +35,15 @@ use PrestaShop\PrestaShop\Core\Image\Exception\AvifUnavailableException;
  */
 class AvifExtensionChecker
 {
+    private $isAvailable;
+
     public function isAvailable(): bool
     {
-        $isAvailable = extension_loaded('gd') && /* @phpstan-ignore-line */
+        if (!is_null($this->isAvailable)) {
+            return $this->isAvailable;
+        }
+
+        $this->isAvailable = extension_loaded('gd') && /* @phpstan-ignore-line */
             version_compare(PHP_VERSION, '8.1') >= 0 &&
             function_exists('imageavif') &&
             is_callable('imageavif'); /* @phpstan-ignore-line */
@@ -58,7 +64,7 @@ class AvifExtensionChecker
                 $image = imagecreatetruecolor(250, 250);
                 imageavif($image, 'test-avif-support.avif');
             } catch (AvifUnavailableException $e) {
-                $isAvailable = false;
+                $this->isAvailable = false;
             } finally {
                 @unlink('test-avif-support.avif');
             }
@@ -66,6 +72,6 @@ class AvifExtensionChecker
             restore_error_handler();
         }
 
-        return $isAvailable;
+        return $this->isAvailable;
     }
 }
