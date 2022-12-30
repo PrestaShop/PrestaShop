@@ -160,23 +160,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateProductSuppliersForDefaultShop(string $productReference, TableNode $tableNode): void
-    {
-        $this->updateProductSuppliers($productReference, $tableNode, $this->getDefaultShopId());
-    }
-
-    /**
-     * @When I update product :productReference suppliers for shop :shopReference:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function updateProductSuppliersForSpecificShop(string $productReference, TableNode $tableNode, string $shopReference): void
-    {
-        $this->updateProductSuppliers($productReference, $tableNode, (int) $this->getSharedStorage()->get($shopReference));
-    }
-
-    private function updateProductSuppliers(string $productReference, TableNode $tableNode, int $shopId): void
+    public function updateProductSuppliers(string $productReference, TableNode $tableNode): void
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
@@ -204,8 +188,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         try {
             $command = new UpdateProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference),
-                $productSuppliers,
-                ShopConstraint::shop($shopId)
+                $productSuppliers
             );
 
             $productSupplierAssociations = $this->getCommandBus()->handle($command);

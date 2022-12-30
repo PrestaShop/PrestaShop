@@ -32,8 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
@@ -52,11 +50,6 @@ class UpdateProductSuppliersCommand
     private $productSuppliers;
 
     /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
      * @param int $productId
      * @param array<int, array<string, mixed>> $productSuppliers
      *
@@ -64,12 +57,10 @@ class UpdateProductSuppliersCommand
      */
     public function __construct(
         int $productId,
-        array $productSuppliers,
-        ShopConstraint $shopConstraint
+        array $productSuppliers
     ) {
         $this->setProductSuppliers($productSuppliers, $productId);
         $this->productId = new ProductId($productId);
-        $this->setShopConstraint($shopConstraint);
     }
 
     /**
@@ -115,21 +106,5 @@ class UpdateProductSuppliersCommand
                 $productSupplier['price_tax_excluded']
             );
         }
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
-    }
-
-    private function setShopConstraint(ShopConstraint $shopConstraint): void
-    {
-        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
-            throw new InvalidShopConstraintException(sprintf('%s can only be used with a single shop constraint', self::class));
-        }
-        $this->shopConstraint = $shopConstraint;
     }
 }

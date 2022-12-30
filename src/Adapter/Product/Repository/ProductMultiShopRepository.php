@@ -116,6 +116,27 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function assertExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertShopAssociation(ProductId $productId, ShopId $shopId): void
+    {
+        $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
+    }
+
+    /**
+     * @param ProductId $productId
      * @param ShopId $shopId
      *
      * @return Product

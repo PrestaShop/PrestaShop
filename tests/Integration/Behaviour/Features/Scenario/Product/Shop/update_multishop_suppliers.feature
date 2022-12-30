@@ -149,15 +149,10 @@ Feature: Copy product from shop to shop.
       | default supplier reference |                |
 
   Scenario: I can update the product suppliers, their data is shared on all the shops (especially the one common to all shops)
-    When I update product product1 suppliers for shop shop1:
-      | product_supplier       | supplier       | reference                      | currency | price_tax_excluded |
-      | product1supplier1      | supplier1      | my first supplier for product1 | USD      | 42                 |
-      | product1multiSupplier1 | multiSupplier1 | temporary modif                | USD      | 10                 |
-    And I update product product1 suppliers for shop shop2:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product1supplier2 | supplier2 | my second supplier for product1 | USD      | 69                 |
-    And I update product product1 suppliers for shop shop3:
+    When I update product product1 suppliers:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
+      | product1supplier1      | supplier1      | my first supplier for product1  | USD      | 42                 |
+      | product1supplier2      | supplier2      | my second supplier for product1 | USD      | 69                 |
       | product1supplier3      | supplier3      | my third supplier for product1  | USD      | 99                 |
       | product1multiSupplier1 | multiSupplier1 | multishop supplier for product1 | USD      | 51                 |
     Then product product1 should have following suppliers for shop shop1:
@@ -311,7 +306,7 @@ Feature: Copy product from shop to shop.
       | supplier       | product_supplier       |
       | supplier2      | product2supplier2      |
       | multiSupplier1 | product2multiSupplier1 |
-    And I update product product2 suppliers for shop shop2:
+    And I update product product2 suppliers:
       | product_supplier       | supplier       | reference                       | currency | price_tax_excluded |
       | product2supplier2      | supplier2      | my second supplier for product2 | USD      | 20                 |
       | product2multiSupplier1 | multiSupplier1 | multishop supplier for product2 | USD      | 51                 |
@@ -403,33 +398,27 @@ Feature: Copy product from shop to shop.
       | unit_price_ratio | 0     |
       | unity            |       |
     When I associate suppliers to product "product3" for shop shop1
-      | supplier       | product_supplier       |
-      | supplier1      | product3supplier1      |
+      | supplier  | product_supplier  |
+      | supplier1 | product3supplier1 |
     And I associate suppliers to product "product3" for shop shop3
-      | supplier       | product_supplier       |
-      | supplier3      | product3supplier3      |
+      | supplier  | product_supplier  |
+      | supplier3 | product3supplier3 |
     And I associate suppliers to product "product3" for shop shop4
-      | supplier       | product_supplier       |
-      | supplier4      | product3supplier4      |
+      | supplier  | product_supplier  |
+      | supplier4 | product3supplier4 |
     # Finish by associating on shop2 with multiSupplier1 as first one (so default for this shop) this associates it to all other
     # shops in the process but they still have their "shop-only" supplier defined as default
     And I associate suppliers to product "product3" for shop shop2
       | supplier       | product_supplier       |
       | multiSupplier1 | product3multiSupplier1 |
       | supplier2      | product3supplier2      |
-    And I update product product3 suppliers for shop shop1:
+    And I update product product3 suppliers:
       | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
       | product3supplier1      | supplier1      | my first supplier for product3     | USD      | 11                 |
+      | product3supplier2      | supplier2      | my second supplier for product3    | USD      | 12                 |
+      | product3supplier3      | supplier3      | my third supplier for product3     | USD      | 13                 |
+      | product3supplier4      | supplier4      | my fourth supplier for product3    | USD      | 14                 |
       | product3multiSupplier1 | multiSupplier1 | my multishop supplier for product3 | EUR      | 21                 |
-    And I update product product3 suppliers for shop shop2:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product3supplier2 | supplier2 | my second supplier for product3 | USD      | 12                 |
-    And I update product product3 suppliers for shop shop3:
-      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
-      | product3supplier3 | supplier3 | my third supplier for product3 | USD      | 13                 |
-    And I update product product3 suppliers for shop shop4:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product3supplier4 | supplier4 | my fourth supplier for product3 | USD      | 14                 |
     And product product3 should have the following suppliers assigned for shop shop1:
       | supplier1      |
       | multiSupplier1 |
@@ -568,3 +557,80 @@ Feature: Copy product from shop to shop.
       | unit_price       | 0     |
       | unit_price_ratio | 0     |
       | unity            |       |
+
+  Scenario: Update product suppliers without specifying the productSupplierId should also work
+    Given I add product "product4" to shop shop1 with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product product4 type should be standard
+    And product product4 should not have any suppliers assigned
+    And I copy product product4 from shop shop1 to shop shop2
+    And I copy product product4 from shop shop1 to shop shop3
+    And I copy product product4 from shop shop1 to shop shop4
+    When I associate suppliers to product "product4" for shop shop1
+      | supplier  | product_supplier  |
+      | supplier1 | product4supplier1 |
+    And I associate suppliers to product "product4" for shop shop2
+      | supplier  | product_supplier  |
+      | supplier2 | product4supplier2 |
+    And I associate suppliers to product "product4" for shop shop3
+      | supplier  | product_supplier  |
+      | supplier3 | product4supplier3 |
+    # Associate multi shop supplier only on last one so that it's not used as the default
+    # on other shops (it's still associated on all shops though)
+    And I associate suppliers to product "product4" for shop shop4
+      | supplier       | product_supplier       |
+      | supplier4      | product4supplier4      |
+      | multiSupplier1 | product4multiSupplier1 |
+    Then product product4 should have the following suppliers assigned for shop shop1:
+      | supplier1      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop2:
+      | supplier2      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop3:
+      | supplier3      |
+      | multiSupplier1 |
+    And product product4 should have the following suppliers assigned for shop shop4:
+      | supplier4      |
+      | multiSupplier1 |
+    And product product4 should have following supplier values for shop shop1:
+      | default supplier           | supplier1 |
+      | default supplier reference |           |
+    And product product4 should have following supplier values for shop shop2:
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
+    And product product4 should have following supplier values for shop shop3:
+      | default supplier           | supplier3 |
+      | default supplier reference |           |
+    And product product4 should have following supplier values for shop shop4:
+      | default supplier           | supplier4 |
+      | default supplier reference |           |
+    # Update data without specifying the product supplier ID it should work as productId/supplierId is enough to match
+    # an existing product supplier, we simply cannot assert that they match the provided productSupplierId since it is
+    # not provided This feature is important in the form it allows performing both association of new suppliers and
+    # update of such new suppliers even if we cannot know the productSupplierId in advance since it has not been created
+    When I update product product4 suppliers:
+      | supplier       | reference                          | currency | price_tax_excluded |
+      | supplier1      | my first supplier for product4     | USD      | 11                 |
+      | supplier2      | my second supplier for product4    | USD      | 12                 |
+      | supplier3      | my third supplier for product4     | USD      | 13                 |
+      | supplier4      | my fourth supplier for product4    | USD      | 14                 |
+      | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+    # Now we can check that each shop product supplier has been correctly updated
+    And product product4 should have following suppliers for shop shop1:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier1      | supplier1      | my first supplier for product4     | USD      | 11                 |
+    And product product4 should have following suppliers for shop shop2:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier2      | supplier2      | my second supplier for product4    | USD      | 12                 |
+    And product product4 should have following suppliers for shop shop3:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier3      | supplier3      | my third supplier for product4     | USD      | 13                 |
+    And product product4 should have following suppliers for shop shop4:
+      | product_supplier       | supplier       | reference                          | currency | price_tax_excluded |
+      | product4multiSupplier1 | multiSupplier1 | my multishop supplier for product4 | USD      | 20                 |
+      | product4supplier4      | supplier4      | my fourth supplier for product4    | USD      | 14                 |

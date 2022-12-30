@@ -45,7 +45,7 @@ class SupplierRepository extends AbstractMultiShopObjectModelRepository
      *
      * @throws SupplierNotFoundException
      */
-    public function assertSupplierExists(SupplierId $supplierId): void
+    public function assertExists(SupplierId $supplierId): void
     {
         $this->assertObjectModelExists($supplierId->getValue(), 'supplier', SupplierNotFoundException::class);
     }

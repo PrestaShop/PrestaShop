@@ -104,7 +104,7 @@ class ProductSupplierValidator extends AbstractObjectModelValidator
     private function assertRelatedEntitiesExists(ProductSupplier $productSupplier): void
     {
         $this->productRepository->assertProductExists(new ProductId((int) $productSupplier->id_product));
-        $this->supplierRepository->assertSupplierExists(new SupplierId((int) $productSupplier->id_supplier));
+        $this->supplierRepository->assertExists(new SupplierId((int) $productSupplier->id_supplier));
         $this->currencyRepository->assertCurrencyExists(new CurrencyId((int) $productSupplier->id_currency));
     }
 }

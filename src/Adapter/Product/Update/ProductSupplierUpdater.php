@@ -112,9 +112,13 @@ class ProductSupplierUpdater
             throw new InvalidArgumentException('Provided empty list of suppliers to associate');
         }
 
-        // First check that all suppliers exist
+        // First check that product exists and is assocated to request shop
+        $this->productRepository->assertExists($productId);
+        $this->productRepository->assertShopAssociation($productId, $shopId);
+
+        // Then check that all suppliers exist and are associated to requested shop
         foreach ($supplierIds as $supplierId) {
-            $this->supplierRepository->assertSupplierExists($supplierId);
+            $this->supplierRepository->assertExists($supplierId);
             $this->supplierRepository->assertShopAssociation($supplierId, $shopId);
         }
 
@@ -287,7 +291,7 @@ class ProductSupplierUpdater
      */
     public function updateProductDefaultSupplier(ProductId $productId, SupplierId $defaultSupplierId, ShopId $shopId): void
     {
-        $this->supplierRepository->assertSupplierExists($defaultSupplierId);
+        $this->supplierRepository->assertExists($defaultSupplierId);
         $this->supplierRepository->assertShopAssociation($defaultSupplierId, $shopId);
 
         $productType = $this->productRepository->getProductType($productId);
