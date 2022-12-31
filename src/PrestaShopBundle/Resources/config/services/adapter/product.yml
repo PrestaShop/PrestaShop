@@ -347,7 +347,7 @@ services:
     alias: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
     deprecated: ~
 
-  prestashop.adapter.product.update.product_supplier_updater:
+  PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
@@ -355,6 +355,10 @@ services:
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
+
+  prestashop.adapter.product.update.product_supplier_updater:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
+    deprecated: ~
 
   prestashop.adapter.product.update.related_products_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater

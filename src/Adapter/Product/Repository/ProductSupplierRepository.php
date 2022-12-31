@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
@@ -217,7 +218,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @return ProductSupplierId|null
      */
-    public function getDefaultProductSupplierId(ProductId $productId, ShopId $shopId): ?ProductSupplierId
+    public function getProductDefaultProductSupplierId(ProductId $productId, ShopId $shopId): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_product_supplier AS default_supplier_id')
@@ -226,11 +227,41 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
                 'ps',
                 $this->dbPrefix . 'product_shop',
                 'p',
-                'ps.id_supplier = p.id_supplier AND p.id_shop = :shopId'
+                'ps.id_supplier = p.id_supplier AND ps.id_product = :productId AND ps.id_product_attribute = 0 AND p.id_shop = :shopId'
             )
-            ->where('ps.id_product = :productId')
-            ->andWhere('ps.id_supplier = p.id_supplier')
             ->setParameter('productId', $productId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        if (empty($result['default_supplier_id'])) {
+            return null;
+        }
+
+        return new ProductSupplierId((int) $result['default_supplier_id']);
+    }
+
+    /**
+     * Returns the ProductSupplier associated to a combination as its default one.
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return ProductSupplierId|null
+     */
+    public function getCombinationDefaultProductSupplierId(CombinationId $combinationId, ShopId $shopId): ?ProductSupplierId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_supplier AS default_supplier_id')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'product_shop',
+                'p',
+                'p.id_product = ps.id_product AND ps.id_product_attribute = :combinationId AND p.id_shop = :shopId AND ps.id_supplier = p.id_supplier'
+            )
+            ->setParameter('combinationId', $combinationId->getValue())
             ->setParameter('shopId', $shopId->getValue())
         ;
 

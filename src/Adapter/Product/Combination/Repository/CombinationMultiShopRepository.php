@@ -507,7 +507,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      *
      * @return CombinationId|null
      */
-    public function findDefaultCombinationIdForShop(ProductId $productId, ShopId $shopId): ?CombinationId
+    public function getDefaultCombinationId(ProductId $productId, ShopId $shopId): ?CombinationId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb

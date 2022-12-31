@@ -244,17 +244,17 @@ class ProductSupplierUpdater
     }
 
     /**
-     * @param ProductId $productId
      * @param CombinationId $combinationId
      * @param array<int, ProductSupplier> $productSuppliers
      *
      * @return array<int, ProductSupplierAssociation>
      */
     public function updateSuppliersForCombination(
-        ProductId $productId,
         CombinationId $combinationId,
         array $productSuppliers
     ): array {
+        $productId = $this->combinationRepository->getProductId($combinationId);
+
         return $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
     }
 
@@ -297,7 +297,7 @@ class ProductSupplierUpdater
         $productType = $this->productRepository->getProductType($productId);
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
             // Product must always be updated even for product with combinations, we use the default combination as the reference
-            $defaultProductSupplier = $this->getDefaultCombinationProductSupplier($productId, $defaultSupplierId);
+            $defaultProductSupplier = $this->getDefaultCombinationProductSupplier($productId, $defaultSupplierId, $shopId);
             if (!$defaultProductSupplier) {
                 // When no combinations exist yet we use the default ProductSupplier as a fallback
                 $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
@@ -324,20 +324,25 @@ class ProductSupplierUpdater
      * @param DecimalNumber $wholesalePrice
      * @param ShopConstraint $shopConstraint
      */
-    public function synchronizeDefaultSuppliersPrice(ProductId $productId, DecimalNumber $wholesalePrice, ShopConstraint $shopConstraint): void
+    public function synchronizeProductDefaultSuppliersPrice(ProductId $productId, DecimalNumber $wholesalePrice, ShopConstraint $shopConstraint): void
     {
         $productSupplierIds = [];
         if ($shopConstraint->forAllShops()) {
             // Get all the product suppliers IDs defined as default for any of the product's associated shops
             foreach ($this->productRepository->getAssociatedShopIds($productId) as $associatedShopId) {
-                $defaultSupplierId = $this->productSupplierRepository->getDefaultProductSupplierId($productId, $associatedShopId);
+                $defaultSupplierId = $this->productSupplierRepository->getProductDefaultProductSupplierId($productId, $associatedShopId);
                 if (null !== $defaultSupplierId && !array_key_exists($defaultSupplierId->getValue(), $productSupplierIds)) {
                     $productSupplierIds[$defaultSupplierId->getValue()] = $defaultSupplierId;
                 }
             }
         } else {
+            $defaultSupplierId = $this->productSupplierRepository->getProductDefaultProductSupplierId($productId, $shopConstraint->getShopId());
+            if (null === $defaultSupplierId) {
+                return;
+            }
+
             $productSupplierIds = [
-                $this->productSupplierRepository->getDefaultProductSupplierId($productId, $shopConstraint->getShopId()),
+                $defaultSupplierId,
             ];
         }
 
@@ -354,6 +359,49 @@ class ProductSupplierUpdater
         if (!empty($updatedProductSuppliers)) {
             // Use updateSuppliersForProduct to update necessary product suppliers, as it will also impact related product for appropriate shops
             $this->updateSuppliersForProduct($productId, $updatedProductSuppliers);
+        }
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param DecimalNumber $wholesalePrice
+     * @param ShopConstraint $shopConstraint
+     */
+    public function synchronizeCombinationDefaultSuppliersPrice(CombinationId $combinationId, DecimalNumber $wholesalePrice, ShopConstraint $shopConstraint): void
+    {
+        $productSupplierIds = [];
+        if ($shopConstraint->forAllShops()) {
+            // Get all the product suppliers IDs defined as default for any of the product's associated shops
+            foreach ($this->combinationRepository->getAssociatedShopIds($combinationId) as $associatedShopId) {
+                $defaultSupplierId = $this->productSupplierRepository->getCombinationDefaultProductSupplierId($combinationId, $associatedShopId);
+                if (null !== $defaultSupplierId && !array_key_exists($defaultSupplierId->getValue(), $productSupplierIds)) {
+                    $productSupplierIds[$defaultSupplierId->getValue()] = $defaultSupplierId;
+                }
+            }
+        } else {
+            $defaultSupplierId = $this->productSupplierRepository->getCombinationDefaultProductSupplierId($combinationId, $shopConstraint->getShopId());
+            if (null === $defaultSupplierId) {
+                return;
+            }
+
+            $productSupplierIds = [
+                $defaultSupplierId,
+            ];
+        }
+
+        $updatedProductSuppliers = [];
+        foreach ($productSupplierIds as $productSupplierId) {
+            $productSupplier = $this->productSupplierRepository->get($productSupplierId);
+            // Update supplier if the price is different
+            if (!$wholesalePrice->equals(new DecimalNumber((string) $productSupplier->product_supplier_price_te))) {
+                $productSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
+                $updatedProductSuppliers[] = $productSupplier;
+            }
+        }
+
+        if (!empty($updatedProductSuppliers)) {
+            // Use updateSuppliersForProduct to update necessary product suppliers, as it will also impact related product for appropriate shops
+            $this->updateSuppliersForCombination($combinationId, $updatedProductSuppliers);
         }
     }
 
@@ -487,9 +535,9 @@ class ProductSupplierUpdater
      *
      * @return ProductSupplier|null
      */
-    private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId): ?ProductSupplier
+    private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId, ShopId $shopId): ?ProductSupplier
     {
-        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
+        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId, $shopId);
         if (!$defaultCombinationId) {
             return null;
         }

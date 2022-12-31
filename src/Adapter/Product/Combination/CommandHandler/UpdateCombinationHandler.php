@@ -28,16 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFillerInterface;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 /**
  * Handles the @see UpdateCombinationCommand using legacy object model
@@ -55,9 +52,9 @@ class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
     private $combinationFiller;
 
     /**
-     * @var ProductSupplierRepository
+     * @var ProductSupplierUpdater
      */
-    private $productSupplierRepository;
+    private $productSupplierUpdater;
 
     /**
      * @var DefaultCombinationUpdater
@@ -67,12 +64,12 @@ class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
     public function __construct(
         CombinationMultiShopRepository $combinationRepository,
         CombinationFillerInterface $combinationFiller,
-        ProductSupplierRepository $productSupplierRepository,
+        ProductSupplierUpdater $productSupplierUpdater,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->combinationFiller = $combinationFiller;
-        $this->productSupplierRepository = $productSupplierRepository;
+        $this->productSupplierUpdater = $productSupplierUpdater;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
     }
 
@@ -100,29 +97,11 @@ class UpdateCombinationHandler implements UpdateCombinationHandlerInterface
         }
 
         if (null !== $command->getWholesalePrice()) {
-            $this->updateDefaultSupplier($command->getCombinationId(), $command->getWholesalePrice());
+            $this->productSupplierUpdater->synchronizeCombinationDefaultSuppliersPrice(
+                $command->getCombinationId(),
+                $command->getWholesalePrice(),
+                $command->getShopConstraint()
+            );
         }
-    }
-
-    private function updateDefaultSupplier(CombinationId $combinationId, DecimalNumber $wholesalePrice): void
-    {
-        $productId = $this->combinationRepository->getProductId($combinationId);
-        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
-        if (null === $defaultSupplierId) {
-            return;
-        }
-
-        $defaultProductSupplierId = $this->productSupplierRepository->getIdByAssociation(new ProductSupplierAssociation(
-            $productId->getValue(),
-            $combinationId->getValue(),
-            $defaultSupplierId->getValue()
-        ));
-        if (!$defaultProductSupplierId) {
-            return;
-        }
-
-        $defaultProductSupplier = $this->productSupplierRepository->get($defaultProductSupplierId);
-        $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
-        $this->productSupplierRepository->update($defaultProductSupplier);
     }
 }

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -147,7 +148,8 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     private function getCombinationSuppliers(string $combinationReference): array
     {
         return $this->getQueryBus()->handle(new GetCombinationSuppliers(
-            $this->getSharedStorage()->get($combinationReference)
+            $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($this->getDefaultShopId())
         ));
     }
 }

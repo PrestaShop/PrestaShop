@@ -71,7 +71,7 @@ final class GenerateProductCombinationsHandler implements GenerateProductCombina
             $command->getShopConstraint()
         );
 
-        $this->productSupplierUpdater->updateMissingProductSuppliers($command->getProductId());
+        $this->productSupplierUpdater->updateMissingProductSuppliers($command->getProductId(), $command->getShopConstraint());
 
         return $combinationIds;
     }

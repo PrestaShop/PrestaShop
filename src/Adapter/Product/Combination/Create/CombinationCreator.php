@@ -219,7 +219,7 @@ class CombinationCreator
     {
         foreach ($shopIds as $shopId) {
             // set default combination if none is set yet
-            if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $shopId)) {
+            if (!$this->combinationRepository->getDefaultCombinationId($productId, $shopId)) {
                 $shopConstraint = ShopConstraint::shop($shopId->getValue());
                 $firstCombinationId = $this->combinationRepository->findFirstCombinationId($productId, $shopConstraint);
                 $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);

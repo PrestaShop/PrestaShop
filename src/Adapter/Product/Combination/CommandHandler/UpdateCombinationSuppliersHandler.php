@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
@@ -37,27 +36,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateC
 class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
     /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
      * @var ProductSupplierUpdater
      */
     private $productSupplierUpdater;
 
     /**
-     * @param CombinationRepository $combinationRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
         ProductSupplierRepository $productSupplierRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
         parent::__construct($productSupplierRepository);
-        $this->combinationRepository = $combinationRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
@@ -67,7 +58,6 @@ class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler i
     public function handle(UpdateCombinationSuppliersCommand $command): array
     {
         $combinationId = $command->getCombinationId();
-        $productId = $this->combinationRepository->getProductId($combinationId);
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
@@ -75,7 +65,6 @@ class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler i
         }
 
         return $this->productSupplierUpdater->updateSuppliersForCombination(
-            $productId,
             $combinationId,
             $productSuppliers
         );

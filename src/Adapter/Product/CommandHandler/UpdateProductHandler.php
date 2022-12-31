@@ -104,7 +104,7 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         );
 
         if (null !== $command->getWholesalePrice()) {
-            $this->productSupplierUpdater->synchronizeDefaultSuppliersPrice($command->getProductId(), $command->getWholesalePrice(), $command->getShopConstraint());
+            $this->productSupplierUpdater->synchronizeProductDefaultSuppliersPrice($command->getProductId(), $command->getWholesalePrice(), $command->getShopConstraint());
         }
 
         // Reindexing is costly operation, so we check if properties impacting indexation have changed and then reindex if needed.

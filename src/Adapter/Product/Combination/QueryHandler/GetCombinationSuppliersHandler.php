@@ -62,7 +62,8 @@ class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler impl
 
         return $this->getProductSuppliersInfo(
             new ProductId((int) $combination->id_product),
-            $query->getCombinationId()
+            $query->getCombinationId(),
+            $query->getShopConstraint()->getShopId()
         );
     }
 }
