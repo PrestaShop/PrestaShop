@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEdit
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\OrderReturnFormDataProvider;
 use PrestaShopBundle\Service\Routing\Router;
 use RuntimeException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrderReturnFormDataProviderTest extends TestCase
 {
