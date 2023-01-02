@@ -52,11 +52,6 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $carrierRestrictionsForm = $this->getPaymentCarrierRestrictionsFormHandler()->getForm();
-        $countryRestrictionsForm = $this->getPaymentCountryRestrictionsFormHandler()->getForm();
-        $currencyRestrictionsForm = $this->getPaymentCurrencyRestrictionsFormHandler()->getForm();
-        $groupRestrictionsForm = $this->getPaymentGroupRestrictionsFormHandler()->getForm();
-
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $paymentModulesListProvider = $this->get('prestashop.adapter.module.payment_module_provider');
@@ -64,28 +59,60 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
 
         $isSingleShopContext = $shopContext->isSingleShopContext();
 
+        $paymentPreferencesForm = null;
         $paymentModulesCount = 0;
-        $carrierRestrictionsView = $countryRestrictionsView = $currencyRestrictionsView = $groupRestrictionsView = null;
 
         if ($isSingleShopContext) {
             $paymentModulesCount = count($paymentModulesListProvider->getPaymentModuleList());
-            $carrierRestrictionsView = $carrierRestrictionsForm->createView();
-            $countryRestrictionsView = $countryRestrictionsForm->createView();
-            $currencyRestrictionsView = $currencyRestrictionsForm->createView();
-            $groupRestrictionsView = $groupRestrictionsForm->createView();
+            $paymentPreferencesForm = $this->getPaymentPreferencesFormHandler()->getForm()->createView();
         }
 
+        /** In next major version for separate views should be passed one for each restriction group */
         return $this->render('@PrestaShop/Admin/Improve/Payment/Preferences/payment_preferences.html.twig', [
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'paymentCurrencyRestrictionsForm' => $currencyRestrictionsView,
-            'paymentCountryRestrictionsForm' => $countryRestrictionsView,
-            'paymentGroupRestrictionsForm' => $groupRestrictionsView,
-            'paymentCarrierRestrictionsForm' => $carrierRestrictionsView,
+            'paymentPreferencesForm' => $paymentPreferencesForm,
             'isSingleShopContext' => $isSingleShopContext,
             'paymentModulesCount' => $paymentModulesCount,
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
         ]);
+    }
+
+    /**
+     *  @deprecated Should be removed in next major version in favor of multiple separate actions
+     * Process payment modules preferences form.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="Access denied.",
+     *     redirectRoute="admin_payment_preferences"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        $paymentPreferencesFormHandler = $this->getPaymentPreferencesFormHandler();
+
+        $paymentPreferencesForm = $paymentPreferencesFormHandler->getForm();
+        $paymentPreferencesForm->handleRequest($request);
+
+        if ($paymentPreferencesForm->isSubmitted()) {
+            $paymentPreferences = $paymentPreferencesForm->getData();
+
+            $errors = $paymentPreferencesFormHandler->save($paymentPreferences);
+            if (empty($errors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_payment_preferences');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_payment_preferences');
     }
 
     /**
@@ -217,5 +244,13 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
     private function getPaymentGroupRestrictionsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.payment_group_restrictions.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getPaymentPreferencesFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.admin.payment_preferences.form_handler');
     }
 }

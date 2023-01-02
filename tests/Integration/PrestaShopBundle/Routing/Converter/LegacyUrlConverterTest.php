@@ -144,7 +144,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_geolocation_by_ip_address_save' => ['/improve/international/geolocation/by-ip-address', 'AdminGeolocation', 'update'],
 
             'admin_payment_preferences' => ['/improve/payment/preferences', 'AdminPaymentPreferences'],
-            'admin_payment_preferences_carrier_restrictions_save' => ['/improve/payment/carrier-restrictions', 'AdminPaymentPreferences', 'update'],
+            'admin_payment_preferences_process' => ['/improve/payment/preferences', 'AdminPaymentPreferences', 'update'],
 
             'admin_order_invoices' => ['/sell/orders/invoices/', 'AdminInvoices'],
             'admin_order_invoices_process' => ['/sell/orders/invoices/', 'AdminInvoices', 'update'],

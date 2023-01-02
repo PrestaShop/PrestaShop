@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @deprecated Should be removed in next major version in favor of multiple types
  * Class PaymentModulePreferencesType defines form in "Improve > Payment > Preferences" page.
  */
 class PaymentModulePreferencesType extends TranslatorAwareType
@@ -105,26 +106,50 @@ class PaymentModulePreferencesType extends TranslatorAwareType
         $builder
             ->add('currency_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Currency restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->getCurrencyChoices(),
                 'multiple_choices' => $this->getCurrencyChoicesForPaymentModules(),
+                'help' => $this->trans(
+                    'Please select available payment modules for each currency.',
+                    'Admin.Payment.Help'
+                ),
+                'required' => false,
                 'headers_fixed' => true,
             ])
             ->add('country_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Country restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->countryChoices,
                 'multiple_choices' => $this->getCountryChoicesForPaymentModules(),
+                'help' => $this->trans(
+                    'Please select available payment modules for each country.',
+                    'Admin.Payment.Help'
+                ),
+                'required' => false,
                 'headers_fixed' => true,
             ])
             ->add('group_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Group restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->groupChoices,
                 'multiple_choices' => $this->getGroupChoicesForPaymentModules(),
+                'help' => $this->trans(
+                    'Please select available payment modules for each customer group.',
+                    'Admin.Payment.Help'
+                ),
+                'required' => false,
                 'headers_fixed' => true,
             ])
             ->add('carrier_restrictions', MaterialMultipleChoiceTableType::class, [
                 'label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
+                'table_label' => $this->trans('Carrier restrictions', 'Admin.Payment.Feature'),
                 'choices' => $this->carrierChoices,
                 'multiple_choices' => $this->getCarrierChoicesForPaymentModules(),
+                'help' => $this->trans(
+                    'Please select available payment modules for each carrier.',
+                    'Admin.Payment.Help'
+                ),
+                'required' => false,
                 'headers_fixed' => true,
             ]);
     }

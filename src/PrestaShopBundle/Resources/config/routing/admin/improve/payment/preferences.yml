@@ -6,6 +6,14 @@ admin_payment_preferences:
     _legacy_link: AdminPaymentPreferences
     _controller: PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::indexAction
 
+admin_payment_preferences_process:
+  path: /preferences
+  methods: [ POST ]
+  defaults:
+    _legacy_controller: AdminPaymentPreferences
+    _legacy_link: AdminPaymentPreferences:update
+    _controller: PrestaShopBundle\Controller\Admin\Improve\Payment\PaymentPreferencesController::processFormAction
+
 admin_payment_carrier_restrictions_save:
   path: /carrier-restrictions
   methods: [ POST ]
