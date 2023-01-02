@@ -177,50 +177,24 @@ class ImageRetriever
             $id_image . '.jpg',
         ]);
 
+        $configuredImageFormats = explode(',', Configuration::get('PS_IMAGE_FORMAT'));
         $rewriteLink = !empty($object->link_rewrite) ? $object->link_rewrite : $object->name;
         foreach ($image_types as $image_type) {
             $additionalSources = [];
 
             // in legacy, jpg image is always generated
-            if (!$this->isMultipleImageFormatFeatureActive || Configuration::get('PS_ADDITIONAL_IMAGE_JPG')) {
+            if (!$this->isMultipleImageFormatFeatureActive) {
                 $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
                 $additionalSources['jpg'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.jpg');
-            }
+                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
+            } else {
+                foreach ($configuredImageFormats as $imageFormat) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
+                    $additionalSources[$imageFormat] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.' . $imageFormat);
 
-            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_PNG')) {
-                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'png');
-                $additionalSources['png'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.png');
-            }
-
-            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_WEBP')) {
-                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'webp');
-                $additionalSources['webp'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.webp');
-            }
-
-            if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_AVIF')) {
-                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'avif');
-                $additionalSources['avif'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.avif');
-            }
-
-            /*
-            * If High-DPI images are enabled, we will also generate a thumbnail in
-            * double the size, so it can be used in src-sets.
-            */
-            if ($generateHighDpiImages) {
-                if (!$this->isMultipleImageFormatFeatureActive || Configuration::get('PS_ADDITIONAL_IMAGE_JPG')) {
-                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
-                }
-
-                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_PNG')) {
-                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'png', true);
-                }
-
-                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_WEBP')) {
-                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'webp', true);
-                }
-
-                if ($this->isMultipleImageFormatFeatureActive && Configuration::get('PS_ADDITIONAL_IMAGE_AVIF')) {
-                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'avif', true);
+                    if ($generateHighDpiImages) {
+                        $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat, true);
+                    }
                 }
             }
 

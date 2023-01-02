@@ -42,6 +42,8 @@ class AdminImagesControllerCore extends AdminController
 
     protected $isMultipleImageFormatFeatureEnabled;
 
+    protected $imageFormatConfiguration;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -60,6 +62,7 @@ class AdminImagesControllerCore extends AdminController
         parent::init();
 
         $this->canGenerateAvif = $this->get('PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker')->isAvailable();
+        $this->imageFormatConfiguration = $this->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration');
 
         $fields = [
             'PS_JPEG_QUALITY' => [
@@ -423,10 +426,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         if ($this->isMultipleImageFormatFeatureEnabled && !$this->errors && $value) {
-            Configuration::updateValue('PS_ADDITIONAL_IMAGE_JPG', in_array('jpg', $value));
-            Configuration::updateValue('PS_ADDITIONAL_IMAGE_PNG', in_array('png', $value));
-            Configuration::updateValue('PS_ADDITIONAL_IMAGE_WEBP', in_array('webp', $value));
-            Configuration::updateValue('PS_ADDITIONAL_IMAGE_AVIF', in_array('avif', $value));
+            $this->imageFormatConfiguration->setListOfGenerationFormats($value);
         }
     }
 
@@ -603,10 +603,7 @@ class AdminImagesControllerCore extends AdminController
         }
 
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
-        $generateAdditionalJpg = $this->isMultipleImageFormatFeatureEnabled && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_JPG');
-        $generateAdditionalWebP = $this->isMultipleImageFormatFeatureEnabled && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_WEBP');
-        $generateAdditionalAvif = $this->isMultipleImageFormatFeatureEnabled && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_AVIF');
-        $generateAdditionalPng = $this->isMultipleImageFormatFeatureEnabled && (bool) Configuration::get('PS_ADDITIONAL_IMAGE_PNG');
+        $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         if (!$productsImages) {
             $formated_medium = ImageType::getFormattedName('medium');
@@ -631,37 +628,22 @@ class AdminImagesControllerCore extends AdminController
                                 $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                             }
 
-                            if ($generateAdditionalJpg) {
-                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height']);
-                            }
-
-                            if ($generateAdditionalWebP) {
-                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
-                            }
-
-                            if ($generateAdditionalAvif) {
-                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.avif', (int) $imageType['width'], (int) $imageType['height'], 'avif', true);
-                            }
-
-                            if ($generateAdditionalPng) {
-                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.png', (int) $imageType['width'], (int) $imageType['height'], 'png', true);
-                            }
-
                             if ($generate_hight_dpi_images) {
                                 if (!$this->isMultipleImageFormatFeatureEnabled && !ImageManager::resize($dir . $image, $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                 }
-                                if ($generateAdditionalJpg) {
-                                    ImageManager::resize($dir . $image, $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2);
+                            }
+
+                            // image generation for when the multiple image feature is active
+                            foreach ($imageConfiguredFormats as $imageFormat) {
+                                if (!$this->isMultipleImageFormatFeatureEnabled) {
+                                    break;
                                 }
-                                if ($generateAdditionalWebP) {
-                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.webp', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'webp', true);
-                                }
-                                if ($generateAdditionalAvif) {
-                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.avif', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'avif', true);
-                                }
-                                if ($generateAdditionalPng) {
-                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.png', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, 'png', true);
+
+                                ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, (int) $imageType['width'], (int) $imageType['height'], $imageFormat, true);
+
+                                if ($generate_hight_dpi_images) {
+                                    ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat, true);
                                 }
                             }
                         }
@@ -691,22 +673,6 @@ class AdminImagesControllerCore extends AdminController
                             }
                         }
 
-                        if ($generateAdditionalJpg) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.jpg', (int) $imageType['width'], (int) $imageType['height']);
-                        }
-
-                        if ($generateAdditionalWebP) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.webp', (int) $imageType['width'], (int) $imageType['height'], 'webp', true);
-                        }
-
-                        if ($generateAdditionalAvif && $this->canGenerateAvif) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.avif', (int) $imageType['width'], (int) $imageType['height'], 'avif', true);
-                        }
-
-                        if ($generateAdditionalPng) {
-                            ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.png', (int) $imageType['width'], (int) $imageType['height'], 'png', true);
-                        }
-
                         if ($generate_hight_dpi_images) {
                             if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')) {
                                 if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
@@ -719,6 +685,21 @@ class AdminImagesControllerCore extends AdminController
                                         'Admin.Design.Notification'
                                     );
                                 }
+                            }
+                        }
+
+                        foreach ($imageConfiguredFormats as $imageFormat) {
+                            if (!$this->isMultipleImageFormatFeatureEnabled) {
+                                break;
+                            }
+                            if ($imageFormat === 'avif' && !$this->canGenerateAvif) {
+                                continue;
+                            }
+                            if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat)) {
+                                ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, (int) $imageType['width'], (int) $imageType['height'], $imageFormat, true);
+                            }
+                            if ($generate_hight_dpi_images && !file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
+                                ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat, true);
                             }
                         }
                     }
@@ -963,6 +944,7 @@ class AdminImagesControllerCore extends AdminController
                 $imageFormatsDisabled['avif'] = true;
             }
             $key = 'PS_IMAGE_FORMAT';
+            $configuredImageFormats = $this->imageFormatConfiguration->getGenerationFormats();
             $value = [
                 'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
                 'show' => true,
@@ -971,16 +953,16 @@ class AdminImagesControllerCore extends AdminController
                 'type' => 'checkbox',
                 'multiple' => true,
                 'choices' => [
-                    'jpeg' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
+                    'jpg' => $this->trans('JPEG', [], 'Admin.Design.Feature'),
                     'png' => $this->trans('PNG', [], 'Admin.Design.Feature'),
                     'webp' => $this->trans('WebP', [], 'Admin.Design.Feature'),
                     'avif' => $this->trans('AVIF', [], 'Admin.Design.Feature'),
                 ],
                 'value_multiple' => [
-                    'jpeg' => Configuration::get('PS_ADDITIONAL_IMAGE_JPG'),
-                    'png' => Configuration::get('PS_ADDITIONAL_IMAGE_PNG'),
-                    'webp' => Configuration::get('PS_ADDITIONAL_IMAGE_WEBP'),
-                    'avif' => Configuration::get('PS_ADDITIONAL_IMAGE_AVIF'),
+                    'jpg' => in_array('jpg', $configuredImageFormats),
+                    'png' => in_array('png', $configuredImageFormats),
+                    'webp' => in_array('webp', $configuredImageFormats),
+                    'avif' => in_array('avif', $configuredImageFormats),
                 ],
                 'disabled' => $imageFormatsDisabled,
             ];

@@ -9,3 +9,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Image\Deleter\ImageFileDeleter'
 
   PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker: ~
+
+  PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'

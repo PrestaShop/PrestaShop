@@ -907,5 +907,8 @@ Country</value>
     <configuration id="PS_AVIF_QUALITY" name="PS_AVIF_QUALITY">
       <value>90</value>
     </configuration>
+    <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
+      <value>jpg</value>
+    </configuration>
   </entities>
 </entity_configuration>
