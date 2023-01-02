@@ -1,12 +1,11 @@
 services:
+  _defaults:
+    autowire: true
+    bind:
+      $modifyAllNamePrefix: !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\AbstractFormDataFormatter:
-    abstract: true
-    arguments:
-      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\AbstractFormDataFormatter: ~
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter:
-    parent: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\AbstractFormDataFormatter
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter: ~
 
-  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter:
-    parent: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\AbstractFormDataFormatter
+  PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter: ~
