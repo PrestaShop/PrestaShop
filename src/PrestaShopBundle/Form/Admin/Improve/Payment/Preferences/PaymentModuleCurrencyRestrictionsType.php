@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Payment\PaymentModulePreferencesConfiguration;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class PaymentModuleCurrencyRestrictionsType defines Currency Restriction form in "Improve > Payment > Preferences" page.

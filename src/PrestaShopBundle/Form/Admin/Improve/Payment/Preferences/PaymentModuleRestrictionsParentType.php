@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\Payment\Preferences;
 
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class PaymentModuleRestrictionsParentType defines is parent for all restriction forms in Payment Preferences

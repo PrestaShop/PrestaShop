@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableCardType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class PaymentModuleCountryRestrictionsType defines Country Restriction form in "Improve > Payment > Preferences" page.
