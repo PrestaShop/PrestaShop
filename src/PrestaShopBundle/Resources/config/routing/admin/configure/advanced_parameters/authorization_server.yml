@@ -1,28 +1,41 @@
 admin_authorized_applications_index:
-  path: /
-  methods: [ GET, POST ]
+  path: /applications
+  methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::indexAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::indexAction
 
 admin_authorized_applications_view:
-  path: /{authorizedApplicationId}
-  methods: [ GET, POST ]
+  path: /applications/{authorizedApplicationId}
+  methods: [ GET ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::viewAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::viewAction
     categoryId: null
   requirements:
     authorizedApplicationId: \d+
 
-admin_authorized_applications_edit:
-  path: /{authorizedApplicationId}/edit
+admin_authorized_applications_create:
+  path: /applications/create
   methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::editAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::createAction
+
+admin_authorized_applications_edit:
+  path: /applications/{authorizedApplicationId}/edit
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::editAction
   requirements:
     authorizedApplicationId: \d+
 
 admin_authorized_applications_delete:
-  path: /delete
+  path: /applications/{authorizedApplicationId}/delete
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServerController::deleteAction
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::deleteAction
+
+
+admin_api_accesses_create:
+  path: /applications/api-access/create
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::createAction
