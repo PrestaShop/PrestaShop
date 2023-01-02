@@ -4,16 +4,14 @@ import {expect} from 'chai';
 // Import utils
 import helper from '@utils/helpers';
 import files from '@utils/files';
-
-// Import test context
 import testContext from '@utils/testContext';
+import basicHelper from '@utils/basicHelper';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
 import foProductPage from '@pages/FO/product';
-import basicHelper from '@utils/basicHelper';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';

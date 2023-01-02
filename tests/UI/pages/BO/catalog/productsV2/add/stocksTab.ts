@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Stocks tab on new product V2 page, contains functions that can be used on the page
@@ -8,6 +9,12 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class StocksTab extends BOBasePage {
+  private readonly stocksTabLink: string;
+
+  private readonly productQuantityInput: string;
+
+  private readonly productMinimumQuantityInput: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on stocks tab
@@ -31,11 +38,11 @@ class StocksTab extends BOBasePage {
    * @param productData {ProductData} Data to set in stock form
    * @returns {Promise<void>}
    */
-  async setProductStock(page, productData) {
+  async setProductStock(page:Page, productData:object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.stocksTabLink);
     await this.setValue(page, this.productQuantityInput, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);
   }
 }
 
-module.exports = new StocksTab();
+export default new StocksTab();
