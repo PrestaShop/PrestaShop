@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Product;
 
 /**
@@ -172,7 +173,14 @@ class ProductShopUpdater
 
     private function copyCombinationsStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId, OutOfStockType $outOfStockType): void
     {
-        $sourceCombinations = $this->combinationRepository->getCombinationIds($productId, ShopConstraint::shop($targetShopId->getValue()));
+        $sourceCombinations = $this->combinationRepository->getCombinationIds(
+            new ProductCombinationFilters(
+                ShopConstraint::shop($targetShopId->getValue()),
+                [
+                    'filters' => ['product_id' => $productId->getValue()],
+                ]
+            )
+        );
         $targetConstraint = ShopConstraint::shop($targetShopId->getValue());
 
         foreach ($sourceCombinations as $combinationId) {

@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetEditab
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -111,15 +112,17 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
 
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
-        $filters['shop_id'] = $shopId->getValue();
 
-        $searchCriteria = new ProductCombinationFilters([
-            'limit' => $query->getLimit(),
-            'offset' => $query->getOffset(),
-            'orderBy' => $query->getOrderBy(),
-            'sortOrder' => $query->getOrderWay(),
-            'filters' => $filters,
-        ]);
+        $searchCriteria = new ProductCombinationFilters(
+            ShopConstraint::shop($shopId->getValue()),
+            [
+                'limit' => $query->getLimit(),
+                'offset' => $query->getOffset(),
+                'orderBy' => $query->getOrderBy(),
+                'sortOrder' => $query->getOrderWay(),
+                'filters' => $filters,
+            ]
+        );
 
         $combinations = $this->combinationQueryBuilder->getSearchQueryBuilder($searchCriteria)->execute()->fetchAll();
         $total = (int) $this->combinationQueryBuilder->getCountQueryBuilder($searchCriteria)->execute()->fetch(PDO::FETCH_COLUMN);

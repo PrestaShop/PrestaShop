@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -358,11 +357,7 @@ class CombinationController extends FrameworkBundleAdminController
         /** @var CombinationMultiShopRepository $combinationRepository */
         $combinationRepository = $this->get('PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository');
 
-        $combinationIds = $combinationRepository->getCombinationIds(
-            new ProductId($productId),
-            ShopConstraint::shop($filters->getShopId()),
-            $filters
-        );
+        $combinationIds = $combinationRepository->getCombinationIds($filters);
         $data = [];
         foreach ($combinationIds as $combinationId) {
             $data[] = $combinationId->getValue();
