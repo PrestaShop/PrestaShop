@@ -165,7 +165,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
       const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublichButtonName);
+      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublishButtonName);
     });
 
     it('should preview product', async function () {
