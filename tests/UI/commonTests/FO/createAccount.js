@@ -5,10 +5,10 @@ import testContext from '@utils/testContext';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foCreateAccountPage from '@pages/FO/myAccount/add';
 
 require('module-alias/register');
 const foMyAccountPage = require('@pages/FO/myAccount');
-const foCreateAccountPage = require('@pages/FO/myAccount/add');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
 const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
 

@@ -2,29 +2,28 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-const createAccountPage = require('@pages/FO/myAccount/add');
-
-// Import common test
-const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+import createAccountPage from '@pages/FO/myAccount/add';
 
 // Import data
-const CustomerFaker = require('@data/faker/customer');
+import CustomerFaker from '@data/faker/customer';
 
-const baseContext = 'functional_FO_login_createAccount';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-const customerData = new CustomerFaker();
+const baseContext: string = 'functional_FO_login_createAccount';
 
 describe('FO - Login : Create account', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const customerData: CustomerFaker = new CustomerFaker();
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

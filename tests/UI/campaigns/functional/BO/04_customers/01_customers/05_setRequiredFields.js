@@ -8,6 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foCreateAccountPage from '@pages/FO/myAccount/add';
 
 require('module-alias/register');
 
@@ -16,7 +17,6 @@ const {expect} = require('chai');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
-const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 const baseContext = 'functional_BO_customers_customers_setRequiredFields';
 

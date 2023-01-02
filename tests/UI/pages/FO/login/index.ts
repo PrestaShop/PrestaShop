@@ -14,7 +14,7 @@ import type {Page} from 'playwright';
 class Login extends FOBasePage {
   public readonly pageTitle: string;
 
-  private readonly loginErrorText: string;
+  public readonly loginErrorText: string;
 
   private readonly disabledAccountErrorText: string;
 
