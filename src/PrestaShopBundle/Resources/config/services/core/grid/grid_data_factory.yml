@@ -550,4 +550,3 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'authorized_application'
-

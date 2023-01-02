@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Manages the "Configure > Advanced Parameters > Authorization Server" page.
  */
-class AuthorizationServerController extends FrameworkBundleAdminController
+class ApplicationController extends FrameworkBundleAdminController
 {
     /**
      * @param AuthorizedApplicationsFilters $filters the list of filters from the request
@@ -48,22 +48,36 @@ class AuthorizationServerController extends FrameworkBundleAdminController
         $grid = $gridAuthorizedApplicationFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getApplicationToolbarButtons(),
             'grid' => $this->presentGrid($grid),
         ]);
     }
 
-    public function viewAction(): Response
+    /**
+     * @return array
+     */
+    private function getApplicationToolbarButtons(): array
     {
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/edit.html.twig');
-    }
+        $toolbarButtons = [];
 
-    public function editAction(): Response
-    {
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/view.html.twig');
+        $toolbarButtons['addApplication'] = [
+            'href' => $this->generateUrl('admin_authorized_applications_create'),
+            'desc' => $this->trans('Add new authorized app', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+            'class' => 'btn-primary',
+        ];
+
+        $toolbarButtons['addApiAccess'] = [
+            'href' => $this->generateUrl('admin_api_accesses_create'),
+            'desc' => $this->trans('Add new Api access', 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+            'class' => 'btn-primary',
+        ];
+
+        return $toolbarButtons;
     }
 }
