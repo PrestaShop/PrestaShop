@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import zonesPage from '@pages/BO/international/locations';
 
 // Import data
-import {Zones} from '@data/demo/zones';
+import Zones from '@data/demo/zones';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -84,7 +84,7 @@ describe('BO - International - Zones : Filter and quick edit', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'active',
-          filterValue: Zones.europe.enabled ? '1' : '0',
+          filterValue: Zones.europe.status ? '1' : '0',
         },
       },
     ].forEach((test) => {

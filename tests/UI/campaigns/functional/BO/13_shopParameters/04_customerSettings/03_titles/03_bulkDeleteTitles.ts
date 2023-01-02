@@ -13,7 +13,7 @@ import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
 // Import data
-import TitleFaker from '@data/faker/title';
+import TitleData from '@data/faker/title';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,9 +25,9 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
   let page: Page;
   let numberOfTitles: number = 0;
 
-  const titlesToCreate: TitleFaker[] = [
-    new TitleFaker({name: 'todelete1'}),
-    new TitleFaker({name: 'todelete2'}),
+  const titlesToCreate: TitleData[] = [
+    new TitleData({name: 'todelete1'}),
+    new TitleData({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -36,13 +36,13 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
     page = await helper.newTab(browserContext);
 
     // Create images
-    titlesToCreate.forEach((titleToCreate) => files.generateImage(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate: TitleData) => files.generateImage(titleToCreate.imageName));
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
 
-    titlesToCreate.forEach((titleToCreate) => files.deleteFile(titleToCreate.imageName));
+    titlesToCreate.forEach((titleToCreate: TitleData) => files.deleteFile(titleToCreate.imageName));
   });
 
   it('should login in BO', async function () {
@@ -57,7 +57,6 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
-
     await customerSettingPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingPage.getPageTitle(page);

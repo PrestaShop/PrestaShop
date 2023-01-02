@@ -13,7 +13,7 @@ import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
 // Import data
-import TitleFaker from '@data/faker/title';
+import TitleData from '@data/faker/title';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,8 +25,8 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
   let page: Page;
   let numberOfTitles: number = 0;
 
-  const createTitleData: TitleFaker = new TitleFaker();
-  const editTitleData: TitleFaker = new TitleFaker();
+  const createTitleData: TitleData = new TitleData();
+  const editTitleData: TitleData = new TitleData();
 
   // before and after functions
   before(async function () {
