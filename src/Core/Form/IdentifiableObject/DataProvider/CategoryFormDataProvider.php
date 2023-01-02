@@ -125,7 +125,6 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
                     [
                         'image_path' => $thumbnailImage['path'],
                         'size' => $thumbnailImage['size'],
-
                     ];
             }
             $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
