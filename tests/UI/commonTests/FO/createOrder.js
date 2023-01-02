@@ -72,7 +72,7 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
       await foLoginPage.goToHomePage(page);
 
       // Go to the first product page
-      await homePage.goToProductPage(page, orderData.product);
+      await homePage.goToProductPage(page, orderData.productId);
 
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);
@@ -115,11 +115,11 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
 
 /**
  * Function to create order with specific product by customer in FO
- * @param orderData {object} Data to set when creating the order
+ * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-createOrderSpecificProductTest') {
-  describe(`PRE-TEST: Create order contain '${orderData.product}' by default customer in FO`, async () => {
+  describe(`PRE-TEST: Create order contain '${orderData.product.name}' by default customer in FO`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -159,10 +159,10 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it(`should search for the product ${orderData.product}`, async function () {
+    it(`should search for the product ${orderData.product.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
-      await homePage.searchProduct(page, orderData.product);
+      await homePage.searchProduct(page, orderData.product.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -214,7 +214,7 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
 
 /**
  * Function to create simple order by guest in FO
- * @param orderData {object} Data to set when creating the order
+ * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrderByGuestTest') {
@@ -247,7 +247,7 @@ function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrde
       await homePage.goToHomePage(page);
 
       // Go to the fourth product page
-      await homePage.goToProductPage(page, orderData.product);
+      await homePage.goToProductPage(page, orderData.productId);
 
       // Add the created product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);

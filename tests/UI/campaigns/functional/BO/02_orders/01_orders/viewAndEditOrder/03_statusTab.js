@@ -57,7 +57,7 @@ const createEmployeeData = new EmployeeFaker({
 // New order by customer data
 const orderByCustomerData = {
   customer: DefaultCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
@@ -65,7 +65,7 @@ const orderByCustomerData = {
 // New order by guest data
 const orderByGuestData = {
   customer: customerData,
-  product: 4,
+  productId: 4,
   productQuantity: 1,
   address: addressData,
   paymentMethod: PaymentMethods.wirePayment.moduleName,

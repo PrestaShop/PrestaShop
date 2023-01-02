@@ -7,6 +7,7 @@ type ProductCombinationDimension = {
 };
 
 type Product = {
+  name: string
   type: string,
   productHasCombinations: boolean
   coverImage: string

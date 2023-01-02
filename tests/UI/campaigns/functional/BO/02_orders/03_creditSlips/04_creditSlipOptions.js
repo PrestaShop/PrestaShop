@@ -48,7 +48,7 @@ const product = new ProductFaker({
 // New order by customer
 const orderByCustomerData = {
   customer: DefaultCustomer,
-  product: product.name,
+  product,
   productQuantity: 3,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };

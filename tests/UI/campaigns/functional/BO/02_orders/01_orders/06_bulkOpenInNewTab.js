@@ -36,7 +36,7 @@ const addressData = new AddressFaker({country: 'France'});
 
 const firstOrderByGuestData = {
   customer: firstCustomerData,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   address: addressData,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -44,7 +44,7 @@ const firstOrderByGuestData = {
 
 const secondOrderByGuestData = {
   customer: secondCustomerData,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   address: addressData,
   paymentMethod: PaymentMethods.wirePayment.moduleName,

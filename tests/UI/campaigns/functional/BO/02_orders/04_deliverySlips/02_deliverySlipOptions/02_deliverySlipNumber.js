@@ -33,7 +33,7 @@ let fileName;
 
 const orderByCustomerData = {
   customer: DefaultCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 5,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };

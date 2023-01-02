@@ -5,13 +5,11 @@ import testContext from '@utils/testContext';
 
 // Common tests BO
 import loginCommon from '@commonTests/BO/loginBO';
+import {createShoppingCart} from '@commonTests/FO/createShoppingCart';
 
 require('module-alias/register');
 const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
-
-// Common tests FO
-const {createShoppingCart} = require('@commonTests/FO/createShoppingCart');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

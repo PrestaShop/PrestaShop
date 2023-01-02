@@ -47,7 +47,7 @@ const prefixNewProduct = 'TOTEST';
 // First order by customer data
 const firstOrderByCustomer = {
   customer: DefaultCustomer,
-  product: 1,
+  productId: 1,
   productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
@@ -68,7 +68,7 @@ const customizedProduct = new ProductFaker({
 // Second order by customer
 const secondOrderByCustomer = {
   customer: DefaultCustomer,
-  product: customizedProduct.name,
+  product: customizedProduct,
   productQuantity: 1,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
