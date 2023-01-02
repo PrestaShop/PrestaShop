@@ -499,7 +499,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
       const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
-      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublichButtonName);
+      await expect(saveButtonName).to.equal(createProductsPage.saveAndPublishButtonName);
     });
 
     it('should check the product header details', async function () {

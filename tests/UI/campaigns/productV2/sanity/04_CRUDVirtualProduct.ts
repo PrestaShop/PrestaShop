@@ -12,8 +12,8 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import productsPage = require('@pages/BO/catalog/productsV2');
-import createProductsPage = require('@pages/BO/catalog/productsV2/add');
+import productsPage from '@pages/BO/catalog/productsV2';
+import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import foProductPage from '@pages/FO/product';
 
 // Import data
