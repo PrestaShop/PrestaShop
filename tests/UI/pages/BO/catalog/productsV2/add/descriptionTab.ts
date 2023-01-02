@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Description tab on new product V2 page, contains functions that can be used on the page
@@ -8,6 +9,18 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class DescriptionTab extends BOBasePage {
+  private readonly descriptionTabLink: string;
+
+  private readonly productImageDropZoneDiv: string;
+
+  private readonly openFileManagerDiv: string;
+
+  private readonly imagePreviewBlock: string;
+
+  private readonly productSummary: string;
+
+  private readonly productDescription: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on description tab
@@ -21,7 +34,7 @@ class DescriptionTab extends BOBasePage {
     this.openFileManagerDiv = `${this.productImageDropZoneDiv} div.dz-default.openfilemanager.dz-clickable`;
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} div.dz-preview.openfilemanager`;
     this.productSummary = '#product_description_description_short';
-    this.productdescription = '#product_description_description';
+    this.productDescription = '#product_description_description';
   }
 
   /*
@@ -33,7 +46,7 @@ class DescriptionTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfImages(page) {
+  async getNumberOfImages(page: Page): Promise<number> {
     return (await page.$$(this.imagePreviewBlock)).length;
   }
 
@@ -43,7 +56,7 @@ class DescriptionTab extends BOBasePage {
    * @param imagesPaths {Array<?string>} Paths of the images to add to the product
    * @returns {Promise<void>}
    */
-  async addProductImages(page, imagesPaths = []) {
+  async addProductImages(page: Page, imagesPaths: any[] = []): Promise<void> {
     const filteredImagePaths = imagesPaths.filter((el) => el !== null);
 
     if (filteredImagePaths !== null && filteredImagePaths.length !== 0) {
@@ -65,7 +78,7 @@ class DescriptionTab extends BOBasePage {
    * @param value {string} Text to set on tinymce input
    * @returns {Promise<void>}
    */
-  async setValueOnTinymceInput(page, selector, value) {
+  async setValueOnTinymceInput(page: Page, selector: string, value: string): Promise<void> {
     // Select all
     await page.click(`${selector} .mce-edit-area`, {clickCount: 3});
 
@@ -82,14 +95,14 @@ class DescriptionTab extends BOBasePage {
    * @param productData {ProductData} Data to set in description form
    * @returns {Promise<void>}
    */
-  async setProductDescription(page, productData) {
+  async setProductDescription(page: Page, productData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.descriptionTabLink);
 
     await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
 
     await this.setValueOnTinymceInput(page, this.productSummary, productData.summary);
-    await this.setValueOnTinymceInput(page, this.productdescription, productData.description);
+    await this.setValueOnTinymceInput(page, this.productDescription, productData.description);
   }
 }
 
-module.exports = new DescriptionTab();
+export default new DescriptionTab();

@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Products V2 page, contains functions that can be used on the page
@@ -8,6 +9,154 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Products extends BOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly alertDangerIDFilterValue: string;
+
+  private readonly alertDangerPriceFilterValue: string;
+
+  private readonly alertDangerQuantityFilterValue: string;
+
+  private readonly standardProductDescription: string;
+
+  private readonly productWithCombinationsDescription: string;
+
+  private readonly virtualProductDescription: string;
+
+  private readonly packOfProductsDescription: string;
+
+  private readonly newProductButton: string;
+
+  private readonly addNewProductButton: string;
+
+  private readonly productGridPanel: string;
+
+  private readonly productGridHeader: string;
+
+  private readonly headerTitle: string;
+
+  private readonly productGrid: string;
+
+  private readonly filterByCategoryBlock: string;
+
+  private readonly filterByCategoriesButton: string;
+
+  private readonly filterByCategoriesExpandButton: string;
+
+  private readonly filterByCategoriesUnselectButton: string;
+
+  private readonly filterByCategoriesLabel: string;
+
+  private readonly clearFilterButton: string;
+
+  private readonly productBulkMenuButton: string;
+
+  private readonly bulkActionsDropDownMenu: string;
+
+  private readonly bulkActionsDeleteSelectionLink: string;
+
+  private readonly productGridTable: string;
+
+  private readonly productTableFilterLine: string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly selectAllProductsCheckbox: string;
+
+  private readonly productFilterIDMinInput: string;
+
+  private readonly productFilterIDMaxInput: string;
+
+  private readonly productFilterNameInput: string;
+
+  private readonly productFilterReferenceInput: string;
+
+  private readonly productFilterCategoryInput: string;
+
+  private readonly productFilterPriceMinInput: string;
+
+  private readonly productFilterPriceMaxInput: string;
+
+  private readonly productFilterQuantityMinInput: string;
+
+  private readonly productFilterQuantityMaxInput: string;
+
+  private readonly productFilterSelectStatus: string;
+
+  private readonly productFilterPositionInput: string;
+
+  private readonly productRow: string;
+
+  private readonly productEmptyRow: string;
+
+  private readonly productsListTableRow: (row: number) => string;
+
+  private readonly productsListTableColumnID: (row: number) => string;
+
+  private readonly productsListTableColumnName: (row: number) => string;
+
+  private readonly productsListTableColumnReference: (row: number) => string;
+
+  private readonly productsListTableColumnCategory: (row: number) => string;
+
+  private readonly productsListTableColumnPriceTExc: (row: number) => string;
+
+  private readonly productsListTableColumnPriceATI: (row: number) => string;
+
+  private readonly productsListTableColumnQuantity: (row: number) => string;
+
+  private readonly productsListTableColumnStatus: (row: number) => string;
+
+  private readonly productsListTableColumnPosition: (row: number) => string;
+
+  private readonly productListTableDropDownList: (row: number) => string;
+
+  private readonly productListTableDeleteButton: (row: number) => string;
+
+  readonly modalCreateProduct: string;
+
+  private readonly modalCreateProductLoader: string;
+
+  private readonly productTypeChoices: string;
+
+  private readonly productTypeDescription: string;
+
+  private readonly productType: (type: string) => string;
+
+  private readonly modalDialog: string;
+
+  private readonly modalDialogFooter: string;
+
+  private readonly modalDialogDeleteButton: string;
+
+  private readonly modalBulkDeleteProducts: string;
+
+  private readonly modalBulkDeleteProductsBody: string;
+
+  private readonly modalBulkDeleteProductsFooter: string;
+
+  private readonly modalDialogBulkDeleteButton: string;
+
+  private readonly modalBulkDeleteProductsProgress: string;
+
+  private readonly modalBulkDeleteProductsProgressBody: string;
+
+  private readonly modalBulkDeleteProductsProgressSuccessMessage: string;
+
+  private readonly modalBulkDeleteProductsProgressFooter: string;
+
+  private readonly modalBulkDeleteProductsProgressBarDone: string;
+
+  private readonly modalBulkDeleteProductsCloseButton: string;
+
+  private readonly paginationBlock: string;
+
+  private readonly productsNumberLabel: string;
+
+  private readonly paginationNextLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -25,7 +174,6 @@ class Products extends BOBasePage {
       + 'customers can choose.';
     this.virtualProductDescription = 'An intangible product that doesn\'t require shipping. You can also add a '
       + 'downloadable file.';
-
     this.packOfProductsDescription = ' A collection of products from your catalog.';
 
     // Header selectors
@@ -49,7 +197,7 @@ class Products extends BOBasePage {
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
-    this.bulkActionsdeleteSelectionLink = '#product_grid_bulk_action_bulk_delete_ajax';
+    this.bulkActionsDeleteSelectionLink = '#product_grid_bulk_action_bulk_delete_ajax';
 
     // Products table selectors
     this.productGridTable = '#product_grid_table';
@@ -95,7 +243,7 @@ class Products extends BOBasePage {
     this.modalCreateProduct = '#modal-create-product';
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.productTypeChoices = '#create_product div.product-type-choices';
-    this.productTypedescription = '#create_product div.product-type-description';
+    this.productTypeDescription = '#create_product div.product-type-description';
     this.productType = (type) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
 
     // Modal dialog
@@ -105,9 +253,9 @@ class Products extends BOBasePage {
 
     // Modal delete products selectors
     this.modalBulkDeleteProducts = '#product-ajax-bulk_delete_ajax-confirm-modal';
-    this.modalBulkdeleteProductsBody = `${this.modalBulkDeleteProducts} div.modal-body`;
-    this.modalBulkdeleteProductsFooter = `${this.modalBulkDeleteProducts} div.modal-footer`;
-    this.modalDialogBulkDeleteButton = `${this.modalBulkdeleteProductsFooter} button.btn-confirm-submit`;
+    this.modalBulkDeleteProductsBody = `${this.modalBulkDeleteProducts} div.modal-body`;
+    this.modalBulkDeleteProductsFooter = `${this.modalBulkDeleteProducts} div.modal-footer`;
+    this.modalDialogBulkDeleteButton = `${this.modalBulkDeleteProductsFooter} button.btn-confirm-submit`;
     this.modalBulkDeleteProductsProgress = '#product-ajax-bulk_delete_ajax-progress-modal';
     this.modalBulkDeleteProductsProgressBody = `${this.modalBulkDeleteProductsProgress} div.modal-body`;
     this.modalBulkDeleteProductsProgressSuccessMessage = `${this.modalBulkDeleteProductsProgressBody}`
@@ -131,7 +279,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnNewProductButton(page) {
+  async clickOnNewProductButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
     return this.elementVisible(page, this.modalCreateProduct, 1000);
@@ -142,13 +290,13 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getProductDescription(page) {
+  async getProductDescription(page: Page): Promise<string> {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
 
-    return this.getTextContent(createProductFrame, this.productTypedescription);
+    return this.getTextContent(createProductFrame, this.productTypeDescription);
   }
 
   /**
@@ -156,7 +304,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertDangerBlockContent(page) {
+  getAlertDangerBlockContent(page: Page): Promise<string> {
     return this.getAlertDangerBlockParagraphContent(page);
   }
 
@@ -166,11 +314,11 @@ class Products extends BOBasePage {
    * @param productType {string} Product type to select
    * @returns {Promise<void>}
    */
-  async selectProductType(page, productType) {
+  async selectProductType(page: Page, productType: string): Promise<void> {
     await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
     await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
 
-    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
     await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
   }
 
@@ -179,8 +327,8 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnAddNewProduct(page) {
-    const createProductFrame = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
+  async clickOnAddNewProduct(page: Page): Promise<void> {
+    const createProductFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/create/gmi});
 
     await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);
   }
@@ -190,7 +338,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfProductsFromHeader(page) {
+  async getNumberOfProductsFromHeader(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.headerTitle);
   }
 
@@ -199,7 +347,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isResetButtonVisible(page) {
+  isResetButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.filterResetButton, 1000);
   }
 
@@ -209,7 +357,7 @@ class Products extends BOBasePage {
    * @param row {number} Row in product table
    * @returns {Promise<void>}
    */
-  async goToProductPage(page, row = 1) {
+  async goToProductPage(page: Page, row: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.productsListTableColumnName(row));
   }
 
@@ -219,7 +367,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async bulkSelectProducts(page) {
+  async bulkSelectProducts(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.selectAllProductsCheckbox);
 
     return this.elementNotVisible(page, `${this.productBulkMenuButton}[disabled]`, 1000);
@@ -230,15 +378,15 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async clickOnBulkDeleteProducts(page) {
+  async clickOnBulkDeleteProducts(page: Page): Promise<string> {
     await Promise.all([
       await this.waitForSelectorAndClick(page, this.productBulkMenuButton),
       await this.waitForVisibleSelector(page, this.bulkActionsDropDownMenu),
     ]);
-    await this.waitForSelectorAndClick(page, this.bulkActionsdeleteSelectionLink);
+    await this.waitForSelectorAndClick(page, this.bulkActionsDeleteSelectionLink);
     await this.waitForVisibleSelector(page, this.modalBulkDeleteProducts);
 
-    return this.getTextContent(page, this.modalBulkdeleteProductsBody);
+    return this.getTextContent(page, this.modalBulkDeleteProductsBody);
   }
 
   /**
@@ -246,7 +394,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async bulkDeleteProduct(page) {
+  async bulkDeleteProduct(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.modalDialogBulkDeleteButton);
 
     await this.waitForVisibleSelector(page, this.modalBulkDeleteProductsProgressBarDone);
@@ -259,7 +407,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeBulkDeleteProgressModal(page) {
+  async closeBulkDeleteProgressModal(page: Page): Promise<boolean> {
     await this.clickAndWaitForNavigation(page, this.modalBulkDeleteProductsCloseButton);
 
     return this.elementNotVisible(page, this.modalBulkDeleteProductsProgress, 1000);
@@ -272,7 +420,7 @@ class Products extends BOBasePage {
    * @param categoryName {string} Category name to filter by
    * @returns {Promise<void>}
    */
-  async filterProductsByCategory(page, categoryName = 'Home') {
+  async filterProductsByCategory(page: Page, categoryName: string = 'Home'): Promise<void> {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
@@ -309,7 +457,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getFilterByCategoryButtonName(page) {
+  getFilterByCategoryButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.filterByCategoriesButton);
   }
 
@@ -318,7 +466,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilterCategory(page) {
+  async resetFilterCategory(page: Page): Promise<void> {
     // Click and wait to be open
     await page.click(this.filterByCategoriesButton);
     await this.waitForVisibleSelector(page, `${this.filterByCategoriesButton}[aria-expanded='true']`);
@@ -333,7 +481,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isClearFilterLinkVisible(page) {
+  isClearFilterLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.clearFilterButton, 2000);
   }
 
@@ -342,7 +490,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnClearFilterLink(page) {
+  async clickOnClearFilterLink(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.clearFilterButton);
   }
 
@@ -351,7 +499,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPositionColumnVisible(page) {
+  isPositionColumnVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.productFilterPositionInput);
   }
 
@@ -362,7 +510,7 @@ class Products extends BOBasePage {
    * @param idMax {number} Value of id max to set on filter input
    * @return {Promise<void>}
    */
-  async filterProductsByID(page, idMin, idMax) {
+  async filterProductsByID(page: Page, idMin: number, idMax: number): Promise<void> {
     await page.type(this.productFilterIDMinInput, idMin.toString());
     await page.type(this.productFilterIDMaxInput, idMax.toString());
   }
@@ -374,7 +522,7 @@ class Products extends BOBasePage {
    * @param quantityMax {number} Value of quantity max to set on input
    * @return {Promise<void>}
    */
-  async filterProductsByQuantity(page, quantityMin, quantityMax) {
+  async filterProductsByQuantity(page: Page, quantityMin: number, quantityMax: number): Promise<void> {
     await page.type(this.productFilterQuantityMinInput, quantityMin.toString());
     await page.type(this.productFilterQuantityMaxInput, quantityMax.toString());
   }
@@ -386,7 +534,7 @@ class Products extends BOBasePage {
    * @param priceMax {number} Value of max price to set on filter input
    * @return {Promise<void>}
    */
-  async filterProductsByPrice(page, priceMin, priceMax) {
+  async filterProductsByPrice(page: Page, priceMin: number, priceMax: number): Promise<void> {
     await page.type(this.productFilterPriceMinInput, priceMin.toString());
     await page.type(this.productFilterPriceMaxInput, priceMax.toString());
   }
@@ -399,7 +547,8 @@ class Products extends BOBasePage {
    * @param filterType {string} Input or select to choose method of filter
    * @return {Promise<void>}
    */
-  async filterProducts(page, filterBy, value = '', filterType = 'input') {
+  async filterProducts(page: Page, filterBy: string, value: string | boolean | number = '', filterType: string = 'input')
+    : Promise<void> {
     switch (filterType) {
       case 'input':
         switch (filterBy) {
@@ -442,7 +591,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -453,7 +602,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
 
     return this.getNumberOfProductsFromList(page);
@@ -464,7 +613,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfProductsFromList(page) {
+  async getNumberOfProductsFromList(page: Page): Promise<number> {
     const found = await this.elementVisible(page, this.paginationNextLink, 1000);
 
     // In case we filter products and there is only one page, link next from pagination does not appear
@@ -485,7 +634,7 @@ class Products extends BOBasePage {
    * @param withTaxes {boolean} True if we need to get product price with tax, false if not
    * @returns {Promise<number>}
    */
-  async getProductPriceFromList(page, row, withTaxes) {
+  async getProductPriceFromList(page: Page, row: number, withTaxes: boolean): Promise<number> {
     const selector = withTaxes ? this.productsListTableColumnPriceATI : this.productsListTableColumnPriceTExc;
     const text = await this.getTextContent(page, selector(row));
     const price = /\d+(\.\d+)?/g.exec(text).toString();
@@ -499,7 +648,7 @@ class Products extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<boolean>}
    */
-  async getProductStatusFromList(page, row) {
+  async getProductStatusFromList(page: Page, row: number): Promise<boolean> {
     const inputValue = await this.getAttributeContent(
       page,
       `${this.productsListTableColumnStatus(row)}[checked]`,
@@ -514,9 +663,9 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name to get text content
    * @param row {number} Row on table
-   * @returns {Promise<string|number>}
+   * @returns {Promise<string|number|boolean>}
    */
-  async getTextColumn(page, columnName, row = 1) {
+  async getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string | number | boolean> {
     switch (columnName) {
       case 'id_product':
         return this.getNumberFromText(page, this.productsListTableColumnID(row));
@@ -545,7 +694,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getTextForEmptyTable(page) {
+  getTextForEmptyTable(page: Page): Promise<string> {
     return this.getTextContent(page, this.productEmptyRow);
   }
 
@@ -553,9 +702,9 @@ class Products extends BOBasePage {
    * Click on delete product button
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async clickOnDeleteProductButton(page, row = 1) {
+  async clickOnDeleteProductButton(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
     await this.waitForSelectorAndClick(page, this.productListTableDeleteButton(row));
 
@@ -565,13 +714,13 @@ class Products extends BOBasePage {
   /**
    * Delete product
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async deleteProduct(page) {
+  async deleteProduct(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.modalDialogDeleteButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
-module.exports = new Products();
+export default new Products();

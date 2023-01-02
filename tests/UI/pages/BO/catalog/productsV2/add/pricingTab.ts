@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Pricing tab on new product V2 page, contains functions that can be used on the page
@@ -8,6 +9,14 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class PricingTab extends BOBasePage {
+  private readonly pricingTabLink: string;
+
+  private readonly retailPriceInput: string;
+
+  private readonly taxRuleSpan: string;
+
+  private readonly taxRuleList: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on pricing tab
@@ -32,7 +41,7 @@ class PricingTab extends BOBasePage {
    * @param productData {ProductData} Data to set in pricing form
    * @returns {Promise<void>}
    */
-  async setProductPricing(page, productData) {
+  async setProductPricing(page: Page, productData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
     await this.setValue(page, this.retailPriceInput, productData.price);
     // Select tax rule by ID
@@ -44,4 +53,4 @@ class PricingTab extends BOBasePage {
   }
 }
 
-module.exports = new PricingTab();
+export default new PricingTab();

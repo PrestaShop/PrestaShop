@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Details tab on new product V2 page, contains functions that can be used on the page
@@ -8,6 +9,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class DetailsTab extends BOBasePage {
+  private readonly detailsTabLink: string;
+
+  private readonly productReferenceInput: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on details tab
@@ -30,10 +35,10 @@ class DetailsTab extends BOBasePage {
    * @param productData {ProductData} Data to set in details form
    * @returns {Promise<void>}
    */
-  async setProductDetails(page, productData) {
+  async setProductDetails(page: Page, productData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.detailsTabLink);
     await this.setValue(page, this.productReferenceInput, productData.reference);
   }
 }
 
-module.exports = new DetailsTab();
+export default new DetailsTab();

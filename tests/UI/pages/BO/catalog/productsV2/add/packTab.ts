@@ -1,14 +1,14 @@
+import type {Page} from 'playwright';
+
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
-
-import type {Page} from 'playwright';
 
 /**
  * Pack tab on new product V2 page, contains functions that can be used on the page
  * @class
- * @extends CommonPage
+ * @extends BOBasePage
  */
-export default class PackTab extends BOBasePage {
+class PackTab extends BOBasePage {
   private readonly packTabLink: string;
 
   private readonly searchProductInput: string;
@@ -322,4 +322,4 @@ export default class PackTab extends BOBasePage {
   }
 }
 
-module.exports = new PackTab();
+export default new PackTab();

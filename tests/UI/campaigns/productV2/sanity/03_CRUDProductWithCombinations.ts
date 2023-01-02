@@ -1,55 +1,51 @@
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import commonTests
+// Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
+import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-// Import FO pages
 import foProductPage from '@pages/FO/product';
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/productsV2';
+import createProductsPage from '@pages/BO/catalog/productsV2/add';
+import combinationsTab from '@pages/BO/catalog/productsV2/add/combinationsTab';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
+// Import data
+import ProductFaker from '@data/faker/product';
 
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/productsV2');
-const createProductsPage = require('@pages/BO/catalog/productsV2/add');
-const combinationsTab = require('@pages/BO/catalog/productsV2/add/combinationsTab');
-
-// Import faker data
-const ProductFaker = require('@data/faker/product');
-
-const baseContext = 'productV2_sanity_CRUDProductWithCombinations';
-
-let browserContext;
-let page;
-
-// Data to create product with combinations
-const newProductData = new ProductFaker({
-  type: 'combinations',
-  taxRule: 'No tax',
-  quantity: 50,
-  minimumQuantity: 1,
-  status: true,
-});
-// Data to edit product with combinations
-const editProductData = new ProductFaker({
-  type: 'combinations',
-  taxRule: 'No tax',
-  quantity: 100,
-  minimumQuantity: 1,
-  status: true,
-  attributes: {
-    color: ['Grey', 'Taupe', 'Red'],
-    size: ['L', 'XL'],
-  },
-});
+const baseContext: string = 'productV2_sanity_CRUDProductWithCombinations';
 
 describe('BO - Catalog - Products : CRUD product with combinations', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  // Data to create product with combinations
+  const newProductData: ProductFaker = new ProductFaker({
+    type: 'combinations',
+    taxRule: 'No tax',
+    quantity: 50,
+    minimumQuantity: 1,
+    status: true,
+  });
+  // Data to edit product with combinations
+  const editProductData: ProductFaker = new ProductFaker({
+    type: 'combinations',
+    taxRule: 'No tax',
+    quantity: 100,
+    minimumQuantity: 1,
+    status: true,
+    attributes: {
+      color: ['Grey', 'Taupe', 'Red'],
+      size: ['L', 'XL'],
+    },
+  });
+
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
@@ -79,14 +75,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
+      const pageTitle: string = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -95,7 +91,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await productsPage.selectProductType(page, newProductData.type);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -104,7 +100,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await productsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -113,21 +109,21 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductsPage.setProduct(page, newProductData);
+      const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check that the save button is changed to \'Save and publish\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
-      const saveButtonName = await createProductsPage.getSaveButtonName(page);
+      const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
       await expect(saveButtonName).to.equal('Save and publish');
     });
 
     it('should create combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-      const generateCombinationsButton = await combinationsTab.setProductAttributes(
+      const generateCombinationsButton: string = await combinationsTab.setProductAttributes(
         page,
         newProductData.attributes,
       );
@@ -137,21 +133,21 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
-      const successMessage = await combinationsTab.generateCombinations(page);
+      const successMessage: string = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
     it('should close generate combinations modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal', baseContext);
 
-      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
+      const isModalVisible: boolean = await combinationsTab.closeGenerateCombinationModal(page);
       await expect(isModalVisible).to.be.true;
     });
 
     it('should save the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'saveProduct', baseContext);
 
-      const updateProductMessage = await createProductsPage.saveProduct(page);
+      const updateProductMessage: string = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
@@ -163,14 +159,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result = await foProductPage.getProductInformation(page);
+      let result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
@@ -191,7 +187,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
@@ -200,14 +196,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should edit the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-      const createProductMessage = await createProductsPage.setProduct(page, editProductData);
+      const createProductMessage: string = await createProductsPage.setProduct(page, editProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should add combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCombinations', baseContext);
 
-      const generateCombinationsButton = await combinationsTab.setProductAttributes(
+      const generateCombinationsButton: string = await combinationsTab.setProductAttributes(
         page,
         editProductData.attributes,
       );
@@ -217,21 +213,21 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations2', baseContext);
 
-      const successMessage = await combinationsTab.generateCombinations(page);
+      const successMessage: string = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
     it('should close generate combinations modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal2', baseContext);
 
-      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
+      const isModalVisible: boolean = await combinationsTab.closeGenerateCombinationModal(page);
       await expect(isModalVisible).to.be.true;
     });
 
     it('should save the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'saveProduct2', baseContext);
 
-      const updateProductMessage = await createProductsPage.saveProduct(page);
+      const updateProductMessage: string = await createProductsPage.saveProduct(page);
       await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
@@ -243,14 +239,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(editProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      let result = await foProductPage.getProductInformation(page);
+      let result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price),
@@ -271,7 +267,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
@@ -280,7 +276,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage = await createProductsPage.deleteProduct(page);
+      const createProductMessage: string = await createProductsPage.deleteProduct(page);
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });

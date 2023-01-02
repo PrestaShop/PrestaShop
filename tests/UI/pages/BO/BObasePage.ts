@@ -887,7 +887,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getAlertDangerBlockParagraphContent(page: Page): Promise<string|null> {
+  getAlertDangerBlockParagraphContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertDangerBlockParagraph);
   }
 

@@ -1,49 +1,45 @@
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
+
 // Import utils
-import basicHelper from '@utils/basicHelper';
 import helper from '@utils/helpers';
+import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
-
-// Import FO pages
+// Import pages
 import foProductPage from '@pages/FO/product';
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/productsV2';
+import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
+// Import common tests
+import loginCommon from '@commonTests/BO/loginBO';
+import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/productsV2');
-const createProductsPage = require('@pages/BO/catalog/productsV2/add');
+// Import data
+import ProductFaker from '@data/faker/product';
 
-// Import faker data
-const ProductFaker = require('@data/faker/product');
-
-const baseContext = 'productV2_sanity_CRUDStandardProduct';
-
-let browserContext;
-let page;
-
-// Data to create standard product
-const newProductData = new ProductFaker({
-  type: 'standard',
-  taxRule: 'No tax',
-  quantity: 50,
-  minimumQuantity: 1,
-  status: true,
-});
-const editProductData = new ProductFaker({
-  type: 'standard',
-  taxRule: 'FR Taux réduit (10%)',
-  quantity: 100,
-  minimumQuantity: 1,
-  status: true,
-});
+const baseContext: string = 'productV2_sanity_CRUDStandardProduct';
 
 describe('BO - Catalog - Products : CRUD standard product', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  // Data to create standard product
+  const newProductData: ProductFaker = new ProductFaker({
+    type: 'standard',
+    taxRule: 'No tax',
+    quantity: 50,
+    minimumQuantity: 1,
+    status: true,
+  });
+  const editProductData: ProductFaker = new ProductFaker({
+    type: 'standard',
+    taxRule: 'FR Taux réduit (10%)',
+    quantity: 100,
+    minimumQuantity: 1,
+    status: true,
+  });
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
@@ -73,14 +69,14 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await productsPage.closeSfToolBar(page);
 
-      const pageTitle = await productsPage.getPageTitle(page);
+      const pageTitle: string = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible = await productsPage.clickOnNewProductButton(page);
+      const isModalVisible: boolean = await productsPage.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -89,7 +85,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await productsPage.selectProductType(page, newProductData.type);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -98,7 +94,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await productsPage.clickOnAddNewProduct(page);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
@@ -107,14 +103,14 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await createProductsPage.closeSfToolBar(page);
 
-      const createProductMessage = await createProductsPage.setProduct(page, newProductData);
+      const createProductMessage: string = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
     it('should check that the save button is changed to \'Save and publish\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSaveButton', baseContext);
 
-      const saveButtonName = await createProductsPage.getSaveButtonName(page);
+      const saveButtonName: string = await createProductsPage.getSaveButtonName(page);
       await expect(saveButtonName).to.equal('Save and publish');
     });
 
@@ -126,14 +122,14 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(newProductData.name);
     });
 
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
@@ -148,7 +144,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
@@ -157,7 +153,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     it('should edit the created product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-      const createProductMessage = await createProductsPage.setProduct(page, editProductData);
+      const createProductMessage: string = await createProductsPage.setProduct(page, editProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
     });
 
@@ -169,7 +165,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       await foProductPage.changeLanguage(page, 'en');
 
-      const pageTitle = await foProductPage.getPageTitle(page);
+      const pageTitle: string = await foProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(editProductData.name);
     });
 
@@ -178,7 +174,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
 
       const taxValue = await basicHelper.percentage(editProductData.price, 10);
 
-      const result = await foProductPage.getProductInformation(page);
+      const result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price + taxValue),
@@ -192,7 +188,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       // Go back to BO
       page = await foProductPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await createProductsPage.getPageTitle(page);
+      const pageTitle: string = await createProductsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
   });
@@ -201,7 +197,7 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const createProductMessage = await createProductsPage.deleteProduct(page);
+      const createProductMessage: string = await createProductsPage.deleteProduct(page);
       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
     });
   });
