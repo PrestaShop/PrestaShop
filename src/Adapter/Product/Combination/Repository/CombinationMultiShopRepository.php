@@ -412,43 +412,43 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function deleteByProductId(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $combinationIds = $this->getCombinationIds($productId, $shopConstraint);
+        $combinationIds = $this->getCombinationIds(
+            new ProductCombinationFilters($shopConstraint, [
+                'filters' => [
+                    'product_id' => $productId->getValue(),
+                ],
+            ])
+        );
 
         $this->bulkDelete($combinationIds, $shopConstraint);
     }
 
     /**
-     * @param ProductId $productId
-     * @param ShopConstraint $shopConstraint
+     * @param ProductCombinationFilters $filters
      *
      * @return CombinationId[]
      */
-    public function getCombinationIds(
-        ProductId $productId,
-        ShopConstraint $shopConstraint,
-        ?ProductCombinationFilters $filters = null
-    ): array {
-        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+    public function getCombinationIds(ProductCombinationFilters $filters): array
+    {
+        $productId = $filters->getProductId();
+        $shopIds = $this->productRepository->getShopIdsByConstraint(
+            new ProductId($productId),
+            $filters->getShopConstraint()
+        );
         $shopIds = array_map(function (ShopId $shopId) {
             return $shopId->getValue();
         }, $shopIds);
 
-        if ($filters) {
-            $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
-                ->select('pas.id_product_attribute')
-            ;
-        } else {
-            $qb = $this->connection->createQueryBuilder();
-            $qb
-                ->select('pas.id_product_attribute')
-                ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
-                ->andWhere('pas.id_product = :productId')
-                ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
-                ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
-                ->setParameter('productId', $productId->getValue())
-                ->addOrderBy('pas.id_product_attribute', 'ASC')
-            ;
-        }
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->andWhere('pas.id_product = :productId')
+            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId)
+            ->addOrderBy('pas.id_product_attribute', 'ASC')
+        ;
 
         $combinationIds = $qb->execute()->fetchAllAssociative();
 

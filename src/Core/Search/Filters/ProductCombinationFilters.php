@@ -27,15 +27,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
  * Filters of product combination list.
  *
  * Combination list is handled by javascript so it doesn't need grid id
  */
-class ProductCombinationFilters extends Filters
+class ProductCombinationFilters extends ShopFilters
 {
     public const LIST_LIMIT = 10;
 
@@ -47,32 +48,30 @@ class ProductCombinationFilters extends Filters
     private $productId;
 
     /**
-     * @var int
-     */
-    private $shopId;
-
-    /**
      * {@inheritDoc}
      */
-    public function __construct(array $filters = [], $filterId = '')
+    public function __construct(ShopConstraint $shopConstraint, array $filters = [])
     {
-        parent::__construct($filters, $filterId);
         if (!isset($filters['filters']['product_id'])) {
             throw new InvalidArgumentException(sprintf('%s filters expect a product_id filter', static::class));
         }
 
-        if (!isset($filters['filters']['shop_id'])) {
-            throw new InvalidArgumentException(sprintf('%s filters expect a shop_id filter', static::class));
+        $this->productId = (int) $filters['filters']['product_id'];
+
+        if (!$shopConstraint->getShopId()) {
+            throw new InvalidArgumentException(sprintf('%s filters supports only single shopConstraint', static::class));
         }
 
-        $this->needsToBePersisted = false;
-        $this->productId = (int) $filters['filters']['product_id'];
-        $this->shopId = (int) $filters['filters']['shop_id'];
+        parent::__construct(
+            $shopConstraint,
+            $filters,
+            // Since each combination lists depends on its associated product, the filterId must depend on it so that each
+            // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
+            // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
+            static::generateFilterId($this->getProductId(), $shopConstraint->getShopId()->getValue())
+        );
 
-        // Since each combination lists depends on its associated product, the filterId must depend on it so that each
-        // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
-        // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
-        $this->filterId = static::generateFilterId($this->productId, $this->shopId);
+        $this->needsToBePersisted = false;
     }
 
     /**
@@ -88,7 +87,7 @@ class ProductCombinationFilters extends Filters
      */
     public function getShopId(): int
     {
-        return $this->shopId;
+        return $this->getShopConstraint()->getShopId()->getValue();
     }
 
     /**
