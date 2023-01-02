@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombina
 
 class BulkCombinationFormDataFormatterTest extends TestCase
 {
+    private const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
+
     /**
      * @dataProvider getDataToFormat
      *
@@ -41,7 +43,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
      */
     public function testFormat(array $bulkFormData, array $expectedFormattedData): void
     {
-        $formatter = new BulkCombinationFormDataFormatter();
+        $formatter = new BulkCombinationFormDataFormatter(self::MODIFY_ALL_SHOPS_PREFIX);
         $formData = $formatter->format($bulkFormData);
         $this->assertEquals($formData, $expectedFormattedData);
     }
@@ -136,6 +138,39 @@ class BulkCombinationFormDataFormatterTest extends TestCase
             ],
         ];
 
+        yield 'stock data with modify all shops prefix' => [
+            [
+                'stock' => [
+                    'delta_quantity' => [
+                        'delta' => 15,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
+                    ],
+                    'minimal_quantity' => 2,
+                    'stock_location' => 'far',
+                    'low_stock_threshold' => 5,
+                    'low_stock_alert' => true,
+                    'available_date' => '2022-01-15',
+                ],
+            ],
+            [
+                'stock' => [
+                    'quantities' => [
+                        'delta_quantity' => [
+                            'delta' => 15,
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
+                        ],
+                        'minimal_quantity' => 2,
+                    ],
+                    'options' => [
+                        'stock_location' => 'far',
+                        'low_stock_threshold' => 5,
+                        'low_stock_alert' => true,
+                    ],
+                    'available_date' => '2022-01-15',
+                ],
+            ],
+        ];
+
         yield 'stock data with fixed quantity' => [
             [
                 'stock' => [
@@ -150,6 +185,33 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                 'stock' => [
                     'quantities' => [
                         'fixed_quantity' => 7,
+                    ],
+                    'options' => [
+                        'stock_location' => 'close',
+                        'low_stock_threshold' => 2,
+                        'low_stock_alert' => false,
+                    ],
+                    'available_date' => '2022-02-15',
+                ],
+            ],
+        ];
+
+        yield 'stock data with fixed quantity and modify all shops prefix' => [
+            [
+                'stock' => [
+                    'fixed_quantity' => 7,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'fixed_quantity' => false,
+                    'stock_location' => 'close',
+                    'low_stock_threshold' => 2,
+                    'low_stock_alert' => false,
+                    'available_date' => '2022-02-15',
+                ],
+            ],
+            [
+                'stock' => [
+                    'quantities' => [
+                        'fixed_quantity' => 7,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'fixed_quantity' => false,
                     ],
                     'options' => [
                         'stock_location' => 'close',
@@ -216,6 +278,35 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'price_tax_included' => 18,
                     'unit_price' => 87,
                     'weight' => 45,
+                ],
+            ],
+        ];
+
+        yield 'price data with modify all shops prefix' => [
+            [
+                'price' => [
+                    'wholesale_price' => 12,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'wholesale_price' => true,
+                    'price_tax_excluded' => 10,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
+                    'price_tax_included' => 18,
+                    'unit_price' => 87,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price' => false,
+                    'weight' => 45,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'weight' => false,
+                ],
+            ],
+            [
+                'price_impact' => [
+                    'wholesale_price' => 12,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'wholesale_price' => true,
+                    'price_tax_excluded' => 10,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
+                    'price_tax_included' => 18,
+                    'unit_price' => 87,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'unit_price' => false,
+                    'weight' => 45,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'weight' => false,
                 ],
             ],
         ];
