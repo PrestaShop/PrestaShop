@@ -143,6 +143,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         } else {
             $categoryUrl = $this->categoryProvider->getUrl(0, '{friendly-url}');
         }
+
         return [
             'name' => $editableCategory->getName(),
             'active' => $editableCategory->isActive(),
