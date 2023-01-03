@@ -1,7 +1,7 @@
 // Import data
 import {countries} from '@data/demo/countries';
 import tax from '@data/demo/tax';
-import {behaviour} from '@data/demo/taxRule';
+import TaxRuleBehaviour from '@data/demo/taxRuleBehaviour';
 import TaxRuleCreator from '@data/types/taxRule';
 
 import {faker} from '@faker-js/faker';
@@ -40,7 +40,7 @@ export default class TaxRuleData {
     this.zipCode = taxRulesToCreate.zipCode || faker.address.zipCode();
 
     /** @type {string} Behavior of the tax rule */
-    this.behaviour = taxRulesToCreate.behaviour || faker.helpers.arrayElement(behaviour);
+    this.behaviour = taxRulesToCreate.behaviour || faker.helpers.arrayElement(TaxRuleBehaviour);
 
     /** @type {string} Name of the tax to use on the rule */
     this.name = taxRulesToCreate.name || tax.DefaultFrTax.name;

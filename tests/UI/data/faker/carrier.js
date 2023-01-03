@@ -1,10 +1,10 @@
 // Import data
-import {taxRules} from '@data/demo/taxRule';
+import TaxRules from '@data/demo/taxRule';
 import Zones from '@data/demo/zones';
 
 const {faker} = require('@faker-js/faker');
 
-const taxes = Object.values(taxRules).map((tax) => tax.name);
+const taxes = Object.values(TaxRules).map((tax) => tax.name);
 const zonesID = Object.values(Zones).map((zone) => zone.id);
 const outOfRangeBehavior = ['Apply the cost of the highest defined range', 'Disable carrier'];
 const billing = ['According to total price', 'According to total weight'];
