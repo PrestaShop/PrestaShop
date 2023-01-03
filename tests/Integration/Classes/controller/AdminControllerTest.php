@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
@@ -271,6 +272,9 @@ class AdminControllerTest extends TestCase
                 if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
+                if ($param === 'prestashop.core.admin.feature_flag.repository') {
+                    return $this->getMockedFeatureFlagRepository();
+                }
             });
 
         return $mockContainerBuilder;
@@ -348,6 +352,16 @@ class AdminControllerTest extends TestCase
         $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
 
         return $mockAvifExtensionChecker;
+    }
+
+    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    {
+        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->getMock();
+
+        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+
+        return $mockFeatureFlagRepository;
     }
 
     private function getMockNumberSpecification(): NumberSpecification
