@@ -4,30 +4,22 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import common tests
+// Import commonTests
+import {importFileTest} from '@commonTests/BO/advancedParameters/importFile';
+import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteCustomersTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const {Data} = require('@data/import/customers');
+import {Data} from '@data/import/customers';
+
+import type {BrowserContext, Page} from 'playwright';
+import {expect} from 'chai';
 
 const baseContext = 'functional_BO_customers_customers_paginationAndSortCustomers';
-
-let browserContext;
-let page;
-let numberOfCustomers = 0;
-
-// Variable used to create customers csv file
-const fileName = 'customers.csv';
 
 /*
 Pre-condition:
@@ -39,6 +31,13 @@ Post-condition:
 - Delete imported customers with bulk actions
  */
 describe('BO - Customers - Customers : Pagination and sort customers table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+
+  // Variable used to create customers csv file
+  const fileName: string = 'customers.csv';
+
   // Pre-condition: Import list of categories
   importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
 
@@ -70,7 +69,6 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
         dashboardPage.customersParentLink,
         dashboardPage.customersLink,
       );
-
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await customersPage.getPageTitle(page);
@@ -90,7 +88,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await customersPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await customersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -111,7 +109,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await customersPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await customersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -170,10 +168,10 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
         const sortedTable = await customersPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isNumber) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseInt(text, 10));
-          const sortedTableFloat = sortedTable.map((text) => parseInt(text, 10));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseInt(text, 10));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseInt(text, 10));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -181,7 +179,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else if (test.args.isDate) {
-          const expectedResult = await basicHelper.sortArrayDate(nonSortedTable);
+          const expectedResult: string[] = await basicHelper.sortArrayDate(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
@@ -189,7 +187,7 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
             await expect(sortedTable).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);

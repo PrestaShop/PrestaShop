@@ -6,58 +6,34 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customersPage from '@pages/BO/customers';
+import addCustomerPage from '@pages/BO/customers/add';
+import viewCustomerPage from '@pages/BO/customers/view';
+import addAddressPage from '@pages/BO/customers/addresses/add';
+import dashboardPage from '@pages/BO/dashboard';
+import viewCartPage from '@pages/BO/orders/shoppingCarts/view';
+import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foHomePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
-const viewCustomerPage = require('@pages/BO/customers/view');
-const addAddressPage = require('@pages/BO/customers/addresses/add');
-const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
-const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const CustomerFaker = require('@data/faker/customer');
-const {Products} = require('@data/demo/products');
-const {Languages} = require('@data/demo/languages');
-const {Statuses} = require('@data/demo/orderStatuses');
-const AddressFaker = require('@data/faker/address');
+import {Languages} from '@data/demo/languages';
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
+import AddressFaker from '@data/faker/address';
+import CustomerFaker from '@data/faker/customer';
 
-const baseContext = 'functional_BO_customers_customers_viewCustomer';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-const today = date.getDateFormat('mm/dd/yyyy');
-
-let numberOfCustomers = 0;
-
-// Init data
-const createCustomerData = new CustomerFaker({defaultCustomerGroup: 'Customer'});
-const editCustomerData = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
-const address = new AddressFaker({city: 'Paris', country: 'France'});
-const createAddressData = new AddressFaker({country: 'France'});
-
-// Get customer birth date format 'mm/dd/yyyy'
-const mmBirth = `0${createCustomerData.monthOfBirth}`.slice(-2);
-const ddBirth = `0${createCustomerData.dayOfBirth}`.slice(-2);
-const yyyyBirth = createCustomerData.yearOfBirth;
-const customerBirthDate = `${mmBirth}/${ddBirth}/${yyyyBirth}`;
-
-const mmEditBirth = `0${editCustomerData.monthOfBirth}`.slice(-2);
-const ddEditBirth = `0${editCustomerData.dayOfBirth}`.slice(-2);
-const yyyyEditBirth = editCustomerData.yearOfBirth;
-const editCustomerBirthDate = `${mmEditBirth}/${ddEditBirth}/${yyyyEditBirth}`;
+const baseContext: string = 'functional_BO_customers_customers_viewCustomer';
 
 /*
 Create customer
@@ -71,6 +47,28 @@ View carts page
 Delete customer
  */
 describe('BO - Customers - Customers : View information about customer', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+
+  const today: string = date.getDateFormat('mm/dd/yyyy');
+  // Init data
+  const createCustomerData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Customer'});
+  const editCustomerData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
+  const address: AddressFaker = new AddressFaker({city: 'Paris', country: 'France'});
+  const createAddressData: AddressFaker = new AddressFaker({country: 'France'});
+
+  // Get customer birthdate format 'mm/dd/yyyy'
+  const mmBirth: string = `0${createCustomerData.monthOfBirth}`.slice(-2);
+  const ddBirth: string = `0${createCustomerData.dayOfBirth}`.slice(-2);
+  const yyyyBirth: string = createCustomerData.yearOfBirth;
+  const customerBirthDate: string = `${mmBirth}/${ddBirth}/${yyyyBirth}`;
+
+  const mmEditBirth: string = `0${editCustomerData.monthOfBirth}`.slice(-2);
+  const ddEditBirth: string = `0${editCustomerData.dayOfBirth}`.slice(-2);
+  const yyyyEditBirth: string = editCustomerData.yearOfBirth;
+  const editCustomerBirthDate: string = `${mmEditBirth}/${ddEditBirth}/${yyyyEditBirth}`;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -93,7 +91,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
-
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
@@ -113,6 +110,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
 
       await customersPage.goToAddNewCustomerPage(page);
+
       const pageTitle = await addCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
     });
@@ -134,7 +132,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedCustomer', baseContext);
 
       await customersPage.resetFilter(page);
-
       await customersPage.filterCustomers(
         page,
         'input',
@@ -150,6 +147,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPageAfterCreateCustomer', baseContext);
 
       await customersPage.goToViewCustomerPage(page, 1);
+
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
     });
@@ -158,7 +156,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformationTitle1', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
-
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
@@ -168,7 +165,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCustomerInfo1', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getTextFromElement(page, 'Personal information');
-
       await expect(cardHeaderText).to.contains(createCustomerData.socialTitle);
       await expect(cardHeaderText).to.contains(`birth date: ${customerBirthDate}`);
       await expect(cardHeaderText).to.contains('Never');
@@ -201,7 +197,6 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       // Click on view my shop
       page = await viewCustomerPage.viewMyShop(page);
-
       // Change language
       await foHomePage.changeLanguage(page, 'en');
 
@@ -214,7 +209,6 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       // Go to the first product page
       await foHomePage.goToProductPage(page, 1);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
 
@@ -236,6 +230,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'loginToFO', baseContext);
 
       await checkoutPage.clickOnSignIn(page);
+
       const isStepLoginComplete = await checkoutPage.customerLogin(page, createCustomerData);
       await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
     });
@@ -255,7 +250,6 @@ describe('BO - Customers - Customers : View information about customer', async (
         1,
         'test message',
       );
-
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
     });
 
@@ -298,7 +292,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCustomer', baseContext);
 
       await customersPage.resetFilter(page);
-
       await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
@@ -309,6 +302,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPageAfterCreateOrder', baseContext);
 
       await customersPage.goToViewCustomerPage(page, 1);
+
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
     });
@@ -317,7 +311,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformationTitle2', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
-
       await expect(cardHeaderText).to.contains(createCustomerData.firstName);
       await expect(cardHeaderText).to.contains(createCustomerData.lastName);
       await expect(cardHeaderText).to.contains(createCustomerData.email);
@@ -327,7 +320,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCustomerInfo2', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getTextFromElement(page, 'Personal information');
-
       await expect(cardHeaderText).to.contains(createCustomerData.socialTitle);
       await expect(cardHeaderText).to.contains(`birth date: ${customerBirthDate}`);
       await expect(cardHeaderText).to.contains(today);
@@ -361,7 +353,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrders', baseContext);
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
-
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
       expect(carts).to.contains(Statuses.awaitingBankWire.status);
@@ -387,7 +378,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddress', baseContext);
 
       const customerAddress = await viewCustomerPage.getTextFromElement(page, 'Addresses');
-
       expect(customerAddress).to.contains(address.company);
       expect(customerAddress).to.contains(`${createCustomerData.firstName} ${createCustomerData.lastName}`);
       expect(customerAddress).to.contains(address.address);
@@ -399,7 +389,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkMessages', baseContext);
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Messages');
-
       expect(carts).to.contains(today);
       expect(carts).to.contains('Open');
       expect(carts).to.contains('test message');
@@ -409,7 +398,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkLAstConnections', baseContext);
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Last connections');
-
       expect(carts).to.contains(today);
     });
 
@@ -434,6 +422,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCustomerPage', baseContext);
 
       await viewCustomerPage.goToEditCustomerPage(page);
+
       const pageTitle = await addCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCustomerPage.pageTitleEdit);
     });
@@ -449,7 +438,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCustomerTitle', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
-
       await expect(cardHeaderText).to.contains(editCustomerData.firstName);
       await expect(cardHeaderText).to.contains(editCustomerData.lastName);
       await expect(cardHeaderText).to.contains(editCustomerData.email);
@@ -459,7 +447,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCustomerInfo', baseContext);
 
       const cardHeaderText = await viewCustomerPage.getTextFromElement(page, 'Personal information');
-
       expect(cardHeaderText).to.contains(editCustomerData.socialTitle);
       expect(cardHeaderText).to.contains(`birth date: ${editCustomerBirthDate}`);
       expect(cardHeaderText).to.contains(today);
@@ -483,6 +470,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToorderPageCustomerBlock', baseContext);
 
       await viewCustomerPage.goToPage(page, 'Orders');
+
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
@@ -511,7 +499,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCustomerAfterEditOrder', baseContext);
 
       await customersPage.resetFilter(page);
-
       await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
@@ -522,6 +509,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCustomerPageAfterEditOrder', baseContext);
 
       await customersPage.goToViewCustomerPage(page, 1);
+
       const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
     });
@@ -530,7 +518,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'CheckOrderStatusAfterEdit', baseContext);
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
-
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
       expect(carts).to.contains(Statuses.shipped.status);
@@ -548,7 +535,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkPurchasedProduct', baseContext);
 
       const purchasedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
-
       expect(purchasedProduct).to.contains(today);
       expect(purchasedProduct).to.contains(Products.demo_1.name);
     });
@@ -560,6 +546,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
       await viewCustomerPage.goToPage(page, 'Addresses');
+
       const pageTitle = await addAddressPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addAddressPage.pageTitleEdit);
     });
@@ -575,7 +562,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'CheckEditedAddress', baseContext);
 
       const customerAddress = await viewCustomerPage.getTextFromElement(page, 'Addresses');
-
       expect(customerAddress).to.contains(createAddressData.company);
       expect(customerAddress).to.contains(`${createAddressData.firstName} ${createAddressData.lastName}`);
       expect(customerAddress).to.contains(createAddressData.address);
@@ -590,6 +576,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewCartPage', baseContext);
 
       await viewCustomerPage.goToPage(page, 'Carts');
+
       const pageTitle = await viewCartPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCartPage.pageTitle);
     });
@@ -614,7 +601,6 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await customersPage.resetFilter(page);
-
       await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
 
       const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');

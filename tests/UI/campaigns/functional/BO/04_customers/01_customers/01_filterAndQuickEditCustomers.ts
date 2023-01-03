@@ -3,32 +3,32 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfCustomers = 0;
-const today = date.getDateFormat('mm/dd/yyyy');
+const baseContext: string = 'functional_BO_customers_customers_filterAndQuickEditCustomers';
 
 /*
 Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
 Quick edit customer enable/disable - status, newsletter and partner offers
  */
 describe('BO - Customers - Customers : Filter and quick edit Customers table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+
+  const today: string = date.getDateFormat('mm/dd/yyyy');
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -51,7 +51,6 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
-
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
@@ -74,7 +73,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_customer',
-            filterValue: DefaultCustomer.id,
+            filterValue: DefaultCustomer.id.toString(),
           },
       },
       {
@@ -119,7 +118,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: DefaultCustomer.enabled,
+            filterValue: DefaultCustomer.enabled ? '1' : '0',
           },
       },
       {
@@ -128,7 +127,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterNewsletter',
             filterType: 'select',
             filterBy: 'newsletter',
-            filterValue: DefaultCustomer.newsletter,
+            filterValue: DefaultCustomer.newsletter ? '1' : '0',
           },
       },
       {
@@ -137,7 +136,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterOptin',
             filterType: 'select',
             filterBy: 'optin',
-            filterValue: false,
+            filterValue: '0',
           },
       },
     ];
@@ -146,7 +145,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        if (typeof test.args.filterValue === 'boolean') {
+        if (['filterActive', 'filterNewsletter', 'filterOptin'].includes(test.args.testIdentifier)) {
           await customersPage.filterCustomersSwitch(
             page,
             test.args.filterBy,
@@ -190,7 +189,6 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
                 i,
                 test.args.filterBy,
               );
-
               await expect(textColumn).to.contains(test.args.filterValue);
               break;
             }
@@ -211,7 +209,6 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
 
       // Filter orders
       await customersPage.filterCustomersByRegistration(page, today, today);
-
       // Get number of elements
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
 
