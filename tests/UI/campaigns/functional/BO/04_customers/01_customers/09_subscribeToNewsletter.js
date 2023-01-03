@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import BO pages
+import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 require('module-alias/register');
 
@@ -18,7 +19,6 @@ const {psEmailSubscription} = require('@data/demo/modules');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
-const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
 
 const baseContext = 'functional_BO_customers_customers_subscribeToNewsletter';

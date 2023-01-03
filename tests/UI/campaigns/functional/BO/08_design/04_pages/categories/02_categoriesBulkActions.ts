@@ -1,40 +1,35 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-const CategoryFaker = require('@data/faker/CMScategory');
+import CategoryFaker from '@data/faker/CMScategory';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_categories_categoriesBulkActions';
-
-let browserContext;
-let page;
-let numberOfCategories = 0;
-
-const firstCategoryData = new CategoryFaker({name: 'todelete'});
-const secondCategoryData = new CategoryFaker({name: 'todelete'});
-
-const categoriesTableName = 'cms_page_category';
+const baseContext: string = 'functional_BO_design_pages_categories_categoriesBulkActions';
 
 /* Create 2 categories
 Enable/Disable/Delete categories by bulk actions
  */
 describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCategories: number = 0;
+
+  const firstCategoryData: CategoryFaker = new CategoryFaker({name: 'todelete'});
+  const secondCategoryData: CategoryFaker = new CategoryFaker({name: 'todelete'});
+  const categoriesTableName: string = 'cms_page_category';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +52,6 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -76,11 +70,12 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
 
   // 1 : Create 2 categories In BO
   describe('Create 2 categories', async () => {
-    [firstCategoryData, secondCategoryData].forEach((categoryToCreate, index) => {
+    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: CategoryFaker, index: number) => {
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 
         await pagesPage.goToAddNewPageCategory(page);
+
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
@@ -96,6 +91,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         await testContext.addContextItem(this, 'testIdentifier', `backToCategories${index + 1}`, baseContext);
 
         await pagesPage.backToList(page);
+
         const pageTitle = await pagesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
@@ -131,7 +127,6 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
             categoriesTableName,
             i,
           );
-
           await expect(textColumn).to.equal(categoryStatus.args.enable);
         }
       });
@@ -163,7 +158,6 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
         page,
         categoriesTableName,
       );
-
       await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
     });
   });

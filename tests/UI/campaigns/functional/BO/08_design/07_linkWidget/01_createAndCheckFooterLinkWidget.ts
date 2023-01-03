@@ -5,28 +5,22 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import linkWidgetsPage from '@pages/BO/design/linkWidgets';
+import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const linkWidgetsPage = require('@pages/BO/design/linkWidgets');
-const addLinkWidgetPage = require('@pages/BO/design/linkWidgets/add');
-
 // Import data
-const {LinkWidgets} = require('@data/demo/linkWidgets');
-const {hooks} = require('@data/demo/hooks');
+import {LinkWidgets} from '@data/demo/linkWidgets';
+import {hooks} from '@data/demo/hooks';
 
-const baseContext = 'functional_BO_design_linkWidget_createAndCheckFooterLinkWidget';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfLinkWidgetInFooter = 0;
+const baseContext: string = 'functional_BO_design_linkWidget_createAndCheckFooterLinkWidget';
 
 /*
 Create link widget
@@ -34,6 +28,10 @@ Check existence in FO
 Delete link widget created
  */
 describe('BO - Design - Link Widget : Create footer link widget and check it in FO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfLinkWidgetInFooter: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +54,6 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       dashboardPage.designParentLink,
       dashboardPage.linkWidgetLink,
     );
-
     await linkWidgetsPage.closeSfToolBar(page);
 
     const pageTitle = await linkWidgetsPage.getPageTitle(page);
@@ -97,7 +94,6 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
 
       // View shop
       page = await linkWidgetsPage.viewMyShop(page);
-
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
 
@@ -112,7 +108,6 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await expect(title).to.contains(LinkWidgets.demo_1.name);
 
       const linksTextContent = await foHomePage.getFooterLinksTextContent(page, numberOfLinkWidgetInFooter + 1);
-
       await Promise.all([
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.contentPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.productsPages),
@@ -125,7 +120,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
       // Go back to BO
-      page = await foHomePage.closePage(browserContext, page, 0);
+      page = await foHomePage.closePage(browserContext, page, 0) as Page;
 
       const pageTitle = await linkWidgetsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(linkWidgetsPage.pageTitle);

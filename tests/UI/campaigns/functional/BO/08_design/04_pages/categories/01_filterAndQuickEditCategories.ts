@@ -1,35 +1,22 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import expect from chai
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
+// Import pages
+import dashboardPage from '@pages/BO/dashboard/index';
+import pagesPage from '@pages/BO/design/pages/index';
+import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-const CategoryPageFaker = require('@data/faker/CMScategory');
+import CategoryPageFaker from '@data/faker/CMScategory';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard/index');
-const pagesPage = require('@pages/BO/design/pages/index');
-const addPageCategoryPage = require('@pages/BO/design/pages/pageCategory/add');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_categories_filterAndQuickEditCategories';
-
-let browserContext;
-let page;
-let numberOfCategories = 0;
-
-const firstCategoryData = new CategoryPageFaker();
-const secondCategoryData = new CategoryPageFaker();
-
-const categoriesTableName = 'cms_page_category';
+const baseContext: string = 'functional_BO_design_pages_categories_filterAndQuickEditCategories';
 
 /*
 Create 2 categories
@@ -38,6 +25,14 @@ Enable/Disable status by quick edit
 Delete created categories by bulk actions
  */
 describe('BO - Design - Pages : Filter and quick edit categories table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCategories: number = 0;
+
+  const firstCategoryData: CategoryPageFaker = new CategoryPageFaker();
+  const secondCategoryData: CategoryPageFaker = new CategoryPageFaker();
+  const categoriesTableName: string = 'cms_page_category';
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -60,7 +55,6 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
       dashboardPage.designParentLink,
       dashboardPage.pagesLink,
     );
-
     await pagesPage.closeSfToolBar(page);
 
     const pageTitle = await pagesPage.getPageTitle(page);
@@ -69,11 +63,12 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
 
   // 1 : Create two categories and filter with all inputs and selects in grid table
   describe('Create 2 categories then filter the table', async () => {
-    [firstCategoryData, secondCategoryData].forEach((categoryToCreate, index) => {
+    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: CategoryPageFaker, index: number) => {
       it('should go to add new category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 
         await pagesPage.goToAddNewPageCategory(page);
+
         const pageTitle = await addPageCategoryPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addPageCategoryPage.pageTitleCreate);
       });
@@ -89,6 +84,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
         await testContext.addContextItem(this, 'testIdentifier', `backToCategories${index + 1}`, baseContext);
 
         await pagesPage.backToList(page);
+
         const pageTitle = await pagesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(pagesPage.pageTitle);
       });
@@ -111,7 +107,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
             testIdentifier: 'filterIdCategory',
             filterType: 'input',
             filterBy: 'id_cms_category',
-            filterValue: 1,
+            filterValue: '1',
           },
       },
       {
@@ -138,7 +134,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
             testIdentifier: 'filterPosition',
             filterType: 'input',
             filterBy: 'position',
-            filterValue: 5,
+            filterValue: '5',
           },
       },
       {
@@ -147,7 +143,7 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: secondCategoryData.displayed,
+            filterValue: secondCategoryData.displayed ? '1' : '0',
           },
       },
     ];
@@ -168,20 +164,18 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
           page,
           categoriesTableName,
         );
-
         await expect(numberOfCategoriesAfterFilter).to.be.at.most(numberOfCategories);
 
         for (let i = 1; i <= numberOfCategoriesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const categoryStatus = await pagesPage.getStatus(page, categoriesTableName, i);
-            await expect(categoryStatus).to.equal(test.args.filterValue);
+            await expect(categoryStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await pagesPage.getTextColumnFromTableCmsPageCategory(
               page,
               i,
               test.args.filterBy,
             );
-
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -194,7 +188,6 @@ describe('BO - Design - Pages : Filter and quick edit categories table', async (
           page,
           categoriesTableName,
         );
-
         await expect(numberOfCategoriesAfterFilter).to.be.equal(numberOfCategories);
       });
     });
