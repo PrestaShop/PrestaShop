@@ -7482,7 +7482,7 @@ class ProductCore extends ObjectModel
         if (null === $this->id || 0 >= $this->id) {
             return false;
         }
-        $attributes = self::getAttributesInformationsByProduct($this->id);
+        $attributes = self::getProductAttributesIds($this->id, true);
 
         return !empty($attributes);
     }
