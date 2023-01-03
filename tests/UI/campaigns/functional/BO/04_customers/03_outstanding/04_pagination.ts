@@ -1,47 +1,27 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import common tests
-const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
-const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-
-// Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Statuses} = require('@data/demo/orderStatuses');
+import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
+import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const outstandingPage = require('@pages/BO/customers/outstanding');
-const ordersPage = require('@pages/BO/orders');
+import outstandingPage from '@pages/BO/customers/outstanding';
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
 
-const baseContext = 'functional_BO_customers_outstanding_pagination';
+// Import data
+import {DefaultCustomer} from '@data/demo/customer';
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import type Order from '@data/types/order';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Variable used to get the number of outstanding
-let numberOutstanding;
-
-// Const used to get the least number of outstanding to display pagination
-const numberOfOrdersToCreate = 11;
-
-const orderByCustomerData = {
-  customer: DefaultCustomer,
-  productId: 1,
-  productQuantity: 1,
-  paymentMethod: PaymentMethods.wirePayment.moduleName,
-};
+const baseContext: string = 'functional_BO_customers_outstanding_pagination';
 
 /*
 Pre-condition:
@@ -56,7 +36,20 @@ Scenario:
 Post-condition:
 - Disable B2B
 */
-describe('BO - Customers - Outstanding : Pagination of the outstanding page', async () => {
+describe('BO - Customers - Outstanding : Pagination of the outstanding page', async () => {let browserContext: BrowserContext;
+  let page: Page;
+  // Variable used to get the number of outstanding
+  let numberOutstanding: number;
+
+  // Const used to get the least number of outstanding to display pagination
+  const numberOfOrdersToCreate: number = 11;
+  const orderByCustomerData: Order = {
+    customer: DefaultCustomer,
+    productId: 1,
+    productQuantity: 1,
+    paymentMethod: PaymentMethods.wirePayment.moduleName,
+  };
+
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -74,8 +67,8 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await loginCommon.loginBO(this, page);
     });
 
-    const creationTests = new Array(numberOfOrdersToCreate).fill(0, 0, numberOfOrdersToCreate);
-    creationTests.forEach((value, index) => {
+    const creationTests: number[] = new Array(numberOfOrdersToCreate).fill(0, 0, numberOfOrdersToCreate);
+    creationTests.forEach((value: number, index: number) => {
       createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
 
       // Pre-condition: Update order status to payment accepted
@@ -135,7 +128,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await outstandingPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await outstandingPage.selectPaginationLimit(page, 10);
       expect(paginationNumber, `Number of pages is not correct (page 1 / ${Math.ceil(numberOutstanding / 10)})`)
         .to.contains(`(page 1 / ${Math.ceil(numberOutstanding / 10)})`);
     });
@@ -159,7 +152,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await outstandingPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await outstandingPage.selectPaginationLimit(page, 50);
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
   });
