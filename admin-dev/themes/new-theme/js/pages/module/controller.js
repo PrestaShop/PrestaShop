@@ -187,36 +187,64 @@ class AdminModuleController {
     });
 
     body.on('click', self.bulkItemSelector, function initializeBodyChange() {
-      if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
-        $.growl.warning({
-          message: window.translate_javascripts['Bulk Action - One module minimum'],
-        });
-        return;
-      }
-
+      const isMaintenanceMode = window.isShopMaintenance;
       self.lastBulkAction = $(this).data('ref');
       const modulesListString = self.buildBulkActionModuleList();
-      const actionString = $(this)
-        .find(':checked')
-        .text()
-        .toLowerCase();
-      $(self.bulkConfirmModalListSelector).html(modulesListString);
-      $(self.bulkConfirmModalActionNameSelector).text(actionString);
 
-      if (self.lastBulkAction === 'bulk-uninstall') {
-        $(self.bulkActionCheckboxSelector).show();
+      if (self.lastBulkAction === 'bulk-install' && !isMaintenanceMode) {
+        const maintenanceLink = document.createElement('a');
+        maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+        maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+        maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
+        const bulkInstallConfirmModal = new ConfirmModal(
+          {
+            id: 'confirm-module-bulk-install-modal',
+            confirmTitle:
+            window.moduleTranslations.multipleModuleModalInstallTitle,
+            closeButtonLabel: window.moduleTranslations.moduleModalCancel,
+            confirmButtonLabel: window.moduleTranslations.installAnywayButtonText,
+            confirmButtonClass: 'btn-secondary',
+            confirmMessage: window.moduleTranslations.moduleModalConfirmMessage,
+            closable: true,
+            customButtons: [maintenanceLink],
+          },
+
+          () => self.doBulkAction(self.lastBulkAction),
+        );
+
+        $('#confirm-module-bulk-install-modal .modal-body').prepend(`<p>${modulesListString}</p>`);
+
+        bulkInstallConfirmModal.show();
       } else {
-        $(self.bulkActionCheckboxSelector).hide();
+        if ($(self.getBulkCheckboxesCheckedSelector()).length === 0) {
+          $.growl.warning({
+            message: window.translate_javascripts['Bulk Action - One module minimum'],
+          });
+          return;
+        }
+
+        const actionString = $(this)
+          .find(':checked')
+          .text()
+          .toLowerCase();
+        $(self.bulkConfirmModalListSelector).html(modulesListString);
+        $(self.bulkConfirmModalActionNameSelector).text(actionString);
+
+        if (self.lastBulkAction === 'bulk-uninstall') {
+          $(self.bulkActionCheckboxSelector).show();
+        } else {
+          $(self.bulkActionCheckboxSelector).hide();
+        }
+
+        $(self.bulkConfirmModalSelector).modal('show');
+
+        body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          $(self.bulkConfirmModalSelector).modal('hide');
+          self.doBulkAction(self.lastBulkAction);
+        });
       }
-
-      $(self.bulkConfirmModalSelector).modal('show');
-    });
-
-    body.on('click', this.bulkConfirmModalAckBtnSelector, (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      $(self.bulkConfirmModalSelector).modal('hide');
-      self.doBulkAction(self.lastBulkAction);
     });
   }
 
