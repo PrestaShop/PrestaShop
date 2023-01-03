@@ -268,7 +268,7 @@ class AdminControllerTest extends TestCase
                 if ($param === 'security.csrf.token_manager') {
                     return $this->getMockedCsrfTokenManager();
                 }
-                if ($param === 'prestashop.core.configuration.avif_extension_checker') {
+                if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
                     return $this->getMockedAvifExtensionChecker();
                 }
             });
