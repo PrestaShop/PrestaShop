@@ -186,7 +186,9 @@ class ImageRetriever
             if (!$this->isMultipleImageFormatFeatureActive) {
                 $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg');
                 $additionalSources['jpg'] = $this->link->$getImageURL($rewriteLink, $id_image, $image_type['name'], '.jpg');
-                $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
+                if ($generateHighDpiImages) {
+                    $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
+                }
             } else {
                 foreach ($configuredImageFormats as $imageFormat) {
                     $this->generateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
