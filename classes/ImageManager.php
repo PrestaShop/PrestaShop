@@ -660,7 +660,7 @@ class ImageManagerCore
         static $psPngQuality = null;
         static $psJpegQuality = null;
         static $psWebpQuality = null;
-        static $pasAvifQuality = null;
+        static $psAvifQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -674,8 +674,8 @@ class ImageManagerCore
             $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
         }
 
-        if ($pasAvifQuality === null) {
-            $pasAvifQuality = Configuration::get('PS_AVIF_QUALITY');
+        if ($psAvifQuality === null) {
+            $psAvifQuality = Configuration::get('PS_AVIF_QUALITY');
         }
 
         $success = false;
@@ -701,7 +701,7 @@ class ImageManagerCore
                 break;
 
             case 'avif':
-                $quality = ($pasAvifQuality === false ? 80 : $pasAvifQuality);
+                $quality = ($psAvifQuality === false ? 80 : $psAvifQuality);
                 // @phpstan-ignore-next-line
                 $success = imageavif($resource, $filename, $quality);
 
