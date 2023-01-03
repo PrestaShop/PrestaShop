@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles @see DeleteProductFromShopsCommand using dedicated service
@@ -43,11 +45,19 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     private $productRepository;
 
     /**
+     * @var CombinationMultiShopRepository
+     */
+    private $combinationMultiShopRepository;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
      */
-    public function __construct(ProductMultiShopRepository $productRepository)
-    {
+    public function __construct(
+        ProductMultiShopRepository $productRepository,
+        CombinationMultiShopRepository $combinationMultiShopRepository
+    ) {
         $this->productRepository = $productRepository;
+        $this->combinationMultiShopRepository = $combinationMultiShopRepository;
     }
 
     /**
@@ -55,6 +65,16 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
      */
     public function handle(DeleteProductFromShopsCommand $command): void
     {
-        $this->productRepository->deleteFromShops($command->getProductId(), $command->getShopIds());
+        $shopIds = $command->getShopIds();
+        $productId = $command->getProductId();
+        $this->productRepository->deleteFromShops($command->getProductId(), $shopIds);
+
+        if (!$this->productRepository->hasCombinations($command->getProductId())) {
+            return;
+        }
+
+        foreach ($shopIds as $shopId) {
+            $this->combinationMultiShopRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
+        }
     }
 }
