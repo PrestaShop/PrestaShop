@@ -45,9 +45,9 @@ class Home extends FOBasePage {
 
   private readonly productColorLink: (number: number, color: string) => string;
 
-  private readonly allProductLink: string;
+  public readonly allProductLink: string;
 
-  private readonly totalProducts: string;
+  public readonly totalProducts: string;
 
   private readonly productPrice: (number: number) => string;
 

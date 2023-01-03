@@ -42,7 +42,7 @@ class Cart extends FOBasePage {
 
   private readonly deleteIcon: (number: number) => string;
 
-  private readonly itemsNumber: string;
+  public readonly itemsNumber: string;
 
   private readonly subtotalDiscountValueSpan: string;
 

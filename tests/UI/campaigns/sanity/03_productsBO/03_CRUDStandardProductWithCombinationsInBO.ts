@@ -2,44 +2,46 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
+// Import commonTests
+import loginCommon from '@commonTests/BO/loginBO';
+
+// Import BO pages
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/products';
+import addProductPage from '@pages/BO/catalog/products/add';
 // Import FO pages
 import foProductPage from '@pages/FO/product';
 
-// Import login steps
-import loginCommon from '@commonTests/BO/loginBO';
+// Import data
+import ProductFaker from '@data/faker/product';
+import {ProductDetailsBasic} from '@data/types/product';
 
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
-
-const ProductFaker = require('@data/faker/product');
-
-const baseContext = 'sanity_productsBO_CRUDStandardProductWithCombinationsInBO';
-
-const productToCreate = {
-  type: 'Standard product',
-  productHasCombinations: true,
-};
-const productWithCombinations = new ProductFaker(productToCreate);
-const editedProductWithCombinations = new ProductFaker(productToCreate);
-
-let browserContext;
-let page;
-let productInformation = {
-  price: 0,
-  name: '',
-  description: '',
-  shortDescription: '',
-};
+const baseContext: string = 'sanity_productsBO_CRUDStandardProductWithCombinationsInBO';
 
 // Create, read, update and delete Standard product with combinations in BO
 describe('BO - Catalog - Products : Create, read, update and delete Standard product '
   + 'with combinations in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let productInformation: ProductDetailsBasic = {
+    price: 0,
+    name: '',
+    description: '',
+    shortDescription: '',
+  };
+
+  const productWithCombinations = new ProductFaker({
+    type: 'Standard product',
+    productHasCombinations: true,
+  });
+  const editedProductWithCombinations = new ProductFaker({
+    type: 'Standard product',
+    productHasCombinations: true,
+  });
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +65,6 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
       dashboardPage.catalogParentLink,
       dashboardPage.productsLink,
     );
-
     await productsPage.closeSfToolBar(page);
 
     const pageTitle = await productsPage.getPageTitle(page);
@@ -74,6 +75,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await testContext.addContextItem(this, 'testIdentifier', 'resetFilters', baseContext);
 
     await productsPage.resetFilterCategory(page);
+
     const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfProducts).to.be.above(0);
   });
@@ -83,6 +85,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
 
     await productsPage.goToAddProductPage(page);
     await addProductPage.createEditBasicProduct(page, productWithCombinations);
+
     const createProductMessage = await addProductPage.setAttributesInProduct(
       page,
       productWithCombinations,
@@ -103,7 +106,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   it('should go back to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
-    page = await foProductPage.closePage(browserContext, page, 0);
+    page = await foProductPage.closePage(browserContext, page, 0) as Page;
 
     const pageTitle = await addProductPage.getPageTitle(page);
     await expect(pageTitle).to.contains(addProductPage.pageTitle);
@@ -125,6 +128,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
     await addProductPage.createEditBasicProduct(page, editedProductWithCombinations);
+
     const createProductMessage = await addProductPage.setAttributesInProduct(
       page,
       editedProductWithCombinations,
@@ -145,7 +149,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   it('should go back to BO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
 
-    page = await foProductPage.closePage(browserContext, page, 0);
+    page = await foProductPage.closePage(browserContext, page, 0) as Page;
 
     const pageTitle = await addProductPage.getPageTitle(page);
     await expect(pageTitle).to.contains(addProductPage.pageTitle);
