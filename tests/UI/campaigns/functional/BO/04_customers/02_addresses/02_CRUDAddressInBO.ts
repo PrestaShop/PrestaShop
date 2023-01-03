@@ -1,36 +1,32 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
-const addAddressPage = require('@pages/BO/customers/addresses/add');
+import addressesPage from '@pages/BO/customers/addresses';
+import addAddressPage from '@pages/BO/customers/addresses/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const AddressFaker = require('@data/faker/address');
+import AddressFaker from '@data/faker/address';
 
-const baseContext = 'functional_BO_customers_addresses_CRUDAddressInBO';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfAddresses = 0;
-
-const createAddressData = new AddressFaker({email: 'pub@prestashop.com', country: 'France'});
-const editAddressData = new AddressFaker({country: 'France'});
+const baseContext: string = 'functional_BO_customers_addresses_CRUDAddressInBO';
 
 // Create, Read, Update and Delete address in BO
 describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfAddresses: number = 0;
+
+  const createAddressData: AddressFaker = new AddressFaker({email: 'pub@prestashop.com', country: 'France'});
+  const editAddressData: AddressFaker = new AddressFaker({country: 'France'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,7 +49,6 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
       dashboardPage.customersParentLink,
       dashboardPage.addressesLink,
     );
-
     await addressesPage.closeSfToolBar(page);
 
     const pageTitle = await addressesPage.getPageTitle(page);
@@ -73,6 +68,7 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewAddressPage', baseContext);
 
       await addressesPage.goToAddNewAddressPage(page);
+
       const pageTitle = await addAddressPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
     });
@@ -107,9 +103,7 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       await addressesPage.resetFilter(page);
-
       await addressesPage.filterAddresses(page, 'input', 'firstname', createAddressData.firstName);
-
       await addressesPage.filterAddresses(page, 'input', 'lastname', createAddressData.lastName);
 
       const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
@@ -123,6 +117,7 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
       await addressesPage.goToEditAddressPage(page, 1);
+
       const pageTitle = await addAddressPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addAddressPage.pageTitleEdit);
     });
@@ -157,9 +152,7 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await addressesPage.resetFilter(page);
-
       await addressesPage.filterAddresses(page, 'input', 'firstname', editAddressData.firstName);
-
       await addressesPage.filterAddresses(page, 'input', 'lastname', editAddressData.lastName);
 
       const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');

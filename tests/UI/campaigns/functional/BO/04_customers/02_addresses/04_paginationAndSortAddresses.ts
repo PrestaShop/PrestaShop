@@ -4,31 +4,22 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import common tests
+// Import commonTests
+import {importFileTest} from '@commonTests/BO/advancedParameters/importFile';
+import {bulkDeleteAddressesTest} from '@commonTests/BO/customers/createDeleteAddress';
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteAddressesTest} = require('@commonTests/BO/customers/createDeleteAddress');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
+import addressesPage from '@pages/BO/customers/addresses';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const {Data} = require('@data/import/addresses');
+import {Data} from '@data/import/addresses';
 
-const baseContext = 'functional_BO_customers_addresses_paginationAndSortAddresses';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfAddresses = 0;
-
-// Variable used to create customers csv file
-const fileName = 'addresses.csv';
+const baseContext: string = 'functional_BO_customers_addresses_paginationAndSortAddresses';
 
 /*
 Pre-condition:
@@ -40,6 +31,13 @@ Post-condition:
 - Delete addresses with bulk actions
  */
 describe('BO - Customers - Addresses : Pagination and sort addresses table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfAddresses: number = 0;
+
+  // Variable used to create customers csv file
+  const fileName: string = 'addresses.csv';
+
   // Pre-condition: Import list of categories
   importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
 
@@ -71,7 +69,6 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
         dashboardPage.customersParentLink,
         dashboardPage.addressesLink,
       );
-
       await dashboardPage.closeSfToolBar(page);
 
       const pageTitle = await addressesPage.getPageTitle(page);
@@ -91,7 +88,7 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await addressesPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await addressesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -112,7 +109,7 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await addressesPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await addressesPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -155,10 +152,10 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
         const sortedTable = await addressesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -166,7 +163,7 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);

@@ -1,35 +1,31 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import utils
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
-const addAddressPage = require('@pages/BO/customers/addresses/add');
+import addressesPage from '@pages/BO/customers/addresses';
+import addAddressPage from '@pages/BO/customers/addresses/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const AddressFaker = require('@data/faker/address');
+import AddressFaker from '@data/faker/address';
 
-const baseContext = 'functional_BO_customers_addresses_addressesBulkActions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfAddresses = 0;
-
-const addressData = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
+const baseContext: string = 'functional_BO_customers_addresses_addressesBulkActions';
 
 // Create addresses then delete with Bulk actions
 describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfAddresses: number = 0;
+
+  const addressData: AddressFaker = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -52,7 +48,6 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
       dashboardPage.customersParentLink,
       dashboardPage.addressesLink,
     );
-
     await addressesPage.closeSfToolBar(page);
 
     const pageTitle = await addressesPage.getPageTitle(page);
@@ -76,6 +71,7 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAddressPage${index + 1}`, baseContext);
 
         await addressesPage.goToAddNewAddressPage(page);
+
         const pageTitle = await addAddressPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
       });
@@ -98,7 +94,6 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
       await addressesPage.resetFilter(page);
-
       await addressesPage.filterAddresses(page, 'input', 'address1', addressData.address);
 
       const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');

@@ -5,32 +5,25 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import addressesPage from '@pages/BO/customers/addresses';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
-
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foAddressesPage = require('@pages/FO/myAccount/addresses');
-const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
-
-const baseContext = 'functional_BO_customers_addresses_setRequiredFields';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foAddressesPage from '@pages/FO/myAccount/addresses';
+import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const FakerAddress = require('@data/faker/address');
+import {DefaultCustomer} from '@data/demo/customer';
+import FakerAddress from '@data/faker/address';
 
-let browserContext;
-let page;
-const addressDataWithVatNumber = new FakerAddress({country: 'France', vatNumber: '0102030405'});
-const addressDataWithoutVatNumber = new FakerAddress({country: 'France'});
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+const baseContext: string = 'functional_BO_customers_addresses_setRequiredFields';
 
 /*
 Check 'Vat number' to be a required fields
@@ -39,6 +32,12 @@ Uncheck 'Vat number'
 Go to FO, new address page and verify that 'Vat number' is not required
  */
 describe('BO - Customers - Addresses : Set required fields for addresses', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const addressDataWithVatNumber: FakerAddress = new FakerAddress({country: 'France', vatNumber: '0102030405'});
+  const addressDataWithoutVatNumber: FakerAddress = new FakerAddress({country: 'France'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -61,7 +60,6 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
       dashboardPage.customersParentLink,
       dashboardPage.addressesLink,
     );
-
     await addressesPage.closeSfToolBar(page);
 
     const pageTitle = await addressesPage.getPageTitle(page);
@@ -84,7 +82,6 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       // View shop
       page = await addressesPage.viewMyShop(page);
-
       // Change language in FO
       await foHomePage.changeLanguage(page, 'en');
 
@@ -94,6 +91,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
     it('should login in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `loginFO${index}`, baseContext);
+
       // Go to create account page
       await foHomePage.goToLoginPage(page);
       await foLoginPage.customerLogin(page, DefaultCustomer);
@@ -107,6 +105,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
+
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);
     });
