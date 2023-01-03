@@ -5,86 +5,41 @@ import testContext from '@utils/testContext';
 // Common tests login BO
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
+import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
+import viewSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/view';
+import cartRulesPage from '@pages/BO/catalog/discounts';
+import addCartRulePage from '@pages/BO/catalog/discounts/add';
+import dashboardPage from '@pages/BO/dashboard';
+import currenciesPage from '@pages/BO/international/currencies';
+import addCurrencyPage from '@pages/BO/international/currencies/add';
+import localizationPage from '@pages/BO/international/localization';
+import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import searchResultsPage from '@pages/FO/searchResults';
 
-require('module-alias/register');
+// Import data
+import {Currencies} from '@data/demo/currencies';
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Products} from '@data/demo/products';
+import CartRuleFaker from '@data/faker/cartRule';
+import Order from '@data/types/order';
 
-// Import pages
-
-// BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
-const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-const localizationPage = require('@pages/BO/international/localization');
-const currenciesPage = require('@pages/BO/international/currencies');
-const addCurrencyPage = require('@pages/BO/international/currencies/add');
-const ordersPage = require('@pages/BO/orders');
-const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
-const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/add');
-const viewSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManager/view');
-const searchResultsPage = require('@pages/FO/searchResults');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
-// Import expect from chai
-const {expect} = require('chai');
-
-// Import demo data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
-const {Currencies} = require('@data/demo/currencies');
-
-const {Products} = require('@data/demo/products');
-
-// Import faker data
-const CartRuleFaker = require('@data/faker/cartRule');
-
-const percentCartRule = new CartRuleFaker(
-  {
-    name: 'discount15',
-    code: 'discount15',
-    discountType: 'Percent',
-    discountPercent: 15,
-  },
-);
-
-const giftCartRule = new CartRuleFaker(
-  {
-    name: 'freeGiftMug',
-    code: 'freeMug',
-    discountType: 'None',
-    freeGift: true,
-    freeGiftProduct: Products.demo_13,
-  },
-);
-
-// Create sql query data to get last order discount and total price
-const dbPrefix = global.INSTALL.DB_PREFIX;
-const sqlQueryData = {
-  name: 'Discount and ATI from last order',
-  sqlQuery: (orderRef) => 'SELECT total_discounts, total_paid_tax_incl '
-    + `from  ${dbPrefix}orders `
-    + `WHERE reference = '${orderRef}'`,
-};
-
-// Init data for the order
-const orderToMake = {
-  product: Products.demo_3,
-  quantityToOrder: 4,
-  percentDiscountValue: 20.678,
-  giftDiscountValue: giftCartRule.freeGiftProduct.price,
-  atiPrice: 117.178,
-};
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'regression_currencies_computingPrecision_FO';
 
-// Browser and tab
-let browserContext;
-let page;
+// Browser and tab;
 
 /*
 Create 2 cart rules
@@ -102,7 +57,41 @@ Create new sql query to check discount value and ATI price in database
 describe(
   'Regression - Currencies: Change currency precision and check orders total price in FO, BO and database',
   async () => {
-  // before and after functions
+    let browserContext: BrowserContext;
+    let page: Page;
+
+    const percentCartRule: CartRuleFaker = new CartRuleFaker({
+      name: 'discount15',
+      code: 'discount15',
+      discountType: 'Percent',
+      discountPercent: 15,
+    });
+    const giftCartRule: CartRuleFaker = new CartRuleFaker({
+      name: 'freeGiftMug',
+      code: 'freeMug',
+      discountType: 'None',
+      freeGift: true,
+      freeGiftProduct: Products.demo_13,
+    });
+    // Create sql query data to get last order discount and total price
+    const dbPrefix: string = global.INSTALL.DB_PREFIX;
+    const sqlQueryData = {
+      name: 'Discount and ATI from last order',
+      sqlQuery: '',
+      sqlQueryTemplate: (orderRef: string) => 'SELECT total_discounts, total_paid_tax_incl '
+        + `from  ${dbPrefix}orders `
+        + `WHERE reference = '${orderRef}'`,
+    };
+    // Init data for the order
+    const orderToMake: Order = {
+      product: Products.demo_3,
+      productQuantity: 4,
+      percentDiscountValue: 20.678,
+      giftDiscountValue: giftCartRule.freeGiftProduct.price,
+      atiPrice: 117.178,
+    };
+
+    // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
       page = await helper.newTab(browserContext);
@@ -135,6 +124,7 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage1', baseContext);
 
           await cartRulesPage.goToAddNewCartRulesPage(page);
+
           const pageTitle = await addCartRulePage.getPageTitle(page);
           await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
         });
@@ -152,6 +142,7 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage2', baseContext);
 
           await cartRulesPage.goToAddNewCartRulesPage(page);
+
           const pageTitle = await addCartRulePage.getPageTitle(page);
           await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
         });
@@ -174,7 +165,6 @@ describe(
           dashboardPage.internationalParentLink,
           dashboardPage.localizationLink,
         );
-
         await localizationPage.closeSfToolBar(page);
 
         const pageTitle = await localizationPage.getPageTitle(page);
@@ -185,6 +175,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToChangePrecision', baseContext);
 
         await localizationPage.goToSubTabCurrencies(page);
+
         const pageTitle = await currenciesPage.getPageTitle(page);
         await expect(pageTitle).to.contains(currenciesPage.pageTitle);
       });
@@ -204,6 +195,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyToChangePrecision', baseContext);
 
         await currenciesPage.goToEditCurrencyPage(page, 1);
+
         const pageTitle = await addCurrencyPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
       });
@@ -232,6 +224,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'goToFOLoginPage', baseContext);
 
         await homePage.goToLoginPage(page);
+
         const pageTitle = await foLoginPage.getPageTitle(page);
         await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
       });
@@ -240,6 +233,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'loginInFO', baseContext);
 
         await foLoginPage.customerLogin(page, DefaultCustomer);
+
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
       });
@@ -249,13 +243,11 @@ describe(
 
         // Go to home page
         await foLoginPage.goToHomePage(page);
-
         // Go to product page after searching its name
         await homePage.searchProduct(page, orderToMake.product.name);
         await searchResultsPage.goToProductPage(page, 1);
-
         // Add the created product to the cart
-        await productPage.addProductToTheCart(page, orderToMake.quantityToOrder);
+        await productPage.addProductToTheCart(page, orderToMake.productQuantity);
 
         // Check cart page
         const pageTitle = await cartPage.getPageTitle(page);
@@ -265,7 +257,7 @@ describe(
       it('should add percent discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addPercentDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, percentCartRule.code);
+        await cartPage.addPromoCode(page, percentCartRule.code as string);
         const firstSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(firstSubtotalDiscountValue, 'First discount was not applied')
@@ -275,7 +267,7 @@ describe(
       it('should add free gift discount and check that the discount was added', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addGiftDiscount', baseContext);
 
-        await cartPage.addPromoCode(page, giftCartRule.code);
+        await cartPage.addPromoCode(page, giftCartRule.code as string);
         const finalSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(finalSubtotalDiscountValue, 'Second discount was not applied')
@@ -341,7 +333,7 @@ describe(
         await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInBO', baseContext);
 
         // Get order reference to use in sql query
-        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1);
+        orderToMake.reference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
 
         // Check total price
         const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
@@ -368,9 +360,8 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'goToCreateSqlQueryPage', baseContext);
 
           await sqlManagerPage.goToNewSQLQueryPage(page);
-
           // Adding order reference to sql query
-          sqlQueryData.sqlQuery = sqlQueryData.sqlQuery(orderToMake.reference);
+          sqlQueryData.sqlQuery = sqlQueryData.sqlQueryTemplate(orderToMake.reference);
 
           const pageTitle = await addSqlQueryPage.getPageTitle(page);
           await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
@@ -389,7 +380,6 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'filterSqlQueriesToView', baseContext);
 
           await sqlManagerPage.resetFilter(page);
-
           await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
           const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
@@ -425,10 +415,10 @@ describe(
     });
 
     /*
-  Reset Currency precision
-  Delete cart rules created
-  Delete Sql query created
-   */
+      Reset Currency precision
+      Delete cart rules created
+      Delete Sql query created
+    */
     describe('Reset currency precision and delete created data', async () => {
       describe('Reset currency precision', async () => {
         it('should go to localization page', async function () {
@@ -448,6 +438,7 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPageToReset', baseContext);
 
           await localizationPage.goToSubTabCurrencies(page);
+
           const pageTitle = await currenciesPage.getPageTitle(page);
           await expect(pageTitle).to.contains(currenciesPage.pageTitle);
         });
@@ -467,6 +458,7 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'goToEditCurrencyPageToReset', baseContext);
 
           await currenciesPage.goToEditCurrencyPage(page, 1);
+
           const pageTitle = await addCurrencyPage.getPageTitle(page);
           await expect(pageTitle).to.contains(addCurrencyPage.pageTitle);
         });
@@ -520,7 +512,6 @@ describe(
           await testContext.addContextItem(this, 'testIdentifier', 'filterSQLQueriesToDelete', baseContext);
 
           await sqlManagerPage.resetFilter(page);
-
           await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
           const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
