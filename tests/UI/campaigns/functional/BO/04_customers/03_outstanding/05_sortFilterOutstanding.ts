@@ -4,50 +4,29 @@ import date from '@utils/date';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import Common tests
-const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
-const {createCustomerB2BTest, bulkDeleteCustomersTest} = require('@commonTests/BO/customers/createDeleteCustomer');
-const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
-const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
+import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
+import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
+import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const outstandingPage = require('@pages/BO/customers/outstanding');
-const ordersPage = require('@pages/BO/orders');
+import outstandingPage from '@pages/BO/customers/outstanding';
+import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
 
-// Import faker data
-const CustomerFaker = require('@data/faker/customer');
-const AddressFaker = require('@data/faker/address');
+// Import data
+import {Statuses} from '@data/demo/orderStatuses';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import AddressFaker from '@data/faker/address';
+import CustomerFaker from '@data/faker/customer';
+import type Order from '@data/types/order';
 
-// Import demo data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Statuses} = require('@data/demo/orderStatuses');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customers_outstanding_sortFilterOutstanding';
-
-let browserContext;
-let page;
-
-// Variable used to get the number of outstanding
-let numberOutstanding;
-
-// New B2B customers
-const createCustomerData1 = new CustomerFaker();
-const createCustomerData2 = new CustomerFaker();
-const createCustomerData3 = new CustomerFaker();
-
-const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
-
-// Const used to get today date format
-const today = date.getDateFormat('yyyy-mm-dd');
-const dateToCheck = date.getDateFormat('mm/dd/yyyy');
+const baseContext: string = 'functional_BO_customers_outstanding_sortFilterOutstanding';
 
 /*
 Pre-condition:
@@ -64,6 +43,22 @@ Post-condition:
 - Disable B2B
 */
 describe('BO - Customers - Outstanding : Filter and sort the Outstanding table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  // Variable used to get the number of outstanding
+  let numberOutstanding: number;
+
+  // New B2B customers
+  const createCustomerData1: CustomerFaker = new CustomerFaker();
+  const createCustomerData2: CustomerFaker = new CustomerFaker();
+  const createCustomerData3: CustomerFaker = new CustomerFaker();
+
+  const customersData: CustomerFaker[] = [createCustomerData1, createCustomerData2, createCustomerData3];
+
+  // Const used to get today date format
+  const today: string = date.getDateFormat('yyyy-mm-dd');
+  const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
+
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -82,11 +77,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await loginCommon.loginBO(this, page);
     });
     customersData.forEach((customerData, index = 1) => {
-      const addressData = new AddressFaker({
+      const addressData: AddressFaker = new AddressFaker({
         email: customerData.email,
         country: 'France',
       });
-      const orderByCustomerData = {
+      const orderByCustomerData: Order = {
         customer: customerData,
         productId: 1,
         productQuantity: 1,
@@ -294,10 +289,10 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         const sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -361,10 +356,10 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         const sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text) => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text) => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
