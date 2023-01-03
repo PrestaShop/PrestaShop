@@ -27,6 +27,10 @@ $(function(){
   const checkboxName = 'PS_IMAGE_FORMAT[]';
   const formId = 'image_type_form';
   const checkedCheckboxes = `input[name="${checkboxName}"]:checked`
+  const avifFieldId = '#PS_IMAGE_FORMATavif_on';
+
+  const avifCheckbox = document.querySelector(avifFieldId);
+  const isAvifSupported = !(avifCheckbox.disabled && !avifCheckbox.checked);
 
   // on page load, disable checkbox if there is only one checked
   if (document.querySelectorAll(checkedCheckboxes).length === 1) {
@@ -40,10 +44,15 @@ $(function(){
       const checkedCount = document.querySelectorAll(checkedCheckboxes).length;
 
       if (checkedCount > 1) {
-        disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
+        let disabledCheckbox;
+        if (isAvifSupported) {
+          disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled`);
+        } else {
+          disabledCheckbox = document.querySelector(`input[name="${checkboxName}"]:disabled:not(${avifFieldId})`);
+        }
         disabledCheckbox.disabled = false;
       } else {
-        checkedCheckbox = document.querySelector(checkedCheckboxes);
+        const checkedCheckbox = document.querySelector(checkedCheckboxes);
         checkedCheckbox.disabled = true;
       }
     });
