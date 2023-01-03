@@ -7,6 +7,8 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
+import Suppliers from '@data/demo/suppliers';
+
 require('module-alias/register');
 
 // Import expect from chai
@@ -14,7 +16,6 @@ const {expect} = require('chai');
 
 // Import data
 const {Products} = require('@data/demo/products');
-const {Suppliers} = require('@data/demo/suppliers');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

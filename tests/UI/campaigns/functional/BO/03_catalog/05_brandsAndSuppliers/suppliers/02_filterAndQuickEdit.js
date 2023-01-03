@@ -1,11 +1,12 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import data
+import Suppliers from '@data/demo/suppliers';
 
 require('module-alias/register');
 
@@ -16,9 +17,6 @@ const {expect} = require('chai');
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 const suppliersPage = require('@pages/BO/catalog/suppliers');
-
-// Import data
-const {Suppliers} = require('@data/demo/suppliers');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_suppliers_filterAndQuickEdit';
 
@@ -92,7 +90,7 @@ describe('BO - Catalog - Brands & Suppliers : Filter and quick edit suppliers', 
             testIdentifier: 'filterProductsCount',
             filterType: 'input',
             filterBy: 'products_count',
-            filterValue: Suppliers.fashionSupplier.numberOfProducts.toString(),
+            filterValue: Suppliers.fashionSupplier.products.toString(),
           },
       },
       {

@@ -1,18 +1,62 @@
-const {faker} = require('@faker-js/faker');
-const {countries} = require('@data/demo/countries');
+import {faker} from '@faker-js/faker';
+import {countries} from '@data/demo/countries';
+import SupplierCreator from '@data/types/supplier';
 
-const countriesNames = Object.values(countries).map((country) => country.name);
+const countriesNames: string[] = Object.values(countries).map((country) => country.name);
 
 /**
  * Create new supplier to use on supplier creation form on BO
  * @class
  */
-class SupplierData {
+export default class SupplierData {
+  public id: number;
+
+  public name: string;
+
+  public description: string;
+
+  public descriptionFr: string;
+
+  public homePhone: string;
+
+  public mobilePhone: string;
+
+  public address: string;
+
+  public secondaryAddress: string;
+
+  public postalCode: string;
+
+  public city: string;
+
+  public country: string;
+
+  public logo: string;
+
+  public metaTitle: string;
+
+  public metaTitleFr: string;
+
+  public metaDescription: string;
+
+  public metaDescriptionFr: string;
+
+  public metaKeywords: string[];
+
+  public metaKeywordsFr: string[];
+
+  public enabled: boolean;
+
+  public products: number;
+
   /**
    * Constructor for class SupplierData
-   * @param supplierToCreate {Object} Could be used to force the value of some members
+   * @param supplierToCreate {SupplierCreator} Could be used to force the value of some members
    */
-  constructor(supplierToCreate = {}) {
+  constructor(supplierToCreate: SupplierCreator = {}) {
+    /** @type {number} ID of the supplier */
+    this.id = supplierToCreate.id || 0;
+
     /** @type {string} Name of the supplier */
     this.name = (supplierToCreate.name || faker.company.name()).substring(0, 63);
 
@@ -71,5 +115,3 @@ class SupplierData {
     this.products = supplierToCreate.products || 0;
   }
 }
-
-module.exports = SupplierData;

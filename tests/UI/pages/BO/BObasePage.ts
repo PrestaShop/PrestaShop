@@ -85,7 +85,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly attributesAndFeaturesLink: string;
 
-  private readonly brandsAndSuppliersLink: string;
+  public readonly brandsAndSuppliersLink: string;
 
   private readonly filesLink: string;
 
