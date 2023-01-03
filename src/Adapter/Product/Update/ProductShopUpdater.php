@@ -126,6 +126,7 @@ class ProductShopUpdater
 
         /** @var Product $sourceProduct */
         $sourceProduct = $this->productRepository->getByShopConstraint($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $productType = $sourceProduct->getProductType();
         $this->productRepository->update(
             $sourceProduct,
             ShopConstraint::shop($targetShopId->getValue()),
