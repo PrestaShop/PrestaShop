@@ -3,12 +3,16 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonSteps
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import foProductPage from '@pages/FO/product';
+
+// Import data
+import TaxRuleData from '@data/faker/taxRule';
+import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 require('module-alias/register');
 
@@ -27,10 +31,6 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import common pages
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
-
-// Import data
-const TaxRuleGroup = require('@data/faker/taxRuleGroup');
-const TaxRule = require('@data/faker/taxRule');
 const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -43,21 +43,17 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-const taxRuleGroupToCreate = new TaxRuleGroup();
-const firstTaxRuleToCreate = new TaxRule(
-  {
-    country: 'France',
-    behaviour: 'Combine',
-    tax: 'TVA FR 20%',
-  },
-);
-const secondTaxRuleToCreate = new TaxRule(
-  {
-    country: 'France',
-    behaviour: 'Combine',
-    tax: 'TVA FR 10%',
-  },
-);
+const taxRuleGroupToCreate = new TaxRulesGroupData();
+const firstTaxRuleToCreate = new TaxRuleData({
+  country: 'France',
+  behaviour: 'Combine',
+  name: 'TVA FR 20%',
+});
+const secondTaxRuleToCreate = new TaxRuleData({
+  country: 'France',
+  behaviour: 'Combine',
+  name: 'TVA FR 10%',
+});
 
 const productToCreate = {
   type: 'Standard product',

@@ -11,7 +11,7 @@ import taxesPage from '@pages/BO/international/taxes';
 import addTaxPage from '@pages/BO/international/taxes/add';
 
 // Import data
-import TaxFaker from '@data/faker/tax';
+import TaxData from '@data/faker/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
   let page: Page;
   let numberOfTaxes: number = 0;
 
-  const createTaxData: TaxFaker = new TaxFaker();
-  const editTaxData: TaxFaker = new TaxFaker({enabled: 'No'});
+  const createTaxData: TaxData = new TaxData();
+  const editTaxData: TaxData = new TaxData({enabled: false});
 
   // before and after functions
   before(async function () {
@@ -129,7 +129,7 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
     it('should go to edit tax page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
-      await taxesPage.goToEditTaxPage(page, '1');
+      await taxesPage.goToEditTaxPage(page, 1);
 
       const pageTitle = await addTaxPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addTaxPage.pageTitleEdit);
@@ -196,7 +196,7 @@ describe('BO - International - Taxes : Create, Update and Delete Tax', async () 
     it('should delete Tax', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteTax', baseContext);
 
-      const textResult = await taxesPage.deleteTax(page, '1');
+      const textResult = await taxesPage.deleteTax(page, 1);
       await expect(textResult).to.equal(taxesPage.successfulDeleteMessage);
 
       const numberOfTaxesAfterDelete = await taxesPage.resetAndGetNumberOfLines(page);

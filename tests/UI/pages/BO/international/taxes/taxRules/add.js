@@ -64,7 +64,7 @@ class AddTaxRules extends BOBasePage {
   async createEditTaxRules(page, taxRuleData) {
     await this.selectByVisibleText(page, this.countrySelect, taxRuleData.country);
     await this.selectByVisibleText(page, this.behaviourSelect, taxRuleData.behaviour);
-    await this.selectByVisibleText(page, this.taxSelect, taxRuleData.tax);
+    await this.selectByVisibleText(page, this.taxSelect, taxRuleData.name);
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
     await this.clickAndWaitForNavigation(page, this.saveAndStayButton);

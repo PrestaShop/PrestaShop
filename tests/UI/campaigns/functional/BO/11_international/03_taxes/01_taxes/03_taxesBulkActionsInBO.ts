@@ -11,7 +11,7 @@ import taxesPage from '@pages/BO/international/taxes';
 import addTaxPage from '@pages/BO/international/taxes/add';
 
 // Import data
-import TaxFaker from '@data/faker/tax';
+import TaxData from '@data/faker/tax';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - International - Taxes : Bulk actions', async () => {
   let page: Page;
   let numberOfTaxes: number = 0;
 
-  const firstTaxData: TaxFaker = new TaxFaker({name: 'TVA to delete'});
-  const secondTaxData: TaxFaker = new TaxFaker({name: 'TVA to delete2'});
+  const firstTaxData: TaxData = new TaxData({name: 'TVA to delete'});
+  const secondTaxData: TaxData = new TaxData({name: 'TVA to delete2'});
 
   // before and after functions
   before(async function () {

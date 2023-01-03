@@ -13,8 +13,8 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
-import {taxRules} from '@data/demo/taxRule';
-import TaxRuleGroupFaker from '@data/faker/taxRuleGroup';
+import TaxRules from '@data/demo/taxRule';
+import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -85,7 +85,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_tax_rules_group',
-            filterValue: taxRules[3].id.toString(),
+            filterValue: TaxRules[3].id.toString(),
           },
       },
       {
@@ -94,7 +94,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: taxRules[1].name,
+            filterValue: TaxRules[1].name,
           },
       },
       {
@@ -207,7 +207,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
 
   creationTests.forEach((test: number, index: number) => {
     describe(`Create tax rule n°${index + 1} in BO`, async () => {
-      const taxRuleData = new TaxRuleGroupFaker({name: `todelete${index}`});
+      const taxRuleData = new TaxRulesGroupData({name: `todelete${index}`});
 
       it('should go to add new tax rule group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTaxRuleGroupPage${index}`, baseContext);
