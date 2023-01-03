@@ -98,7 +98,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
             i,
             test.args.filterBy,
           );
-
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -157,10 +156,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
         const sortedTable = await searchEnginesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);

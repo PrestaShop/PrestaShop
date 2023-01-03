@@ -1,5 +1,7 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+// Import BO pages
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Search engine page, contains selectors and functions for the page
@@ -7,6 +9,66 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class SearchEngines extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly newSearchEngineLink: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTable: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumns: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number, column: string) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on search engine page
@@ -28,30 +90,30 @@ class SearchEngines extends BOBasePage {
 
     // Sort selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.column-filters`;
-    this.filterColumn = (filterBy) => `${this.filterRow} #search_engine_${filterBy}`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} #search_engine_${filterBy}`;
     this.filterSearchButton = 'button.grid-search-button';
     this.filterResetButton = 'button.grid-reset-button';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumns = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumns = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableBodyColumn = (row, column) => `${this.tableBodyColumns(row)}.column-${column}`;
+    this.tableBodyColumn = (row: number, column: string) => `${this.tableBodyColumns(row)}.column-${column}`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumns(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} a.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.grid-edit-row-link`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} a.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.grid-delete-row-link`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#search_engine-grid-confirm-modal button.btn-confirm-submit';
@@ -74,7 +136,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToNewSearchEnginePage(page) {
+  async goToNewSearchEnginePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.newSearchEngineLink);
   }
 
@@ -85,7 +147,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableHeaderTitle);
   }
 
@@ -94,7 +156,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -107,7 +169,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
 
     return this.getNumberOfElementInGrid(page);
@@ -120,7 +182,7 @@ class SearchEngines extends BOBasePage {
    * @param value {string} value to filter with
    * @return {Promise<void>}
    */
-  async filterTable(page, filterBy, value) {
+  async filterTable(page: Page, filterBy: string, value: string): Promise<void> {
     await this.setValue(page, this.filterColumn(filterBy), value.toString());
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
@@ -134,7 +196,7 @@ class SearchEngines extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
-  getTextColumn(page, row, columnName) {
+  getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     return this.getTextContent(page, this.tableBodyColumn(row, columnName));
   }
 
@@ -144,9 +206,9 @@ class SearchEngines extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     // Get text column from each row
     for (let i = 1; i <= rowsNumber; i++) {
@@ -165,7 +227,7 @@ class SearchEngines extends BOBasePage {
    * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -184,7 +246,7 @@ class SearchEngines extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToEditSearchEnginePage(page, row) {
+  async goToEditSearchEnginePage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
@@ -194,7 +256,7 @@ class SearchEngines extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<string>}
    */
-  async deleteSearchEngine(page, row) {
+  async deleteSearchEngine(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
@@ -216,7 +278,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -226,7 +288,7 @@ class SearchEngines extends BOBasePage {
    * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
     return this.getPaginationLabel(page);
   }
@@ -236,7 +298,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
@@ -246,7 +308,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
@@ -257,9 +319,9 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await Promise.all([
-      page.$eval(this.selectAllLink, (el) => el.click()),
+      page.$eval(this.selectAllLink, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionMenuButton}:not([disabled])`),
     ]);
   }
@@ -269,7 +331,7 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async bulkDeleteSearchEngine(page) {
+  async bulkDeleteSearchEngine(page: Page): Promise<string> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -290,9 +352,9 @@ class SearchEngines extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async confirmDelete(page) {
+  async confirmDelete(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
   }
 }
 
-module.exports = new SearchEngines();
+export default new SearchEngines();
