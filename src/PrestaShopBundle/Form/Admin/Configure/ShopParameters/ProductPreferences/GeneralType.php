@@ -152,7 +152,7 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'placeholder' => false,
                 'help' => $this->trans(
-                    'Select what category you want to display in breadcrumbs on product page. It could be always the default category of the product, or the category the customer came from.',
+                    'Select which category to display on the product page breadcrumbs. It can be the default category of the product or the category the customer came from.',
                     'Admin.Shopparameters.Help'
                 ),
                 'required' => false,
