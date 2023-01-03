@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 
 /**
@@ -55,7 +56,7 @@ class AdminImagesControllerCore extends AdminController
 
     public function init()
     {
-        $this->isMultipleImageFormatFeatureEnabled = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $this->isMultipleImageFormatFeatureEnabled = SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
@@ -602,7 +603,7 @@ class AdminImagesControllerCore extends AdminController
             return false;
         }
 
-        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
         $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         if (!$productsImages) {
@@ -628,7 +629,7 @@ class AdminImagesControllerCore extends AdminController
                                 $this->errors[] = $this->trans('Failed to resize image file (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                             }
 
-                            if ($generate_hight_dpi_images) {
+                            if ($generate_high_dpi_images) {
                                 if (!$this->isMultipleImageFormatFeatureEnabled && !ImageManager::resize($dir . $image, $newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans('Failed to resize image file to high resolution (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
                                 }
@@ -642,7 +643,7 @@ class AdminImagesControllerCore extends AdminController
 
                                 ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, (int) $imageType['width'], (int) $imageType['height'], $imageFormat, true);
 
-                                if ($generate_hight_dpi_images) {
+                                if ($generate_high_dpi_images) {
                                     ImageManager::resize($dir . $image, $newDir . substr(str_replace('_thumb.', '.', $image), 0, -4) . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat, true);
                                 }
                             }
@@ -673,7 +674,7 @@ class AdminImagesControllerCore extends AdminController
                             }
                         }
 
-                        if ($generate_hight_dpi_images) {
+                        if ($generate_high_dpi_images) {
                             if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg')) {
                                 if (!ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.jpg', (int) $imageType['width'] * 2, (int) $imageType['height'] * 2)) {
                                     $this->errors[] = $this->trans(
@@ -698,7 +699,7 @@ class AdminImagesControllerCore extends AdminController
                             if (!file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat)) {
                                 ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, (int) $imageType['width'], (int) $imageType['height'], $imageFormat, true);
                             }
-                            if ($generate_hight_dpi_images && !file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
+                            if ($generate_high_dpi_images && !file_exists($dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat)) {
                                 ImageManager::resize($existing_img, $dir . $imageObj->getExistingImgPath() . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $imageFormat, true);
                             }
                         }
@@ -734,7 +735,7 @@ class AdminImagesControllerCore extends AdminController
     protected function _regenerateNoPictureImages($dir, $type, $languages)
     {
         $errors = false;
-        $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         foreach ($type as $image_type) {
             foreach ($languages as $language) {
@@ -747,7 +748,7 @@ class AdminImagesControllerCore extends AdminController
                         $errors = true;
                     }
 
-                    if ($generate_hight_dpi_images) {
+                    if ($generate_high_dpi_images) {
                         if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
                             $errors = true;
                         }
