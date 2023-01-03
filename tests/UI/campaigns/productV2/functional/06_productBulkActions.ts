@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
-// Import faker data
+// Import data
 import ProductFaker from '@data/faker/product';
 
 const baseContext: string = 'productV2_functional_productBulkActions';
