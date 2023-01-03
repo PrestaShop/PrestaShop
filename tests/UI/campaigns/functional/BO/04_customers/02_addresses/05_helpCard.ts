@@ -1,28 +1,24 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
+import addressesPage from '@pages/BO/customers/addresses';
+import dashboardPage from '@pages/BO/dashboard';
 
-const baseContext = 'functional_BO_customers_addresses_helpCard';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_customers_addresses_helpCard';
 
 // Check that help card is in english in addresses page
 describe('BO - Customers - Addresses - Help card on addresses page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

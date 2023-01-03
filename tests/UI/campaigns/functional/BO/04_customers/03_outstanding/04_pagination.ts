@@ -36,7 +36,8 @@ Scenario:
 Post-condition:
 - Disable B2B
 */
-describe('BO - Customers - Outstanding : Pagination of the outstanding page', async () => {let browserContext: BrowserContext;
+describe('BO - Customers - Outstanding : Pagination of the outstanding page', async () => {
+  let browserContext: BrowserContext;
   let page: Page;
   // Variable used to get the number of outstanding
   let numberOutstanding: number;

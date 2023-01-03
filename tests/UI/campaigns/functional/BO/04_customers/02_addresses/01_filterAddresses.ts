@@ -1,34 +1,30 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
+import addressesPage from '@pages/BO/customers/addresses';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const Address = require('@data/demo/address');
+import Address from '@data/demo/address';
 
-const baseContext = 'functional_BO_customers_addresses_filterAddresses';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfAddresses = 0;
+const baseContext: string = 'functional_BO_customers_addresses_filterAddresses';
 
 /*
 Filter addresses table by Id, firstname, lastname, address, postcode, city and country
  */
 describe('BO - Customers - Addresses : Filter Addresses table', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfAddresses: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,7 +68,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_address',
-            filterValue: Address.first.id,
+            filterValue: Address.first.id.toString(),
           },
       },
       {
