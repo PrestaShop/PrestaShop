@@ -389,48 +389,44 @@ class Products extends BOBasePage {
    * @returns {Promise<string>}
    */
   async clickOnBulkActionsProducts(page: Page, action: string): Promise<string> {
-    let textResult;
     await Promise.all([
       await this.waitForSelectorAndClick(page, this.productBulkMenuButton),
       await this.waitForVisibleSelector(page, this.bulkActionsDropDownMenu),
     ]);
 
-    if (action === 'enable' || action === 'disable') {
-      await this.waitForSelectorAndClick(page, this.bulkActionsSelectionLink(`${action}_selection`));
-      await this.waitForVisibleSelector(page, this.modalBulkActionsProducts(`${action}_selection`));
-      textResult = await this.getTextContent(page, this.modalBulkActionsProductsBody(`${action}_selection`));
-    } else {
-      await this.waitForSelectorAndClick(page, this.bulkActionsSelectionLink(`bulk_${action}`));
-      await this.waitForVisibleSelector(page, this.modalBulkActionsProducts(`bulk_${action}`));
-      textResult = await this.getTextContent(page, this.modalBulkActionsProductsBody(`bulk_${action}`));
-    }
+    const bulkActionsSelectionLink = this.bulkActionsSelectionLink(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
 
-    return textResult;
+    const modalBulkActionsProducts = this.modalBulkActionsProducts(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProductsBody = this.modalBulkActionsProductsBody(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.waitForSelectorAndClick(page, bulkActionsSelectionLink);
+    await this.waitForVisibleSelector(page, modalBulkActionsProducts);
+
+    return this.getTextContent(page, modalBulkActionsProductsBody);
   }
 
   /**
-   * Bulk action products
+   * Bulk actions products
    * @param page {Page} Browser tab
    * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<string>}
    */
   async bulkActionsProduct(page: Page, action: string): Promise<string> {
-    let textMessage;
+    const modalDialogBulkActionButton = this.modalDialogBulkActionButton(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProgressSuccessMessage = this.modalBulkActionsProgressSuccessMessage(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.waitForSelectorAndClick(page, modalDialogBulkActionButton);
+    await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
 
-    if (action === 'enable' || action === 'disable') {
-      await this.waitForSelectorAndClick(page, this.modalDialogBulkActionButton(`${action}_selection`));
-      await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
-      textMessage = this.getTextContent(
-        page,
-        this.modalBulkActionsProgressSuccessMessage(`${action}_selection`),
-      );
-    } else {
-      await this.waitForSelectorAndClick(page, this.modalDialogBulkActionButton(`bulk_${action}`));
-      await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
-      textMessage = this.getTextContent(page, this.modalBulkActionsProgressSuccessMessage(`bulk_${action}`));
-    }
-
-    return textMessage;
+    return this.getTextContent(page, modalBulkActionsProgressSuccessMessage);
   }
 
   /**
@@ -440,25 +436,15 @@ class Products extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async closeBulkActionsProgressModal(page: Page, action: string): Promise<boolean> {
-    let isNotVisible;
+    const modalBulkActionsProductsCloseButton = this.modalBulkActionsProductsCloseButton(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProductsProgress = this.modalBulkActionsProductsProgress(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.clickAndWaitForNavigation(page, modalBulkActionsProductsCloseButton);
 
-    if (action === 'enable' || action === 'disable') {
-      await this.clickAndWaitForNavigation(page, this.modalBulkActionsProductsCloseButton(`${action}_selection`));
-      isNotVisible = await this.elementNotVisible(
-        page,
-        this.modalBulkActionsProductsProgress(`${action}_selection`),
-        1000,
-      );
-    } else {
-      await this.clickAndWaitForNavigation(page, this.modalBulkActionsProductsCloseButton(`bulk_${action}`));
-      isNotVisible = await this.elementNotVisible(
-        page,
-        this.modalBulkActionsProductsProgress(`bulk_${action}`),
-        1000,
-      );
-    }
-
-    return isNotVisible;
+    return this.elementNotVisible(page, modalBulkActionsProductsProgress, 1000);
   }
 
   // Filter products table methods
