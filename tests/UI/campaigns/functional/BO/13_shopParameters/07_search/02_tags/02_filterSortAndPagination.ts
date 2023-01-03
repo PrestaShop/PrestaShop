@@ -14,7 +14,7 @@ import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
 // Import data
 import {Languages} from '@data/demo/languages';
-import TagFaker from '@data/faker/tag';
+import TagData from '@data/faker/tag';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -76,7 +76,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
 
     creationTests.forEach((test, index) => {
-      const tagData: TagFaker = new TagFaker({name: `todelete${index}`, language: Languages.english.name});
+      const tagData: TagData = new TagData({name: `todelete${index}`, language: Languages.english.name});
 
       it('should go to add new tag page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddTagPage${index}`, baseContext);
