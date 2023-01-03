@@ -98,10 +98,18 @@ class SearchResults extends BOBasePage {
     if (!Object.keys(this.allowedTypes).includes(type)) {
       throw new Error(`${type} has not been found in allowed types : ${Object.keys(this.allowedTypes).join(', ')}`);
     }
-    // @ts-ignore
-    const typeHeader = this.allowedTypes[type];
+    let typeHeader: RegExp|null = null;
 
-    if (!(typeHeader instanceof RegExp)) {
+    Object.entries(this.allowedTypes).find(([key, value]) => {
+      if (key === type) {
+        typeHeader = value;
+        return true;
+      }
+
+      return false;
+    });
+
+    if (typeHeader === null) {
       throw new Error(`${type} is not a RegExp`);
     }
 
