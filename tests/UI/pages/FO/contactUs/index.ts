@@ -14,7 +14,7 @@ import type {Page} from 'playwright';
 class ContactUs extends FOBasePage {
   public readonly pageTitle: string;
 
-  private readonly validationMessage: string;
+  public readonly validationMessage: string;
 
   private readonly invalidEmail: string;
 
