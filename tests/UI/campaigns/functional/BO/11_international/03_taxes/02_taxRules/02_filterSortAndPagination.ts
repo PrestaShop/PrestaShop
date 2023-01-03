@@ -13,7 +13,7 @@ import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
-import {taxRules} from '@data/demo/taxRule';
+import TaxRules from '@data/demo/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
 import {expect} from 'chai';
@@ -85,7 +85,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_tax_rules_group',
-            filterValue: taxRules[3].id.toString(),
+            filterValue: TaxRules[3].id.toString(),
           },
       },
       {
@@ -94,7 +94,7 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: taxRules[1].name,
+            filterValue: TaxRules[1].name,
           },
       },
       {

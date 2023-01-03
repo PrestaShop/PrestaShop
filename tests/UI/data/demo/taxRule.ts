@@ -1,8 +1,6 @@
 import TaxRuleData from '@data/faker/taxRule';
 
-const behaviour: string[] = ['This tax only', 'Combine', 'One after another'];
-
-const taxRules: TaxRuleData[] = [
+export default [
   new TaxRuleData({
     id: 1,
     name: 'FR Taux standard (20%)',
@@ -24,5 +22,3 @@ const taxRules: TaxRuleData[] = [
     name: 'EU VAT For Virtual Products',
   }),
 ];
-
-export {behaviour, taxRules};
