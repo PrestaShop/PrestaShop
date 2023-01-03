@@ -40,6 +40,7 @@ class ImageFormatConfigurationTest extends TestCase
      *
      * @param string $confData
      * @param array $expectedResult
+     *
      * @return void
      */
     public function testGetGenerationFormats(string $confData, array $expectedResult): void
@@ -60,6 +61,7 @@ class ImageFormatConfigurationTest extends TestCase
      * Checks that wrong format throw right exception in addInvalidGenerationFormat method
      *
      * @return void
+     *
      * @throws ImageFormatConfigurationException
      */
     public function testAddInvalidGenerationFormat(): void
@@ -79,6 +81,7 @@ class ImageFormatConfigurationTest extends TestCase
      * @dataProvider setListOfGenerationFormatsProvider
      *
      * @param array $formatList
+     *
      * @return void
      */
     public function testSetListOfGenerationFormats(array $formatList): void
@@ -98,6 +101,7 @@ class ImageFormatConfigurationTest extends TestCase
      * @param string $input
      * @param string $confData
      * @param bool $expectedResult
+     *
      * @return void
      */
     public function testIsGenerationFormatSet(string $input, string $confData, bool $expectedResult): void
@@ -128,7 +132,7 @@ class ImageFormatConfigurationTest extends TestCase
     public function setListOfGenerationFormatsProvider(): array
     {
         return [
-            [['jpg','png','fake']],
+            [['jpg', 'png', 'fake']],
             [['fake']],
         ];
     }
