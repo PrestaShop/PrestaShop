@@ -1,6 +1,7 @@
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
+import type {Page} from 'playwright';
+
+// Import page
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Combinations tab on new product V2 page, contains functions that can be used on the page
@@ -8,6 +9,160 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CombinationsTab extends BOBasePage {
+  private readonly generateCombinationsMessage: (number: number) => string;
+
+  private readonly successfulGenerateCombinationsMessage: (number: number) => string;
+
+  private readonly editCombinationsModalTitle: (number: number) => string;
+
+  private readonly editCombinationsModalMessage: (number: number) => string;
+
+  private readonly successfulUpdateMessage: string;
+
+  private readonly combinationsTabLink: string;
+
+  private readonly attributesAndFeaturesLink: string;
+
+  private readonly generateFirstCombinationsButton: string;
+
+  private readonly generateCombinationButton: string;
+
+  private readonly generateCombinationsModal: string;
+
+  private readonly searchAttributesButton: string;
+
+  private readonly generateCombinationsButtonOnModal: string;
+
+  private readonly generateCombinationsCloseButton: string;
+
+  private readonly saveCombinationEditButton: string;
+
+  private readonly bulkActionsButton: string;
+
+  private readonly bulkEditButton: string;
+
+  private readonly bulkEditModal: string;
+
+  private readonly bulkEditModalTitle: string;
+
+  private readonly bulkEditModalStocksButton: string;
+
+  private readonly bulkEditModalQuantitySwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalQuantityInput: string;
+
+  private readonly bulkEditModalMinimalQuantitySwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalMinimalQuantityInput: string;
+
+  private readonly bulkEditModalStockLocationSwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalStockLocationInput: string;
+
+  private readonly bulkEditModalSaveButton: string;
+
+  private readonly bulkEditModalRetailPriceButton: string;
+
+  private readonly bulkEditModalCostPriceSwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalCostPriceInput: string;
+
+  private readonly bulkEditModalImpactOnPriceTIncSwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalImpactOnPriceTIncInput: string;
+
+  private readonly bulkEditModalImpactOnWeightSwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalImpactOnWeightInput: string;
+
+  private readonly bulkEditModalSpecificReferences: string;
+
+  private readonly bulkEditModalReferenceSwitchButton: (toEnable: number) => string;
+
+  private readonly bulkEditModalReferenceInput: string;
+
+  private readonly bulkCombinationProgressModal: string;
+
+  private readonly bulkCombinationProgressBarDone: string;
+
+  private readonly bulkCombinationProgressModalHeader: string;
+
+  private readonly bulkCombinationProgressModalCloseButton: string;
+
+  private readonly filterBySizeButton: string;
+
+  private readonly filterBySizeDropDownMenu: string;
+
+  private readonly filterBySizeCheckboxButton: (toEnable: number) => string;
+
+  private readonly clearFilterButton: string;
+
+  private readonly combinationsListTable: string;
+
+  private readonly combinationListTableRow: (row: number) => string;
+
+  private readonly combinationListTableColumn: (row: number, column: string) => string;
+
+  private readonly combinationListTableActionsColumn: (row: number, action: string) => string;
+
+  private readonly combinationListTableSelectAllButton: string;
+
+  private readonly combinationListSelectAllDropDownMenu: string;
+
+  private readonly combinationListBulkSelectAll: string;
+
+  private readonly combinationListBulkSelectAllInPage: string;
+
+  private readonly editCombinationIframe: string;
+
+  private readonly editCombinationEditModal: string;
+
+  private readonly editCombinationModal: string;
+
+  private readonly editCombinationModalQuantityInput: string;
+
+  private readonly editCombinationModalMinimalQuantityInput: string;
+
+  private readonly editCombinationModalImpactOnPriceTExcInput: string;
+
+  private readonly editCombinationModalReferenceInput: string;
+
+  private readonly editCombinationModalSaveButton: string;
+
+  private readonly editCombinationModalCancelButton: string;
+
+  private readonly editCombinationCloseModal: string;
+
+  private readonly editCombinationModalDiscardButton: string;
+
+  private readonly combinationStockMovementsDate: (row: number) => string;
+
+  private readonly combinationStockMovementsEmployeeName: (row: number) => string;
+
+  private readonly combinationStockMovements: (row: number) => string;
+
+  private readonly modalConfirmDeleteCombination: string;
+
+  private readonly modalDeleteCombinationCancelButton: string;
+
+  private readonly modalDeleteCombinationDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (columnNumber: number) => string;
+
+  private readonly sortColumnSpanButton: (columnNumber: number) => string;
+
+  private readonly paginationBlock: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on combinations tab
@@ -110,7 +265,7 @@ class CombinationsTab extends BOBasePage {
     // Delete combination modal
     this.modalConfirmDeleteCombination = '#modal-confirm-delete-combination';
     this.modalDeleteCombinationCancelButton = `${this.modalConfirmDeleteCombination} button.btn-outline-secondary`;
-    this.modalDeleteCombinationDeletelButton = `${this.modalConfirmDeleteCombination} button.btn-confirm-submit`;
+    this.modalDeleteCombinationDeleteButton = `${this.modalConfirmDeleteCombination} button.btn-confirm-submit`;
 
     // Sort Selectors
     this.tableHead = `${this.combinationsListTable} thead`;
@@ -136,7 +291,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<Page>}
    */
-  async clickOnAttributesAndFeaturesLink(page) {
+  async clickOnAttributesAndFeaturesLink(page: Page): Promise<Page> {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
 
     return this.openLinkWithTargetBlank(page, this.attributesAndFeaturesLink, 'body');
@@ -148,7 +303,7 @@ class CombinationsTab extends BOBasePage {
    * @param combination {string} Attribute to set
    * @returns {Promise<void>}
    */
-  async selectAttribute(page, combination) {
+  async selectAttribute(page: Page, combination: string): Promise<void> {
     await page.type(this.searchAttributesButton, combination);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
@@ -160,7 +315,7 @@ class CombinationsTab extends BOBasePage {
    * @param attributes {Object} Combinations of the product
    * @returns {Promise<string>}
    */
-  async setProductAttributes(page, attributes) {
+  async setProductAttributes(page: Page, attributes: object): Promise<string> {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
     if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.generateCombinationButton);
@@ -186,7 +341,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async generateCombinations(page) {
+  async generateCombinations(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.generateCombinationsButtonOnModal);
 
     return this.getGrowlMessageContent(page);
@@ -195,9 +350,9 @@ class CombinationsTab extends BOBasePage {
   /**
    * Close generateCombinations modal
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async closeGenerateCombinationModal(page) {
+  async closeGenerateCombinationModal(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.generateCombinationsCloseButton);
 
     return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
@@ -209,9 +364,9 @@ class CombinationsTab extends BOBasePage {
    * Click on edit icon
    * @param page {Page} Browser tab
    * @param row {number} Row in table
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async clickOnEditIcon(page, row = 1) {
+  async clickOnEditIcon(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'edit')}`);
 
     return this.elementVisible(page, this.editCombinationModal, 2000);
@@ -224,7 +379,7 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row in table
    * @returns {Promise<string>}
    */
-  async editCombination(page, combinationData, row = 1) {
+  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string> {
     await this.closeGrowlMessage(page);
     await this.setValue(page, `${this.combinationListTableColumn(row, 'reference')}`, combinationData.reference);
     await this.setValue(
@@ -250,7 +405,7 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row in table
    * @returns {Promise<string|boolean>}
    */
-  async clickOnDeleteIcon(page, action, row = 1) {
+  async clickOnDeleteIcon(page: Page, action: string, row: number = 1): Promise<string | boolean> {
     await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'delete')}`);
 
     if (action === 'cancel') {
@@ -258,7 +413,7 @@ class CombinationsTab extends BOBasePage {
       return !(await this.elementNotVisible(page, this.modalConfirmDeleteCombination, 2000));
     }
 
-    await this.waitForSelectorAndClick(page, this.modalDeleteCombinationDeletelButton);
+    await this.waitForSelectorAndClick(page, this.modalDeleteCombinationDeleteButton);
 
     return this.getGrowlMessageContent(page);
   }
@@ -269,11 +424,11 @@ class CombinationsTab extends BOBasePage {
    * @param combinationData {object}
    * @returns {Promise<string>}
    */
-  async editCombinationFromModal(page, combinationData) {
+  async editCombinationFromModal(page: Page, combinationData: object): Promise<string> {
     await page.waitForTimeout(2000);
     await this.waitForVisibleSelector(page, this.editCombinationIframe);
 
-    const combinationFrame = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
 
     await this.setValue(combinationFrame, this.editCombinationModalQuantityInput, combinationData.quantity);
     await this.setValue(
@@ -299,8 +454,8 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row in table
    * @returns {Promise<{dateTime: string, quantity: string, employee: string}>}
    */
-  async getRecentStockMovements(page, row = 1) {
-    const combinationFrame = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+  async getRecentStockMovements(page: Page, row: number = 1): Promise<object> {
+    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
 
     return {
       dateTime: await this.getTextContent(combinationFrame, this.combinationStockMovementsDate(row)),
@@ -314,8 +469,8 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeEditCombinationModal(page) {
-    const combinationFrame = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
+  async closeEditCombinationModal(page: Page): Promise<boolean> {
+    const combinationFrame: Page = await page.frame({url: /sell\/catalog\/products-v2\/combinations/gmi});
 
     await this.waitForSelectorAndClick(page, this.editCombinationModalCancelButton);
     await this.waitForSelectorAndClick(page, this.editCombinationModalDiscardButton);
@@ -332,7 +487,7 @@ class CombinationsTab extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, column, sortDirection = 'asc') {
+  async sortTable(page: Page, sortBy: string, column: number, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(column)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(column);
 
@@ -347,13 +502,13 @@ class CombinationsTab extends BOBasePage {
   /**
    * Get text column
    * @param page {Page} Browser tab
-   * @param column {} Column name to get text content
+   * @param column {string} Column name to get text content
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async getTextColumn(page, column, row = 1) {
-    const selector = this.combinationListTableColumn(row, column);
-    let text;
+  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string> {
+    const selector: string = this.combinationListTableColumn(row, column);
+    let text: string;
 
     switch (column) {
       case 'combination_id':
@@ -389,7 +544,7 @@ class CombinationsTab extends BOBasePage {
    * @param column {string} Column name to get all rows text content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, numberOfCombinations, column) {
+  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<Array<string>> {
     const allRowsContentTable = [];
 
     for (let i = 1; i <= numberOfCombinations; i++) {
@@ -406,7 +561,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getPaginationLabel(page) {
+  async getPaginationLabel(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
 
     return this.getTextContent(page, this.paginationLabel);
@@ -418,7 +573,7 @@ class CombinationsTab extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
 
     return this.getPaginationLabel(page);
@@ -429,7 +584,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -440,7 +595,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -452,7 +607,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfCombinationsFromList(page) {
+  async getNumberOfCombinationsFromList(page: Page): Promise<number> {
     const footerText = await this.getTextContent(page, this.paginationLabel);
     const numberOfCombinations = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
 
@@ -465,7 +620,7 @@ class CombinationsTab extends BOBasePage {
    * @param sizeID {number} Size number in list
    * @returns {Promise<void>}
    */
-  async filterCombinationsBySize(page, sizeID) {
+  async filterCombinationsBySize(page: Page, sizeID: number): Promise<void> {
     await this.waitForSelectorAndClick(page, this.filterBySizeButton);
     await this.waitForVisibleSelector(page, `${this.filterBySizeDropDownMenu}.show`);
     await this.setChecked(page, this.filterBySizeCheckboxButton(sizeID));
@@ -478,7 +633,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getFilterBySizeButtonName(page) {
+  getFilterBySizeButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.filterBySizeButton);
   }
 
@@ -487,7 +642,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async clearFilter(page) {
+  async clearFilter(page: Page): Promise<number> {
     await this.waitForSelectorAndClick(page, this.clearFilterButton);
 
     return this.getNumberOfCombinationsFromList(page);
@@ -500,7 +655,7 @@ class CombinationsTab extends BOBasePage {
    * @param allCombinations {boolean} true to select all combinations, false to select all in page
    * @returns {Promise<boolean>}
    */
-  async selectAllCombinations(page, allCombinations = true) {
+  async selectAllCombinations(page: Page, allCombinations: boolean = true): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.combinationListTableSelectAllButton);
 
     await this.waitForVisibleSelector(page, this.combinationListSelectAllDropDownMenu);
@@ -516,7 +671,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async clickOnEditCombinationsByBulkActions(page) {
+  async clickOnEditCombinationsByBulkActions(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.bulkActionsButton);
     await this.waitForSelectorAndClick(page, this.bulkEditButton);
 
@@ -531,7 +686,7 @@ class CombinationsTab extends BOBasePage {
    * @param editStockData {object} Data to set on bulk edit stock form
    * @returns {Promise<void>}
    */
-  async bulkEditStock(page, editStockData) {
+  async bulkEditStock(page: Page, editStockData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalStocksButton);
     await this.setChecked(
       page,
@@ -565,7 +720,7 @@ class CombinationsTab extends BOBasePage {
    * @param editRetailPriceData {object} Data to set on bulk edit retail price form
    * @returns {Promise<void>}
    */
-  async bulkEditRetailPrice(page, editRetailPriceData) {
+  async bulkEditRetailPrice(page: Page, editRetailPriceData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalRetailPriceButton);
     await this.setChecked(page, this.bulkEditModalCostPriceSwitchButton(editRetailPriceData.costPriceToEnable ? 1 : 0),
     );
@@ -588,7 +743,7 @@ class CombinationsTab extends BOBasePage {
    * @param specificReferencesData {object} Data to set on specific references form
    * @returns {Promise<void>}
    */
-  async bulkEditSpecificPrice(page, specificReferencesData) {
+  async bulkEditSpecificPrice(page: Page, specificReferencesData: object): Promise<void> {
     await this.waitForSelectorAndClick(page, this.bulkEditModalSpecificReferences);
     await this.setChecked(
       page,
@@ -600,11 +755,11 @@ class CombinationsTab extends BOBasePage {
   /**
    * Edit combinations by bulk actions
    * @param page {Page} Browser tab
-   * @param editCombinationsData {object}
+   * @param editCombinationsData {object} Data to edit combination
    * @returns {Promise<string>}
    */
-  async editCombinationsByBulkActions(page, editCombinationsData) {
-    const bulkEditCombinationFrame = await page.frame('bulk-combination-form-modal-iframe');
+  async editCombinationsByBulkActions(page: Page, editCombinationsData: object): Promise<string> {
+    const bulkEditCombinationFrame: Page = await page.frame('bulk-combination-form-modal-iframe');
 
     // Edit stocks
     if (editCombinationsData.stocks) {
@@ -630,4 +785,4 @@ class CombinationsTab extends BOBasePage {
   }
 }
 
-module.exports = new CombinationsTab();
+export default new CombinationsTab();

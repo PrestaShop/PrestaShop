@@ -1,21 +1,53 @@
-import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
+import type {Page} from 'playwright';
 
-require('module-alias/register');
-// Importing page
-const BOBasePage = require('@pages/BO/BObasePage');
-const productsPage = require('@pages/BO/catalog/productsV2');
-const descriptionTab = require('@pages/BO/catalog/productsV2/add/descriptionTab');
-const detailsTab = require('@pages/BO/catalog/productsV2/add/detailsTab');
-const stocksTab = require('@pages/BO/catalog/productsV2/add/stocksTab');
-const pricingTab = require('@pages/BO/catalog/productsV2/add/pricingTab');
-const packTab = require('@pages/BO/catalog/productsV2/add/packTab');
+// Import pages
+import virtualProductTab from '@pages/BO/catalog/productsV2/add/virtualProductTab';
+import BOBasePage from '@pages/BO/BObasePage';
+import productsPage from '@pages/BO/catalog/productsV2';
+import descriptionTab from '@pages/BO/catalog/productsV2/add/descriptionTab';
+import detailsTab from '@pages/BO/catalog/productsV2/add/detailsTab';
+import stocksTab from '@pages/BO/catalog/productsV2/add/stocksTab';
+import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
+import packTab from '@pages/BO/catalog/productsV2/add/packTab';
 
 /**
- * Products V2 page, contains functions that can be used on the page
+ * Create Product V2 page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-class Products extends BOBasePage {
+class CreateProduct extends BOBasePage {
+  private readonly pageTitle: string;
+
+  private readonly saveAndPublishButtonName: string;
+
+  private readonly productNameInput: string;
+
+  private readonly productActiveSwitchButton: string;
+
+  private readonly productHeaderSummary: string;
+
+  private readonly productHeaderTaxExcluded: string;
+
+  private readonly productHeaderTaxIncluded: string;
+
+  private readonly productHeaderQuantity: string;
+
+  private readonly productHeaderReference: string;
+
+  private readonly previewProductButton: string;
+
+  private readonly saveProductButton: string;
+
+  private readonly deleteProductButton: string;
+
+  private readonly deleteProductFooterModal: string;
+
+  private readonly deleteProductSubmitButton: string;
+
+  private readonly newProductButton: string;
+
+  private readonly goToCatalogButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -24,7 +56,7 @@ class Products extends BOBasePage {
     super();
 
     this.pageTitle = 'Products';
-    this.saveAndPublichButtonName = 'Save and publish';
+    this.saveAndPublishButtonName = 'Save and publish';
 
     // Header selectors
     this.productNameInput = '#product_header_name_1';
@@ -55,7 +87,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{reference: string, quantity: string, priceTaxIncl: string, priceTaxExc: string}>}
    */
-  async getProductHeaderSummary(page) {
+  async getProductHeaderSummary(page: Page): Promise<object> {
     return {
       priceTaxExc: await this.getTextContent(page, this.productHeaderTaxExcluded),
       priceTaxIncl: await this.getTextContent(page, this.productHeaderTaxIncluded),
@@ -70,7 +102,7 @@ class Products extends BOBasePage {
    * @param status {boolean} The product status
    * @returns {Promise<void>}
    */
-  async setProductStatus(page, status) {
+  async setProductStatus(page: Page, status: boolean): Promise<void> {
     await this.setChecked(page, this.productActiveSwitchButton, status);
   }
 
@@ -80,7 +112,7 @@ class Products extends BOBasePage {
    * @param productData {ProductData} Data to set in new product page
    * @returns {Promise<string>}
    */
-  async setProduct(page, productData) {
+  async setProduct(page: Page, productData: object): Promise<string> {
     await this.setValue(page, this.productNameInput, productData.name);
 
     await descriptionTab.setProductDescription(page, productData);
@@ -109,7 +141,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async saveProduct(page) {
+  async saveProduct(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveProductButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -120,16 +152,16 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getSaveButtonName(page) {
+  async getSaveButtonName(page: Page): Promise<string> {
     return this.getTextContent(page, this.saveProductButton);
   }
 
   /**
    * Preview product in new tab
    * @param page {Page} Browser tab
-   * @return page opened
+   * @return {Promise<Page>}
    */
-  async previewProduct(page) {
+  async previewProduct(page: Page): Promise<Page> {
     const newPage = await this.openLinkWithTargetBlank(page, this.previewProductButton, 'body a');
     const textBody = await this.getTextContent(newPage, 'body');
 
@@ -144,7 +176,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteProduct(page) {
+  async deleteProduct(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.deleteProductButton);
     await this.waitForVisibleSelector(page, this.deleteProductFooterModal);
     await this.clickAndWaitForNavigation(page, this.deleteProductSubmitButton);
@@ -157,7 +189,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToCatalogPage(page) {
+  async goToCatalogPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
   }
 
@@ -166,7 +198,7 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnNewProductButton(page) {
+  async clickOnNewProductButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
     return this.elementVisible(page, productsPage.modalCreateProduct, 1000);
@@ -175,10 +207,10 @@ class Products extends BOBasePage {
   /**
    * Choose product type
    * @param page {Page} Browser tab
-   * @param productType
+   * @param productType {string} Data to choose in product type
    * @returns {Promise<void>}
    */
-  async chooseProductType(page, productType) {
+  async chooseProductType(page: Page, productType: string): Promise<void> {
     await productsPage.selectProductType(page, productType);
     await productsPage.clickOnAddNewProduct(page);
     await page.waitForNavigation({waitUntil: 'networkidle'});
@@ -189,9 +221,9 @@ class Products extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isChooseProductIframeVisible(page) {
+  async isChooseProductIframeVisible(page: Page): Promise<boolean> {
     return !(await this.elementNotVisible(page, `${productsPage.modalCreateProduct} iframe`, 1000));
   }
 }
 
-module.exports = new Products();
+export default new CreateProduct();

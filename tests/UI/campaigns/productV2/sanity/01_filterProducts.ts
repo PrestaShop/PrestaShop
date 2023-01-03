@@ -1,32 +1,29 @@
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-
-require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTests/BO/advancedParameters/newFeatures');
+import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/productsV2');
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/productsV2';
 
 // Import data
-const {Products} = require('@data/demo/products');
-const {Categories} = require('@data/demo/categories');
+import {Products} from '@data/demo/products';
+import {Categories} from '@data/demo/categories';
 
-const baseContext = 'productV2_sanity_filterProducts';
-
-let browserContext;
-let page;
-let numberOfProducts = 0;
+const baseContext: string = 'productV2_sanity_filterProducts';
 
 describe('BO - Catalog - Products : Filter in Products Page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfProducts: number = 0;
+
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
@@ -54,14 +51,14 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         dashboardPage.productsLink,
       );
 
-      const pageTitle = await productsPage.getPageTitle(page);
+      const pageTitle: string = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
     it('should check that no filter is applied by default', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoFilter', baseContext);
 
-      const isVisible = await productsPage.isResetButtonVisible(page);
+      const isVisible: boolean = await productsPage.isResetButtonVisible(page);
       await expect(isVisible, 'Reset button is visible!').to.be.false;
     });
 
@@ -135,7 +132,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
 
         await productsPage.filterProducts(page, test.args.filterBy, test.args.filterValue, test.args.filterType);
 
-        const numberOfProductsAfterFilter = await productsPage.getNumberOfProductsFromList(page);
+        const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
 
         if (test.args.filterBy === 'active') {
           await expect(numberOfProductsAfterFilter).to.be.above(0);
@@ -144,7 +141,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         }
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
+          const textColumn: string = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
           if (test.args.filterBy === 'id_product' || test.args.filterBy === 'price'
             || test.args.filterBy === 'quantity') {
@@ -160,7 +157,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
       it('should reset filter', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `resetAfter${test.args.identifier}`, baseContext);
 
-        const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
+        const numberOfProductsAfterReset: number = await productsPage.resetAndGetNumberOfLines(page);
         await expect(numberOfProductsAfterReset).to.equal(numberOfProducts);
       });
     });
