@@ -5,25 +5,24 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import pages
+// Import BO pages
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import foCreateAccountPage from '@pages/FO/myAccount/add';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_customers_customers_setRequiredFields';
 
-let browserContext;
-let page;
-
 describe('BO - Customers - Customers : Set required fields', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +45,6 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
-
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
@@ -69,7 +67,6 @@ describe('BO - Customers - Customers : Set required fields', async () => {
 
       // View shop
       page = await customersPage.viewMyShop(page);
-
       // Change language in FO
       await foHomePage.changeLanguage(page, 'en');
 
@@ -100,7 +97,7 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await foCreateAccountPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0) as Page;
 
       const pageTitle = await customersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(customersPage.pageTitle);

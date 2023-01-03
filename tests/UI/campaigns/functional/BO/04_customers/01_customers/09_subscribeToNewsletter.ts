@@ -6,28 +6,25 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
+import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
-const {psEmailSubscription} = require('@data/demo/modules');
+import {DefaultCustomer} from '@data/demo/customer';
+import {psEmailSubscription} from '@data/demo/modules';
 
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-const psEmailSubscriptionPage = require('@pages/BO/modules/psEmailSubscription');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_customers_customers_subscribeToNewsletter';
 
-let numberOfCustomers = 0;
-let browserContext;
-let page;
-
 describe('BO - Customers - Customers : Check customer subscription to newsletter from BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,7 +47,6 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
-
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);

@@ -3,23 +3,17 @@ import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext = 'functional_BO_customers_customers_exportCustomers';
-
-let browserContext;
-let page;
-let numberOfCustomers = 0;
-let filePath;
 
 /*
 Export customers
@@ -27,6 +21,11 @@ Check csv file was downloaded
 Check existence of customers data in csv file
  */
 describe('BO - Customers - Customers : Export customers', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+  let filePath: string;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -65,6 +64,7 @@ describe('BO - Customers - Customers : Export customers', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'exportCustomers', baseContext);
 
     filePath = await customersPage.exportDataToCsv(page);
+
     const doesFileExist = await files.doesFileExist(filePath, 5000);
     await expect(doesFileExist, 'Export of data has failed').to.be.true;
   });
