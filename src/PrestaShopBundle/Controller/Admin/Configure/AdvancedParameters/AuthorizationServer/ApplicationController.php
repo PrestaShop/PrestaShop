@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\Authori
 
 use PrestaShop\PrestaShop\Core\Search\Filters\AuthorizedApplicationsFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -48,6 +49,7 @@ class ApplicationController extends FrameworkBundleAdminController
         $grid = $gridAuthorizedApplicationFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig', [
+            'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'layoutTitle' => $this->trans('Authorization Server Management', 'Admin.Navigation.Menu'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
