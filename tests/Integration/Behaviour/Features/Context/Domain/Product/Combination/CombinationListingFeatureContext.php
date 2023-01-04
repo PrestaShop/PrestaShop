@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -146,73 +145,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @param int $productId
-     * @param TableNode $tableNode
-     *
-     * @return ProductCombinationFilters
-     */
-    private function buildProductCombinationFiltersForDefaultShop(int $productId, TableNode $tableNode): ProductCombinationFilters
-    {
-        $dataRows = $tableNode->getRowsHash();
-        $defaults = ProductCombinationFilters::getDefaults();
-
-        $limit = isset($dataRows['limit']) ? (int) $dataRows['limit'] : $defaults['limit'];
-        $offset = isset($dataRows['page']) ? $this->countOffset((int) $dataRows['page'], $limit) : $defaults['offset'];
-        $orderBy = isset($dataRows['order by']) ? $this->getDbField($dataRows['order by']) : $defaults['orderBy'];
-        $orderWay = isset($dataRows['order way']) ? $this->getDbField($dataRows['order way']) : $defaults['sortOrder'];
-        unset($dataRows['limit'], $dataRows['page'], $dataRows['order by'], $dataRows['order way'], $dataRows['criteria']);
-
-        $filters = $defaults['filters'];
-        $filters['product_id'] = $productId;
-        $filters['shop_id'] = $this->getDefaultShopId();
-
-        foreach ($dataRows as $criteriaField => $criteriaValue) {
-            $attributeGroupMatch = preg_match('/attributes\[(.*?)\]/', $criteriaField, $matches) ? $matches[1] : null;
-            if (null !== $attributeGroupMatch) {
-                $attributeGroupId = $this->getSharedStorage()->get($attributeGroupMatch);
-                $attributes = PrimitiveUtils::castStringArrayIntoArray($criteriaValue);
-                foreach ($attributes as $attributeRef) {
-                    $filters['attributes'][$attributeGroupId][] = $this->getSharedStorage()->get($attributeRef);
-                }
-            } elseif ('is default' === $criteriaField) {
-                $filters[$this->getDbField('is default')] = PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']);
-            } else {
-                $filters[$this->getDbField($criteriaField)] = $criteriaValue;
-            }
-        }
-
-        return new ProductCombinationFilters(
-            ShopConstraint::shop($this->getDefaultShopId()),
-            [
-                'limit' => $limit,
-                'offset' => $offset,
-                'orderBy' => $orderBy,
-                'sortOrder' => $orderWay,
-                'filters' => $filters,
-            ]
-        );
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return string
-     */
-    private function getDbField(string $field): string
-    {
-        $fieldMap = [
-            'impact on price' => 'price',
-            'is default' => 'default_on',
-        ];
-
-        if (isset($fieldMap[$field])) {
-            return $fieldMap[$field];
-        }
-
-        return $field;
-    }
-
-    /**
      * @param string $productReference
      * @param array $dataRows
      * @param int $shopId
@@ -250,23 +182,13 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
     /**
      * @param string $productReference
+     * @param int $shopId
      *
      * @return string
      */
     private function getSearchCriteriaKey(string $productReference, int $shopId): string
     {
-        return sprintf('combination_search_criteria_%s_%s', $productReference, $shopId);
-    }
-
-    /**
-     * @param int $page
-     * @param int $limit
-     *
-     * @return int
-     */
-    private function countOffset(int $page, int $limit): int
-    {
-        return ($page - 1) * $limit;
+        return sprintf('combination_list_search_criteria_%s_%s', $productReference, $shopId);
     }
 
     /**
