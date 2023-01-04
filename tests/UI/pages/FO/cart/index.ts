@@ -14,11 +14,11 @@ import type {Page} from 'playwright';
 class Cart extends FOBasePage {
   public readonly pageTitle: string;
 
-  private readonly cartRuleAlreadyUsedErrorText: string;
+  public readonly cartRuleAlreadyUsedErrorText: string;
 
-  private readonly cartRuleAlertMessageText: string;
+  public readonly cartRuleAlertMessageText: string;
 
-  private readonly alertChooseDeliveryAddressWarningtext: string;
+  public readonly alertChooseDeliveryAddressWarningtext: string;
 
   private readonly productItem: (number: number) => string;
 
@@ -66,9 +66,9 @@ class Cart extends FOBasePage {
 
   private readonly cartRuleAlertMessage: string;
 
-  private readonly cartRuleChooseCarrierAlertMessageText: string;
+  public readonly cartRuleChooseCarrierAlertMessageText: string;
 
-  private readonly cartRuleCannotUseVoucherAlertMessageText: string;
+  public readonly cartRuleCannotUseVoucherAlertMessageText: string;
 
   private readonly alertWarning: string;
 

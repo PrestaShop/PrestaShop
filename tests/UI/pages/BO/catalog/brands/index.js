@@ -177,7 +177,7 @@ class Brands extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterBrandsEnabled(page, value) {
-    await this.filterTable(page, 'manufacturer', 'select', 'active', value ? 'Yes' : 'No');
+    await this.filterTable(page, 'manufacturer', 'select', 'active', value === '1' ? 'Yes' : 'No');
   }
 
   /**
