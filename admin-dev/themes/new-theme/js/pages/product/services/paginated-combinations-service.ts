@@ -111,6 +111,6 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
   }
 
   private getFilterId(): string {
-    return `product_combinations_${this.productId}_${this.shopId}`;
+    return `product_combinations_${this.productId}`;
   }
 }

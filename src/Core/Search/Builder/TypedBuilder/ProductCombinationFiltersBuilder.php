@@ -85,7 +85,7 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
     /**
      * Build ShopConstraint from request. These filters only supports single shop constraint.
      *
-     * @return int
+     * @return ShopConstraint
      */
     private function buildShopConstraint(): ShopConstraint
     {
