@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -180,13 +181,16 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             }
         }
 
-        return new ProductCombinationFilters([
-            'limit' => $limit,
-            'offset' => $offset,
-            'orderBy' => $orderBy,
-            'sortOrder' => $orderWay,
-            'filters' => $filters,
-        ]);
+        return new ProductCombinationFilters(
+            ShopConstraint::shop($this->getDefaultShopId()),
+            [
+                'limit' => $limit,
+                'offset' => $offset,
+                'orderBy' => $orderBy,
+                'sortOrder' => $orderWay,
+                'filters' => $filters,
+            ]
+        );
     }
 
     /**
