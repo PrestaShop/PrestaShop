@@ -27,6 +27,10 @@ inputs:
     required: false
     description: False to disable dev mode
     default: "true"
+  github-token:
+    required: false
+    description: GITHUB_TOKEN to be used by composer
+    default: ""
 
 runs:
   using: "composite"
@@ -36,6 +40,8 @@ runs:
       with:
         php-version: ${{ inputs.php-version }}
         extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
     - name: Setup Apache
       shell: bash
