@@ -148,7 +148,7 @@ class Customers extends BOBasePage {
       page,
       'select',
       filterBy,
-      value ? 'Yes' : 'No',
+      value === '1' ? 'Yes' : 'No',
     );
   }
 
