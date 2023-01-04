@@ -44,7 +44,7 @@ services:
   prestashop.adapter.product.combination.query_handler.get_editable_combinations_list_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler
     arguments:
-      - '@prestashop.core.grid.query_builder.product_combination'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
@@ -72,7 +72,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.combination.validate.combination_validator'
-      - '@prestashop.core.grid.query_builder.product_combination'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
 
   prestashop.adapter.product.combination.repository.combination_repository:
     alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
@@ -85,7 +85,7 @@ services:
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@prestashop.core.grid.query_builder.product_combination'
+      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
@@ -176,6 +176,12 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
+
+  PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationIdsHandler:
+    autowire: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\Filler\CombinationFiller:
     arguments:

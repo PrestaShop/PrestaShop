@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
@@ -347,23 +347,17 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param int $productId
      * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
      */
-    public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
+    public function getCombinationIdsAction(ProductCombinationFilters $filters): JsonResponse
     {
-        /** @var CombinationMultiShopRepository $combinationRepository */
-        $combinationRepository = $this->get('PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository');
+        $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds($filters));
 
-        $combinationIds = $combinationRepository->getCombinationIds($filters);
-        $data = [];
-        foreach ($combinationIds as $combinationId) {
-            $data[] = $combinationId->getValue();
-        }
-
-        return $this->json($data);
+        return $this->json(array_map(static function (CombinationId $combinationId): int {
+            return $combinationId->getValue();
+        }, $combinationIds));
     }
 
     /**

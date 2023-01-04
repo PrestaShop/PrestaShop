@@ -51,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 
 /**
@@ -412,29 +411,20 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function deleteByProductId(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        $combinationIds = $this->getCombinationIds(
-            new ProductCombinationFilters($shopConstraint, [
-                'filters' => [
-                    'product_id' => $productId->getValue(),
-                ],
-            ])
-        );
+        $combinationIds = $this->getCombinationIds($productId, $shopConstraint);
 
         $this->bulkDelete($combinationIds, $shopConstraint);
     }
 
     /**
-     * @param ProductCombinationFilters $filters
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return CombinationId[]
      */
-    public function getCombinationIds(ProductCombinationFilters $filters): array
+    public function getCombinationIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
-        $productId = $filters->getProductId();
-        $shopIds = $this->productRepository->getShopIdsByConstraint(
-            new ProductId($productId),
-            $filters->getShopConstraint()
-        );
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $shopIds = array_map(function (ShopId $shopId) {
             return $shopId->getValue();
         }, $shopIds);
