@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 
 class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
 {
@@ -54,10 +55,22 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
      */
     public function handle(GetCombinationIds $query): array
     {
-        $qb = $this->productCombinationQueryBuilder->getSearchQueryBuilder($query->getFilters());
+        $filters = $query->getFilters();
+        $filters['product_id'] = $query->getProductId()->getValue();
 
-        $results = $qb
-            ->select('pas.id_product_attribute')
+        $searchCriteria = new ProductCombinationFilters(
+            $query->getShopConstraint(),
+            [
+                'limit' => $query->getLimit(),
+                'offset' => $query->getOffset(),
+                'orderBy' => $query->getOrderBy(),
+                'sortOrder' => $query->getOrderWay(),
+                'filters' => $filters,
+            ]
+        );
+
+        $results = $this->productCombinationQueryBuilder
+            ->getSearchQueryBuilder($searchCriteria)
             ->execute()
             ->fetchAllAssociative()
         ;

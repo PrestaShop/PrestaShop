@@ -27,28 +27,125 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class GetCombinationIds
 {
     /**
-     * @var ProductCombinationFilters
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
+     * @var int|null
+     */
+    private $limit;
+
+    /**
+     * @var int|null
+     */
+    private $offset;
+
+    /**
+     * @var array<string, mixed>
      */
     private $filters;
 
     /**
-     * @param ProductCombinationFilters $filters
+     * @var string|null
+     */
+    private $orderBy;
+
+    /**
+     * @var string|null
+     */
+    private $orderWay;
+
+    /**
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     * @param int|null $limit
+     * @param int|null $offset
+     * @param string|null $orderBy
+     * @param string|null $orderWay
+     * @param array<string, mixed> $filters
      */
     public function __construct(
-        ProductCombinationFilters $filters
+        int $productId,
+        ShopConstraint $shopConstraint,
+        ?int $limit = null,
+        ?int $offset = null,
+        ?string $orderBy = null,
+        ?string $orderWay = null,
+        array $filters = []
     ) {
+        $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
+        $this->limit = $limit;
+        $this->offset = $offset;
         $this->filters = $filters;
+        $this->orderBy = $orderBy;
+        $this->orderWay = $orderWay;
     }
 
     /**
-     * @return ProductCombinationFilters
+     * @return ProductId
      */
-    public function getFilters(): ProductCombinationFilters
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrderWay(): ?string
+    {
+        return $this->orderWay;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getFilters(): array
     {
         return $this->filters;
     }
