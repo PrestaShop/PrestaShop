@@ -68,7 +68,7 @@ class ProductCombinationFilters extends ShopFilters
             // Since each combination lists depends on its associated product, the filterId must depend on it so that each
             // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
             // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
-            static::generateFilterId($this->getProductId(), $shopConstraint->getShopId()->getValue())
+            static::generateFilterId($this->getProductId())
         );
 
         $this->needsToBePersisted = false;
@@ -106,12 +106,11 @@ class ProductCombinationFilters extends ShopFilters
 
     /**
      * @param int $productId
-     * @param int $shopId
      *
      * @return string
      */
-    public static function generateFilterId(int $productId, int $shopId): string
+    public static function generateFilterId(int $productId): string
     {
-        return self::FILTER_PREFIX . $productId . '_' . $shopId;
+        return self::FILTER_PREFIX . $productId;
     }
 }
