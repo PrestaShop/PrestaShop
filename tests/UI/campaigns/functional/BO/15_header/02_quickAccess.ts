@@ -19,7 +19,7 @@ import quickAccessPage from '@pages/BO/quickAccess';
 import addNewQuickAccessPage from '@pages/BO/quickAccess/add';
 import newCustomerPage from '@pages/BO/customers/add';
 
-const baseContext = 'functional_BO_header_quickAccess';
+const baseContext: string = 'functional_BO_header_quickAccess';
 
 describe('BO - Header : Quick access links', async () => {
   let browserContext: BrowserContext;

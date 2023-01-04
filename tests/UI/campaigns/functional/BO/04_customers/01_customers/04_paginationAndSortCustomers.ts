@@ -19,7 +19,7 @@ import {Data} from '@data/import/customers';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
-const baseContext = 'functional_BO_customers_customers_paginationAndSortCustomers';
+const baseContext: string = 'functional_BO_customers_customers_paginationAndSortCustomers';
 
 /*
 Pre-condition:

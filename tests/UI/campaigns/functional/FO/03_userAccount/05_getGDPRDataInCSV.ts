@@ -35,7 +35,7 @@ import CustomerData from '@data/faker/customer';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_userAccount_getGDPRDataInCSV';
+const baseContext: string = 'functional_FO_userAccount_getGDPRDataInCSV';
 
 /*
 Scenario

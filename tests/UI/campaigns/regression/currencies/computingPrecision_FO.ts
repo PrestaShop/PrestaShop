@@ -37,7 +37,7 @@ import Order from '@data/types/order';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'regression_currencies_computingPrecision_FO';
+const baseContext: string = 'regression_currencies_computingPrecision_FO';
 
 // Browser and tab;
 

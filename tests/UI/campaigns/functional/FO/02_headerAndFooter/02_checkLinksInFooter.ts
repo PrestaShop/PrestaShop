@@ -39,7 +39,7 @@ import CustomerFaker from '@data/faker/customer';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_headerAndFooter_checkLinksInFooter';
+const baseContext: string = 'functional_FO_headerAndFooter_checkLinksInFooter';
 
 /*
 Pre-condition:

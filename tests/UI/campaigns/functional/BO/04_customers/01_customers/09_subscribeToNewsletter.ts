@@ -18,7 +18,7 @@ import {psEmailSubscription} from '@data/demo/modules';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customers_customers_subscribeToNewsletter';
+const baseContext: string = 'functional_BO_customers_customers_subscribeToNewsletter';
 
 describe('BO - Customers - Customers : Check customer subscription to newsletter from BO', async () => {
   let browserContext: BrowserContext;

@@ -23,7 +23,7 @@ import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 // Import data
 import EmployeeFaker from '@data/faker/employee';
 
-const baseContext = 'functional_BO_header_myProfile';
+const baseContext: string = 'functional_BO_header_myProfile';
 
 describe('BO - Header : My profile', async () => {
   let browserContext: BrowserContext;

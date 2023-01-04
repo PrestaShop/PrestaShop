@@ -22,7 +22,7 @@ import type Order from '@data/types/order';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customers_outstanding_viewInvoice';
+const baseContext: string = 'functional_BO_customers_outstanding_viewInvoice';
 
 /*
 Pre-condition:

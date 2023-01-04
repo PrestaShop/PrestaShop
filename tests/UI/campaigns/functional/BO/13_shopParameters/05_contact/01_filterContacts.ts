@@ -15,7 +15,7 @@ import contactsPage from '@pages/BO/shopParameters/contact/index';
 import {Contacts} from '@data/demo/contacts';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_shopParameters_contact_filterContacts';
+const baseContext: string = 'functional_BO_shopParameters_contact_filterContacts';
 
 // Filter Contacts
 describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {

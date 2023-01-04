@@ -13,7 +13,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customers_customers_exportCustomers';
+const baseContext: string = 'functional_BO_customers_customers_exportCustomers';
 
 /*
 Export customers

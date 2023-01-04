@@ -17,7 +17,7 @@ import {countries} from '@data/demo/countries';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_international_localization_localization_defaultCountry';
+const baseContext: string = 'functional_BO_international_localization_localization_defaultCountry';
 
 /*
 Go to Localization page

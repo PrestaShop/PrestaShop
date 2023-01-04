@@ -13,7 +13,7 @@ import CustomerFaker from '@data/faker/customer';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_login_login';
+const baseContext: string = 'functional_FO_login_login';
 
 describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;

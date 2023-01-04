@@ -12,7 +12,7 @@ import webservicePage from '@pages/BO/advancedParameters/webservice';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_advancedParameters_webservice_helpCard';
+const baseContext: string = 'functional_BO_advancedParameters_webservice_helpCard';
 
 // Check that help card is in english in webservice page
 describe('BO - Advanced Parameters - Webservice : Help card in webservice page', async () => {

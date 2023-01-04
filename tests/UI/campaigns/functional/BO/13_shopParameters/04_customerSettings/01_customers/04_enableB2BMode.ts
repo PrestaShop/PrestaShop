@@ -18,7 +18,7 @@ import foCreateAccountPage from '@pages/FO/myAccount/add';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_shopParameters_customerSettings_customers_enableB2BMode';
+const baseContext: string = 'functional_BO_shopParameters_customerSettings_customers_enableB2BMode';
 
 /*
 Enable B2B mode

@@ -11,7 +11,7 @@ import testContext from '@utils/testContext';
 import dashboardPage from '@pages/BO/dashboard';
 import foHomePage from '@pages/FO/home';
 
-const baseContext = 'functional_BO_header_viewMyShop';
+const baseContext: string = 'functional_BO_header_viewMyShop';
 
 describe('BO - Header : View My Shop', async () => {
   let browserContext: BrowserContext;

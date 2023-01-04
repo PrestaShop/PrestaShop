@@ -14,7 +14,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_userAccount_orderHistory_orderList';
+const baseContext: string = 'functional_FO_userAccount_orderHistory_orderList';
 
 /*
 Sign in FO with default account

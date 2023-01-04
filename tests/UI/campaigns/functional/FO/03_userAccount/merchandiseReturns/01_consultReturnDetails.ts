@@ -37,7 +37,7 @@ import Order from '@data/types/order';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_FO_userAccount_merchandiseReturns_consultReturnDetails';
+const baseContext: string = 'functional_FO_userAccount_merchandiseReturns_consultReturnDetails';
 
 /*
 Pre-condition:
