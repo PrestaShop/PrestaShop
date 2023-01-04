@@ -11,7 +11,7 @@ import testContext from '@utils/testContext';
 import dashboardPage from '@pages/BO/dashboard';
 import searchResultsPage from '@pages/BO/searchResults';
 
-const baseContext = 'functional_BO_header_searchBar';
+const baseContext: string = 'functional_BO_header_searchBar';
 
 describe('BO - Header : Search bar', async () => {
   let browserContext: BrowserContext;

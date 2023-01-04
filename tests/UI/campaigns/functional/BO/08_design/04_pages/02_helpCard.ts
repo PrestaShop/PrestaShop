@@ -12,7 +12,7 @@ import pagesPage from '@pages/BO/design/pages/index';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_design_pages_helpCard';
+const baseContext: string = 'functional_BO_design_pages_helpCard';
 
 let browserContext: BrowserContext;
 let page: Page;

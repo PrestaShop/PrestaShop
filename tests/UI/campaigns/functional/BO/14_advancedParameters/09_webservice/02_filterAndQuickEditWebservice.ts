@@ -16,7 +16,7 @@ import WebserviceData from '@data/faker/webservice';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_advancedParameters_webservice_filterAndQuickEditWebservice';
+const baseContext: string = 'functional_BO_advancedParameters_webservice_filterAndQuickEditWebservice';
 
 describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservice', async () => {
   let browserContext: BrowserContext;

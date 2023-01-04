@@ -17,7 +17,7 @@ import foCreateAccountPage from '@pages/FO/myAccount/add';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_customers_customers_setRequiredFields';
+const baseContext: string = 'functional_BO_customers_customers_setRequiredFields';
 
 describe('BO - Customers - Customers : Set required fields', async () => {
   let browserContext: BrowserContext;

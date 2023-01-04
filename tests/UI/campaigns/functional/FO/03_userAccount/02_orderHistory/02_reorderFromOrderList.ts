@@ -21,7 +21,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext = 'functional_FO_userAccount_orderHistory_reorderFromOrderList';
+const baseContext: string = 'functional_FO_userAccount_orderHistory_reorderFromOrderList';
 
 /*
 Go to the FO homepage

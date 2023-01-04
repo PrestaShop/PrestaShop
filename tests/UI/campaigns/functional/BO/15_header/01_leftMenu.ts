@@ -10,7 +10,7 @@ import testContext from '@utils/testContext';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 
-const baseContext = 'functional_BO_header_leftMenu';
+const baseContext: string = 'functional_BO_header_leftMenu';
 
 describe('BO - Header : Left menu', async () => {
   let browserContext: BrowserContext;

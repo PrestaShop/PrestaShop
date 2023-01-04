@@ -12,7 +12,7 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_helpCard';
+const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_helpCard';
 
 describe('BO - Shop Parameters - Traffic & SEO : Help card', async () => {
   let browserContext: BrowserContext;

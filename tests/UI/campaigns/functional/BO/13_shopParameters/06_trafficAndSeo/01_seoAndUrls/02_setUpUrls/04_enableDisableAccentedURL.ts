@@ -20,7 +20,7 @@ import ProductFaker from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableAccentedURL';
+const baseContext: string = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_setUpUrls_enableDisableAccentedURL';
 
 describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', async () => {
   let browserContext: BrowserContext;

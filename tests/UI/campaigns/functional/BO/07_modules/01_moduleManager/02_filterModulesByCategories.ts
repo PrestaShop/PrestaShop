@@ -15,7 +15,7 @@ import {moduleCategories} from '@data/demo/moduleCategories';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategories';
+const baseContext: string = 'functional_BO_modules_moduleManager_filterModulesByCategories';
 
 describe('BO - Modules - Module Manager : Filter modules by Categories', async () => {
   let browserContext: BrowserContext;
