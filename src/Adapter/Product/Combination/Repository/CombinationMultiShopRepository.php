@@ -257,6 +257,19 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * Copy combination data from one shop to another.
+     *
+     * @param CombinationId $combinationId
+     * @param ShopId $sourceId
+     * @param ShopId $targetId
+     */
+    public function copyToShop(CombinationId $combinationId, ShopId $sourceId, ShopId $targetId): void
+    {
+        $combination = $this->get($combinationId, $sourceId);
+        $this->updateObjectModelForShops($combination, [$targetId], CannotUpdateCombinationException::class);
+    }
+
+    /**
      * @param CombinationId $combinationId
      * @param ShopConstraint $shopConstraint
      *
@@ -347,9 +360,11 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      */
     public function delete(CombinationId $combinationId, ShopConstraint $shopConstraint, int $errorCode = 0): void
     {
+        $removedShops = $this->getShopIdsByConstraint($combinationId, $shopConstraint);
         $this->deleteObjectModelFromShops(
-            $this->getByShopConstraint($combinationId, $shopConstraint),
-            $this->getShopIdsByConstraint($combinationId, $shopConstraint),
+            // We get the combination any of the removed ones, it doesn't change much so the first is fine
+            $this->get($combinationId, reset($removedShops)),
+            $removedShops,
             CannotDeleteCombinationException::class,
             $errorCode
         );

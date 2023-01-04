@@ -23,6 +23,7 @@ Feature: Update product combination stock information in Back Office (BO) in mul
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
+    And Shop group test_second_shop_group shares its stock
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
@@ -486,3 +487,63 @@ Feature: Update product combination stock information in Back Office (BO) in mul
       | out_of_stock_type | not_available |
     Then all combinations of product "product1" for shops "shop1,shop2" should have the stock policy to "not_available"
 
+  Scenario: I copy product to shops belonging to a group that shares stock, modify one shop affects all the shop from the group
+    Given I update combination "product1SBlack" stock for shop "shop1" with following details:
+      | delta quantity | 50              |
+      | location       | location shop 1 |
+    And I update combination "product1SBlack" stock for shop "shop1" with following details:
+      | delta quantity | 50 |
+    # Update another combination just to keep track of the sum on product
+    And I update combination "product1SWhite" stock for shop "shop1" with following details:
+      | delta quantity | 50 |
+    Then product "product1" should have following stock information for shops "shop1":
+      | quantity | 150 |
+    Then combination "product1SBlack" should have following stock details for shops "shop1":
+      | combination stock detail   | value           |
+      | quantity                   | 100             |
+      | minimal quantity           | 1               |
+      | low stock threshold        | 0               |
+      | low stock alert is enabled | false           |
+      | location                   | location shop 1 |
+      | available date             |                 |
+    And combination "product1SBlack" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 50             |
+      | Puff Daddy | 50             |
+    Given I copy product product1 from shop shop1 to shop shop3
+    Given I copy product product1 from shop shop1 to shop shop4
+    Then combination "product1SBlack" should have following stock details for shops "shop1,shop3,shop4":
+      | combination stock detail   | value           |
+      | quantity                   | 100             |
+      | minimal quantity           | 1               |
+      | low stock threshold        | 0               |
+      | low stock alert is enabled | false           |
+      | location                   | location shop 1 |
+      | available date             |                 |
+    And combination "product1SBlack" last stock movements for shop "shop1" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 50             |
+      | Puff Daddy | 50             |
+    And combination "product1SBlack" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 100            |
+    And product "product1" should have following stock information for shops "shop1,shop3,shop4":
+      | quantity | 150 |
+    Given I update combination "product1SBlack" stock for shop "shop3" with following details:
+      | delta quantity | -42 |
+    Then combination "product1SBlack" should have following stock details for shops "shop3,shop4":
+      | combination stock detail   | value           |
+      | quantity                   | 58              |
+      | minimal quantity           | 1               |
+      | low stock threshold        | 0               |
+      | low stock alert is enabled | false           |
+      | location                   | location shop 1 |
+      | available date             |                 |
+    And combination "product1SBlack" last stock movements for shop "shop3,shop4" should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -42            |
+      | Puff Daddy | 100            |
+    And product "product1" should have following stock information for shops "shop1":
+      | quantity | 150 |
+    And product "product1" should have following stock information for shops "shop3,shop4":
+      | quantity | 108 |
