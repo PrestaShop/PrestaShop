@@ -396,8 +396,7 @@ services:
       - '@=service("prestashop.adapter.shop.context").getContextListShopId()'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
-  prestashop.core.grid.query_builder.product_combination:
-    class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
+  PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder:
     parent: 'prestashop.core.grid.abstract_query_builder'
     public: true
     arguments:
