@@ -301,7 +301,7 @@ class Order extends BOBasePage {
    * Set order status
    * @param page {Page} Browser tab
    * @param row {number} Order row in table
-   * @param status {{id: number, name: string}} Order status on table
+   * @param status {{id: number}} Order status on table
    * @returns {Promise<string>}
    */
   async setOrderStatus(page, row, status) {

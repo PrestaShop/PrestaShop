@@ -1,27 +1,19 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-
-require('module-alias/register');
-
-const {expect} = require('chai');
-
-// Import common tests
-const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
+import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
 
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const outstandingPage = require('@pages/BO/customers/outstanding');
+import dashboardPage from '@pages/BO/dashboard';
+import outstandingPage from '@pages/BO/customers/outstanding';
 
-const baseContext = 'functional_BO_customers_outstanding_helpCard';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_customers_outstanding_helpCard';
 
 /*
 Pre-condition:
@@ -33,6 +25,9 @@ Post-condition:
 */
 
 describe('BO - Customers - Outstanding : Help card in outstanding page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -60,7 +55,6 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
         dashboardPage.customersParentLink,
         dashboardPage.outstandingLink,
       );
-
       await outstandingPage.closeSfToolBar(page);
 
       const pageTitle = await outstandingPage.getPageTitle(page);

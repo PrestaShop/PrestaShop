@@ -9,13 +9,13 @@ import {Page} from 'playwright';
  * @extends CommonPage
  */
 export default class BOBasePage extends CommonPage {
-  private readonly successfulCreationMessage: string;
+  public readonly successfulCreationMessage: string;
 
   public readonly successfulUpdateMessage: string;
 
-  private readonly successfulDeleteMessage: string;
+  public readonly successfulDeleteMessage: string;
 
-  private readonly successfulMultiDeleteMessage: string;
+  public readonly successfulMultiDeleteMessage: string;
 
   private readonly accessDeniedMessage: string;
 

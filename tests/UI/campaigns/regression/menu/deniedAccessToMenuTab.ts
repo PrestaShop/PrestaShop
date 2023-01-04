@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'regression_menu_deniedAccessToMenuTab';
+const baseContext: string = 'regression_menu_deniedAccessToMenuTab';
 
 describe('Regression : Access to Menu tab is denied with neither left menu and Url', async () => {
   let browserContext: BrowserContext;

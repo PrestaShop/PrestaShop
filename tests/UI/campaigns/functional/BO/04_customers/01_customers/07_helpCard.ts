@@ -1,28 +1,24 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
+import customersPage from '@pages/BO/customers';
+import dashboardPage from '@pages/BO/dashboard';
 
-const baseContext = 'functional_BO_customers_addresses_helpCard';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+const baseContext: string = 'functional_BO_customers_customers_helpCard';
 
-// Check that help card is in english in addresses page
-describe('BO - Customers - Addresses - Help card on addresses page', async () => {
+// Check that help card is in english in customers page
+describe('BO - Customers - Customers : Help card on customers page', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -37,33 +33,34 @@ describe('BO - Customers - Addresses - Help card on addresses page', async () =>
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Customers > Addresses\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+  it('should go to \'Customers > Customers\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
       page,
       dashboardPage.customersParentLink,
-      dashboardPage.addressesLink,
+      dashboardPage.customersLink,
     );
+    await customersPage.closeSfToolBar(page);
 
-    const pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    const pageTitle = await customersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customersPage.pageTitle);
   });
 
   it('should open the help side bar and check the document language', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
-    const isHelpSidebarVisible = await addressesPage.openHelpSideBar(page);
+    const isHelpSidebarVisible = await customersPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
 
-    const documentURL = await addressesPage.getHelpDocumentURL(page);
+    const documentURL = await customersPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
-    const isHelpSidebarNotVisible = await addressesPage.closeHelpSideBar(page);
+    const isHelpSidebarNotVisible = await customersPage.closeHelpSideBar(page);
     await expect(isHelpSidebarNotVisible).to.be.true;
   });
 });

@@ -16,7 +16,7 @@ import WebserviceData from '@data/faker/webservice';
 
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_advancedParameters_webservice_CRUDWebservice';
+const baseContext: string = 'functional_BO_advancedParameters_webservice_CRUDWebservice';
 
 // Create, Read, Update and Delete webservice key in BO
 describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delete webservice key in BO', async () => {

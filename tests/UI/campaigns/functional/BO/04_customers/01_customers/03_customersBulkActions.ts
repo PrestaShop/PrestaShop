@@ -1,38 +1,35 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
+import customersPage from '@pages/BO/customers';
+import addCustomerPage from '@pages/BO/customers/add';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const CustomerFaker = require('@data/faker/customer');
+import CustomerFaker from '@data/faker/customer';
 
-const baseContext = 'functional_BO_customers_customers_customersBulkActions';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfCustomers = 0;
-
-const firstCustomerData = new CustomerFaker({firstName: 'todelete'});
-const secondCustomerData = new CustomerFaker({firstName: 'todelete'});
+const baseContext: string = 'functional_BO_customers_customers_customersBulkActions';
 
 /*
 Create Customer
 Enable/Disable/Delete by Bulk actions
 */
 describe('BO - Customers - Customers : Customers bulk actions', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfCustomers: number = 0;
+
+  const firstCustomerData: CustomerFaker = new CustomerFaker({firstName: 'todelete'});
+  const secondCustomerData: CustomerFaker = new CustomerFaker({firstName: 'todelete'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -55,7 +52,6 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
       dashboardPage.customersParentLink,
       dashboardPage.customersLink,
     );
-
     await customersPage.closeSfToolBar(page);
 
     const pageTitle = await customersPage.getPageTitle(page);
@@ -79,6 +75,7 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCustomerPage${index + 1}`, baseContext);
 
         await customersPage.goToAddNewCustomerPage(page);
+
         const pageTitle = await addCustomerPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
       });

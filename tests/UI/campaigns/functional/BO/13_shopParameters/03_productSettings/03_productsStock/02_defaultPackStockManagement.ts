@@ -27,7 +27,7 @@ import ProductFaker from '@data/faker/product';
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_defaultPackStockManagement';
+const baseContext: string = 'functional_BO_shopParameters_productSettings_productsStock_defaultPackStockManagement';
 
 describe('BO - Shop Parameters - Product Settings : Default pack stock management', async () => {
   let browserContext: BrowserContext;

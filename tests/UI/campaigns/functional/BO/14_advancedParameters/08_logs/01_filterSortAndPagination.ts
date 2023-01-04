@@ -17,7 +17,7 @@ import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
 
-const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
+const baseContext: string = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 /*
 Erase all logs
