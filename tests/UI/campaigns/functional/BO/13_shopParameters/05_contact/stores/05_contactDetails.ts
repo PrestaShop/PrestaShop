@@ -12,8 +12,8 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import {stores} from '@data/demo/stores';
-import StoreFaker from '@data/faker/store';
+import Stores from '@data/demo/stores';
+import StoreData from '@data/faker/store';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,7 +24,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const storesContactToCreate: StoreFaker = new StoreFaker();
+  const storesContactToCreate: StoreData = new StoreData();
 
   // before and after functions
   before(async function () {
@@ -112,7 +112,7 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
   it('should back to default contact details information', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultInformation', baseContext);
 
-    const textResult = await storesPage.setContactDetails(page, stores.contact);
+    const textResult = await storesPage.setContactDetails(page, Stores.contact);
     await expect(textResult).to.contains(storesPage.contactFormSuccessfulUpdateMessage);
   });
 });

@@ -1,5 +1,4 @@
 // Import utils
-import files from '@utils/files';
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
@@ -13,7 +12,7 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
 // Import data
-import StoreFaker from '@data/faker/store';
+import StoreData from '@data/faker/store';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,9 +24,9 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
   let page: Page;
   let numberOfStores: number = 0;
 
-  const storesToCreate: StoreFaker[] = [
-    new StoreFaker({name: 'todelete1'}),
-    new StoreFaker({name: 'todelete2'}),
+  const storesToCreate: StoreData[] = [
+    new StoreData({name: 'todelete1'}),
+    new StoreData({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -38,8 +37,6 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-
-    storesToCreate.forEach((storeToCreate) => files.deleteFile(storeToCreate.imageName));
   });
 
   it('should login in BO', async function () {
@@ -78,7 +75,7 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
   });
 
   describe('Create 2 stores in BO', async () => {
-    storesToCreate.forEach((storeToCreate, index) => {
+    storesToCreate.forEach((storeToCreate: StoreData, index: number) => {
       it('should go to add new store page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewStorePage${index + 1}`, baseContext);
 

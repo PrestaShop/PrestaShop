@@ -11,7 +11,7 @@ import contactPage from '@pages/BO/shopParameters/contact';
 import storesPage from '@pages/BO/shopParameters/stores';
 
 // Import data
-import {stores} from '@data/demo/stores';
+import Stores from '@data/demo/stores';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -76,7 +76,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Id',
             filterType: 'input',
             filterBy: 'id_store',
-            filterValue: stores.first.id.toString(),
+            filterValue: Stores.first.id.toString(),
           },
       },
       {
@@ -85,7 +85,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Name',
             filterType: 'input',
             filterBy: 'sl!name',
-            filterValue: stores.first.name,
+            filterValue: Stores.first.name,
           },
       },
       {
@@ -94,7 +94,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Address',
             filterType: 'input',
             filterBy: 'sl!address1',
-            filterValue: stores.first.address1,
+            filterValue: Stores.first.address1,
           },
       },
       {
@@ -103,7 +103,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'City',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: stores.first.city,
+            filterValue: Stores.first.city,
           },
       },
       {
@@ -112,7 +112,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'PostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: stores.first.postCode,
+            filterValue: Stores.first.postcode,
           },
       },
       {
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'State',
             filterType: 'input',
             filterBy: 'st!name',
-            filterValue: stores.first.state,
+            filterValue: Stores.first.state,
           },
       },
       {
@@ -130,7 +130,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'country',
             filterType: 'input',
             filterBy: 'cl!name',
-            filterValue: stores.first.country,
+            filterValue: Stores.first.country,
           },
       },
       {
@@ -139,7 +139,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Phone',
             filterType: 'input',
             filterBy: 'phone',
-            filterValue: stores.first.phone,
+            filterValue: Stores.first.phone,
           },
       },
       {
@@ -148,7 +148,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Fax',
             filterType: 'input',
             filterBy: 'fax',
-            filterValue: stores.first.fax,
+            filterValue: Stores.first.fax,
           },
       },
       {
@@ -157,7 +157,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             column: 'Status',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: stores.first.enabled ? '1' : '0',
+            filterValue: Stores.first.status ? '1' : '0',
           },
       },
     ];
@@ -197,16 +197,16 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
   });
 
   describe('Quick edit stores', async () => {
-    it(`should filter by name '${stores.second.name}'`, async function () {
+    it(`should filter by name '${Stores.second.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await storesPage.filterTable(page, 'input', 'sl!name', stores.second.name);
+      await storesPage.filterTable(page, 'input', 'sl!name', Stores.second.name);
 
       const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
       await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
-      await expect(textColumn).to.contains(stores.second.name);
+      await expect(textColumn).to.contains(Stores.second.name);
     });
 
     const tests = [

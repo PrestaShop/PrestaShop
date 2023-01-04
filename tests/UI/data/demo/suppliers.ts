@@ -7,7 +7,7 @@ export default {
     products: 17,
     enabled: true,
   }),
-  accessoriesSupplier:  new SupplierData({
+  accessoriesSupplier: new SupplierData({
     id: 2,
     name: 'Accessories supplier',
     products: 5,
