@@ -13,7 +13,7 @@ import storesPage from '@pages/BO/shopParameters/stores';
 import addStorePage from '@pages/BO/shopParameters/stores/add';
 
 // Import data
-import StoreFaker from '@data/faker/store';
+import StoreData from '@data/faker/store';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -191,7 +191,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
 
       creationTests.forEach((test, index) => {
         describe(`Create store n°${index + 1} in BO`, async () => {
-          const createStoreData = new StoreFaker({name: `todelete${index}`});
+          const createStoreData: StoreData = new StoreData({name: `todelete${index}`});
 
           it('should go to add new store page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `goToAddStorePage${index}`, baseContext);
@@ -219,7 +219,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should change the items number to 20 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-        const paginationNumber = await storesPage.selectPaginationLimit(page, '20');
+        const paginationNumber = await storesPage.selectPaginationLimit(page, 20);
         expect(paginationNumber).to.equal('1');
       });
 
@@ -240,7 +240,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should change the items number to 50 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-        const paginationNumber = await storesPage.selectPaginationLimit(page, '50');
+        const paginationNumber = await storesPage.selectPaginationLimit(page, 50);
         expect(paginationNumber).to.equal('1');
       });
     });

@@ -7,14 +7,13 @@ import testContext from '@utils/testContext';
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import data
+import SupplierData from '@data/faker/supplier';
+
 require('module-alias/register');
 
 // Import expect from chai
 const {expect} = require('chai');
-
-// Import data
-const SupplierFaker = require('@data/faker/supplier');
-
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
@@ -78,7 +77,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
   describe('Create 11 suppliers in BO', async () => {
     const creationTests = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test, index) => {
-      const createSupplierData = new SupplierFaker({name: `todelete${index}`});
+      const createSupplierData = new SupplierData({name: `todelete${index}`});
       before(() => files.generateImage(createSupplierData.logo));
 
       it('should go to add new supplier page', async function () {
@@ -108,7 +107,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
-      const paginationNumber = await suppliersPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await suppliersPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -129,7 +128,7 @@ describe('BO - Catalog - Brands & Suppliers : Pagination and sort suppliers', as
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
-      const paginationNumber = await suppliersPage.selectPaginationLimit(page, '50');
+      const paginationNumber = await suppliersPage.selectPaginationLimit(page, 50);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
