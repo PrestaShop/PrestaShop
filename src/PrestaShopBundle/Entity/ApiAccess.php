@@ -73,10 +73,6 @@ class ApiAccess
      */
     private $scopes = [];
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */

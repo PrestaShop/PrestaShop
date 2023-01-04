@@ -67,10 +67,6 @@ class AuthorizedApplication
      */
     private $apiAccesses;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */
@@ -122,7 +118,7 @@ class AuthorizedApplication
     /**
      * @return Collection
      */
-    public function getApiAccesses()
+    public function getApiAccesses(): Collection
     {
         return $this->apiAccesses;
     }
