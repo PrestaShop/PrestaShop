@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ApiAccessesStatesColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 /**
  * Class AuthorizedApplicationGridDefinitionFactory is responsible for creating new instance of Authorized Application grid definition.
@@ -42,12 +41,6 @@ final class AuthorizedApplicationGridDefinitionFactory extends AbstractGridDefin
     use DeleteActionTrait;
 
     public const GRID_ID = 'authorized_application';
-
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher
-    ) {
-        parent::__construct($hookDispatcher);
-    }
 
     /**
      * {@inheritdoc}
