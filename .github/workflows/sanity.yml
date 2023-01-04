@@ -28,6 +28,7 @@ jobs:
           mysql-root-password: 'password'
           node-version: '16'
           npm-version: '7'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3
