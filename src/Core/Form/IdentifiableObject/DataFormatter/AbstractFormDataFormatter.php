@@ -40,7 +40,7 @@ abstract class AbstractFormDataFormatter
     protected $modifyAllNamePrefix;
 
     public function __construct(
-        string $modifyAllNamePrefix
+        string $modifyAllNamePrefix = ''
     ) {
         $this->modifyAllNamePrefix = $modifyAllNamePrefix;
     }
