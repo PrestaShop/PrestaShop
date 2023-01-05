@@ -81,6 +81,7 @@ class QuantityType extends TranslatorAwareType
                     'required' => false,
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'label_tag_name' => 'h4',
+                    'modify_delta_for_all_shops' => true,
                 ])
                 ->add('stock_movements', EntitySearchInputType::class, [
                     'required' => false,
