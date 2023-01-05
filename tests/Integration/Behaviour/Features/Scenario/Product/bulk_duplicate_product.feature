@@ -237,8 +237,7 @@ Feature: Duplicate product from Back Office (BO).
       | ecotax           | 0               |
       | tax rules group  | US-AL Rate (4%) |
       | on_sale          | true            |
-      # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
-      | wholesale_price  | 10              |
+      | wholesale_price  | 70              |
       | unit_price       | 500             |
       | unity            | bag of ten      |
       | unit_price_ratio | 0.2             |
@@ -325,8 +324,7 @@ Feature: Duplicate product from Back Office (BO).
       | ecotax           | 0               |
       | tax rules group  | US-AL Rate (4%) |
       | on_sale          | true            |
-      # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
-      | wholesale_price  | 10              |
+      | wholesale_price  | 150             |
       | unit_price       | 500             |
       | unity            | lots            |
       | unit_price_ratio | 0.4             |
