@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Core\Import\File;
+namespace Tests\Integration\Core\Import\File;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
@@ -82,7 +82,7 @@ class FileFinderTest extends TestCase
         $this->assertEquals($importedFileName, $this->filefinder->getImportFileNames()[0]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fs->remove($this->adminDirectory);
     }
