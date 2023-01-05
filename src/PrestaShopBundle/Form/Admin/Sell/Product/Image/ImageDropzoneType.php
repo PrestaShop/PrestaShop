@@ -61,6 +61,9 @@ class ImageDropzoneType extends TranslatorAwareType
         $this->multistoreFeature = $multistoreFeature;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
