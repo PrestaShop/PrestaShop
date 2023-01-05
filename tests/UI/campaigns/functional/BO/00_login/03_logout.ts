@@ -2,7 +2,7 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import common tests
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages

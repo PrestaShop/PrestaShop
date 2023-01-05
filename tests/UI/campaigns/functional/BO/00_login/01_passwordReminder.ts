@@ -1,45 +1,27 @@
 // Import utils
 import helper from '@utils/helpers';
 import mailHelper from '@utils/mailHelper';
-
-// Import test context
 import testContext from '@utils/testContext';
-// Import common tests
+
+// Import commonTests
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/configSMTP';
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
-
 // Import pages
-const loginPage = require('@pages/BO/login/index');
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import dashboardPage from '@pages/BO/dashboard';
+import loginPage from '@pages/BO/login/index';
 
 // Import data
-const EmployeeFaker = require('@data/faker/employee');
+import EmployeeFaker from '@data/faker/employee';
+import type MailDevEmail from '@data/types/maildev';
 
-const baseContext = 'functional_BO_login_passwordReminder';
+import {expect} from 'chai';
+import type MailDev from 'maildev';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import expect from chai
-const {expect} = require('chai');
-
-let browserContext;
-let page;
-let numberOfEmployees = 0;
-
-let newMail;
-const resetPasswordMailSubject = 'Your new password';
-
-// New employee data
-const createEmployeeData = new EmployeeFaker({
-  defaultPage: 'Products',
-  language: 'English (English)',
-  permissionProfile: 'Salesman',
-});
-
-// mailListener
-let mailListener;
+const baseContext: string = 'functional_BO_login_passwordReminder';
 
 /*
 Pre-condition
@@ -53,6 +35,19 @@ Post-condition
 - Reset SMTP parameters
  */
 describe('BO - Login : Password reminder', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfEmployees: number = 0;
+  let newMail: MailDevEmail;
+  let mailListener: MailDev;
+
+  const resetPasswordMailSubject: string = 'Your new password';
+  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+    defaultPage: 'Products',
+    language: 'English (English)',
+    permissionProfile: 'Salesman',
+  });
+
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(baseContext);
 
@@ -66,7 +61,7 @@ describe('BO - Login : Password reminder', async () => {
     mailHelper.startListener(mailListener);
 
     // Handle every new email
-    mailListener.on('new', (email) => {
+    mailListener.on('new', (email: MailDevEmail) => {
       newMail = email;
     });
   });
@@ -107,6 +102,7 @@ describe('BO - Login : Password reminder', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
       await employeesPage.goToAddNewEmployeePage(page);
+
       const pageTitle = await addEmployeePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });
@@ -126,6 +122,7 @@ describe('BO - Login : Password reminder', async () => {
   describe('Go to BO login page and use password reminder link', async () => {
     it('should go to BO login page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToBOLoginPage', baseContext);
+
       await loginPage.goTo(page, global.BO.URL);
 
       const pageTitle = await loginPage.getPageTitle(page);
