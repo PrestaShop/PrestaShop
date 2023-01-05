@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Order details page, contains functions that can be used on the page
@@ -8,6 +8,44 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class OrderDetails extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successMessageText: string;
+
+  private readonly headerTitle: string;
+
+  private readonly reorderLink: string;
+
+  private readonly orderReturnForm: string;
+
+  private readonly gridTable: string;
+
+  private readonly returnTextarea: string;
+
+  private readonly requestReturnButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number, column: number) => string;
+
+  private readonly productName: (row: number, column: number) => string;
+
+  private readonly downloadLink: (row: number, column: number) => string;
+
+  private readonly productIdSelect: string;
+
+  private readonly messageTextarea: string;
+
+  private readonly submitMessageButton: string;
+
+  private readonly deliveryAddressBox: string;
+
+  private readonly invoiceAddressBox: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order details page
@@ -31,7 +69,7 @@ class OrderDetails extends FOBasePage {
     // Order products table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
 
     // Order product table content
@@ -57,7 +95,7 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isOrderReturnFormVisible(page) {
+  isOrderReturnFormVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.orderReturnForm, 1000);
   }
 
@@ -67,7 +105,7 @@ class OrderDetails extends FOBasePage {
    * @param messageText {string} Value of message text to set on return input
    * @returns {Promise<void>}
    */
-  async requestMerchandiseReturn(page, messageText) {
+  async requestMerchandiseReturn(page: Page, messageText: string): Promise<void> {
     await this.setChecked(page, `${this.tableBodyColumn(1, 1)} input`);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
@@ -80,10 +118,11 @@ class OrderDetails extends FOBasePage {
    * @param messageText {String} The message content
    * @returns {Promise<string>}
    */
-  async addAMessage(page, messageOption, messageText) {
+  async addAMessage(page: Page, messageOption: string, messageText: string): Promise<string> {
     await this.selectByVisibleText(page, this.productIdSelect, messageOption);
     await this.setValue(page, this.messageTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.submitMessageButton);
+
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -94,7 +133,7 @@ class OrderDetails extends FOBasePage {
    * @param column {Number} column in orders details table
    * @returns {Promise<string>}
    */
-  getProductName(page, row = 1, column = 1) {
+  getProductName(page: Page, row: number = 1, column: number = 1): Promise<string> {
     return this.getTextContent(page, this.productName(row, column));
   }
 
@@ -105,7 +144,7 @@ class OrderDetails extends FOBasePage {
    * @param column {Number} column in orders details table
    * @returns {Promise<void>}
    */
-  async clickOnDownloadLink(page, row = 1, column = 1) {
+  async clickOnDownloadLink(page: Page, row: number = 1, column: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.downloadLink(row, column));
   }
 
@@ -115,7 +154,7 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getPageTitle(page) {
+  async getPageTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.headerTitle);
   }
 
@@ -124,7 +163,7 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnReorderLink(page) {
+  async clickOnReorderLink(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.reorderLink);
   }
 
@@ -133,7 +172,7 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getDeliveryAddress(page) {
+  async getDeliveryAddress(page: Page): Promise<string> {
     return this.getTextContent(page, this.deliveryAddressBox);
   }
 
@@ -142,9 +181,9 @@ class OrderDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getInvoiceAddress(page) {
+  async getInvoiceAddress(page: Page): Promise<string> {
     return this.getTextContent(page, this.invoiceAddressBox);
   }
 }
 
-module.exports = new OrderDetails();
+export default new OrderDetails();

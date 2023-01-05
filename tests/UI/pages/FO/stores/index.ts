@@ -1,13 +1,13 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
-
 /**
  * Stores page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
 class Stores extends FOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on stores page
@@ -19,4 +19,4 @@ class Stores extends FOBasePage {
   }
 }
 
-module.exports = new Stores();
+export default new Stores();

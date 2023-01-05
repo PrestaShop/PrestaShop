@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Order history page, contains functions that can be used on the page
@@ -8,6 +8,38 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class OrderHistory extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly messageSuccessSent: string;
+
+  private readonly ordersTable: string;
+
+  private readonly ordersTableRows: string;
+
+  private readonly ordersTableRow: (row: number) => string;
+
+  private readonly orderTableColumn: (row: number, column: number) => string;
+
+  private readonly reorderLink: (row: number) => string;
+
+  private readonly detailsLink: (row: number) => string;
+
+  private readonly orderTableColumnInvoice: (row: number) => string;
+
+  private readonly orderDetailsLink: (orderID: number) => string;
+
+  private readonly boxMessagesSection: string;
+
+  private readonly messageRow: (row: number) => string;
+
+  private readonly orderMessageForm: string;
+
+  private readonly productSelect: string;
+
+  private readonly messageTextarea: string;
+
+  private readonly sendMessageButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order history page
@@ -23,16 +55,16 @@ class OrderHistory extends FOBasePage {
     // Selectors
     this.ordersTable = '#content table';
     this.ordersTableRows = `${this.ordersTable} tbody tr`;
-    this.ordersTableRow = (row) => `${this.ordersTableRows}:nth-child(${row})`;
-    this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
-    this.reorderLink = (row) => `${this.ordersTableRow(row)} a.reorder-link`;
-    this.detailsLink = (row) => `${this.ordersTableRow(row)} a.view-order-details-link`;
-    this.orderTableColumnInvoice = (row) => `${this.orderTableColumn(row, 6)} a`;
-    this.orderDetailsLink = (orderID) => `${this.ordersTableRows}`
+    this.ordersTableRow = (row: number) => `${this.ordersTableRows}:nth-child(${row})`;
+    this.orderTableColumn = (row: number, column: number) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
+    this.reorderLink = (row: number) => `${this.ordersTableRow(row)} a.reorder-link`;
+    this.detailsLink = (row: number) => `${this.ordersTableRow(row)} a.view-order-details-link`;
+    this.orderTableColumnInvoice = (row: number) => `${this.orderTableColumn(row, 6)} a`;
+    this.orderDetailsLink = (orderID: number) => `${this.ordersTableRows}`
       + ` td a.view-order-details-link[href$='order-detail&id_order=${orderID}']`;
     // Messages block
     this.boxMessagesSection = '.box.messages';
-    this.messageRow = (row) => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
+    this.messageRow = (row: number) => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
     // Add message block
     this.orderMessageForm = '.order-message-form';
     this.productSelect = `${this.orderMessageForm} select[data-role='product']`;
@@ -49,7 +81,7 @@ class OrderHistory extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfOrders(page) {
+  async getNumberOfOrders(page: Page): Promise<number> {
     return (await page.$$(this.ordersTableRows)).length;
   }
 
@@ -59,7 +91,7 @@ class OrderHistory extends FOBasePage {
    * @param orderRow {Number} Row on orders table
    * @returns {Promise<boolean>}
    */
-  isReorderLinkVisible(page, orderRow = 1) {
+  isReorderLinkVisible(page: Page, orderRow: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.reorderLink(orderRow), 1000);
   }
 
@@ -70,7 +102,7 @@ class OrderHistory extends FOBasePage {
    * @param orderRow {Number} Row in orders table
    * @returns {Promise<void>}
    */
-  async clickOnReorderLink(page, orderRow = 1) {
+  async clickOnReorderLink(page: Page, orderRow: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.reorderLink(orderRow));
   }
 
@@ -80,7 +112,7 @@ class OrderHistory extends FOBasePage {
    * @param orderRow {number} Row number in orders table
    * @return {Promise<string>}
    */
-  getOrderStatus(page, orderRow = 1) {
+  getOrderStatus(page: Page, orderRow: number = 1): Promise<string> {
     return this.getTextContent(page, `${this.orderTableColumn(orderRow, 5)} span`);
   }
 
@@ -90,7 +122,7 @@ class OrderHistory extends FOBasePage {
    * @param orderRow {number} Row number in orders table
    * @returns {Promise<boolean>}
    */
-  isInvoiceVisible(page, orderRow = 1) {
+  isInvoiceVisible(page: Page, orderRow: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.orderTableColumnInvoice(orderRow), 1000);
   }
 
@@ -98,9 +130,9 @@ class OrderHistory extends FOBasePage {
    * Get order id from invoice href
    * @param page {Page} Browser tab
    * @param orderRow {number} Row number in orders table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getOrderIdFromInvoiceHref(page, orderRow = 1) {
+  getOrderIdFromInvoiceHref(page: Page, orderRow: number = 1): Promise<string | null> {
     return this.getAttributeContent(page, this.orderTableColumnInvoice(orderRow), 'href');
   }
 
@@ -110,7 +142,7 @@ class OrderHistory extends FOBasePage {
    * @param orderRow {Number} row in orders table
    * @returns {Promise<void>}
    */
-  async goToDetailsPage(page, orderRow = 1) {
+  async goToDetailsPage(page: Page, orderRow: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
   }
 
@@ -120,7 +152,7 @@ class OrderHistory extends FOBasePage {
    * @param orderID {number} Order ID
    * @returns {Promise<void>}
    */
-  async goToOrderDetailsPage(page, orderID = 1) {
+  async goToOrderDetailsPage(page: Page, orderID: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
   }
 
@@ -130,7 +162,7 @@ class OrderHistory extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isBoxMessagesSectionVisible(page) {
+  isBoxMessagesSectionVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.boxMessagesSection, 1000);
   }
 
@@ -140,7 +172,7 @@ class OrderHistory extends FOBasePage {
    * @param row {number} Row on table messages (2 is the first row)
    * @returns {Promise<boolean>}
    */
-  isMessageRowVisible(page, row = 1) {
+  isMessageRowVisible(page: Page, row: number = 1): Promise<boolean> {
     return this.elementVisible(page, this.messageRow(row + 1), 1000);
   }
 
@@ -150,7 +182,7 @@ class OrderHistory extends FOBasePage {
    * @param row {number} Row on table messages (2 is the first row)
    * @returns {Promise<string>}
    */
-  getMessageRow(page, row = 1) {
+  getMessageRow(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.messageRow(row + 1));
   }
 
@@ -161,7 +193,7 @@ class OrderHistory extends FOBasePage {
    * @param messageText {{product: string, message:string}} Data to set on Add message form
    * @returns {Promise<string>}
    */
-  async sendMessage(page, messageText) {
+  async sendMessage(page: Page, messageText: any): Promise<string> {
     if (messageText.product !== '') {
       await this.selectByVisibleText(page, this.productSelect, messageText.product);
     }
@@ -173,4 +205,4 @@ class OrderHistory extends FOBasePage {
   }
 }
 
-module.exports = new OrderHistory();
+export default new OrderHistory();

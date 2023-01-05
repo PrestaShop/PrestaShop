@@ -18,7 +18,7 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleAlertMessageText: string;
 
-  public readonly alertChooseDeliveryAddressWarningtext: string;
+  private readonly alertChooseDeliveryAddressWarningText: string;
 
   private readonly productItem: (number: number) => string;
 
@@ -88,7 +88,7 @@ class Cart extends FOBasePage {
     this.pageTitle = 'Cart';
     this.cartRuleAlreadyUsedErrorText = 'This voucher has already been used';
     this.cartRuleAlertMessageText = 'You cannot use this voucher';
-    this.alertChooseDeliveryAddressWarningtext = 'You must choose a delivery address'
+    this.alertChooseDeliveryAddressWarningText = 'You must choose a delivery address'
     + ' before applying this voucher to your order';
 
     // Selectors for cart page

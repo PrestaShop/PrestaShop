@@ -1,13 +1,13 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
-
 /**
  * Secure payment page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
 class SecurePayment extends FOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on secure payment page
@@ -19,4 +19,4 @@ class SecurePayment extends FOBasePage {
   }
 }
 
-module.exports = new SecurePayment();
+export default new SecurePayment();

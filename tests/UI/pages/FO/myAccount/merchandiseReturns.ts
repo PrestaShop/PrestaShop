@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Merchandise returns page, contains functions that can be used on the page
@@ -8,6 +8,22 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class MerchandiseReturns extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly alertNoMerchandiseReturns: string;
+
+  private readonly alertInfoDiv: string;
+
+  private readonly gridTable: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableColumn: (row: number, column: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on merchandise returns page
@@ -25,8 +41,8 @@ class MerchandiseReturns extends FOBasePage {
     // Merchandise return table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableColumn = (row: number, column: number) => `${this.tableBodyRow(row)} td:nth-child(${column})`;
   }
 
   /*
@@ -37,7 +53,7 @@ class MerchandiseReturns extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getAlertText(page) {
+  async getAlertText(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertInfoDiv);
   }
 
@@ -48,8 +64,8 @@ class MerchandiseReturns extends FOBasePage {
    * @param row {number} Row number in table
    * @returns {Promise<string>}
    */
-  getTextColumn(page, columnName, row = 1) {
-    let columnSelector;
+  getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string> {
+    let columnSelector: string;
 
     switch (columnName) {
       case 'orderReference':
@@ -81,7 +97,7 @@ class MerchandiseReturns extends FOBasePage {
    * @param row {number} Row number in table
    * @returns {Promise<void>}
    */
-  async goToReturnDetailsPage(page, row = 1) {
+  async goToReturnDetailsPage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, `${this.tableColumn(row, 2)} a`);
   }
 
@@ -89,11 +105,11 @@ class MerchandiseReturns extends FOBasePage {
    * Download return form
    * @param page {Page} Browser tab
    * @param row {number} Row number in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async downloadReturnForm(page, row = 1) {
+  async downloadReturnForm(page: Page, row: number = 1): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.tableColumn(row, 5));
   }
 }
 
-module.exports = new MerchandiseReturns();
+export default new MerchandiseReturns();

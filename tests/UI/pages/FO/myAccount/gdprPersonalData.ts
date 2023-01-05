@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * GDPR personal data page, contains functions that can be used on the page
@@ -8,6 +8,16 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class GDPRPersonalData extends FOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly headerTitle: string;
+
+  private readonly exportDataToPDFButton: string;
+
+  private readonly contactUsLink: string;
+
+  private readonly exportDataToCSVButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on gdpr personal data page
@@ -33,16 +43,16 @@ class GDPRPersonalData extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getPageTitle(page) {
+  async getPageTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.headerTitle);
   }
 
   /**
    * Export data to PDF
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async exportDataToPDF(page) {
+  async exportDataToPDF(page: Page): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.exportDataToPDFButton);
   }
 
@@ -51,18 +61,18 @@ class GDPRPersonalData extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToContactUsPage(page) {
+  async goToContactUsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.contactUsLink);
   }
 
   /**
    * Export data to CSV
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async exportDataToCSV(page) {
+  async exportDataToCSV(page: Page): Promise<string | null> {
     return this.clickAndWaitForDownload(page, this.exportDataToCSVButton);
   }
 }
 
-module.exports = new GDPRPersonalData();
+export default new GDPRPersonalData();

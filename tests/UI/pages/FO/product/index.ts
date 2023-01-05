@@ -25,7 +25,7 @@ class Product extends FOBasePage {
 
   private readonly productDescription: string;
 
-  private readonly custumizedTextarea: string;
+  private readonly customizedTextarea: string;
 
   private readonly saveCustomizationButton: string;
 
@@ -148,7 +148,7 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
-    this.custumizedTextarea = '.product-customization-item .product-message';
+    this.customizedTextarea = '.product-customization-item .product-message';
     this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
@@ -205,11 +205,11 @@ class Product extends FOBasePage {
     this.closeReviewSentConfirmationModalButton = `${this.reviewSentConfirmationModal} button`;
 
     // Products in pack selectors
-    this.productInPackList = (productInList) => `.product-pack article:nth-child(${productInList})`;
-    this.productInPackImage = (productInList) => `${this.productInPackList(productInList)} div.thumb-mask img`;
-    this.productInPackName = (productInList) => `${this.productInPackList(productInList)} div.pack-product-name a`;
-    this.productInPackPrice = (productInList) => `${this.productInPackList(productInList)} div.pack-product-price`;
-    this.productInPackQuantity = (productInList) => `${this.productInPackList(productInList)}`
+    this.productInPackList = (productInList: number) => `.product-pack article:nth-child(${productInList})`;
+    this.productInPackImage = (productInList: number) => `${this.productInPackList(productInList)} div.thumb-mask img`;
+    this.productInPackName = (productInList: number) => `${this.productInPackList(productInList)} div.pack-product-name a`;
+    this.productInPackPrice = (productInList: number) => `${this.productInPackList(productInList)} div.pack-product-price`;
+    this.productInPackQuantity = (productInList: number) => `${this.productInPackList(productInList)}`
       + ' div.pack-product-quantity';
   }
 
@@ -427,8 +427,8 @@ class Product extends FOBasePage {
       await this.setValue(page, this.productQuantity, quantity.toString());
     }
 
-    if (await this.elementVisible(page, this.custumizedTextarea, 2000)) {
-      await this.setValue(page, this.custumizedTextarea, customizedText);
+    if (await this.elementVisible(page, this.customizedTextarea, 2000)) {
+      await this.setValue(page, this.customizedTextarea, customizedText);
       await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
 

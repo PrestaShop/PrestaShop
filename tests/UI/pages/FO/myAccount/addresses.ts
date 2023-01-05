@@ -1,6 +1,7 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Addresses page, contains functions that can be used on the page
@@ -8,6 +9,28 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class Addresses extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly addressPageTitle: string;
+
+  public readonly addAddressSuccessfulMessage: string;
+
+  public readonly updateAddressSuccessfulMessage: string;
+
+  public readonly deleteAddressSuccessfulMessage: string;
+
+  public readonly deleteAddressErrorMessage: string;
+
+  private readonly addressBlock: string;
+
+  private readonly addressBodyTitle: string;
+
+  private readonly createNewAddressLink: string;
+
+  private readonly editAddressLink: string;
+
+  private readonly deleteAddressLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on addresses page
@@ -39,7 +62,7 @@ class Addresses extends FOBasePage {
    * @returns {Promise<void>}
    * @constructor
    */
-  async openNewAddressForm(page) {
+  async openNewAddressForm(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.createNewAddressLink, 2000)) {
       await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
     }
@@ -51,7 +74,7 @@ class Addresses extends FOBasePage {
    * @param alias {string} Alias of the address
    * @return {Promise<number>}
    */
-  async getAddressPosition(page, alias) {
+  async getAddressPosition(page: Page, alias: string): Promise<number> {
     const titles = await page.$$eval(
       this.addressBodyTitle,
       (all) => all.map((address) => address.textContent),
@@ -66,7 +89,7 @@ class Addresses extends FOBasePage {
    * @param position {string} String of the position
    * @returns {Promise<void>}
    */
-  async goToEditAddressPage(page, position = 'last') {
+  async goToEditAddressPage(page: Page, position: string | number = 'last'): Promise<void> {
     const editButtons = await page.$$(this.editAddressLink);
 
     await Promise.all([
@@ -81,7 +104,7 @@ class Addresses extends FOBasePage {
    * @param position {string} String of the position
    * @returns {Promise<string>}
    */
-  async deleteAddress(page, position = 'last') {
+  async deleteAddress(page: Page, position: string | number = 'last'): Promise<string> {
     const deleteButtons = await page.$$(this.deleteAddressLink);
 
     await Promise.all([
@@ -93,4 +116,4 @@ class Addresses extends FOBasePage {
   }
 }
 
-module.exports = new Addresses();
+export default new Addresses();

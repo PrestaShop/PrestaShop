@@ -1,6 +1,5 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
-
-require('module-alias/register');
 
 /**
  * CMS page, contains functions that can be used on the page
@@ -8,6 +7,12 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class CMS extends FOBasePage {
+  public readonly pageNotFound: string;
+
+  private readonly pageTitle: string;
+
+  private readonly pageContent: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on cms page
@@ -22,4 +27,4 @@ class CMS extends FOBasePage {
   }
 }
 
-module.exports = new CMS();
+export default new CMS();
