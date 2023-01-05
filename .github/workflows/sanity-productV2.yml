@@ -35,6 +35,7 @@ jobs:
           npm-version: '7'
           ps-auto-install: 'true'
           ps-dev-mode: 'false'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Playwright browsers
         uses: actions/cache@v3

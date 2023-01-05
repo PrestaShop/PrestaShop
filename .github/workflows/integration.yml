@@ -21,6 +21,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
