@@ -246,6 +246,11 @@ class ImageController extends FrameworkBundleAdminController
         ];
     }
 
+    /**
+     * @param ShopProductImagesCollection $shopImagesCollection
+     *
+     * @return array<int, array{shopId: int, shopName: string, images: array<int, array{imageId: int, isCover: bool}>}>
+     */
     private function formatShopImages(ShopProductImagesCollection $shopImagesCollection): array
     {
         /** @var ShopRepository $shopRepository */
