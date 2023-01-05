@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\ShopSearchCriteriaInterface;
 /**
  * Defines all required sql statements to render products list.
  */
-final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
+class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -176,6 +176,14 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'ps',
                 $this->addShopCondition('ps.`id_product` = p.`id_product`', 'ps', $shopId, $filteredShopGroupId)
             )
+            // This join is only useful in multishop mode, but it's too complicated to handle this in ProductShopsQueryBuilder since
+            // it must be called precisely here
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'shop',
+                's',
+                's.`id_shop` = ps.`id_shop`'
+            )
             ->leftJoin(
                 'p',
                 $this->dbPrefix . 'product_lang',
@@ -220,18 +228,9 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
 
         if ($isStockManagementEnabled) {
-            $stockOnCondition =
-                'sa.`id_product` = p.`id_product`
-                    AND sa.`id_product_attribute` = 0
-                ';
-
+            $stockOnCondition = $this->getStockOnCondition($sharedStockGroupId, $shopId, $filteredShopGroupId);
             if ($sharedStockGroupId) {
-                $stockOnCondition .= '
-                     AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId
-                ';
                 $qb->setParameter('sharedShopGroupId', $sharedStockGroupId);
-            } else {
-                $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
             }
 
             $qb->leftJoin(
@@ -319,7 +318,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    private function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
+    protected function addShopCondition(string $sql, string $tableAlias, ?int $shopId, ?int $filteredShopGroupId): string
     {
         if ($shopId) {
             // Single shop context simple left join on a single shopId
@@ -334,6 +333,22 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         // All shops context left join on the product's default shop
         return $sql . ' AND ' . $tableAlias . '.`id_shop` = p.id_shop_default';
+    }
+
+    protected function getStockOnCondition(?int $sharedStockGroupId, ?int $shopId, ?int $filteredShopGroupId): string
+    {
+        $stockOnCondition =
+            'sa.`id_product` = p.`id_product`
+            AND sa.`id_product_attribute` = 0
+        ';
+
+        if ($sharedStockGroupId) {
+            $stockOnCondition .= 'AND sa.`id_shop` = 0 AND sa.`id_shop_group` = :sharedShopGroupId';
+        } else {
+            $stockOnCondition = $this->addShopCondition($stockOnCondition, 'sa', $shopId, $filteredShopGroupId);
+        }
+
+        return $stockOnCondition;
     }
 
     private function getFilteredCategoryId(array $filterValues): ?int

@@ -97,6 +97,13 @@ services:
       - "@prestashop.adapter.shop.repository.shop_repository"
       - "@prestashop.adapter.product.repository.product_multi_shop_repository"
 
+  prestashop.adapter.product.grid.data.factory.product_shops_grid_data_factory_decorator:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator'
+    parent: 'prestashop.adapter.product.grid.data.factory.product_grid_data_factory_decorator'
+    arguments:
+      $productGridDataFactory: '@prestashop.core.grid.data.factory.product.shops'
+    public: false
+
   prestashop.adapter.product.grid.data.factory.product_light_grid_data_factory_decorator:
     class: 'PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductLightGridDataFactoryDecorator'
     arguments:

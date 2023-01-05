@@ -2512,4 +2512,5 @@ $product-page-padding-bottom: 80px !default;
 
 // Create product modal
 @import "create_product_modal";
+// Product light list (which is displayed in the form, hence its stylesheet is in this file)
 @import "product_light_list";

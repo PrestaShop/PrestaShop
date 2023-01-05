@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -232,6 +233,37 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * Shows products shop details.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function productShopPreviewsAction(ProductFilters $filters, int $productId): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.product.shops');
+        $filters = new ProductFilters(
+            ShopConstraint::allShops(),
+            [
+                'filters' => [
+                    'id_product' => [
+                        'min_field' => $productId,
+                        'max_field' => $productId,
+                    ],
+                ],
+            ],
+            $filters->getFilterId()
+        );
+        $grid = $gridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/shop_previews.html.twig', [
+            'shopDetailsGrid' => $this->presentGrid($grid),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('read', 'AdminProducts')")
      *
      * @return Response
@@ -364,6 +396,16 @@ class ProductController extends FrameworkBundleAdminController
     {
         if ($this->shouldRedirectToV1()) {
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
+        if ($request->query->get('switchToShop')) {
+            $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_products_v2_edit', [
+                'productId' => $productId,
+                // Force shop context switching to selected shop for creation (handled in admin-dev/init.php and/or AdminController)
+                'setShopContext' => 's-' . $request->query->get('switchToShop'),
+            ]);
         }
 
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {

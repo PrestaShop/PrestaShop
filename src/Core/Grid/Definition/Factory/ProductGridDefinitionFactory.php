@@ -62,7 +62,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 /**
  * Defines products grid name, its columns, actions, bulk actions and filters.
  */
-final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
+class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use DeleteActionTrait;
 
@@ -116,15 +116,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns()
     {
-        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
-            $editAttributes = [
-                'class' => 'multi-shop-edit-product',
-                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
-                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
-            ];
-        } else {
-            $editAttributes = [];
-        }
+        $editAttributes = $this->getEditColumnAttributes();
 
         $columns = (new ColumnCollection())
             ->add(
@@ -261,12 +253,29 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 ->setOptions([
                     'field' => 'associated_shops',
                     'ids_field' => 'associated_shops_ids',
+                    'product_id_field' => 'id_product',
                     'max_displayed_characters' => 35,
                 ])
             );
         }
 
         return $columns;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getEditColumnAttributes(): array
+    {
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            return [
+                'class' => 'multi-shop-edit-product',
+                'data-modal-title' => $this->trans('Select a store', [], 'Admin.Catalog.Feature'),
+                'data-shop-selector' => $this->formFactory->create(ShopSelectorType::class),
+            ];
+        }
+
+        return [];
     }
 
     protected function getRowActions(): RowActionCollection
