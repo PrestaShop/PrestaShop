@@ -3,6 +3,8 @@ admin_authorized_applications_index:
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApplicationController::indexAction
+    _legacy_controller: AdminAuthorizationServer
+    _legacy_link: AdminAuthorizationServer
 
 admin_authorized_applications_view:
   path: /applications/{authorizedApplicationId}
