@@ -37,7 +37,11 @@ class CombinationCore extends ObjectModel
 
     public $reference;
 
-    /** @var string */
+    /**
+     * @deprecated since 8.1.0
+     *
+     * @var string
+     */
     public $supplier_reference;
 
     public $ean13;
