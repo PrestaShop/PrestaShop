@@ -81,7 +81,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             $shopConstraint
         ));
 
-        $suppliersData = $this->extractSuppliersData($combinationForEditing);
+        $suppliersData = $this->extractSuppliersData($combinationForEditing, $shopConstraint);
 
         return array_merge([
             'id' => $combinationId,
@@ -206,20 +206,21 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CombinationForEditing $combinationForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, array<int, array<string, int|string|null>>|int>
      */
-    private function extractSuppliersData(CombinationForEditing $combinationForEditing): array
+    private function extractSuppliersData(CombinationForEditing $combinationForEditing, ShopConstraint $shopConstraint): array
     {
         /** @var AssociatedSuppliers $associatedSuppliers */
-        $associatedSuppliers = $this->queryBus->handle(new GetAssociatedSuppliers($combinationForEditing->getProductId()));
+        $associatedSuppliers = $this->queryBus->handle(new GetAssociatedSuppliers($combinationForEditing->getProductId(), $shopConstraint));
         $suppliersData = [
             'default_supplier_id' => $associatedSuppliers->getDefaultSupplierId(),
             'product_suppliers' => [],
         ];
 
         /** @var ProductSupplierForEditing[] $combinationProductSuppliers */
-        $combinationProductSuppliers = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
+        $combinationProductSuppliers = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId(), $shopConstraint));
 
         if (empty($combinationProductSuppliers)) {
             return $suppliersData;

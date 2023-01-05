@@ -249,7 +249,7 @@ class ProductShopUpdater
             $this->combinationRepository->copyToShop($shopCombinationId, $sourceShopId, $targetShopId);
         }
 
-        if (!$this->combinationRepository->findDefaultCombinationIdForShop($productId, $targetShopId)) {
+        if (!$this->combinationRepository->getDefaultCombinationId($productId, $targetShopId)) {
             $shopConstraint = ShopConstraint::shop($targetShopId->getValue());
             $firstCombinationId = $this->combinationRepository->findFirstCombinationId($productId, $shopConstraint);
             $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);

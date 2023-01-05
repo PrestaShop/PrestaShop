@@ -122,7 +122,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
-            'options' => $this->extractOptionsData($productForEditing),
+            'options' => $this->extractOptionsData($productForEditing, $shopConstraint),
         ];
 
         if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
@@ -552,13 +552,14 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, mixed>
      */
-    private function extractOptionsData(ProductForEditing $productForEditing): array
+    private function extractOptionsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $options = $productForEditing->getOptions();
-        $suppliersData = $this->extractSuppliersData($productForEditing);
+        $suppliersData = $this->extractSuppliersData($productForEditing, $shopConstraint);
 
         return array_merge([
             'visibility' => [
@@ -642,10 +643,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array{suppliers: array{default_supplier_id: int, supplier_ids: int[]}, product_suppliers: array<int, array{supplier_id: int, supplier_name: string, product_supplier_id: int, price_tax_excluded: string, reference: string, currency_id: int, combination_id: int}>}
      */
-    private function extractSuppliersData(ProductForEditing $productForEditing): array
+    private function extractSuppliersData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $suppliersData = [
             'suppliers' => [
@@ -656,7 +658,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         ];
 
         /** @var ProductSupplierOptions $productSupplierOptions */
-        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId(), $shopConstraint));
         $suppliersData['suppliers']['default_supplier_id'] = $productSupplierOptions->getDefaultSupplierId();
         $suppliersData['suppliers']['supplier_ids'] = $productSupplierOptions->getSupplierIds();
 
