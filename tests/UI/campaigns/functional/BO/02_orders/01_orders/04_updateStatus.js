@@ -9,6 +9,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 require('module-alias/register');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
@@ -16,8 +18,6 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');

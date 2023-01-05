@@ -11,6 +11,8 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 require('module-alias/register');
 
@@ -19,8 +21,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
