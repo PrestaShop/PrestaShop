@@ -357,6 +357,7 @@ class AdminControllerTest extends TestCase
     private function getMockedFeatureFlagRepository(): FeatureFlagRepository
     {
         $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
         $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
