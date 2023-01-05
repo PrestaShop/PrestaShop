@@ -38,6 +38,12 @@ use Shop;
  */
 class ProductShopsGridDataFactoryDecorator extends ProductGridDataFactoryDecorator
 {
+    /**
+     * @param array $products
+     * @param ShopSearchCriteriaInterface $searchCriteria
+     *
+     * @return array<int, array<string, mixed>>
+     */
     protected function applyShopModifications(array $products, ShopSearchCriteriaInterface $searchCriteria): array
     {
         foreach ($products as $i => $product) {

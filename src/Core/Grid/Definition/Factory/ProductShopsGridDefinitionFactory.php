@@ -130,6 +130,8 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
 
     /**
      * We don't perform any filtering on the shop, so no need to define them.
+     *
+     * {@inheritDoc}
      */
     protected function getFilters()
     {

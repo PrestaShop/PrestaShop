@@ -262,6 +262,9 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
         return $columns;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getEditColumnAttributes(): array
     {
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
