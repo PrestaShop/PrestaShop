@@ -26,20 +26,36 @@
 
 namespace PrestaShopBundle\EventListener;
 
+use Context;
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UserLocaleListener
 {
+    /** @var Context|null */
     private $prestaShopContext;
 
-    public function __construct(LegacyContext $context)
+    /** @var ShopConfigurationInterface */
+    private $configuration;
+
+    /**
+     * @param LegacyContext $context
+     * @param ShopConfigurationInterface $configuration
+     */
+    public function __construct(LegacyContext $context, ShopConfigurationInterface $configuration)
     {
         $this->prestaShopContext = $context->getContext();
+        $this->configuration = $configuration;
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    /**
+     * @param GetResponseEvent $event
+     *
+     * @return void
+     */
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         if (isset($this->prestaShopContext->employee) && $this->prestaShopContext->employee->isLoggedBack()) {
             $request = $event->getRequest();
@@ -50,10 +66,17 @@ class UserLocaleListener
         }
     }
 
-    private function getLocaleFromEmployee()
+    /**
+     * @return string
+     */
+    private function getLocaleFromEmployee(): string
     {
         $employee = $this->prestaShopContext->employee;
         $employeeLanguage = new Language($employee->id_lang);
+
+        if (!$employeeLanguage->locale) {
+            $employeeLanguage = new Language($this->configuration->get('PS_LANG_DEFAULT'));
+        }
 
         return $employeeLanguage->locale;
     }
