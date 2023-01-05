@@ -366,7 +366,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
         $result = $qb->execute()->fetchAssociative();
 
-        return !empty($result['id_supplier']) ? new SupplierId($result['id_supplier']) : null;
+        return !empty($result['id_supplier']) ? new SupplierId((int) $result['id_supplier']) : null;
     }
 
     /**
@@ -502,7 +502,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         }
 
         return array_map(static function (array $productSupplier) {
-            return new ProductSupplierId($productSupplier['id_product_supplier']);
+            return new ProductSupplierId((int) $productSupplier['id_product_supplier']);
         }, $qb->execute()->fetchAllAssociative());
     }
 
