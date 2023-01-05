@@ -102,15 +102,10 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         } else {
             $shopId = $shopConstraint->getShopId();
         }
-        $idOfCoverImage = $this->getCoverImageId($productId, $shopConstraint->getShopId());
 
         return array_map(
-            function (ImageId $imageId) use ($shopId, $idOfCoverImage, $productId): Image {
-                $image = $this->get($imageId, $shopId);
-                $image->cover = (int) $image->id === $idOfCoverImage->getValue();
-                $image->id_product = $productId->getValue();
-
-                return $image;
+            function (ImageId $imageId) use ($shopId): Image {
+                return $this->get($imageId, $shopId);
             },
             $this->getImagesIds($productId, $shopConstraint)
         );
@@ -210,7 +205,7 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         $shopIds = $this->productMultiShopRepository->getShopIdsByConstraint($productId, $shopConstraint);
         $this->addObjectModelToShops($image, $shopIds, CannotAddProductImageException::class);
 
-        $this->setCoversIfDoesntExist($productId);
+        $this->updateMissingCovers($productId);
 
         return $image;
     }
@@ -331,15 +326,20 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         ;
     }
 
-    public function setCoversIfDoesntExist(ProductId $productId): void
+    public function updateMissingCovers(ProductId $productId): void
     {
-        //todo: remove duplication
         $results = $this->connection->createQueryBuilder()
-            ->select('id_image', 'id_shop', 'cover')
-            ->from($this->dbPrefix . 'image_shop', 'i')
-            ->andWhere('i.id_product = :productId')
+            ->select('is.id_image', 'is.id_shop', 'is.cover')
+            ->from($this->dbPrefix . 'image_shop', '`is`')
+            ->leftJoin(
+                '`is`',
+                $this->dbPrefix . 'image',
+                'i',
+                'i.id_image = is.id_image'
+            )
+            ->andWhere('is.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
-            ->addOrderBy('i.id_image', 'ASC')//todo: to remove
+            ->addOrderBy('i.position', 'ASC')
             ->execute()
             ->fetchAll()
         ;
@@ -351,15 +351,18 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             }
 
             if ($coverId === null) {
-                $image['cover'] = 1;
+                $newValue = 1;
             } else {
-                $image['cover'] = null;
+                $newValue = null;
             }
 
+            if ($newValue === $image['cover']) {
+                continue;
+            }
             $this->connection->createQueryBuilder()
                 ->update($this->dbPrefix . 'image_shop')
                 ->set($this->dbPrefix . 'image_shop' . '.cover', ':cover')
-                ->setParameter('cover', $image['cover'])
+                ->setParameter('cover', $newValue)
                 ->andWhere($this->dbPrefix . 'image_shop' . '.id_image = :imageId')
                 ->setParameter('imageId', (int) $image['id_image'])
                 ->andWhere($this->dbPrefix . 'image_shop' . '.id_shop = :shopId')
@@ -392,5 +395,24 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             $this->getAssociatedShopIds(new ImageId((int) $image->id)),
             CannotDeleteProductImageException::class
         );
+    }
+
+    /**
+     * @param ImageId $imageId
+     *
+     * @return Image
+     *
+     * @throws CoreException
+     */
+    public function getImageById(ImageId $imageId): Image
+    {
+        /** @var Image $image */
+        $image = $this->getObjectModel(
+            $imageId->getValue(),
+            Image::class,
+            ProductImageNotFoundException::class
+        );
+
+        return $image;
     }
 }

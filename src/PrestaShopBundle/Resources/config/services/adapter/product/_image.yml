@@ -89,7 +89,6 @@ services:
   prestashop.adapter.product.image.update.product_image_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater
     arguments:
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.uploader.product_image_uploader'
       - '@prestashop.core.grid.position.position_update_factory'
       - '@prestashop.core.grid.image.position_definition'

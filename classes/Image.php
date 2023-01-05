@@ -88,10 +88,15 @@ class ImageCore extends ObjectModel
      *
      * @param int|null $id
      * @param int|null $idLang
+     * @param null $id_shop
+     * @param null $translator
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
-    public function __construct($id = null, $idLang = null)
+    public function __construct($id = null, $idLang = null, $id_shop = null, $translator = null)
     {
-        parent::__construct($id, $idLang);
+        parent::__construct($id, $idLang, $id_shop, $translator);
         $this->image_dir = _PS_PRODUCT_IMG_DIR_;
         $this->source_index = _PS_PRODUCT_IMG_DIR_ . 'index.php';
     }
