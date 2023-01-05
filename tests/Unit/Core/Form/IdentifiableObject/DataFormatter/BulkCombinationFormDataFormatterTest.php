@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataFormatter;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 
 class BulkCombinationFormDataFormatterTest extends TestCase
 {
@@ -116,7 +117,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'minimal_quantity' => 2,
                     'stock_location' => 'far',
                     'low_stock_threshold' => 5,
-                    'low_stock_alert' => true,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                     'available_date' => '2022-01-15',
                 ],
             ],
@@ -131,7 +132,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'options' => [
                         'stock_location' => 'far',
                         'low_stock_threshold' => 5,
-                        'low_stock_alert' => true,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                     ],
                     'available_date' => '2022-01-15',
                 ],
@@ -148,7 +149,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'minimal_quantity' => 2,
                     'stock_location' => 'far',
                     'low_stock_threshold' => 5,
-                    'low_stock_alert' => true,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                     'available_date' => '2022-01-15',
                 ],
             ],
@@ -164,7 +165,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'options' => [
                         'stock_location' => 'far',
                         'low_stock_threshold' => 5,
-                        'low_stock_alert' => true,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                     ],
                     'available_date' => '2022-01-15',
                 ],
@@ -177,7 +178,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'fixed_quantity' => 7,
                     'stock_location' => 'close',
                     'low_stock_threshold' => 2,
-                    'low_stock_alert' => false,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     'available_date' => '2022-02-15',
                 ],
             ],
@@ -189,7 +190,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'options' => [
                         'stock_location' => 'close',
                         'low_stock_threshold' => 2,
-                        'low_stock_alert' => false,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     ],
                     'available_date' => '2022-02-15',
                 ],
@@ -203,7 +204,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     self::MODIFY_ALL_SHOPS_PREFIX . 'fixed_quantity' => false,
                     'stock_location' => 'close',
                     'low_stock_threshold' => 2,
-                    'low_stock_alert' => false,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     'available_date' => '2022-02-15',
                 ],
             ],
@@ -216,7 +217,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'options' => [
                         'stock_location' => 'close',
                         'low_stock_threshold' => 2,
-                        'low_stock_alert' => false,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                     ],
                     'available_date' => '2022-02-15',
                 ],
@@ -248,14 +249,14 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'delta_quantity' => [
                     ],
                     'stock_location' => 'far',
-                    'low_stock_alert' => true,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                 ],
             ],
             [
                 'stock' => [
                     'options' => [
                         'stock_location' => 'far',
-                        'low_stock_alert' => true,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                     ],
                 ],
             ],

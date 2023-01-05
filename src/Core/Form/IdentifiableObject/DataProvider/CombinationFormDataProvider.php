@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 
 /**
  * Provides the data that is used to prefill the Combination form
@@ -123,7 +124,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'options' => [
                 'stock_location' => $stockInformation->getLocation(),
                 'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
-                'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
+                sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => $stockInformation->isLowStockAlertEnabled(),
             ],
             'available_date' => DateTime::isNull($availableDate) ? '' : $availableDate->format(DateTime::DEFAULT_DATE_FORMAT),
             'available_now_label' => $stockInformation->getLocalizedAvailableNowLabels(),

@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 use RuntimeException;
 
 class CombinationFormDataProviderTest extends TestCase
@@ -130,7 +131,7 @@ class CombinationFormDataProviderTest extends TestCase
             'quantity' => 42,
             'minimal_quantity' => 7,
             'low_stock_threshold' => 5,
-            'low_stock_alert' => true,
+            sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
             'stock_movements' => [
@@ -191,7 +192,7 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options'][sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX)] = true;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
         $expectedOutputData['stock']['quantities']['stock_movements'] = [
@@ -532,7 +533,7 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['quantity'] ?? self::DEFAULT_QUANTITY,
             $combination['minimal_quantity'] ?? 0,
             $combination['low_stock_threshold'] ?? 0,
-            $combination['low_stock_alert'] ?? false,
+            $combination[sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX)] ?? false,
             $combination['location'] ?? 'location',
             $combination['available_date'] ?? null,
             $combination['available_now'] ?? [],
@@ -662,7 +663,7 @@ class CombinationFormDataProviderTest extends TestCase
                 'options' => [
                     'stock_location' => 'location',
                     'low_stock_threshold' => 0,
-                    'low_stock_alert' => false,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                 ],
                 'available_date' => '',
                 'available_now_label' => [],

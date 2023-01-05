@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+
 /**
  * This class transforms the data from bulk form into data adapted to the combination form structure,
  * since the forms are not constructed the same way the goal is to rebuild the same data values with the
@@ -57,7 +59,13 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[stock][minimal_quantity]' => '[stock][quantities][minimal_quantity]',
             '[stock][stock_location]' => '[stock][options][stock_location]',
             '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
-            '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
+            sprintf(
+                '[stock][%slow_stock_threshold]',
+                DisablingSwitchExtension::FIELD_PREFIX
+            ) => sprintf(
+                '[stock][options][%slow_stock_threshold]',
+                DisablingSwitchExtension::FIELD_PREFIX
+            ),
             '[stock][available_date]' => '[stock][available_date]',
             '[stock][available_now_label]' => '[stock][available_now_label]',
             '[stock][available_later_label]' => '[stock][available_later_label]',
@@ -66,7 +74,7 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
         $formattedData = $this->formatByPath($formData, $pathAssociations);
 
         // We only update images if disabling_switch_images value is truthy
-        if (!empty($formData['images']['disabling_switch_images'])) {
+        if (!empty($formData['images'][sprintf('%simages', DisablingSwitchExtension::FIELD_PREFIX)])) {
             if (empty($formData['images']['images'])) {
                 // Images are collection of checkboxes and there are no values submitted if none of them are checked, but
                 // truthy disabling_switch_images value suggests, that it was intended to "unselect" all images

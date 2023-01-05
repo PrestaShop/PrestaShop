@@ -202,14 +202,14 @@ services:
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler:
     autowire: true
     arguments:
-      $contextShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      $defaultShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler:
     autowire: true
     arguments:
-      $contextShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
-      $defaultShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $contextShopId: "@=service('prestashop.adapter.shop.context').getContextShopID()"
+      $defaultShopId: '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
 
   PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler:
     - '@prestashop.core.command_bus'
