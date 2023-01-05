@@ -167,7 +167,7 @@ class AdminImagesControllerCore extends AdminController
                     'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
                     'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
                     'validation' => 'isUnsignedId',
-                    'required' => true,
+                    'required' => $this->canGenerateAvif,
                     'cast' => 'intval',
                     'type' => 'text',
                     'disabled' => !$this->canGenerateAvif,
