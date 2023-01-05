@@ -53,7 +53,7 @@ class ModifyAllShopsUtil
          *
          *    [
          *        ['[foo]','[bar]'],
-         *        ['foo', 'bar']],
+         *        ['foo', 'bar'],
          *    ]
          */
         preg_match_all('/\\[(.*?)\\]/', $fieldPath, $matches);
