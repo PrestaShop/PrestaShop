@@ -102,7 +102,7 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
      *
      * @return ProductCombinationFilters
      */
-    protected function buildProductCombinationFiltersForDefaultShop(int $productId, TableNode $tableNode): ProductCombinationFilters
+    protected function buildProductCombinationFiltersForShop(int $productId, TableNode $tableNode, int $shopId): ProductCombinationFilters
     {
         $dataRows = $tableNode->getRowsHash();
         $defaults = ProductCombinationFilters::getDefaults();
@@ -133,7 +133,7 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
         }
 
         return new ProductCombinationFilters(
-            ShopConstraint::shop($this->getDefaultShopId()),
+            ShopConstraint::shop($shopId),
             [
                 'limit' => $limit,
                 'offset' => $offset,
