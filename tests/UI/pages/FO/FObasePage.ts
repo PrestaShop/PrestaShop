@@ -119,9 +119,9 @@ export default class FOBasePage extends CommonPage {
 
   private readonly copyrightLink: string;
 
-  private readonly alertSuccessBlock: string;
+  public readonly alertSuccessBlock: string;
 
-  private readonly notificationsBlock: string;
+  public readonly notificationsBlock: string;
 
   /**
    * @constructs

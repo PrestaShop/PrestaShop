@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Identity page, contains functions that can be used on the page
@@ -8,6 +8,48 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class AccountIdentity extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateMessage: string;
+
+  public readonly errorUpdateMessage: string;
+
+  public readonly invalidEmailAlertMessage: string;
+
+  public readonly invalidNumberOfCharacters: string;
+
+  public readonly minimumScoreAlertMessage: string;
+
+  private readonly createAccountForm: string;
+
+  private readonly genderRadioButton: (id: number) => string;
+
+  private readonly firstNameInput: string;
+
+  private readonly lastNameInput: string;
+
+  private readonly newEmailInput: string;
+
+  private readonly invalidEmailAlertDanger: string;
+
+  private readonly passwordInput: string;
+
+  private readonly invalidPasswordAlertDanger: string;
+
+  private readonly invalidNewPasswordAlertDanger: string;
+
+  private readonly newPasswordInput: string;
+
+  private readonly birthdateInput: string;
+
+  private readonly customerPrivacyCheckbox: string;
+
+  private readonly psgdprCheckbox: string;
+
+  private readonly newsletterCheckbox: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on identity page
@@ -24,7 +66,7 @@ class AccountIdentity extends FOBasePage {
 
     // Selectors
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = (id) => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
+    this.genderRadioButton = (id: number) => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
     this.firstNameInput = `${this.createAccountForm} #field-firstname`;
     this.lastNameInput = `${this.createAccountForm} #field-lastname`;
     this.newEmailInput = `${this.createAccountForm} #field-email`;
@@ -50,7 +92,7 @@ class AccountIdentity extends FOBasePage {
    * @param customer {object} Customer's information to fill form
    * @returns {Promise<string>}
    */
-  async editAccount(page, oldPassword, customer) {
+  async editAccount(page: Page, oldPassword: string, customer: any): Promise<string> {
     await page.$eval(this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2), (el) => el.click());
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
@@ -79,7 +121,7 @@ class AccountIdentity extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getInvalidEmailAlert(page) {
+  getInvalidEmailAlert(page:Page):Promise<string> {
     return this.getTextContent(page, this.invalidEmailAlertDanger);
   }
 
@@ -88,7 +130,7 @@ class AccountIdentity extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getInvalidPasswordAlert(page) {
+  async getInvalidPasswordAlert(page:Page):Promise<string> {
     return this.getTextContent(page, this.invalidPasswordAlertDanger);
   }
 
@@ -97,7 +139,7 @@ class AccountIdentity extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getInvalidNewPasswordAlert(page) {
+  async getInvalidNewPasswordAlert(page:Page):Promise<string> {
     return this.getTextContent(page, this.invalidNewPasswordAlertDanger);
   }
 
@@ -107,7 +149,7 @@ class AccountIdentity extends FOBasePage {
    * @param password {string} String for the password
    * @returns {Promise<string>}
    */
-  async unsubscribeNewsletter(page, password) {
+  async unsubscribeNewsletter(page:Page, password:string):Promise<string> {
     await this.setValue(page, this.passwordInput, password);
 
     await page.click(this.customerPrivacyCheckbox);
@@ -122,4 +164,4 @@ class AccountIdentity extends FOBasePage {
   }
 }
 
-module.exports = new AccountIdentity();
+export default new AccountIdentity();

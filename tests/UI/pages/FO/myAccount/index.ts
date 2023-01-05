@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * My account page, contains functions that can be used on the page
@@ -8,6 +8,30 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class MyAccount extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly resetPasswordSuccessMessage: string;
+
+  private readonly accountInformationLink: string;
+
+  private readonly accountHistoryLink: string;
+
+  private readonly accountAddressesLink: string;
+
+  private readonly accountFirstAddressLink: string;
+
+  private readonly accountVouchersLink: string;
+
+  private readonly merchandiseReturnsLink: string;
+
+  private readonly orderSlipsLink: string;
+
+  private readonly successMessageAlert: string;
+
+  private readonly logoutFooterLink: string;
+
+  private readonly psgdprLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on my account page
@@ -40,7 +64,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getSuccessMessageAlert(page) {
+  getSuccessMessageAlert(page: Page): Promise<string> {
     return this.getTextContent(page, this.successMessageAlert);
   }
 
@@ -49,7 +73,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToInformationPage(page) {
+  async goToInformationPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.accountInformationLink);
   }
 
@@ -58,7 +82,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToCreditSlipsPage(page) {
+  async goToCreditSlipsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.orderSlipsLink);
   }
 
@@ -67,16 +91,16 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToHistoryAndDetailsPage(page) {
+  async goToHistoryAndDetailsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
   }
 
   /**
    * Is add first address link visible
-   * @param page page {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isAddFirstAddressLinkVisible(page) {
+  async isAddFirstAddressLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.accountFirstAddressLink);
   }
 
@@ -85,7 +109,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddressesPage(page) {
+  async goToAddressesPage(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
       await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
     } else {
@@ -98,7 +122,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToVouchersPage(page) {
+  async goToVouchersPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
   }
 
@@ -107,7 +131,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToMerchandiseReturnsPage(page) {
+  async goToMerchandiseReturnsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
   }
 
@@ -116,7 +140,7 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async logout(page) {
+  async logout(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
   }
 
@@ -125,9 +149,9 @@ class MyAccount extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToMyGDPRPersonalDataPage(page) {
+  async goToMyGDPRPersonalDataPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.psgdprLink);
   }
 }
 
-module.exports = new MyAccount();
+export default new MyAccount();

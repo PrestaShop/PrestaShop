@@ -1,6 +1,7 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Add address page, contains functions that can be used on the page
@@ -8,6 +9,40 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class AddAddress extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly creationFormTitle: string;
+
+  public readonly updateFormTitle: string;
+
+  private readonly pageHeaderTitle: string;
+
+  private readonly addressForm: string;
+
+  private readonly aliasInput: string;
+
+  private readonly firstNameInput: string;
+
+  private readonly lastNameInput: string;
+
+  private readonly companyInput: string;
+
+  private readonly vatNumberInput: string;
+
+  private readonly addressInput: string;
+
+  private readonly secondAddressInput: string;
+
+  private readonly postCodeInput: string;
+
+  private readonly cityInput: string;
+
+  private readonly countrySelect: string;
+
+  private readonly phoneInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add address page
@@ -23,8 +58,8 @@ class AddAddress extends FOBasePage {
     this.pageHeaderTitle = '#main .page-header h1';
     this.addressForm = '.address-form';
     this.aliasInput = `${this.addressForm} input[name=alias]`;
-    this.firstnameInput = `${this.addressForm} input[name=firstname]`;
-    this.lastnameInput = `${this.addressForm} input[name=lastname]`;
+    this.firstNameInput = `${this.addressForm} input[name=firstname]`;
+    this.lastNameInput = `${this.addressForm} input[name=lastname]`;
     this.companyInput = `${this.addressForm} input[name=company]`;
     this.vatNumberInput = `${this.addressForm} input[name=vat_number]`;
     this.addressInput = `${this.addressForm} input[name=address1]`;
@@ -45,7 +80,7 @@ class AddAddress extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getHeaderTitle(page) {
+  getHeaderTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeaderTitle);
   }
 
@@ -55,14 +90,14 @@ class AddAddress extends FOBasePage {
    * @param addressData {object} Address's information to fill on form
    * @returns {Promise<string>}
    */
-  async setAddress(page, addressData) {
+  async setAddress(page: Page, addressData: object): Promise<string> {
     // Set alias if added (optional)
     if (addressData.alias) {
       await this.setValue(page, this.aliasInput, addressData.alias);
     }
 
-    await this.setValue(page, this.firstnameInput, addressData.firstName);
-    await this.setValue(page, this.lastnameInput, addressData.lastName);
+    await this.setValue(page, this.firstNameInput, addressData.firstName);
+    await this.setValue(page, this.lastNameInput, addressData.lastName);
 
     // Set company if added (optional)
     if (addressData.company) {
@@ -92,6 +127,7 @@ class AddAddress extends FOBasePage {
 
     // Save address
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 
@@ -100,7 +136,7 @@ class AddAddress extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isVatNumberRequired(page) {
+  async isVatNumberRequired(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.vatNumberInput}:required`, 1000);
   }
 
@@ -110,8 +146,8 @@ class AddAddress extends FOBasePage {
    * @param countryName {string} String of the country name
    * @returns {Promise<boolean>}
    */
-  async countryExist(page, countryName) {
-    const options = await page.$$eval(
+  async countryExist(page: Page, countryName: string): Promise<boolean> {
+    const options: string = await page.$$eval(
       `${this.countrySelect} option`,
       (all) => all.map((option) => option.textContent),
     );
@@ -120,4 +156,4 @@ class AddAddress extends FOBasePage {
   }
 }
 
-module.exports = new AddAddress();
+export default new AddAddress();

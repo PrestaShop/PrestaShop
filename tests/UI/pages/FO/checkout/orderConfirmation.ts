@@ -1,6 +1,7 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Order confirmation page, contains functions that can be used on the page
@@ -8,6 +9,24 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class OrderConfirmation extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly orderConfirmationCardTitle: string;
+
+  private readonly orderConfirmationCardSection: string;
+
+  private readonly orderConfirmationCardTitleH3: string;
+
+  private readonly orderSummaryContent: string;
+
+  private readonly orderReferenceValue: string;
+
+  private readonly customerSupportLink: string;
+
+  private readonly orderConfirmationTable: string;
+
+  private readonly giftWrappingRow: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on order confirmation page
@@ -36,7 +55,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {boolean}
    */
-  isFinalSummaryVisible(page) {
+  isFinalSummaryVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.orderSummaryContent, 2000);
   }
 
@@ -45,7 +64,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getOrderConfirmationCardTitle(page) {
+  getOrderConfirmationCardTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderConfirmationCardTitleH3);
   }
 
@@ -54,7 +73,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderReferenceValue(page) {
+  async getOrderReferenceValue(page: Page): Promise<string> {
     const orderRefText = await this.getTextContent(page, this.orderReferenceValue);
 
     return (orderRefText.split(':'))[1].trim();
@@ -65,7 +84,7 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToContactUsPage(page) {
+  async goToContactUsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.customerSupportLink);
   }
 
@@ -74,9 +93,9 @@ class OrderConfirmation extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getGiftWrappingValue(page) {
+  async getGiftWrappingValue(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.giftWrappingRow);
   }
 }
 
-module.exports = new OrderConfirmation();
+export default new OrderConfirmation();
