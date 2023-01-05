@@ -351,9 +351,17 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function getCombinationIdsAction(ProductCombinationFilters $filters): JsonResponse
+    public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
-        $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds($filters));
+        $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds(
+            $productId,
+            $filters->getShopConstraint(),
+            $filters->getLimit(),
+            $filters->getOffset(),
+            $filters->getOrderBy(),
+            $filters->getOrderWay(),
+            $filters->getFilters()
+        ));
 
         return $this->json(array_map(static function (CombinationId $combinationId): int {
             return $combinationId->getValue();

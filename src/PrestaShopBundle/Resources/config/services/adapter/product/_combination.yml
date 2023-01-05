@@ -72,7 +72,6 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.combination.validate.combination_validator'
-      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
 
   prestashop.adapter.product.combination.repository.combination_repository:
     alias: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository
@@ -85,7 +84,6 @@ services:
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
     arguments:
