@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Update;
 
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProductImageException;
@@ -54,11 +53,6 @@ class ProductImageUpdater
     private $productImageUploader;
 
     /**
-     * @var ProductImageRepository
-     */
-    private $productImageRepository;
-
-    /**
      * @var PositionUpdateFactory
      */
     private $positionUpdateFactory;
@@ -79,21 +73,18 @@ class ProductImageUpdater
     private $productImageMultiShopRepository;
 
     /**
-     * @param ProductImageRepository $productImageRepository
      * @param ProductImageUploader $productImageUploader
      * @param PositionUpdateFactory $positionUpdateFactory
      * @param PositionDefinition $positionDefinition
      * @param GridPositionUpdaterInterface $positionUpdater
      */
     public function __construct(
-        ProductImageRepository $productImageRepository,
         ProductImageUploader $productImageUploader,
         PositionUpdateFactory $positionUpdateFactory,
         PositionDefinition $positionDefinition,
         GridPositionUpdaterInterface $positionUpdater,
         ProductImageMultiShopRepository $productImageMultiShopRepository
     ) {
-        $this->productImageRepository = $productImageRepository;
         $this->productImageUploader = $productImageUploader;
         $this->positionUpdateFactory = $positionUpdateFactory;
         $this->positionDefinition = $positionDefinition;
@@ -109,12 +100,12 @@ class ProductImageUpdater
      */
     public function deleteImage(ImageId $imageId)
     {
-        $image = $this->productImageRepository->get($imageId);
+        $image = $this->productImageMultiShopRepository->getImageById($imageId);
 
         $this->productImageUploader->remove($image);
         $this->productImageMultiShopRepository->delete($image);
 
-        $this->productImageMultiShopRepository->setCoversIfDoesntExist(new ProductId((int) $image->id_product));
+        $this->productImageMultiShopRepository->updateMissingCovers(new ProductId((int) $image->id_product));
     }
 
     /**

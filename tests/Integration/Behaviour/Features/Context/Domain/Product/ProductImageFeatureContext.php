@@ -336,13 +336,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductHasNoImagesForShops(string $productReference, string $shopReferences): void
     {
-        //todo: use transformer
-        $shopIds = array_map(
-          function (string $shopReference): int {
-              return $this->getSharedStorage()->get(trim($shopReference));
-          },
-            explode(',', $shopReferences)
-        );
+        $shopIds = $this->referencesToIds($shopReferences);
 
         foreach ($shopIds as $shopId) {
             Assert::assertEmpty(
@@ -374,9 +368,8 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCoverForShops(string $productReference, string $coverUrl, string $shopReferences): void
     {
-        $shopReferences = explode(',', $shopReferences);
-        foreach ($shopReferences as $shopReference) {
-            $productForEditing = $this->getProductForEditing($productReference, $this->getSharedStorage()->get(trim($shopReference)));
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $productForEditing = $this->getProductForEditing($productReference, $shopId);
             $realImageUrl = $this->getRealImageUrl($coverUrl);
 
             Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());

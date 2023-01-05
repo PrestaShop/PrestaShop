@@ -42,7 +42,7 @@ Feature: Update product image from Back Office (BO)
     And product "product1" should have following images for shop "shop3":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg" for shops "shop1, shop2, shop3"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg" for shops "shop1,shop2,shop3"
     And images "[image1, image2]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -66,6 +66,9 @@ Feature: Update product image from Back Office (BO)
       | image reference | is cover | legend[en-US]    | position | image url                            | thumbnail url                                      |
       | image1          | true     | preston is alive | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
       | image2          | false    |                  | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+    Then product "product1" should have following images for shop "shop3":
+      | image reference | is cover | legend[en-US]    | position | image url                            | thumbnail url                                      |
+      | image1          | true     | preston is alive | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
     When I update image "image1" with following information for shop "shop2":
       | legend[en-US] | preston is alive |
     Then product "product1" should have following images for shop "shop1, shop2":

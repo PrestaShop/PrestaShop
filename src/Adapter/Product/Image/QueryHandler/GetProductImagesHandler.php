@@ -45,7 +45,7 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     /**
      * @var ProductImageMultiShopRepository
      */
-    private $productImageMultishopRepository;
+    private $productImageRepository;
 
     /**
      * @var ProductImagePathFactory
@@ -53,14 +53,14 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @param ProductImageMultiShopRepository $productImageMultishopRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        ProductImageMultiShopRepository $productImageMultishopRepository,
+        ProductImageMultiShopRepository $productImageRepository,
         ProductImagePathFactory $productImageUrlFactory
     ) {
-        $this->productImageMultishopRepository = $productImageMultishopRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
@@ -70,12 +70,12 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     public function handle(GetProductImages $query): array
     {
         //todo throw exception if not single shop
-        $images = $this->productImageMultishopRepository->getImages($query->getProductId(), $query->getShopConstraint());
+        $images = $this->productImageRepository->getImages($query->getProductId(), $query->getShopConstraint());
         $productImages = [];
         foreach ($images as $image) {
             $productImages[] = $this->formatImage(
                 $image,
-                $this->productImageMultishopRepository->getAssociatedShopIds(new ImageId($image->id))
+                $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
             );
         }
 
