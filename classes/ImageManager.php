@@ -311,7 +311,7 @@ class ImageManagerCore
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png') {
+        if ($fileType == 'png' || $fileType == 'webp' || $fileType == 'avif') {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);

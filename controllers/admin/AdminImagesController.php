@@ -163,7 +163,7 @@ class AdminImagesControllerCore extends AdminController
 
         if ($this->isMultipleImageFormatFeatureEnabled) {
             $avifQualityField = [
-                'PS_ADDITIONAL_IMAGE_AVIF_QUALITY' => [
+                'PS_AVIF_QUALITY' => [
                     'title' => $this->trans('AVIF compression', [], 'Admin.Design.Feature'),
                     'hint' => $this->trans('Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 90.', [], 'Admin.Design.Help'),
                     'validation' => 'isUnsignedId',
