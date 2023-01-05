@@ -4,7 +4,7 @@ Thank you for contributing to the PrestaShop project!
 Please take the time to edit the "Answers" rows below with the necessary information.
 
 Check out our contribution guidelines to find out how to complete it:
-https://devdocs.prestashop.com/8/contribute/contribution-guidelines/#pull-requests
+https://devdocs.prestashop-project.org/8/contribute/contribution-guidelines/#pull-requests
 ------------------------------------------------------------------------------>
 
 | Questions         | Answers
@@ -15,10 +15,7 @@ https://devdocs.prestashop.com/8/contribute/contribution-guidelines/#pull-reques
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no
-| Fixed ticket?     | Fixes #{issue number here}. If your PR fixes multiple issues, use Resolves #{issue number here}, Resolves #{another issue number here}.
-| Related PRs       | If theme, autoupgrade or other module change is needed, provide a link to related PRs here.
-| How to test?      | Please indicate how to best verify that this PR is correct.
-| Possible impacts? | Please indicate what parts of the software we need to check to make sure everything is alright.
-
-
-<!-- Click the form's "Preview" button to make sure the table is functional in GitHub. Thank you! -->
+| Fixed ticket?     | Fixes #{issue number here}, Fixes #{another issue number here}
+| Related PRs       | If theme, autoupgrade or other module change is needed to make this change work, provide a link to related PRs here.
+| Sponsor company   | Your company name goes here.
+| How to test?      | Indicate how to verify that this change works as expected.
