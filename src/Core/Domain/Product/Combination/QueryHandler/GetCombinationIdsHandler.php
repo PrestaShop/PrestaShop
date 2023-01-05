@@ -83,7 +83,7 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
         ;
 
         return array_map(static function (array $result): CombinationId {
-            return new CombinationId($result['id_product_attribute']);
+            return new CombinationId((int) $result['id_product_attribute']);
         }, $results);
     }
 }
