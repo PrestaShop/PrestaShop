@@ -119,7 +119,7 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
     }
 
     /**
-     * Edit attributes are only used to hanlde the shop selection modal, not needed in a shop row.
+     * Edit attributes are only used to handle the shop selection modal, not needed in a shop row.
      *
      * @return array
      */
