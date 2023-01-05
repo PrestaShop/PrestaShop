@@ -57,13 +57,19 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
     {
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
+        $orderBy = $query->getOrderBy();
+
+        if ('price' === $query->getOrderBy()) {
+            // we need to specify alias for price to avoid price being ambiguous in the query
+            $orderBy = 'pas.price';
+        }
 
         $searchCriteria = new ProductCombinationFilters(
             $query->getShopConstraint(),
             [
                 'limit' => $query->getLimit(),
                 'offset' => $query->getOffset(),
-                'orderBy' => $query->getOrderBy(),
+                'orderBy' => $orderBy,
                 'sortOrder' => $query->getOrderWay(),
                 'filters' => $filters,
             ]
@@ -71,6 +77,7 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
 
         $results = $this->productCombinationQueryBuilder
             ->getSearchQueryBuilder($searchCriteria)
+            ->select('pas.id_product_attribute')
             ->execute()
             ->fetchAllAssociative()
         ;
