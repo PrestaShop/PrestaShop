@@ -1,30 +1,26 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import pages
-const loginPage = require('@pages/BO/login/index');
-const dashboardPage = require('@pages/BO/dashboard');
+import loginPage from '@pages/BO/login/index';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const {DefaultEmployee} = require('@data/demo/employees');
-const EmployeeFaker = require('@data/faker/employee');
+import {DefaultEmployee} from '@data/demo/employees';
+import EmployeeFaker from '@data/faker/employee';
 
-const baseContext = 'functional_BO_login_login';
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-const employeeData = new EmployeeFaker({password: '123456789'});
+const baseContext: string = 'functional_BO_login_login';
 
 describe('BO - Login : Login in BO', async () => {
+  let browserContext: BrowserContext;
+  let page: Page;
+
+  const employeeData: EmployeeFaker = new EmployeeFaker({password: '123456789'});
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
