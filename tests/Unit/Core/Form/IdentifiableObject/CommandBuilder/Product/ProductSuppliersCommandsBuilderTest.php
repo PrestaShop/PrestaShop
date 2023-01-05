@@ -44,7 +44,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new ProductSuppliersCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -81,7 +81,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
                     'product_suppliers' => [],
                 ],
             ],
-            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
+            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint())],
         ];
 
         yield [
@@ -92,7 +92,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
                     ],
                 ],
             ],
-            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
+            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint())],
         ];
 
         yield [
@@ -122,16 +122,18 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
                     ],
                 ],
             ],
-            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
+            [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint())],
         ];
 
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
-            [5, 3]
+            [5, 3],
+            $this->getSingleShopConstraint()
         );
         $defaultSupplierCommand = new SetProductDefaultSupplierCommand(
             $this->getProductId()->getValue(),
-            5
+            5,
+            $this->getSingleShopConstraint()
         );
 
         yield [
@@ -148,7 +150,8 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
 
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
-            [3, 5]
+            [3, 5],
+            $this->getSingleShopConstraint()
         );
 
         yield [
@@ -164,7 +167,8 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
 
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
-            [5, 3]
+            [5, 3],
+            $this->getSingleShopConstraint()
         );
         $updateSuppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),
@@ -191,7 +195,8 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
         );
         $defaultSupplierCommand = new SetProductDefaultSupplierCommand(
             $this->getProductId()->getValue(),
-            5
+            5,
+            $this->getSingleShopConstraint()
         );
 
         yield [
@@ -226,7 +231,8 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
 
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
-            [5]
+            [5],
+            $this->getSingleShopConstraint()
         );
         $updateSuppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),
@@ -267,7 +273,8 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
 
         $suppliersCommand = new SetSuppliersCommand(
             $this->getProductId()->getValue(),
-            [5]
+            [5],
+            $this->getSingleShopConstraint()
         );
         $updateSuppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),

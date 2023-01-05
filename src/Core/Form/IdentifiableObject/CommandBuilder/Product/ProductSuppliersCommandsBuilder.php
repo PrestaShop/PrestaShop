@@ -33,13 +33,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefault
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInterface
+final class ProductSuppliersCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['options']['suppliers']['supplier_ids']) &&
             !isset($formData['options']['suppliers']['default_supplier_id']) &&
@@ -49,19 +50,21 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
 
         $associatedSuppliers = $formData['options']['suppliers']['supplier_ids'] ?? [];
         if (empty($associatedSuppliers)) {
-            return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue())];
+            return [new RemoveAllAssociatedProductSuppliersCommand($productId->getValue(), $singleShopConstraint)];
         }
 
         $commands[] = new SetSuppliersCommand(
             $productId->getValue(),
-            $associatedSuppliers
+            $associatedSuppliers,
+            $singleShopConstraint
         );
 
         $defaultSupplierId = $formData['options']['suppliers']['default_supplier_id'] ?? null;
         if (!empty($defaultSupplierId)) {
             $commands[] = new SetProductDefaultSupplierCommand(
                 $productId->getValue(),
-                (int) $defaultSupplierId
+                (int) $defaultSupplierId,
+                $singleShopConstraint
             );
         }
 
