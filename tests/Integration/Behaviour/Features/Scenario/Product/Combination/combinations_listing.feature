@@ -3,9 +3,9 @@
 @clear-cache-before-feature
 @product-combination
 @combinations-listing
-Feature: Generate attribute combinations for product in Back Office (BO)
+Feature: List attribute combinations for product in Back Office (BO)
   As an employee
-  I need to be able to generate product attribute combinations from BO
+  I need to be able to see and manipulate a list of product attribute combinations from BO
 
   Background:
     Given language with iso code "en" is the default one
