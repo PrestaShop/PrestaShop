@@ -245,7 +245,7 @@ class Product extends FOBasePage {
    * @returns {Promise<{image: string, quantity: number, price: string, name: string}>}
    */
   async getProductInPackList(page: Page, productInList: number = 1): Promise<{
-    image: string, quantity: number,
+    image: string | null, quantity: number,
     price: string, name: string
   }> {
     return {
