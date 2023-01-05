@@ -75,12 +75,8 @@ class GetCombinationIdsHandler implements GetCombinationIdsHandlerInterface
             ->fetchAllAssociative()
         ;
 
-        $combinationIds = [];
-
-        foreach ($results as $result) {
-            $combinationIds[] = new CombinationId((int) $result['id_product_attribute']);
-        }
-
-        return $combinationIds;
+        return array_map(static function (array $result): CombinationId {
+            return new CombinationId($result['id_product_attribute']);
+        }, $results);
     }
 }

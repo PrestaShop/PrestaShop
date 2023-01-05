@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Repository\ShopConstraintTrait;
 use PrestaShopException;
@@ -90,32 +89,24 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     private $productRepository;
 
     /**
-     * @var ProductCombinationQueryBuilder
-     */
-    private $combinationQueryBuilder;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
      * @param AttributeRepository $attributeRepository
      * @param ProductMultiShopRepository $productRepository
-     * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         CombinationValidator $combinationValidator,
         AttributeRepository $attributeRepository,
-        ProductMultiShopRepository $productRepository,
-        ProductCombinationQueryBuilder $combinationQueryBuilder
+        ProductMultiShopRepository $productRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->combinationValidator = $combinationValidator;
         $this->attributeRepository = $attributeRepository;
         $this->productRepository = $productRepository;
-        $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
 
     /**
@@ -436,7 +427,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             ->andWhere('pas.id_product = :productId')
             ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
-            ->setParameter('productId', $productId)
+            ->setParameter('productId', $productId->getValue())
             ->addOrderBy('pas.id_product_attribute', 'ASC')
         ;
 
