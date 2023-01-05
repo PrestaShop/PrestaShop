@@ -9,6 +9,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
+import foOrderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 require('module-alias/register');
 
@@ -20,9 +23,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const orderPageMessagesBlock = require('@pages/BO/orders/view/messagesBlock');
 const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');

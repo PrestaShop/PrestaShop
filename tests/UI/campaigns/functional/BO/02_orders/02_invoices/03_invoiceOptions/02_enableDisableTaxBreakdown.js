@@ -9,6 +9,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
 import foProductPage from '@pages/FO/product';
+import checkoutPage from '@pages/FO/checkout';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
 import TaxRuleData from '@data/faker/taxRule';
@@ -26,8 +28,6 @@ const boProductsPage = require('@pages/BO/catalog/products/index');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const ordersPage = require('@pages/BO/orders/index');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import common pages
 const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');

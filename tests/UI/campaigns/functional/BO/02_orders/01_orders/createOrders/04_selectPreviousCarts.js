@@ -11,6 +11,7 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import checkoutPage from '@pages/FO/checkout';
 
 require('module-alias/register');
 
@@ -24,7 +25,6 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 const viewShoppingCartPage = require('@pages/BO/orders/shoppingCarts/view');
 const stocksPage = require('@pages/BO/catalog/stocks');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
-const checkoutPage = require('@pages/FO/checkout');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');

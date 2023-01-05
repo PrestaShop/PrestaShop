@@ -6,6 +6,9 @@ import testContext from '@utils/testContext';
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
 
+// Import FO pages
+import checkoutPage from '@pages/FO/checkout';
+
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -15,9 +18,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const orderPageMessagesBlock = require('@pages/BO/orders/view/messagesBlock');
-
-// Import FO pages
-const checkoutPage = require('@pages/FO/checkout');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
