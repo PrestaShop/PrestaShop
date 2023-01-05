@@ -59,10 +59,15 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
 
     /**
      * @param RequestStack|null $requestStack (nullable to preserve backward compatibility)
+     * @param iterable|null $hookSubscribers
      */
-    public function __construct(RequestStack $requestStack = null)
+    public function __construct(RequestStack $requestStack = null, iterable $hookSubscribers = null)
     {
         $this->requestStack = $requestStack;
+
+        foreach ($hookSubscribers as $hookSubscriber) {
+            $this->addSubscriber($hookSubscriber);
+        }
     }
 
     /**
