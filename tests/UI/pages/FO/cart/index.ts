@@ -18,7 +18,7 @@ class Cart extends FOBasePage {
 
   public readonly cartRuleAlertMessageText: string;
 
-  private readonly alertChooseDeliveryAddressWarningText: string;
+  public readonly alertChooseDeliveryAddressWarningText: string;
 
   private readonly productItem: (number: number) => string;
 
