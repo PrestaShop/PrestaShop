@@ -25,7 +25,7 @@
 
 import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
 import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
-import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
+import {Supplier} from '@pages/product/components/suppliers/supplier-types';
 import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductMap from '@pages/product/product-map';
@@ -110,14 +110,8 @@ export default class ProductOptionsManager {
         ProductMap.suppliers.productSuppliers,
         this.productFormModel.getProduct().suppliers?.defaultSupplierId || 0,
         this.productFormModel.getProduct().price.wholesalePrice,
-        (defaultProductSupplier: ProductSupplier) => {
-          this.productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
-        },
       );
 
-      this.productFormModel.watch('price.wholesalePrice', (event) => {
-        productSuppliers.updateWholesalePrice(event.value);
-      });
       this.productFormModel.watch('suppliers.defaultSupplierId', (event) => {
         productSuppliers.setDefaultSupplierId(event.value);
       });
