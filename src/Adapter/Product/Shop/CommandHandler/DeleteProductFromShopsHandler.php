@@ -67,14 +67,13 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     {
         $shopIds = $command->getShopIds();
         $productId = $command->getProductId();
+
+        if ($this->productRepository->hasCombinations($command->getProductId())) {
+            foreach ($shopIds as $shopId) {
+                $this->combinationMultiShopRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
+            }
+        }
+
         $this->productRepository->deleteFromShops($command->getProductId(), $shopIds);
-
-        if (!$this->productRepository->hasCombinations($command->getProductId())) {
-            return;
-        }
-
-        foreach ($shopIds as $shopId) {
-            $this->combinationMultiShopRepository->deleteByProductId($productId, ShopConstraint::shop($shopId->getValue()));
-        }
     }
 }
