@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
@@ -47,7 +47,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -348,23 +347,27 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param int $productId
+     * @oaram int $productId
+     *
      * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
      */
     public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
-        /** @var CombinationRepository $repository */
-        $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
+        $combinationIds = $this->getQueryBus()->handle(new GetCombinationIds(
+            $productId,
+            $filters->getShopConstraint(),
+            $filters->getLimit(),
+            $filters->getOffset(),
+            $filters->getOrderBy(),
+            $filters->getOrderWay(),
+            $filters->getFilters()
+        ));
 
-        $combinationIds = $repository->getCombinationIds(new ProductId($productId), $filters);
-        $data = [];
-        foreach ($combinationIds as $combinationId) {
-            $data[] = $combinationId->getValue();
-        }
-
-        return $this->json($data);
+        return $this->json(array_map(static function (CombinationId $combinationId): int {
+            return $combinationId->getValue();
+        }, $combinationIds));
     }
 
     /**

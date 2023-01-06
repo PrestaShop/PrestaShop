@@ -93,6 +93,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      * @param string $dbPrefix
      * @param CombinationValidator $combinationValidator
      * @param AttributeRepository $attributeRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         Connection $connection,

@@ -59,7 +59,7 @@ class ProductCombinationFiltersBuilderTest extends TestCase
         $builder->setConfig(['request' => $this->buildRequestMock($productId, $shopId)]);
 
         $builtFilters = $builder->buildFilters();
-        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId, $shopId), $builtFilters->getFilterId());
+        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId), $builtFilters->getFilterId());
         $filters = $builtFilters->getFilters();
         $this->assertEquals($productId, $filters['product_id']);
     }
@@ -79,7 +79,7 @@ class ProductCombinationFiltersBuilderTest extends TestCase
         ], 'product_id');
 
         $builtFilters = $builder->buildFilters($initialFilters);
-        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId, $shopId), $builtFilters->getFilterId());
+        $this->assertEquals(ProductCombinationFilters::generateFilterId($productId), $builtFilters->getFilterId());
         $filters = $builtFilters->getFilters();
         $this->assertEquals($productId, $filters['product_id']);
         $this->assertEquals(45, $filters['category_id']);
