@@ -12,7 +12,7 @@ import sqlManagerPage from '@pages/BO/advancedParameters/database/sqlManager';
 import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/add';
 
 // Import data
-import {Tables} from '@data/demo/sqlTables';
+import Tables from '@data/demo/sqlTables';
 import SQLQueryFaker from '@data/faker/sqlQuery';
 
 import {expect} from 'chai';
