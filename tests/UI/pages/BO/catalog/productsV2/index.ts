@@ -765,7 +765,7 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Click on delete product button
+   * Click on duplicate product button
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @returns {Promise<boolean>}
@@ -791,7 +791,7 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Delete product
+   * Confirm dialog product
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
