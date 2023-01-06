@@ -94,6 +94,7 @@ class StockOptionsType extends TranslatorAwareType
                 'default_empty_data' => 0,
                 'empty_view_data' => null,
                 'modify_all_shops' => true,
+                // @todo: need to trigger opening allShopscheckbox on "disabling_switch" change too.
                 'disabling_switch' => true,
                 'attr' => [
                     'class' => 'small-input',

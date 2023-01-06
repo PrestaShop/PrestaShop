@@ -60,7 +60,7 @@ class DeltaQuantityType extends TranslatorAwareType
                     new NotBlank(),
                 ],
                 'required' => false,
-                'modify_all_shops' => true,
+                'modify_all_shops' => $options['modify_delta_for_all_shops'],
             ]);
 
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
@@ -72,8 +72,10 @@ class DeltaQuantityType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'delta_label' => $this->trans('Add or subtract items', 'Admin.Global'),
+                'modify_delta_for_all_shops' => false,
             ])
             ->setAllowedTypes('delta_label', ['string', 'boolean', 'null'])
+            ->setAllowedTypes('modify_delta_for_all_shops', ['boolean'])
         ;
     }
 

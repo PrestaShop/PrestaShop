@@ -124,9 +124,7 @@ class StringModifierTest extends TestCase
      */
     public function testStr2url(string $input, string $expected): void
     {
-        $cc = new StringModifier();
-
-        self::assertSame($expected, $cc->str2url($input));
+        self::assertSame($expected, $this->stringModifier->str2url($input));
     }
 
     public function str2UrlProvider(): Generator
@@ -146,9 +144,7 @@ class StringModifierTest extends TestCase
      */
     public function testReplaceAccentedCharacters(string $input, string $expected): void
     {
-        $cc = new StringModifier();
-
-        self::assertSame($expected, $cc->replaceAccentedChars($input));
+        self::assertSame($expected, $this->stringModifier->replaceAccentedChars($input));
     }
 
     public function getTestReplaceAccentedCharactersData(): Generator

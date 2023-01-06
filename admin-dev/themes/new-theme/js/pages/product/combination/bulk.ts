@@ -37,6 +37,7 @@ $(() => {
     'EventEmitter',
     'DeltaQuantityInput',
     'DisablingSwitch',
+    'ModifyAllShopsCheckbox',
   ]);
   new ImageSelector();
   new QuantityModeSwitcher();

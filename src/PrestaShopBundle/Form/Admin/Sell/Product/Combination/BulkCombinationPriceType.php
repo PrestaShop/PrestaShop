@@ -100,6 +100,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => 0,
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
@@ -113,6 +114,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => 0,
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -138,6 +140,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => 0,
+                'modify_all_shops' => true,
             ])
             ->add('weight', NumberType::class, [
                 'required' => false,
@@ -156,6 +159,7 @@ class BulkCombinationPriceType extends TranslatorAwareType
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => 0,
+                'modify_all_shops' => true,
             ])
         ;
     }
