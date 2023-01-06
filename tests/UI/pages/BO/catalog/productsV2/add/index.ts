@@ -18,7 +18,9 @@ import packTab from '@pages/BO/catalog/productsV2/add/packTab';
 class CreateProduct extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly saveAndPublishButtonName: string;
+  public readonly saveAndPublishButtonName: string;
+
+  public readonly successfulDuplicateMessage: string;
 
   private readonly productNameInput: string;
 
@@ -48,6 +50,12 @@ class CreateProduct extends BOBasePage {
 
   private readonly goToCatalogButton: string;
 
+  private readonly duplicateProductButton: string;
+
+  private readonly duplicateProductFooterModal: string;
+
+  private readonly duplicateProductFooterModalConfirmSubmit: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products V2 page
@@ -57,6 +65,7 @@ class CreateProduct extends BOBasePage {
 
     this.pageTitle = 'Products';
     this.saveAndPublishButtonName = 'Save and publish';
+    this.successfulDuplicateMessage = 'Successful duplication';
 
     // Header selectors
     this.productNameInput = '#product_header_name_1';
@@ -77,6 +86,9 @@ class CreateProduct extends BOBasePage {
     this.deleteProductSubmitButton = `${this.deleteProductFooterModal} button.btn-confirm-submit`;
     this.newProductButton = '#product_footer_new_product';
     this.goToCatalogButton = '#product_footer_catalog';
+    this.duplicateProductButton = '#product_footer_duplicate_product';
+    this.duplicateProductFooterModal = '#duplicate-product-footer-modal';
+    this.duplicateProductFooterModalConfirmSubmit = `${this.duplicateProductFooterModal} button.btn-confirm-submit`;
   }
 
   /*
@@ -202,6 +214,19 @@ class CreateProduct extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.newProductButton);
 
     return this.elementVisible(page, productsPage.modalCreateProduct, 1000);
+  }
+
+  /**
+   * Click on duplicate product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async duplicateProduct(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.duplicateProductButton);
+
+    await this.waitForSelectorAndClick(page, this.duplicateProductFooterModalConfirmSubmit);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

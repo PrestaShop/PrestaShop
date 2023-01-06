@@ -9,7 +9,7 @@ import BOBasePage from '@pages/BO/BObasePage';
  * @extends BOBasePage
  */
 class Products extends BOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly alertDangerIDFilterValue: string;
 
@@ -141,6 +141,8 @@ class Products extends BOBasePage {
 
   private readonly productListTableDeleteButton: (row: number) => string;
 
+  private readonly productListTableDuplicateButton: (row: number) => string;
+
   readonly modalCreateProduct: string;
 
   private readonly modalCreateProductLoader: string;
@@ -150,6 +152,32 @@ class Products extends BOBasePage {
   private readonly productTypeDescription: string;
 
   private readonly productType: (type: string) => string;
+
+  private readonly modalDialog: string;
+
+  private readonly modalDialogFooter: string;
+
+  private readonly modalDialogConfirmButton: string;
+
+  private readonly modalBulkDeleteProducts: string;
+
+  private readonly modalBulkDeleteProductsBody: string;
+
+  private readonly modalBulkDeleteProductsFooter: string;
+
+  private readonly modalDialogBulkDeleteButton: string;
+
+  private readonly modalBulkDeleteProductsProgress: string;
+
+  private readonly modalBulkDeleteProductsProgressBody: string;
+
+  private readonly modalBulkDeleteProductsProgressSuccessMessage: string;
+
+  private readonly modalBulkDeleteProductsProgressFooter: string;
+
+  private readonly modalBulkDeleteProductsProgressBarDone: string;
+
+  private readonly modalBulkDeleteProductsCloseButton: string;
 
   private readonly paginationBlock: string;
 
@@ -174,7 +202,7 @@ class Products extends BOBasePage {
       + 'customers can choose.';
     this.virtualProductDescription = 'An intangible product that doesn\'t require shipping. You can also add a '
       + 'downloadable file.';
-    this.packOfProductsDescription = ' A collection of products from your catalog.';
+    this.packOfProductsDescription = 'A collection of products from your catalog.';
 
     // Header selectors
     this.newProductButton = '#page-header-desc-configuration-add';
@@ -260,6 +288,8 @@ class Products extends BOBasePage {
       + 'a.dropdown-toggle';
     this.productListTableDeleteButton = (row) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-delete-row-link';
+    this.productListTableDuplicateButton = (row) => `${this.productsListTableRow(row)}`
+      + ' td.column-actions a.grid-duplicate-row-link';
 
     // Modal create product selectors
     this.modalCreateProduct = '#modal-create-product';
@@ -271,7 +301,7 @@ class Products extends BOBasePage {
     // Modal dialog
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
     this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
-    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
+    this.modalDialogConfirmButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
     // Pagination
     this.paginationBlock = `${this.productGridPanel} div.pagination-block`;
@@ -748,12 +778,25 @@ class Products extends BOBasePage {
   }
 
   /**
+   * Click on delete product button
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<boolean>}
+   */
+  async clickOnDuplicateProductButton(page: Page, row: number = 1): Promise<boolean> {
+    await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
+    await this.waitForSelectorAndClick(page, this.productListTableDuplicateButton(row));
+
+    return this.elementVisible(page, this.modalDialog, 1000);
+  }
+
+  /**
    * Delete product
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteProduct(page: Page): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.modalDialogDeleteButton);
+  async clickOnConfirmDialogButton(page: Page): Promise<string> {
+    await this.waitForSelectorAndClick(page, this.modalDialogConfirmButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
