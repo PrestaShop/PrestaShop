@@ -11,6 +11,15 @@ Feature: Copy product from shop to shop.
 
   Background:
     Given I enable multishop feature
+    And language with iso code "en" is the default one
+    And attribute group "Size" named "Size" in en language exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "S" named "S" in en language exists
+    And attribute "M" named "M" in en language exists
+    And attribute "L" named "L" in en language exists
+    And attribute "White" named "White" in en language exists
+    And attribute "Black" named "Black" in en language exists
+    And attribute "Blue" named "Blue" in en language exists
     And shop "shop1" with name "test_shop" exists
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
@@ -579,3 +588,31 @@ Feature: Copy product from shop to shop.
     # Now I delete product from remaining shops it should be completely removed
     When I delete product productToDelete from shops "shop1,shop3"
     Then product productToDelete should not exist anymore
+
+  Scenario: Product combinations are copied/deleted when product is being copied/deleted to/from shop.
+    Given I add product "product1" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product1 type should be combinations
+    And I generate combinations in shop "shop1" for product product1 using following attributes:
+      | Size  | [L]                |
+      | Color | [White,Black,Blue] |
+    And product "product1" should have the following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have no combinations for shops "shop2"
+    When I copy product "product1" from shop shop1 to shop shop2
+    Then product "product1" should have the following combinations for shops "shop1,shop2":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+    When I delete product "product1" from shops "shop2"
+    Then product "product1" should have the following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | true       |
+      | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
+      | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have no combinations for shops "shop2"
