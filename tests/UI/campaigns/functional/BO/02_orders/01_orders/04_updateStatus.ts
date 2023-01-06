@@ -90,8 +90,13 @@ describe('BO - orders : Update order status', async () => {
 
       await ordersPage.resetFilter(page);
 
-      orderId = parseInt(await ordersPage.getTextColumn(page, 'id_order', 1).toString(), 10);
-      await expect(orderId).to.be.at.least(1);
+      const result: string|number = await ordersPage.getTextColumn(page, 'id_order', 1);
+      await expect(result).to.be.a('number');
+
+      if (typeof result === 'number') {
+        orderId = result;
+        await expect(orderId).to.be.at.least(1);
+      }
     });
   });
 
