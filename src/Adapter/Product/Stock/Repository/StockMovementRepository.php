@@ -78,6 +78,7 @@ class StockMovementRepository
                 'GROUP_CONCAT(id_employee) id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
+//todo: check this error
 //                'SUM(sm.sign * sm.physical_quantity) delta_quantity',
                 'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
                 'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
@@ -105,7 +106,7 @@ class StockMovementRepository
             foreach ($result as $key => $row) {
                 $result[$key]['delta_quantity'] = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $a = 1;
         }
 
