@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Vouchers page, contains functions that can be used on the page
@@ -8,6 +8,10 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class MyWishlists extends FOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly headerTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on vouchers page
@@ -30,9 +34,9 @@ class MyWishlists extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getPageTitle(page) {
+  async getPageTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.headerTitle);
   }
 }
 
-module.exports = new MyWishlists();
+export default new MyWishlists();

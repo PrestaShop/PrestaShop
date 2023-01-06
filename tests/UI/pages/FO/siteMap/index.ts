@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Site map page, contains functions that can be used on the page
@@ -8,6 +8,18 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class SiteMap extends FOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly categoryNameSelect: (id: number) => string;
+
+  private readonly categoryPageNameSelect: (id: number) => string;
+
+  private readonly suppliersPageLink: string;
+
+  private readonly brandsPageLink: string;
+
+  private readonly categoryPageLink: (categoryIDd: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on site map page
@@ -18,11 +30,11 @@ class SiteMap extends FOBasePage {
     this.pageTitle = 'Sitemap';
 
     // Selectors
-    this.categoryNameSelect = (id) => `#category-page-${id}`;
-    this.categoryPageNameSelect = (id) => `#cms-category-${id}`;
+    this.categoryNameSelect = (id: number) => `#category-page-${id}`;
+    this.categoryPageNameSelect = (id: number) => `#cms-category-${id}`;
     this.suppliersPageLink = '#supplier-page';
     this.brandsPageLink = '#manufacturer-page';
-    this.categoryPageLink = (categoryID) => `#category-page-${categoryID}`;
+    this.categoryPageLink = (categoryID: number) => `#category-page-${categoryID}`;
   }
 
   /*
@@ -34,7 +46,7 @@ class SiteMap extends FOBasePage {
    * @param categoryID {number} ID of the category
    * @return {Promise<string>}
    */
-  async getCategoryName(page, categoryID) {
+  async getCategoryName(page: Page, categoryID: number): Promise<string> {
     return this.getTextContent(page, this.categoryNameSelect(categoryID));
   }
 
@@ -44,7 +56,7 @@ class SiteMap extends FOBasePage {
    * @param categoryID {number} ID of the category
    * @return {Promise<boolean>}
    */
-  async isVisibleCategory(page, categoryID) {
+  async isVisibleCategory(page: Page, categoryID: number): Promise<boolean> {
     return this.elementVisible(page, this.categoryNameSelect(categoryID));
   }
 
@@ -54,7 +66,7 @@ class SiteMap extends FOBasePage {
    * @param pageCategoryID {number} Id of the page category
    * @return {Promise<string>}
    */
-  async getPageCategoryName(page, pageCategoryID) {
+  async getPageCategoryName(page: Page, pageCategoryID: number): Promise<string> {
     return this.getTextContent(page, this.categoryPageNameSelect(pageCategoryID));
   }
 
@@ -63,7 +75,7 @@ class SiteMap extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isSuppliersLinkVisible(page) {
+  isSuppliersLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
   }
 
@@ -72,19 +84,19 @@ class SiteMap extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isBrandsLinkVisible(page) {
+  isBrandsLinkVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.brandsPageLink, 2000);
   }
 
   /**
    * Click on the created category
    * @param page {Page} Browser tab
-   * @param page {categoryID} number
+   * @param categoryID {number} The category ID
    * @return {Promise<void>}
    */
-  async viewCreatedCategory(page, categoryID) {
+  async viewCreatedCategory(page: Page, categoryID: number): Promise<void> {
     return this.clickAndWaitForNavigation(page, this.categoryPageLink(categoryID));
   }
 }
 
-module.exports = new SiteMap();
+export default new SiteMap();

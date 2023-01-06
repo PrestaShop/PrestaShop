@@ -6,11 +6,11 @@ import testContext from '@utils/testContext';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import foCreateAccountPage from '@pages/FO/myAccount/add';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foAddressesPage from '@pages/FO/myAccount/addresses';
+import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 require('module-alias/register');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foAddressesPage = require('@pages/FO/myAccount/addresses');
-const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import expect from chai
 const {expect} = require('chai');

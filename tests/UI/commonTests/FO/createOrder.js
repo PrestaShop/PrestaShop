@@ -7,11 +7,11 @@ import cartPage from '@pages/FO/cart';
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
+import searchResultsPage from '@pages/FO/searchResults';
+import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
+import checkoutPage from '@pages/FO/checkout';
 
 require('module-alias/register');
-const searchResultsPage = require('@pages/FO/searchResults');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const checkoutPage = require('@pages/FO/checkout');
 
 // Import expect from chai
 const {expect} = require('chai');

@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Credit slip page, contains functions that can be used on the page
@@ -8,6 +8,24 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class CreditSlip extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly noCreditSlipsInfoMessage: string;
+
+  private readonly creditSlipsTable: string;
+
+  private readonly creditSlipsTableRows: string;
+
+  private readonly creditSlipsTableRow: (row: number) => string;
+
+  private readonly creditSlipsTableColumn: (row: number, column: number) => string;
+
+  private readonly backToYourAccountLink: string;
+
+  private readonly homeLink: string;
+
+  private readonly alertInfoBlock: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on credit slip page
@@ -24,8 +42,8 @@ class CreditSlip extends FOBasePage {
     // Selectors
     this.creditSlipsTable = '#content table';
     this.creditSlipsTableRows = `${this.creditSlipsTable} tbody tr`;
-    this.creditSlipsTableRow = (row) => `${this.creditSlipsTableRows}:nth-child(${row})`;
-    this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
+    this.creditSlipsTableRow = (row: number) => `${this.creditSlipsTableRows}:nth-child(${row})`;
+    this.creditSlipsTableColumn = (row: number, column: number) => `${this.creditSlipsTableRow(row)} td:nth-child(${column})`;
     this.backToYourAccountLink = 'a.account-link[data-role="back-to-your-account"]';
     this.homeLink = 'a.account-link[data-role="home"]';
     // Alert block selectors
@@ -41,7 +59,7 @@ class CreditSlip extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfCreditSlips(page) {
+  async getNumberOfCreditSlips(page: Page): Promise<number> {
     return (await page.$$(this.creditSlipsTableRows)).length;
   }
 
@@ -51,7 +69,7 @@ class CreditSlip extends FOBasePage {
    * @param creditSlipRow {number} Row number in credit slips table
    * @return {Promise<string>}
    */
-  getOrderReference(page, creditSlipRow = 1) {
+  getOrderReference(page: Page, creditSlipRow: number = 1): Promise<string> {
     return this.getTextContent(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
   }
 
@@ -61,7 +79,7 @@ class CreditSlip extends FOBasePage {
    * @param creditSlipRow {number} Row number in credit slips table
    * @return {Promise<string>}
    */
-  getCreditSlipID(page, creditSlipRow = 1) {
+  getCreditSlipID(page: Page, creditSlipRow: number = 1): Promise<string> {
     return this.getTextContent(page, this.creditSlipsTableColumn(creditSlipRow, 2));
   }
 
@@ -71,7 +89,7 @@ class CreditSlip extends FOBasePage {
    * @param creditSlipRow {number} Row number in credit slips table
    * @return {Promise<string>}
    */
-  getDateIssued(page, creditSlipRow = 1) {
+  getDateIssued(page: Page, creditSlipRow: number = 1): Promise<string> {
     return this.getTextContent(page, this.creditSlipsTableColumn(creditSlipRow, 3));
   }
 
@@ -81,7 +99,7 @@ class CreditSlip extends FOBasePage {
    * @param creditSlipRow {number} Row number in credit slips table
    * @returns {Promise<void>}
    */
-  async clickOrderReference(page, creditSlipRow = 1) {
+  async clickOrderReference(page: Page, creditSlipRow: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, `${this.creditSlipsTableColumn(creditSlipRow, 1)} a`);
   }
 
@@ -89,9 +107,9 @@ class CreditSlip extends FOBasePage {
    * Export data to PDF
    * @param page {Page} Browser tab
    * @param creditSlipRow {number} Row number in credit slips table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async downloadCreditSlip(page, creditSlipRow = 1) {
+  async downloadCreditSlip(page: Page, creditSlipRow: number = 1): Promise<string | null> {
     return this.clickAndWaitForDownload(page, `${this.creditSlipsTableColumn(creditSlipRow, 4)} a`);
   }
 
@@ -100,7 +118,7 @@ class CreditSlip extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getAlertInfoMessage(page) {
+  getAlertInfoMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertInfoBlock);
   }
 
@@ -109,7 +127,7 @@ class CreditSlip extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickBackToYourAccountLink(page) {
+  async clickBackToYourAccountLink(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
   }
 
@@ -118,9 +136,9 @@ class CreditSlip extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickHomeLink(page) {
+  async clickHomeLink(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.homeLink);
   }
 }
 
-module.exports = new CreditSlip();
+export default new CreditSlip();

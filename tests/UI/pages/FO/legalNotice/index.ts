@@ -1,6 +1,5 @@
+// Import pages
 import FOBasePage from '@pages/FO/FObasePage';
-
-require('module-alias/register');
 
 /**
  * Legal notice page, contains functions that can be used on the page
@@ -8,6 +7,8 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class LegalNotice extends FOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on legal notice page
@@ -19,4 +20,4 @@ class LegalNotice extends FOBasePage {
   }
 }
 
-module.exports = new LegalNotice();
+export default new LegalNotice();

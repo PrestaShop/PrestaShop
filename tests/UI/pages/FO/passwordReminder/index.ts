@@ -22,7 +22,7 @@ class PasswordReminder extends FOBasePage {
 
   private readonly newPasswordInput: string;
 
-  private readonly confirmationPasswoedInput: string;
+  private readonly confirmationPasswordInput: string;
 
   private readonly submitButton: string;
 
@@ -46,7 +46,7 @@ class PasswordReminder extends FOBasePage {
     this.sendResetLinkButton = '#send-reset-link';
     this.emailAddressText = 'section.renew-password .email';
     this.newPasswordInput = 'section.renew-password input[name=passwd]';
-    this.confirmationPasswoedInput = 'section.renew-password input[name=confirmation]';
+    this.confirmationPasswordInput = 'section.renew-password input[name=confirmation]';
     this.submitButton = 'section.renew-password button[name=submit]';
 
     // Success message
@@ -108,7 +108,7 @@ class PasswordReminder extends FOBasePage {
    */
   async setNewPassword(page: Page, password: string): Promise<void> {
     await this.setValue(page, this.newPasswordInput, password);
-    await this.setValue(page, this.confirmationPasswoedInput, password);
+    await this.setValue(page, this.confirmationPasswordInput, password);
     await page.click(this.submitButton);
   }
 

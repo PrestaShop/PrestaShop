@@ -1,6 +1,6 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Return details page, contains functions that can be used on the page
@@ -8,6 +8,18 @@ require('module-alias/register');
  * @extends FOBasePage
  */
 class ReturnDetails extends FOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly errorMessage: string;
+
+  public readonly orderReturnCardBlock: string;
+
+  private readonly pageTitleHeader: string;
+
+  private readonly alertWarning: string;
+
+  private readonly orderReturnInfo: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on return details page
@@ -35,7 +47,7 @@ class ReturnDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getPageTitle(page) {
+  async getPageTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageTitleHeader);
   }
 
@@ -44,7 +56,7 @@ class ReturnDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getAlertWarning(page) {
+  async getAlertWarning(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertWarning);
   }
 
@@ -53,7 +65,7 @@ class ReturnDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAlertWarningVisible(page) {
+  isAlertWarningVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.alertWarning);
   }
 
@@ -62,9 +74,9 @@ class ReturnDetails extends FOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderReturnInfo(page) {
+  async getOrderReturnInfo(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderReturnInfo);
   }
 }
 
-module.exports = new ReturnDetails();
+export default new ReturnDetails();
