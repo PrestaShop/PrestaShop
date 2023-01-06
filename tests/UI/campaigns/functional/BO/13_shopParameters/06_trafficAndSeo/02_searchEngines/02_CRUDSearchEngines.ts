@@ -12,7 +12,7 @@ import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngi
 import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
 
 // Import data
-import SearchEngineFaker from '@data/faker/searchEngine';
+import SearchEngineDate from '@data/faker/searchEngine';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +29,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete searc
   let page: Page;
   let numberOfSearchEngines: number = 0;
 
-  const createSearchEngineData: SearchEngineFaker = new SearchEngineFaker();
-  const editSearchEngineData: SearchEngineFaker = new SearchEngineFaker();
+  const createSearchEngineData: SearchEngineDate = new SearchEngineDate();
+  const editSearchEngineData: SearchEngineDate = new SearchEngineDate();
 
   // before and after functions
   before(async function () {
