@@ -12,7 +12,7 @@ import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngi
 import addSearchEnginePage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines/add';
 
 // Import data
-import SearchEngineFaker from '@data/faker/searchEngine';
+import SearchEngineDate from '@data/faker/searchEngine';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -75,9 +75,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete search engine', asy
 
   const creationTests: number[] = new Array(2).fill(0, 0, 2);
 
-  creationTests.forEach((test, index) => {
+  creationTests.forEach((test: number, index: number) => {
     describe(`Create search engine n°${index + 1}`, async () => {
-      const searchEngineData = new SearchEngineFaker({server: `todelete${index}`});
+      const searchEngineData: SearchEngineDate = new SearchEngineDate({server: `todelete${index}`});
       it('should go to new search engine', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewSearchEnginePage${index}`, baseContext);
 
