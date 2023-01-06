@@ -11,7 +11,7 @@ import zonesPage from '@pages/BO/international/locations';
 import statesPage from '@pages/BO/international/locations/states';
 
 // Import data
-import {states} from '@data/demo/states';
+import States from '@data/demo/states';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -78,7 +78,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterId',
           filterType: 'input',
           filterBy: 'id_state',
-          filterValue: states.california.id.toString(),
+          filterValue: States.california.id.toString(),
         },
       },
       {
@@ -86,7 +86,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterName',
           filterType: 'input',
           filterBy: 'a!name',
-          filterValue: states.bari.name,
+          filterValue: States.bari.name,
         },
       },
       {
@@ -94,7 +94,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterIsoCode',
           filterType: 'input',
           filterBy: 'iso_code',
-          filterValue: states.california.isoCode,
+          filterValue: States.california.isoCode,
         },
       },
       {
@@ -102,7 +102,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterZone',
           filterType: 'select',
           filterBy: 'z!id_zone',
-          filterValue: states.bihar.zone,
+          filterValue: States.bihar.zone,
         },
       },
       {
@@ -110,7 +110,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterCountry',
           filterType: 'select',
           filterBy: 'cl!id_country',
-          filterValue: states.california.country,
+          filterValue: States.california.country,
         },
       },
       {
@@ -118,7 +118,7 @@ describe('BO - International - States : Filter and quick edit', async () => {
           testIdentifier: 'filterStatus',
           filterType: 'select',
           filterBy: 'a!active',
-          filterValue: states.bari.status ? '1' : '0',
+          filterValue: States.bari.status ? '1' : '0',
         },
       },
     ];
@@ -167,14 +167,14 @@ describe('BO - International - States : Filter and quick edit', async () => {
         page,
         'input',
         'a!name',
-        states.california.name,
+        States.california.name,
       );
 
       const numberOfStatesAfterFilter = await statesPage.getNumberOfElementInGrid(page);
       await expect(numberOfStatesAfterFilter).to.be.below(numberOfStates);
 
       const textColumn = await statesPage.getTextColumn(page, 1, 'a!name');
-      await expect(textColumn).to.contains(states.california.name);
+      await expect(textColumn).to.contains(States.california.name);
     });
 
     const statuses = [
