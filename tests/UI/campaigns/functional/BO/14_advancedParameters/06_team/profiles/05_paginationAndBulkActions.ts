@@ -12,7 +12,7 @@ import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
 // Import data
-import ProfileFaker from '@data/faker/profile';
+import ProfileData from '@data/faker/profile';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,7 +20,7 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_advancedParameters_team_profiles_paginationAndBulkActions';
 
 describe('BO - Advanced Parameters - Team : Pagination and delete by bulk actions profiles', async () => {
-  const profileData: ProfileFaker = new ProfileFaker();
+  const createProfileData: ProfileData = new ProfileData();
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -87,7 +87,7 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
       it(`should create profile n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `CreateProfile${index}`, baseContext);
 
-        const textResult = await addProfilePage.createEditProfile(page, profileData);
+        const textResult = await addProfilePage.createEditProfile(page, createProfileData);
         await expect(textResult).to.equal(profilesPage.successfulCreationMessage);
       });
 
@@ -136,10 +136,10 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
     it('should filter list by Name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await profilesPage.filterProfiles(page, 'input', 'name', profileData.name);
+      await profilesPage.filterProfiles(page, 'input', 'name', createProfileData.name);
 
       const textName = await profilesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(profileData.name);
+      await expect(textName).to.contains(createProfileData.name);
     });
 
     it('should delete profiles with Bulk Actions and check result', async function () {
