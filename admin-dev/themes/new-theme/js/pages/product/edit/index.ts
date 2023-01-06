@@ -51,6 +51,7 @@ import ProductOptionsManager from '@pages/product/edit/manager/product-options-m
 import ProductShippingManager from '@pages/product/edit/manager/product-shipping-manager';
 import ProductDetailsManager from '@pages/product/edit/manager/product-details-manager';
 import SummaryQuantityUpdater from '@pages/product/edit/summary-quantity-updater';
+import initCarrierSelector from '@pages/product/components/carriers';
 
 const {$} = window;
 
@@ -136,6 +137,19 @@ $(() => {
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
   initImagesShopAssociation(ProductMap.manageShopImagesButtonContainer, shopId);
+  initCarrierSelector(
+    ProductMap.shipping.carrierSelectorContainer,
+    eventEmitter,
+    // @todo: pass via data attr or api request
+    [
+      {
+        name: 'carrier1name', label: 'carrier1label', id: 1,
+      },
+      {
+        name: 'carrier2name', label: 'carrier2label', id: 2,
+      },
+    ],
+  );
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();

@@ -246,6 +246,7 @@ export default {
   shipping: {
     deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
     deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
+    carrierSelectorContainer: '#carrier_selector',
   },
   seo: {
     container: '#product_seo_serp',

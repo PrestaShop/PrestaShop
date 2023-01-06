@@ -120,6 +120,8 @@ class ShippingType extends TranslatorAwareType
                 'alert_message' => $this->trans('If no carrier is selected then all the carriers will be available for customers orders.', 'Admin.Catalog.Notification'),
                 'alert_type' => 'warning',
                 'modify_all_shops' => true,
+                'block_prefix' => '_product_carriers',
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/carriers.html.twig',
             ])
         ;
     }
