@@ -78,8 +78,7 @@ class StockMovementRepository
                 'GROUP_CONCAT(id_employee) id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
-//todo: check this error
-//                'SUM(sm.sign * sm.physical_quantity) delta_quantity',
+                // SQL doesn't allow use to multiply physical_quantity by negitive number because its unsignedInt
                 'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
                 'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
                 'MIN(sm.date_add) date_add_min',
@@ -91,7 +90,6 @@ class StockMovementRepository
         $this->addGroupingCondition($queryBuilder);
 
         $queryBuilder
-//            ->andHaving('delta_quantity != 0')
             ->orderBy('id_stock_mvt_min', 'DESC')
             ->andWhere('sm.id_stock = :stockId')
             ->setParameter('stockId', $stockId->getValue())
@@ -101,13 +99,14 @@ class StockMovementRepository
 
         // It is CRITICAL to reset the counter before each request
         $this->connection->executeStatement('SET @grouping_id := null');
-        try {
-            $result = $queryBuilder->execute()->fetchAllAssociative();
-            foreach ($result as $key => $row) {
-                $result[$key]['delta_quantity'] = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
+        $result = $queryBuilder->execute()->fetchAllAssociative();
+        foreach ($result as $key => $row) {
+            $totalQuantity = $row['delta_quantity_positive'] - $row['delta_quantity_negative'];
+            if ($totalQuantity === 0) {
+                unset($result[$key]);
+                continue;
             }
-        } catch (\Exception $e) {
-            $a = 1;
+            $result[$key]['delta_quantity'] = $totalQuantity;
         }
 
         return $result;
