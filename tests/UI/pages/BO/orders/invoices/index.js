@@ -112,7 +112,7 @@ class Invoice extends BOBasePage {
   /**
    * Generate PDF by status
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
   generatePDFByStatusAndDownload(page) {
     return this.clickAndWaitForDownload(page, this.generatePdfByStatusButton);

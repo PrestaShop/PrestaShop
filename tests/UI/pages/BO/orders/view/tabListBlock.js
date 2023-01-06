@@ -298,7 +298,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    * Download a document in document tab
    * @param page {Page} Browser tab
    * @param row {number} Document row on table
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
   downloadDocument(page, row) {
     return this.clickAndWaitForDownload(page, this.documentNumberLink(row));
@@ -308,7 +308,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    * Download invoice
    * @param page {Page} Browser tab
    * @param row {number} Row of the invoice
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
   async downloadInvoice(page, row = 1) {
     await this.goToDocumentsTab(page);
