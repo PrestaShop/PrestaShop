@@ -325,7 +325,6 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   | Storage nr1 |
       | low stock threshold        | 0           |
       | low stock alert is enabled | false       |
-      | available date             |             |
     Then combination "product1MBlue" should have following stock details:
       | combination stock detail   | value       |
       | quantity                   | 2147483647  |
@@ -334,6 +333,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   | Storage nr1 |
       | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 2147483647     |
     When I update combination "product1MBlue" stock with following details:
       | delta quantity             | -4294967295 |
       | minimal quantity           | 1           |
@@ -349,6 +351,10 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   | Storage nr1 |
       | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | -4294967295    |
+      | Puff Daddy | 2147483647     |
     When I update combination "product1MBlue" stock with following details:
       | delta quantity             | 4294967295  |
       | minimal quantity           | 1           |
@@ -364,3 +370,8 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   | Storage nr1 |
       | available date             |             |
+    And combination "product1MBlue" last stock movements should be:
+      | employee   | delta_quantity |
+      | Puff Daddy | 4294967295     |
+      | Puff Daddy | -4294967295    |
+      | Puff Daddy | 2147483647     |

@@ -78,7 +78,7 @@ class StockMovementRepository
                 'GROUP_CONCAT(id_employee) id_employee_list',
                 'MIN(employee_firstname) employee_firstname',
                 'MIN(employee_lastname) employee_lastname',
-                // SQL doesn't allow use to multiply physical_quantity by negitive number because its unsignedInt
+                // SQL doesn't allow use to multiply physical_quantity by negative number because its unsignedInt
                 'SUM(IF(sign = 1, physical_quantity, 0)) delta_quantity_positive',
                 'SUM(IF(sign = -1, physical_quantity, 0)) delta_quantity_negative',
                 'MIN(sm.date_add) date_add_min',
