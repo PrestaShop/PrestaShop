@@ -289,7 +289,6 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
         /** @var ContactId $id */
         $id = $commandBus->handle($command);
 
-        $this->latestResult = $id->getValue();
         $this->contactRegistry[$contactReference] = $id->getValue();
     }
 
