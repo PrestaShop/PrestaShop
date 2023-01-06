@@ -1,7 +1,10 @@
+import Profiles from '@data/demo/profiles';
+
 const {faker} = require('@faker-js/faker');
-const {Profiles} = require('@data/demo/profiles');
 const {Languages} = require('@data/demo/languages');
 const {Pages} = require('@data/demo/pages');
+
+const profileNames = Object.values(Profiles).map((profile) => profile.name);
 
 /**
  * Create new employee to use on creation form on employee page on BO
@@ -36,7 +39,7 @@ class EmployeeData {
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
 
     /** @type {string} Permission profile to set on the employee */
-    this.permissionProfile = employeeToCreate.permissionProfile || faker.helpers.arrayElement(Profiles);
+    this.permissionProfile = employeeToCreate.permissionProfile || faker.helpers.arrayElement(profileNames);
 
     /** @type {string|null} Path of the avatar of the employee */
     this.avatarFile = employeeToCreate.avatarFile || null;
