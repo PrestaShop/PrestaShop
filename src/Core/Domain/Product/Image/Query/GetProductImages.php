@@ -42,12 +42,19 @@ class GetProductImages
     private $productId;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      */
     public function __construct(
-        int $productId
+        int $productId,
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -56,5 +63,13 @@ class GetProductImages
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

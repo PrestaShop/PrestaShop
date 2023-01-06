@@ -98,7 +98,7 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
         }
 
         if ($command->isCover()) {
-            $this->productImageUpdater->updateProductCover($image);
+            $this->productImageUpdater->updateProductCover($image, $command->getShopConstraint());
         }
 
         if (null !== $command->getFilePath()) {

@@ -54,11 +54,11 @@ Feature: Get every image details for a product in every shop
       | image1          |  1     | shop1         |
       | image2          |  0     | shop1         |
       #shop2
-      | image1          |  0     | shop2         |
+      | image1          |  1     | shop2         |
       | image2          |  0     | shop2         |
       | image3          |  0     | shop2         |
       #shop3
-      | image1          |  0     | shop3         |
+      | image1          |  1     | shop3         |
       | image2          |  0     | shop3         |
       | image3          |  0     | shop3         |
     And the shop "shop4" should have empty image details
