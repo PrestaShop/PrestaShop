@@ -11,8 +11,8 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
 
 // Import data
-import {orderReturn, pdfOrderReturn} from '@data/demo/seoPages';
-import SeoPageFaker from '@data/faker/seoPage';
+import SeoPages from '@data/demo/seoPages';
+import SeoPageData from '@data/faker/seoPage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,9 +24,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
   let page: Page;
   let numberOfSeoPages: number = 0;
 
-  const seoPagesData: SeoPageFaker[] = [
-    new SeoPageFaker({page: orderReturn.page, title: 'ToDelete1'}),
-    new SeoPageFaker({page: pdfOrderReturn.page, title: 'ToDelete2'}),
+  const seoPagesData: SeoPageData[] = [
+    new SeoPageData({page: SeoPages.orderReturn.page, title: 'ToDelete1'}),
+    new SeoPageData({page: SeoPages.pdfOrderReturn.page, title: 'ToDelete2'}),
   ];
 
   // before and after functions
@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
   });
 
   describe('Create 2 seo pages', async () => {
-    seoPagesData.forEach((seoPageData, index) => {
+    seoPagesData.forEach((seoPageData: SeoPageData, index: number) => {
       it('should go to new seo page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewSeoPage${index + 1}`, baseContext);
 
