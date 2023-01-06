@@ -620,7 +620,6 @@ class AdminImagesControllerCore extends AdminController
                             $image = str_replace('.', '_thumb.', $image);
                         }
 
-                        // todoimage: what if the original image is not jpg ?
                         if (!file_exists($newDir . substr($image, 0, -4) . '-' . stripslashes($imageType['name']) . '.jpg')) {
                             if (!file_exists($dir . $image) || !filesize($dir . $image)) {
                                 $this->errors[] = $this->trans('Source file does not exist or is empty (%filepath%)', ['%filepath%' => $dir . $image], 'Admin.Design.Notification');
