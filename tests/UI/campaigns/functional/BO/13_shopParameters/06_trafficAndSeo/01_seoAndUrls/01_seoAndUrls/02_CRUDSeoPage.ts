@@ -11,8 +11,8 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import addSeoAndUrlPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls/add';
 
 // Import data
-import {orderReturn, pdfOrderReturn} from '@data/demo/seoPages';
-import SeoPageFaker from '@data/faker/seoPage';
+import SeoPages from '@data/demo/seoPages';
+import SeoPageData from '@data/faker/seoPage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
   let page: Page;
   let numberOfSeoPages: number = 0;
 
-  const createSeoPageData: SeoPageFaker = new SeoPageFaker(orderReturn);
-  const editSeoPageData: SeoPageFaker = new SeoPageFaker(pdfOrderReturn);
+  const createSeoPageData: SeoPageData = SeoPages.orderReturn;
+  const editSeoPageData: SeoPageData = SeoPages.pdfOrderReturn;
 
   // before and after functions
   before(async function () {
