@@ -11,7 +11,7 @@ import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
 // Import data
-import SearchFaker from '@data/faker/search';
+import SearchAliasData from '@data/faker/search';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,8 +28,8 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
   let page: Page;
   let numberOfSearch: number = 0;
 
-  const createAliasData: SearchFaker = new SearchFaker();
-  const editSearchData: SearchFaker = new SearchFaker({alias: createAliasData.alias});
+  const createAliasData: SearchAliasData = new SearchAliasData();
+  const editSearchData: SearchAliasData = new SearchAliasData({alias: createAliasData.alias});
 
   // before and after functions
   before(async function () {
