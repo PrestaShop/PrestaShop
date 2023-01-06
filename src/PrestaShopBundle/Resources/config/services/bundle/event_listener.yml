@@ -7,6 +7,7 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
+      - "@prestashop.core.admin.lang.repository"
     tags:
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 15 }
 
