@@ -14,7 +14,7 @@ import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
-import ShopFaker from '@data/faker/shop';
+import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -58,7 +58,6 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         dashboardPage.shopParametersParentLink,
         dashboardPage.shopParametersGeneralLink,
       );
-
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
@@ -101,7 +100,11 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
   // 3 : Create 20 shop urls
   describe('Create 20 shop Urls', async () => {
     Array(20).fill(0, 0, 20).forEach((test, index) => {
-      const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}Shop`});
+      const shopUrlData: ShopData = new ShopData({
+        name: `ToDelete${index + 1}Shop`,
+        shopGroup: '',
+        categoryRoot: '',
+      });
       it('should go to add shop URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
 
@@ -114,7 +117,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should create shop URl n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
-        const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
+        const textResult = await addShopUrlPage.setVirtualUrl(page, shopUrlData);
         await expect(textResult).to.contains(addShopUrlPage.successfulCreationMessage);
       });
     });

@@ -13,7 +13,7 @@ import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
-import ShopFaker from '@data/faker/shop';
+import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,7 +32,7 @@ describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions sh
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfShopUrls: number = 0;
-  const ShopUrlData:ShopFaker = new ShopFaker({name: 'ToDelete'});
+  const ShopUrlData:ShopData = new ShopData({name: 'ToDelete', shopGroup: '', categoryRoot: ''});
 
   // before and after functions
   before(async function () {

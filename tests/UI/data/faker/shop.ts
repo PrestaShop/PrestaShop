@@ -1,15 +1,23 @@
-const {faker} = require('@faker-js/faker');
+import type ShopCreator from '@data/types/shop';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new shop to use on shop creation form on BO
  * @class
  */
-class ShopData {
+export default class ShopData {
+  public readonly name: string;
+
+  public readonly shopGroup: string;
+
+  public readonly categoryRoot: string;
+
   /**
    * Constructor for class ShopGroupData
-   * @param shopToCreate {Object} Could be used to force the value of some members
+   * @param shopToCreate {ShopCreator} Could be used to force the value of some members
    */
-  constructor(shopToCreate = {}) {
+  constructor(shopToCreate: ShopCreator) {
     /** @type {string} Name of the shop */
     this.name = shopToCreate.name || `shop_${faker.lorem.word()}`;
 
@@ -20,5 +28,3 @@ class ShopData {
     this.categoryRoot = shopToCreate.categoryRoot;
   }
 }
-
-module.exports = ShopData;
