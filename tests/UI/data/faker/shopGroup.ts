@@ -1,15 +1,25 @@
-const {faker} = require('@faker-js/faker');
+import type ShopGroupCreator from '@data/types/shopGroup';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new shop group to use on shop group creation form on BO
  * @class
  */
-class ShopGroupData {
+export default class ShopGroupData {
+  public readonly name: string;
+
+  public readonly shareCustomer: boolean;
+
+  public readonly shareAvailableQuantities: boolean;
+
+  public readonly status: boolean;
+
   /**
    * Constructor for class ShopGroupData
    * @param shopGroupToCreate {Object} Could be used to force the value of some members
    */
-  constructor(shopGroupToCreate = {}) {
+  constructor(shopGroupToCreate: ShopGroupCreator = {}) {
     /** @type {string} Name of the group */
     this.name = shopGroupToCreate.name || `shop_group_${faker.lorem.word()}`;
 
@@ -24,5 +34,3 @@ class ShopGroupData {
     this.status = shopGroupToCreate.status === undefined ? true : shopGroupToCreate.status;
   }
 }
-
-module.exports = ShopGroupData;

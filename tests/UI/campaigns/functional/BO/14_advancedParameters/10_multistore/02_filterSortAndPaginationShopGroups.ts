@@ -13,7 +13,7 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopGroupPage from '@pages/BO/advancedParameters/multistore/add';
 
 // Import data
-import ShopGroupFaker from '@data/faker/shopGroup';
+import ShopGroupData from '@data/faker/shopGroup';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -101,8 +101,8 @@ describe('BO - Advanced Parameters - MultiStore : Filter, sort and pagination sh
 
   // 3 : Create 20 shop groups
   describe('Create 20 shop groups', async () => {
-    new Array(20).fill(0, 0, 20).forEach((test, index) => {
-      const shopGroupData = new ShopGroupFaker({name: `todelete${index}`});
+    new Array(20).fill(0, 0, 20).forEach((test: number, index: number) => {
+      const shopGroupData: ShopGroupData = new ShopGroupData({name: `todelete${index}`});
       it('should go to add new shop group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopGroupPage${index}`, baseContext);
 
