@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -34,6 +34,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the virtual product.
@@ -42,19 +43,20 @@ class ProductVirtual extends CommonAbstractType
 {
     private $translator;
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
     /**
      * Constructor.
      *
-     * @param object $translator
+     * @param TranslatorInterface $translator
+     * @param ConfigurationInterface $configuration
      */
-    public function __construct($translator)
+    public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
     {
         $this->translator = $translator;
-        $this->configuration = $this->getConfiguration();
+        $this->configuration = $configuration;
     }
 
     /**

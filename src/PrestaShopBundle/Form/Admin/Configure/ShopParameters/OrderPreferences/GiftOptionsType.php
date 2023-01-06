@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -59,8 +59,14 @@ class GiftOptionsType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param ConfigurationInterface $configuration
      * @param string $defaultCurrencyIsoCode
      * @param array $taxChoices
      * @param RouterInterface $router
@@ -68,6 +74,7 @@ class GiftOptionsType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        ConfigurationInterface $configuration,
         $defaultCurrencyIsoCode,
         array $taxChoices,
         RouterInterface $router
@@ -77,6 +84,7 @@ class GiftOptionsType extends TranslatorAwareType
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->taxChoices = $taxChoices;
         $this->router = $router;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -84,9 +92,7 @@ class GiftOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Configuration $configuration */
-        $configuration = $this->getConfiguration();
-        $atcpShipWrap = $configuration->getBoolean('PS_ATCP_SHIPWRAP');
+        $atcpShipWrap = (bool) $this->configuration->get('PS_ATCP_SHIPWRAP');
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
