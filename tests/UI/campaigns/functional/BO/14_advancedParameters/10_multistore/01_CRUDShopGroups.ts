@@ -15,7 +15,7 @@ import shopPage from '@pages/BO/advancedParameters/multistore/shop/index';
 
 // Import data
 import ShopGroupData from '@data/faker/shopGroup';
-import ShopFaker from '@data/faker/shop';
+import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,7 +32,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
 
   const createShopGroupData: ShopGroupData = new ShopGroupData();
   const updateShopGroupData: ShopGroupData = new ShopGroupData();
-  const shopData: ShopFaker = new ShopFaker({shopGroup: updateShopGroupData.name, categoryRoot: 'Home'});
+  const shopData: ShopData = new ShopData({shopGroup: updateShopGroupData.name, categoryRoot: 'Home'});
 
   // before and after functions
   before(async function () {
