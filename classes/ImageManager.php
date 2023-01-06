@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 
 /**
@@ -38,6 +39,10 @@ class ImageManagerCore
     public const ERROR_FILE_NOT_EXIST = 1;
     public const ERROR_FILE_WIDTH = 2;
     public const ERROR_MEMORY_LIMIT = 3;
+
+    // IMAGETYPE_AVIF constant is only available in php 8.1, so we make our own here
+    public const PS_IMAGETYPE_AVIF = 19;
+
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',
         'image/jpg',
@@ -248,24 +253,28 @@ class ImageManagerCore
             $sourceHeight = $tmpHeight;
         }
 
-        $isMultipleImageFormatFeatureActive = FeatureFlag::isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
+        $isMultipleImageFormatFeatureActive = SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
 
-        if (!$isMultipleImageFormatFeatureActive) {
-            // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
-            // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-            // because JPG reencoding by GD, even with max quality setting, degrades the image.
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType) {
-                $fileType = 'png';
-            }
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'png_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'png' && $type == IMAGETYPE_PNG) && !$forceType
+            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_PNG && !$forceType) {
+            $fileType = 'png';
+        }
 
-            // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
-            // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
-            // because JPG reencoding by GD, even with max quality setting, degrades the image.
-            if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
-                || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
-                $fileType = 'webp';
-            }
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType
+            || $isMultipleImageFormatFeatureActive && $type == IMAGETYPE_WEBP && !$forceType) {
+            $fileType = 'webp';
+        }
+
+        if ($isMultipleImageFormatFeatureActive && $type == self::PS_IMAGETYPE_AVIF && !$forceType) {
+            $fileType = 'avif';
         }
 
         if (!$sourceWidth) {
