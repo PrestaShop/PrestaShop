@@ -58,7 +58,7 @@ class ApiAccess
     private $clientSecret;
 
     /**
-     * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class, inversedBy="apiAccesses")
+     * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
      * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
      */
     private $authorizedApplication;
