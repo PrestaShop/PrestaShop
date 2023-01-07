@@ -27,8 +27,6 @@ import ImageSelector from '@pages/product/combination/form/image-selector';
 import CombinationMap from '@pages/product/combination/form/combination-map';
 import CombinationFormModel from '@pages/product/combination/form/combination-form-model';
 import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
-import {FormUpdateEvent} from '@components/form/form-object-mapper';
-import {ProductSupplier} from '@pages/product/components/suppliers/supplier-types';
 
 const {$} = window;
 
@@ -49,16 +47,10 @@ $(() => {
   // Init combination model along with input watching and syncing
   const combinationFormModel = new CombinationFormModel($combinationForm, eventEmitter);
 
-  const productSuppliers: ProductSuppliersCollection = new ProductSuppliersCollection(
+  new ProductSuppliersCollection(
     CombinationMap.suppliers.productSuppliers,
     combinationFormModel.getCombination().suppliers.defaultSupplierId,
     combinationFormModel.getCombination().price.wholesalePrice,
-    (defaultProductSupplier: ProductSupplier) => {
-      combinationFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
-    },
   );
-  combinationFormModel.watch('price.wholesalePrice', (event: FormUpdateEvent) => {
-    productSuppliers.updateWholesalePrice(event.value);
-  });
   new ImageSelector();
 });
