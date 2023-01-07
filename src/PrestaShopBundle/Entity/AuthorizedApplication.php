@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Entity;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -61,11 +60,6 @@ class AuthorizedApplication
      * @ORM\Column(name="description", type="text", options={"default":""})
      */
     private $description;
-
-    /**
-     * @ORM\OneToMany(targetEntity=ApiAccess::class, mappedBy="associatedAuthorizedApplication")
-     */
-    private $apiAccesses;
 
     /**
      * @return int
@@ -113,21 +107,5 @@ class AuthorizedApplication
     public function setDescription(string $description): void
     {
         $this->description = $description;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getApiAccesses(): Collection
-    {
-        return $this->apiAccesses;
-    }
-
-    /**
-     * @param Collection $apiAccesses
-     */
-    public function setApiAccesses(Collection $apiAccesses): void
-    {
-        $this->apiAccesses = $apiAccesses;
     }
 }
