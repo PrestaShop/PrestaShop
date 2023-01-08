@@ -24,43 +24,95 @@
  *-->
 <template>
   <div class="carrier-selector">
+    <div class="form-check form-check-radio form-radio">
+      <label class="form-check-label">
+        <input
+          id="select-all-carriers-checkbox"
+          type="radio"
+          name="all_carriers"
+          class="form-check-input"
+          value="1"
+          @change="toggleAllSelected"
+        >
+        <i class="form-check-round"/>
+        All carriers @todo translate
+      </label>
+    </div>
     <div
-      class="carrier-selector-line"
-      v-if="carriers.length"
+      class="form-check form-check-radio form-radio"
     >
-      <checkboxes-dropdown
-        :items="carriers"
-        :parent-id="1"
-        label="test"
-        @addCarrier="addCarrier"
-        @removeCarrier="removeCarrier"
-        :event-emitter="eventEmitter"
-      />
-      <button
-        type="button"
-        v-if="selectedCarriersNumber > 0"
-        class="btn btn-outline-secondary carrier-selector-clear"
-        @click="clearAll"
+      <label class="form-check-label">
+        <input
+          type="radio"
+          name="all_carriers"
+          class="form-check-input"
+          value="1"
+          @change="toggleAllSelected"
+        >
+        <i class="form-check-round"/>
+        <div
+          class="carrier-selector-line"
+          v-if="carriers.length"
+        >
+          <checkboxes-dropdown
+            :items="carriers"
+            :parent-id="1"
+            label="Only selected carriers @todo translate"
+            @addItem="addCarrier"
+            @removeItem="removeCarrier"
+            :event-emitter="eventEmitter"
+            :disabled="allCarriersSelected"
+          />
+        </div>
+      </label>
+    </div>
+    <div
+      v-if="selectedCarriers.length"
+      id="selected-carriers"
+    >
+      <span
+        v-if="selectedCarriers.length && !allCarriersSelected"
       >
-        <i class="material-icons">close</i>
-        {{ $tc('carriers.clear', selectedCarriersNumber, { 'carriersNb': selectedCarriersNumber }) }}
-      </button>
+        <ul>
+          <li
+            v-for="selectedCarrier in selectedCarriers"
+            :key="selectedCarrier.id"
+          >
+            {{ selectedCarrier.name }}
+            <input
+              type="hidden"
+              :value="selectedCarrier.id"
+              :disabled="allCarriersSelected"
+            >
+          </li>
+        </ul>
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import CheckboxesDropdown from '@components/CheckboxesDropdown.vue';
+  import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
 
   const CombinationEvents = ProductEventMap.combinations;
 
+  interface Carrier {
+    id: string,
+    name: string,
+    label: string,
+  }
+
   export default defineComponent({
     name: 'CarrierSelector',
-    data(): {selectedCarriers: Record<string, any>} {
+    data(): {
+      selectedCarriers: Carrier[],
+      allCarriersSelected: boolean,
+    } {
       return {
-        selectedCarriers: {},
+        selectedCarriers: [],
+        allCarriersSelected: false,
       };
     },
     props: {
@@ -74,55 +126,30 @@
       },
     },
     components: {
-      CheckboxesDropdown,
-    },
-    computed: {
-      selectedCarriersNumber(): number {
-        if (!this.selectedCarriers) {
-          return 0;
-        }
-
-        return Object.values(this.selectedCarriers).reduce<number>((total, attributes) => total + attributes.length, 0);
-      },
+      checkboxesDropdown,
     },
     mounted() {
+      this.selectedCarriers = [];
       // this.eventEmitter.on(CombinationEvents.clearCarriers, () => this.clearAll());
     },
     methods: {
       /**
        * This methods is used to initialize product carriers
        */
-      addCarrier(carrier: Record<string, any>, parentId: number): void {
-        // If absent set new field with set method so that it's reactive
-        if (!this.selectedCarriers[parentId]) {
-          this.selectedCarriers[parentId] = [];
-        }
-
-        this.selectedCarriers[parentId].push(carrier);
+      addCarrier(carrier: Carrier): void {
+        this.selectedCarriers.push(carrier);
         this.updateCarriers();
       },
-      removeCarrier(carrier: Record<string, any>, parentId: number): void {
-        if (!this.selectedCarriers[parentId]) {
-          return;
-        }
-
-        this.selectedCarriers[parentId] = this.selectedCarriers[parentId].carrier(
+      removeCarrier(carrier: Carrier): void {
+        this.selectedCarriers = this.selectedCarriers.filter(
           (e: Record<string, any>) => carrier.id !== e.id,
         );
 
-        if (this.selectedCarriers[parentId].length === 0) {
-          // remove parent array if it became empty after carriers removal
-          this.selectedCarriers.splice(parentId, 1);
-        }
-
         this.updateCarriers();
       },
-      clearAll(): void {
-        this.selectedCarriers = [];
-        this.$emit('clearAll');
-        // @todo: events
-        // this.eventEmitter.emit(CombinationEvents.clearAllCombinationCarriers);
-        // this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedCarriers);
+      toggleAllSelected(event: Event): void {
+        const input = <HTMLInputElement> event.currentTarget;
+        this.allCarriersSelected = input.id === 'select-all-carriers-checkbox' && input.checked;
       },
       updateCarriers(): void {
         // this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedCarriers);

@@ -32,6 +32,7 @@
           'dropdown-toggle',
           selectedItems.length > 0 ? 'btn-primary' : 'btn-outline-secondary',
           'btn',
+          {disabled: this.disabled}
         ]"
         type="button"
         data-toggle="dropdown"
@@ -73,9 +74,8 @@
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
-
+  // @todo: should this file be PascalCased?
   export default defineComponent({
-    name: 'CheckboxesDropdown',
     data(): {selectedItems: Array<Record<string, any>>} {
       return {
         selectedItems: [],
@@ -97,6 +97,10 @@
       eventEmitter: {
         type: Object,
         required: true,
+      },
+      disabled: {
+        type: Boolean,
+        default: false,
       },
     },
     mounted() {
