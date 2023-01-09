@@ -75,13 +75,12 @@
       >
         <ul>
           <li
-            v-for="selectedCarrier in selectedCarriers"
-            :key="selectedCarrier.id"
+            v-for="(selectedCarrier, key) in selectedCarriers"
           >
-            {{ selectedCarrier.name }}
+            {{ selectedCarrier.label }}<span v-if="key !== selectedCarriers.length -1 ">, </span>
             <input
               type="hidden"
-              :value="selectedCarrier.id"
+              :value="selectedCarrier.value"
               :disabled="allCarriersSelected"
             >
           </li>
@@ -95,8 +94,8 @@
   import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
   import {defineComponent, PropType} from 'vue';
 
-  interface Carrier {
-    id: string,
+  export interface Carrier {
+    id: number,
     name: string,
     label: string,
   }
@@ -114,7 +113,7 @@
     },
     props: {
       carriers: {
-        type: Array as PropType<Array<Record<string, any>>>,
+        type: Array as PropType<Carrier[]>,
         required: true,
       },
       eventEmitter: {
@@ -139,7 +138,7 @@
       },
       removeCarrier(carrier: Carrier): void {
         this.selectedCarriers = this.selectedCarriers.filter(
-          (e: Record<string, any>) => carrier.id !== e.id,
+          (e: Carrier) => carrier.id !== e.id,
         );
 
         this.updateCarriers();
@@ -170,6 +169,10 @@
     align-items: flex-start;
     flex-wrap: wrap;
     margin: 0 -0.35rem;
+  }
+  #selected-carriers ul li {
+    list-style-type: none;
+    display: inline;
   }
 }
 </style>

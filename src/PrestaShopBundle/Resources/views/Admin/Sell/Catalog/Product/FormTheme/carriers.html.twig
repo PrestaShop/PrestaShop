@@ -25,13 +25,14 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block _product_carriers_widget %}
-{#  <div {{ block('widget_container_attributes') }}>#}
+  <div {{ block('widget_container_attributes') }}>
     <div id="carrier_selector"
          {# @todo: fix #}
          data-translations="{{ {
            'allCarriers.label': 'All carriers'|trans({}, 'Admin.Actions'),
            'selectedCarriers.label': 'Only selected carriers'|trans({}, 'Admin.Actions'),
          }|json_encode }}"
+         data-carrier-choices="{{ form.vars.choices|json_encode }}"
     ></div>
-{#  </div>#}
+  </div>
 {% endblock %}

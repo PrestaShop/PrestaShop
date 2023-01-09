@@ -140,15 +140,6 @@ $(() => {
   initCarrierSelector(
     ProductMap.shipping.carrierSelectorContainer,
     eventEmitter,
-    // @todo: pass via data attr or api request
-    [
-      {
-        name: 'carrier1name', label: 'carrier1label', id: 1,
-      },
-      {
-        name: 'carrier2name', label: 'carrier2label', id: 2,
-      },
-    ],
   );
 
   new FeatureValuesManager(eventEmitter);
