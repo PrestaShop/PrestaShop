@@ -12,8 +12,8 @@ import addSqlQueryPage from '@pages/BO/advancedParameters/database/sqlManager/ad
 import viewQueryManagerPage from '@pages/BO/advancedParameters/database/sqlManager/view';
 
 // Import data
-import {Tables} from '@data/demo/sqlTables';
-import SQLQueryFaker from '@data/faker/sqlQuery';
+import Tables from '@data/demo/sqlTables';
+import SqlQueryData from '@data/faker/sqlQuery';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,8 +22,8 @@ const baseContext: string = 'functional_BO_advancedParameters_database_sqlManage
 
 describe('BO - Advanced Parameters - Database : Create, View, update and delete SQL query', async () => {
   const dbPrefix: string = global.INSTALL.DB_PREFIX;
-  const sqlQueryData: SQLQueryFaker = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
-  const editSqlQueryData: SQLQueryFaker = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
+  const sqlQueryData: SqlQueryData = new SqlQueryData({tableName: `${dbPrefix}alias`});
+  const editSqlQueryData: SqlQueryData = new SqlQueryData({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
 
   let browserContext: BrowserContext;
   let page: Page;

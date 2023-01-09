@@ -12,7 +12,7 @@ import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 import searchEnginesPage from '@pages/BO/shopParameters/trafficAndSeo/searchEngines';
 
 // Import data
-import {searchEngines} from '@data/demo/searchEngines';
+import SearchEngines from '@data/demo/searchEngines';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -74,9 +74,9 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter, sort and pagination sea
 
   describe('Filter search engines', async () => {
     const tests = [
-      {args: {testIdentifier: 'filterId', filterBy: 'id_search_engine', filterValue: searchEngines.lycos.id.toString()}},
-      {args: {testIdentifier: 'filterServer', filterBy: 'server', filterValue: searchEngines.google.server}},
-      {args: {testIdentifier: 'filterKey', filterBy: 'query_key', filterValue: searchEngines.voila.queryKey}},
+      {args: {testIdentifier: 'filterId', filterBy: 'id_search_engine', filterValue: SearchEngines.lycos.id.toString()}},
+      {args: {testIdentifier: 'filterServer', filterBy: 'server', filterValue: SearchEngines.google.server}},
+      {args: {testIdentifier: 'filterKey', filterBy: 'query_key', filterValue: SearchEngines.voila.queryKey}},
     ];
 
     tests.forEach((test) => {

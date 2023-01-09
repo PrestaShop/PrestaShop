@@ -14,7 +14,7 @@ import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import shopsPage from '@pages/BO/advancedParameters/multistore/shop';
 
 // Import data
-import ShopFaker from '@data/faker/shop';
+import ShopData from '@data/faker/shop';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,7 +33,7 @@ Disable multistore
 describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shops', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  const ShopData: ShopFaker = new ShopFaker({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
+  const shopCreate: ShopData = new ShopData({name: 'todelete0', shopGroup: 'Default', categoryRoot: 'Home'});
 
   // before and after functions
   before(async function () {
@@ -84,7 +84,6 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         dashboardPage.advancedParametersLink,
         dashboardPage.multistoreLink,
       );
-
       await multiStorePage.closeSfToolBar(page);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
@@ -103,15 +102,15 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
     it('should create shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createFirstShop', baseContext);
 
-      const textResult = await addShopPage.setShop(page, ShopData);
+      const textResult = await addShopPage.setShop(page, shopCreate);
       await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
     });
   });
 
   // 3 : Create 19 shops
   describe('Create 19 shops', async () => {
-    Array(19).fill(0, 0, 19).forEach((test, index) => {
-      const ShopData = new ShopFaker({name: `Todelete${index + 1}`, shopGroup: 'Default', categoryRoot: 'Home'});
+    Array(19).fill(0, 0, 19).forEach((test: number, index: number) => {
+      const shopCreate: ShopData = new ShopData({name: `Todelete${index + 1}`, shopGroup: 'Default', categoryRoot: 'Home'});
       it('should go to add new shop page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewShopsPage${index}`, baseContext);
 
@@ -124,7 +123,7 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
       it(`should create shop n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createShop${index}`, baseContext);
 
-        const textResult = await addShopPage.setShop(page, ShopData);
+        const textResult = await addShopPage.setShop(page, shopCreate);
         await expect(textResult).to.contains(multiStorePage.successfulCreationMessage);
       });
     });

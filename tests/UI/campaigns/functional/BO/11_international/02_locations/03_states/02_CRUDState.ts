@@ -12,7 +12,7 @@ import statesPage from '@pages/BO/international/locations/states';
 import addStatePage from '@pages/BO/international/locations/states/add';
 
 // Import data
-import StateFaker from '@data/faker/state';
+import StateData from '@data/faker/state';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - International - States : CRUD state', async () => {
   let page: Page;
   let numberOfStates: number = 0;
 
-  const createStateData: StateFaker = new StateFaker();
-  const editStateData: StateFaker = new StateFaker();
+  const createStateData: StateData = new StateData();
+  const editStateData: StateData = new StateData();
 
   // before and after functions
   before(async function () {

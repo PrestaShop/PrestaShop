@@ -12,7 +12,7 @@ import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
 // Import data
-import ProfileFaker from '@data/faker/profile';
+import ProfileData from '@data/faker/profile';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -21,8 +21,8 @@ const baseContext: string = 'functional_BO_advancedParameters_team_profiles_CRUD
 
 // Create, Read, Update and Delete profile in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete profile in BO', async () => {
-  const profileData: ProfileFaker = new ProfileFaker();
-  const editProfileData: ProfileFaker = new ProfileFaker();
+  const createProfileData: ProfileData = new ProfileData();
+  const editProfileData: ProfileData = new ProfileData();
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -88,7 +88,7 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
     it('should create profile and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProfile', baseContext);
 
-      const textResult = await addProfilePage.createEditProfile(page, profileData);
+      const textResult = await addProfilePage.createEditProfile(page, createProfileData);
       await expect(textResult).to.equal(profilesPage.successfulCreationMessage);
 
       const numberOfProfilesAfterCreation = await profilesPage.getNumberOfElementInGrid(page);
@@ -101,10 +101,10 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await profilesPage.filterProfiles(page, 'input', 'name', profileData.name);
+      await profilesPage.filterProfiles(page, 'input', 'name', createProfileData.name);
 
       const textName = await profilesPage.getTextColumnFromTable(page, 1, 'name');
-      await expect(textName).to.contains(profileData.name);
+      await expect(textName).to.contains(createProfileData.name);
     });
 
     it('should go to edit profile page', async function () {

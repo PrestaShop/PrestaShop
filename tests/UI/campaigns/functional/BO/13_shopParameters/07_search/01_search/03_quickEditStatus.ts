@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import searchPage from '@pages/BO/shopParameters/search';
 
 // Import data
-import {Aliases} from '@data/demo/search';
+import Aliases from '@data/demo/search';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +63,6 @@ describe('BO - Shop Parameters - Search : Quick edit status', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
     await searchPage.resetFilter(page);
-
     await searchPage.filterTable(page, 'input', 'alias', Aliases.bloose.alias);
 
     const textAlias = await searchPage.getTextColumn(page, 1, 'alias');

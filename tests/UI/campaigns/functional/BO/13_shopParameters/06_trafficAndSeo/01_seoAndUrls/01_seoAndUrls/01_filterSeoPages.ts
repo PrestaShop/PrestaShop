@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
 
 // Import data
-import {contact} from '@data/demo/seoPages';
+import SeoPages from '@data/demo/seoPages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -64,10 +64,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
 
   describe('Filter SEO pages', async () => {
     const tests = [
-      {args: {testIdentifier: 'filterIdMeta', filterBy: 'id_meta', filterValue: contact.id.toString()}},
-      {args: {testIdentifier: 'filterPage', filterBy: 'page', filterValue: contact.page}},
-      {args: {testIdentifier: 'filterTitle', filterBy: 'title', filterValue: contact.title}},
-      {args: {testIdentifier: 'filterUrlRewrite', filterBy: 'url_rewrite', filterValue: contact.friendlyUrl}},
+      {args: {testIdentifier: 'filterIdMeta', filterBy: 'id_meta', filterValue: SeoPages.contact.id.toString()}},
+      {args: {testIdentifier: 'filterPage', filterBy: 'page', filterValue: SeoPages.contact.page}},
+      {args: {testIdentifier: 'filterTitle', filterBy: 'title', filterValue: SeoPages.contact.title}},
+      {args: {testIdentifier: 'filterUrlRewrite', filterBy: 'url_rewrite', filterValue: SeoPages.contact.friendlyUrl}},
     ];
 
     tests.forEach((test) => {

@@ -12,7 +12,7 @@ import statesPage from '@pages/BO/international/locations/states';
 import addStatePage from '@pages/BO/international/locations/states/add';
 
 // Import data
-import StateFaker from '@data/faker/state';
+import StateData from '@data/faker/state';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,9 +24,9 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   let page: Page;
   let numberOfStates: number = 0;
 
-  const statesToCreate: StateFaker[] = [
-    new StateFaker({name: 'todelete1', isoCode: 'HM'}),
-    new StateFaker({name: 'todelete2', isoCode: 'BV'}),
+  const statesToCreate: StateData[] = [
+    new StateData({name: 'todelete1', isoCode: 'HM'}),
+    new StateData({name: 'todelete2', isoCode: 'BV'}),
   ];
 
   // before and after functions
@@ -74,7 +74,7 @@ describe('BO - International - States : Bulk edit status and bulk delete', async
   });
 
   describe('Create 2 states in BO', async () => {
-    statesToCreate.forEach((stateToCreate, index) => {
+    statesToCreate.forEach((stateToCreate: StateData, index: number) => {
       it('should go to add new title page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewStatePage${index + 1}`, baseContext);
 

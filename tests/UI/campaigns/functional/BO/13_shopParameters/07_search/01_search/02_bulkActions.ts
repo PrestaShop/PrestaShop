@@ -11,7 +11,7 @@ import searchPage from '@pages/BO/shopParameters/search';
 import addSearchPage from '@pages/BO/shopParameters/search/add';
 
 // Import data
-import SearchFaker from '@data/faker/search';
+import SearchAliasData from '@data/faker/search';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -66,8 +66,8 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
   // 1 - Create 2 aliases
   const creationTests: number[] = new Array(2).fill(0, 0, 2);
   describe('Create 2 aliases in BO', async () => {
-    creationTests.forEach((test, index) => {
-      const aliasData = new SearchFaker({alias: `todelete${index}`});
+    creationTests.forEach((test: number, index: number) => {
+      const aliasData: SearchAliasData = new SearchAliasData({alias: `todelete${index}`});
 
       it('should go to add new search page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddAliasPage${index}`, baseContext);
@@ -96,19 +96,16 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
       await testContext.addContextItem(this, 'testIdentifier', 'filterToEnableDisable', baseContext);
 
       await searchPage.resetFilter(page);
-
       await searchPage.filterTable(page, 'input', 'alias', 'todelete');
 
       const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
       await expect(textAlias).to.contains('todelete');
     });
 
-    const tests = [
+    [
       {args: {action: 'disable', value: false}},
       {args: {action: 'enable', value: true}},
-    ];
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should ${test.args.action} with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}Status`, baseContext);
 
@@ -131,7 +128,6 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await searchPage.resetFilter(page);
-
       await searchPage.filterTable(page, 'input', 'alias', 'todelete');
 
       const textAlias = await searchPage.getTextColumn(page, 1, 'alias');
