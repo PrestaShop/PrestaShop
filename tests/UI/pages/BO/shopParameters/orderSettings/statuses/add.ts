@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Add order status page, contains selectors and functions for the page
@@ -7,6 +8,36 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddOrderStatus extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly iconInput: string;
+
+  private readonly colorInput: string;
+
+  private readonly logableOnCheckbox: string;
+
+  private readonly invoiceOnCheckbox: string;
+
+  private readonly hiddenOnCheckbox: string;
+
+  private readonly sendEmailOnCheckbox: string;
+
+  private readonly pdfInvoiceOnCheckbox: string;
+
+  private readonly pdfDeliveryOnCheckbox: string;
+
+  private readonly shippedOnCheckbox: string;
+
+  private readonly paidOnCheckbox: string;
+
+  private readonly deliveryOnCheckbox: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add order status page
@@ -41,7 +72,7 @@ class AddOrderStatus extends BOBasePage {
    * @param orderStatusData {OrderStatusData} Data to set on order status form
    * @return {Promise<string>}
    */
-  async setOrderStatus(page, orderStatusData) {
+  async setOrderStatus(page: Page, orderStatusData): Promise<string> {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set icon for order status
@@ -68,4 +99,4 @@ class AddOrderStatus extends BOBasePage {
   }
 }
 
-module.exports = new AddOrderStatus();
+export default new AddOrderStatus();
