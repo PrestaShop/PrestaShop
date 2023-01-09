@@ -1,6 +1,6 @@
-const {faker} = require('@faker-js/faker');
+import Products from '@data/demo/products';
 
-const {Products} = require('@data/demo/products');
+const {faker} = require('@faker-js/faker');
 
 const ProductsNames = Object.values(Products).map((product) => product.name);
 

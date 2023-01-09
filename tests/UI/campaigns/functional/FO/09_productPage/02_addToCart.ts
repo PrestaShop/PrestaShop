@@ -19,9 +19,9 @@ import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import {Products} from '@data/demo/products';
-import ProductFaker from '@data/faker/product';
-import type {Product, ProductCombinationColorSize} from '@data/types/product';
+import Products from '@data/demo/products';
+import ProductData from '@data/faker/product';
+import type {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,15 +41,32 @@ Check share links
 describe('FO - product page : Add product to cart', async () => {
   const quantity: number = 6;
   const totalPrice: number = 137.66;
-  const firstCombination: ProductCombinationColorSize = {color: 'White', size: 'XL'};
-  const secondCombination: ProductCombinationColorSize = {color: 'Black', size: 'M'};
-  const productToCreate: Product = {
+  const firstCombination: ProductAttribute[] = [
+    {
+      name: 'size',
+      value: 'XL',
+    },
+    {
+      name: 'color',
+      value: 'White',
+    },
+  ];
+  const secondCombination: ProductAttribute[] = [
+    {
+      name: 'size',
+      value: 'M',
+    },
+    {
+      name: 'color',
+      value: 'Black',
+    },
+  ];
+  const productData: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: false,
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
-  };
-  const productData: ProductFaker = new ProductFaker(productToCreate);
+  });
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -91,20 +108,22 @@ describe('FO - product page : Add product to cart', async () => {
       await Promise.all([
         await expect(result.name).to.equal(Products.demo_1.name),
         await expect(result.price).to.equal(Products.demo_1.finalPrice),
-        await expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
+        await expect(result.summary).to.equal(Products.demo_1.summary),
         await expect(result.description).to.equal(Products.demo_1.description),
       ]);
 
       result = await productPage.getRegularPrice(page);
-      await expect(result).to.equal(Products.demo_1.regularPrice);
+      await expect(result).to.equal(Products.demo_1.retailPrice);
 
       result = await productPage.getDiscountPercentage(page);
-      await expect(result).to.contains(Products.demo_1.discount);
+      await expect(result).to.contains(`${Products.demo_1.specificPrice.discount}%`);
 
-      result = await productPage.getProductAttributes(page);
+      const productAttributes = await productPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(Products.demo_1.attributes.size.join(' ')),
-        await expect(result.color).to.equal(`${Products.demo_1.attributes.color.join(' ')}`),
+        await expect(productAttributes[0].name).to.equal(Products.demo_1.attributes[0].name),
+        await expect(productAttributes[0].value).to.equal(Products.demo_1.attributes[0].values.join(' ')),
+        await expect(productAttributes[1].name).to.equal(Products.demo_1.attributes[1].name),
+        await expect(productAttributes[1].value).to.equal(Products.demo_1.attributes[1].values.join(' ')),
       ]);
 
       result = await productPage.getProductImageUrls(page);
@@ -123,15 +142,15 @@ describe('FO - product page : Add product to cart', async () => {
       await Promise.all([
         await expect(result.name).to.equal(Products.demo_1.name),
         await expect(result.price).to.equal(Products.demo_1.finalPrice),
-        await expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
+        await expect(result.summary).to.equal(Products.demo_1.summary),
         await expect(result.description).to.equal(Products.demo_1.description),
       ]);
 
       result = await productPage.getDiscountPercentage(page);
-      await expect(result).to.contains(Products.demo_1.discount);
+      await expect(result).to.contains(Products.demo_1.specificPrice.discount);
 
       result = await productPage.getRegularPrice(page);
-      await expect(result).to.equal(Products.demo_1.regularPrice);
+      await expect(result).to.equal(Products.demo_1.retailPrice);
 
       result = await productPage.getProductImageUrls(page);
       await Promise.all([
@@ -139,10 +158,13 @@ describe('FO - product page : Add product to cart', async () => {
         await expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
 
-      result = await productPage.getSelectedProductAttributes(page);
+      const selectedProductAttributes = await productPage.getSelectedProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(firstCombination.size),
-        await expect(result.color).to.equal(firstCombination.color),
+        await expect(selectedProductAttributes.length).to.equal(2),
+        await expect(selectedProductAttributes[0].name).to.equal(firstCombination[0].name),
+        await expect(selectedProductAttributes[0].value).to.equal(firstCombination[0].value),
+        await expect(selectedProductAttributes[1].name).to.equal(firstCombination[1].name),
+        await expect(selectedProductAttributes[1].value).to.equal(firstCombination[1].value),
       ]);
     });
   });
@@ -161,7 +183,7 @@ describe('FO - product page : Add product to cart', async () => {
     it('should check the ordered product details in cart page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderedProduct', baseContext);
 
-      let result = await cartPage.getProductDetail(page, 1);
+      const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_1.name),
         expect(result.price).to.equal(Products.demo_1.finalPrice),
@@ -169,10 +191,13 @@ describe('FO - product page : Add product to cart', async () => {
         expect(result.quantity).to.equal(quantity),
       ]);
 
-      result = await cartPage.getProductAttributes(page, 1);
+      const cartProductAttributes = await cartPage.getProductAttributes(page, 1);
       await Promise.all([
-        expect(result.size).to.equal(secondCombination.size),
-        expect(result.color).to.equal(secondCombination.color),
+        await expect(cartProductAttributes.length).to.equal(2),
+        await expect(cartProductAttributes[0].name).to.equal(secondCombination[0].name),
+        await expect(cartProductAttributes[0].value).to.equal(secondCombination[0].value),
+        await expect(cartProductAttributes[1].name).to.equal(secondCombination[1].name),
+        await expect(cartProductAttributes[1].value).to.equal(secondCombination[1].value),
       ]);
     });
   });

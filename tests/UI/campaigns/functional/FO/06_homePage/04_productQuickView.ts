@@ -10,9 +10,9 @@ import categoryPage from '@pages/FO/category';
 import homePage from '@pages/FO/home';
 
 // Import data
-import {Products} from '@data/demo/products';
-import ProductFaker from '@data/faker/product';
-import {ProductAttributesDimension, ProductCombinationDimension} from '@data/types/product';
+import Products from '@data/demo/products';
+import ProductData from '@data/faker/product';
+import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,17 +34,19 @@ describe('FO - Home Page : Product quick view', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const defaultAttributes: ProductAttributesDimension = {
-    dimension: '40x60cm',
+  const defaultAttributes: ProductAttribute = {
+    name: 'dimension',
+    value: '40x60cm',
     quantity: 1,
   };
-  const attributes: ProductAttributesDimension = {
-    dimension: '60x90cm',
+  const attributes: ProductAttribute = {
+    name: 'dimension',
+    value: '60x90cm',
     quantity: 4,
   };
 
   // Data to create product out of stock not allowed
-  const productOutOfStockNotAllowed: ProductFaker = new ProductFaker({
+  const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: 'Out of stock not allowed',
     type: 'Standard product',
     taxRule: 'No tax',
@@ -92,15 +94,17 @@ describe('FO - Home Page : Product quick view', async () => {
       const result = await homePage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_6.name),
-        expect(result.price).to.equal(Products.demo_6.priceDimension4060),
+        expect(result.price).to.equal(Products.demo_6.combinations[0].price),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_6.shortDescription),
+        expect(result.shortDescription).to.equal(Products.demo_6.summary),
         expect(result.coverImage).to.contains(Products.demo_6.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_6.thumbnailImage),
+        expect(result.thumbImage).to.contains(Products.demo_6.thumbImage),
       ]);
 
       const resultAttributes = await homePage.getSelectedAttributesFromQuickViewModal(page, defaultAttributes);
-      await expect((resultAttributes as ProductCombinationDimension).dimension).to.equal(defaultAttributes.dimension);
+      await expect(resultAttributes.length).to.be.equal(1);
+      await expect(resultAttributes[0].name).to.be.equal(defaultAttributes.name);
+      await expect(resultAttributes[0].value).to.be.equal(defaultAttributes.value);
     });
 
     it('should change combination and check product information', async function () {
@@ -111,14 +115,16 @@ describe('FO - Home Page : Product quick view', async () => {
       const result = await homePage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_6.name),
-        expect(result.price).to.equal(Products.demo_6.priceDimension6090),
-        expect(result.shortDescription).to.equal(Products.demo_6.shortDescription),
+        expect(result.price).to.equal(Products.demo_6.combinations[1].price),
+        expect(result.shortDescription).to.equal(Products.demo_6.summary),
         expect(result.coverImage).to.contains(Products.demo_6.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_6.thumbnailImage),
+        expect(result.thumbImage).to.contains(Products.demo_6.thumbImage),
       ]);
 
       const resultAttributes = await homePage.getSelectedAttributesFromQuickViewModal(page, attributes);
-      await expect((resultAttributes as ProductCombinationDimension).dimension).to.equal(attributes.dimension);
+      await expect(resultAttributes.length).to.be.equal(1);
+      await expect(resultAttributes[0].name).to.be.equal(attributes.name);
+      await expect(resultAttributes[0].value).to.be.equal(attributes.value);
     });
 
     it('should change the product quantity and click on add to cart', async function () {
@@ -157,9 +163,9 @@ describe('FO - Home Page : Product quick view', async () => {
         expect(result.name).to.equal(Products.demo_11.name),
         expect(result.price).to.equal(Products.demo_11.finalPrice),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_11.shortDescription),
+        expect(result.shortDescription).to.equal(Products.demo_11.summary),
         expect(result.coverImage).to.contains(Products.demo_11.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_11.thumbnailImage),
+        expect(result.thumbImage).to.contains(Products.demo_11.thumbImage),
       ]);
     });
 
@@ -207,11 +213,11 @@ describe('FO - Home Page : Product quick view', async () => {
       const result = await homePage.getProductDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_14.name),
-        expect(result.price).to.equal(Products.demo_14.priceTaxIncl),
+        expect(result.price).to.equal(Products.demo_14.price),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_14.shortDescription),
+        expect(result.shortDescription).to.equal(Products.demo_14.summary),
         expect(result.coverImage).to.contains(Products.demo_14.coverImage),
-        expect(result.thumbImage).to.contains(Products.demo_14.thumbnailImage),
+        expect(result.thumbImage).to.contains(Products.demo_14.thumbImage),
       ]);
     });
 

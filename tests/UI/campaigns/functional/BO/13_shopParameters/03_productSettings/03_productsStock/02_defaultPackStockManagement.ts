@@ -22,7 +22,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,12 +33,21 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstProductData: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 40, reference: 'demo_test1'});
-  const secondProductData: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 30, reference: 'demo_test2'});
-  const productPackData: ProductFaker = new ProductFaker({
+  const firstProductData: ProductData = new ProductData({type: 'Standard product', quantity: 40, reference: 'demo_test1'});
+  const secondProductData: ProductData = new ProductData({type: 'Standard product', quantity: 30, reference: 'demo_test2'});
+  const productPackData: ProductData = new ProductData({
     type: 'Pack of products',
     quantity: 15,
-    pack: {demo_test1: 10, demo_test2: 5},
+    pack: [
+      {
+        reference: 'demo_test1',
+        quantity: 10,
+      },
+      {
+        reference: 'demo_test2',
+        quantity: 5,
+      },
+    ],
   });
 
   // before and after functions
@@ -101,16 +110,16 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         args: {
           option: 'Decrement products in pack only.',
           packQuantity: productPackData.quantity - 1,
-          firstProductQuantity: firstProductData.quantity - productPackData.pack.demo_test1,
-          secondProductQuantity: secondProductData.quantity - productPackData.pack.demo_test2,
+          firstProductQuantity: firstProductData.quantity - productPackData.pack[0].quantity,
+          secondProductQuantity: secondProductData.quantity - productPackData.pack[1].quantity,
         },
       },
       {
         args: {
           option: 'Decrement both.',
           packQuantity: productPackData.quantity - 2,
-          firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack.demo_test1,
-          secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack.demo_test2,
+          firstProductQuantity: firstProductData.quantity - 2 * productPackData.pack[0].quantity,
+          secondProductQuantity: secondProductData.quantity - 2 * productPackData.pack[1].quantity,
         },
       },
     ];

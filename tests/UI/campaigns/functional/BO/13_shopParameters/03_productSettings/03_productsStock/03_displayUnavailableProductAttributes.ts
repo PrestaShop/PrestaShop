@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,16 +29,20 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductFaker = new ProductFaker(
-    {
-      type: 'Standard product',
-      attributes: {
-        color: ['White'],
-        size: ['S'],
+  const productData: ProductData = new ProductData({
+    type: 'Standard product',
+    attributes: [
+      {
+        name: 'color',
+        values: ['White'],
       },
-      quantity: 0,
-    },
-  );
+      {
+        name: 'size',
+        values: ['S'],
+      },
+    ],
+    quantity: 0,
+  });
 
   // before and after functions
   before(async function () {
@@ -123,13 +127,13 @@ describe('BO - Shop Parameters - Product Settings : Display unavailable product 
 
       const sizeIsVisible = await productPage.isUnavailableProductSizeDisplayed(
         page,
-        productData.attributes.size[0],
+        productData.attributes[1].values[0],
       );
       await expect(sizeIsVisible).to.be.equal(test.args.enable);
 
       const colorIsVisible = await productPage.isUnavailableProductColorDisplayed(
         page,
-        productData.attributes.color[0],
+        productData.attributes[0].values[0],
       );
       await expect(colorIsVisible).to.be.equal(test.args.enable);
     });

@@ -21,7 +21,7 @@ import {Currencies} from '@data/demo/currencies';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -92,7 +92,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     date: today,
     paymentMethod: 'Bank transfer',
     transactionID: '12190',
-    amount: Products.demo_5.priceTaxIncl,
+    amount: Products.demo_5.price,
     currency: '€',
   };
 

@@ -1,7 +1,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import ProductReviewData from '@data/faker/productReview';
-import {ProductCombinationColorSize, ProductDetailsBasic} from '@data/types/product';
+import {ProductAttribute, ProductDetails} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -227,13 +227,13 @@ class Product extends FOBasePage {
   /**
    * Get Product information (Product name, price, short description, description)
    * @param page {Page} Browser tab
-   * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
+   * @returns {Promise<ProductDetails>}
    */
-  async getProductInformation(page: Page): Promise<ProductDetailsBasic> {
+  async getProductInformation(page: Page): Promise<ProductDetails> {
     return {
       name: await this.getTextContent(page, this.productName),
       price: await this.getPriceFromText(page, this.productPrice),
-      shortDescription: await this.getTextContent(page, this.shortDescription, false),
+      summary: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
     };
   }
@@ -278,25 +278,37 @@ class Product extends FOBasePage {
   /**
    * Get product attributes
    * @param page {Page} Browser tab
-   * @returns {Promise<ProductCombinationColorSize>}
+   * @returns {Promise<ProductAttribute[]>}
    */
-  async getProductAttributes(page: Page): Promise<ProductCombinationColorSize> {
-    return {
-      size: await this.getTextContent(page, this.productSizeSelect),
-      color: (await this.getProductsAttributesFromUl(page, this.productColorUl)).join(' '),
-    };
+  async getProductAttributes(page: Page): Promise<ProductAttribute[]> {
+    return [
+      {
+        name: 'size',
+        value: await this.getTextContent(page, this.productSizeSelect),
+      },
+      {
+        name: 'color',
+        value: (await this.getProductsAttributesFromUl(page, this.productColorUl)).join(' '),
+      },
+    ];
   }
 
   /**
    * Get selected product attributes
    * @param page {Page} Browser tab
-   * @returns {Promise<ProductCombinationColorSize>}
+   * @returns {Promise<ProductAttribute[]>}
    */
-  async getSelectedProductAttributes(page: Page): Promise<ProductCombinationColorSize> {
-    return {
-      size: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
-      color: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title'),
-    };
+  async getSelectedProductAttributes(page: Page): Promise<ProductAttribute[]> {
+    return [
+      {
+        name: 'size',
+        value: await this.getTextContent(page, `${this.productSizeSelect} option[selected]`, false),
+      },
+      {
+        name: 'color',
+        value: await this.getAttributeContent(page, `${this.productColors} input[checked]`, 'title') ?? '',
+      },
+    ];
   }
 
   /**
@@ -390,22 +402,30 @@ class Product extends FOBasePage {
    * Select product attributes
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param attributes {ProductCombinationColorSize}  Product's attributes data to select
+   * @param attributes {ProductAttribute[]}  Product's attributes data to select
    * @returns {Promise<void>}
    */
-  async selectAttributes(page: Page, quantity: number, attributes: ProductCombinationColorSize): Promise<void> {
-    if (attributes.color !== null) {
-      await Promise.all([
-        this.waitForVisibleSelector(page, `${this.productColorInput(attributes.color)}[checked]`),
-        page.click(this.productColorInput(attributes.color)),
-      ]);
+  async selectAttributes(page: Page, quantity: number, attributes: ProductAttribute[]): Promise<void> {
+    if (attributes.length === 0) {
+      return;
     }
-
-    if (attributes.size !== null) {
-      await Promise.all([
-        this.waitForAttachedSelector(page, `${this.productSizeOption(attributes.size)}[selected]`),
-        this.selectByVisibleText(page, this.productSizeSelect, attributes.size),
-      ]);
+    for (let i: number = 0; i < attributes.length; i++) {
+      switch (attributes[i].name) {
+        case 'color':
+          await Promise.all([
+            this.waitForVisibleSelector(page, `${this.productColorInput(attributes[i].value)}[checked]`),
+            page.click(this.productColorInput(attributes[i].value)),
+          ]);
+          break;
+        case 'size':
+          await Promise.all([
+            this.waitForAttachedSelector(page, `${this.productSizeOption(attributes[i].value)}[selected]`),
+            this.selectByVisibleText(page, this.productSizeSelect, attributes[i].value),
+          ]);
+          break;
+        default:
+          throw new Error(`${attributes[i].name} is not defined`);
+      }
     }
   }
 
@@ -413,15 +433,18 @@ class Product extends FOBasePage {
    * Click on Add to cart button then on Proceed to checkout button in the modal
    * @param page {Page} Browser tab
    * @param quantity {number} Quantity of the product that customer wants
-   * @param combination {{size: ?string, color: ?string}}  Product's combination data to add to cart
+   * @param combination {ProductAttribute[]}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
    * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page: Page, quantity: number = 1, combination: ProductCombinationColorSize = {
-    color: null,
-    size: null,
-  }, proceedToCheckout: boolean = true, customizedText: string = 'text'): Promise<void> {
+  async addProductToTheCart(
+    page: Page,
+    quantity: number = 1,
+    combination: ProductAttribute[] = [],
+    proceedToCheckout: boolean = true,
+    customizedText: string = 'text',
+  ): Promise<void> {
     await this.selectAttributes(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());

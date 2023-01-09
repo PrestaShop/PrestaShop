@@ -20,7 +20,7 @@ import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -55,14 +55,14 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   // First product to create
-  const firstProduct: ProductFaker = new ProductFaker({
+  const firstProduct: ProductData = new ProductData({
     name: `First product ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
     quantity: 20,
   });
   // Second product to create
-  const secondProduct: ProductFaker = new ProductFaker({
+  const secondProduct: ProductData = new ProductData({
     name: `second product ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',

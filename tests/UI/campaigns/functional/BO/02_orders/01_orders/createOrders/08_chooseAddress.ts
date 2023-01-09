@@ -24,7 +24,7 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 
 import {expect} from 'chai';
@@ -117,16 +117,16 @@ describe('BO - Orders - Create order : Choose address', async () => {
     it('should add to cart the product \'demo_12\' and check details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
-      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.price_ht.toFixed(2)}`;
+      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.priceTaxExcluded.toFixed(2)}`;
       await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.thumbnailImage),
+        expect(result.image).to.contains(Products.demo_12.thumbImage),
         expect(result.description).to.equal(Products.demo_12.name),
         expect(result.reference).to.equal(Products.demo_12.reference),
         expect(result.quantityMin).to.equal(1),
-        expect(result.price).to.equal(Products.demo_12.price_ht),
+        expect(result.price).to.equal(Products.demo_12.priceTaxExcluded),
       ]);
     });
 

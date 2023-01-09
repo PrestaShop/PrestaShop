@@ -17,7 +17,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -86,7 +86,7 @@ describe('FO - Account - Order details : Reorder from order detail', async () =>
 
       await foLoginPage.customerLogin(page, DefaultCustomer);
 
-      const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 

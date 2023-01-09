@@ -12,7 +12,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import monitoringPage from '@pages/BO/catalog/monitoring';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,12 +30,12 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
   let numberOfProducts: number = 0;
   let numberOfProductsIngrid: number = 0;
 
-  const productWithoutImage: ProductFaker = new ProductFaker({type: 'Standard product'});
-  const disabledProduct: ProductFaker = new ProductFaker({type: 'Standard product', status: false});
-  const productWithoutCombinationsWithoutQuantity: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 0});
-  const productWithCombinationsWithoutQuantity: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 0});
-  const productWithoutPrice: ProductFaker = new ProductFaker({type: 'Standard product', price: 0});
-  const productWithoutDescription: ProductFaker = new ProductFaker({type: 'Standard product', description: '', summary: ''});
+  const productWithoutImage: ProductData = new ProductData({type: 'Standard product'});
+  const disabledProduct: ProductData = new ProductData({type: 'Standard product', status: false});
+  const productWithoutCombinationsWithoutQuantity: ProductData = new ProductData({type: 'Standard product', quantity: 0});
+  const productWithCombinationsWithoutQuantity: ProductData = new ProductData({type: 'Standard product', quantity: 0});
+  const productWithoutPrice: ProductData = new ProductData({type: 'Standard product', price: 0});
+  const productWithoutDescription: ProductData = new ProductData({type: 'Standard product', description: '', summary: ''});
 
   // before and after functions
   before(async function () {

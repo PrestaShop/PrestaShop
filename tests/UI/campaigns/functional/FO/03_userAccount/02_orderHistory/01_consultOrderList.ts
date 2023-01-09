@@ -21,7 +21,7 @@ import {PaymentMethods} from '@data/demo/paymentMethods';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import {Order, OrderHistory} from '@data/types/order';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

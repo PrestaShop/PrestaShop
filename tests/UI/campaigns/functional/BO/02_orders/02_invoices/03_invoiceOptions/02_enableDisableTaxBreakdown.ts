@@ -28,7 +28,7 @@ import foProductPage from '@pages/FO/product';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
 
@@ -66,7 +66,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
     behaviour: 'Combine',
     name: 'TVA FR 10%',
   });
-  const productData: ProductFaker = new ProductFaker({
+  const productData: ProductData = new ProductData({
     type: 'Standard product',
     taxRule: taxRuleGroupToCreate.name,
   });

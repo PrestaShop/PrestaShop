@@ -28,7 +28,7 @@ import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -77,7 +77,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
   // Customized product data
-  const customizedProduct: ProductFaker = new ProductFaker({
+  const customizedProduct: ProductData = new ProductData({
     name: `Customized product ${prefixNewProduct}`,
     type: 'Standard product',
     reference: 'bbcdef',
@@ -96,7 +96,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
   // Virtual product data
-  const virtualProduct: ProductFaker = new ProductFaker({
+  const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,
     type: 'Virtual product',
     quantity: 20,
@@ -105,20 +105,21 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     stockLocation: 'stock 1',
   });
   // Product with specific price data
-  const productWithSpecificPrice: ProductFaker = new ProductFaker({
+  const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with sp price ${prefixNewProduct}`,
     reference: 'abcdef',
     type: 'Standard product',
     taxRule: 'No tax',
     quantity: 20,
     specificPrice: {
+      attributes: null,
       discount: 35,
       startingAt: 1,
       reductionType: '%',
     },
   });
   // Product with ecoTax data
-  const productWithEcoTax: ProductFaker = new ProductFaker({
+  const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',

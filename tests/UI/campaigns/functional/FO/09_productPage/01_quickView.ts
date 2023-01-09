@@ -19,9 +19,10 @@ import boProductsPage from '@pages/BO/catalog/products';
 import boAddProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import {Products} from '@data/demo/products';
-import ProductFaker from '@data/faker/product';
-import type {Product, ProductAttributesColorSize, ProductDetails} from '@data/types/product';
+import Products from '@data/demo/products';
+import ProductData from '@data/faker/product';
+import CartProductDetails from '@data/types/cart';
+import type {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,37 +44,62 @@ describe('FO - product page : Product quick view', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const attributes: ProductAttributesColorSize = {
-    size: 'M',
-    color: 'Black',
-    quantity: 4,
-    totalTaxInc: 91.78,
-  };
-  const productToCreate: Product = {
+  const attributes: ProductAttribute[] = [
+    {
+      name: 'size',
+      value: 'M',
+    },
+    {
+      name: 'color',
+      value: 'Black',
+    },
+  ];
+  const attributesQty = 4;
+  const attributesTotalTaxInc = 91.78;
+  const productData: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: false,
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
-  };
-  const productData: ProductFaker = new ProductFaker(productToCreate);
-  const firstCheckProductDetails: ProductDetails = {
+  });
+  const firstCheckProductDetails: CartProductDetails = {
     name: Products.demo_1.name,
     price: Products.demo_1.finalPrice,
-    size: 'S',
-    color: 'White',
+    cartSubtotal: Products.demo_1.finalPrice,
+    totalTaxIncl: Products.demo_1.finalPrice,
     quantity: 1,
-    shipping: 'Free',
+    cartProductsCount: 1,
+    cartShipping: 'Free',
   };
-  const secondCheckProductDetails: ProductDetails = {
+  const firstCheckProductDetailsProducts: ProductAttribute[] = [
+    {
+      name: 'size',
+      value: 'S',
+    },
+    {
+      name: 'color',
+      value: 'White',
+    },
+  ];
+  const secondCheckProductDetails: CartProductDetails = {
     name: Products.demo_1.name,
     price: Products.demo_1.finalPrice,
-    size: 'S',
-    color: 'White',
+    cartSubtotal: 45.89,
+    totalTaxIncl: 45.89,
     quantity: 2,
-    shipping: 'Free',
-    subtotal: 45.89,
-    totalTaxInc: 45.89,
+    cartProductsCount: 2,
+    cartShipping: 'Free',
   };
+  const secondCheckProductDetailsProducts: ProductAttribute[] = [
+    {
+      name: 'size',
+      value: 'S',
+    },
+    {
+      name: 'color',
+      value: 'White',
+    },
+  ];
 
   // before and after functions
   before(async function () {
@@ -101,21 +127,24 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.addProductToCartByQuickView(page, 1, 1);
 
-      let result = await homePage.getProductDetailsFromBlockCartModal(page);
+      const result = await homePage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.name).to.equal(firstCheckProductDetails.name),
         expect(result.price).to.equal(firstCheckProductDetails.price),
         expect(result.quantity).to.equal(firstCheckProductDetails.quantity),
-        expect(result.cartProductsCount).to.equal(firstCheckProductDetails.quantity),
+        expect(result.cartProductsCount).to.equal(firstCheckProductDetails.cartProductsCount),
         expect(result.cartSubtotal).to.equal(firstCheckProductDetails.price),
-        expect(result.cartShipping).to.contains(firstCheckProductDetails.shipping),
-        expect(result.totalTaxIncl).to.equal(firstCheckProductDetails.price),
+        expect(result.cartShipping).to.contains(firstCheckProductDetails.cartShipping),
+        expect(result.totalTaxIncl).to.equal(firstCheckProductDetails.totalTaxIncl),
       ]);
 
-      result = await homePage.getProductAttributesFromBlockCartModal(page);
+      const productAttributesFromBlockCart = await homePage.getProductAttributesFromBlockCartModal(page);
       await Promise.all([
-        expect(result.size).to.equal(firstCheckProductDetails.size),
-        expect(result.color).to.equal(firstCheckProductDetails.color),
+        expect(productAttributesFromBlockCart.length).to.equal(2),
+        expect(productAttributesFromBlockCart[0].name).to.equal(firstCheckProductDetailsProducts[0].name),
+        expect(productAttributesFromBlockCart[0].value).to.equal(firstCheckProductDetailsProducts[0].value),
+        expect(productAttributesFromBlockCart[1].name).to.equal(firstCheckProductDetailsProducts[1].name),
+        expect(productAttributesFromBlockCart[1].value).to.equal(firstCheckProductDetailsProducts[1].value),
       ]);
     });
   });
@@ -140,21 +169,24 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.addProductToCartByQuickView(page, 1, 2);
 
-      let result = await homePage.getProductDetailsFromBlockCartModal(page);
+      const result = await homePage.getProductDetailsFromBlockCartModal(page);
       await Promise.all([
         expect(result.name).to.equal(secondCheckProductDetails.name),
         expect(result.price).to.equal(secondCheckProductDetails.price),
         expect(result.quantity).to.equal(secondCheckProductDetails.quantity),
-        expect(result.cartProductsCount).to.equal(secondCheckProductDetails.quantity),
-        expect(result.cartSubtotal).to.equal(secondCheckProductDetails.subtotal),
-        expect(result.cartShipping).to.contains(secondCheckProductDetails.shipping),
-        expect(result.totalTaxIncl).to.equal(secondCheckProductDetails.totalTaxInc),
+        expect(result.cartProductsCount).to.equal(secondCheckProductDetails.cartProductsCount),
+        expect(result.cartSubtotal).to.equal(secondCheckProductDetails.cartSubtotal),
+        expect(result.cartShipping).to.contains(secondCheckProductDetails.cartShipping),
+        expect(result.totalTaxIncl).to.equal(secondCheckProductDetails.totalTaxIncl),
       ]);
 
-      result = await homePage.getProductAttributesFromBlockCartModal(page);
+      const productAttributesFromBlockCart = await homePage.getProductAttributesFromBlockCartModal(page);
       await Promise.all([
-        expect(result.size).to.equal(secondCheckProductDetails.size),
-        expect(result.color).to.equal(secondCheckProductDetails.color),
+        expect(productAttributesFromBlockCart.length).to.equal(2),
+        expect(productAttributesFromBlockCart[0].name).to.equal(secondCheckProductDetailsProducts[0].name),
+        expect(productAttributesFromBlockCart[0].value).to.equal(secondCheckProductDetailsProducts[0].value),
+        expect(productAttributesFromBlockCart[1].name).to.equal(secondCheckProductDetailsProducts[1].name),
+        expect(productAttributesFromBlockCart[1].value).to.equal(secondCheckProductDetailsProducts[1].value),
       ]);
     });
 
@@ -226,22 +258,25 @@ describe('FO - product page : Product quick view', async () => {
     it('should check product information from quick view modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result = await homePage.getProductWithDiscountDetailsFromQuickViewModal(page);
+      const result = await homePage.getProductWithDiscountDetailsFromQuickViewModal(page);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
+        expect(result.regularPrice).to.equal(Products.demo_1.retailPrice),
         expect(result.price).to.equal(Products.demo_1.finalPrice),
-        expect(result.discountPercentage).to.equal(`Save ${Products.demo_1.discount}`),
+        expect(result.discountPercentage).to.equal(`Save ${Products.demo_1.specificPrice.discount}%`),
         expect(result.taxShippingDeliveryLabel).to.equal('Tax included'),
-        expect(result.shortDescription).to.equal(Products.demo_1.shortDescription),
+        expect(result.shortDescription).to.equal(Products.demo_1.summary),
         expect(result.coverImage).to.contains(Products.demo_1.coverImage),
         expect(result.thumbImage).to.contains(Products.demo_1.coverImage),
       ]);
 
-      result = await homePage.getProductAttributesFromQuickViewModal(page);
+      const productAttributesFromQuickView = await homePage.getProductAttributesFromQuickViewModal(page);
       await Promise.all([
-        expect(result.size).to.equal('S M L XL'),
-        expect(result.color).to.equal('White Black'),
+        expect(productAttributesFromQuickView.length).to.equal(2),
+        expect(productAttributesFromQuickView[0].name).to.equal('size'),
+        expect(productAttributesFromQuickView[0].value).to.equal('S M L XL'),
+        expect(productAttributesFromQuickView[1].name).to.equal('color'),
+        expect(productAttributesFromQuickView[1].value).to.equal('White Black'),
       ]);
     });
   });
@@ -270,8 +305,7 @@ describe('FO - product page : Product quick view', async () => {
     it('should change combination on popup and proceed to checkout', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
 
-      await homePage.changeAttributesAndAddToCart(page, attributes);
-
+      await homePage.changeAttributesAndAddToCart(page, attributes, attributesQty);
       await homePage.proceedToCheckout(page);
 
       const pageTitle = await cartPage.getPageTitle(page);
@@ -282,27 +316,30 @@ describe('FO - product page : Product quick view', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
 
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(attributes.quantity);
+      await expect(notificationsNumber).to.be.equal(attributesQty);
     });
 
     it('should check product details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
 
-      let result = await cartPage.getProductDetail(page, 1);
+      const result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
         expect(result.name).to.equal(Products.demo_1.name),
-        expect(result.regularPrice).to.equal(Products.demo_1.regularPrice),
+        expect(result.regularPrice).to.equal(Products.demo_1.retailPrice),
         expect(result.price).to.equal(Products.demo_1.finalPrice),
-        expect(result.discountPercentage).to.equal(`-${Products.demo_1.discount}`),
+        expect(result.discountPercentage).to.equal(`-${Products.demo_1.specificPrice.discount}%`),
         expect(result.image).to.contains(Products.demo_1.coverImage),
-        expect(result.quantity).to.equal(attributes.quantity),
-        expect(result.totalPrice).to.equal(attributes.totalTaxInc),
+        expect(result.quantity).to.equal(attributesQty),
+        expect(result.totalPrice).to.equal(attributesTotalTaxInc),
       ]);
 
-      result = await cartPage.getProductAttributes(page, 1);
+      const cartProductAttributes = await cartPage.getProductAttributes(page, 1);
       await Promise.all([
-        expect(result.size).to.equal(attributes.size),
-        expect(result.color).to.equal(attributes.color),
+        expect(cartProductAttributes.length).to.equal(2),
+        expect(cartProductAttributes[0].name).to.equal(attributes[0].name),
+        expect(cartProductAttributes[0].value).to.equal(attributes[0].value),
+        expect(cartProductAttributes[1].name).to.equal(attributes[1].name),
+        expect(cartProductAttributes[1].value).to.equal(attributes[1].value),
       ]);
     });
   });
