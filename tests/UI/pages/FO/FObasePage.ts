@@ -51,7 +51,7 @@ export default class FOBasePage extends CommonPage {
 
   private readonly currencySelect: string;
 
-  private readonly searchInput: string;
+  public readonly searchInput: string;
 
   private readonly autocompleteSearchResult: string;
 

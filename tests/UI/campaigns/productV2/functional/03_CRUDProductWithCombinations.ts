@@ -22,7 +22,7 @@ import pricingTab from '@pages/BO/catalog/productsV2/add/pricingTab';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import {DefaultEmployee} from '@data/demo/employees';
 
 const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
@@ -33,17 +33,23 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create product with combinations
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'combinations',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
-    attributes: {
-      size: ['S', 'M', 'L', 'XL'],
-      color: ['Grey', 'Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
-    },
+    attributes: [
+      {
+        name: 'size',
+        values: ['S', 'M', 'L', 'XL'],
+      },
+      {
+        name: 'color',
+        values: ['Grey', 'Taupe', 'Beige', 'White', 'Red', 'Black', 'Orange', 'Green', 'Yellow', 'Brown'],
+      },
+    ],
     status: false,
   });
 
@@ -102,16 +108,22 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   };
 
   // Data to edit the product with combinations
-  const editProductData: ProductFaker = new ProductFaker({
+  const editProductData: ProductData = new ProductData({
     type: 'combinations',
     taxRule: 'No tax',
     quantity: 100,
     minimumQuantity: 1,
     status: true,
-    attributes: {
-      color: ['Pink', 'Camel', 'Off White'],
-      size: ['L', 'XL'],
-    },
+    attributes: [
+      {
+        name: 'color',
+        values: ['Pink', 'Camel', 'Off White'],
+      },
+      {
+        name: 'size',
+        values: ['L', 'XL'],
+      },
+    ],
   });
 
   // Pre-condition: Enable new product page
@@ -540,14 +552,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(pricingData.price + secondCombinationData.impactOnPriceTExc + taxValue),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.summary).to.equal(newProductData.summary),
         await expect(result.description).to.equal(newProductData.description),
       ]);
 
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(editProductAttributesData.attributes.size.join(' ')),
-        await expect(result.color).to.equal(editProductAttributesData.attributes.color.join(' ')),
+        await expect(result.size).to.equal(newProductData.attributes[1].values.join(' ')),
+        await expect(result.color).to.equal(newProductData.attributes[0].values.join(' ')),
       ]);
     });
   });
@@ -627,8 +639,8 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       result = await foProductPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(editProductAttributesData.attributes.size.join(' ')),
-        await expect(result.color).to.equal(editProductAttributesData.attributes.color.join(' ')),
+        await expect(result.size).to.equal(editProductAttributesData.attributes[1].values.join(' ')),
+        await expect(result.color).to.equal(editProductAttributesData.attributes[0].values.join(' ')),
       ]);
     });
 

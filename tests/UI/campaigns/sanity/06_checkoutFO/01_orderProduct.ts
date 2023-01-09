@@ -12,7 +12,7 @@ import loginPage from '@pages/FO/login';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

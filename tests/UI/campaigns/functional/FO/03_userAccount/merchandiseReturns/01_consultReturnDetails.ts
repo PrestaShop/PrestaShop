@@ -31,7 +31,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import Order from '@data/types/order';
 
 import {expect} from 'chai';

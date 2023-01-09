@@ -20,7 +20,7 @@ import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
 import {expect} from 'chai';
@@ -118,15 +118,15 @@ describe('BO - Orders - Create order : Check summary', async () => {
     it(`should add to cart '${Products.demo_12.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addStandardSimpleProduct', baseContext);
 
-      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.price_ht.toFixed(2)}`;
+      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.priceTaxExcluded.toFixed(2)}`;
       await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_12.thumbnailImage),
+        expect(result.image).to.contains(Products.demo_12.thumbImage),
         expect(result.description).to.equal(Products.demo_12.name),
         expect(result.reference).to.equal(Products.demo_12.reference),
-        expect(result.price).to.equal(Products.demo_12.price_ht),
+        expect(result.price).to.equal(Products.demo_12.priceTaxExcluded),
       ]);
     });
 
@@ -144,16 +144,16 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock1', baseContext);
 
-        const totalTaxes = await basicHelper.percentage(Products.demo_12.price_ht, Products.demo_12.tax);
+        const totalTaxes = await basicHelper.percentage(Products.demo_12.priceTaxExcluded, Products.demo_12.tax);
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([
-          expect(result.totalProducts).to.equal(`€${Products.demo_12.price_ht.toFixed(2)}`),
+          expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
           expect(result.totalVouchers).to.equal('€0.00'),
           expect(result.totalShipping).to.equal('€0.00'),
           expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-          expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.price_ht.toFixed(2)}`),
-          expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price_ttc.toFixed(2)}`),
+          expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+          expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
         ]);
       });
 
@@ -174,15 +174,15 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock2', baseContext);
 
         const totalTaxes = await basicHelper.percentage(
-          Products.demo_12.price_ht - cartRuleWithCodeData.discountAmount.value,
+          Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value,
           20,
         );
-        const totalTaxExcluded = Products.demo_12.price_ht - cartRuleWithCodeData.discountAmount.value;
+        const totalTaxExcluded = Products.demo_12.priceTaxExcluded - cartRuleWithCodeData.discountAmount.value;
         const totalTaxIncluded = totalTaxes + totalTaxExcluded;
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([
-          expect(result.totalProducts).to.equal(`€${Products.demo_12.price_ht.toFixed(2)}`),
+          expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
           expect(result.totalVouchers).to.equal(`-€${cartRuleWithCodeData.discountAmount.value.toFixed(2)}`),
           expect(result.totalShipping).to.equal('€0.00'),
           expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
@@ -203,16 +203,16 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-        const totalTaxes = await basicHelper.percentage(Products.demo_12.price_ht, Products.demo_12.tax);
+        const totalTaxes = await basicHelper.percentage(Products.demo_12.priceTaxExcluded, Products.demo_12.tax);
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([
-          expect(result.totalProducts).to.equal(`€${Products.demo_12.price_ht.toFixed(2)}`),
+          expect(result.totalProducts).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
           expect(result.totalVouchers).to.equal('€0.00'),
           expect(result.totalShipping).to.equal('€0.00'),
           expect(result.totalTaxes).to.equal(`€${totalTaxes.toFixed(2)}`),
-          expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.price_ht.toFixed(2)}`),
-          expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price_ttc.toFixed(2)}`),
+          expect(result.totalTaxExcluded).to.equal(`€${Products.demo_12.priceTaxExcluded.toFixed(2)}`),
+          expect(result.totalTaxIncluded).to.equal(`Total (Tax incl.) €${Products.demo_12.price.toFixed(2)}`),
         ]);
       });
 
@@ -228,8 +228,8 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should check summary block', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
-        const totalTaxExc = (Products.demo_12.price_ht + Carriers.myCarrier.price).toFixed(2);
-        const totalTaxInc = (Products.demo_12.price_ttc + Carriers.myCarrier.priceTTC).toFixed(2);
+        const totalTaxExc = (Products.demo_12.priceTaxExcluded + Carriers.myCarrier.price).toFixed(2);
+        const totalTaxInc = (Products.demo_12.price + Carriers.myCarrier.priceTTC).toFixed(2);
 
         const result = await addOrderPage.getSummaryDetails(page);
         await Promise.all([

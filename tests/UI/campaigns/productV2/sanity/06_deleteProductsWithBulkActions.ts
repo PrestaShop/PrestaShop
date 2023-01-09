@@ -15,7 +15,7 @@ import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_sanity_deleteProductsWithBulkActions';
 
@@ -25,20 +25,18 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
   let numberOfProducts: number = 0;
 
   // Data to create first product
-  const firstProductData: ProductFaker = new ProductFaker({
-    name: 'toDelete1',
+  const firstProductData: ProductData = new ProductData({
+    name: 'toDelete1'.toUpperCase(),
     type: 'standard',
-    taxRuleID: 0,
     quantity: 50,
     minimumQuantity: 1,
     status: true,
   });
 
   // Data to create second product
-  const secondProductData: ProductFaker = new ProductFaker({
-    name: 'toDelete2',
+  const secondProductData: ProductData = new ProductData({
+    name: 'toDelete2'.toUpperCase(),
     type: 'standard',
-    taxRuleID: 0,
     quantity: 100,
     minimumQuantity: 1,
     status: true,
@@ -164,7 +162,7 @@ describe('BO - Catalog - Products : Delete products with bulk actions', async ()
       const numberOfProductsAfterFilter: number = await productsPage.getNumberOfProductsFromList(page);
       await expect(numberOfProductsAfterFilter).to.equal(2);
 
-      const textColumn: string = await productsPage.getTextColumn(page, 'product_name', 1);
+      const textColumn = await productsPage.getTextColumn(page, 'product_name', 1);
       await expect(textColumn).to.contains('TODELETE');
     });
 

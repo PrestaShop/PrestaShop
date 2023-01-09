@@ -483,7 +483,9 @@ class Products extends BOBasePage {
     if (!found) {
       throw new Error(`${categoryName} not found as a category`);
     }
-    await page.waitForNavigation('networkidle');
+    await page.waitForNavigation({
+      waitUntil: 'networkidle',
+    });
   }
 
   /**

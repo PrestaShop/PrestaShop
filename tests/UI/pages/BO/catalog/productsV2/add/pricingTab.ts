@@ -1,7 +1,10 @@
-import type {Page} from 'playwright';
-
 // Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import ProductData from '@data/faker/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Pricing tab on new product V2 page, contains functions that can be used on the page
@@ -41,7 +44,7 @@ class PricingTab extends BOBasePage {
    * @param productData {ProductData} Data to set in pricing form
    * @returns {Promise<void>}
    */
-  async setProductPricing(page: Page, productData: object): Promise<void> {
+  async setProductPricing(page: Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.pricingTabLink);
     await this.setValue(page, this.retailPriceInput, productData.price);
     // Select tax rule by ID

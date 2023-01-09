@@ -14,8 +14,8 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import tax from '@data/demo/tax';
-import ProductFaker from '@data/faker/product';
-import {ProductDetailsBasic} from '@data/types/product';
+import ProductData from '@data/faker/product';
+import {ProductDetails} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,18 +26,18 @@ const baseContext: string = 'sanity_productsBO_CRUDStandardProductInBO';
 describe('BO - Catalog - Products : Create, read, update and delete Standard product in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let productInformation: ProductDetailsBasic = {
+  let productInformation: ProductDetails = {
     price: 0,
     name: '',
     description: '',
-    shortDescription: '',
+    summary: '',
   };
 
-  const productData: ProductFaker = new ProductFaker({
+  const productData: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: false,
   });
-  const editedProductData: ProductFaker = new ProductFaker({
+  const editedProductData: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: false,
   });
@@ -117,7 +117,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await Promise.all([
       expect(productInformation.name).to.equal(productData.name),
       expect(productInformation.price).to.equal(productData.price),
-      expect(productInformation.shortDescription).to.equal(productData.summary),
+      expect(productInformation.summary).to.equal(productData.summary),
       expect(productInformation.description).to.contains(productData.description),
     ]);
   });
@@ -152,7 +152,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await Promise.all([
       expect(productInformation.name).to.equal(editedProductData.name),
       expect(productInformation.price).to.equal(editedProductData.price),
-      expect(productInformation.shortDescription).to.be.equal(editedProductData.summary),
+      expect(productInformation.summary).to.be.equal(editedProductData.summary),
       expect(productInformation.description).to.be.equal(editedProductData.description),
     ]);
   });

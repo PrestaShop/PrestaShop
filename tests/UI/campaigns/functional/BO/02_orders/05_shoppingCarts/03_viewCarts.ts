@@ -19,7 +19,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 // Import data
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import Order from '@data/types/order';
@@ -153,7 +153,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbnailImage}},
+      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
       {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
       {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},
@@ -264,7 +264,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbnailImage}},
+      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
       {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
       {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},

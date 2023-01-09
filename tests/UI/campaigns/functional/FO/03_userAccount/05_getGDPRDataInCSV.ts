@@ -27,7 +27,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 import ContactUsFakerData from '@data/faker/contactUs';
 import CustomerData from '@data/faker/customer';

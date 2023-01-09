@@ -19,7 +19,7 @@ import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -64,7 +64,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     },
     paymentMethod: PaymentMethods.checkPayment.moduleName,
     orderStatus: Statuses.paymentAccepted,
-    totalPrice: (Products.demo_5.price * 4) * 1.2, // Price tax included
+    totalPrice: (Products.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
   };
 
   before(async function () {

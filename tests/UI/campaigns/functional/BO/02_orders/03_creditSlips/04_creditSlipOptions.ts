@@ -18,7 +18,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -46,7 +46,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
   let fileName: string;
 
   const prefixToEdit: string = 'CreSlip';
-  const product: ProductFaker = new ProductFaker({
+  const product: ProductData = new ProductData({
     name: 'New product',
     type: 'Standard product',
     taxRule: 'No tax',

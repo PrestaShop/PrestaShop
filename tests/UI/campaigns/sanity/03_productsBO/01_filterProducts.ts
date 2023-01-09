@@ -11,7 +11,7 @@ import productsPage from '@pages/BO/catalog/products';
 
 // Import data
 import {Categories} from '@data/demo/categories';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import tax from '@data/demo/tax';
 
 import {expect} from 'chai';

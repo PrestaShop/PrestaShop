@@ -24,7 +24,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 // Import data
 import {Carriers} from '@data/demo/carriers';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 
@@ -108,7 +108,7 @@ describe('BO - Orders : Preview order', async () => {
 
         await searchResultsPage.goToProductPage(page, 1);
         // Add the product to the cart
-        await productPage.addProductToTheCart(page, 1, {size: null, color: null}, false);
+        await productPage.addProductToTheCart(page, 1, [], false);
 
         const notificationsNumber = await productPage.getCartNotificationsNumber(page);
         await expect(notificationsNumber).to.be.equal(index + 1);
@@ -241,14 +241,14 @@ describe('BO - Orders : Preview order', async () => {
       [
         {args: {product: Products.demo_1, productPrice: Products.demo_1.finalPrice}},
         {args: {product: Products.demo_3, productPrice: Products.demo_3.finalPrice}},
-        {args: {product: Products.demo_5, productPrice: Products.demo_5.priceTaxIncl}},
-        {args: {product: Products.demo_6, productPrice: Products.demo_6.priceDimension4060}},
+        {args: {product: Products.demo_5, productPrice: Products.demo_5.price}},
+        {args: {product: Products.demo_6, productPrice: Products.demo_6.combinations[0].price}},
         {args: {product: Products.demo_7, productPrice: Products.demo_7.price}},
         {args: {product: Products.demo_8, productPrice: Products.demo_8.price}},
         {args: {product: Products.demo_11, productPrice: Products.demo_11.finalPrice}},
-        {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
+        {args: {product: Products.demo_12, productPrice: Products.demo_12.price}},
         {args: {product: Products.demo_13, productPrice: Products.demo_13.price}},
-        {args: {product: Products.demo_14, productPrice: Products.demo_14.priceTaxIncl}},
+        {args: {product: Products.demo_14, productPrice: Products.demo_14.price}},
       ].forEach((test, index) => {
         it(`should check the product '${test.args.product.name}'`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkProduct${index}`, baseContext);
@@ -398,14 +398,14 @@ describe('BO - Orders : Preview order', async () => {
         [
           {args: {product: Products.demo_1, productPrice: Products.demo_1.finalPrice}},
           {args: {product: Products.demo_3, productPrice: Products.demo_3.finalPrice}},
-          {args: {product: Products.demo_5, productPrice: Products.demo_5.priceTaxIncl}},
-          {args: {product: Products.demo_6, productPrice: Products.demo_6.priceDimension4060}},
+          {args: {product: Products.demo_5, productPrice: Products.demo_5.price}},
+          {args: {product: Products.demo_6, productPrice: Products.demo_6.combinations[0].price}},
           {args: {product: Products.demo_7, productPrice: Products.demo_7.price}},
           {args: {product: Products.demo_8, productPrice: Products.demo_8.price}},
           {args: {product: Products.demo_11, productPrice: Products.demo_11.finalPrice}},
-          {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
+          {args: {product: Products.demo_12, productPrice: Products.demo_12.price}},
           {args: {product: Products.demo_13, productPrice: Products.demo_13.price}},
-          {args: {product: Products.demo_14, productPrice: Products.demo_14.priceTaxIncl}},
+          {args: {product: Products.demo_14, productPrice: Products.demo_14.price}},
         ].forEach((test, index: number) => {
           it(`should check the product '${test.args.product.name}'`, async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkProduct${index}1`, baseContext);

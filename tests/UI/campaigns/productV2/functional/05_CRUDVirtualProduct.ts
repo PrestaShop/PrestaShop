@@ -29,7 +29,7 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 import {Statuses} from '@data/demo/orderStatuses';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';
 
@@ -38,7 +38,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   let page: Page;
 
   // Data to create standard product
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'virtual',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
@@ -52,8 +52,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
     minimumQuantity: 1,
     status: true,
   });
-
-  const editProductData: ProductFaker = new ProductFaker({
+  const editProductData: ProductData = new ProductData({
     type: 'virtual',
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,
@@ -189,7 +188,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price.toFixed(2)).to.equal((newProductData.price + taxValue).toFixed(2)),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.summary).to.equal(newProductData.summary),
         await expect(result.description).to.equal(newProductData.description),
       ]);
     });

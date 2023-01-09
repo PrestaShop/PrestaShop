@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import stocksPage from '@pages/BO/catalog/stocks';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import Suppliers from '@data/demo/suppliers';
 
 import {expect} from 'chai';

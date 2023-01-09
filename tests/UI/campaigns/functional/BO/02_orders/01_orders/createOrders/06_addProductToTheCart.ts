@@ -23,9 +23,9 @@ import addOrderPage from '@pages/BO/orders/add';
 // Import data
 import {Currencies} from '@data/demo/currencies';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -83,15 +83,25 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   let availableStockVirtualProduct: number = 0;
   // Variable used for available stock of customized product
   let availableStockCustomizedProduct: number = 0;
+  let createProductMessage: string = '';
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   // Constant used to add a prefix to created products
   const prefixNewProduct: string = 'TOTEST';
   // Data to create pack of products with minimum quantity = 2
-  const packOfProducts: ProductFaker = new ProductFaker({
+  const packOfProducts: ProductData = new ProductData({
     name: `Pack of products ${prefixNewProduct}`,
     type: 'Pack of products',
-    pack: {demo_13: 1, demo_7: 1},
+    pack: [
+      {
+        reference: 'demo_13',
+        quantity: 1,
+      },
+      {
+        reference: 'demo_7',
+        quantity: 1,
+      },
+    ],
     price: 12.65,
     taxRule: 'No tax',
     quantity: 197,
@@ -101,7 +111,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     behaviourOutOfStock: 'Default behavior',
   });
   // Data to create product out of stock allowed
-  const productOutOfStockAllowed: ProductFaker = new ProductFaker({
+  const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
@@ -111,7 +121,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     behaviourOutOfStock: 'Allow orders',
   });
   // Data to create product out of stock not allowed
-  const productOutOfStockNotAllowed: ProductFaker = new ProductFaker({
+  const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: `Out of stock not allowed ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
@@ -121,19 +131,20 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     behaviourOutOfStock: 'Deny orders',
   });
   // Data to create product with specific price
-  const productWithSpecificPrice: ProductFaker = new ProductFaker({
+  const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with specific price ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
     quantity: 20,
     specificPrice: {
+      attributes: null,
       discount: 50,
       startingAt: 2,
       reductionType: '%',
     },
   });
   // Data to create product with ecotax
-  const productWithEcoTax: ProductFaker = new ProductFaker({
+  const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
@@ -142,7 +153,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     ecoTax: 10,
   });
   // Data to create product with cart rule
-  const productWithCartRule: ProductFaker = new ProductFaker({
+  const productWithCartRule: ProductData = new ProductData({
     name: `Product with cart rule ${prefixNewProduct}`,
     type: 'Standard product',
     taxRule: 'No tax',
@@ -169,12 +180,12 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     freeGiftProduct: Products.demo_13,
   });
   // Data to add customized value for product
+  const customizedValue: string = 'Test';
   const customizedProduct = {
     name: Products.demo_14.name,
     reference: Products.demo_14.reference,
-    customizedValue: 'Test',
-    price: Products.demo_14.price,
-    thumbnailImage: Products.demo_14.thumbnailImage,
+    price: Products.demo_14.priceTaxExcluded,
+    thumbnailImage: Products.demo_14.thumbImage,
   };
 
   // Pre-condition: Enable EcoTax
@@ -215,7 +226,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       productWithSpecificPrice,
       productWithEcoTax,
       productWithCartRule,
-    ].forEach((product: ProductFaker, index: number) => {
+    ].forEach((product: ProductData, index: number) => {
       it('should go to add product page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
 
@@ -231,8 +242,6 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       it(`create product '${product.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
-
-        let createProductMessage = '';
 
         if (product === productWithSpecificPrice) {
           await addProductPage.createEditBasicProduct(page, product);
@@ -379,7 +388,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_11.thumbnailImage),
+        expect(result.image).to.contains(Products.demo_11.thumbImage),
         expect(result.description).to.equal(Products.demo_11.name),
         expect(result.reference).to.equal(Products.demo_11.reference),
         expect(result.quantityMin).to.equal(1),
@@ -396,7 +405,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_11.thumbnailImage),
+        expect(result.image).to.contains(Products.demo_11.thumbImage),
         expect(result.description).to.equal(Products.demo_11.name),
         expect(result.reference).to.equal(Products.demo_11.reference),
         expect(result.quantityMin).to.equal(1),
@@ -409,7 +418,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addStandardCombinationsProduct', baseContext);
 
       await addOrderPage.addProductToCart(page, Products.demo_1, Products.demo_1.name);
-      const discountValue = await basicHelper.percentage(Products.demo_1.price, Products.demo_1.discountPercentage);
+      const discountValue = await basicHelper.percentage(Products.demo_1.price, Products.demo_1.specificPrice.discount);
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 2);
       await Promise.all([
@@ -430,7 +439,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 3);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_18.thumbnailImage),
+        expect(result.image).to.contains(Products.demo_18.thumbImage),
         expect(result.description).to.equal(Products.demo_18.name),
         expect(result.reference).to.equal(Products.demo_18.reference),
         expect(result.quantityMin).to.equal(1),
@@ -471,7 +480,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     it('should add to cart \'Customized product\' and check error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomizedProduct', baseContext);
 
-      const productToSelect = `${Products.demo_14.name} - €${Products.demo_14.price.toFixed(2)}`;
+      const productToSelect = `${Products.demo_14.name} - €${Products.demo_14.priceTaxExcluded.toFixed(2)}`;
 
       const alertMessage = await addOrderPage.AddProductToCartAndGetAlert(page, Products.demo_14.name, productToSelect);
       await expect(alertMessage).to.equal('Please fill in all the required fields.');
@@ -481,13 +490,13 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addCustomizedValueAndAddToCart', baseContext);
 
       const productToSelect = `${customizedProduct.name} - €${customizedProduct.price.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, customizedProduct, productToSelect);
+      await addOrderPage.addProductToCart(page, customizedProduct, productToSelect, 1, customizedValue);
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 5);
       await Promise.all([
         expect(result.image).to.contains(customizedProduct.thumbnailImage),
         expect(result.description).to.equal(
-          `${customizedProduct.name} Type your text here : ${customizedProduct.customizedValue}`),
+          `${customizedProduct.name} Type your text here : ${customizedValue}`),
         expect(result.reference).to.equal(customizedProduct.reference),
         expect(result.quantityMin).to.equal(1),
         expect(result.quantityMax).to.equal(availableStockCustomizedProduct),
@@ -639,7 +648,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherLanguage', baseContext);
 
       await addOrderPage.selectAnotherLanguage(page, 'Français (French)');
-      await addOrderPage.waitForVisibleProductImage(page, 3, Products.demo_18.thumbnailImageFR);
+      await addOrderPage.waitForVisibleProductImage(page, 3, Products.demo_18.thumbImageFR ?? '');
 
       const result = await addOrderPage.getProductDetailsFromTable(page, 3);
       await expect(result.description).to.contains(Products.demo_18.nameFR);

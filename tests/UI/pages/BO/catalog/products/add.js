@@ -242,15 +242,15 @@ class AddProduct extends BOBasePage {
   /**
    * Generate combinations in input
    * @param page {Page} Browser tab
-   * @param attributes {Object|{color: Array<string>, size: Array<string>}} Data to set on combination form
+   * @param attributes {ProductAttributes[]} Data to set on combination form
    * @return {Promise<void>}
    */
   async selectAttributes(page, attributes) {
-    const keys = Object.keys(attributes);
-    /*eslint-disable*/
-    for (const key of keys) {
-      for (const value of attributes[key]) {
-        await this.addAttribute(page, `${key} : ${value}`);
+    if (attributes.length > 0) {
+      for (let i = 0; i < attributes.length; i++) {
+        for (let j = 0; j < attributes[i].values.length; j++) {
+          await this.addAttribute(page, `${attributes[i].name} : ${attributes[i].values[j]}`);
+        }
       }
     }
     /* eslint-enable */
@@ -415,7 +415,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add customized value
    * @param page {Page} Browser tab
-   * @param customizationData {{label: string, type: string, required: boolean}} Data to set on customized form
+   * @param customizationData {ProductCustomization} Data to set on customized form
    * @param row {number} Row of input
    * @returns {Promise<string>}
    */
@@ -440,8 +440,7 @@ class AddProduct extends BOBasePage {
   /**
    * Add specific prices
    * @param page {Page} Browser tab
-   * @param specificPriceData {Object|{attributes: ?string, discount: ?number, startingAt: ?number,
-   * reductionType: ?string}} Data to set on specific price form
+   * @param specificPriceData {ProductSpecificPrice} Data to set on specific price form
    * @return {Promise<string>}
    */
   async addSpecificPrices(page, specificPriceData) {
@@ -530,14 +529,12 @@ class AddProduct extends BOBasePage {
   /**
    * Add pack of products
    * @param page {Page} Browser tab
-   * @param pack {Object} Data to set on pack form
+   * @param pack {ProductPackItem[]} Data to set on pack form
    * @returns {Promise<void>}
    */
   async addPackOfProducts(page, pack) {
-    const keys = Object.keys(pack);
-
-    for (let i = 0; i < keys.length; i += 1) {
-      await this.addProductToPack(page, keys[i], pack[keys[i]]);
+    for (let i = 0; i < pack.length; i++) {
+      await this.addProductToPack(page, pack[i].reference, pack[i].quantity);
     }
   }
 
@@ -590,7 +587,7 @@ class AddProduct extends BOBasePage {
     // Set value on label In and out of stock inputs
     await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, productData.labelWhenInStock);
-    await this.setValue(page, this.labelWhenOutOfStock, productData.LabelWhenOutOfStock);
+    await this.setValue(page, this.labelWhenOutOfStock, productData.labelWhenOutOfStock);
   }
 
   /**

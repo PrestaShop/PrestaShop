@@ -16,7 +16,8 @@ import foProductPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
+import {ProductAttribute} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,25 +36,47 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productWithCombinations: ProductFaker = new ProductFaker(
-    {
-      type: 'Standard product',
-      price: 20,
-      attributes: {
-        color: ['White', 'Black'],
-        size: ['S'],
+  const productWithCombinations: ProductData = new ProductData({
+    type: 'Standard product',
+    price: 20,
+    attributes: [
+      {
+        name: 'color',
+        values: ['White', 'Black'],
       },
-      quantity: 10,
-      specificPrice: {
-        attributes: 'Size - S, Color - White',
-        discount: 50,
-        startingAt: 2,
-        reductionType: '%',
+      {
+        name: 'size',
+        values: ['S'],
       },
+    ],
+    quantity: 10,
+    specificPrice: {
+      attributes: 'Size - S, Color - White',
+      discount: 50,
+      startingAt: 2,
+      reductionType: '%',
     },
-  );
-  const firstAttributeToChoose: ProductCombinationColorSize = {color: 'White', size: 'S'};
-  const secondAttributeToChoose: ProductCombinationColorSize = {color: 'Black', size: 'S'};
+  });
+  const firstAttributeToChoose: ProductAttribute[] = [
+    {
+      name: 'color',
+      value: 'White',
+    },
+    {
+      name: 'size',
+      value: 'S',
+    },
+  ];
+  const secondAttributeToChoose: ProductAttribute[] = [
+    {
+      name: 'color',
+      value: 'Black',
+    },
+    {
+      name: 'size',
+      value: 'S',
+    },
+  ];
   const firstCartTotalATI: number = 30;
   const secondCartTotalATI: number = 40;
 

@@ -133,8 +133,8 @@ class OrderDetails extends FOBasePage {
   /**
    * Add a message to order history
    * @param page {Page} Browser tab
-   * @param messageOption {String} The reference of the order
-   * @param messageText {String} The message content
+   * @param messageOption {string} The reference of the order
+   * @param messageText {string} The message content
    * @returns {Promise<string>}
    */
   async addAMessage(page: Page, messageOption: string, messageText: string): Promise<string> {

@@ -21,9 +21,9 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import {DefaultEmployee} from '@data/demo/employees';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 const baseContext: string = 'productV2_functional_CRUDPackOfProducts';
 
@@ -33,11 +33,16 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
 
   // Data to create standard product
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'pack',
     coverImage: 'cover.jpg',
     thumbImage: 'thumb.jpg',
-    pack: {demo_11: 10},
+    pack: [
+      {
+        reference: 'demo_11',
+        quantity: 10,
+      },
+    ],
     taxRule: 'FR Taux standard (20%)',
     tax: 20,
     quantity: 0,
@@ -58,9 +63,14 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
     priceTaxIncl: 18,
   };
 
-  const editProductData: ProductFaker = new ProductFaker({
+  const editProductData: ProductData = new ProductData({
     type: 'pack',
-    pack: {demo_19: 20},
+    pack: [
+      {
+        reference: 'demo_19',
+        quantity: 20,
+      },
+    ],
     taxRule: 'FR Taux réduit (10%)',
     tax: 10,
     quantity: 100,
@@ -372,7 +382,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price.toFixed(2)).to.equal((pricingData.price + taxValue).toFixed(2)),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.summary).to.equal(newProductData.summary),
         await expect(result.description).to.equal(newProductData.description),
       ]);
     });
@@ -440,7 +450,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price.toFixed(2)).to.equal((editProductData.price + taxValue).toFixed(2)),
-        await expect(result.shortDescription).to.equal(editProductData.summary),
+        await expect(result.summary).to.equal(editProductData.summary),
         await expect(result.description).to.equal(editProductData.description),
       ]);
     });

@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import {Categories} from '@data/demo/categories';
 
 const baseContext: string = 'productV2_sanity_filterProducts';
@@ -141,7 +141,7 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
         }
 
         for (let i = 1; i <= numberOfProductsAfterFilter; i++) {
-          const textColumn: string = await productsPage.getTextColumn(page, test.args.filterBy, i);
+          const textColumn = await productsPage.getTextColumn(page, test.args.filterBy, i);
 
           if (test.args.filterBy === 'id_product' || test.args.filterBy === 'price'
             || test.args.filterBy === 'quantity') {

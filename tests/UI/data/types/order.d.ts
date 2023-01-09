@@ -1,10 +1,10 @@
 import type Customer from '@data/types/customer';
-import type {Product} from '@data/types/product';
+import ProductData from '@data/faker/product';
 
 type Order = {
   reference: string
   customer: Customer
-  product: Product
+  product: ProductData
   productId: number
   productQuantity: number
   paymentMethod: string

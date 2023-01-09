@@ -16,7 +16,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
 

@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,7 +28,7 @@ describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 0});
+  const productData: ProductData = new ProductData({type: 'Standard product', quantity: 0});
 
   // before and after functions
   before(async function () {

@@ -16,7 +16,7 @@ import packTab from '@pages/BO/catalog/productsV2/add/packTab';
  * @extends BOBasePage
  */
 class CreateProduct extends BOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly saveAndPublishButtonName: string;
 

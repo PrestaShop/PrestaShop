@@ -467,12 +467,13 @@ class AddOrder extends BOBasePage {
   /**
    * Add product to cart
    * @param page {Page} Browser tab
-   * @param productToSearch {object} Product data to search with
+   * @param productToSearch {ProductData} Product data to search with
    * @param productToSelect {string} Product name to select
    * @param quantity {number} Product quantity to add to the cart
+   * @param customizedValue {string}
    * @returns {Promise<void>}
    */
-  async addProductToCart(page, productToSearch, productToSelect, quantity = 1) {
+  async addProductToCart(page, productToSearch, productToSelect, quantity = 1, customizedValue = '') {
     // Search product
     await this.setValue(page, this.productSearchInput, productToSearch.name);
     await this.waitForVisibleSelector(page, this.addProductToCartForm);
@@ -480,7 +481,7 @@ class AddOrder extends BOBasePage {
     // Fill add product form
     await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
     if (await this.elementVisible(page, this.productCustomInput, 1000)) {
-      await this.setValue(page, this.productCustomInput, productToSearch.customizedValue);
+      await this.setValue(page, this.productCustomInput, customizedValue);
     }
     await this.setValue(page, this.productQuantityInput, quantity);
 
@@ -875,7 +876,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setGift(page, isEnabled) {
-    await this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0));
+    await this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0), isEnabled);
     await page.waitForTimeout(3000);
   }
 

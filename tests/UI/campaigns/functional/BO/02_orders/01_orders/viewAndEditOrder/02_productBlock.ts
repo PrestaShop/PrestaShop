@@ -23,9 +23,9 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import AddressFaker from '@data/faker/address';
 import CartRuleFaker from '@data/faker/cartRule';
 import CustomerFaker from '@data/faker/customer';
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -81,7 +81,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     address: addressData,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
-  const productOutOfStockAllowed: ProductFaker = new ProductFaker({
+  const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
     reference: 'd12345',
     type: 'Standard product',
@@ -91,7 +91,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Allow orders',
   });
-  const productOutOfStockNotAllowed: ProductFaker = new ProductFaker({
+  const productOutOfStockNotAllowed: ProductData = new ProductData({
     name: `Out of stock not allowed ${prefixNewProduct}`,
     reference: 'e12345',
     type: 'Standard product',
@@ -102,11 +102,20 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Deny orders',
   });
-  const packOfProducts: ProductFaker = new ProductFaker({
+  const packOfProducts: ProductData = new ProductData({
     name: `Pack of products ${prefixNewProduct}`,
     reference: 'c12345',
     type: 'Pack of products',
-    pack: {demo_13: 1, demo_7: 1},
+    pack: [
+      {
+        reference: 'demo_13',
+        quantity: 1,
+      },
+      {
+        reference: 'demo_7',
+        quantity: 1,
+      },
+    ],
     taxRule: 'No tax',
     quantity: 197,
     minimumQuantity: 3,
@@ -114,14 +123,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-  const virtualProduct: ProductFaker = new ProductFaker({
+  const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,
     reference: 'b12345',
     type: 'Virtual product',
     taxRule: 'No tax',
     quantity: 20,
   });
-  const combinationProduct: ProductFaker = new ProductFaker({
+  const combinationProduct: ProductData = new ProductData({
     name: `Product with combination ${prefixNewProduct}`,
     reference: 'a12345',
     type: 'Standard product',
@@ -132,7 +141,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-  const simpleProduct: ProductFaker = new ProductFaker({
+  const simpleProduct: ProductData = new ProductData({
     name: `Simple product ${prefixNewProduct}`,
     reference: 'i12345',
     type: 'Standard product',
@@ -144,19 +153,20 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-  const productWithSpecificPrice: ProductFaker = new ProductFaker({
+  const productWithSpecificPrice: ProductData = new ProductData({
     name: `Product with specific price ${prefixNewProduct}`,
     reference: 'f12345',
     type: 'Standard product',
     taxRule: 'No tax',
     quantity: 20,
     specificPrice: {
+      attributes: null,
       discount: 50,
       startingAt: 2,
       reductionType: '%',
     },
   });
-  const productWithEcoTax: ProductFaker = new ProductFaker({
+  const productWithEcoTax: ProductData = new ProductData({
     name: `Product with ecotax ${prefixNewProduct}`,
     reference: 'g12345',
     type: 'Standard product',
@@ -165,7 +175,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     minimumQuantity: 1,
     ecoTax: 10,
   });
-  const productWithCartRule: ProductFaker = new ProductFaker({
+  const productWithCartRule: ProductData = new ProductData({
     name: `Product with cart rule ${prefixNewProduct}`,
     reference: 'h12345',
     type: 'Standard product',
@@ -235,7 +245,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       productWithSpecificPrice,
       productWithEcoTax,
       productWithCartRule,
-    ].forEach((product: ProductFaker, index: number) => {
+    ].forEach((product: ProductData, index: number) => {
       describe(`Create product : '${product.name}'`, async () => {
         it('should go to add product page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
@@ -445,7 +455,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         const result = await orderPageProductsBlock.getProductDetails(page, 1);
         await Promise.all([
           expect(result.name).to.equal(`${combinationProduct.name} (Size: `
-            + `${combinationProduct.attributes.size[0]} - Color: ${combinationProduct.attributes.color[0]})`),
+            + `${combinationProduct.attributes[1].values[0]} - Color: ${combinationProduct.attributes[0].values[0]})`),
           expect(result.reference).to.equal(`Reference number: ${combinationProduct.reference}`),
           expect(result.basePrice).to.equal(combinationProduct.price),
           expect(result.quantity).to.equal(1),
@@ -542,7 +552,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         const result = await orderPageProductsBlock.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.available).to.be.above(0),
-          expect(result.price).to.equal(Products.demo_14.priceTaxIncl),
+          expect(result.price).to.equal(Products.demo_14.price),
         ]);
       });
 
@@ -561,9 +571,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         await Promise.all([
           expect(result.name).to.equal(Products.demo_14.name),
           expect(result.reference).to.equal(`Reference number: ${Products.demo_14.reference}`),
-          expect(result.basePrice).to.equal(Products.demo_14.priceTaxIncl),
+          expect(result.basePrice).to.equal(Products.demo_14.price),
           expect(result.quantity).to.equal(1),
-          expect(result.total).to.equal(Products.demo_14.priceTaxIncl),
+          expect(result.total).to.equal(Products.demo_14.price),
         ]);
       });
     });

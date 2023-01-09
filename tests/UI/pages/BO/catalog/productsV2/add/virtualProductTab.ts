@@ -4,7 +4,7 @@ import type {Page} from 'playwright';
 import BOBasePage from '@pages/BO/BObasePage';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 /**
  * Virtual product tab on new product V2 page, contains functions that can be used on the page
@@ -50,10 +50,10 @@ class VirtualProductTab extends BOBasePage {
   /**
    * Set virtual product
    * @param page {Page} Browser tab
-   * @param productData {ProductFaker} Data to set in virtual product form
+   * @param productData {ProductData} Data to set in virtual product form
    * @returns {Promise<void>}
    */
-  async setVirtualProduct(page: Page, productData: ProductFaker): Promise<void> {
+  async setVirtualProduct(page: Page, productData: ProductData): Promise<void> {
     await this.waitForSelectorAndClick(page, this.virtualProductTabLink);
     await this.setValue(page, this.productQuantityInput, productData.quantity);
     await this.setValue(page, this.productMinimumQuantityInput, productData.minimumQuantity);

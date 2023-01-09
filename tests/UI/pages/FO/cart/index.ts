@@ -2,7 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
-import type {ProductCombinationColorSize} from '@data/types/product';
+import type {ProductAttribute} from '@data/types/product';
 
 import type {Page} from 'playwright';
 
@@ -162,13 +162,19 @@ class Cart extends FOBasePage {
    * Get product attributes
    * @param page {Page} Browser tab
    * @param row {number} Row number in the table
-   * @returns {Promise<ProductCombinationColorSize>}
+   * @returns {Promise<ProductAttribute[]>}
    */
-  async getProductAttributes(page: Page, row: number): Promise<ProductCombinationColorSize> {
-    return {
-      size: await this.getTextContent(page, this.productSize(row)),
-      color: await this.getTextContent(page, this.productColor(row)),
-    };
+  async getProductAttributes(page: Page, row: number): Promise<ProductAttribute[]> {
+    return [
+      {
+        name: 'size',
+        value: await this.getTextContent(page, this.productSize(row)),
+      },
+      {
+        name: 'color',
+        value: await this.getTextContent(page, this.productColor(row)),
+      },
+    ];
   }
 
   /**

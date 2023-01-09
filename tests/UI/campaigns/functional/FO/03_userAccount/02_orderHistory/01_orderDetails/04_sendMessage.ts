@@ -25,7 +25,7 @@ import productPage from '@pages/FO/product';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import {faker} from '@faker-js/faker';
@@ -48,8 +48,8 @@ describe('FO - Account : Send a message with an ordered product', async () => {
   let page: Page;
 
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
-  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes.size[0]} `
-    + `- Color: ${Products.demo_1.attributes.color[0]})`;
+  const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
+    + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
 
   // before and after functions
   before(async function () {

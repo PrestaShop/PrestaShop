@@ -21,7 +21,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import type Order from '@data/types/order';

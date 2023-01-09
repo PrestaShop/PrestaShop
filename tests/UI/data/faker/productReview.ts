@@ -1,4 +1,4 @@
-import type {ProductReview} from '@data/types/product';
+import type {ProductReviewCreator} from '@data/types/product';
 
 import {faker} from '@faker-js/faker';
 
@@ -15,9 +15,9 @@ export default class ProductReviewData {
 
   /**
    * Constructor for class ProductReview
-   * @param productReviewToCreate {ProductReview} Could be used to add a review on a product
+   * @param productReviewToCreate {ProductReviewCreator} Could be used to add a review on a product
    */
-  constructor(productReviewToCreate: ProductReview = {}) {
+  constructor(productReviewToCreate: ProductReviewCreator = {}) {
     /** @type {string} Title of the review */
     this.reviewTitle = productReviewToCreate.reviewTitle
       || faker.lorem.sentence(faker.datatype.number({min: 3, max: 7}));

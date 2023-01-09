@@ -15,7 +15,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,7 +28,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
   const productName: string = 'TESTURLÉ';
   const productNameWithoutAccent: string = 'TESTURLE';
-  const productData: ProductFaker = new ProductFaker({name: productName, type: 'Standard product'});
+  const productData: ProductData = new ProductData({name: productName, type: 'Standard product'});
 
   // before and after functions
   before(async function () {

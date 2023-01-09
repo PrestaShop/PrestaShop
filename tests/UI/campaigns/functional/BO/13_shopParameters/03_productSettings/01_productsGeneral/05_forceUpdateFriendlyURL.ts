@@ -12,7 +12,7 @@ import productsPage from '@pages/BO/catalog/products';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +29,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductFaker = new ProductFaker({type: 'Standard product', status: false});
-  const editProductData: ProductFaker = new ProductFaker({name: 'testForceFriendlyURL', type: 'Standard product', status: false});
+  const productData: ProductData = new ProductData({type: 'Standard product', status: false});
+  const editProductData: ProductData = new ProductData({name: 'testForceFriendlyURL', type: 'Standard product', status: false});
 
   // before and after functions
   before(async function () {

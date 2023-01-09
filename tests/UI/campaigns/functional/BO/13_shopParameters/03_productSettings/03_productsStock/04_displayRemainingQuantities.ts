@@ -17,7 +17,7 @@ import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,7 +35,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductFaker = new ProductFaker({type: 'Standard product', quantity: 2});
+  const productData: ProductData = new ProductData({type: 'Standard product', quantity: 2});
   const remainingQuantity: number = 0;
   const defaultRemainingQuantity: number = 3;
 

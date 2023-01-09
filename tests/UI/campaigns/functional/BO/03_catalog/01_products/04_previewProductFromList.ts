@@ -13,7 +13,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

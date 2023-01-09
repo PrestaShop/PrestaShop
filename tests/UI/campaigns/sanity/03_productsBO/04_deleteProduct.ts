@@ -11,7 +11,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,7 +23,7 @@ describe('BO - Catalog - Products : Create Standard product in BO and Delete it 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const productData: ProductFaker = new ProductFaker({
+  const productData: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: false,
   });

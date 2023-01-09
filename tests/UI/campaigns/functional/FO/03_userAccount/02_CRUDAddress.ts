@@ -18,7 +18,7 @@ import addressesPage from '@pages/FO/myAccount/addresses';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import CustomerFaker from '@data/faker/customer';
 import FakerAddress from '@data/faker/address';
 

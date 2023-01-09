@@ -15,7 +15,7 @@ import productsPage from '@pages/BO/catalog/productsV2';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_sanity_deleteProduct';
 
@@ -25,9 +25,8 @@ describe('BO - Catalog - Products : Delete product', async () => {
   let numberOfProducts: number = 0;
 
   // Data to create standard product
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'standard',
-    taxRuleID: 0,
     quantity: 50,
     minimumQuantity: 1,
     status: true,
@@ -59,7 +58,6 @@ describe('BO - Catalog - Products : Delete product', async () => {
         dashboardPage.catalogParentLink,
         dashboardPage.productsLink,
       );
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle: string = await productsPage.getPageTitle(page);
