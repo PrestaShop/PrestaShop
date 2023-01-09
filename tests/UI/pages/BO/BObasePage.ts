@@ -9,9 +9,9 @@ import {Page} from 'playwright';
  * @extends CommonPage
  */
 export default class BOBasePage extends CommonPage {
-  public readonly successfulCreationMessage: string;
+  public successfulCreationMessage: string;
 
-  public readonly successfulUpdateMessage: string;
+  public successfulUpdateMessage: string;
 
   public readonly successfulDeleteMessage: string;
 
@@ -207,7 +207,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly alertBlock: string;
 
-  private readonly alertSuccessBlock: string;
+  protected readonly alertSuccessBlock: string;
 
   private readonly alertDangerBlock: string;
 

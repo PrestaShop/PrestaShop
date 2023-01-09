@@ -64,7 +64,6 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     await testContext.addContextItem(this, 'testIdentifier', 'goToTagsPage', baseContext);
 
     await searchPage.goToTagsPage(page);
-
     numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
 
     const pageTitle = await tagsPage.getPageTitle(page);
