@@ -1,5 +1,10 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import type StoreData from '@data/faker/store';
+
+import type {Page} from 'playwright';
 
 /**
  * Stores page, contains selectors and functions for the page
@@ -7,6 +12,124 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Stores extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly contactFormSuccessfulUpdateMessage: string;
+
+  private readonly newStoreLink: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnAddress: (row: number) => string;
+
+  private readonly tableColumnCity: (row: number) => string;
+
+  private readonly tableColumnPostalCode: (row: number) => string;
+
+  private readonly tableColumnState: (row: number) => string;
+
+  private readonly tableColumnCountry: (row: number) => string;
+
+  private readonly tableColumnPhone: (row: number) => string;
+
+  private readonly tableColumnFax: (row: number) => string;
+
+  private readonly tableColumnStatus: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly enableSelectionLink: string;
+
+  private readonly disableSelectionLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly contactDetailsForm: string;
+
+  private readonly nameInput: string;
+
+  private readonly emailInput: string;
+
+  private readonly registrationNumberTextarea: string;
+
+  private readonly address1Input: string;
+
+  private readonly address2Input: string;
+
+  private readonly postcodeInput: string;
+
+  private readonly cityInput: string;
+
+  private readonly countrySelect: string;
+
+  private readonly phoneInput: string;
+
+  private readonly faxInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on stores page
@@ -32,39 +155,39 @@ class Stores extends BOBasePage {
 
     // Sort selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='storeFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='storeFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonstore';
     this.filterResetButton = 'button[name=\'submitResetstore\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnAddress = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnCity = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnPostalCode = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnState = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnCountry = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
-    this.tableColumnPhone = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnFax = (row) => `${this.tableBodyColumn(row)}:nth-child(10)`;
-    this.tableColumnStatus = (row) => `${this.tableBodyColumn(row)}:nth-child(11) a`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnAddress = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnCity = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnPostalCode = (row: number) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnState = (row: number) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnCountry = (row: number) => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumnPhone = (row: number) => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnFax = (row: number) => `${this.tableBodyColumn(row)}:nth-child(10)`;
+    this.tableColumnStatus = (row: number) => `${this.tableBodyColumn(row)}:nth-child(11) a`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -82,7 +205,7 @@ class Stores extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
@@ -107,7 +230,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToNewStorePage(page) {
+  async goToNewStorePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.newStoreLink);
   }
 
@@ -118,7 +241,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -127,7 +250,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -139,7 +262,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -152,7 +275,7 @@ class Stores extends BOBasePage {
    * @param value {string} Value to filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -162,7 +285,7 @@ class Stores extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 
@@ -180,7 +303,7 @@ class Stores extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
+  async getTextColumn(page: Page, row: number, columnName: string) {
     let columnSelector;
 
     switch (columnName) {
@@ -233,9 +356,9 @@ class Stores extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     // Get text column from each row
     for (let i = 1; i <= rowsNumber; i++) {
@@ -252,7 +375,7 @@ class Stores extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getStoreStatus(page, row) {
+  getStoreStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, `${this.tableColumnStatus(row)}.action-enabled`, 1000);
   }
 
@@ -263,7 +386,7 @@ class Stores extends BOBasePage {
    * @param wantedStatus {boolean} True if we need to enable status
    * @return {Promise<void>}
    */
-  async setStoreStatus(page, row, wantedStatus) {
+  async setStoreStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     const actualStatus = await this.getStoreStatus(page, row);
 
     if (actualStatus !== wantedStatus) {
@@ -277,7 +400,7 @@ class Stores extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async gotoEditStorePage(page, row) {
+  async gotoEditStorePage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
@@ -287,7 +410,7 @@ class Stores extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<string>}
    */
-  async deleteStore(page, row) {
+  async deleteStore(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
@@ -309,7 +432,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async selectAllRow(page) {
+  async selectAllRow(page: Page): Promise<void> {
     await Promise.all([
       page.click(this.bulkActionMenuButton),
       this.waitForVisibleSelector(page, this.selectAllLink),
@@ -327,7 +450,7 @@ class Stores extends BOBasePage {
    * @param statusWanted {boolean} True if we need to enable status
    * @return {Promise<void>}
    */
-  async bulkUpdateStoreStatus(page, statusWanted) {
+  async bulkUpdateStoreStatus(page: Page, statusWanted: boolean): Promise<void> {
     // Select all rows
     await this.selectAllRow(page);
 
@@ -351,9 +474,9 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async bulkDeleteStores(page) {
+  async bulkDeleteStores(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await this.selectAllRow(page);
@@ -378,7 +501,7 @@ class Stores extends BOBasePage {
    * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     let columnSelector;
 
     switch (sortBy) {
@@ -425,7 +548,7 @@ class Stores extends BOBasePage {
    * @param storeContactData {StoreData} Store contact data to set on contact detail form
    * @returns {Promise<string>}
    */
-  async setContactDetails(page, storeContactData) {
+  async setContactDetails(page: Page, storeContactData: StoreData): Promise<string> {
     // Set name
     await this.setValue(page, this.nameInput, storeContactData.name);
 
@@ -457,7 +580,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -467,7 +590,7 @@ class Stores extends BOBasePage {
    * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
 
@@ -479,7 +602,7 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -490,11 +613,11 @@ class Stores extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new Stores();
+export default new Stores();

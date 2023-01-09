@@ -76,7 +76,6 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
 
     // View my shop and init pages
     page = await storesPage.viewMyShop(page);
-
     await foHomePage.changeLanguage(page, 'en');
 
     const isHomePage = await foHomePage.isHomePage(page);
