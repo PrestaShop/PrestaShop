@@ -30,7 +30,7 @@ admin_products_v2_preview:
     _legacy_link: AdminProducts:preview
     _legacy_parameters:
       id_product: productId
-    default: shopId
+    shopId: null
   requirements:
     productId: \d+
 

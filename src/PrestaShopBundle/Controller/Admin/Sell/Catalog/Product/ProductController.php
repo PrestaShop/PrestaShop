@@ -301,6 +301,12 @@ class ProductController extends FrameworkBundleAdminController
             $this->getContextLangId()
         ));
 
+        if (null === $shopId) {
+            /** @var ProductMultiShopRepository $productRepository */
+            $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+            $shopId = $productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
+        }
+
         /** @var ProductPreviewProvider $previewUrlProvider */
         $previewUrlProvider = $this->get('prestashop.adapter.shop.url.product_preview_provider');
         $previewUrl = $previewUrlProvider->getUrl($productId, $productForEditing->isActive(), $shopId);

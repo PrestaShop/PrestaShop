@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\AjaxBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
@@ -83,16 +84,23 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     private $formFactory;
 
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    private $productPreviewChecker;
+
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ConfigurationInterface $configuration,
         MultistoreContextCheckerInterface $multiStoreContext,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        AccessibilityCheckerInterface $productPreviewChecker
     ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
         $this->multiStoreContext = $multiStoreContext;
         $this->formFactory = $formFactory;
+        $this->productPreviewChecker = $productPreviewChecker;
     }
 
     /**
@@ -301,22 +309,17 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setIcon('edit')
             ->setOptions($editOptions)
             )
-        ;
-
-        if ($this->multiStoreContext->isSingleShopContext()) {
-            $rowActions->add((new LinkRowAction('preview'))
-                ->setName($this->trans('Preview', [], 'Admin.Actions'))
-                ->setIcon('remove_red_eye')
-                ->setOptions([
-                    'route' => 'admin_products_v2_preview',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                    'target' => '_blank',
-                ])
-            );
-        }
-
-        $rowActions
+            ->add((new LinkRowAction('preview'))
+            ->setName($this->trans('Preview', [], 'Admin.Actions'))
+            ->setIcon('remove_red_eye')
+            ->setOptions([
+                'route' => 'admin_products_v2_preview',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                'target' => '_blank',
+                'accessibility_checker' => $this->productPreviewChecker,
+            ])
+            )
             ->add((new SubmitRowAction('duplicate'))
             ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
             ->setIcon('content_copy')
