@@ -48,7 +48,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page,
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
