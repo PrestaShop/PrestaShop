@@ -51,7 +51,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete seo pages', async (
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);

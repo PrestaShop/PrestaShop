@@ -42,7 +42,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages',
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
@@ -87,10 +86,10 @@ describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages',
         const sortedTable = await seoAndUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);

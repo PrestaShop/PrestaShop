@@ -49,7 +49,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
@@ -86,7 +85,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
 
       // Go to FO
       page = await seoAndUrlsPage.viewMyShop(page);
-
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
 

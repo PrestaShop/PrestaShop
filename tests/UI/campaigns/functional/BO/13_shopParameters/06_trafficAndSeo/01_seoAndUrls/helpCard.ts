@@ -40,7 +40,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Help card', async () => {
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
