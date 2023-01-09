@@ -52,6 +52,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -469,6 +470,29 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return Response
+     */
+    public function deleteFromShopAction(int $productId, int $shopId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, [$shopId]));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')

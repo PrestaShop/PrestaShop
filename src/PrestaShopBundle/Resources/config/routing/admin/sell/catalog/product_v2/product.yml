@@ -127,6 +127,16 @@ admin_products_v2_delete:
   requirements:
     productId: \d+
 
+admin_products_v2_delete_from_shop:
+  path: /{productId}/delete_from_shop/{shopId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+
+
 admin_products_v2_duplicate:
   path: /{productId}/duplicate
   methods: [ POST ]

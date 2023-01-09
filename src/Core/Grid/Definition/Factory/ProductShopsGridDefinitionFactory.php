@@ -123,14 +123,23 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
                 ],
             ])
             )
-            /*
             ->add(
                 $this->buildDeleteAction(
-                    'admin_products_v2_delete',
+                    'admin_products_v2_delete_from_shop',
                     'productId',
-                    'id_product'
+                    'id_product',
+                    'POST',
+                    [
+                        'shopId' => 'id_shop',
+                    ],
+                    [
+                        'modal_options' => [
+                            'title' => $this->trans('Delete from store', [], 'Admin.Global'),
+                        ],
+                    ],
+                    $this->trans('Delete from store', [], 'Admin.Global')
                 )
-            )*/
+            )
         ;
 
         return $rowActions;
