@@ -162,10 +162,10 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         const sortedTable = await storesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -173,7 +173,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTable).to.deep.equal(expectedResult);
