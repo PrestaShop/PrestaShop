@@ -22,7 +22,7 @@ admin_products_v2_light_list:
     _legacy_controller: AdminProducts
 
 admin_products_v2_preview:
-  path: /{productId}/preview
+  path: /{productId}/preview/{shopId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
@@ -30,6 +30,7 @@ admin_products_v2_preview:
     _legacy_link: AdminProducts:preview
     _legacy_parameters:
       id_product: productId
+    default: shopId
   requirements:
     productId: \d+
 

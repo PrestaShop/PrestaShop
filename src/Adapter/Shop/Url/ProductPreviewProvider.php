@@ -64,10 +64,11 @@ class ProductPreviewProvider implements UrlProviderInterface
      *
      * @param int|null $productId
      * @param bool $active
+     * @param int|null $shopId
      *
      * @return string
      */
-    public function getUrl(?int $productId = null, ?bool $active = true): string
+    public function getUrl(?int $productId = null, ?bool $active = true, ?int $shopId = null): string
     {
         $preview_url = $this->link->getProductLink(
             $productId,
@@ -75,7 +76,7 @@ class ProductPreviewProvider implements UrlProviderInterface
             null,
             null,
             null,
-            null,
+            $shopId,
             null,
             $this->urlRewritingIsEnabled
         );

@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -291,14 +290,19 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function previewAction(int $productId): RedirectResponse
+    public function previewAction(int $productId, ?int $shopId): RedirectResponse
     {
-        /** @var bool $isEnabled */
-        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+        $shopConstraint = !empty($shopId) ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
 
         /** @var ProductPreviewProvider $previewUrlProvider */
         $previewUrlProvider = $this->get('prestashop.adapter.shop.url.product_preview_provider');
-        $previewUrl = $previewUrlProvider->getUrl($productId, $isEnabled);
+        $previewUrl = $previewUrlProvider->getUrl($productId, $productForEditing->isActive(), $shopId);
 
         return $this->redirect($previewUrl);
     }

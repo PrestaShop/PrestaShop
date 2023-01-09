@@ -68,7 +68,6 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
             ])
         );
 
-        // @todo: adapt toggle column to handle specific shop
         // Replace active toggle column, mainly to adapt the primary key
         $columns
             ->remove('active')
@@ -111,17 +110,20 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
                 ],
             ])
             )
-            // @todo: individual action will be handled later
-            /*->add((new LinkRowAction('preview'))
-                ->setName($this->trans('Preview', [], 'Admin.Actions'))
-                ->setIcon('remove_red_eye')
-                ->setOptions([
-                    'route' => 'admin_products_v2_preview',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                    'target' => '_blank',
-                ])
+            ->add((new LinkRowAction('preview'))
+            ->setName($this->trans('Preview', [], 'Admin.Actions'))
+            ->setIcon('remove_red_eye')
+            ->setOptions([
+                'route' => 'admin_products_v2_preview',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                'target' => '_blank',
+                'extra_route_params' => [
+                    'shopId' => 'id_shop',
+                ],
+            ])
             )
+            /*
             ->add(
                 $this->buildDeleteAction(
                     'admin_products_v2_delete',
