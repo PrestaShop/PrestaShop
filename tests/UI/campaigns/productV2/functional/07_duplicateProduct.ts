@@ -50,7 +50,6 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
         dashboardPage.catalogParentLink,
         dashboardPage.productsLink,
       );
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle: string = await productsPage.getPageTitle(page);
@@ -121,7 +120,9 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
       textColumn = await productsPage.getTextColumn(page, 'product_name', 2);
       await expect(textColumn).to.contain(`copy of ${Products.demo_14.name}`);
     });
+  });
 
+  describe('Bulk delete duplicated products', async () => {
     it('should select the 2 products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDeleteProduct', baseContext);
 
