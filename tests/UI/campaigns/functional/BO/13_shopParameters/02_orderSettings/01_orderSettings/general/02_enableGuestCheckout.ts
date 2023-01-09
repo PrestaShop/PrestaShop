@@ -78,7 +78,6 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
-
       // Change FO language
       await homePage.changeLanguage(page, 'en');
 
