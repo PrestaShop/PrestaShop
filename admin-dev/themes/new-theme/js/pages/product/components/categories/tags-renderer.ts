@@ -46,7 +46,7 @@ export default class TagsRenderer {
     this.listenTagRemoval();
   }
 
-  public render(categories: Array<Category>, defaultCategoryId: number): void {
+  public render(categories: Array<Category>): void {
     this.container.innerHTML = '';
     const tagTemplate = this.container.dataset.prototype;
     const {prototypeName} = this.container.dataset;
@@ -69,8 +69,8 @@ export default class TagsRenderer {
 
         const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
 
-        // don't show the tag removal element for main category or when it is the last category
-        if (category.id === defaultCategoryId || categories.length === 1) {
+        // don't show the tag removal element when it is the last category
+        if (categories.length === 1) {
           tagRemoveBtn.classList.add('d-none');
         } else {
           tagRemoveBtn.classList.remove('d-none');
