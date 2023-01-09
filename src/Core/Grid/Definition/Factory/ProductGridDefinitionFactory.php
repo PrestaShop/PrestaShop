@@ -301,16 +301,22 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setIcon('edit')
             ->setOptions($editOptions)
             )
-            ->add((new LinkRowAction('preview'))
-            ->setName($this->trans('Preview', [], 'Admin.Actions'))
-            ->setIcon('remove_red_eye')
-            ->setOptions([
-                'route' => 'admin_products_v2_preview',
-                'route_param_name' => 'productId',
-                'route_param_field' => 'id_product',
-                'target' => '_blank',
-            ])
-            )
+        ;
+
+        if ($this->multiStoreContext->isSingleShopContext()) {
+            $rowActions->add((new LinkRowAction('preview'))
+                ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                ->setIcon('remove_red_eye')
+                ->setOptions([
+                    'route' => 'admin_products_v2_preview',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                    'target' => '_blank',
+                ])
+            );
+        }
+
+        $rowActions
             ->add((new SubmitRowAction('duplicate'))
             ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
             ->setIcon('content_copy')
@@ -330,10 +336,39 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 $this->buildDeleteAction(
                     'admin_products_v2_delete',
                     'productId',
-                    'id_product'
+                    'id_product',
+                    'POST',
+                    [],
+                    [],
+                    $this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext() ?
+                            $this->trans('Delete from all stores', [], 'Admin.Actions') : null
                 )
             )
         ;
+
+        // Toggle column is disabled when product is associated to more than one shop, so enable/disable actions are handled via the dropdown actions
+        if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
+            $rowActions
+                ->add((new LinkRowAction('enable'))
+                ->setName($this->trans('Enable on all stores', [], 'Admin.Actions'))
+                ->setIcon('radio_button_checked')
+                ->setOptions([
+                    'route' => 'admin_products_v2_enable',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                ])
+                )
+                ->add((new LinkRowAction('disable'))
+                ->setName($this->trans('Disable on all stores', [], 'Admin.Actions'))
+                ->setIcon('radio_button_unchecked')
+                ->setOptions([
+                    'route' => 'admin_products_v2_disable',
+                    'route_param_name' => 'productId',
+                    'route_param_field' => 'id_product',
+                ])
+                )
+            ;
+        }
 
         return $rowActions;
     }

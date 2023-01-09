@@ -152,6 +152,24 @@ admin_products_v2_toggle_status:
   requirements:
     productId: \d+
 
+admin_products_v2_enable:
+  path: /{productId}/enable
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_v2_disable:
+  path: /{productId}/disable
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
 admin_products_v2_update_position:
   path: /update_position
   methods: [ POST ]

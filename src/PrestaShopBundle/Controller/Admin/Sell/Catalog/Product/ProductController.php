@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
@@ -455,12 +456,11 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
-     * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function deleteAction(Request $request, int $productId): Response
+    public function deleteAction(int $productId): Response
     {
         try {
             $this->getCommandBus()->handle(new DeleteProductCommand($productId));
@@ -504,7 +504,6 @@ class ProductController extends FrameworkBundleAdminController
      * Toggles product status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
-     * @DemoRestricted(redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
      *
@@ -512,13 +511,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function toggleStatusAction(int $productId): JsonResponse
     {
-        if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->getDemoModeErrorMessage(),
-            ]);
-        }
-
         /** @var bool $isEnabled */
         $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
 
@@ -537,6 +529,34 @@ class ProductController extends FrameworkBundleAdminController
             'status' => true,
             'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
         ]);
+    }
+
+    /**
+     * Enable product status and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function enableAction(int $productId): RedirectResponse
+    {
+        return $this->updateProductStatus($productId, true);
+    }
+
+    /**
+     * Disable product status and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function disableAction(int $productId): RedirectResponse
+    {
+        return $this->updateProductStatus($productId, false);
     }
 
     /**
@@ -915,6 +935,28 @@ class ProductController extends FrameworkBundleAdminController
             'productShopsForm' => $productShopsForm->createView(),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
         ]);
+    }
+
+    /**
+     * Helper private method to update a product's status.
+     *
+     * @param int $productId
+     * @param bool $isEnabled
+     *
+     * @return RedirectResponse
+     */
+    private function updateProductStatus(int $productId, bool $isEnabled): RedirectResponse
+    {
+        try {
+            $command = new UpdateProductCommand($productId, ShopConstraint::allShops());
+            $command->setActive($isEnabled);
+            $this->getCommandBus()->handle($command);
+            $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
     }
 
     /**
