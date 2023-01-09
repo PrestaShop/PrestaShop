@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
 
       await addOrderReturnStatusPage.setOrderReturnStatus(page, createOrderReturnStatusData);
 
-      /* Successful message is not visible, skipping it */
+      /* @todo Successful message is not visible, skipping it */
       /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
       // const textResult = await addOrderReturnStatusPage.setOrderStatus(page, createOrderReturnStatusData);
 

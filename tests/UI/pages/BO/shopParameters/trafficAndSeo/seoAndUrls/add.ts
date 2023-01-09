@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import SeoPageData from '@data/faker/seoPage';
+
 import type {Page} from 'playwright';
 
 /**
@@ -108,7 +110,7 @@ class AddSeoUrl extends BOBasePage {
    * @param seoPageData {SeoPageData} Data to set on seo form
    * @return {Promise<void>}
    */
-  async createEditSeoPage(page: Page, seoPageData): Promise<string> {
+  async createEditSeoPage(page: Page, seoPageData: SeoPageData): Promise<string> {
     await page.selectOption(this.pageNameSelect, seoPageData.page);
     // Fill form in english
     await this.changeLanguageForSelectors(page, 'en');

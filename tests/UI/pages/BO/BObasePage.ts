@@ -63,9 +63,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly dashboardLink: string;
 
-  private readonly ordersParentLink: string;
+  public readonly ordersParentLink: string;
 
-  private readonly ordersLink: string;
+  public readonly ordersLink: string;
 
   private readonly invoicesLink: string;
 

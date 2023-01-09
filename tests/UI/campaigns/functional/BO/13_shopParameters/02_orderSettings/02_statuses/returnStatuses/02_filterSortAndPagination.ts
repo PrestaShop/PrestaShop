@@ -191,8 +191,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
         );
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
@@ -234,7 +234,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
         await testContext.addContextItem(this, 'testIdentifier', `createOrderReturnStatus${index}`, baseContext);
 
         await addOrderReturnStatusPage.setOrderReturnStatus(page, orderReturnStatusData);
-        /* Successful message is not visible, skipping it */
+        /* @todo Successful message is not visible, skipping it */
         /* https://github.com/PrestaShop/PrestaShop/issues/21270 */
         // await expect(textResult).to.contains(statusesPage.successfulCreationMessage);
 
@@ -249,7 +249,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.equal('1');
     });
 
@@ -270,7 +270,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
