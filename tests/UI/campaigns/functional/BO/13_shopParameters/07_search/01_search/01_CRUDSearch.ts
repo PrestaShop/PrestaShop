@@ -93,7 +93,6 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await searchPage.resetFilter(page);
-
       await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
       const textEmail = await searchPage.getTextColumn(page, 1, 'alias');
@@ -126,7 +125,6 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await searchPage.resetFilter(page);
-
       await searchPage.filterTable(page, 'input', 'alias', createAliasData.alias);
 
       const textEmail = await searchPage.getTextColumn(page, 1, 'alias');

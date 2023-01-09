@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Search page, contains selectors and functions for the page
@@ -7,6 +8,82 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Search extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly settingsUpdateMessage: string;
+
+  private readonly addNewAliasLink: string;
+
+  private readonly tagsTabLink: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes;
+
+  private readonly tableColumnAliases: (row: number) => string;
+
+  private readonly tableColumnSearch: (row: number) => string;
+
+  private readonly tableColumnStatus: (row: number) => string;
+
+  private readonly tableColumnStatusEnabledIcon: (row: number) => string;
+
+  private readonly tableColumnStatusDisabledIcon: (row: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly bulkEnableButton: string;
+
+  private readonly bulkDisableButton: string;
+
+  private readonly aliasForm: string;
+
+  private readonly fuzzySearchLabel: (status: string) => string;
+
+  private readonly saveFormButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on search page
@@ -37,32 +114,32 @@ class Search extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='aliasFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='aliasFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonalias';
     this.filterResetButton = 'button[name=\'submitResetalias\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Columns selectors
-    this.tableColumnAliases = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnSearch = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnStatus = (row) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnStatusEnabledIcon = (row) => `${this.tableColumnStatus(row)}.action-enabled`;
-    this.tableColumnStatusDisabledIcon = (row) => `${this.tableColumnStatus(row)}.action-disabled`;
+    this.tableColumnAliases = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnSearch = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnStatus = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnStatusEnabledIcon = (row: number) => `${this.tableColumnStatus(row)}.action-enabled`;
+    this.tableColumnStatusDisabledIcon = (row: number) => `${this.tableColumnStatus(row)}.action-disabled`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -75,7 +152,7 @@ class Search extends BOBasePage {
 
     // Search form
     this.aliasForm = '#alias_fieldset_search';
-    this.fuzzySearchLabel = (status) => `#PS_SEARCH_FUZZY_${status}`;
+    this.fuzzySearchLabel = (status: string) => `#PS_SEARCH_FUZZY_${status}`;
     this.saveFormButton = `${this.aliasForm} button[name='submitOptionsalias']`;
   }
 
@@ -89,7 +166,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewAliasPage(page) {
+  async goToAddNewAliasPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewAliasLink);
   }
 
@@ -98,7 +175,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToTagsPage(page) {
+  async goToTagsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tagsTabLink);
   }
 
@@ -108,7 +185,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -117,7 +194,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -129,7 +206,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -142,7 +219,7 @@ class Search extends BOBasePage {
    * @param value {string} Value to filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -152,7 +229,7 @@ class Search extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 
@@ -168,7 +245,7 @@ class Search extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async gotoEditAliasPage(page, row) {
+  async gotoEditAliasPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
@@ -179,7 +256,7 @@ class Search extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -212,7 +289,7 @@ class Search extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<string>}
    */
-  async deleteAlias(page, row) {
+  async deleteAlias(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
@@ -233,7 +310,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await page.click(this.bulkActionMenuButton);
 
     await Promise.all([
@@ -247,7 +324,7 @@ class Search extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async bulkDeleteAliases(page) {
+  async bulkDeleteAliases(page: Page): Promise<string> {
     await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page);
@@ -265,9 +342,9 @@ class Search extends BOBasePage {
    * Enable / disable by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to enable status
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, enable = true) {
+  async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -286,7 +363,7 @@ class Search extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getStatus(page, row) {
+  getStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row), 500);
   }
 
@@ -297,7 +374,7 @@ class Search extends BOBasePage {
    * @param valueWanted {boolean} Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, row, valueWanted = true) {
+  async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.tableColumnStatus(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
       await page.click(this.tableColumnStatus(row));
@@ -317,11 +394,11 @@ class Search extends BOBasePage {
    * @param toEnable {boolean} True if we need to enable fuzzy search
    * @returns {Promise<string>}
    */
-  async setFuzzySearch(page, toEnable = true) {
+  async setFuzzySearch(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockContent(page);
   }
 }
 
-module.exports = new Search();
+export default new Search();
