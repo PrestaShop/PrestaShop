@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Add alias page, contains selectors and functions for the page
@@ -7,6 +8,16 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddAlias extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly aliasInput: string;
+
+  private readonly resultInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add alias page
@@ -28,9 +39,9 @@ class AddAlias extends BOBasePage {
    * Create/Edit alias
    * @param page {Page} Browser tab
    * @param aliasData {SearchAliasData} Data to set on alias form
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async setAlias(page, aliasData) {
+  async setAlias(page: Page, aliasData): Promise<string> {
     await this.setValue(page, this.aliasInput, aliasData.alias);
     await this.setValue(page, this.resultInput, aliasData.result);
 
@@ -39,4 +50,4 @@ class AddAlias extends BOBasePage {
   }
 }
 
-module.exports = new AddAlias();
+export default new AddAlias();
