@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\EmptyColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Product\ShopNameColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -68,6 +69,21 @@ class ProductShopsGridDefinitionFactory extends ProductGridDefinitionFactory
         );
 
         // @todo: adapt toggle column to handle specific shop
+        // Replace active toggle column, mainly to adapt the primary key
+        $columns
+            ->remove('active')
+            ->addBefore('position', (new ToggleColumn('active'))
+            ->setName($this->trans('Status', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'active',
+                'primary_field' => 'id_product',
+                'route' => 'admin_products_v2_toggle_status',
+                'route_param_name' => 'productId',
+                'extra_route_params' => [
+                    'shopId' => 'id_shop',
+                ],
+            ])
+            );
 
         return $columns;
     }

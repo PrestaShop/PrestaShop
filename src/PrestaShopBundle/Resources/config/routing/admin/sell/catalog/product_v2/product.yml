@@ -140,7 +140,7 @@ admin_products_v2_duplicate:
     productId: \d+
 
 admin_products_v2_toggle_status:
-  path: /{productId}/toggle_status
+  path: /{productId}/toggle_status/{shopId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
@@ -149,6 +149,7 @@ admin_products_v2_toggle_status:
       - AdminProducts:statusproduct
     _legacy_parameters:
       id_product: productId
+    shopId: null
   requirements:
     productId: \d+
 

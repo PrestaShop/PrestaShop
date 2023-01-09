@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
@@ -49,9 +48,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -506,18 +507,24 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction(int $productId): JsonResponse
+    public function toggleStatusAction(int $productId, ?int $shopId): JsonResponse
     {
-        /** @var bool $isEnabled */
-        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+        $shopConstraint = !empty($shopId) ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
 
         try {
-            $this->getCommandBus()->handle(
-                new UpdateProductStatusCommand((int) $productId, !$isEnabled)
-            );
+            $command = new UpdateProductCommand($productId, $shopConstraint);
+            $command->setActive(!$productForEditing->isActive());
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             return $this->json([
                 'status' => false,
