@@ -60,7 +60,6 @@ describe('BO - Shop Parameters - Product Settings : Update number of product dis
           dashboardPage.shopParametersParentLink,
           dashboardPage.productSettingsLink,
         );
-
         await productSettingsPage.closeSfToolBar(page);
 
         const pageTitle = await productSettingsPage.getPageTitle(page);
