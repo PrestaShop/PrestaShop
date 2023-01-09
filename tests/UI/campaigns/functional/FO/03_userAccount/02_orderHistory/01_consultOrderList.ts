@@ -92,7 +92,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
 
       await foLoginPage.customerLogin(page, customerData);
 
-      const isCustomerConnected: string = await foMyAccountPage.isCustomerConnected(page);
+      const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
@@ -107,7 +107,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
     });
 
     it('should check number of orders', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfOrders1', baseContext);
 
       const numberOfOrders: number = await foOrderHistoryPage.getNumberOfOrders(page);
       await expect(numberOfOrders).to.equal(0);
@@ -128,7 +128,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
     });
 
     it('should check the number of orders', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderList', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfOrders2', baseContext);
 
       const numberOfOrders: number = await foOrderHistoryPage.getNumberOfOrders(page);
       await expect(numberOfOrders).to.equal(1);
