@@ -115,7 +115,7 @@ export default class CategoryTreeSelector {
       `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
       ProductEventMap.categories.tagRemoved,
     );
-    this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
+    this.tagsRenderer.render(this.selectedCategories);
     this.treeCategories = await getCategories();
 
     this.initTypeaheadData(this.treeCategories);
@@ -399,12 +399,6 @@ export default class CategoryTreeSelector {
     const checkedCheckboxes = <NodeListOf<HTMLInputElement>> this.categoryTree
       .querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
-    let onlyOneSelected = false;
-
-    if (checkedCheckboxes.length === 1) {
-      onlyOneSelected = true;
-    }
-
     const categories: Array<Category> = [];
     checkedCheckboxes.forEach((checkbox) => {
       const categoryId = Number((checkbox as HTMLInputElement).value);
@@ -420,10 +414,10 @@ export default class CategoryTreeSelector {
 
       // do not allow to uncheck the checkbox if it is the last one selected category
       // eslint-disable-next-line no-param-reassign
-      checkbox.disabled = onlyOneSelected;
+      checkbox.disabled = checkedCheckboxes.length === 1;
     });
 
-    this.tagsRenderer.render(categories, this.defaultCategoryId);
+    this.tagsRenderer.render(categories);
     this.selectedCategories = categories;
   }
 
