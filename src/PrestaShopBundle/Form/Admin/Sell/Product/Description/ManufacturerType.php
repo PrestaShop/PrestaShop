@@ -36,6 +36,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ManufacturerType extends ChoiceType
 {
+    private const MANUFACTURER_MIN_RESULTS_FOR_SEARCH = 7;
+
     /**
      * @var TranslatorInterface
      */
@@ -79,6 +81,7 @@ class ManufacturerType extends ChoiceType
             'choices' => $choices,
             'attr' => [
                 'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => self::MANUFACTURER_MIN_RESULTS_FOR_SEARCH,
             ],
         ]);
     }
