@@ -29,9 +29,18 @@ import {Products} from '@data/demo/products';
 const baseContext: string = 'functional_FO_userAccount_orderHistory_consultOrderList';
 
 /*
-Sign in FO with default account
-Go to orders history page
-Check that number of orders is above 5 (default orders)
+Pre-condition:
+- Create customer
+- Create address
+Scenario:
+- Go to orders history page
+- Check that number of orders is 0
+- Create order
+- Check that number of orders is 1
+- Check the link of My account page
+- Check the link of Home page
+Post-condition
+- Delete customer
  */
 
 describe('FO - Account - Order history : Consult order list', async () => {
