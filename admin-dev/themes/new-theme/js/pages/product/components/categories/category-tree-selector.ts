@@ -168,12 +168,6 @@ export default class CategoryTreeSelector {
       if (checkbox instanceof HTMLInputElement) {
         const categoryId = Number(checkbox.value);
 
-        // disable main category checkbox
-        if (categoryId === this.defaultCategoryId) {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.disabled = true;
-        }
-
         if (this.selectedCategories.some((category) => category.id === categoryId)) {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = true;
@@ -188,11 +182,9 @@ export default class CategoryTreeSelector {
             return;
           }
 
-          // do not allow unchecking main category id
-          if (Number(currentTarget.value) === this.defaultCategoryId && !currentTarget.checked) {
+          // do not allow unchecking last remaining category
+          if (this.selectedCategories.length === 1) {
             currentTarget.checked = true;
-
-            return;
           }
 
           this.updateSelectedCategories();
@@ -404,7 +396,14 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+    const checkedCheckboxes = <NodeListOf<HTMLInputElement>> this.categoryTree
+      .querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+
+    let onlyOneSelected = false;
+
+    if (checkedCheckboxes.length === 1) {
+      onlyOneSelected = true;
+    }
 
     const categories: Array<Category> = [];
     checkedCheckboxes.forEach((checkbox) => {
@@ -418,6 +417,10 @@ export default class CategoryTreeSelector {
           displayName: searchedCategory.displayName,
         });
       }
+
+      // do not allow to uncheck the checkbox if it is the last one selected category
+      // eslint-disable-next-line no-param-reassign
+      checkbox.disabled = onlyOneSelected;
     });
 
     this.tagsRenderer.render(categories, this.defaultCategoryId);
