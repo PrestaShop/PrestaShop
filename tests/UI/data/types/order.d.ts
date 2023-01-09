@@ -12,7 +12,16 @@ type Order = {
   // Discount
   giftDiscountValue: number
   percentDiscountValue: number
-  atiPrice:number
+  atiPrice: number
 }
 
-export default Order;
+type OrderHistory = {
+  reference: string
+  date: string
+  price: string
+  paymentType: string
+  status: string
+  invoice: string
+}
+
+export {Order, OrderHistory};
