@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import SearchAliasData from '@data/faker/search';
+
 import type {Page} from 'playwright';
 
 /**
@@ -41,7 +43,7 @@ class AddAlias extends BOBasePage {
    * @param aliasData {SearchAliasData} Data to set on alias form
    * @returns {Promise<string>}
    */
-  async setAlias(page: Page, aliasData): Promise<string> {
+  async setAlias(page: Page, aliasData: SearchAliasData): Promise<string> {
     await this.setValue(page, this.aliasInput, aliasData.alias);
     await this.setValue(page, this.resultInput, aliasData.result);
 
