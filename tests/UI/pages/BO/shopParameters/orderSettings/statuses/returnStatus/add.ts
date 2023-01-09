@@ -1,5 +1,5 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+import {Page} from "playwright";
 
 /**
  * Add order return status page, contains selectors and functions for the page
@@ -7,6 +7,16 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddOrderReturnStatus extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly colorInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add order return status page
@@ -31,7 +41,7 @@ class AddOrderReturnStatus extends BOBasePage {
    * @param orderReturnStatusData {OrderReturnStatusData} Data to set on order return status form
    * @return {Promise<string>}
    */
-  async setOrderReturnStatus(page, orderReturnStatusData) {
+  async setOrderReturnStatus(page: Page, orderReturnStatusData): Promise<string> {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color
@@ -45,4 +55,4 @@ class AddOrderReturnStatus extends BOBasePage {
   }
 }
 
-module.exports = new AddOrderReturnStatus();
+export default new AddOrderReturnStatus();
