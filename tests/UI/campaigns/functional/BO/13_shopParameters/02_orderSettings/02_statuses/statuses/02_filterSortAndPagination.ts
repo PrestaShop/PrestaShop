@@ -345,7 +345,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name', 3);
+        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });
