@@ -35,7 +35,7 @@
           @change="toggleAllSelected"
         >
         <i class="form-check-round"/>
-        All carriers @todo translate
+        {{ $t('allCarriers.label') }}
       </label>
     </div>
     <div
@@ -57,7 +57,7 @@
           <checkboxes-dropdown
             :items="carriers"
             :parent-id="1"
-            label="Only selected carriers @todo translate"
+            :label="$t('selectedCarriers.label')"
             @addItem="addCarrier"
             @removeItem="removeCarrier"
             :event-emitter="eventEmitter"
@@ -93,10 +93,7 @@
 
 <script lang="ts">
   import checkboxesDropdown from '@app/components/checkboxesDropdown.vue';
-  import ProductEventMap from '@pages/product/product-event-map';
   import {defineComponent, PropType} from 'vue';
-
-  const CombinationEvents = ProductEventMap.combinations;
 
   interface Carrier {
     id: string,

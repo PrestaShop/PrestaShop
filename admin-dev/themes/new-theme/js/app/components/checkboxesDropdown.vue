@@ -73,7 +73,6 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
-  import ProductEventMap from '@pages/product/product-event-map';
   // @todo: should this file be PascalCased?
   export default defineComponent({
     data(): {selectedItems: Array<Record<string, any>>} {
