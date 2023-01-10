@@ -1,6 +1,3 @@
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -25,6 +22,9 @@ import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import {Order, OrderHistory} from '@data/types/order';
 import {Products} from '@data/demo/products';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_userAccount_orderHistory_consultOrderList';
 
@@ -58,7 +58,6 @@ describe('FO - Account - Order history : Consult order list', async () => {
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
-
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create new account
