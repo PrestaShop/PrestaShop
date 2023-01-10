@@ -46,7 +46,7 @@
       {% endfor %}
     </div>
   {% endif %}
-  {% if form.parent.vars.data.disabled_menu_thumbnail_uploadis is defined and form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
+  {% if form.parent.vars.data.disabled_menu_thumbnail_upload is defined and form.parent.vars.data.disabled_menu_thumbnail_upload and warning_message is not null %}
     <div class="d-none">
       {{ block('file_widget') }}
     </div>
