@@ -117,7 +117,7 @@ class ImageFormatConfigurationTest extends TestCase
     /**
      * @return array[]
      */
-    private function testGetGenerationFormatsProvider(): array
+    public function testGetGenerationFormatsProvider(): array
     {
         return [
             ['jpg,png,webp', ['jpg', 'png', 'webp']],
