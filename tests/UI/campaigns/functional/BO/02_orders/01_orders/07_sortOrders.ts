@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -109,7 +109,7 @@ describe('BO - Orders : Sort orders', async () => {
         const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
         const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-        const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTableFloat).to.deep.equal(expectedResult);

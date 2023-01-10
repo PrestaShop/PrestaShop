@@ -15,7 +15,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import homePage from '@pages/FO/home';

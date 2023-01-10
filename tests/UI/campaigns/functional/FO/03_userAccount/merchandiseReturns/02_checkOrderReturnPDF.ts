@@ -16,7 +16,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import viewOrderPage from '@pages/BO/orders/view/viewOrderBasePage';
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 // Import FO pages

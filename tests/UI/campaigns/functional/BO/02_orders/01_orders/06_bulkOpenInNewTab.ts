@@ -9,7 +9,7 @@ import {createOrderByGuestTest} from '@commonTests/FO/createOrder';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import data

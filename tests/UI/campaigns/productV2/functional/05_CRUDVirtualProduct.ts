@@ -11,7 +11,7 @@ import testContext from '@utils/testContext';
 import dashboardPage from '@pages/BO/dashboard';
 import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import productsPage from '@pages/BO/catalog/productsV2';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import homePage from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 import cartPage from '@pages/FO/cart';

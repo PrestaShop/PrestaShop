@@ -11,7 +11,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import creditSlipsPage from '@pages/BO/orders/creditSlips/index';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 

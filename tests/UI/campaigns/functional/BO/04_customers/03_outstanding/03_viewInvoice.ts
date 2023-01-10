@@ -11,7 +11,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';

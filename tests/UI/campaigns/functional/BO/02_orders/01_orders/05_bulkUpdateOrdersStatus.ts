@@ -8,7 +8,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
