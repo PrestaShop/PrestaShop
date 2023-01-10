@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * General page, contains selectors and functions for the page
@@ -7,6 +8,18 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ShopParamsGeneral extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly maintenanceNavItemLink: string;
+
+  private readonly displaySuppliersToggleInput: (toggle: number) => string;
+
+  private readonly displayBrandsToggleInput: (toggle: number) => string;
+
+  private readonly enableMultiStoreToggleInput: (toggle: number) => string;
+
+  private readonly saveFormButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on general page
@@ -18,9 +31,9 @@ class ShopParamsGeneral extends BOBasePage {
 
     // Selectors
     this.maintenanceNavItemLink = '#subtab-AdminMaintenance';
-    this.displaySuppliersToggleInput = (toggle) => `#form_display_suppliers_${toggle}`;
-    this.displayBrandsToggleInput = (toggle) => `#form_display_manufacturers_${toggle}`;
-    this.enableMultiStoreToggleInput = (toggle) => `#form_multishop_feature_active_${toggle}`;
+    this.displaySuppliersToggleInput = (toggle: number) => `#form_display_suppliers_${toggle}`;
+    this.displayBrandsToggleInput = (toggle: number) => `#form_display_manufacturers_${toggle}`;
+    this.enableMultiStoreToggleInput = (toggle: number) => `#form_multishop_feature_active_${toggle}`;
     this.saveFormButton = '#form-preferences-save-button';
   }
 
@@ -33,7 +46,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabMaintenance(page) {
+  async goToSubTabMaintenance(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.maintenanceNavItemLink);
   }
 
@@ -43,7 +56,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @param toEnable {boolean} Status to set to enable/disable suppliers
    * @returns {Promise<string>}
    */
-  async setDisplaySuppliers(page, toEnable = true) {
+  async setDisplaySuppliers(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displaySuppliersToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -55,7 +68,7 @@ class ShopParamsGeneral extends BOBasePage {
    * @param toEnable {boolean} Status to set to enable/disable brands
    * @returns {Promise<string>}
    */
-  async setDisplayBrands(page, toEnable = true) {
+  async setDisplayBrands(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.displayBrandsToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -67,11 +80,11 @@ class ShopParamsGeneral extends BOBasePage {
    * @param toEnable {boolean} Status to set to enable/disable multistore
    * @returns {Promise<string>}
    */
-  async setMultiStoreStatus(page, toEnable = true) {
+  async setMultiStoreStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableMultiStoreToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
-module.exports = new ShopParamsGeneral();
+export default new ShopParamsGeneral();

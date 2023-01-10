@@ -55,7 +55,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
         dashboardPage.shopParametersParentLink,
         dashboardPage.shopParametersGeneralLink,
       );
-
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
@@ -193,7 +192,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
         dashboardPage.shopParametersParentLink,
         dashboardPage.shopParametersGeneralLink,
       );
-
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);
