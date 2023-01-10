@@ -73,7 +73,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
         CustomerSettingsOptions.OPTION_B2B,
         test.args.enable,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 

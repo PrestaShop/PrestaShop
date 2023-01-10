@@ -1,8 +1,7 @@
+import BOBasePage from '@pages/BO/BObasePage';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
-
+import type {Page} from 'playwright';
 
 /**
  * Customer settings page, contains functions that can be used on the page
@@ -10,6 +9,24 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CustomerSettings extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly titlesSubtab: string;
+
+  private readonly groupsSubtab: string;
+
+  private readonly redisplayCartAtLoginToggleInput: (toggle: number) => string;
+
+  private readonly enablePartnerOfferToggleInput: (toggle: number) => string;
+
+  private readonly sendEmailAfterRegistrationToggleInput: (toggle: number) => string;
+
+  private readonly askForBirthDateToggleInput: (toggle: number) => string;
+
+  private readonly enableB2BModeToggle: (toggle: number) => string;
+
+  private readonly saveGeneralFormButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on customer settings page
@@ -25,11 +42,11 @@ class CustomerSettings extends BOBasePage {
     this.groupsSubtab = '#subtab-AdminGroups';
 
     // Form selectors
-    this.redisplayCartAtLoginToggleInput = (toggle) => `#form_redisplay_cart_at_login_${toggle}`;
-    this.enablePartnerOfferToggleInput = (toggle) => `#form_enable_offers_${toggle}`;
-    this.sendEmailAfterRegistrationToggleInput = (toggle) => `#form_send_email_after_registration_${toggle}`;
-    this.askForBirthDateToggleInput = (toggle) => `#form_ask_for_birthday_${toggle}`;
-    this.enableB2BModeToggle = (toggle) => `#form_enable_b2b_mode_${toggle}`;
+    this.redisplayCartAtLoginToggleInput = (toggle: number) => `#form_redisplay_cart_at_login_${toggle}`;
+    this.enablePartnerOfferToggleInput = (toggle: number) => `#form_enable_offers_${toggle}`;
+    this.sendEmailAfterRegistrationToggleInput = (toggle: number) => `#form_send_email_after_registration_${toggle}`;
+    this.askForBirthDateToggleInput = (toggle: number) => `#form_ask_for_birthday_${toggle}`;
+    this.enableB2BModeToggle = (toggle: number) => `#form_enable_b2b_mode_${toggle}`;
     this.saveGeneralFormButton = '#form-general-save-button';
   }
 
@@ -42,7 +59,7 @@ class CustomerSettings extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToTitlesPage(page) {
+  async goToTitlesPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.titlesSubtab);
   }
 
@@ -51,7 +68,7 @@ class CustomerSettings extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToGroupsPage(page) {
+  async goToGroupsPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.groupsSubtab);
   }
 
@@ -62,7 +79,7 @@ class CustomerSettings extends BOBasePage {
    * @param toEnable {boolean} True if we need to enable status
    * @return {Promise<string>}
    */
-  async setOptionStatus(page, option, toEnable = true) {
+  async setOptionStatus(page: Page, option: string, toEnable: boolean = true): Promise<string> {
     let selector;
 
     switch (option) {
@@ -91,4 +108,4 @@ class CustomerSettings extends BOBasePage {
   }
 }
 
-module.exports = new CustomerSettings();
+export default new CustomerSettings();

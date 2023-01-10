@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import {Page} from "playwright";
-import StoreData from "@data/faker/store";
+import {Page} from 'playwright';
+import StoreData from '@data/faker/store';
 
 /**
  * Add store page, contains selectors and functions for the page

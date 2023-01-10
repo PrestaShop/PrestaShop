@@ -53,7 +53,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
-
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -74,7 +73,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
         CustomerSettingsOptions.OPTION_PARTNER_OFFER,
         test.args.enable,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
@@ -83,10 +81,8 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
-
       // Change language in FO
       await foHomePage.changeLanguage(page, 'en');
-
       // Go to create account page
       await foHomePage.goToLoginPage(page);
       await loginFOPage.goToCreateAccountPage(page);

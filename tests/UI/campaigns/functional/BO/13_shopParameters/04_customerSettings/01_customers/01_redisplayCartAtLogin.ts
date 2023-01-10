@@ -57,7 +57,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
-
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -83,7 +82,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
         CustomerSettingsOptions.OPTION_CART_LOGIN,
         test.args.enable,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
