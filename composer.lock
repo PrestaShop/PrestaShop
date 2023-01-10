@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d356e0dd0e9e2c7ff4f7f62e8cda434",
+    "content-hash": "d1cef2a84fa37f88d65400af5ea0ea01",
     "packages": [
         {
             "name": "api-platform/core",
@@ -5236,6 +5236,7 @@
                     "PrestaShop\\Autoload\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
