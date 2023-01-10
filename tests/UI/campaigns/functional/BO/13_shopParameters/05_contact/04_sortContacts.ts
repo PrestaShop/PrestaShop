@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import contactsPage from '@pages/BO/shopParameters/contact/index';
+import contactsPage from '@pages/BO/shopParameters/contact';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -43,7 +43,6 @@ describe('BO - Shop Parameters - Contact : Sort Contacts list', async () => {
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);

@@ -54,7 +54,6 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);
