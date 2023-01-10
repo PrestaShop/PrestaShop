@@ -26,36 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
- * Displays locks on private column
+ * @deprecated since 8.1 and will be removed in next major.
+ * Use \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PrivateColumn instead.
  */
-final class PrivateColumn extends AbstractColumn
+final class PrivateColumn extends \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PrivateColumn
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'private';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'field',
-            ])
-            ->setDefaults([
-                'clickable' => false,
-            ])
-            ->setAllowedTypes('field', 'string')
-            ->setAllowedTypes('clickable', 'bool')
-        ;
-    }
 }

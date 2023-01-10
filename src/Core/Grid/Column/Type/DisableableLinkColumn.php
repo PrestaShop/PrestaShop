@@ -24,69 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-final class DisableableLinkColumn extends AbstractColumn
+/**
+ * @deprecated since 8.1 and will be removed in next major.
+ * Use \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DisableableLinkColumn instead.
+ */
+final class DisableableLinkColumn extends \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DisableableLinkColumn
 {
-    /**
-     * @var LinkColumn
-     */
-    private $linkColumn;
-
-    public function __construct($id)
-    {
-        parent::__construct($id);
-        $this->linkColumn = new LinkColumn($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'disableable_link';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired(['disabled_field'])
-            ->setAllowedTypes('disabled_field', ['string', 'null'])
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setOptions(array $options)
-    {
-        $disabledOptions = [];
-
-        if (isset($options['disabled_field'])) {
-            $disabledOptions['disabled_field'] = $options['disabled_field'];
-            unset($options['disabled_field']);
-        }
-
-        $this->linkColumn->setOptions($options);
-        parent::setOptions($disabledOptions);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOptions()
-    {
-        return array_merge($this->linkColumn->getOptions(), parent::getOptions());
-    }
 }

@@ -26,32 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 /**
- * Allows adding group of links in single column
+ * @deprecated since 8.1 and will be removed in next major.
+ * Use \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkGroupColumn instead.
  */
-final class LinkGroupColumn extends AbstractColumn
+final class LinkGroupColumn extends \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkGroupColumn
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
-    {
-        return 'link_group';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'links',
-            ])
-            ->setAllowedTypes('links', 'array')
-        ;
-    }
 }

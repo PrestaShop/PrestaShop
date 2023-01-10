@@ -24,12 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @deprecated since 8.1 and will be removed in next major.
- * Use \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn instead.
+ * Column which background color can be configured.
  */
-final class DataColumn extends \PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn
+class ColorColumn extends AbstractColumn
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'color';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired([
+                'field',
+                'color_field',
+            ])
+        ;
+    }
 }

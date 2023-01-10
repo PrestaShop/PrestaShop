@@ -24,22 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Columns is used as identifier in grid (e.g. Product ID, Category ID & etc)
- */
-final class IdentifierColumn extends AbstractColumn
+class DisableableLinkColumn extends AbstractColumn
 {
+    /**
+     * @var LinkColumn
+     */
+    private $linkColumn;
+
+    public function __construct($id)
+    {
+        parent::__construct($id);
+        $this->linkColumn = new LinkColumn($id);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getType()
     {
-        return 'identifier';
+        return 'disableable_link';
     }
 
     /**
@@ -48,24 +58,34 @@ final class IdentifierColumn extends AbstractColumn
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired([
-                'identifier_field',
-            ])
-            ->setDefaults([
-                'sortable' => true,
-                'with_bulk_field' => false,
-                'bulk_field' => null,
-                'preview' => null,
-                'clickable' => true,
-            ])
-            ->setAllowedTypes('identifier_field', 'string')
-            ->setAllowedTypes('sortable', 'bool')
-            ->setAllowedTypes('with_bulk_field', 'bool')
-            ->setAllowedTypes('bulk_field', ['string', 'null'])
-            ->setAllowedTypes('clickable', 'bool')
-            ->setAllowedValues('preview', function ($previewColumn) {
-                return $previewColumn instanceof PreviewColumn || $previewColumn === null;
-            })
+            ->setRequired(['disabled_field'])
+            ->setAllowedTypes('disabled_field', ['string', 'null'])
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setOptions(array $options)
+    {
+        $disabledOptions = [];
+
+        if (isset($options['disabled_field'])) {
+            $disabledOptions['disabled_field'] = $options['disabled_field'];
+            unset($options['disabled_field']);
+        }
+
+        $this->linkColumn->setOptions($options);
+        parent::setOptions($disabledOptions);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOptions()
+    {
+        return array_merge($this->linkColumn->getOptions(), parent::getOptions());
     }
 }
