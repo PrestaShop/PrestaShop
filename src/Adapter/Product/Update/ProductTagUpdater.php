@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
@@ -101,7 +102,7 @@ class ProductTagUpdater
 
         // Since tags have been modified we need to update the indexation values (only for active products)
         if ($product->active) {
-            $this->productIndexationUpdater->updateIndexation($product);
+            $this->productIndexationUpdater->updateIndexation($product, ShopConstraint::allShops());
         }
     }
 

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class ProductStatusUpdater
 {
@@ -69,7 +70,7 @@ class ProductStatusUpdater
         // If status changed we need to update its indexes (we check if it is necessary because index build can be
         // an expensive operation).
         if ($initialState !== $newStatus) {
-            $this->productIndexationUpdater->updateIndexation($product);
+            $this->productIndexationUpdater->updateIndexation($product, ShopConstraint::allShops());
         }
     }
 }

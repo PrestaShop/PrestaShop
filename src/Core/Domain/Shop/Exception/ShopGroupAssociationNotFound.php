@@ -26,52 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
 /**
- * Class UpdateProductStatusCommand update a given product status
- *
- * @deprecated You should use UpdateProductCommand instead
+ * Thrown when a shop group association is checked but is nonexistent.
  */
-class UpdateProductStatusCommand
+class ShopGroupAssociationNotFound extends ShopException
 {
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @var bool
-     */
-    private $enable;
-
-    /**
-     * UpdateProductStatusCommand constructor.
-     *
-     * @param int $productId
-     * @param bool $enable
-     */
-    public function __construct(int $productId, bool $enable)
-    {
-        $this->productId = new ProductId($productId);
-        $this->enable = $enable;
-    }
-
-    /**
-     * @return ProductId
-     */
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEnable(): bool
-    {
-        return $this->enable;
-    }
 }

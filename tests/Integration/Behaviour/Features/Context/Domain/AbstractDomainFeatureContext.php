@@ -271,6 +271,20 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
+     * @param string $reference
+     *
+     * @return int
+     */
+    protected function referenceToId(string $reference): int
+    {
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException(sprintf('Reference %s does not exist in shared storage', $reference));
+        }
+
+        return $this->getSharedStorage()->get($reference);
+    }
+
+    /**
      * @param TableNode $tableNode
      *
      * @return array

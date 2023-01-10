@@ -36,10 +36,10 @@ Feature: Update product status from BO (Back Office)
     And product product100 type should be standard
     And product "product100" should be disabled
     And product "product100" should not be indexed
-    When I enable product "product100" in a form
+    When I enable product "product100"
     Then product "product100" should be enabled
     And product "product100" should be indexed
-    When I disable product "product100" in a form
+    When I disable product "product100"
     Then product "product100" should be disabled
     And product "product100" should not be indexed
 
@@ -61,10 +61,10 @@ Feature: Update product status from BO (Back Office)
       | type        | virtual       |
     And product product200 type should be virtual
     And product "product200" should be disabled
-    When I enable product "product200" in a form
+    When I enable product "product200"
     Then product "product200" should be enabled
     And product "product200" should be indexed
-    When I disable product "product200" in a form
+    When I disable product "product200"
     Then product "product200" should be disabled
     And product "product200" should not be indexed
 
@@ -104,10 +104,10 @@ Feature: Update product status from BO (Back Office)
       | product300MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
     And product product300 type should be combinations
     And product "product300" should be disabled
-    When I enable product "product300" in a form
+    When I enable product "product300"
     Then product "product300" should be enabled
     And product "product300" should be indexed
-    When I disable product "product300" in a form
+    When I disable product "product300"
     Then product "product300" should be disabled
     And product "product300" should not be indexed
 
@@ -118,7 +118,7 @@ Feature: Update product status from BO (Back Office)
     And product "product1" should not be indexed
     # same scenario using UpdateProductCommand
     Given product "product100" should be disabled
-    When I disable product "product100" in a form
+    When I disable product "product100"
     Then product "product100" should be disabled
     And product "product100" should not be indexed
 
@@ -132,10 +132,10 @@ Feature: Update product status from BO (Back Office)
     And product "product1" should be indexed
     # same scenario using UpdateProductCommand
     Given product "product100" should be disabled
-    When I enable product "product100" in a form
+    When I enable product "product100"
     Then product "product100" should be enabled
     And product "product100" should be indexed
-    When I enable product "product100" in a form
+    When I enable product "product100"
     Then product "product100" should be enabled
     And product "product100" should be indexed
 
@@ -171,7 +171,7 @@ Feature: Update product status from BO (Back Office)
     And product "product400" should be assigned to following categories:
       | id reference | name | is default |
       | home         | Home | true       |
-    When I enable product "product400" in a form
+    When I enable product "product400"
     Then I should get an error that product online data are invalid
     And product "product400" should be disabled
     When I update product "product400" with following values:
@@ -179,5 +179,5 @@ Feature: Update product status from BO (Back Office)
     Then product "product400" localized "name" should be:
       | locale | value              |
       | en-US  | photo of funny mug |
-    When I enable product "product400" in a form
+    When I enable product "product400"
     And product "product400" should be enabled

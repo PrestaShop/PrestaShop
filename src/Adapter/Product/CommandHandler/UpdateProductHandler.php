@@ -104,8 +104,11 @@ class UpdateProductHandler implements UpdateProductHandlerInterface
         if (
             $wasVisibleOnSearch !== $this->productIndexationUpdater->isVisibleOnSearch($product)
             || $wasActive !== (bool) $product->active
+            // If multiple shops are impacted it's safer to update indexation, it's more complicated to check if it's needed
+            || $shopConstraint->forAllShops()
+            || $shopConstraint->getShopGroupId()
         ) {
-            $this->productIndexationUpdater->updateIndexation($product);
+            $this->productIndexationUpdater->updateIndexation($product, $command->getShopConstraint());
         }
     }
 }

@@ -305,7 +305,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should be indexed for shops ":shopReferences"
+     * @Then product :productReference should be indexed for shops :shopReferences
      *
      * @param string $productReference
      * @param string $shopReferences
@@ -329,7 +329,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should not be indexed for shops ":shopReferences"
+     * @Then product :productReference should not be indexed for shops :shopReferences
      *
      * @param string $productReference
      * @param string $shopReferences
