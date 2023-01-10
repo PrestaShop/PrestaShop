@@ -166,6 +166,15 @@ class OrderHistoryPage extends FOBasePage {
   }
 
   /**
+   * Download invoice
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in orders table
+   */
+  async downloadInvoice(page: Page, row: number = 1): Promise<string | null> {
+    return this.clickAndWaitForDownload(page, this.orderTableColumnInvoice(row));
+  }
+
+  /**
    * Go to details page from order history page
    * @param page {Page} Browser tab
    * @param orderRow {Number} row in orders table
