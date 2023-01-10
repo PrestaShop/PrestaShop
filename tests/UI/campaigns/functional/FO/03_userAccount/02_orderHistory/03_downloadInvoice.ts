@@ -1,6 +1,3 @@
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -24,6 +21,9 @@ import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
 import {Statuses} from '@data/demo/orderStatuses';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_userAccount_orderHistory_downloadInvoice';
@@ -78,7 +78,7 @@ describe('FO - Account - Order history : download invoice', async () => {
         invoicesPage.ordersLink,
       );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
+      const pageTitle: string = await ordersPage.getPageTitle(page);
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
@@ -88,14 +88,14 @@ describe('FO - Account - Order history : download invoice', async () => {
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
+      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -103,7 +103,7 @@ describe('FO - Account - Order history : download invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page);
+      fileName = await orderPageTabListBlock.getFileName(page) as string;
       await expect(fileName).not.null;
     });
   });
@@ -123,7 +123,7 @@ describe('FO - Account - Order history : download invoice', async () => {
 
       await foHomePage.goToLoginPage(page);
 
-      const pageHeaderTitle = await foLoginPage.getPageTitle(page);
+      const pageHeaderTitle: string = await foLoginPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foLoginPage.pageTitle);
     });
 
@@ -141,7 +141,7 @@ describe('FO - Account - Order history : download invoice', async () => {
 
       await foHomePage.goToMyAccountPage(page);
 
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
+      const pageTitle: string = await foMyAccountPage.getPageTitle(page);
       await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
     });
 
@@ -150,30 +150,30 @@ describe('FO - Account - Order history : download invoice', async () => {
 
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
+      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });
 
     it('should check that the invoice of the first order in list is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
 
-      const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1);
+      const isVisible: boolean = await foOrderHistoryPage.isInvoiceVisible(page, 1);
       await expect(isVisible, 'The invoice file is not existing!').to.be.true;
     });
 
     it('should download the invoice and check the invoice ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
-      const downloadFilePath = await foOrderHistoryPage.downloadInvoice(page);
+      const downloadFilePath: string = await foOrderHistoryPage.downloadInvoice(page);
 
-      const exist = await files.isTextInPDF(downloadFilePath, fileName);
+      const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
       await expect(exist).to.be.true;
     });
 
     it('should check that no invoice is visible for the second order in list', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoice', baseContext);
 
-      const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 2);
+      const isVisible: boolean = await foOrderHistoryPage.isInvoiceVisible(page, 2);
       await expect(isVisible).to.be.false;
     });
   });
