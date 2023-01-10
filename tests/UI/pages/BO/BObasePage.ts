@@ -159,7 +159,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly productSettingsLink: string;
 
-  private readonly customerSettingsLink: string;
+  public readonly customerSettingsLink: string;
 
   public readonly contactLink: string;
 

@@ -1,11 +1,13 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+
+// Import pages
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 require('module-alias/register');
 
@@ -13,8 +15,6 @@ const {expect} = require('chai');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
-const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 
 let browserContext;
 let page;
@@ -47,7 +47,6 @@ function enableB2BTest(baseContext = 'commonTests-enableB2BTest') {
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -59,10 +58,9 @@ function enableB2BTest(baseContext = 'commonTests-enableB2BTest') {
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_B2B,
+        CustomerSettingsOptions.OPTION_B2B,
         true,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
   });
@@ -108,10 +106,9 @@ function disableB2BTest(baseContext = 'commonTests-disableB2BTest') {
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_B2B,
+        CustomerSettingsOptions.OPTION_B2B,
         false,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
   });
