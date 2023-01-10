@@ -1896,6 +1896,7 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@prestashop.adapter.feature.multistore'
     tags:
       - { name: form.type }
 

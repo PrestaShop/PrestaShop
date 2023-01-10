@@ -29,6 +29,7 @@
     {# Special case to keep both inputs in the same cell #}
     {% for child in form.children %}
       <td>
+        {# action column is rendered separately bellow #}
         {% if child.vars.name != 'actions' %}
           {# When value is null we are displaying the prototype #}
           {% if value is null %}

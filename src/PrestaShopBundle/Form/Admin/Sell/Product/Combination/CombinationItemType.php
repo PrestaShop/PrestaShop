@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
@@ -54,13 +55,20 @@ class CombinationItemType extends TranslatorAwareType
      */
     protected $defaultCurrency;
 
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        Currency $defaultCurrency,
+        FeatureInterface $multistoreFeature
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -68,6 +76,55 @@ class CombinationItemType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $actionButtons = [
+            'edit' => [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'icon' => 'mode_edit',
+                    'attr' => [
+                        'class' => 'edit-combination-item tooltip-link',
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Edit', 'Admin.Actions'),
+                    ],
+                ],
+            ],
+            'delete' => [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'label' => $this->trans('Delete', 'Admin.Actions'),
+                    'icon' => 'delete',
+                    'attr' => [
+                        'class' => 'delete-combination-item tooltip-link',
+                        'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $this->trans('Delete selected item from current shop?', 'Admin.Notifications.Warning'),
+                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
+                    ],
+                ],
+            ],
+        ];
+
+        if ($this->multistoreFeature->isActive()) {
+            $actionButtons['delete_for_all_shops'] = [
+                'type' => IconButtonType::class,
+                'options' => [
+                    'label' => $this->trans('Delete from all shops', 'Admin.Actions'),
+                    'icon' => 'delete',
+                    'attr' => [
+                        'class' => 'delete-combination-all-shops tooltip-link',
+                        'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $this->trans('Delete selected item from all shops?', 'Admin.Notifications.Warning'),
+                        'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                        'data-toggle' => 'pstooltip',
+                        'data-original-title' => $this->trans('Delete from all shops', 'Admin.Actions'),
+                    ],
+                ],
+            ];
+        }
+
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
@@ -154,51 +211,7 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('actions', ButtonCollectionType::class, [
-                'buttons' => [
-                    'edit' => [
-                        'type' => IconButtonType::class,
-                        'options' => [
-                            'icon' => 'mode_edit',
-                            'attr' => [
-                                'class' => 'edit-combination-item tooltip-link',
-                                'data-toggle' => 'pstooltip',
-                                'data-original-title' => $this->trans('Edit', 'Admin.Actions'),
-                            ],
-                        ],
-                    ],
-                    'delete' => [
-                        'type' => IconButtonType::class,
-                        'options' => [
-                            'label' => $this->trans('Delete', 'Admin.Actions'),
-                            'icon' => 'delete',
-                            'attr' => [
-                                'class' => 'delete-combination-item tooltip-link',
-                                'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                                'data-modal-message' => $this->trans('Delete selected item in current shop?', 'Admin.Notifications.Warning'),
-                                'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
-                                'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                                'data-toggle' => 'pstooltip',
-                                'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
-                            ],
-                        ],
-                    ],
-                    'delete_in_all_shops' => [
-                        'type' => IconButtonType::class,
-                        'options' => [
-                            'label' => $this->trans('Delete in all shops', 'Admin.Actions'),
-                            'icon' => 'delete',
-                            'attr' => [
-                                'class' => 'delete-combination-item-all-shops tooltip-link',
-                                'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                                'data-modal-message' => $this->trans('Delete selected item in all shops?', 'Admin.Notifications.Warning'),
-                                'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
-                                'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                                'data-toggle' => 'pstooltip',
-                                'data-original-title' => $this->trans('Delete in all shops', 'Admin.Actions'),
-                            ],
-                        ],
-                    ],
-                ],
+                'buttons' => $actionButtons,
                 'label' => $this->trans('Actions', 'Admin.Global'),
                 'attr' => [
                     'class' => 'combination-row-actions',

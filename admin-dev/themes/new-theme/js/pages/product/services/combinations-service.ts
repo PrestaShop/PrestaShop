@@ -43,12 +43,15 @@ export default class CombinationsService {
     this.orderWay = null;
   }
 
-  deleteCombination(combinationId: number): JQuery.jqXHR<any> {
+  deleteCombination(combinationId: number, allShops: boolean): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
         combinationId,
       }),
       type: 'DELETE',
+      data: {
+        allShops: allShops ? 1 : 0,
+      },
     });
   }
 

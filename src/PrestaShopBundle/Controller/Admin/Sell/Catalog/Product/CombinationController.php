@@ -373,17 +373,18 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
+     * @param Request $request
      * @param int $combinationId
      *
      * @return JsonResponse
      */
-    public function deleteAction(int $combinationId): JsonResponse
+    public function deleteAction(Request $request, int $combinationId): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteCombinationCommand(
                 $combinationId,
-                ShopConstraint::shop($this->getContextShopId()))
-            );
+                $request->request->get('allShops') ? ShopConstraint::allShops() : ShopConstraint::shop($this->getContextShopId())
+            ));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
