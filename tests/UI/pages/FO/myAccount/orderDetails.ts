@@ -16,6 +16,8 @@ class OrderDetails extends FOBasePage {
 
   private readonly reorderLink: string;
 
+  private readonly invoiceLink: string;
+
   private readonly orderReturnForm: string;
 
   private readonly gridTable: string;
@@ -59,6 +61,7 @@ class OrderDetails extends FOBasePage {
     // Selectors
     this.headerTitle = '.page-header h1';
     this.reorderLink = '#order-infos a';
+    this.invoiceLink = '#order-infos div:nth-child(2) ul li:nth-child(3) a';
 
     // Order return form selectors
     this.orderReturnForm = '#order-return-form';
@@ -89,6 +92,22 @@ class OrderDetails extends FOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Download invoice
+   * @param page {Page} Browser tab
+   */
+  downloadInvoice(page: Page): Promise<string | null> {
+    return this.clickAndWaitForDownload(page, this.invoiceLink);
+  }
+
+  /**
+   * Is invoice visible
+   * @param page {Page} Browser tab
+   */
+  isInvoiceVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.invoiceLink);
+  }
 
   /**
    * Is orderReturn form visible
