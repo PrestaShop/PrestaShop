@@ -448,11 +448,44 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param ProductId $productId
      *
+     * @return ProductType
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductType(ProductId $productId): ProductType
+    {
+        $result = $this->connection->createQueryBuilder()
+            ->select('p.product_type')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('p.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAssociative()
+        ;
+
+        if (empty($result)) {
+            throw new ProductNotFoundException(sprintf(
+                'Cannot find product type for product %d because it does not exist',
+                $productId->getValue()
+            ));
+        }
+
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->getProductByDefaultShop($productId)->getDynamicProductType());
+    }
+
+    /**
+     * @param ProductId $productId
+     *
      * @return Product
      *
      * @throws ProductNotFoundException
      */
-    private function getProductByDefaultShop(ProductId $productId): Product
+    public function getProductByDefaultShop(ProductId $productId): Product
     {
         $defaultShopId = $this->getProductDefaultShopId($productId);
 

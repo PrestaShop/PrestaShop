@@ -138,7 +138,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_supplier_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers

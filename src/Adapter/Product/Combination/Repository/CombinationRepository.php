@@ -77,25 +77,6 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param CombinationId $combinationId
-     *
-     * @return Combination
-     *
-     * @throws CombinationNotFoundException
-     */
-    public function get(CombinationId $combinationId): Combination
-    {
-        /** @var Combination $combination */
-        $combination = $this->getObjectModel(
-            $combinationId->getValue(),
-            Combination::class,
-            CombinationNotFoundException::class
-        );
-
-        return $combination;
-    }
-
-    /**
      * @param Combination $combination
      * @param array $updatableProperties
      * @param int $errorCode
@@ -147,32 +128,5 @@ class CombinationRepository extends AbstractObjectModelRepository
             'product_attribute',
             CombinationNotFoundException::class
         );
-    }
-
-    /**
-     * Returns default combination ID identified as such in DB by default_on property
-     *
-     * @param ProductId $productId
-     *
-     * @return CombinationId|null
-     */
-    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pa.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
-            ->andWhere('pa.default_on = 1')
-            ->addOrderBy('pa.id_product_attribute', 'ASC')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAssociative();
-        if (empty($result['id_product_attribute'])) {
-            return null;
-        }
-
-        return new CombinationId((int) $result['id_product_attribute']);
     }
 }

@@ -357,8 +357,8 @@ services:
   prestashop.adapter.product.update.product_supplier_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
