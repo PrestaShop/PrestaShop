@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -83,7 +84,11 @@ class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInter
     public function getChoices(array $options): array
     {
         $options = $this->resolveOptions($options);
-        $combinationIds = $this->combinationRepository->getCombinationIds(new ProductId($options['product_id']));
+        $combinationIds = $this->combinationRepository->getCombinationIds(
+            new ProductId($options['product_id']),
+            //@todo: shopConstraint should probably be passed to options instead of always loading combinations from all shops
+            ShopConstraint::allShops()
+        );
         $attributesInfo = $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $this->languageId);
 
         $choices = [];
