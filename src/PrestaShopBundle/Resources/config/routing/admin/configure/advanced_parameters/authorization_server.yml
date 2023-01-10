@@ -37,7 +37,7 @@ admin_authorized_applications_delete:
 
 
 admin_api_accesses_create:
-  path: /applications/api-access/create
+  path: /applications/api-accesses/create
   methods: [ GET, POST, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AuthorizationServer\ApiAccessController::createAction
