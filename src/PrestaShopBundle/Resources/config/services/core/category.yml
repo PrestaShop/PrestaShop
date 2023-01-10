@@ -12,3 +12,4 @@ services:
     deprecated: ~
 
   PrestaShop\PrestaShop\Core\Category\Provider\MenuThumbnailAvailableKeyProvider:
+    - !php/const _PS_CAT_IMG_DIR_

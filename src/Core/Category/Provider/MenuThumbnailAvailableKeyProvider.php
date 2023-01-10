@@ -34,6 +34,16 @@ use Symfony\Component\Finder\Finder;
 class MenuThumbnailAvailableKeyProvider
 {
     /**
+     * @var string
+     */
+    private $categoryImgDir;
+
+    public function __construct(string $categoryImgDir)
+    {
+        $this->categoryImgDir = $categoryImgDir;
+    }
+
+    /**
      * @param int $categoryId
      *
      * @return array<int, int>
@@ -41,7 +51,7 @@ class MenuThumbnailAvailableKeyProvider
     public function getAvailableKeys(int $categoryId): array
     {
         $finder = new Finder();
-        $finder->files()->in(_PS_CAT_IMG_DIR_);
+        $finder->files()->in($this->categoryImgDir);
 
         $usedKeys = [];
 
