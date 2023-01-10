@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\Connection;
 use Image;
 use ImageType;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -69,8 +69,9 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @var ProductImagePathFactory
      */
     protected $productImagePathFactory;
+
     /**
-     * @var CombinationRepository
+     * @var CombinationMultiShopRepository
      */
     protected $combinationRepository;
 
@@ -79,13 +80,14 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @param string $dbPrefix
      * @param ProductImageValidator $productImageValidator
      * @param ProductImagePathFactory $productImagePathFactory
+     * @param CombinationMultiShopRepository $combinationRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductImageValidator $productImageValidator,
         ProductImagePathFactory $productImagePathFactory,
-        CombinationRepository $combinationRepository
+        CombinationMultiShopRepository $combinationRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
