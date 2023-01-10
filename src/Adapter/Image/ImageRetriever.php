@@ -205,7 +205,7 @@ class ImageRetriever
                 if ($generateHighDpiImages) {
                     $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, 'jpg', true);
                 }
-            // In new image system, we generate each format with it's proper extension
+                // In new image system, we generate each format with it's proper extension
             } else {
                 foreach ($configuredImageFormats as $imageFormat) {
                     $this->checkOrGenerateImageType($originalImagePath, $imageFolderPath, $id_image, $image_type, $imageFormat);
@@ -220,7 +220,7 @@ class ImageRetriever
             // Let's resolve the base image URL we will use
             if (isset($sources['jpg'])) {
                 $baseUrl = $sources['jpg'];
-            } else if (isset($sources['png'])) {
+            } elseif (isset($sources['png'])) {
                 $baseUrl = $sources['png'];
             } else {
                 $baseUrl = reset($sources);
