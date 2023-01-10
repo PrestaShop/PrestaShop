@@ -1,6 +1,3 @@
-import {expect} from 'chai';
-import type {BrowserContext, Page} from 'playwright';
-
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
@@ -22,6 +19,9 @@ import {DefaultCustomer} from '@data/demo/customer';
 import {Products} from '@data/demo/products';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
+
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 // context
 const baseContext: string = 'functional_FO_userAccount_orderHistory_reorderFromOrderList';
