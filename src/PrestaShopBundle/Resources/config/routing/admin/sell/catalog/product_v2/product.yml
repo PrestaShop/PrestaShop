@@ -177,22 +177,26 @@ admin_products_v2_toggle_status:
     productId: \d+
 
 admin_products_v2_enable:
-  path: /{productId}/enable
+  path: /{productId}/enable/{shopGroupId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableAction
     _legacy_controller: AdminProducts
+    shopGroupId: null
   requirements:
     productId: \d+
+    shopGroupId: \d+
 
 admin_products_v2_disable:
-  path: /{productId}/disable
+  path: /{productId}/disable/{shopGroupId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableAction
     _legacy_controller: AdminProducts
+    shopGroupId: null
   requirements:
     productId: \d+
+    shopGroupId: \d+
 
 admin_products_v2_update_position:
   path: /update_position

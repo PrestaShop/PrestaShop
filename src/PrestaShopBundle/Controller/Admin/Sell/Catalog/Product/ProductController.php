@@ -609,12 +609,13 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
+     * @param int|null $shopGroupId
      *
      * @return RedirectResponse
      */
-    public function enableAction(int $productId): RedirectResponse
+    public function enableAction(int $productId, ?int $shopGroupId): RedirectResponse
     {
-        return $this->updateProductStatus($productId, true);
+        return $this->updateProductStatus($productId, true, $shopGroupId);
     }
 
     /**
@@ -623,12 +624,13 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
+     * @param int|null $shopGroupId
      *
      * @return RedirectResponse
      */
-    public function disableAction(int $productId): RedirectResponse
+    public function disableAction(int $productId, ?int $shopGroupId): RedirectResponse
     {
-        return $this->updateProductStatus($productId, false);
+        return $this->updateProductStatus($productId, false, $shopGroupId);
     }
 
     /**
@@ -1014,13 +1016,15 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param int $productId
      * @param bool $isEnabled
+     * @param int|null $shopGroupId
      *
      * @return RedirectResponse
      */
-    private function updateProductStatus(int $productId, bool $isEnabled): RedirectResponse
+    private function updateProductStatus(int $productId, bool $isEnabled, ?int $shopGroupId): RedirectResponse
     {
         try {
-            $command = new UpdateProductCommand($productId, ShopConstraint::allShops());
+            $shopConstraint = !empty($shopGroupId) ? ShopConstraint::shopGroup($shopGroupId) : ShopConstraint::allShops();
+            $command = new UpdateProductCommand($productId, $shopConstraint);
             $command->setActive($isEnabled);
             $this->getCommandBus()->handle($command);
             $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
