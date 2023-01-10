@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\Customer\EditCustomerDiscoun
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\StatusColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 
 /**
  * Class CustomerDiscountGridDefinitionFactory defines customer's discounts grid structure.
