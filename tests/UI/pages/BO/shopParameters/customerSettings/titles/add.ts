@@ -1,5 +1,10 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import TitleData from '@data/faker/title';
+
+import type {Page} from 'playwright';
 
 /**
  * Add title page, contains functions that can be used on the page
@@ -7,6 +12,30 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddTitle extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly genderForm: string;
+
+  private readonly nameInput: (idLang: number) => string;
+
+  private readonly genderInput: (type: string) => string;
+
+  private readonly imageInput: string;
+
+  private readonly imageWidthInput: string;
+
+  private readonly imageHeightInput: string;
+
+  private readonly saveButton: string;
+
+  private readonly dropdownButton: string;
+
+  private readonly dropdownMenu: string;
+
+  private readonly dropdownMenuItemLink: (idLang: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add title page
@@ -19,8 +48,8 @@ class AddTitle extends BOBasePage {
 
     // Form selectors
     this.genderForm = '#gender_form';
-    this.nameInput = (idLang) => `#name_${idLang}`;
-    this.genderInput = (type) => `#type_${type}`;
+    this.nameInput = (idLang: number) => `#name_${idLang}`;
+    this.genderInput = (type: string) => `#type_${type}`;
     this.imageInput = '#image-name';
     this.imageWidthInput = '#img_width';
     this.imageHeightInput = '#img_height';
@@ -30,7 +59,7 @@ class AddTitle extends BOBasePage {
     // Language selectors
     this.dropdownButton = `${this.genderForm} button.dropdown-toggle`;
     this.dropdownMenu = `${this.genderForm} ul.dropdown-menu`;
-    this.dropdownMenuItemLink = (idLang) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
+    this.dropdownMenuItemLink = (idLang: number) => `${this.dropdownMenu} li:nth-child(${idLang}) a`;
   }
 
   /*
@@ -43,7 +72,7 @@ class AddTitle extends BOBasePage {
    * @param idLang {number} Id language to select
    * @return {Promise<void>}
    */
-  async changeLanguage(page, idLang) {
+  async changeLanguage(page: Page, idLang: number): Promise<void> {
     await Promise.all([
       page.click(this.dropdownButton),
       this.waitForVisibleSelector(page, this.dropdownMenuItemLink(idLang)),
@@ -61,7 +90,7 @@ class AddTitle extends BOBasePage {
    * @param titleData {TitleData} Data to set on create/edit title form
    * @return {Promise<string>}
    */
-  async createEditTitle(page, titleData) {
+  async createEditTitle(page: Page, titleData: TitleData): Promise<string> {
     await this.changeLanguage(page, 1);
     await this.setValue(page, this.nameInput(1), titleData.name);
 
@@ -84,4 +113,4 @@ class AddTitle extends BOBasePage {
   }
 }
 
-module.exports = new AddTitle();
+export default new AddTitle();
