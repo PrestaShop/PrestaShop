@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
-use PrestaShop\PrestaShop\Core\Shop\Url\CategoryProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
+use PrestaShop\PrestaShop\Core\Shop\Url\CategoryProvider;
 use PrestaShopBundle\Service\Routing\Router;
 
 /**
