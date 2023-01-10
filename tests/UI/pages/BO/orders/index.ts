@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Orders page, contains functions that can be used on orders page
@@ -7,6 +8,106 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Order extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly createNewOrderButton: string;
+
+  private readonly gridPanel: string;
+
+  private readonly gridTable: string;
+
+  private readonly gridHeaderTitle: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableEmptyRow: string;
+
+  private readonly tableColumn: (row: number, column: string) => string;
+
+  private readonly tableColumnStatus: (row: number) => string;
+
+  private readonly updateStatusInTableButton: (row: number) => string;
+
+  private readonly updateStatusInTableDropdown: (row: number) => string;
+
+  private readonly updateStatusInTableDropdownChoice: (row: number, statusId: number) => string;
+
+  private readonly expandIcon: (row: number) => string;
+
+  private readonly previewRow: string;
+
+  private readonly shippingDetails: string;
+
+  private readonly customerEmail: string;
+
+  private readonly invoiceDetails: string;
+
+  private readonly productTable: string;
+
+  private readonly productsNumber: string;
+
+  private readonly productRowFromTable: (row: number) => string;
+
+  private readonly previewMoreProductsLink: (row: number) => string;
+
+  private readonly previewOrderButton: string;
+
+  private readonly actionsColumn: (row: number) => string;
+
+  private readonly viewRowLink: (row: number) => string;
+
+  private readonly viewInvoiceRowLink: (row: number) => string;
+
+  private readonly viewDeliverySlipsRowLink: (row: number) => string;
+
+  private readonly gridActionButton: string;
+
+  private readonly gridActionDropDownMenu: string;
+
+  private readonly gridActionExportLink: string;
+
+  private readonly selectAllRowsLabel: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkUpdateOrdersStatusButton: string;
+
+  private readonly bulkOpenInNewTabsButton: string;
+
+  private readonly tableColumnOrderBulk: (row: number) => string;
+
+  private readonly tableColumnOrderBulkCheckboxLabel: (row: number) => string;
+
+  private readonly updateOrdersStatusModal: string;
+
+  private readonly updateOrdersStatusModalSelect: string;
+
+  private readonly updateOrdersStatusModalButton: string;
+
+  private readonly paginationBlock: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on orders page
@@ -26,41 +127,41 @@ class Order extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Filters
-    this.filterColumn = (filterBy) => `${this.gridTable} #order_${filterBy}`;
+    this.filterColumn = (filterBy: string) => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
-    this.tableColumnStatus = (row) => `${this.tableRow(row)} td.column-osname`;
-    this.updateStatusInTableButton = (row) => `${this.tableColumnStatus(row)} button`;
-    this.updateStatusInTableDropdown = (row) => `${this.tableColumnStatus(row)} div.js-choice-options`;
-    this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
+    this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumnStatus = (row: number) => `${this.tableRow(row)} td.column-osname`;
+    this.updateStatusInTableButton = (row: number) => `${this.tableColumnStatus(row)} button`;
+    this.updateStatusInTableDropdown = (row: number) => `${this.tableColumnStatus(row)} div.js-choice-options`;
+    this.updateStatusInTableDropdownChoice = (row: number, statusId: number) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
     // Preview row
-    this.expandIcon = (row) => `${this.tableRow(row)} span.preview-toggle`;
+    this.expandIcon = (row: number) => `${this.tableRow(row)} span.preview-toggle`;
     this.previewRow = `${this.tableBody} tr.preview-row td div[data-role=preview-row]`;
     this.shippingDetails = `${this.previewRow} div[data-role=shipping-details]`;
     this.customerEmail = `${this.previewRow} div[data-role=email]`;
     this.invoiceDetails = `${this.previewRow} div[data-role=invoice-details]`;
     this.productTable = `${this.previewRow} table[data-role=product-table]`;
     this.productsNumber = `${this.productTable} thead tr:nth-child(1)`;
-    this.productRowFromTable = (row) => `${this.productTable} tbody tr:nth-child(${row})`;
-    this.previewMoreProductsLink = (row) => `${this.productRowFromTable(row)} td a.js-preview-more-products-btn`;
+    this.productRowFromTable = (row: number) => `${this.productTable} tbody tr:nth-child(${row})`;
+    this.previewMoreProductsLink = (row: number) => `${this.productRowFromTable(row)} td a.js-preview-more-products-btn`;
     this.previewOrderButton = `${this.gridTable} tr.preview-row a.btn-primary`;
 
     // Column actions selectors
-    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
-    this.viewRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-row-link`;
-    this.viewInvoiceRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
-    this.viewDeliverySlipsRowLink = (row) => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
+    this.actionsColumn = (row: number) => `${this.tableRow(row)} td.column-actions`;
+    this.viewRowLink = (row: number) => `${this.actionsColumn(row)} a.grid-view-row-link`;
+    this.viewInvoiceRowLink = (row: number) => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
+    this.viewDeliverySlipsRowLink = (row: number) => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
 
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
@@ -72,8 +173,8 @@ class Order extends BOBasePage {
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.bulkOpenInNewTabsButton = '#order_grid_bulk_action_open_tabs';
-    this.tableColumnOrderBulk = (row) => `${this.tableRow(row)} td.column-orders_bulk`;
-    this.tableColumnOrderBulkCheckboxLabel = (row) => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
+    this.tableColumnOrderBulk = (row: number) => `${this.tableRow(row)} td.column-orders_bulk`;
+    this.tableColumnOrderBulkCheckboxLabel = (row: number) => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
 
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
@@ -96,16 +197,16 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToCreateOrderPage(page) {
+  async goToCreateOrderPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
   }
 
   /**
    * Click on lint to export orders to a csv file
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async exportDataToCsv(page) {
+  async exportDataToCsv(page: Page): Promise<string|null> {
     await Promise.all([
       page.click(this.gridActionButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
@@ -127,7 +228,7 @@ class Order extends BOBasePage {
    * @param value {string} Value to filter
    * @returns {Promise<void>}
    */
-  async filterOrders(page, filterType, filterBy, value = '') {
+  async filterOrders(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     await this.resetFilter(page);
     switch (filterType) {
       case 'input':
@@ -150,7 +251,7 @@ class Order extends BOBasePage {
    * @param dateTo {string} Date to to filter with
    * @returns {Promise<void>}
    */
-  async filterOrdersByDate(page, dateFrom, dateTo) {
+  async filterOrdersByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.filterColumn('date_add_from'), dateFrom);
     await page.type(this.filterColumn('date_add_to'), dateTo);
     // click on search
@@ -162,7 +263,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -173,7 +274,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -183,7 +284,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
@@ -193,7 +294,7 @@ class Order extends BOBasePage {
    * @param orderRow {number} Order row on table
    * @returns {Promise<void>}
    */
-  async goToOrder(page, orderRow) {
+  async goToOrder(page: Page, orderRow: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.viewRowLink(orderRow));
   }
 
@@ -202,15 +303,11 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
-   * @returns {Promise<string|number>}
+   * @returns {Promise<string>}
    */
-  async getTextColumn(page, columnName, row = 1) {
+  async getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string> {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
-    }
-
-    if (columnName === 'id_order') {
-      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
@@ -222,7 +319,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row in table
    * @returns {Promise<number>}
    */
-  async getOrderIDNumber(page, row = 1) {
+  async getOrderIDNumber(page: Page, row: number = 1): Promise<number> {
     return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
   }
 
@@ -233,7 +330,7 @@ class Order extends BOBasePage {
    * @returns {Promise<{id: number, reference: string, newClient:string, delivery: string, customer: string,
    * totalPaid: string, payment: string, status: string}>}
    */
-  async getOrderFromTable(page, row) {
+  async getOrderFromTable(page: Page, row: number) {
     return {
       id: parseFloat(await this.getTextColumn(page, 'id_order', row)),
       reference: await this.getTextColumn(page, 'reference', row),
@@ -251,7 +348,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfOrdersInPage(page) {
+  async getNumberOfOrdersInPage(page: Page): Promise<number> {
     return (await page.$$(`${this.tableBody} tr`)).length;
   }
 
@@ -261,14 +358,14 @@ class Order extends BOBasePage {
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
-    let rowContent;
-    const rowsNumber = await this.getNumberOfOrdersInPage(page);
-    const allRowsContentTable = [];
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    let rowContent: string;
+    const rowsNumber: number = await this.getNumberOfOrdersInPage(page);
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       if (column === 'total_paid_tax_incl') {
-        rowContent = await this.getOrderATIPrice(page, i);
+        rowContent = (await this.getOrderATIPrice(page, i)).toString();
       } else {
         rowContent = await this.getTextColumn(page, column, i);
       }
@@ -284,7 +381,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string>}
    */
-  async getOrderInCsvFormat(page, row) {
+  async getOrderInCsvFormat(page: Page, row: number): Promise<string> {
     const order = await this.getOrderFromTable(page, row);
 
     return `${order.id};`
@@ -304,7 +401,7 @@ class Order extends BOBasePage {
    * @param status {{id: number}} Order status on table
    * @returns {Promise<string>}
    */
-  async setOrderStatus(page, row, status) {
+  async setOrderStatus(page: Page, row: number, status): Promise<string> {
     await Promise.all([
       page.click(this.updateStatusInTableButton(row)),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
@@ -319,7 +416,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<string>}
    */
-  downloadInvoice(page, row) {
+  downloadInvoice(page: Page, row: number): Promise<string> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 
@@ -327,9 +424,9 @@ class Order extends BOBasePage {
    * Click on view delivery slip to download it
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  downloadDeliverySlip(page, row) {
+  downloadDeliverySlip(page: Page, row: number): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
   }
 
@@ -339,7 +436,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<Page>} New browser tab to work with
    */
-  viewCustomer(page, row) {
+  viewCustomer(page: Page, row: number): Promise<Page> {
     return this.openLinkWithTargetBlank(
       page,
       `${this.tableColumn(row, 'customer')} a`,
@@ -353,7 +450,7 @@ class Order extends BOBasePage {
    * @param row {number} Order row on table
    * @returns {Promise<number>}
    */
-  async getOrderATIPrice(page, row = 1) {
+  async getOrderATIPrice(page: Page, row: number = 1): Promise<number> {
     // Delete the first character (currency symbol) before getting price ATI
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }
@@ -364,7 +461,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async selectAllOrders(page) {
+  async selectAllOrders(page: Page): Promise<void> {
     await Promise.all([
       this.waitForSelectorAndClick(page, this.selectAllRowsLabel),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
@@ -377,7 +474,7 @@ class Order extends BOBasePage {
    * @param rows {Array<number>} Array of which orders rows to change
    * @returns {Promise<void>}
    */
-  async selectOrdersRows(page, rows = []) {
+  async selectOrdersRows(page: Page, rows: number[] = []): Promise<void> {
     for (let i = 0; i < rows.length; i++) {
       await page.click(this.tableColumnOrderBulkCheckboxLabel(rows[i]));
     }
@@ -389,7 +486,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnBulkActionsButton(page) {
+  async clickOnBulkActionsButton(page: Page): Promise<void> {
     await Promise.all([
       page.click(this.bulkActionsToggleButton),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
@@ -400,10 +497,10 @@ class Order extends BOBasePage {
    * Bulk open in new tabs
    * @param page {Page} Browser tab
    * @param isAllOrders {boolean} True if want to update all orders status
-   * @param rows {Array<number>|boolean} Array of which orders rows to change (if allOrders = false)
+   * @param rows {Array<number>} Array of which orders rows to change (if allOrders = false)
    * @returns {Promise<Page>}
    */
-  async bulkOpenInNewTabs(page, isAllOrders = true, rows = []) {
+  async bulkOpenInNewTabs(page: Page, isAllOrders: boolean = true, rows: number[] = []): Promise<Page> {
     // Select all orders or some
     if (isAllOrders) {
       await this.selectAllOrders(page);
@@ -426,7 +523,7 @@ class Order extends BOBasePage {
    * @param rows {Array<number>|boolean} Array of which orders rows to change (if allOrders = false)
    * @returns {Promise<string>}
    */
-  async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {
+  async bulkUpdateOrdersStatus(page: Page, status: string, isAllOrders: boolean = true, rows: number[] = []): Promise<string> {
     // Select all orders or some
     if (isAllOrders) {
       await this.selectAllOrders(page);
@@ -457,7 +554,7 @@ class Order extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -476,7 +573,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -486,7 +583,7 @@ class Order extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -500,7 +597,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -511,7 +608,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -524,7 +621,7 @@ class Order extends BOBasePage {
    * @param row {number} Row in orders table
    * @returns {Promise<boolean>}
    */
-  async previewOrder(page, row = 1) {
+  async previewOrder(page: Page, row: number = 1): Promise<boolean> {
     await page.hover(this.tableColumn(row, 'id_order'));
     await this.waitForSelectorAndClick(page, this.expandIcon(row));
 
@@ -536,7 +633,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getShippingDetails(page) {
+  async getShippingDetails(page: Page): Promise<string> {
     return this.getTextContent(page, this.shippingDetails);
   }
 
@@ -545,7 +642,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCustomerEmail(page) {
+  async getCustomerEmail(page: Page): Promise<string> {
     return this.getTextContent(page, this.customerEmail);
   }
 
@@ -554,7 +651,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCustomerInvoiceAddressDetails(page) {
+  async getCustomerInvoiceAddressDetails(page: Page): Promise<string> {
     return this.getTextContent(page, this.invoiceDetails);
   }
 
@@ -563,7 +660,7 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getProductsNumberFromTable(page) {
+  async getProductsNumberFromTable(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.productsNumber);
   }
 
@@ -573,7 +670,7 @@ class Order extends BOBasePage {
    * @param row {number} Row in products table
    * @returns {Promise<string>}
    */
-  async getProductDetailsFromTable(page, row = 1) {
+  async getProductDetailsFromTable(page: Page, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.productRowFromTable(row));
   }
 
@@ -583,7 +680,7 @@ class Order extends BOBasePage {
    * @param row {number} Row in Products table
    * @returns {Promise<void>}
    */
-  async clickOnMoreLink(page, row = 12) {
+  async clickOnMoreLink(page: Page, row: number = 12): Promise<void> {
     await this.waitForSelectorAndClick(page, this.previewMoreProductsLink(row));
     await this.waitForVisibleSelector(page, this.productRowFromTable(row - 1));
   }
@@ -593,9 +690,9 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async openOrderDetails(page) {
+  async openOrderDetails(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.previewOrderButton);
   }
 }
 
-module.exports = new Order();
+export default new Order();

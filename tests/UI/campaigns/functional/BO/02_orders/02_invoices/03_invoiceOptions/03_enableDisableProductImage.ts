@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages

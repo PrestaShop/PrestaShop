@@ -104,12 +104,7 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
       );
 
       const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
-
-      if (test.args.filterBy === 'id_order') {
-        await expect(textColumn.toString()).to.equal(test.args.filterValue);
-      } else {
-        await expect(textColumn).to.equal(test.args.filterValue);
-      }
+      await expect(textColumn).to.equal(test.args.filterValue);
     });
 
     it('should reset all filters', async function () {

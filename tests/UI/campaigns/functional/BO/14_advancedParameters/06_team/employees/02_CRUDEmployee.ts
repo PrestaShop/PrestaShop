@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard/index';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import productsPage from '@pages/BO/catalog/products/index';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 
 // Import data
 import EmployeeFaker from '@data/faker/employee';

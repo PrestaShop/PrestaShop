@@ -10,7 +10,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import pages
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
+import ordersPage from '@pages/BO/orders';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
@@ -90,13 +90,9 @@ describe('BO - orders : Update order status', async () => {
 
       await ordersPage.resetFilter(page);
 
-      const result: string|number = await ordersPage.getTextColumn(page, 'id_order', 1);
-      await expect(result).to.be.a('number');
-
-      if (typeof result === 'number') {
-        orderId = result;
-        await expect(orderId).to.be.at.least(1);
-      }
+      const result: string = await ordersPage.getTextColumn(page, 'id_order', 1);
+      orderId = parseInt(result, 10);
+      await expect(orderId).to.be.at.least(1);
     });
   });
 

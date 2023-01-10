@@ -23,7 +23,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly userProfileIconNonMigratedPages: string;
 
-  private readonly userProfileIcon: string;
+  protected readonly userProfileIcon: string;
 
   private readonly userProfileFirstname: string;
 
