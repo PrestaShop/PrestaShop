@@ -34,12 +34,13 @@ use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Product\ProductCsvExporter;
@@ -1184,7 +1185,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction($productId)
+    public function toggleStatusAction(Request $request, $productId)
     {
         if ($this->isDemoModeEnabled()) {
             return $this->json([
@@ -1193,10 +1194,18 @@ class ProductController extends FrameworkBundleAdminController
             ]);
         }
 
-        try {
-            $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled($productId));
+        $shopConstraint = $request->attributes->get('shopConstraint');
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
 
-            $this->getCommandBus()->handle(new UpdateProductStatusCommand($productId, !$isEnabled));
+        try {
+            $command = new UpdateProductCommand($productId, $request->attributes->get('shopConstraint'));
+            $command->setActive(!$productForEditing->isActive());
+            $this->getCommandBus()->handle($command);
             $response = [
                 'status' => true,
                 'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
