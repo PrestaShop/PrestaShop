@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Security;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -83,11 +83,11 @@ class Admin
      * Check if employee is logged in
      * If not logged in, redirect to admin home page.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @return bool or redirect
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if (
             $this->security->getUser() !== null
