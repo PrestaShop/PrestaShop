@@ -271,6 +271,8 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'ids_field' => 'associated_shops_ids',
                     'product_id_field' => 'id_product',
                     'max_displayed_characters' => 35,
+                    'shop_group_id' => $this->shopConstraintContext->getShopConstraint()->getShopGroupId() ?
+                        $this->shopConstraintContext->getShopConstraint()->getShopGroupId()->getValue() : null,
                 ])
             );
         }

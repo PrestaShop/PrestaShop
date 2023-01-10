@@ -62,11 +62,13 @@ final class ShopListColumn extends AbstractColumn
                 'sortable' => false,
                 'clickable' => false,
                 'max_displayed_characters' => 0,
+                'shop_group_id' => null,
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('ids_field', 'string')
             ->setAllowedTypes('product_id_field', 'string')
             ->setAllowedTypes('max_displayed_characters', 'int')
+            ->setAllowedTypes('shop_group_id', ['int', 'null'])
         ;
     }
 }

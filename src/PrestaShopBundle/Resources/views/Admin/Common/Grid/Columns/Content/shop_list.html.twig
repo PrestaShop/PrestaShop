@@ -28,6 +28,12 @@
 {% set shops = record[column.options.field] %}
 {% set productId = record[column.options.product_id_field] %}
 {% set allShops = shops|join(', ') %}
+
+{% set routeParams = {productId: productId} %}
+{% if column.options.shop_group_id is not null %}
+  {% set routeParams = routeParams|merge({shopGroupId: column.options.shop_group_id}) %}
+{% endif %}
+
 <span class="product-shop-list" title="{{ allShops }}" data-shop-ids="{{ shopsIds|join(',') }}">
   {% set firstShop = shops[0] %}
   <strong>{{ firstShop }}</strong>
@@ -43,7 +49,7 @@
     <span
       class="product-shop-details-toggle"
       data-product-id="{{ productId }}"
-      data-shop-previews-url="{{ path('admin_products_grid_shop_previews', {productId: productId}) }}"
+      data-shop-previews-url="{{ path('admin_products_grid_shop_previews', routeParams) }}"
     >
     </span>
   {%- endif -%}

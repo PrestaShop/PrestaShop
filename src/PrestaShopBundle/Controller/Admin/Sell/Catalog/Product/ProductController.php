@@ -240,15 +240,18 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param ProductFilters $filters
      * @param int $productId
+     * @param int|null $shopGroupId
      *
      * @return Response
      */
-    public function productShopPreviewsAction(ProductFilters $filters, int $productId): Response
+    public function productShopPreviewsAction(ProductFilters $filters, int $productId, ?int $shopGroupId): Response
     {
+        $shopConstraint = !empty($shopGroupId) ? ShopConstraint::shopGroup($shopGroupId) : ShopConstraint::allShops();
         $gridFactory = $this->get('prestashop.core.grid.factory.product.shops');
         $filters = new ProductFilters(
-            ShopConstraint::allShops(),
+            $shopConstraint,
             [
                 'filters' => [
                     'id_product' => [
