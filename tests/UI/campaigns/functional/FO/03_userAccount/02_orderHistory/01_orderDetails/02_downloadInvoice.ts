@@ -15,6 +15,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
+import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
@@ -24,7 +25,6 @@ import {Statuses} from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // context
 const baseContext: string = 'functional_FO_userAccount_orderHistory_orderDetails_downloadInvoice';
@@ -206,7 +206,7 @@ describe('FO - Account - Order details : download invoice', async () => {
     it('should check that no invoice is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceIsVisible', baseContext);
 
-      const isInvoiceVisible = await orderDetailsPage.isInvoiceVisible(page);
+      const isInvoiceVisible: boolean = await orderDetailsPage.isInvoiceVisible(page);
       await expect(isInvoiceVisible).to.be.false;
     });
   });
