@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Image;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\ImageFormatConfigurationException;
 
 class ImageFormatConfiguration implements ImageFormatConfigurationInterface
@@ -40,11 +40,11 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
     public $supportedFormats = ['jpg', 'png', 'webp', 'avif'];
 
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
     }

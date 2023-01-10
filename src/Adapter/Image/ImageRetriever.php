@@ -257,16 +257,16 @@ class ImageRetriever
     }
 
     /**
-     * @param $originalImagePath
-     * @param $imageFolderPath
-     * @param $idImage
-     * @param $imageTypeData
-     * @param $ext
-     * @param $hdpi
+     * @param string $originalImagePath
+     * @param string $imageFolderPath
+     * @param int $idImage
+     * @param array $imageTypeData
+     * @param string $ext
+     * @param bool $hdpi
      *
      * @return void
      */
-    private function checkOrGenerateImageType($originalImagePath, $imageFolderPath, $idImage, $imageTypeData, $ext, $hdpi = false)
+    private function checkOrGenerateImageType(string $originalImagePath, string $imageFolderPath, int $idImage, array $imageTypeData, string $ext, bool $hdpi = false)
     {
         $fileName = sprintf('%s-%s.%s', $idImage, $imageTypeData['name'], $ext);
 
