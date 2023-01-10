@@ -1,5 +1,5 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+import {Page} from "playwright";
 
 /**
  * Groups page, contains functions that can be used on the page
@@ -7,6 +7,56 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Groups extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly newGroupLink: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfGroupsSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumns: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsEditLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on groups page
@@ -31,22 +81,22 @@ class Groups extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='groupFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='groupFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtongroup';
     this.filterResetButton = 'button[name=\'submitResetgroup\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumns = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumns = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Row actions selectors
-    this.tableColumnActions = (row) => `${this.tableBodyColumns(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumns(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row: number) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -65,7 +115,7 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToNewGroupPage(page) {
+  async goToNewGroupPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.newGroupLink);
   }
 
@@ -76,7 +126,7 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfGroupsSpan);
   }
 
@@ -85,7 +135,7 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -97,7 +147,7 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -110,7 +160,7 @@ class Groups extends BOBasePage {
    * @param value {string} Value to filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -138,11 +188,11 @@ class Groups extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     // Get all text columns
     const textColumns = await page.$$eval(
       `${this.tableBodyColumns(row)}:not(.row-selector)`,
-      (els) => els.map((el) => el.textContent.trim()),
+      (els: HTMLElement[]) => els.map((el: HTMLElement) => (el.textContent ?? '').trim()),
     );
 
     switch (columnName) {
@@ -172,7 +222,7 @@ class Groups extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async gotoEditGroupPage(page, row) {
+  async gotoEditGroupPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsEditLink(row));
   }
 
@@ -182,7 +232,7 @@ class Groups extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<string>}
    */
-  async deleteGroup(page, row) {
+  async deleteGroup(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
@@ -204,9 +254,9 @@ class Groups extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async bulkDeleteGroups(page) {
+  async bulkDeleteGroups(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await Promise.all([
@@ -232,4 +282,4 @@ class Groups extends BOBasePage {
   }
 }
 
-module.exports = new Groups();
+export default new Groups();
