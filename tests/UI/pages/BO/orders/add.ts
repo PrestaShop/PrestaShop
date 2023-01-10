@@ -1,8 +1,11 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+// Import BO pages
+import BOBasePage from '@pages/BO/BObasePage';
+import addCustomerPage from '@pages/BO/customers/add';
 
-// Needed to create customer in orders page
-const addCustomerPage = require('@pages/BO/customers/add');
+// Import data
+import type ProductData from '@data/faker/product';
+
+import type {Frame, Page} from 'playwright';
 
 /**
  * Add order page, contains functions that can be used on create order page
@@ -10,6 +13,206 @@ const addCustomerPage = require('@pages/BO/customers/add');
  * @extends BOBasePage
  */
 class AddOrder extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly noCustomerFoundText: string;
+
+  public readonly noProductFoundText: string;
+
+  public readonly cartRuleAlreadyExistErrorText: string;
+
+  public readonly noVoucherFoudErrorMessage: string;
+
+  public readonly voucherDisabledErrorMessage: string;
+
+  public readonly emailSendSuccessMessage: string;
+
+  private readonly iframe: string;
+
+  private readonly closeFancyBoxIframe: string;
+
+  private readonly addCustomerLink: string;
+
+  private readonly customerSearchInput: string;
+
+  private readonly customerSearchLoadingNoticeBlock: string;
+
+  private readonly customerSearchEmptyResultBlock: string;
+
+  private readonly customerSearchEmptyResultParagraphe: string;
+
+  private readonly customerSearchFullResultsBlock: string;
+
+  private readonly customerResultsBlock: string;
+
+  private readonly customerCardBlock: (pos: number) => string;
+
+  private readonly customerCardNameTitle: (pos: number) => string;
+
+  private readonly customerCardBody: (pos: number) => string;
+
+  private readonly customerCardChooseButton: (pos: number) => string;
+
+  private readonly customerCardDetailButton: string;
+
+  private readonly checkoutHistoryBlock: string;
+
+  private readonly customerCartsTable: string;
+
+  private readonly customerCartsTableBody: string;
+
+  private readonly customerCartsTableRow: (row: number) => string;
+
+  private readonly customerCartsTableColumn: (column: string, row: number) => string;
+
+  private readonly emptyCartBlock: string;
+
+  private readonly customerCartsTableDetailsButton: (row: number) => string;
+
+  private readonly customerCartsTableUseButton: (row: number) => string;
+
+  private readonly cartBlock: string;
+
+  private readonly ordersTab: string;
+
+  private readonly cartErrorBlock: string;
+
+  private readonly customerOrdersTable: string;
+
+  private readonly customerOrdersTableBody: string;
+
+  private readonly customerOrdersTableRows: string;
+
+  private readonly customerOrdersTableRow: (row: number) => string;
+
+  private readonly customerOrdersTableColumn: (column: string, row: number) => string;
+
+  private readonly orderDetailsButton: (row: number) => string;
+
+  private readonly orderUseButton: (row: number) => string;
+
+  private readonly productSearchInput: string;
+
+  private readonly noProductFoundAlert: string;
+
+  private readonly addProductToCartForm: string;
+
+  private readonly productResultsSelect: string;
+
+  private readonly productQuantityInput: string;
+
+  private readonly productCustomInput: string;
+
+  private readonly currencySelect: string;
+
+  private readonly languageSelect: string;
+
+  private readonly addtoCartButton: string;
+
+  private readonly productsTable: string;
+
+  private readonly productsTableBody: string;
+
+  private readonly productsTableRows: string;
+
+  private readonly productsTableRow: (row: number) => string;
+
+  private readonly productsTableColumn: (column: string, row: number) => string;
+
+  private readonly productTableQuantityColumn: (row: number) => string;
+
+  private readonly productTableImageColumn: (row: number) => string;
+
+  private readonly productTableQuantityStockColumn: (row: number) => string;
+
+  private readonly productTableColumnRemoveButton: (row: number) => string;
+
+  private readonly searchVoucherInput: string;
+
+  private readonly searchCartRuleResultBox: string;
+
+  private readonly searchCartRuleResultFound: string;
+
+  private readonly cartRuleErrorText: string;
+
+  private readonly addVoucherBUtton: string;
+
+  private readonly vouchersTable: string;
+
+  private readonly vouchersTableBody: string;
+
+  private readonly vouchersTableRows: string;
+
+  private readonly vouchersTableRow: (row: number) => string;
+
+  private readonly vouchersTableColumn: (column: string, row: number) => string;
+
+  private readonly vouchersTableRowRemoveButton: (row: number) => string;
+
+  private readonly deliveryAddressSelect: string;
+
+  private readonly deliveryAddressDetails: string;
+
+  private readonly deliveryAddressEditButton: string;
+
+  private readonly invoiceAddressSelect: string;
+
+  private readonly invoiceAddressdetails: string;
+
+  private readonly invoiceAddressEditButton: string;
+
+  private readonly shippingBlock: string;
+
+  private readonly deliveryOptionSelect: string;
+
+  private readonly totalShippingTaxIncl: string;
+
+  private readonly freeShippingToggleInput: (toggle: number) => string;
+
+  private readonly giftToggleInput: (toggle: number) => string;
+
+  private readonly recycledPackagingToggleInput: (toggle: number) => string;
+
+  private readonly shippingCost: string;
+
+  private readonly giftMessageTextarea: string;
+
+  private readonly summaryBlock: string;
+
+  private readonly totalProducts: string;
+
+  private readonly totalDiscountProduct: string;
+
+  private readonly totalShippingProduct: string;
+
+  private readonly totalTaxesProduct: string;
+
+  private readonly totalTaxExcProduct: string;
+
+  private readonly totalTaxIncProduct: string;
+
+  private readonly orderMessageTextArea: string;
+
+  private readonly paymentMethodSelect: string;
+
+  private readonly paymentMethodSelectResult: string;
+
+  private readonly paymentMethodOption: (paymentMethod: string) => string;
+
+  private readonly orderStatusSelect: string;
+
+  private readonly createOrderButton: string;
+
+  private readonly moreActionsDropDownButton: string;
+
+  private readonly sendOrderMailButton: string;
+
+  private readonly proceedOrderLink: string;
+
+  private readonly summarySuccessMessageBlock: string;
+
+  private readonly totalTaxIncluded: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on create order page
@@ -41,11 +244,11 @@ class AddOrder extends BOBasePage {
     // Full results
     this.customerSearchFullResultsBlock = 'div.js-customer-search-results';
     this.customerResultsBlock = `${this.customerSearchFullResultsBlock} div.js-customer-search-result-col`;
-    this.customerCardBlock = (pos) => `${this.customerSearchFullResultsBlock} `
+    this.customerCardBlock = (pos: number) => `${this.customerSearchFullResultsBlock} `
       + `.js-customer-search-result-col:nth-child(${pos})`;
-    this.customerCardNameTitle = (pos) => `${this.customerCardBlock(pos)} .js-customer-name`;
-    this.customerCardBody = (pos) => `${this.customerCardBlock(pos)} .card-body`;
-    this.customerCardChooseButton = (pos) => `${this.customerCardBlock(pos)} .js-choose-customer-btn`;
+    this.customerCardNameTitle = (pos: number) => `${this.customerCardBlock(pos)} .js-customer-name`;
+    this.customerCardBody = (pos: number) => `${this.customerCardBlock(pos)} .card-body`;
+    this.customerCardChooseButton = (pos: number) => `${this.customerCardBlock(pos)} .js-choose-customer-btn`;
     this.customerCardDetailButton = `${this.customerSearchFullResultsBlock} a.js-details-customer-btn`;
 
     // Checkout history selectors
@@ -54,11 +257,11 @@ class AddOrder extends BOBasePage {
     // Carts table selectors
     this.customerCartsTable = '#customer-carts-table';
     this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
-    this.customerCartsTableRow = (row) => `${this.customerCartsTableBody} tr:nth-child(${row})`;
-    this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
+    this.customerCartsTableRow = (row: number) => `${this.customerCartsTableBody} tr:nth-child(${row})`;
+    this.customerCartsTableColumn = (column: string, row: number) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
     this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
-    this.customerCartsTableDetailsButton = (row) => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
-    this.customerCartsTableUseButton = (row) => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
+    this.customerCartsTableDetailsButton = (row: number) => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
+    this.customerCartsTableUseButton = (row: number) => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -69,10 +272,10 @@ class AddOrder extends BOBasePage {
     this.customerOrdersTable = '#customer-orders-table';
     this.customerOrdersTableBody = `${this.customerOrdersTable} tbody`;
     this.customerOrdersTableRows = `${this.customerOrdersTableBody} tr`;
-    this.customerOrdersTableRow = (row) => `${this.customerOrdersTableRows}:nth-child(${row})`;
-    this.customerOrdersTableColumn = (column, row) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
-    this.orderDetailsButton = (row) => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
-    this.orderUseButton = (row) => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
+    this.customerOrdersTableRow = (row: number) => `${this.customerOrdersTableRows}:nth-child(${row})`;
+    this.customerOrdersTableColumn = (column: string, row: number) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
+    this.orderDetailsButton = (row: number) => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
+    this.orderUseButton = (row: number) => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
 
     // Cart selectors
     this.productSearchInput = '#product-search';
@@ -88,12 +291,12 @@ class AddOrder extends BOBasePage {
     this.productsTable = '#products-table';
     this.productsTableBody = `${this.productsTable} tbody`;
     this.productsTableRows = `${this.productsTableBody} tr`;
-    this.productsTableRow = (row) => `${this.productsTableRows}:nth-child(${row})`;
-    this.productsTableColumn = (column, row) => `${this.productsTableRow(row)} td.js-product-${column}`;
-    this.productTableQuantityColumn = (row) => `${this.productsTableRow(row)} td input.js-product-qty-input`;
-    this.productTableImageColumn = (row) => `${this.productsTableRow(row)} td img.js-product-image`;
-    this.productTableQuantityStockColumn = (row) => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
-    this.productTableColumnRemoveButton = (row) => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
+    this.productsTableRow = (row: number) => `${this.productsTableRows}:nth-child(${row})`;
+    this.productsTableColumn = (column: string, row: number) => `${this.productsTableRow(row)} td.js-product-${column}`;
+    this.productTableQuantityColumn = (row: number) => `${this.productsTableRow(row)} td input.js-product-qty-input`;
+    this.productTableImageColumn = (row: number) => `${this.productsTableRow(row)} td img.js-product-image`;
+    this.productTableQuantityStockColumn = (row: number) => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
+    this.productTableColumnRemoveButton = (row: number) => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
 
     // Vouchers block selectors
     this.searchVoucherInput = '#search-cart-rules-input';
@@ -104,9 +307,9 @@ class AddOrder extends BOBasePage {
     this.vouchersTable = '#cart-rules-table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
-    this.vouchersTableRow = (row) => `${this.vouchersTableRows}:nth-child(${row})`;
-    this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
-    this.vouchersTableRowRemoveButton = (row) => `${this.vouchersTableRows}:nth-child(${row})`
+    this.vouchersTableRow = (row: number) => `${this.vouchersTableRows}:nth-child(${row})`;
+    this.vouchersTableColumn = (column: string, row: number) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
+    this.vouchersTableRowRemoveButton = (row: number) => `${this.vouchersTableRows}:nth-child(${row})`
       + ' td button.js-cart-rule-delete-btn';
 
     // Addresses form selectors
@@ -121,9 +324,9 @@ class AddOrder extends BOBasePage {
     this.shippingBlock = '#shipping-block';
     this.deliveryOptionSelect = '#delivery-option-select';
     this.totalShippingTaxIncl = '.js-total-shipping-tax-inc';
-    this.freeShippingToggleInput = (toggle) => `#free-shipping_${toggle}`;
-    this.giftToggleInput = (toggle) => `#is-gift_${toggle}`;
-    this.recycledPackagingToggleInput = (toggle) => `#recycled-packaging_${toggle}`;
+    this.freeShippingToggleInput = (toggle: number) => `#free-shipping_${toggle}`;
+    this.giftToggleInput = (toggle: number) => `#is-gift_${toggle}`;
+    this.recycledPackagingToggleInput = (toggle: number) => `#recycled-packaging_${toggle}`;
     this.shippingCost = `${this.shippingBlock} span.js-total-shipping-tax-inc`;
     this.giftMessageTextarea = '#cart_gift_message';
 
@@ -138,7 +341,7 @@ class AddOrder extends BOBasePage {
     this.orderMessageTextArea = '#cart_summary_order_message';
     this.paymentMethodSelect = `${this.summaryBlock} #select2-cart_summary_payment_module-container`;
     this.paymentMethodSelectResult = 'body span.select2-results';
-    this.paymentMethodOption = (paymentMethod) => '#select2-cart_summary_payment_module-results '
+    this.paymentMethodOption = (paymentMethod: string) => '#select2-cart_summary_payment_module-results '
       + `li[data-select2-id*='${paymentMethod}']`;
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
@@ -157,18 +360,18 @@ class AddOrder extends BOBasePage {
    * @param customer {string} Customer name/email to search
    * @returns {Promise<void>}
    */
-  async searchCustomer(page, customer) {
+  async searchCustomer(page: Page, customer: string): Promise<void> {
     await this.setValue(page, this.customerSearchInput, customer);
 
     await this.waitForHiddenSelector(page, this.customerSearchLoadingNoticeBlock);
   }
 
   /**
-   * Get Error message when when no customer was found after searching
+   * Get Error message when no customer was found after searching
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getNoCustomerFoundError(page) {
+  getNoCustomerFoundError(page: Page): Promise<string> {
     return this.getTextContent(page, this.customerSearchEmptyResultParagraphe);
   }
 
@@ -177,10 +380,10 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getCustomersSearchNumber(page) {
+  async getCustomersSearchNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerCardNameTitle(1));
 
-    return page.$$eval(this.customerResultsBlock, (divs) => divs.length);
+    return page.$$eval(this.customerResultsBlock, (divs: HTMLElement[]) => divs.length);
   }
 
   /**
@@ -189,7 +392,7 @@ class AddOrder extends BOBasePage {
    * @param cardPosition {number} Position of the card in results
    * @returns {Promise<string>}
    */
-  getCustomerNameFromResult(page, cardPosition = 1) {
+  getCustomerNameFromResult(page: Page, cardPosition: number = 1): Promise<string> {
     return this.getTextContent(page, this.customerCardNameTitle(cardPosition));
   }
 
@@ -199,7 +402,7 @@ class AddOrder extends BOBasePage {
    * @param cardPosition {number} Position of the card in results
    * @returns {Promise<string>}
    */
-  getCustomerCardBody(page, cardPosition = 1) {
+  getCustomerCardBody(page: Page, cardPosition: number = 1): Promise<string> {
     return this.getTextContent(page, this.customerCardBody(cardPosition));
   }
 
@@ -209,7 +412,7 @@ class AddOrder extends BOBasePage {
    * @param customerData {CustomerData} Customer data fake object
    * @returns {Promise<string>}
    */
-  async addNewCustomer(page, customerData) {
+  async addNewCustomer(page: Page, customerData): Promise<string> {
     await page.click(this.addCustomerLink);
     await this.waitForVisibleSelector(page, this.iframe);
 
@@ -231,7 +434,7 @@ class AddOrder extends BOBasePage {
    * @param cardPosition {number} Position of customer to choose on the list
    * @returns {Promise<boolean>}
    */
-  async chooseCustomer(page, cardPosition = 1) {
+  async chooseCustomer(page: Page, cardPosition: number = 1): Promise<boolean> {
     await page.click(this.customerCardChooseButton(cardPosition));
 
     await Promise.all([
@@ -247,7 +450,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnDetailsButton(page) {
+  async clickOnDetailsButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.customerCardDetailButton);
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -259,7 +462,7 @@ class AddOrder extends BOBasePage {
    * @param customerID {number} Id of customer to check
    * @returns {*}
    */
-  getCustomerIframe(page, customerID) {
+  getCustomerIframe(page: Page, customerID: number): Frame|null {
     return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
   }
 
@@ -268,7 +471,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeIframe(page) {
+  async closeIframe(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.closeFancyBoxIframe);
 
     return this.elementNotVisible(page, this.iframe, 3000);
@@ -281,7 +484,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getTextWhenCartsTableIsEmpty(page) {
+  async getTextWhenCartsTableIsEmpty(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
     return this.getTextContent(page, this.emptyCartBlock, true);
   }
@@ -293,7 +496,7 @@ class AddOrder extends BOBasePage {
    * @param row {Number} Row on table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromCartsTable(page, column, row = 1) {
+  async getTextColumnFromCartsTable(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.customerCartsTableColumn(column, row));
   }
 
@@ -303,7 +506,7 @@ class AddOrder extends BOBasePage {
    * @param row {Number} Row on table
    * @returns {Promise<Boolean>}
    */
-  async clickOnCartDetailsButton(page, row = 1) {
+  async clickOnCartDetailsButton(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.customerCartsTableDetailsButton(row));
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -315,7 +518,7 @@ class AddOrder extends BOBasePage {
    * @param cartId {number} Id of customer to check
    * @returns {*}
    */
-  getShoppingCartIframe(page, cartId) {
+  getShoppingCartIframe(page: Page, cartId: number): Frame|null {
     return page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
   }
 
@@ -325,7 +528,7 @@ class AddOrder extends BOBasePage {
    * @param row {Number} Row on table
    * @returns {Promise<Boolean>}
    */
-  async clickOnCartUseButton(page, row = 1) {
+  async clickOnCartUseButton(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.customerCartsTableUseButton(row));
 
     return this.elementVisible(page, this.productsTable, 1000);
@@ -338,7 +541,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnOrdersTab(page) {
+  async clickOnOrdersTab(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.ordersTab);
 
     return this.elementVisible(page, this.customerOrdersTable, 1000);
@@ -349,10 +552,10 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getOrdersNumber(page) {
+  async getOrdersNumber(page: Page): Promise<number> {
     await this.waitForVisibleSelector(page, this.customerOrdersTable);
 
-    return page.$$eval(this.customerOrdersTableRows, (trs) => trs.length);
+    return page.$$eval(this.customerOrdersTableRows, (trs: HTMLElement[]) => trs.length);
   }
 
   /**
@@ -362,7 +565,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Column row in orders table
    * @returns {Promise<string>}
    */
-  async getTextFromOrdersTable(page, column, row = 1) {
+  async getTextFromOrdersTable(page: Page, column: string, row: number = 1): Promise<string> {
     return this.getTextContent(page, this.customerOrdersTableColumn(column, row));
   }
 
@@ -372,7 +575,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Column row in orders table
    * @returns {Promise<boolean>}
    */
-  async clickOnOrderDetailsButton(page, row = 1) {
+  async clickOnOrderDetailsButton(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.orderDetailsButton(row));
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -384,19 +587,8 @@ class AddOrder extends BOBasePage {
    * @param orderID {number} Id of order to check
    * @returns {*}
    */
-  getOrderIframe(page, orderID) {
+  getOrderIframe(page: Page, orderID: number): Frame|null {
     return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
-  }
-
-  /**
-   * Close order iframe
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeOrderIframe(page) {
-    await this.waitForSelectorAndClick(page, this.closeIframe);
-
-    return this.elementNotVisible(page, this.iframe, 3000);
   }
 
   /**
@@ -405,7 +597,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row in orders table
    * @returns {Promise<boolean>}
    */
-  async clickOnOrderUseButton(page, row = 1) {
+  async clickOnOrderUseButton(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.orderUseButton(row));
 
     return this.elementVisible(page, this.productsTable, 1000);
@@ -419,7 +611,7 @@ class AddOrder extends BOBasePage {
    * @param productName {string} Product name to search
    * @returns {Promise<string>}
    */
-  async searchProductAndGetAlert(page, productName) {
+  async searchProductAndGetAlert(page: Page, productName: string): Promise<string> {
     await this.setValue(page, this.productSearchInput, productName);
 
     return this.getTextContent(page, this.noProductFoundAlert);
@@ -433,7 +625,12 @@ class AddOrder extends BOBasePage {
    * @param quantity {number} Product quantity to add to the cart
    * @returns {Promise<string>}
    */
-  async AddProductToCartAndGetAlert(page, productToSearch, productToSelect, quantity = 1) {
+  async AddProductToCartAndGetAlert(
+    page: Page,
+    productToSearch: string,
+    productToSelect: string,
+    quantity: number = 1,
+  ): Promise<string> {
     // Search product
     await this.setValue(page, this.productSearchInput, productToSearch);
     await this.waitForVisibleSelector(page, this.addProductToCartForm);
@@ -456,7 +653,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on products table
    * @returns {Promise<void>}
    */
-  async addProductQuantity(page, quantity, row) {
+  async addProductQuantity(page: Page, quantity: number, row: number): Promise<void> {
     await this.setValue(page, this.productTableQuantityColumn(row), quantity);
 
     await page.click(this.productsTableColumn('total-price', row));
@@ -473,7 +670,13 @@ class AddOrder extends BOBasePage {
    * @param customizedValue {string}
    * @returns {Promise<void>}
    */
-  async addProductToCart(page, productToSearch, productToSelect, quantity = 1, customizedValue = '') {
+  async addProductToCart(
+    page: Page,
+    productToSearch: ProductData,
+    productToSelect: string,
+    quantity: number = 1,
+    customizedValue: string = '',
+  ) {
     // Search product
     await this.setValue(page, this.productSearchInput, productToSearch.name);
     await this.waitForVisibleSelector(page, this.addProductToCartForm);
@@ -499,12 +702,12 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<{reference: string, image: string, quantityMax: number, price: number, description: string,
    * quantityMin: number}>}
    */
-  async getProductDetailsFromTable(page, row = 1) {
+  async getProductDetailsFromTable(page: Page, row: number = 1) {
     return {
       image: await this.getAttributeContent(page, this.productTableImageColumn(row), 'src'),
       description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
       reference: await this.getTextContent(page, this.productsTableColumn('ref', row)),
-      quantityMin: parseInt(await this.getAttributeContent(page, this.productTableQuantityColumn(row), 'min'), 10),
+      quantityMin: parseInt(await this.getAttributeContent(page, this.productTableQuantityColumn(row), 'min') ?? '', 10),
       quantityMax: parseInt(await this.getTextContent(page, this.productTableQuantityStockColumn(row)), 10),
       price: parseFloat(await this.getTextContent(page, this.productsTableColumn('total-price', row))),
     };
@@ -517,7 +720,7 @@ class AddOrder extends BOBasePage {
    * @param image {string} Image file name to check
    * @returns {Promise<void>}
    */
-  async waitForVisibleProductImage(page, row, image) {
+  async waitForVisibleProductImage(page: Page, row: number, image: string): Promise<void> {
     await this.waitForVisibleSelector(page, `${this.productTableImageColumn(row)}[src*='${image}']`);
   }
 
@@ -528,7 +731,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<{reference: string, image: string, quantity: number, price: string, description: string,
    * basePrice: string}>}
    */
-  async getProductGiftDetailsFromTable(page, row = 1) {
+  async getProductGiftDetailsFromTable(page: Page, row: number = 1) {
     return {
       image: await this.getAttributeContent(page, `${this.productsTableRow(row)} td img.js-product-image`, 'src'),
       description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
@@ -545,7 +748,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on products table
    * @returns {Promise<boolean>}
    */
-  isProductTableRowNotVisible(page, row) {
+  isProductTableRowNotVisible(page: Page, row: number): Promise<boolean> {
     return this.elementNotVisible(page, this.productsTableRow(row), 1000);
   }
 
@@ -555,7 +758,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on product table
    * @returns {Promise<boolean>}
    */
-  async removeProduct(page, row = 1) {
+  async removeProduct(page: Page, row: number = 1): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.productTableColumnRemoveButton(row));
 
     return this.elementNotVisible(page, this.productsTableColumn('total-price', row), 2000);
@@ -567,7 +770,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on cart table
    * @returns {Promise<boolean>}
    */
-  async isProductNotVisibleInCart(page, row) {
+  async isProductNotVisibleInCart(page: Page, row: number): Promise<boolean> {
     return this.elementNotVisible(page, this.productsTableColumn('definition-td', row), 2000);
   }
 
@@ -577,7 +780,7 @@ class AddOrder extends BOBasePage {
    * @param currency {string} Currency to select
    * @returns {Promise<void>}
    */
-  async selectAnotherCurrency(page, currency) {
+  async selectAnotherCurrency(page: Page, currency: string): Promise<void> {
     await this.selectByVisibleText(page, this.currencySelect, currency);
 
     await page.waitForTimeout(2000);
@@ -589,7 +792,7 @@ class AddOrder extends BOBasePage {
    * @param language {string} Language to select
    * @returns {Promise<void>}
    */
-  async selectAnotherLanguage(page, language) {
+  async selectAnotherLanguage(page: Page, language: string): Promise<void> {
     await this.selectByVisibleText(page, this.languageSelect, language);
   }
 
@@ -600,7 +803,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isVouchersTableNotVisible(page) {
+  isVouchersTableNotVisible(page: Page): Promise<boolean> {
     return this.elementNotVisible(page, this.vouchersTable, 1000);
   }
 
@@ -610,7 +813,7 @@ class AddOrder extends BOBasePage {
    * @param voucherName {string} Voucher name to search
    * @returns {Promise<string>}
    */
-  async searchVoucher(page, voucherName) {
+  async searchVoucher(page: Page, voucherName: string): Promise<string> {
     await this.setValue(page, this.searchVoucherInput, voucherName);
     const cartRuleResult = await this.getTextContent(page, this.searchCartRuleResultBox);
 
@@ -626,7 +829,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCartRuleErrorText(page) {
+  async getCartRuleErrorText(page: Page): Promise<string> {
     return this.getTextContent(page, this.cartRuleErrorText);
   }
 
@@ -635,7 +838,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnAddVoucherButton(page) {
+  async clickOnAddVoucherButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.addVoucherBUtton);
     await this.waitForVisibleSelector(page, this.iframe);
 
@@ -647,7 +850,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  async getCreateVoucherIframe(page) {
+  getCreateVoucherIframe(page: Page): Frame|null {
     return page.frame({
       url: /controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1/gmi,
     });
@@ -659,7 +862,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on vouchers table
    * @returns {Promise<{name: string, description: string, value: number}>}
    */
-  async getVoucherDetailsFromTable(page, row = 1) {
+  async getVoucherDetailsFromTable(page: Page, row: number = 1) {
     return {
       name: await this.getTextContent(page, this.vouchersTableColumn('name', row)),
       description: await this.getTextContent(page, this.vouchersTableColumn('description', row)),
@@ -673,7 +876,7 @@ class AddOrder extends BOBasePage {
    * @param row {number} Row on vouchers table
    * @returns {Promise<void>}
    */
-  async removeVoucher(page, row = 1) {
+  async removeVoucher(page: Page, row: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.vouchersTableRowRemoveButton(row));
   }
 
@@ -686,7 +889,7 @@ class AddOrder extends BOBasePage {
    * @param invoiceAddress {string} Invoice address to choose
    * @returns {Promise<void>}
    */
-  async chooseAddresses(page, deliveryAddress, invoiceAddress) {
+  async chooseAddresses(page: Page, deliveryAddress: string, invoiceAddress: string): Promise<void> {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
   }
@@ -696,7 +899,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getDeliveryAddressList(page) {
+  async getDeliveryAddressList(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.deliveryAddressSelect);
 
     return this.getTextContent(page, this.deliveryAddressSelect);
@@ -707,7 +910,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getDeliveryAddressDetails(page) {
+  async getDeliveryAddressDetails(page: Page): Promise<string> {
     await page.waitForTimeout(3000);
 
     return this.getTextContent(page, this.deliveryAddressDetails);
@@ -719,7 +922,7 @@ class AddOrder extends BOBasePage {
    * @param deliveryAddress {string} Delivery address to choose
    * @returns {Promise<string>}
    */
-  async chooseDeliveryAddress(page, deliveryAddress) {
+  async chooseDeliveryAddress(page: Page, deliveryAddress: string): Promise<string> {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
 
     return this.getDeliveryAddressDetails(page);
@@ -730,7 +933,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getInvoiceAddressDetails(page) {
+  async getInvoiceAddressDetails(page: Page): Promise<string> {
     await page.waitForTimeout(2000);
 
     return this.getTextContent(page, this.invoiceAddressdetails);
@@ -742,7 +945,7 @@ class AddOrder extends BOBasePage {
    * @param invoiceAddress {string} Invoice address to choose
    * @returns {Promise<string>}
    */
-  async chooseInvoiceAddress(page, invoiceAddress) {
+  async chooseInvoiceAddress(page: Page, invoiceAddress: string): Promise<string> {
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
 
     return this.getInvoiceAddressDetails(page);
@@ -753,7 +956,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnEditDeliveryAddressButton(page) {
+  async clickOnEditDeliveryAddressButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.deliveryAddressEditButton);
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -764,7 +967,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnEditInvoiceAddressButton(page) {
+  async clickOnEditInvoiceAddressButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.invoiceAddressEditButton);
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -775,7 +978,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  async getEditAddressIframe(page) {
+  getEditAddressIframe(page: Page): Frame|null {
     return page.frame({url: /sell\/addresses\/cart\//gmi});
   }
 
@@ -784,7 +987,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnAddNewAddressButton(page) {
+  async clickOnAddNewAddressButton(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, '#js-add-address-btn');
 
     return this.elementVisible(page, this.iframe, 2000);
@@ -795,7 +998,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<*>}
    */
-  async getAddAddressIframe(page) {
+  getAddAddressIframe(page: Page): Frame|null {
     return page.frame({url: /sell\/addresses\/new\?/gmi});
   }
 
@@ -806,7 +1009,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isShippingBlockVisible(page) {
+  isShippingBlockVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.shippingBlock, 1000);
   }
 
@@ -815,11 +1018,11 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @param deliveryOptionName {string} Delivery option name to choose
    * @param isFreeShipping {boolean} True if we want a free shipping
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
+  async setDeliveryOption(page: Page, deliveryOptionName: string, isFreeShipping: boolean = false): Promise<string> {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el) => el.click());
+    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), (el: HTMLElement) => el.click());
     if (isFreeShipping) {
       await this.waitForVisibleSelector(page, this.vouchersTable);
     }
@@ -833,7 +1036,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getDeliveryOption(page) {
+  async getDeliveryOption(page: Page): Promise<string> {
     return this.getTextContent(page, `${this.deliveryOptionSelect} option[selected='selected']`, false);
   }
 
@@ -842,7 +1045,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getShippingCost(page) {
+  async getShippingCost(page: Page): Promise<string> {
     await page.waitForTimeout(1000);
 
     return this.getTextContent(page, this.shippingCost);
@@ -854,7 +1057,7 @@ class AddOrder extends BOBasePage {
    * @param isEnabled {boolean} True if we need to enable free shipping
    * @returns {Promise<void>}
    */
-  async setFreeShipping(page, isEnabled) {
+  async setFreeShipping(page: Page, isEnabled: boolean): Promise<void> {
     await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0));
   }
 
@@ -864,7 +1067,7 @@ class AddOrder extends BOBasePage {
    * @param isEnabled {boolean} True if we need to enable recycled packaging
    * @returns {Promise<void>}
    */
-  async setRecycledPackaging(page, isEnabled) {
+  async setRecycledPackaging(page: Page, isEnabled: boolean): Promise<void> {
     await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0));
     await page.waitForTimeout(3000);
   }
@@ -875,7 +1078,7 @@ class AddOrder extends BOBasePage {
    * @param isEnabled {boolean} True if we need to enable gift
    * @returns {Promise<void>}
    */
-  async setGift(page, isEnabled) {
+  async setGift(page: Page, isEnabled: boolean): Promise<void> {
     await this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0), isEnabled);
     await page.waitForTimeout(3000);
   }
@@ -886,7 +1089,7 @@ class AddOrder extends BOBasePage {
    * @param giftMessage {string} Gift message text to set on textarea
    * @returns {Promise<void>}
    */
-  async setGiftMessage(page, giftMessage) {
+  async setGiftMessage(page: Page, giftMessage: string): Promise<void> {
     await this.setValue(page, this.giftMessageTextarea, giftMessage);
     await page.waitForTimeout(2000);
   }
@@ -898,7 +1101,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isSummaryBlockVisible(page) {
+  async isSummaryBlockVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.summaryBlock, 2000);
   }
 
@@ -907,7 +1110,7 @@ class AddOrder extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getTotal(page) {
+  async getTotal(page: Page): Promise<string> {
     return this.getTextContent(page, this.totalTaxIncluded);
   }
 
@@ -917,7 +1120,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<{totalTaxIncluded: string, totalVouchers: string, totalTaxes: string, totalProducts: string,
    * totalTaxExcluded: string, totalShipping: string}>}
    */
-  async getSummaryDetails(page) {
+  async getSummaryDetails(page: Page) {
     return {
       totalProducts: await this.getTextContent(page, this.totalProducts),
       totalVouchers: await this.getTextContent(page, this.totalDiscountProduct),
@@ -934,7 +1137,7 @@ class AddOrder extends BOBasePage {
    * @param message {string} Message text to set
    * @returns {Promise<void>}
    */
-  async setOrderMessage(page, message) {
+  async setOrderMessage(page: Page, message: string): Promise<void> {
     await this.setValue(page, this.orderMessageTextArea, message);
   }
 
@@ -945,7 +1148,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<Page|string>}
    */
   // eslint-disable-next-line consistent-return
-  async setMoreActions(page, action) {
+  async setMoreActions(page: Page, action: string): Promise<Page|string> {
     await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
     if (action === 'pre-filled order') {
       await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
@@ -961,7 +1164,7 @@ class AddOrder extends BOBasePage {
    * @param paymentMethodModuleName {string} Payment method to choose
    * @returns {Promise<void>}
    */
-  async setPaymentMethod(page, paymentMethodModuleName) {
+  async setPaymentMethod(page: Page, paymentMethodModuleName: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.paymentMethodSelect);
     await this.waitForVisibleSelector(page, this.paymentMethodSelectResult);
     await page.click(this.paymentMethodOption(paymentMethodModuleName));
@@ -973,7 +1176,7 @@ class AddOrder extends BOBasePage {
    * @param orderStatus {{id: number, status: string}} Order status to choose
    * @returns {Promise<void>}
    */
-  async setOrderStatus(page, orderStatus) {
+  async setOrderStatus(page: Page, orderStatus): Promise<void> {
     await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.status);
   }
 
@@ -983,7 +1186,7 @@ class AddOrder extends BOBasePage {
    * @param waitForNavigation {boolean} True if we need save and waitForNavigation, false if not
    * @returns {Promise<boolean>}
    */
-  async clickOnCreateOrderButton(page, waitForNavigation = true) {
+  async clickOnCreateOrderButton(page: Page, waitForNavigation: boolean = true): Promise<boolean> {
     if (waitForNavigation) {
       await this.clickAndWaitForNavigation(page, this.createOrderButton);
     } else {
@@ -1000,7 +1203,7 @@ class AddOrder extends BOBasePage {
    * @param orderStatus {{id: number, status: string}} Order status to choose
    * @returns {Promise<void>}
    */
-  async setSummaryAndCreateOrder(page, paymentMethodName, orderStatus) {
+  async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus): Promise<void> {
     await this.setPaymentMethod(page, paymentMethodName);
     await this.setOrderStatus(page, orderStatus);
     await this.clickOnCreateOrderButton(page);
@@ -1015,7 +1218,7 @@ class AddOrder extends BOBasePage {
    * @param isNewCustomer {boolean} True if the customer is new
    * @returns {Promise<void>}
    */
-  async createOrder(page, orderToMake, isNewCustomer = false) {
+  async createOrder(page: Page, orderToMake, isNewCustomer: boolean = false): Promise<void> {
     // Choose customer
     // If it's a new customer, the creation of customer should be done in test
     // with add customer page
@@ -1049,4 +1252,4 @@ class AddOrder extends BOBasePage {
   }
 }
 
-module.exports = new AddOrder();
+export default new AddOrder();

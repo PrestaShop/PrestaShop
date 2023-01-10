@@ -56,7 +56,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
   // Variable used to get the number of non ordered shopping carts
   let numberOfNonOrderedShoppingCarts: number;
   // Variable used to get the last shopping card ID
-  let lastShoppingCartId: string = '0';
+  let lastShoppingCartId: number = 0;
   // Variable used to get the available stock of the ordered product from BO > stocks page
   let availableStockOfOrderedProduct: number = 0;
 
@@ -136,8 +136,11 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should get the last shopping cart ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart1', baseContext);
 
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-      await expect(parseInt(lastShoppingCartId, 10)).to.be.above(0);
+      lastShoppingCartId = parseInt(
+        await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'),
+        10,
+      );
+      await expect(lastShoppingCartId).to.be.above(0);
     });
   });
 
@@ -250,8 +253,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should get the last shopping cart ID', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart2', baseContext);
 
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-      await expect(parseInt(lastShoppingCartId, 10)).to.be.above(0);
+      lastShoppingCartId = parseInt(await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
+      await expect(lastShoppingCartId).to.be.above(0);
     });
   });
 
@@ -329,7 +332,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
 
       await shoppingCartsPage.reloadPage(page);
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+      lastShoppingCartId = parseInt(await shoppingCartsPage.getTextColumn(page, 1, 'id_cart'), 10);
     });
   });
 
@@ -409,7 +412,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartId', baseContext);
 
       const cartId = await addOrderPage.getTextColumnFromCartsTable(page, 'id');
-      await expect(parseInt(cartId, 10)).to.be.equal(parseInt(lastShoppingCartId, 10));
+      await expect(parseInt(cartId, 10)).to.be.equal(lastShoppingCartId);
     });
     [
       {args: {columnName: 'date', result: today}},
