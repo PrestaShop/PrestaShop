@@ -1,7 +1,26 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 class Preferences extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly handlingForm: string;
+
+  private readonly handlingChargesInput: string;
+
+  private readonly saveHandlingButton: string;
+
+  private readonly carrierOptionForm: string;
+
+  private readonly defaultCarrierSelect: string;
+
+  private readonly sortBySelect: string;
+
+  private readonly orderBySelect: string;
+
+  private readonly saveCarrierOptionsButton: string;
+
   constructor() {
     super();
 
@@ -26,10 +45,10 @@ class Preferences extends BOBasePage {
   /**
    * Set handling charges button
    * @param page {Page} Browser tab
-   * @param value {String} The handling charges value
+   * @param value {string} The handling charges value
    * @returns {Promise<string>}
    */
-  async setHandlingCharges(page, value) {
+  async setHandlingCharges(page: Page, value: string): Promise<string> {
     await this.setValue(page, this.handlingChargesInput, value);
 
     // Save handling form and return successful message
@@ -45,7 +64,7 @@ class Preferences extends BOBasePage {
    * @param carrier {object} List of carriers
    * @return {Promise<string>}
    */
-  async setDefaultCarrier(page, carrier) {
+  async setDefaultCarrier(page: Page, carrier): Promise<string> {
     await this.selectByVisibleText(
       page,
       this.defaultCarrierSelect,
@@ -64,7 +83,7 @@ class Preferences extends BOBasePage {
    * @param orderBy {String} Order by 'Ascending' or 'Descending'
    * @returns {Promise<string>}
    */
-  async setCarrierSortOrderBy(page, sortBy, orderBy = 'Ascending') {
+  async setCarrierSortOrderBy(page: Page, sortBy: string, orderBy: string = 'Ascending'): Promise<string> {
     await this.selectByVisibleText(page, this.sortBySelect, sortBy);
     await this.selectByVisibleText(page, this.orderBySelect, orderBy);
 
@@ -74,4 +93,4 @@ class Preferences extends BOBasePage {
   }
 }
 
-module.exports = new Preferences();
+export default new Preferences();
