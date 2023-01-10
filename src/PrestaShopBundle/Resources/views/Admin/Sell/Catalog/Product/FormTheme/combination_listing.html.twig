@@ -29,14 +29,49 @@
     {# Special case to keep both inputs in the same cell #}
     {% for child in form.children %}
       <td>
-        {# When value is null we are displaying the prototype #}
-        {% if value is null %}
-          {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
-        {% else %}
-          {% set widgetAttr = {} %}
+        {% if child.vars.name != 'actions' %}
+          {# When value is null we are displaying the prototype #}
+          {% if value is null %}
+            {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
+          {% else %}
+            {% set widgetAttr = {} %}
+          {% endif %}
+          {{ form_widget(child, widgetAttr) }}
+          {{ form_errors(child) }}
+        {% elseif child.children is not empty %}
+          <div class="btn-group">
+            {% set skippedActions, isFirstRendered = 0, false %}
+
+            {# Render first item that is not in dropwdown #}
+            {% for action in child.children %}
+              {% if not isFirstRendered %}
+                {% set skippedActions = skippedActions + 1 %}
+                {{ form_widget(action, {'attr': {
+                  'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+                }}) }}
+                {% set isFirstRendered = true %}
+              {% endif %}
+            {% endfor %}
+
+            {# Render remaining items in dropdown #}
+            {% if child.children|length > skippedActions %}
+              <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+                 data-toggle="dropdown"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+              >
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                {% for action in child.children|slice(skippedActions) %}
+                  {{ form_widget(action, {'attr': {
+                    'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim,
+                    'tooltip_name': false
+                  }}) }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
         {% endif %}
-        {{ form_widget(child, widgetAttr) }}
-        {{ form_errors(child) }}
       </td>
     {% endfor %}
   </tr>

@@ -169,15 +169,32 @@ class CombinationItemType extends TranslatorAwareType
                     'delete' => [
                         'type' => IconButtonType::class,
                         'options' => [
+                            'label' => $this->trans('Delete', 'Admin.Actions'),
                             'icon' => 'delete',
                             'attr' => [
                                 'class' => 'delete-combination-item tooltip-link',
                                 'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                                'data-modal-message' => $this->trans('Delete selected item?', 'Admin.Notifications.Warning'),
+                                'data-modal-message' => $this->trans('Delete selected item in current shop?', 'Admin.Notifications.Warning'),
                                 'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                                 'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                                 'data-toggle' => 'pstooltip',
                                 'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
+                            ],
+                        ],
+                    ],
+                    'delete_in_all_shops' => [
+                        'type' => IconButtonType::class,
+                        'options' => [
+                            'label' => $this->trans('Delete in all shops', 'Admin.Actions'),
+                            'icon' => 'delete',
+                            'attr' => [
+                                'class' => 'delete-combination-item-all-shops tooltip-link',
+                                'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
+                                'data-modal-message' => $this->trans('Delete selected item in all shops?', 'Admin.Notifications.Warning'),
+                                'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
+                                'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                                'data-toggle' => 'pstooltip',
+                                'data-original-title' => $this->trans('Delete in all shops', 'Admin.Actions'),
                             ],
                         ],
                     ],
