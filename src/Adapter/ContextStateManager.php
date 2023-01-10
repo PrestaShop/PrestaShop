@@ -179,6 +179,27 @@ final class ContextStateManager
     }
 
     /**
+     * Sets context shop and saves previous value
+     *
+     * @param int $shopContext
+     * @param int|null $shopContextId
+     *
+     * @return $this
+     *
+     * @throws \PrestaShopException
+     */
+    public function setShopContext(int $shopContext, ?int $shopContextId = null): self
+    {
+        $this->saveContextField('shopContext');
+        if ($shopContext === Shop::CONTEXT_SHOP) {
+            $this->getContext()->shop = new Shop($shopContextId);
+        }
+        Shop::setContext($shopContext, $shopContextId);
+
+        return $this;
+    }
+
+    /**
      * Restores context to a state before changes
      *
      * @return self
@@ -246,7 +267,8 @@ final class ContextStateManager
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             switch ($fieldName) {
                 case 'shop':
-                    $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
+                case 'shopContext':
+                    $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->shop;
                     $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
                     break;
                 default:
