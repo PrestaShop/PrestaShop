@@ -207,10 +207,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/atomiix/jwt"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/autoload"
         }
     ],
     "minimum-stability": "dev",
