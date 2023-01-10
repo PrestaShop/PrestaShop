@@ -1,5 +1,5 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import {Page} from "playwright";
+import {Page} from 'playwright';
 
 /**
  * Add contact page, contains functions that can be used on the page
