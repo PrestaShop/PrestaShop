@@ -21,3 +21,4 @@ services:
 
   PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultiShopPreviewAccessibilityChecker:
     autowire: true
+    public: false
