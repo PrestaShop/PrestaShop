@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
@@ -45,7 +45,7 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
     private $productRepository;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationMultiShopRepository;
 
@@ -54,7 +54,7 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        CombinationMultiShopRepository $combinationMultiShopRepository
+        CombinationRepository $combinationMultiShopRepository
     ) {
         $this->productRepository = $productRepository;
         $this->combinationMultiShopRepository = $combinationMultiShopRepository;

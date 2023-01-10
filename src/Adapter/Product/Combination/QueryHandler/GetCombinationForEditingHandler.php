@@ -32,7 +32,7 @@ use Combination;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
@@ -63,7 +63,7 @@ use Product;
 class GetCombinationForEditingHandler implements GetCombinationForEditingHandlerInterface
 {
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -118,7 +118,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $productImageUrlFactory;
 
     /**
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
@@ -131,7 +131,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         CombinationNameBuilderInterface $combinationNameBuilder,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,

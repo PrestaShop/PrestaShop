@@ -358,7 +358,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
@@ -431,7 +431,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
@@ -479,7 +479,7 @@ services:
       - '@prestashop.adapter.shop.repository.shop_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater'
 
@@ -498,7 +498,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockAvailableCommand

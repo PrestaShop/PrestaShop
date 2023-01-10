@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -46,7 +46,7 @@ class CombinationDeleter
     private $productRepository;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationMultiShopRepository;
 
@@ -57,12 +57,12 @@ class CombinationDeleter
 
     /**
      * @param ProductMultiShopRepository $productRepository
-     * @param CombinationMultiShopRepository $combinationMultiShopRepository
+     * @param CombinationRepository $combinationMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        CombinationMultiShopRepository $combinationMultiShopRepository,
+        CombinationRepository $combinationMultiShopRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->productRepository = $productRepository;

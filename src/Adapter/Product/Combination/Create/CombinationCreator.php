@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Create;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
@@ -63,7 +63,7 @@ class CombinationCreator
     private $productRepository;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -79,14 +79,14 @@ class CombinationCreator
 
     /**
      * @param CombinationGeneratorInterface $combinationGenerator
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableMultiShopRepository
      * @param DefaultCombinationUpdater $defaultCombinationUpdater
      */
     public function __construct(
         CombinationGeneratorInterface $combinationGenerator,
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater

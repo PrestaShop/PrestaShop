@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateC
 class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -47,12 +47,12 @@ class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler i
     private $productSupplierUpdater;
 
     /**
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         ProductSupplierRepository $productSupplierRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
