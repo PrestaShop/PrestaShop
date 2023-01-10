@@ -151,7 +151,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly translationsLink: string;
 
-  private readonly shopParametersParentLink: string;
+  public readonly shopParametersParentLink: string;
 
   private readonly shopParametersGeneralLink: string;
 
@@ -161,7 +161,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly customerSettingsLink: string;
 
-  private readonly contactLink: string;
+  public readonly contactLink: string;
 
   private readonly trafficAndSeoLink: string;
 

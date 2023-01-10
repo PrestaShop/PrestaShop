@@ -48,7 +48,6 @@ describe('BO - Shop Parameters - Contact : Configure contact details', async () 
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);

@@ -45,7 +45,6 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);

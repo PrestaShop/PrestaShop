@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import contactsPage from '@pages/BO/shopParameters/contact/index';
+import contactsPage from '@pages/BO/shopParameters/contact';
 
 // Import data
 import {Contacts} from '@data/demo/contacts';
@@ -45,7 +45,6 @@ describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);

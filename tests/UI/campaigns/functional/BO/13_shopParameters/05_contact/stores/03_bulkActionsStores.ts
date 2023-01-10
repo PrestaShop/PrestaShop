@@ -51,7 +51,6 @@ describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actio
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);

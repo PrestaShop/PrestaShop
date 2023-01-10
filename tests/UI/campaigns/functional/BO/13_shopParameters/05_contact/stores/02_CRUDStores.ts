@@ -49,7 +49,6 @@ describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactPage.closeSfToolBar(page);
 
     const pageTitle = await contactPage.getPageTitle(page);

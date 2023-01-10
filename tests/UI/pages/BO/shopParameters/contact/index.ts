@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Contacts page, contains functions that can be used on the page
@@ -7,6 +8,52 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Contacts extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly storesTabLink: string;
+
+  private readonly addNewContactButton: string;
+
+  private readonly contactsGridPanel: string;
+
+  private readonly contactsGridTitle: string;
+
+  private readonly contactsListForm: string;
+
+  private readonly contactsListTableRow: (row: number) => string;
+
+  private readonly contactsListTableColumn: (row: number, column: string) => string;
+
+  private readonly contactFilterInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly contactsListTableActionsColumn: (row: number) => string;
+
+  private readonly listTableToggleDropDown: (row: number) => string;
+
+  private readonly listTableEditLink: (row: number) => string;
+
+  private readonly deleteRowLink: (row: number) => string;
+
+  private readonly selectAllRowsLabel: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on contacts page
@@ -25,19 +72,19 @@ class Contacts extends BOBasePage {
     this.contactsGridPanel = '#contact_grid_panel';
     this.contactsGridTitle = `${this.contactsGridPanel} h3.card-header-title`;
     this.contactsListForm = '#contact_grid';
-    this.contactsListTableRow = (row) => `${this.contactsListForm} tbody tr:nth-child(${row})`;
-    this.contactsListTableColumn = (row, column) => `${this.contactsListTableRow(row)} td.column-${column}`;
+    this.contactsListTableRow = (row: number) => `${this.contactsListForm} tbody tr:nth-child(${row})`;
+    this.contactsListTableColumn = (row: number, column: string) => `${this.contactsListTableRow(row)} td.column-${column}`;
 
     // Filters
-    this.contactFilterInput = (filterBy) => `${this.contactsListForm} #contact_${filterBy}`;
+    this.contactFilterInput = (filterBy: string) => `${this.contactsListForm} #contact_${filterBy}`;
     this.filterSearchButton = `${this.contactsListForm} .grid-search-button`;
     this.filterResetButton = `${this.contactsListForm} .grid-reset-button`;
 
     // Actions buttons in Row
-    this.contactsListTableActionsColumn = (row) => this.contactsListTableColumn(row, 'actions');
-    this.listTableToggleDropDown = (row) => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
-    this.listTableEditLink = (row) => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
-    this.deleteRowLink = (row) => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
+    this.contactsListTableActionsColumn = (row: number) => this.contactsListTableColumn(row, 'actions');
+    this.listTableToggleDropDown = (row: number) => `${this.contactsListTableActionsColumn(row)} a[data-toggle='dropdown']`;
+    this.listTableEditLink = (row: number) => `${this.contactsListTableActionsColumn(row)} a.grid-edit-row-link`;
+    this.deleteRowLink = (row: number) => `${this.contactsListTableActionsColumn(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.contactsGridPanel} tr.column-filters .grid_bulk_action_select_all`;
@@ -46,8 +93,8 @@ class Contacts extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.contactsGridPanel} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Delete modal
     this.confirmDeleteModal = '#contact-grid-confirm-modal';
@@ -63,7 +110,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToStoresPage(page) {
+  async goToStoresPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.storesTabLink);
   }
 
@@ -72,7 +119,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -83,7 +130,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.contactsGridTitle);
   }
 
@@ -92,7 +139,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -104,7 +151,7 @@ class Contacts extends BOBasePage {
    * @param value {string} value to filter with
    * @return {Promise<void>}
    */
-  async filterContacts(page, filterBy, value = '') {
+  async filterContacts(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.contactFilterInput(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
@@ -117,7 +164,7 @@ class Contacts extends BOBasePage {
    * @param column {string} Column name to get
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableContacts(page, row, column) {
+  async getTextColumnFromTableContacts(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.contactsListTableColumn(row, column));
   }
 
@@ -127,9 +174,9 @@ class Contacts extends BOBasePage {
    * @param column {string} Column name to get
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableContacts(page, i, column);
@@ -144,7 +191,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewContactPage(page) {
+  async goToAddNewContactPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewContactButton);
   }
 
@@ -154,7 +201,7 @@ class Contacts extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToEditContactPage(page, row) {
+  async goToEditContactPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.listTableEditLink(row));
   }
 
@@ -164,7 +211,7 @@ class Contacts extends BOBasePage {
    * @param row Row on table
    * @returns {Promise<string>}
    */
-  async deleteContact(page, row) {
+  async deleteContact(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.listTableToggleDropDown(row)),
@@ -188,7 +235,7 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteContact(page) {
+  async confirmDeleteContact(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -197,10 +244,10 @@ class Contacts extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async deleteContactsBulkActions(page) {
+  async deleteContactsBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -227,7 +274,7 @@ class Contacts extends BOBasePage {
    * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -241,4 +288,4 @@ class Contacts extends BOBasePage {
   }
 }
 
-module.exports = new Contacts();
+export default new Contacts();

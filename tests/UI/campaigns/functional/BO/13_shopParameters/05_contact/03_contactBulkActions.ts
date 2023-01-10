@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import contactsPage from '@pages/BO/shopParameters/contact/index';
+import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
 // Import data
@@ -49,7 +49,6 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
       dashboardPage.shopParametersParentLink,
       dashboardPage.contactLink,
     );
-
     await contactsPage.closeSfToolBar(page);
 
     const pageTitle = await contactsPage.getPageTitle(page);
@@ -75,6 +74,7 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewContactPage${index + 1}`, baseContext);
 
         await contactsPage.goToAddNewContactPage(page);
+
         const pageTitle = await addContactPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addContactPage.pageTitleCreate);
       });
