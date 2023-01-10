@@ -1,5 +1,5 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+import {Page} from "playwright";
 
 /**
  * Add contact page, contains functions that can be used on the page
@@ -7,6 +7,28 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddContact extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly pageTitleLangButton: string;
+
+  private readonly pageTitleLangSpan: (lang: string) => string;
+
+  private readonly titleInputEN: string;
+
+  private readonly titleInputFR: string;
+
+  private readonly emailAddressInput: string;
+
+  private readonly enableSaveMessagesToggleInput: (toggle: number) => string;
+
+  private readonly descriptionTextareaEN: string;
+
+  private readonly descriptionTextareaFR: string;
+
+  private readonly saveContactButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add contact page
@@ -19,12 +41,12 @@ class AddContact extends BOBasePage {
 
     // Selectors
     this.pageTitleLangButton = '#contact_title_dropdown';
-    this.pageTitleLangSpan = (lang) => 'div.dropdown-menu[aria-labelledby=\'contact_title_dropdown\']'
+    this.pageTitleLangSpan = (lang: string) => 'div.dropdown-menu[aria-labelledby=\'contact_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';
-    this.enableSaveMessagesToggleInput = (toggle) => `#contact_is_messages_saving_enabled_${toggle}`;
+    this.enableSaveMessagesToggleInput = (toggle: number) => `#contact_is_messages_saving_enabled_${toggle}`;
     this.descriptionTextareaEN = '#contact_description_1';
     this.descriptionTextareaFR = '#contact_description_2';
     this.saveContactButton = '#save-button';
@@ -40,7 +62,7 @@ class AddContact extends BOBasePage {
    * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
-  async changeLanguageForSelectors(page, lang = 'en') {
+  async changeLanguageForSelectors(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
       page.click(this.pageTitleLangButton),
       this.waitForVisibleSelector(page, `${this.pageTitleLangButton}[aria-expanded='true']`),
@@ -57,7 +79,7 @@ class AddContact extends BOBasePage {
    * @param contactData {ContactData} Data to set on contact form
    * @returns {Promise<string>}
    */
-  async createEditContact(page, contactData) {
+  async createEditContact(page: Page, contactData): Promise<string> {
     await this.setValue(page, this.titleInputEN, contactData.title);
     await this.setValue(page, this.emailAddressInput, contactData.email);
     await this.setValue(page, this.descriptionTextareaEN, contactData.description);
@@ -71,4 +93,4 @@ class AddContact extends BOBasePage {
   }
 }
 
-module.exports = new AddContact();
+export default new AddContact();
