@@ -1,6 +1,8 @@
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
+
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
-const {options} = require('@pages/BO/shopParameters/customerSettings/options.js');
+
 
 /**
  * Customer settings page, contains functions that can be used on the page
@@ -64,19 +66,19 @@ class CustomerSettings extends BOBasePage {
     let selector;
 
     switch (option) {
-      case options.OPTION_B2B:
+      case CustomerSettingsOptions.OPTION_B2B:
         selector = this.enableB2BModeToggle;
         break;
-      case options.OPTION_PARTNER_OFFER:
+      case CustomerSettingsOptions.OPTION_PARTNER_OFFER:
         selector = this.enablePartnerOfferToggleInput;
         break;
-      case options.OPTION_BIRTH_DATE:
+      case CustomerSettingsOptions.OPTION_BIRTH_DATE:
         selector = this.askForBirthDateToggleInput;
         break;
-      case options.OPTION_EMAIL_REGISTRATION:
+      case CustomerSettingsOptions.OPTION_EMAIL_REGISTRATION:
         selector = this.sendEmailAfterRegistrationToggleInput;
         break;
-      case options.OPTION_CART_LOGIN:
+      case CustomerSettingsOptions.OPTION_CART_LOGIN:
         selector = this.redisplayCartAtLoginToggleInput;
         break;
       default:

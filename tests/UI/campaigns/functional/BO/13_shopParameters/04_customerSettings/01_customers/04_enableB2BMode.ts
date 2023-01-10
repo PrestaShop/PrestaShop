@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import {options} from '@pages/BO/shopParameters/customerSettings/options';
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 // Import FO pages
 import foHomePage from '@pages/FO/home';
 import loginFOPage from '@pages/FO/login';
@@ -70,7 +70,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', a
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_B2B,
+        CustomerSettingsOptions.OPTION_B2B,
         test.args.enable,
       );
 

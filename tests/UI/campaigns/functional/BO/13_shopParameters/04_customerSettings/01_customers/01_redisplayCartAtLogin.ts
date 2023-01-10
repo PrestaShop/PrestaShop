@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import {options} from '@pages/BO/shopParameters/customerSettings/options';
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
@@ -80,7 +80,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_CART_LOGIN,
+        CustomerSettingsOptions.OPTION_CART_LOGIN,
         test.args.enable,
       );
 

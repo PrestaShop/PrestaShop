@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import {options} from '@pages/BO/shopParameters/customerSettings/options';
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
@@ -53,7 +53,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
-
     await customerSettingsPage.closeSfToolBar(page);
 
     const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -71,7 +70,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birt
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_BIRTH_DATE,
+        CustomerSettingsOptions.OPTION_BIRTH_DATE,
         test.args.enable,
       );
 
