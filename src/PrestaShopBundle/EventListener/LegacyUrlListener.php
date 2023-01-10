@@ -29,7 +29,7 @@ namespace PrestaShopBundle\EventListener;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
@@ -50,9 +50,9 @@ class LegacyUrlListener
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;
