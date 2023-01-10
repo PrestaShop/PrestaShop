@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import customerSettingPage from '@pages/BO/shopParameters/customerSettings';
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
@@ -53,16 +53,16 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
       dashboardPage.customerSettingsLink,
     );
 
-    await customerSettingPage.closeSfToolBar(page);
+    await customerSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await customerSettingPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
+    const pageTitle = await customerSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Groups\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
 
-    await customerSettingPage.goToGroupsPage(page);
+    await customerSettingsPage.goToGroupsPage(page);
 
     const pageTitle = await groupsPage.getPageTitle(page);
     await expect(pageTitle).to.contains(groupsPage.pageTitle);

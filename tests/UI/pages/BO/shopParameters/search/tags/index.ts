@@ -1,5 +1,5 @@
 import BOBasePage from '@pages/BO/BObasePage';
-import {Page} from "playwright";
+import {Page} from 'playwright';
 
 /**
  * Tags page, contains selectors and functions for the page

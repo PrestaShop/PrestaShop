@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import customerSettingPage from '@pages/BO/shopParameters/customerSettings';
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 
 // Import data
@@ -45,17 +45,16 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
+    await customerSettingsPage.closeSfToolBar(page);
 
-    await customerSettingPage.closeSfToolBar(page);
-
-    const pageTitle = await customerSettingPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
+    const pageTitle = await customerSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Titles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
-    await customerSettingPage.goToTitlesPage(page);
+    await customerSettingsPage.goToTitlesPage(page);
 
     const pageTitle = await titlesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(titlesPage.pageTitle);

@@ -175,7 +175,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly administrationLink: string;
 
-  private readonly emailLink: string;
+  public readonly emailLink: string;
 
   private readonly importLink: string;
 

@@ -78,7 +78,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -93,7 +92,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         CustomerSettingsOptions.OPTION_EMAIL_REGISTRATION,
         test.args.enable,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
@@ -102,7 +100,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
-
       await foHomePage.changeLanguage(page, 'en');
 
       // Create account
