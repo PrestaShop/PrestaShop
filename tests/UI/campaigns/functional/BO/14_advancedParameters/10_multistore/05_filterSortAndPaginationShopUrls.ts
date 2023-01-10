@@ -289,7 +289,6 @@ describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination sh
         dashboardPage.shopParametersParentLink,
         dashboardPage.shopParametersGeneralLink,
       );
-
       await generalPage.closeSfToolBar(page);
 
       const pageTitle = await generalPage.getPageTitle(page);

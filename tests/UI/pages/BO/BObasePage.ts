@@ -167,7 +167,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly searchLink: string;
 
-  private readonly advancedParametersLink: string;
+  public readonly advancedParametersLink: string;
 
   private readonly informationLink: string;
 
@@ -191,7 +191,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly securityLink: string;
 
-  private readonly multistoreLink: string;
+  public readonly multistoreLink: string;
 
   private readonly menuTabLink: string;
 
