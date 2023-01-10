@@ -128,12 +128,12 @@ class Statuses extends BOBasePage {
     // Row actions selectors
     this.tableColumnActions = (tableName: string, row: number) => `${this.tableBodyColumns(tableName, row)}`
       + ' .btn-group-action';
-    this.tableColumnActionsEditLink = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)} `
-      + 'a.edit';
+    this.tableColumnActionsEditLink = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
+      + ' a.edit';
     this.tableColumnActionsToggleButton = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
       + ' button.dropdown-toggle';
     this.tableColumnActionsDropdownMenu = (tableName: string, row: number) => `${this.tableColumnActions(tableName, row)}`
-      + '.dropdown-menu';
+      + ' .dropdown-menu';
     this.tableColumnActionsDeleteLink = (tableName: string, row: number) => `${this.tableColumnActionsDropdownMenu(
       tableName, row)} a.delete`;
     this.tableColumnValidIcon = (row: number, column: string) => `${this.tableColumn('order', row, column)
@@ -380,7 +380,9 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async sortTable(page: Page, tableName: string, sortBy: string, columnID: number, sortDirection: string): Promise<void> {
-    const sortColumnButton = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
+    const sortColumnButton: string = `${this.sortColumnDiv(tableName, columnID)} i.icon-caret-${sortDirection}`;
+
+    console.log(sortColumnButton);
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
 
