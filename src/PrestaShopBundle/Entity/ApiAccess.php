@@ -48,22 +48,30 @@ class ApiAccess
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="client_id", type="string", length=255)
      */
     private $clientId;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="client_secret", type="string", length=255)
      */
     private $clientSecret;
 
     /**
+     * @var AuthorizedApplication
+     *
      * @ORM\ManyToOne(targetEntity=AuthorizedApplication::class)
      * @ORM\JoinColumn(name="id_authorized_application", referencedColumnName="id_authorized_application", nullable=false, onDelete="CASCADE")
      */
     private $authorizedApplication;
 
     /**
+     * @var bool
+     *
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
@@ -90,25 +98,25 @@ class ApiAccess
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
 
     /**
-     * @param mixed $clientId
+     * @param string $clientId
      */
-    public function setClientId($clientId): void
+    public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }
@@ -122,33 +130,33 @@ class ApiAccess
     }
 
     /**
-     * @return mixed
+     * @return AuthorizedApplication
      */
-    public function getAuthorizedApplication()
+    public function getAuthorizedApplication(): AuthorizedApplication
     {
         return $this->authorizedApplication;
     }
 
     /**
-     * @param mixed $authorizedApplication
+     * @param AuthorizedApplication $authorizedApplication
      */
-    public function setAuthorizedApplication($authorizedApplication): void
+    public function setAuthorizedApplication(AuthorizedApplication $authorizedApplication): void
     {
         $this->authorizedApplication = $authorizedApplication;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getActive()
+    public function isActive(): bool
     {
         return $this->active;
     }
 
     /**
-     * @param mixed $active
+     * @param bool $active
      */
-    public function setActive($active): void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }

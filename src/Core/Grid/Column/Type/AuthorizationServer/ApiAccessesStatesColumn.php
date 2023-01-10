@@ -24,38 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\AuthorizationServer;
 
 use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class CustomTypeColumn extends AbstractColumn
+final class ApiAccessesStatesColumn extends AbstractColumn
 {
-    /** @var string */
-    private $type;
-
     /**
-     * @param string $id
-     * @param string|null $type
+     * {@inheritdoc}
      */
-    public function __construct(string $id, string $type = null)
+    public function getType(): string
     {
-        parent::__construct($id);
-        $this->type = $type ?? $id;
+        return 'api_accesses_states';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
+    protected function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 
