@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Quick access page, contains functions that can be used on the page
@@ -7,6 +8,46 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class QuickAccess extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewQuickAccessButton: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnLink: (row: number) => string;
+
+  private readonly tableColumnIsNewWindow: (row: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on quick access page
@@ -25,21 +66,21 @@ class QuickAccess extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='quick_accessFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='quick_accessFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonquick_access';
     this.filterResetButton = 'button[name=\'submitResetquick_access\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnLink = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnIsNewWindow = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnLink = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnIsNewWindow = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -58,7 +99,7 @@ class QuickAccess extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewQuickAccessPage(page) {
+  async goToAddNewQuickAccessPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewQuickAccessButton);
   }
 
@@ -69,8 +110,8 @@ class QuickAccess extends BOBasePage {
    * @param columnName {string} Column name in the table
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+    let columnSelector: string;
 
     switch (columnName) {
       case 'id_quick_access':
@@ -104,7 +145,7 @@ class QuickAccess extends BOBasePage {
    * @param value {string|number} Value for the select filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy:string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
@@ -128,7 +169,7 @@ class QuickAccess extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async bulkDeleteQuickAccessLink(page) {
+  async bulkDeleteQuickAccessLink(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
     await this.dialogListener(page, true);
 
@@ -156,4 +197,4 @@ class QuickAccess extends BOBasePage {
   }
 }
 
-module.exports = new QuickAccess();
+export default new QuickAccess();
