@@ -12,7 +12,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import orderPageMessagesBlock from '@pages/BO/orders/view/paymentBlock';
+import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
@@ -157,8 +157,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      const pageTitle = await orderPagePaymentBlock.getPageTitle(page);
+      await expect(pageTitle, 'Error when view order page!').to.contains(orderPagePaymentBlock.pageTitle);
     });
   });
 
@@ -167,22 +167,22 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that payments number is equal to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayments1', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
     it('should add payment when amount is inferior to the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountInferiorTotal', baseContext);
 
-      const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountInfTotal);
+      const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentDataAmountInfTotal);
       expect(validationMessage, 'Successful message is not correct!')
-        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+        .to.equal(orderPagePaymentBlock.successfulUpdateMessage);
     });
 
     it('should check the warning message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWarning', baseContext);
 
-      const warningMessage = await orderPageMessagesBlock.getPaymentWarning(page);
+      const warningMessage = await orderPagePaymentBlock.getPaymentWarning(page);
       expect(warningMessage, 'Warning message is not correct!')
         .to.equal(`Warning €${paymentDataAmountInfTotal.amount} paid instead of €${totalOrder}`);
     });
@@ -190,14 +190,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that the payments number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments2', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the payment details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayment', baseContext);
 
-      const result = await orderPageMessagesBlock.getPaymentsDetails(page);
+      const result = await orderPagePaymentBlock.getPaymentsDetails(page);
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
@@ -213,22 +213,22 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should add payment when amount is equal to the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountEqualTotal', baseContext);
 
-      const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountEqualTotal);
+      const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentDataAmountEqualTotal);
       expect(validationMessage, 'Successful message is not correct!')
-        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+        .to.equal(orderPagePaymentBlock.successfulUpdateMessage);
     });
 
     it('should check that the payments number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments3', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
     });
 
     it('should check the payment details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentDetails1', baseContext);
 
-      const result = await orderPageMessagesBlock.getPaymentsDetails(page, 3);
+      const result = await orderPagePaymentBlock.getPaymentsDetails(page, 3);
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountEqualTotal.paymentMethod),
@@ -244,15 +244,15 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should add payment when amount is superior to the total', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal1', baseContext);
 
-      const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountSupTotal);
+      const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentDataAmountSupTotal);
       expect(validationMessage, 'Successful message is not correct!')
-        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+        .to.equal(orderPagePaymentBlock.successfulUpdateMessage);
     });
 
     it('should check the warning message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWarning2', baseContext);
 
-      const warningMessage = await orderPageMessagesBlock.getPaymentWarning(page);
+      const warningMessage = await orderPagePaymentBlock.getPaymentWarning(page);
       expect(warningMessage, 'Warning message is not correct!')
         .to.equal(`Warning €${(paymentDataAmountSupTotal.amount + totalOrder).toFixed(2)}`
         + ` paid instead of €${totalOrder}`);
@@ -261,14 +261,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that the payments number is equal to 3', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments4', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(3);
     });
 
     it('should check the payment details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentDetail1', baseContext);
 
-      const result = await orderPageMessagesBlock.getPaymentsDetails(page, 5);
+      const result = await orderPagePaymentBlock.getPaymentsDetails(page, 5);
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
@@ -284,7 +284,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should click on \'Details\' button and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayPaymentDetail', baseContext);
 
-      const result = await orderPageMessagesBlock.displayPaymentDetail(page);
+      const result = await orderPagePaymentBlock.displayPaymentDetail(page);
       await expect(result)
         .to.contain('Card number Not defined')
         .and.to.contain('Card type Not defined')
@@ -330,14 +330,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      const pageTitle = await orderPagePaymentBlock.getPageTitle(page);
+      await expect(pageTitle, 'Error when view order page!').to.contains(orderPagePaymentBlock.pageTitle);
     });
 
     it('should check that the new currency is visible on select options', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSelectOption', baseContext);
 
-      const listOfCurrencies = await orderPageMessagesBlock.getCurrencySelectOptions(page);
+      const listOfCurrencies = await orderPagePaymentBlock.getCurrencySelectOptions(page);
       await expect(listOfCurrencies).to.contain('€')
         .and.to.contain(Currencies.mad.isoCode);
     });
@@ -345,9 +345,9 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should add payment with new currency', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'paymentWithNewCurrency', baseContext);
 
-      const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataWithNewCurrency);
+      const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentDataWithNewCurrency);
       expect(validationMessage, 'Successful message is not correct!')
-        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+        .to.equal(orderPagePaymentBlock.successfulUpdateMessage);
     });
   });
 
@@ -387,35 +387,35 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await ordersPage.goToOrder(page, 2);
 
-      const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-      await expect(pageTitle, 'Error when view order page!').to.contains(orderPageMessagesBlock.pageTitle);
+      const pageTitle = await orderPagePaymentBlock.getPageTitle(page);
+      await expect(pageTitle, 'Error when view order page!').to.contains(orderPagePaymentBlock.pageTitle);
     });
 
     it('should check that the payments number is equal to 0', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments5', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
     it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+      const textResult = await orderPagePaymentBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
       await expect(textResult).to.equal(Statuses.paymentAccepted.status);
     });
 
     it('should check that the payments number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments6', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the payment details and get the invoice number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayment3', baseContext);
 
-      const result = await orderPageMessagesBlock.getPaymentsDetails(page, 1);
+      const result = await orderPagePaymentBlock.getPaymentsDetails(page, 1);
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal('Bank transfer'),
@@ -424,7 +424,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
         expect(result.invoice).to.not.equal(''),
       ]);
 
-      invoiceID = await orderPageMessagesBlock.getInvoiceID(page);
+      invoiceID = await orderPagePaymentBlock.getInvoiceID(page);
     });
 
     it(`should add the product '${Products.demo_5.name}' to the cart`, async function () {
@@ -440,7 +440,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that products number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
 
-      await orderPageMessagesBlock.reloadPage(page);
+      await orderPagePaymentBlock.reloadPage(page);
 
       const productCount = await orderPageProductsBlock.getProductsNumber(page);
       await expect(productCount).to.equal(2);
@@ -456,14 +456,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should check that payments number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments7', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
     });
 
     it('should check the warning message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkWarningMessage', baseContext);
 
-      const warningMessage = await orderPageMessagesBlock.getPaymentWarning(page);
+      const warningMessage = await orderPagePaymentBlock.getPaymentWarning(page);
       expect(warningMessage, 'Warning message is not correct!')
         .to.equal(`Warning €${totalOrder} paid instead of €57.74`);
     });
@@ -473,15 +473,15 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const invoice = `#IN0000${(invoiceID + 1) >= 10 ? '' : '0'}${invoiceID + 1}`;
 
-      const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountEqualRest, invoice);
+      const validationMessage = await orderPagePaymentBlock.addPayment(page, paymentDataAmountEqualRest, invoice);
       expect(validationMessage, 'Successful message is not correct!')
-        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+        .to.equal(orderPagePaymentBlock.successfulUpdateMessage);
     });
 
     it('should check that payments number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkpayments8', baseContext);
 
-      const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
+      const paymentsNumber = await orderPagePaymentBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
     });
 
