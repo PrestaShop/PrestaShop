@@ -1,12 +1,13 @@
+import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+
 require('module-alias/register');
-const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
  * Messages block, contains functions that can be used on view/edit messages block on view order page
  * @class
- * @extends ViewOrderBasePage
+ * @extends viewOrderBasePage
  */
-class MessagesBlock extends ViewOrderBasePage.constructor {
+class MessagesBlock extends viewOrderBasePage.constructor {
   /**
    * @constructs
    * Setting up texts and selectors to use on view/edit messages block

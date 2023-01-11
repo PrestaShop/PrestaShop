@@ -1,12 +1,13 @@
+import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+
 require('module-alias/register');
-const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
  * Tab list block, contains functions that can be used on status, documents, carriers and merchandise returns tabs
  * @class
- * @extends ViewOrderBasePage
+ * @extends viewOrderBasePage
  */
-class TabListBlock extends ViewOrderBasePage.constructor {
+class TabListBlock extends viewOrderBasePage.constructor {
   /**
    * @constructs
    * Setting up texts and selectors to use on status, documents, carriers and merchandise returns tabs
