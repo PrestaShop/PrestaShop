@@ -231,7 +231,7 @@ class AdminModelAdapterTest extends KernelTestCase
     /**
      * @todo find a way to check the value of `attribute_quantity` and `name` and `attribute_price_display` that depend on database
      */
-    public function testGetFormCombination(): void
+    public function testGetFormCombinations(): void
     {
         $expectedStructureReturn = [
             'id_product_attribute' => '6',
