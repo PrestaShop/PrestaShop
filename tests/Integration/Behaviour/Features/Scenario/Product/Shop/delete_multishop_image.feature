@@ -63,7 +63,7 @@ Feature: Delete product image from Back Office (BO)
     And product "product1" should have following images for shop "shop2":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image3          | true    |                | 2        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
-    Then product "product1" should have no images for shop "shop3"
+    Then product "product1" should have no images for shops "shop3"
     And following types for image "image1" should be removed:
       | name           |
       | cart_default   |

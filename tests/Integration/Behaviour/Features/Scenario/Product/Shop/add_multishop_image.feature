@@ -47,7 +47,7 @@ Feature: Add product image from Back Office (BO)
       | large_default  | 800   | 800    |
       | medium_default | 452   | 452    |
       | small_default  | 98    | 98     |
-    And product "product1" should have no images for shop "shop2"
+    And product "product1" should have no images for shops "shop2"
     When I add new image "image3" named "logo.jpg" to product "product1" for shop "shop2"
     And product "product1" should have following images for shop "shop2":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |

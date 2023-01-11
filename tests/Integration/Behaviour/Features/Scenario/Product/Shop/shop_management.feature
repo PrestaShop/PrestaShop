@@ -3,6 +3,7 @@
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
+@reset-img-after-feature
 @clear-cache-after-feature
 @product-multi-shop
 @update-multi-shop-management
@@ -57,13 +58,13 @@ Feature: Copy product from shop to shop.
     Then product productWithPrices is associated to shop shop1
     And default shop for product productWithPrices is shop1
     When I update product "productWithPrices" with following values:
-      | price              | 100.99          |
-      | ecotax             | 0               |
-      | tax rules group    | US-AL Rate (4%) |
-      | on_sale            | true            |
-      | wholesale_price    | 70              |
-      | unit_price         | 10              |
-      | unity              | bag of ten      |
+      | price           | 100.99          |
+      | ecotax          | 0               |
+      | tax rules group | US-AL Rate (4%) |
+      | on_sale         | true            |
+      | wholesale_price | 70              |
+      | unit_price      | 10              |
+      | unity           | bag of ten      |
     Then product productWithPrices should have following prices information for shops "shop1":
       | price              | 100.99          |
       | price_tax_included | 105.0296        |
@@ -96,13 +97,13 @@ Feature: Copy product from shop to shop.
     And product productWithPrices is not associated to shop shop4
     # Now modify and copy the values but this time the shop is already associated so it is an update
     When I update product "productWithPrices" with following values:
-      | price              | 200.99            |
-      | ecotax             | 2                 |
-      | tax rules group    | US-AZ Rate (6.6%) |
-      | on_sale            | false             |
-      | wholesale_price    | 60                |
-      | unit_price         | 20                |
-      | unity              | bag of twenty     |
+      | price           | 200.99            |
+      | ecotax          | 2                 |
+      | tax rules group | US-AZ Rate (6.6%) |
+      | on_sale         | false             |
+      | wholesale_price | 60                |
+      | unit_price      | 20                |
+      | unity           | bag of twenty     |
     Then product productWithPrices should have following prices information for shops "shop1":
       | price              | 200.99            |
       | price_tax_included | 214.25534         |
@@ -151,8 +152,8 @@ Feature: Copy product from shop to shop.
       | description[en-US]       | nice mug           |
       | description_short[en-US] | Just a nice mug    |
     Then product "productWithBasic" localized "name" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     And product "productWithBasic" localized "description" should be:
       | locale | value    |
       | en-US  | nice mug |
@@ -168,8 +169,8 @@ Feature: Copy product from shop to shop.
     And product productWithBasic is associated to shop shop1
     And default shop for product productWithBasic is shop1
     Then product "productWithBasic" localized "name" for shops "shop1,shop2" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     And product "productWithBasic" localized "description" for shops "shop1,shop2" should be:
       | locale | value    |
       | en-US  | nice mug |
@@ -184,8 +185,8 @@ Feature: Copy product from shop to shop.
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
     Then product "productWithBasic" localized "name" for shops "shop1" should be:
-      | locale     | value              |
-      | en-US      | photo of super mug |
+      | locale | value              |
+      | en-US  | photo of super mug |
     And product "productWithBasic" localized "description" for shops "shop1" should be:
       | locale | value     |
       | en-US  | super mug |
@@ -193,8 +194,8 @@ Feature: Copy product from shop to shop.
       | locale | value            |
       | en-US  | Just a super mug |
     But product "productWithBasic" localized "name" for shops "shop2" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     And product "productWithBasic" localized "description" for shops "shop2" should be:
       | locale | value    |
       | en-US  | nice mug |
@@ -205,8 +206,8 @@ Feature: Copy product from shop to shop.
     When I copy product productWithBasic from shop shop1 to shop shop2
     Then product productWithBasic is associated to shop shop2
     And product "productWithBasic" localized "name" for shops "shop1,shop2" should be:
-      | locale     | value              |
-      | en-US      | photo of super mug |
+      | locale | value              |
+      | en-US  | photo of super mug |
     And product "productWithBasic" localized "description" for shops "shop1,shop2" should be:
       | locale | value     |
       | en-US  | super mug |
@@ -265,9 +266,9 @@ Feature: Copy product from shop to shop.
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
     And I update product "productWithStock" stock with following information:
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
-      | location                      | dtc          |
+      | out_of_stock_type | available |
+      | delta_quantity    | 42        |
+      | location          | dtc       |
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | pack_only  |
       | out_of_stock_type   | available  |
@@ -322,9 +323,9 @@ Feature: Copy product from shop to shop.
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
     When I update product "productWithStock" stock for shop shop1 with following information:
-      | out_of_stock_type             | not_available |
-      | delta_quantity                | 69            |
-      | location                      | upa           |
+      | out_of_stock_type | not_available |
+      | delta_quantity    | 69            |
+      | location          | upa           |
     # First only one shop is updated
     Then product "productWithStock" should have following stock information for shops "shop1":
       | pack_stock_type     | products_only |
@@ -412,17 +413,17 @@ Feature: Copy product from shop to shop.
     And I add new image "image2" named "some_image.jpg" to product "graphicProduct" for shop "shop1"
     And I copy product graphicProduct from shop shop1 to shop shop2
     Then product "graphicProduct" should have following images for shop "shop1":
-      | image reference |  position | shops        |
-      | image1          |  1        | shop1, shop2 |
-      | image2          |  2        | shop1, shop2 |
+      | image reference | position | shops        |
+      | image1          | 1        | shop1, shop2 |
+      | image2          | 2        | shop1, shop2 |
     And product "graphicProduct" should have following images for shop "shop2":
-      | image reference |  position | shops        |
-      | image1          |  1        | shop1, shop2 |
-      | image2          |  2        | shop1, shop2 |
+      | image reference | position | shops        |
+      | image1          | 1        | shop1, shop2 |
+      | image2          | 2        | shop1, shop2 |
     And product "graphicProduct" should have following images for shop "shop3":
-      | image reference |  position | shops        |
+      | image reference | position | shops |
     And product "graphicProduct" should have following images for shop "shop4":
-      | image reference |  position | shops        |
+      | image reference | position | shops |
     And following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
@@ -448,21 +449,21 @@ Feature: Copy product from shop to shop.
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
     And I update product "productToDelete" stock for shop shop2 with following information:
-      | out_of_stock_type             | available    |
-      | delta_quantity                | 42           |
-      | location                      | dtc          |
+      | out_of_stock_type | available |
+      | delta_quantity    | 42        |
+      | location          | dtc       |
     And I update product "productToDelete" for shop shop2 with following values:
       | name[en-US]              | photo of super mug |
       | description[en-US]       | super mug          |
       | description_short[en-US] | Just a super mug   |
     When I update product "productToDelete" for shop shop2 with following values:
-      | price              | 100.99          |
-      | ecotax             | 0               |
-      | tax rules group    | US-AL Rate (4%) |
-      | on_sale            | true            |
-      | wholesale_price    | 70              |
-      | unit_price         | 10              |
-      | unity              | bag of ten      |
+      | price           | 100.99          |
+      | ecotax          | 0               |
+      | tax rules group | US-AL Rate (4%) |
+      | on_sale         | true            |
+      | wholesale_price | 70              |
+      | unit_price      | 10              |
+      | unity           | bag of ten      |
     # Copy values to another shop which was not associated yet
     When I copy product productToDelete from shop shop2 to shop shop1
     And I copy product productToDelete from shop shop2 to shop shop3
@@ -472,8 +473,8 @@ Feature: Copy product from shop to shop.
     And product productToDelete is not associated to shop shop4
     And default shop for product productToDelete is shop2
     And product "productToDelete" localized "name" for shops "shop1,shop2,shop3" should be:
-      | locale     | value              |
-      | en-US      | photo of super mug |
+      | locale | value              |
+      | en-US  | photo of super mug |
     And product "productToDelete" localized "description" for shops "shop1,shop2,shop3" should be:
       | locale | value     |
       | en-US  | super mug |
@@ -533,8 +534,8 @@ Feature: Copy product from shop to shop.
     And default shop for product productToDelete is shop1
     # Check that values are still present for other shops
     And product "productToDelete" localized "name" for shops "shop1,shop3" should be:
-      | locale     | value              |
-      | en-US      | photo of super mug |
+      | locale | value              |
+      | en-US  | photo of super mug |
     And product "productToDelete" localized "description" for shops "shop1,shop3" should be:
       | locale | value     |
       | en-US  | super mug |
@@ -616,3 +617,25 @@ Feature: Copy product from shop to shop.
       | product1LBlack | Size - L, Color - Black |           | [Size:L,Color:Black] | 0               | 0        | false      |
       | product1LBlue  | Size - L, Color - Blue  |           | [Size:L,Color:Blue]  | 0               | 0        | false      |
     And product "product1" should have no combinations for shops "shop2"
+
+  Scenario: Product images are copied/deleted when product is being copied/deleted to/from shop.
+    Given I add product "product1" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | standard          |
+    And product product1 type should be standard
+    And product "product1" should have no images for shops "shop1"
+    And product "product1" is not associated to shop "shop2"
+    When I add new image "image1" named "app_icon.png" to product "product1" for shop "shop1"
+    Then product "product1" should have following images for shops "shop1":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    When I copy product "product1" from shop "shop1" to shop "shop2"
+    Then product "product1" should have following images for shops "shop1,shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    When I delete product "product1" from shops "shop2"
+    Then product "product1" should have no images for shops "shop2"
+    And product "product1" is not associated to shop "shop2"
+    And product "product1" should have following images for shops "shop1":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
