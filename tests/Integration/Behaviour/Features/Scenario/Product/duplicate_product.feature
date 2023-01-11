@@ -8,21 +8,9 @@ Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
   Background:
-    Given category "home" in default language named "Home" exists
-    And category "home" is the default one
-    And shop "shop1" with name "test_shop" exists
-    And single shop shop1 context is loaded
-    And category "men" in default language named "Men" exists
-    And category "clothes" in default language named "Clothes" exists
-    And manufacturer studioDesign named "Studio Design" exists
-    And language "language1" with locale "en-US" exists
-    And language with iso code "en" is the default one
+    Given language "language1" with locale "en-US" exists
     And language "language2" with locale "fr-FR" exists
-    And carrier carrier1 named "ecoCarrier" exists
-    And carrier carrier2 named "Fast carry" exists
-    And attribute group "Color" named "Color" in en language exists
-    And attribute "Red" named "Red" in en language exists
-    And attribute "Blue" named "Blue" in en language exists
+    And language with iso code "en" is the default one
     And I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
@@ -31,6 +19,14 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
       | type        | standard        |
+
+  #todo: add specific prices & priorities, test combinations
+  #@todo: assert stock info
+  #@todo: add tests for other type of products Pack, Virtual, Combinations
+  Scenario: I duplicate product with global informations
+    Given I set following related products to product product1:
+      | product2 |
+    And manufacturer studioDesign named "Studio Design" exists
     And I update product "product1" with following values:
       | description[en-US]                      | nice sunglasses            |
       | description[fr-FR]                      | belles lunettes            |
@@ -71,57 +67,12 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time in stock notes[fr-FR]     | en stock                   |
       | delivery time out of stock notes[en-US] | product out of stock       |
       | delivery time out of stock notes[fr-FR] | En rupture de stock        |
-      | redirect_type                           | 301-product                |
-      | redirect_target                         | product2                   |
       | active                                  | true                       |
-    And I update product "product1" tags with following values:
-      | tags[en-US] | smart,glasses,sunglasses,men |
-      | tags[fr-FR] | lunettes,bien,soleil         |
-    And I assign product product1 to following categories:
-      | categories       | [home, men, clothes] |
-      | default category | clothes              |
+    And carrier carrier1 named "ecoCarrier" exists
+    And carrier carrier2 named "Fast carry" exists
     And I assign product product1 with following carriers:
       | carrier1 |
       | carrier2 |
-    And I add new supplier supplier1 with the following properties:
-      | name                    | my supplier 1      |
-      | address                 | Donelaicio st. 1   |
-      | city                    | Kaunas             |
-      | country                 | Lithuania          |
-      | enabled                 | true               |
-      | description[en-US]      | just a supplier    |
-      | meta title[en-US]       | my supplier nr one |
-      | meta description[en-US] |                    |
-      | meta keywords[en-US]    | sup,1              |
-      | shops                   | [shop1]            |
-    When I associate suppliers to product "product1"
-      | supplier  | product_supplier  |
-      | supplier1 | product1supplier1 |
-    And I update product product1 suppliers:
-      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
-      | product1supplier1 | supplier1 | my first supplier for product1 | USD      | 10                 |
-    And I set following related products to product product1:
-      | product2 |
-    And I update product product1 with following customization fields:
-      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
-      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
-    And I add new attachment "att1" with following properties:
-      | description[en-US] | puffin photo nr1 |
-      | description[fr-FR] | macareux         |
-      | name[en-US]        | puffin           |
-      | name[fr-FR]        | macareux         |
-      | file_name          | app_icon.png     |
-    And I associate product product1 with following attachments: "[att1]"
-    And I add a specific price specific_price1 to product product1 with following details:
-      | fixed price     | 0.00   |
-      | reduction type  | amount |
-      | reduction value | 5.00   |
-      | includes tax    | true   |
-      | from quantity   | 1      |
-    And product "product1" should have 1 specific prices
-
-  Scenario: I duplicate product
-#todo: add specific prices & priorities, test combinations
     When I duplicate product product1 to a copy_of_product1
     And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
@@ -137,11 +88,6 @@ Feature: Duplicate product from Back Office (BO).
       | locale | value                      |
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
-    And product copy_of_product1 should be assigned to following categories:
-      | id reference | name    | is default |
-      | home         | Home    | false      |
-      | men          | Men     | false      |
-      | clothes      | Clothes | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
@@ -158,13 +104,6 @@ Feature: Duplicate product from Back Office (BO).
       | ean13          | 978020137962      |
       | mpn            | mpn1              |
       | reference      | ref1              |
-    And product "copy_of_product1" localized "tags" should be:
-      | locale | value                        |
-      | en-US  | smart,glasses,sunglasses,men |
-      | fr-FR  | lunettes,bien,soleil         |
-    And product copy_of_product1 should have following suppliers:
-      | supplier  | reference                      | currency | price_tax_excluded |
-      | supplier1 | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
       | price                   | 100.00          |
       | ecotax                  | 0               |
@@ -204,17 +143,95 @@ Feature: Duplicate product from Back Office (BO).
     And product copy_of_product1 should have following related products:
       | product  | name            | reference | image url                                             |
       | product2 | Reading glasses |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-    And product copy_of_product1 should have following attachments associated:
-      | attachment reference | title                       | description                           | file name    | type      | size  |
-      | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
+
+  Scenario: I duplicate product with categories
+    Given category "home" in default language named "Home" exists
+    And category "men" in default language named "Men" exists
+    And category "clothes" in default language named "Clothes" exists
+    And category "home" is the default one
+    And I assign product product1 to following categories:
+      | categories       | [home, men, clothes] |
+      | default category | clothes              |
+    When I duplicate product product1 to a copy_of_product1
+    And product copy_of_product1 should be assigned to following categories:
+      | id reference | name    | is default |
+      | home         | Home    | false      |
+      | men          | Men     | false      |
+      | clothes      | Clothes | true       |
+
+  Scenario: I duplicate product with tags
+    Given I update product "product1" tags with following values:
+      | tags[en-US] | smart,glasses,sunglasses,men |
+      | tags[fr-FR] | lunettes,bien,soleil         |
+    When I duplicate product product1 to a copy_of_product1
+
+    And product "copy_of_product1" localized "tags" should be:
+      | locale | value                        |
+      | en-US  | smart,glasses,sunglasses,men |
+      | fr-FR  | lunettes,bien,soleil         |
+
+  Scenario: I duplicate product with suppliers
+    Given shop "shop1" with name "test_shop" exists
+    And single shop shop1 context is loaded
+    And I add new supplier supplier1 with the following properties:
+      | name                    | my supplier 1      |
+      | address                 | Donelaicio st. 1   |
+      | city                    | Kaunas             |
+      | country                 | Lithuania          |
+      | enabled                 | true               |
+      | description[en-US]      | just a supplier    |
+      | meta title[en-US]       | my supplier nr one |
+      | meta description[en-US] |                    |
+      | meta keywords[en-US]    | sup,1              |
+      | shops                   | [shop1]            |
+    And I associate suppliers to product "product1"
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
+    And I update product product1 suppliers:
+      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
+      | product1supplier1 | supplier1 | my first supplier for product1 | USD      | 10                 |
+    When I duplicate product product1 to a copy_of_product1
+    And product copy_of_product1 should have following suppliers:
+      | supplier  | reference                      | currency | price_tax_excluded |
+      | supplier1 | my first supplier for product1 | USD      | 10                 |
+
+  Scenario: I duplicate product with custom fields
+    Given I update product product1 with following customization fields:
+      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
+      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+    When I duplicate product product1 to a copy_of_product1
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
+
+  Scenario: I duplicate product with attachment
+    Given I add new attachment "att1" with following properties:
+      | description[en-US] | puffin photo nr1 |
+      | description[fr-FR] | macareux         |
+      | name[en-US]        | puffin           |
+      | name[fr-FR]        | macareux         |
+      | file_name          | app_icon.png     |
+    And I associate product product1 with following attachments: "[att1]"
+    When I duplicate product product1 to a copy_of_product1
+    And product copy_of_product1 should have following attachments associated:
+      | attachment reference | title                       | description                           | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
+
+  Scenario: I duplicate product with specific price
+    Given I add a specific price specific_price1 to product product1 with following details:
+      | fixed price     | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    And product "product1" should have 1 specific prices
+    When I duplicate product product1 to a copy_of_product1
     And product "copy_of_product1" should have 1 specific prices
-#@todo: assert stock info
-#@todo: add tests for other type of products Pack, Virtual, Combinations
 
   Scenario: I duplicate product with combinations
+    Given attribute group "Color" named "Color" in en language exists
+    And attribute "Red" named "Red" in en language exists
+    And attribute "Blue" named "Blue" in en language exists
     When I add product product_with_combinations with following information:
       | name[en-US] | Jar of sand  |
       | type        | combinations |
@@ -245,7 +262,7 @@ Feature: Duplicate product from Back Office (BO).
   Scenario: I duplicate packed product
     Given I add product "product3" with following information:
       | name[en-US] | packed product  |
-      | name[fr-FR] | produit packagé |
+      | name[fr-FR] | produit package |
       | type        | pack            |
     And I update pack "product3" with following product quantities:
       | product  | combination | quantity |
@@ -257,7 +274,7 @@ Feature: Duplicate product from Back Office (BO).
     And product "copy_of_product3" localized "name" should be:
       | locale | value                    |
       | en-US  | copy of packed product   |
-      | fr-FR  | copie de produit packagé |
+      | fr-FR  | copie de produit package |
     And pack copy_of_product3 should contain products with following details:
       | product  | combination | name             | quantity | image url                                              |
       | product1 |             | smart sunglasses | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
