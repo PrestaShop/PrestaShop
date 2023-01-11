@@ -1,5 +1,5 @@
 import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
-import {Page} from "playwright";
+import type {Page} from 'playwright';
 
 /**
  * Products block, contains functions that can be used on view/edit products block on view order page
