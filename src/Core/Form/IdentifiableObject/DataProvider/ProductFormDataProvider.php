@@ -117,7 +117,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
-            'specifications' => $this->extractSpecificationsData($productForEditing, $shopConstraint),
+            'details' => $this->extractDetailsData($productForEditing, $shopConstraint),
             'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
@@ -308,7 +308,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array<string, mixed>
      */
-    private function extractSpecificationsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
+    private function extractDetailsData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $details = $productForEditing->getDetails();
         $options = $productForEditing->getOptions();

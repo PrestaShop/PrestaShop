@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductAttachmentsType;
@@ -37,7 +37,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SpecificationsType extends TranslatorAwareType
+class DetailsType extends TranslatorAwareType
 {
     /**
      * @var bool

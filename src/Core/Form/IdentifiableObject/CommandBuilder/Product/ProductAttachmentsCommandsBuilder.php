@@ -35,11 +35,11 @@ class ProductAttachmentsCommandsBuilder implements ProductCommandsBuilderInterfa
 {
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['specifications']['attachments']['attached_files'])) {
+        if (!isset($formData['details']['attachments']['attached_files'])) {
             return [];
         }
 
-        $attachedFiles = $formData['specifications']['attachments']['attached_files'];
+        $attachedFiles = $formData['details']['attachments']['attached_files'];
 
         if (empty($attachedFiles)) {
             return [new RemoveAllAssociatedProductAttachmentsCommand($productId->getValue())];
