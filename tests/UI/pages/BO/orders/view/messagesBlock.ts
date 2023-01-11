@@ -1,6 +1,6 @@
-import ViewOrderBasePage from "@pages/BO/orders/view/viewOrderBasePage";
+import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 
-require('module-alias/register');
+import type {Page} from 'playwright';
 
 /**
  * Messages block, contains functions that can be used on view/edit messages block on view order page
@@ -8,6 +8,34 @@ require('module-alias/register');
  * @extends ViewOrderBasePage
  */
 class MessagesBlock extends ViewOrderBasePage {
+  private readonly messageBlock: string;
+
+  private readonly messageBlockTitle: string;
+
+  private readonly orderMessageSelect: string;
+
+  private readonly displayToCustometCheckbox: string;
+
+  private readonly messageTextarea: string;
+
+  private readonly sendMessageButton: string;
+
+  private readonly messageBlockList: string;
+
+  private readonly messageListChild: (messageID: number) => string;
+
+  private readonly messageBlockEmployee: (messageID: number) => string;
+
+  private readonly messageBlockCustomer: (messageID: number) => string;
+
+  private readonly messageEmployeeBlockContent: (messageID: number) => string;
+
+  private readonly messageCustomerBlockContent: (messageID: number) => string;
+
+  private readonly messageBlockIcon: (messageID: number) => string;
+
+  private readonly configureLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view/edit messages block
@@ -23,12 +51,12 @@ class MessagesBlock extends ViewOrderBasePage {
     this.messageTextarea = '#order_message_message';
     this.sendMessageButton = `${this.messageBlock} .btn-primary`;
     this.messageBlockList = `${this.messageBlock} .messages-block`;
-    this.messageListChild = (messageID) => `${this.messageBlockList} li:nth-child(${messageID})`;
-    this.messageBlockEmployee = (messageID) => `${this.messageListChild(messageID)}.messages-block-employee`;
-    this.messageBlockCustomer = (messageID) => `${this.messageListChild(messageID)}.messages-block-customer`;
-    this.messageEmployeeBlockContent = (messageID) => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
-    this.messageCustomerBlockContent = (messageID) => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
-    this.messageBlockIcon = (messageID) => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
+    this.messageListChild = (messageID: number) => `${this.messageBlockList} li:nth-child(${messageID})`;
+    this.messageBlockEmployee = (messageID: number) => `${this.messageListChild(messageID)}.messages-block-employee`;
+    this.messageBlockCustomer = (messageID: number) => `${this.messageListChild(messageID)}.messages-block-customer`;
+    this.messageEmployeeBlockContent = (messageID: number) => `${this.messageBlockEmployee(messageID)} .messages-block-content`;
+    this.messageCustomerBlockContent = (messageID: number) => `${this.messageBlockCustomer(messageID)} .messages-block-content`;
+    this.messageBlockIcon = (messageID: number) => `${this.messageBlockEmployee(messageID)} .messages-block-icon`;
     this.configureLink = `${this.messageBlock} .configure-link`;
   }
 
@@ -41,7 +69,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param messageData {{orderMessage: string, displayToCustomer : boolean, message : string}} Data to set on the form
    * @returns {Promise<string>}
    */
-  async sendMessage(page, messageData) {
+  async sendMessage(page: Page, messageData): Promise<string> {
     await this.selectByVisibleText(page, this.orderMessageSelect, messageData.orderMessage);
     if (messageData.displayToCustomer) {
       await this.setChecked(page, this.displayToCustometCheckbox, messageData.displayToCustomer);
@@ -61,7 +89,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getMessagesNumber(page) {
+  getMessagesNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.messageBlockTitle);
   }
 
@@ -72,7 +100,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param messageFrom {string} The message sender
    * @returns {Promise<boolean>}
    */
-  isMessageVisible(page, messageID = 1, messageFrom = 'employee') {
+  isMessageVisible(page: Page, messageID: number = 1, messageFrom: string = 'employee'): Promise<boolean> {
     if (messageFrom === 'employee') {
       return this.elementVisible(page, this.messageEmployeeBlockContent(messageID), 1000);
     }
@@ -86,7 +114,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param messageID {number} Message id number
    * @returns {Promise<boolean>}
    */
-  isEmployeeIconVisible(page, messageID = 1) {
+  isEmployeeIconVisible(page: Page, messageID: number = 1): Promise<boolean> {
     return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon`, 1000);
   }
 
@@ -96,7 +124,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param messageID {number} Message id number
    * @returns {Promise<boolean>}
    */
-  isEmployeePrivateIconVisible(page, messageID = 1) {
+  isEmployeePrivateIconVisible(page: Page, messageID: number = 1): Promise<boolean> {
     return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon--private`, 1000);
   }
 
@@ -107,7 +135,7 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param messageFrom {string} The message sender
    * @returns {Promise<string>}
    */
-  getTextMessage(page, messageID = 1, messageFrom = 'employee') {
+  getTextMessage(page: Page, messageID: number = 1, messageFrom: string = 'employee'): Promise<string> {
     if (messageFrom === 'employee') {
       return this.getTextContent(page, this.messageEmployeeBlockContent(messageID));
     }
@@ -120,9 +148,9 @@ class MessagesBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnConfigureMessageLink(page) {
+  async clickOnConfigureMessageLink(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.configureLink);
   }
 }
 
-module.exports = new MessagesBlock();
+export default new MessagesBlock();
