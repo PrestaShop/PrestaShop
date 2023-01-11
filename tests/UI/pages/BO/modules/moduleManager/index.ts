@@ -142,7 +142,7 @@ class ModuleManager extends BOBasePage {
     const allModulesNames = await this.getAllModulesNames(page);
 
     for (let i = 0; i < allModulesNames.length; i++) {
-      const moduleName: string|null = allModulesNames[i];
+      const moduleName: string | null = allModulesNames[i];
 
       if (typeof moduleName === 'string') {
         const moduleStatus = await this.isModuleEnabled(page, moduleName);
@@ -158,7 +158,7 @@ class ModuleManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<Array<string>>}
    */
-  async getAllModulesNames(page: Page): Promise<(string|null)[]> {
+  async getAllModulesNames(page: Page): Promise<(string | null)[]> {
     return page.$$eval(
       this.allModulesBlock,
       (all) => all.map((el) => el.getAttribute('data-name')),
@@ -169,17 +169,20 @@ class ModuleManager extends BOBasePage {
    * Filter by category
    * @param page {Page} Browser tab
    * @param category {string} Name of module's category to filter with
-   * @return {Promise<void>}
+   * @return {Promise<number>}
    */
-  async filterByCategory(page: Page, category: string): Promise<void> {
+  async filterByCategory(page: Page, category: string): Promise<number> {
     await Promise.all([
       page.click(this.categoriesSelectDiv),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
+    const categoryNumber: number = await this.getNumberFromText(page, `${this.categoryDropdownItem(category)} span`);
     await Promise.all([
       page.click(this.categoryDropdownItem(category)),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
+
+    return categoryNumber;
   }
 
   /**
@@ -188,10 +191,18 @@ class ModuleManager extends BOBasePage {
    * @param position {number} Position of the module on the list
    * @return {Promise<string|null>}
    */
-  async getBlockModuleTitle(page: Page, position: number): Promise<string|null> {
+  async getBlockModuleTitle(page: Page, position: number): Promise<string | null> {
     const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
 
     return modulesBlocks[position - 1];
+  }
+
+  /**
+   * Is modules list block title visible
+   * @param page {Page} Browser tab
+   */
+  async isModulesListBlockTitleVisible(page: Page): Promise<boolean> {
+    return this.elementVisible(page, this.modulesListBlockTitle, 1000);
   }
 }
 
