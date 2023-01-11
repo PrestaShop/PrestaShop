@@ -5,7 +5,7 @@ import type {
 } from '@data/types/playwright';
 
 import {
-  BrowserContext, ElementHandle, FileChooser, Page,
+  BrowserContext, ElementHandle, FileChooser, Frame, Page,
 } from 'playwright';
 import {Unboxed} from 'playwright-core/types/structs';
 
@@ -69,7 +69,7 @@ export default class CommonPage {
    * @returns {Promise<void>}
    */
   async waitForSelector(
-    page: Page,
+    page: Page|Frame,
     selector: string,
     state: PageWaitForSelectorOptionsState,
     timeout: number = 10000,
@@ -84,7 +84,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForVisibleSelector(page: Page, selector: string, timeout: number = 10000): Promise<void> {
+  async waitForVisibleSelector(page: Page|Frame, selector: string, timeout: number = 10000): Promise<void> {
     await this.waitForSelector(page, selector, 'visible', timeout);
   }
 
@@ -117,7 +117,7 @@ export default class CommonPage {
    * @param waitForSelector {boolean} True to wait for selector to be visible before getting text
    * @return {Promise<string>}
    */
-  async getTextContent(page: Page, selector: string, waitForSelector: boolean = true): Promise<string> {
+  async getTextContent(page: Page|Frame, selector: string, waitForSelector: boolean = true): Promise<string> {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
@@ -313,7 +313,7 @@ export default class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<number>}
    */
-  async getNumberFromText(page: Page, selector: string, timeout: number = 0): Promise<number> {
+  async getNumberFromText(page: Page|Frame, selector: string, timeout: number = 0): Promise<number> {
     await page.waitForTimeout(timeout);
     const text = await this.getTextContent(page, selector);
     const number = (/\d+/g.exec(text) ?? '').toString();
