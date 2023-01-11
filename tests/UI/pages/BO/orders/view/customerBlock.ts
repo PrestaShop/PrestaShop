@@ -1,8 +1,8 @@
+import addAddressPage from '@pages/BO/customers/addresses/add';
 import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 
-require('module-alias/register');
-// Needed to create customer in orders page
-const addAddressPage = require('@pages/BO/customers/addresses/add');
+import type {Page} from 'playwright';
+import {Frame} from "playwright";
 
 /**
  * Customer block, contains functions that can be used on view/edit customer block
@@ -10,6 +10,44 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
  * @extends ViewOrderBasePage
  */
 class CustomerBlock extends ViewOrderBasePage {
+  private readonly customerInfoBlock: string;
+
+  private readonly ViewAllDetailsLink: string;
+
+  private readonly customerEmailLink: string;
+
+  private readonly validatedOrders: string;
+
+  private readonly shippingAddressBlock: string;
+
+  private readonly shippingAddressToolTipLink: string;
+
+  private readonly editShippingAddressButton: string;
+
+  private readonly selectAnotherShippingAddressButton: string;
+
+  private readonly changeOrderAddressSelect: string;
+
+  private readonly submitAnotherAddressButton: string;
+
+  private readonly editAddressIframe: string;
+
+  private readonly invoiceAddressBlock: string;
+
+  private readonly invoiceAddressToolTipLink: string;
+
+  private readonly editInvoiceAddressButton: string;
+
+  private readonly selectAnotherInvoiceAddressButton: string;
+
+  private readonly privateNoteDiv: string;
+
+  private readonly privateNoteTextarea: string;
+
+  private readonly addNewPrivateNoteLink: string;
+
+  private readonly privateNoteSaveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view/edit customer block
@@ -47,7 +85,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getCustomerInfoBlock(page) {
+  getCustomerInfoBlock(page: Page): Promise<string> {
     return this.getTextContent(page, this.customerInfoBlock);
   }
 
@@ -56,16 +94,16 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToViewFullDetails(page) {
+  async goToViewFullDetails(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.ViewAllDetailsLink);
   }
 
   /**
    * Get customer email
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  getCustomerEmail(page) {
+  getCustomerEmail(page: Page): Promise<string|null> {
     return this.getAttributeContent(page, this.customerEmailLink, 'href');
   }
 
@@ -74,7 +112,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getShippingAddress(page) {
+  getShippingAddress(page: Page): Promise<string> {
     return this.getTextContent(page, this.shippingAddressBlock);
   }
 
@@ -83,7 +121,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getInvoiceAddress(page) {
+  getInvoiceAddress(page: Page): Promise<string> {
     return this.getTextContent(page, this.invoiceAddressBlock);
   }
 
@@ -92,7 +130,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getValidatedOrdersNumber(page) {
+  getValidatedOrdersNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, `${this.validatedOrders}.badge-dark`);
   }
 
@@ -100,15 +138,15 @@ class CustomerBlock extends ViewOrderBasePage {
    * Edit existing shipping address
    * @param page {Page} Browser tab
    * @param addressData {AddressData} Shipping address data to edit
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async editExistingShippingAddress(page, addressData) {
+  async editExistingShippingAddress(page: Page, addressData): Promise<string> {
     await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.editShippingAddressButton);
 
     await this.waitForVisibleSelector(page, this.editAddressIframe);
 
-    const addressFrame = await page.frame({url: /sell\/addresses\/order/gmi});
+    const addressFrame: Frame = await page.frame({url: /sell\/addresses\/order/gmi});
 
     await addAddressPage.createEditAddress(addressFrame, addressData, false);
 
@@ -126,7 +164,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param address {string} Shipping address to select
    * @returns {Promise<string>}
    */
-  async selectAnotherShippingAddress(page, address) {
+  async selectAnotherShippingAddress(page: Page, address: string): Promise<string> {
     await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.selectAnotherShippingAddressButton);
 
@@ -140,9 +178,9 @@ class CustomerBlock extends ViewOrderBasePage {
    * Edit existing shipping address
    * @param page {Page} Browser tab
    * @param addressData {AddressData} Invoice address data to edit
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async editExistingInvoiceAddress(page, addressData) {
+  async editExistingInvoiceAddress(page: Page, addressData): Promise<string> {
     await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.editInvoiceAddressButton);
 
@@ -166,7 +204,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param address {string} Invoice address to select
    * @returns {Promise<string>}
    */
-  async selectAnotherInvoiceAddress(page, address) {
+  async selectAnotherInvoiceAddress(page: Page, address: string): Promise<string> {
     await this.waitForSelectorAndClick(page, this.invoiceAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.selectAnotherInvoiceAddressButton);
 
@@ -181,7 +219,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPrivateNoteTextareaVisible(page) {
+  isPrivateNoteTextareaVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.privateNoteTextarea, 2000);
   }
 
@@ -190,7 +228,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickAddNewPrivateNote(page) {
+  async clickAddNewPrivateNote(page: Page): Promise<void> {
     await page.click(this.addNewPrivateNoteLink);
     await this.waitForVisibleSelector(page, this.privateNoteTextarea);
   }
@@ -201,7 +239,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param note {string} Private note to set
    * @returns {Promise<string>}
    */
-  async setPrivateNote(page, note) {
+  async setPrivateNote(page: Page, note: string): Promise<string> {
     await this.setValue(page, this.privateNoteTextarea, note);
     await page.click(this.privateNoteSaveButton);
 
@@ -213,9 +251,9 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPrivateNoteContent(page) {
+  getPrivateNoteContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.privateNoteTextarea);
   }
 }
 
-module.exports = new CustomerBlock();
+export default new CustomerBlock();
