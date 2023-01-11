@@ -1,12 +1,13 @@
+import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+
 require('module-alias/register');
-const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
  * Products block, contains functions that can be used on view/edit products block on view order page
  * @class
- * @extends ViewOrderBasePage
+ * @extends viewOrderBasePage
  */
-class ProductsBlock extends ViewOrderBasePage.constructor {
+class ProductsBlock extends viewOrderBasePage.constructor {
   /**
    * @constructs
    * Setting up texts and selectors to use on products block

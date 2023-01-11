@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * View order base page, contains functions that can be used on view/edit order page
@@ -7,6 +8,54 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewOrderBasePage extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly partialRefundValidationMessage: string;
+
+  private readonly successfulAddProductMessage: string;
+
+  private readonly successfulDeleteProductMessage: string;
+
+  private readonly errorMinimumQuantityMessage: string;
+
+  private readonly errorAddSameProduct: string;
+
+  private readonly errorAddSameProductInInvoice: (invoice: string) => string;
+
+  private readonly noAvailableDocumentsMessage: string;
+
+  private readonly updateSuccessfullMessage: string;
+
+  private readonly commentSuccessfullMessage: string;
+
+  private readonly validationSendMessage: string;
+
+  private readonly errorAssignSameStatus: string;
+
+  private readonly discountMustBeNumberErrorMessage: string;
+
+  private readonly invalidPercentValueErrorMessage: string;
+
+  private readonly percentValueNotPositiveErrorMessage: string;
+
+  private readonly discountCannotExceedTotalErrorMessage: string;
+
+  private readonly orderID: string;
+
+  private readonly orderReference: string;
+
+  private readonly orderStatusesSelect: string;
+
+  private readonly updateStatusButton: string;
+
+  private readonly viewInvoiceButton: string;
+
+  private readonly viewDeliverySlipButton: string;
+
+  private readonly partialRefundButton: string;
+
+  private readonly returnProductsButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view/edit order page
@@ -20,7 +69,7 @@ class ViewOrderBasePage extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
-    this.errorAddSameProductInInvoice = (invoice) => `This product is already in the invoice #${invoice}, `
+    this.errorAddSameProductInInvoice = (invoice: string) => `This product is already in the invoice #${invoice}, `
       + 'please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
@@ -52,7 +101,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getOrderID(page) {
+  async getOrderID(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.orderID);
   }
 
@@ -61,7 +110,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderReference(page) {
+  async getOrderReference(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderReference);
   }
 
@@ -72,10 +121,10 @@ class ViewOrderBasePage extends BOBasePage {
    * @param statusName {string} Status to check
    * @returns {Promise<boolean>}
    */
-  async doesStatusExist(page, statusName) {
+  async doesStatusExist(page: Page, statusName: string): Promise<boolean> {
     const options = await page.$$eval(
       `${this.orderStatusesSelect} option`,
-      (all) => all.map((option) => option.textContent),
+      (all: HTMLElement[]) => all.map((option: HTMLElement) => option.textContent),
     );
 
     return options.indexOf(statusName) !== -1;
@@ -86,7 +135,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isUpdateStatusButtonDisabled(page) {
+  isUpdateStatusButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.updateStatusButton}[disabled]`, 1000);
   }
 
@@ -96,7 +145,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param status {string} Status to edit
    * @returns {Promise<void>}
    */
-  async selectOrderStatus(page, status) {
+  async selectOrderStatus(page: Page, status: string): Promise<void> {
     await this.selectByVisibleText(page, this.orderStatusesSelect, status);
   }
 
@@ -105,7 +154,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderStatus(page) {
+  async getOrderStatus(page: Page): Promise<string> {
     return this.getTextContent(page, `${this.orderStatusesSelect} option[selected='selected']`, false);
   }
 
@@ -115,7 +164,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param status {string} Status to edit
    * @returns {Promise<string>}
    */
-  async modifyOrderStatus(page, status) {
+  async modifyOrderStatus(page: Page, status: string): Promise<string> {
     const actualStatus = await this.getOrderStatus(page);
 
     if (status !== actualStatus) {
@@ -132,16 +181,16 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isViewInvoiceButtonVisible(page) {
+  isViewInvoiceButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.viewInvoiceButton, 1000);
   }
 
   /**
    * Click on view invoice button to download the invoice
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
-  async viewInvoice(page) {
+  async viewInvoice(page: Page): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.viewInvoiceButton);
   }
 
@@ -150,7 +199,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isPartialRefundButtonVisible(page) {
+  isPartialRefundButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.partialRefundButton, 1000);
   }
 
@@ -159,7 +208,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async clickOnPartialRefund(page) {
+  async clickOnPartialRefund(page: Page): Promise<void> {
     await page.click(this.partialRefundButton);
   }
 
@@ -168,16 +217,16 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isDeliverySlipButtonVisible(page) {
+  isDeliverySlipButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.viewDeliverySlipButton, 1000);
   }
 
   /**
    * Click on view delivery slip button to download the invoice
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
-  async viewDeliverySlip(page) {
+  async viewDeliverySlip(page: Page): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.viewDeliverySlipButton);
   }
 
@@ -186,9 +235,9 @@ class ViewOrderBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isReturnProductsButtonVisible(page) {
+  isReturnProductsButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.returnProductsButton, 2000);
   }
 }
 
-module.exports = new ViewOrderBasePage();
+export default new ViewOrderBasePage();

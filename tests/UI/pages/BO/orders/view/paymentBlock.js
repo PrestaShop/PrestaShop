@@ -1,12 +1,13 @@
+import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+
 require('module-alias/register');
-const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
  * Payment block, contains functions that can be used on view/edit payment block on view order page
  * @class
- * @extends ViewOrderBasePage
+ * @extends viewOrderBasePage
  */
-class PaymentBlock extends ViewOrderBasePage.constructor {
+class PaymentBlock extends viewOrderBasePage.constructor {
   /**
    * @constructs
    * Setting up texts and selectors to use on payment block

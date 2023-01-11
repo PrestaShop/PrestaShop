@@ -205,7 +205,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly growlCloseButton: string;
 
-  private readonly alertBlock: string;
+  protected alertBlock: string;
 
   protected readonly alertSuccessBlock: string;
 
