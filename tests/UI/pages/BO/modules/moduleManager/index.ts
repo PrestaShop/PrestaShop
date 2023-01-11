@@ -176,13 +176,13 @@ class ModuleManager extends BOBasePage {
       page.click(this.categoriesSelectDiv),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
-    const categoryNumber: number = await this.getNumberFromText(page, `${this.categoryDropdownItem(category)} span`);
+    const categoriesNumber: number = await this.getNumberFromText(page, `${this.categoryDropdownItem(category)} span`);
     await Promise.all([
       page.click(this.categoryDropdownItem(category)),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
 
-    return categoryNumber;
+    return categoriesNumber;
   }
 
   /**
