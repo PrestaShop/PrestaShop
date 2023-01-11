@@ -2,12 +2,14 @@ import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
 
+import {OrderHistory} from '@data/types/order';
+
 /**
  * Order history page, contains functions that can be used on the page
  * @class
  * @extends FOBasePage
  */
-class OrderHistory extends FOBasePage {
+class OrderHistoryPage extends FOBasePage {
   public readonly pageTitle: string;
 
   public readonly messageSuccessSent: string;
@@ -20,6 +22,8 @@ class OrderHistory extends FOBasePage {
 
   private readonly orderTableColumn: (row: number, column: number) => string;
 
+  private readonly orderTableColumnReference: (row: number) => string;
+
   private readonly reorderLink: (row: number) => string;
 
   private readonly detailsLink: (row: number) => string;
@@ -27,6 +31,10 @@ class OrderHistory extends FOBasePage {
   private readonly orderTableColumnInvoice: (row: number) => string;
 
   private readonly orderDetailsLink: (orderID: number) => string;
+
+  private readonly backToYourAccountLink: string;
+
+  private readonly homeLink: string;
 
   private readonly boxMessagesSection: string;
 
@@ -57,14 +65,19 @@ class OrderHistory extends FOBasePage {
     this.ordersTableRows = `${this.ordersTable} tbody tr`;
     this.ordersTableRow = (row: number) => `${this.ordersTableRows}:nth-child(${row})`;
     this.orderTableColumn = (row: number, column: number) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
+    this.orderTableColumnReference = (row: number) => `${this.ordersTableRow(row)} th:nth-child(1)`;
     this.reorderLink = (row: number) => `${this.ordersTableRow(row)} a.reorder-link`;
     this.detailsLink = (row: number) => `${this.ordersTableRow(row)} a.view-order-details-link`;
-    this.orderTableColumnInvoice = (row: number) => `${this.orderTableColumn(row, 6)} a`;
+    this.orderTableColumnInvoice = (row: number) => `${this.ordersTableRow(row)} td:nth-child(6) a`;
     this.orderDetailsLink = (orderID: number) => `${this.ordersTableRows}`
       + ` td a.view-order-details-link[href$='order-detail&id_order=${orderID}']`;
+    this.backToYourAccountLink = 'footer  a[data-role=back-to-your-account]';
+    this.homeLink = 'footer  a[data-role=home]';
+
     // Messages block
     this.boxMessagesSection = '.box.messages';
     this.messageRow = (row: number) => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
+
     // Add message block
     this.orderMessageForm = '.order-message-form';
     this.productSelect = `${this.orderMessageForm} select[data-role='product']`;
@@ -83,6 +96,22 @@ class OrderHistory extends FOBasePage {
    */
   async getNumberOfOrders(page: Page): Promise<number> {
     return (await page.$$(this.ordersTableRows)).length;
+  }
+
+  /**
+   * Get order history details
+   * @param page {Page} Browser tab
+   * @param row {number} Row in order history table
+   */
+  async getOrderHistoryDetails(page: Page, row: number = 1): Promise<OrderHistory> {
+    return {
+      reference: await this.getTextContent(page, this.orderTableColumnReference(row)),
+      date: await this.getTextContent(page, this.orderTableColumn(row, 2)),
+      price: await this.getTextContent(page, this.orderTableColumn(row, 3)),
+      paymentType: await this.getTextContent(page, this.orderTableColumn(row, 4)),
+      status: await this.getTextContent(page, this.orderTableColumn(row, 5)),
+      invoice: await this.getTextContent(page, this.orderTableColumn(row, 6)),
+    };
   }
 
   /**
@@ -156,6 +185,22 @@ class OrderHistory extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
   }
 
+  /**
+   * Click on back to your account link
+   * @param page {Page} Browser tab
+   */
+  async clickOnBackToYourAccountLink(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.backToYourAccountLink);
+  }
+
+  /**
+   * Click on home link
+   * @param page {Page} Browser tab
+   */
+  async clickOnHomeLink(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.homeLink);
+  }
+
   // Methods for box messages
   /**
    * Is box messages section visible
@@ -205,4 +250,4 @@ class OrderHistory extends FOBasePage {
   }
 }
 
-export default new OrderHistory();
+export default new OrderHistoryPage();
