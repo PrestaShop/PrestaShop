@@ -53,7 +53,33 @@ class Products extends BOBasePage {
 
   private readonly bulkActionsDropDownMenu: string;
 
-  private readonly bulkActionsDeleteSelectionLink: string;
+  private readonly bulkActionsSelectionLink: (action: string) => string;
+
+  private readonly modalDialog: string;
+
+  private readonly modalDialogFooter: string;
+
+  private readonly modalDialogDeleteButton: string;
+
+  private readonly modalBulkActionsProducts: (action: string) => string;
+
+  private readonly modalBulkActionsProductsBody: (action: string) => string;
+
+  private readonly modalBulkActionsProductsFooter: (action: string) => string;
+
+  private readonly modalDialogBulkActionButton: (action: string) => string;
+
+  private readonly modalBulkActionsProductsProgress: (action: string) => string;
+
+  private readonly modalBulkActionsProductsProgressBody: (action: string) => string;
+
+  private readonly modalBulkActionsProgressSuccessMessage: (action: string) => string;
+
+  private readonly modalBulkActionsProductsProgressFooter: (action: string) => string;
+
+  private readonly modalBulkActionsProductsProgressBarDone: string;
+
+  private readonly modalBulkActionsProductsCloseButton: (action: string) => string;
 
   private readonly productGridTable: string;
 
@@ -125,32 +151,6 @@ class Products extends BOBasePage {
 
   private readonly productType: (type: string) => string;
 
-  private readonly modalDialog: string;
-
-  private readonly modalDialogFooter: string;
-
-  private readonly modalDialogDeleteButton: string;
-
-  private readonly modalBulkDeleteProducts: string;
-
-  private readonly modalBulkDeleteProductsBody: string;
-
-  private readonly modalBulkDeleteProductsFooter: string;
-
-  private readonly modalDialogBulkDeleteButton: string;
-
-  private readonly modalBulkDeleteProductsProgress: string;
-
-  private readonly modalBulkDeleteProductsProgressBody: string;
-
-  private readonly modalBulkDeleteProductsProgressSuccessMessage: string;
-
-  private readonly modalBulkDeleteProductsProgressFooter: string;
-
-  private readonly modalBulkDeleteProductsProgressBarDone: string;
-
-  private readonly modalBulkDeleteProductsCloseButton: string;
-
   private readonly paginationBlock: string;
 
   private readonly productsNumberLabel: string;
@@ -197,7 +197,29 @@ class Products extends BOBasePage {
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
-    this.bulkActionsDeleteSelectionLink = '#product_grid_bulk_action_bulk_delete_ajax';
+    this.bulkActionsSelectionLink = (action) => `#product_grid_bulk_action_${action}_ajax`;
+
+    // Modal dialog
+    this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
+    this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
+    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
+
+    // Modal bulk actions products selectors
+    this.modalBulkActionsProducts = (action) => `#product-ajax-${action}_ajax-confirm-modal`;
+    this.modalBulkActionsProductsBody = (action) => `${this.modalBulkActionsProducts(action)} div.modal-body`;
+    this.modalBulkActionsProductsFooter = (action) => `${this.modalBulkActionsProducts(action)} div.modal-footer`;
+    this.modalDialogBulkActionButton = (action) => `${this.modalBulkActionsProductsFooter(action)} `
+      + 'button.btn-confirm-submit';
+    this.modalBulkActionsProductsProgress = (action) => `#product-ajax-${action}_ajax-progress-modal`;
+    this.modalBulkActionsProductsProgressBody = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+      + 'div.modal-body';
+    this.modalBulkActionsProgressSuccessMessage = (action) => `${this.modalBulkActionsProductsProgressBody(action)} `
+      + 'div.progress-message';
+    this.modalBulkActionsProductsProgressFooter = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+      + 'div.modal-footer';
+    this.modalBulkActionsProductsProgressBarDone = '#modal_progressbar_done';
+    this.modalBulkActionsProductsCloseButton = (action) => `${this.modalBulkActionsProductsProgressFooter(action)} `
+      + 'button.close-modal-button';
 
     // Products table selectors
     this.productGridTable = '#product_grid_table';
@@ -250,19 +272,6 @@ class Products extends BOBasePage {
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
     this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
     this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
-
-    // Modal delete products selectors
-    this.modalBulkDeleteProducts = '#product-ajax-bulk_delete_ajax-confirm-modal';
-    this.modalBulkDeleteProductsBody = `${this.modalBulkDeleteProducts} div.modal-body`;
-    this.modalBulkDeleteProductsFooter = `${this.modalBulkDeleteProducts} div.modal-footer`;
-    this.modalDialogBulkDeleteButton = `${this.modalBulkDeleteProductsFooter} button.btn-confirm-submit`;
-    this.modalBulkDeleteProductsProgress = '#product-ajax-bulk_delete_ajax-progress-modal';
-    this.modalBulkDeleteProductsProgressBody = `${this.modalBulkDeleteProductsProgress} div.modal-body`;
-    this.modalBulkDeleteProductsProgressSuccessMessage = `${this.modalBulkDeleteProductsProgressBody}`
-      + ' div.progress-message';
-    this.modalBulkDeleteProductsProgressFooter = `${this.modalBulkDeleteProductsProgress} div.modal-footer`;
-    this.modalBulkDeleteProductsProgressBarDone = '#modal_progressbar_done';
-    this.modalBulkDeleteProductsCloseButton = `${this.modalBulkDeleteProductsProgressFooter} button.close-modal-button`;
 
     // Pagination
     this.paginationBlock = `${this.productGridPanel} div.pagination-block`;
@@ -365,7 +374,7 @@ class Products extends BOBasePage {
   /**
    * Bulk select products
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async bulkSelectProducts(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.selectAllProductsCheckbox);
@@ -374,43 +383,68 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Click on bulk delete products
+   * Click on bulk action products
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<string>}
    */
-  async clickOnBulkDeleteProducts(page: Page): Promise<string> {
+  async clickOnBulkActionsProducts(page: Page, action: string): Promise<string> {
     await Promise.all([
       await this.waitForSelectorAndClick(page, this.productBulkMenuButton),
       await this.waitForVisibleSelector(page, this.bulkActionsDropDownMenu),
     ]);
-    await this.waitForSelectorAndClick(page, this.bulkActionsDeleteSelectionLink);
-    await this.waitForVisibleSelector(page, this.modalBulkDeleteProducts);
 
-    return this.getTextContent(page, this.modalBulkDeleteProductsBody);
+    const bulkActionsSelectionLink = this.bulkActionsSelectionLink(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+
+    const modalBulkActionsProducts = this.modalBulkActionsProducts(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProductsBody = this.modalBulkActionsProductsBody(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.waitForSelectorAndClick(page, bulkActionsSelectionLink);
+    await this.waitForVisibleSelector(page, modalBulkActionsProducts);
+
+    return this.getTextContent(page, modalBulkActionsProductsBody);
   }
 
   /**
-   * Bulk delete products
+   * Bulk actions products
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<string>}
    */
-  async bulkDeleteProduct(page: Page): Promise<string> {
-    await this.waitForSelectorAndClick(page, this.modalDialogBulkDeleteButton);
+  async bulkActionsProduct(page: Page, action: string): Promise<string> {
+    const modalDialogBulkActionButton = this.modalDialogBulkActionButton(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProgressSuccessMessage = this.modalBulkActionsProgressSuccessMessage(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.waitForSelectorAndClick(page, modalDialogBulkActionButton);
+    await this.waitForVisibleSelector(page, this.modalBulkActionsProductsProgressBarDone);
 
-    await this.waitForVisibleSelector(page, this.modalBulkDeleteProductsProgressBarDone);
-
-    return this.getTextContent(page, this.modalBulkDeleteProductsProgressSuccessMessage);
+    return this.getTextContent(page, modalBulkActionsProgressSuccessMessage);
   }
 
   /**
-   * Close bulk delete progress modal
+   * Close bulk actions progress modal
    * @param page {Page} Browser tab
+   * @param action {string} Enable/disable/duplicate or delete
    * @returns {Promise<boolean>}
    */
-  async closeBulkDeleteProgressModal(page: Page): Promise<boolean> {
-    await this.clickAndWaitForNavigation(page, this.modalBulkDeleteProductsCloseButton);
+  async closeBulkActionsProgressModal(page: Page, action: string): Promise<boolean> {
+    const modalBulkActionsProductsCloseButton = this.modalBulkActionsProductsCloseButton(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    const modalBulkActionsProductsProgress = this.modalBulkActionsProductsProgress(
+      (action === 'enable' || action === 'disable') ? `${action}_selection` : `bulk_${action}`,
+    );
+    await this.clickAndWaitForNavigation(page, modalBulkActionsProductsCloseButton);
 
-    return this.elementNotVisible(page, this.modalBulkDeleteProductsProgress, 1000);
+    return this.elementNotVisible(page, modalBulkActionsProductsProgress, 1000);
   }
 
   // Filter products table methods
