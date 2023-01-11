@@ -55,9 +55,9 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 
         // Filter modules by categories
-        const categoryNumber: number = await moduleManagerPage.filterByCategory(page, category);
+        const categoriesNumber: number = await moduleManagerPage.filterByCategory(page, category);
 
-        if (categoryNumber !== 0) {
+        if (categoriesNumber !== 0) {
           // Check first category displayed
           const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
           await expect(firstBlockTitle).to.equal(category);
