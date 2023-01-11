@@ -1,13 +1,111 @@
-import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 
-require('module-alias/register');
+import {Frame, Page} from 'playwright';
 
 /**
  * Tab list block, contains functions that can be used on status, documents, carriers and merchandise returns tabs
  * @class
- * @extends viewOrderBasePage
+ * @extends ViewOrderBasePage
  */
-class TabListBlock extends viewOrderBasePage.constructor {
+class TabListBlock extends ViewOrderBasePage {
+  private readonly successBadge: (id: number) => string;
+
+  private readonly historyTabContent: string;
+
+  private readonly secondOrderStatusesSelect: string;
+
+  private readonly secondUpdateStatusButton: string;
+
+  private readonly statusGridTable: string;
+
+  private readonly statusTableBody: string;
+
+  private readonly statusTableRow: (row: number) => string;
+
+  private readonly statusTableColumn: (row: number, column: string) => string;
+
+  private readonly resendEmailButton: (row: number) => string;
+
+  private readonly orderNoteOpenButton: string;
+
+  private readonly orderNoteCloseButton: string;
+
+  private readonly orderNoteTextarea: string;
+
+  private readonly orderNoteSaveButton: string;
+
+  private readonly documentTab: string;
+
+  private readonly orderDocumentTabContent: string;
+
+  private readonly generateInvoiceButton: string;
+
+  private readonly documentsTablegrid: string;
+
+  private readonly documentsTableBody: string;
+
+  private readonly documentsTableRow: (row: number) => string;
+
+  private readonly documentsTableColumn: (row: number, column: string) => string;
+
+  private readonly documentDate: (row: number) => string;
+
+  private readonly documentNumberLink: (row: number) => string;
+
+  private readonly documentType: (row: number) => string;
+
+  private readonly addDocumentNoteButton: (row: number) => string;
+
+  private readonly documentNoteInput: (row: number) => string;
+
+  private readonly documentNoteSaveButton: (row: number) => string;
+
+  private readonly editDocumentNoteButton: (row: number) => string;
+
+  private readonly enterPaymentButton: (row: number) => string;
+
+  private readonly carriersTab: string;
+
+  private readonly orderShippingTabContent: string;
+
+  private readonly carriersGridTable: string;
+
+  private readonly carriersTableBody: string;
+
+  private readonly carriersTableRow: (row: number) => string;
+
+  private readonly carriersTableColumn: (row: number, column: string) => string;
+
+  private readonly editLink: string;
+
+  private readonly updateOrderShippingModal: string;
+
+  private readonly updateOrderShippingModalDialog: string;
+
+  private readonly trackingNumberInput: string;
+
+  private readonly carrierSelect: string;
+
+  private readonly carriersSelectResult: string;
+
+  private readonly carrierToSelect: (id: number) => string;
+
+  private readonly updateCarrierButton: string;
+
+  private readonly giftMessage: string;
+
+  private readonly merchandiseReturnsTab: string;
+
+  private readonly merchandisereturnCount: string;
+
+  private readonly merchandiseReturnsGridTable: string;
+
+  private readonly merchandiseReturnsTableBody: string;
+
+  private readonly merchandiseReturnsTableRow: (row: number) => string;
+
+  private readonly merchandiseReturnsTableColumn: (row: number, column: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on status, documents, carriers and merchandise returns tabs
@@ -15,7 +113,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
   constructor() {
     super();
 
-    this.successBadge = (id) => `.tab-content span.badge-success:nth-child(${id + 3})`;
+    this.successBadge = (id: number) => `.tab-content span.badge-success:nth-child(${id + 3})`;
 
     // Status tab
     this.historyTabContent = '#historyTabContent';
@@ -23,9 +121,9 @@ class TabListBlock extends viewOrderBasePage.constructor {
     this.secondUpdateStatusButton = `${this.historyTabContent} .card-details-form button.btn-primary`;
     this.statusGridTable = 'table[data-role=\'history-grid-table\']';
     this.statusTableBody = `${this.statusGridTable} tbody`;
-    this.statusTableRow = (row) => `${this.statusTableBody} tr:nth-child(${row})`;
-    this.statusTableColumn = (row, column) => `${this.statusTableRow(row)} td[data-role='${column}-column']`;
-    this.resendEmailButton = (row) => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
+    this.statusTableRow = (row: number) => `${this.statusTableBody} tr:nth-child(${row})`;
+    this.statusTableColumn = (row: number, column: string) => `${this.statusTableRow(row)} td[data-role='${column}-column']`;
+    this.resendEmailButton = (row: number) => `${this.statusTableRow(row)} td form[action*='resend-email'] button`;
     this.orderNoteOpenButton = `${this.historyTabContent} a.js-order-notes-toggle-btn`;
     this.orderNoteCloseButton = `${this.orderNoteOpenButton}.is-opened`;
     this.orderNoteTextarea = '#internal_note_note';
@@ -37,31 +135,31 @@ class TabListBlock extends viewOrderBasePage.constructor {
     this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
     this.documentsTablegrid = '#documents-grid-table';
     this.documentsTableBody = `${this.documentsTablegrid} tbody`;
-    this.documentsTableRow = (row) => `${this.documentsTableBody} tr:nth-child(${row})`;
-    this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
-    this.documentDate = (row) => `${this.documentsTableColumn(row, 'documents-table-column-date')}`;
-    this.documentNumberLink = (row) => `${this.documentsTableColumn(row, 'documents-table-column-download-link')} a`;
-    this.documentType = (row) => `${this.documentsTableColumn(row, 'documents-table-column-type')}`;
-    this.addDocumentNoteButton = (row) => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
-    this.documentNoteInput = (row) => `${this.documentsTableRow(row)} td input.invoice-note`;
-    this.documentNoteSaveButton = (row) => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
-    this.editDocumentNoteButton = (row) => `${this.documentsTableRow(row)} td button.btn-edit`;
-    this.enterPaymentButton = (row) => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
+    this.documentsTableRow = (row: number) => `${this.documentsTableBody} tr:nth-child(${row})`;
+    this.documentsTableColumn = (row: number, column: string) => `${this.documentsTableRow(row)} td.${column}`;
+    this.documentDate = (row: number) => `${this.documentsTableColumn(row, 'documents-table-column-date')}`;
+    this.documentNumberLink = (row: number) => `${this.documentsTableColumn(row, 'documents-table-column-download-link')} a`;
+    this.documentType = (row: number) => `${this.documentsTableColumn(row, 'documents-table-column-type')}`;
+    this.addDocumentNoteButton = (row: number) => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = (row: number) => `${this.documentsTableRow(row)} td input.invoice-note`;
+    this.documentNoteSaveButton = (row: number) => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
+    this.editDocumentNoteButton = (row: number) => `${this.documentsTableRow(row)} td button.btn-edit`;
+    this.enterPaymentButton = (row: number) => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
 
     // Carriers tab
     this.carriersTab = '#orderShippingTab';
     this.orderShippingTabContent = '#orderShippingTabContent';
     this.carriersGridTable = '#shipping-grid-table';
     this.carriersTableBody = `${this.carriersGridTable} tbody`;
-    this.carriersTableRow = (row) => `${this.carriersTableBody} tr:nth-child(${row})`;
-    this.carriersTableColumn = (row, column) => `${this.carriersTableRow(row)} td.${column}`;
+    this.carriersTableRow = (row: number) => `${this.carriersTableBody} tr:nth-child(${row})`;
+    this.carriersTableColumn = (row: number, column: string) => `${this.carriersTableRow(row)} td.${column}`;
     this.editLink = `${this.orderShippingTabContent} a.js-update-shipping-btn`;
     this.updateOrderShippingModal = '#updateOrderShippingModal';
     this.updateOrderShippingModalDialog = `${this.updateOrderShippingModal} div.modal-dialog`;
     this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
     this.carrierSelect = '#select2-update_order_shipping_new_carrier_id-container';
     this.carriersSelectResult = '#select2-update_order_shipping_new_carrier_id-results';
-    this.carrierToSelect = (id) => `${this.carriersSelectResult} li:nth-child(${id})`;
+    this.carrierToSelect = (id: number) => `${this.carriersSelectResult} li:nth-child(${id})`;
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
     this.giftMessage = '#gift-message';
 
@@ -70,8 +168,8 @@ class TabListBlock extends viewOrderBasePage.constructor {
     this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`;
     this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
-    this.merchandiseReturnsTableRow = (row) => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
-    this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
+    this.merchandiseReturnsTableRow = (row: number) => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
+    this.merchandiseReturnsTableColumn = (row: number, column: string) => `${this.merchandiseReturnsTableRow(row)}`
       + ` td[data-role='merchandise-${column}']`;
   }
 
@@ -85,8 +183,8 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param numberOfBadges {number} Number of badges to get text content
    * @returns {Promise<string>}
    */
-  async getSuccessBadge(page, numberOfBadges) {
-    let badge = '';
+  async getSuccessBadge(page: Page, numberOfBadges: number): Promise<string> {
+    let badge: string = '';
 
     for (let i = 1; i <= numberOfBadges; i++) {
       badge += await this.getTextContent(page, this.successBadge(i));
@@ -101,7 +199,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getStatusesNumber(page) {
+  async getStatusesNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.historyTabContent);
   }
 
@@ -110,7 +208,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async clickOnUpdateStatus(page) {
+  async clickOnUpdateStatus(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
 
     return this.getAlertDangerBlockParagraphContent(page);
@@ -122,7 +220,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param status {string} Status to edit
    * @returns {Promise<string>}
    */
-  async updateOrderStatus(page, status) {
+  async updateOrderStatus(page: Page, status: string): Promise<string> {
     await this.selectByVisibleText(page, this.secondOrderStatusesSelect, status);
     await this.clickAndWaitForNavigation(page, this.secondUpdateStatusButton);
 
@@ -131,10 +229,10 @@ class TabListBlock extends viewOrderBasePage.constructor {
 
   /**
    * Get status number
-   * @param page {Page} Browser tab
+   * @param page {Page|Frame} Browser tab
    * @returns {Promise<number>}
    */
-  async getStatusNumber(page) {
+  async getStatusNumber(page: Page|Frame): Promise<number> {
     return this.getNumberFromText(page, this.historyTabContent);
   }
 
@@ -145,7 +243,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} status row in table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromHistoryTable(page, columnName, row) {
+  async getTextColumnFromHistoryTable(page: Page, columnName: string, row: number): Promise<string> {
     return this.getTextContent(page, this.statusTableColumn(row, columnName));
   }
 
@@ -154,7 +252,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isOrderNoteOpened(page) {
+  async isOrderNoteOpened(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.orderNoteCloseButton, 100);
   }
 
@@ -163,7 +261,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async openOrderNoteTextarea(page) {
+  async openOrderNoteTextarea(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.orderNoteOpenButton);
 
     return this.isOrderNoteOpened(page);
@@ -175,7 +273,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param orderNote {String} Value of order note to set on textarea
    * @returns {Promise<string>}
    */
-  async setOrderNote(page, orderNote) {
+  async setOrderNote(page: Page, orderNote: string): Promise<string> {
     if (!(await this.isOrderNoteOpened(page))) {
       await this.openOrderNoteTextarea(page);
     }
@@ -190,7 +288,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderNoteContent(page) {
+  async getOrderNoteContent(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderNoteTextarea);
   }
 
@@ -200,7 +298,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Value of row number of resend button
    * @returns {Promise<string>}
    */
-  async resendEmail(page, row = 1) {
+  async resendEmail(page: Page, row: number = 1): Promise<string> {
     await this.waitForSelectorAndClick(page, this.resendEmailButton(row));
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -212,7 +310,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async goToDocumentsTab(page) {
+  async goToDocumentsTab(page: Page): Promise<boolean> {
     await page.click(this.documentTab);
     return this.elementVisible(page, `${this.documentTab}.active`, 1000);
   }
@@ -222,7 +320,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isGenerateInvoiceButtonVisible(page) {
+  isGenerateInvoiceButtonVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.generateInvoiceButton, 1000);
   }
 
@@ -231,7 +329,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getDocumentsNumber(page) {
+  getDocumentsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, `${this.documentTab} .count`);
   }
 
@@ -242,7 +340,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} status row in table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromDocumentsTable(page, columnName, row) {
+  async getTextColumnFromDocumentsTable(page: Page, columnName: string, row: number): Promise<string> {
     return this.getTextContent(page, this.documentsTableColumn(row, columnName));
   }
 
@@ -251,7 +349,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async generateInvoice(page) {
+  async generateInvoice(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -263,7 +361,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
-  async getFileName(page, rowChild = 1) {
+  async getFileName(page: Page, rowChild: number = 1): Promise<string> {
     await this.goToDocumentsTab(page);
 
     const fileName = await this.getTextContent(page, this.documentNumberLink(rowChild));
@@ -277,7 +375,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
-  async getDocumentDate(page, rowChild = 1) {
+  async getDocumentDate(page: Page, rowChild: number = 1): Promise<string> {
     await this.goToDocumentsTab(page);
 
     return this.getTextContent(page, this.documentDate(rowChild));
@@ -289,7 +387,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param rowChild {number} Document row on table
    * @returns {Promise<string>}
    */
-  async getDocumentType(page, rowChild = 1) {
+  async getDocumentType(page: Page, rowChild: number = 1): Promise<string> {
     await this.goToDocumentsTab(page);
 
     return this.getTextContent(page, this.documentType(rowChild));
@@ -301,7 +399,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Document row on table
    * @return {Promise<string|null>}
    */
-  downloadDocument(page, row) {
+  downloadDocument(page: Page, row: number): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.documentNumberLink(row));
   }
 
@@ -311,7 +409,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row of the invoice
    * @returns {Promise<string|null>}
    */
-  async downloadInvoice(page, row = 1) {
+  async downloadInvoice(page: Page, row: number = 1): Promise<string|null> {
     await this.goToDocumentsTab(page);
 
     return this.downloadDocument(page, row);
@@ -324,7 +422,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row in documents table
    * @returns {Promise<string>}
    */
-  async setDocumentNote(page, note, row = 1) {
+  async setDocumentNote(page: Page, note: string, row: number = 1): Promise<string> {
     await this.waitForSelectorAndClick(page, this.addDocumentNoteButton(row));
     await this.setValue(page, this.documentNoteInput(row + 1), note);
     await this.waitForSelectorAndClick(page, this.documentNoteSaveButton(row + 1));
@@ -338,7 +436,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on table documents
    * @returns {Promise<boolean>}
    */
-  async isEditDocumentNoteButtonVisible(page, row = 1) {
+  async isEditDocumentNoteButtonVisible(page: Page, row: number = 1): Promise<boolean> {
     await this.goToDocumentsTab(page);
 
     return this.elementVisible(page, this.editDocumentNoteButton(row), 1000);
@@ -350,7 +448,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on table documents
    * @returns {Promise<boolean>}
    */
-  async isAddDocumentNoteButtonVisible(page, row = 1) {
+  async isAddDocumentNoteButtonVisible(page: Page, row: number = 1): Promise<boolean> {
     await this.goToDocumentsTab(page);
 
     return this.elementVisible(page, this.addDocumentNoteButton(row), 1000);
@@ -362,7 +460,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on table documents
    * @returns {Promise<boolean>}
    */
-  async isEnterPaymentButtonVisible(page, row = 1) {
+  async isEnterPaymentButtonVisible(page: Page, row: number = 1): Promise<boolean> {
     await this.goToDocumentsTab(page);
 
     return this.elementVisible(page, this.enterPaymentButton(row), 1000);
@@ -374,22 +472,20 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async clickOnEnterPaymentButton(page, row = 1) {
+  async clickOnEnterPaymentButton(page: Page, row: number = 1): Promise<void> {
     await this.waitForSelectorAndClick(page, this.enterPaymentButton(row));
   }
 
   /**
    * Download delivery slip
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async downloadDeliverySlip(page) {
-    /* eslint-disable no-return-assign, no-param-reassign */
+  async downloadDeliverySlip(page: Page): Promise<string|null> {
     await this.goToDocumentsTab(page);
 
     // Delete the target because a new tab is opened when downloading the file
     return this.downloadDocument(page, 3);
-    /* eslint-enable no-return-assign, no-param-reassign */
   }
 
   // Methods for carriers tab
@@ -398,7 +494,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getCarriersNumber(page) {
+  getCarriersNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, `${this.carriersTab} .count`);
   }
 
@@ -407,7 +503,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async goToCarriersTab(page) {
+  async goToCarriersTab(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.carriersTab);
 
     return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
@@ -418,7 +514,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getGiftMessage(page) {
+  async getGiftMessage(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.carriersTab);
 
     return this.getTextContent(page, this.giftMessage);
@@ -430,7 +526,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on carriers table
    * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
    */
-  async getCarrierDetails(page, row = 1) {
+  async getCarrierDetails(page: Page, row: number = 1) {
     return {
       date: await this.getTextContent(page, this.carriersTableColumn(row, 'date')),
       carrier: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-name')),
@@ -445,7 +541,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async clickOnEditLink(page) {
+  async clickOnEditLink(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.editLink);
 
     return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
@@ -457,7 +553,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param shippingData {{trackingNumber: string, carrier: string, carrierID: number}} Data to set on shipping form
    * @returns {Promise<string>}
    */
-  async setShippingDetails(page, shippingData) {
+  async setShippingDetails(page: Page, shippingData): Promise<string> {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
     await page.click(this.carrierSelect);
     await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));
@@ -472,7 +568,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async goToMerchandiseReturnsTab(page) {
+  async goToMerchandiseReturnsTab(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
 
     return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
@@ -483,7 +579,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getMerchandiseReturnsNumber(page) {
+  getMerchandiseReturnsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.merchandisereturnCount);
   }
 
@@ -493,7 +589,7 @@ class TabListBlock extends viewOrderBasePage.constructor {
    * @param row {number} Row on table merchandise returns
    * @returns {Promise<{date: string, type: string, status: string, number: string}>}
    */
-  async getMerchandiseReturnsDetails(page, row = 1) {
+  async getMerchandiseReturnsDetails(page: Page, row: number = 1) {
     return {
       date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
       type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
@@ -503,4 +599,4 @@ class TabListBlock extends viewOrderBasePage.constructor {
   }
 }
 
-module.exports = new TabListBlock();
+export default new TabListBlock();

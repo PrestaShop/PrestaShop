@@ -67,11 +67,11 @@ export default class BOBasePage extends CommonPage {
 
   public readonly ordersLink: string;
 
-  private readonly invoicesLink: string;
+  public readonly invoicesLink: string;
 
-  private readonly creditSlipsLink: string;
+  public readonly creditSlipsLink: string;
 
-  private readonly deliverySlipslink: string;
+  public readonly deliverySlipslink: string;
 
   private readonly shoppingCartsLink: string;
 
@@ -958,5 +958,3 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
   }
 }
-
-module.exports = BOBasePage;

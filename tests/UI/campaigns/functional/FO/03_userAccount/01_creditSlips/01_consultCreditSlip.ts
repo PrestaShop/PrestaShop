@@ -18,8 +18,8 @@ import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import ordersPage from '@pages/BO/orders';
 import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
-import viewOrderTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import viewOrderPage from '@pages/BO/orders/view/viewOrderBasePage';
+import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
+import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
@@ -165,28 +165,28 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         // View order
         await ordersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await viewOrderBasePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
       it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
         await expect(result).to.equal(Statuses.paymentAccepted.status);
       });
 
       it('should check if the button \'Partial Refund\' is visible', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkPartialRefundButton', baseContext);
 
-        const result = await viewOrderPage.isPartialRefundButtonVisible(page);
+        const result = await viewOrderBasePage.isPartialRefundButtonVisible(page);
         await expect(result).to.be.true;
       });
 
       it('should create \'Partial refund\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-        await viewOrderPage.clickOnPartialRefund(page);
+        await viewOrderBasePage.clickOnPartialRefund(page);
 
         const textMessage = await viewOrderProductsBlockPage.addPartialRefundProduct(page, 1, 1);
         await expect(textMessage).to.contains(viewOrderProductsBlockPage.partialRefundValidationMessage);
@@ -196,7 +196,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
         // Get document name
-        const documentType = await viewOrderTabListBlock.getDocumentType(page, 3);
+        const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
         await expect(documentType).to.be.equal('Credit slip');
       });
 
@@ -204,7 +204,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getOrderReference', baseContext);
 
         // Get document name
-        orderReference = await viewOrderPage.getOrderReference(page);
+        orderReference = await viewOrderBasePage.getOrderReference(page);
         await expect(orderReference).is.not.equal('');
       });
 
@@ -212,11 +212,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'getIdentifierDateIssued', baseContext);
 
         // Get Credit Slip ID
-        creditSlipID = await viewOrderTabListBlock.getFileName(page, 3);
+        creditSlipID = await orderPageTabListBlock.getFileName(page, 3);
         await expect(creditSlipID).is.not.equal('');
 
         // Get Date Issued
-        dateIssued = await viewOrderTabListBlock.getDocumentDate(page, 3);
+        dateIssued = await orderPageTabListBlock.getDocumentDate(page, 3);
         await expect(dateIssued).is.not.equal('');
       });
     });
@@ -226,7 +226,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop_1', baseContext);
 
         // View my shop and init pages
-        page = await viewOrderPage.viewMyShop(page);
+        page = await viewOrderBasePage.viewMyShop(page);
         await homePage.changeLanguage(page, 'en');
 
         const isHomePage = await homePage.isHomePage(page);

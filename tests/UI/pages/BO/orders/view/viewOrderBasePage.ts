@@ -7,12 +7,12 @@ import type {Page} from 'playwright';
  * @class
  * @extends BOBasePage
  */
-class ViewOrderBasePage extends BOBasePage {
+export default class ViewOrderBasePage extends BOBasePage {
   public readonly pageTitle: string;
 
   private readonly partialRefundValidationMessage: string;
 
-  private readonly successfulAddProductMessage: string;
+  public readonly successfulAddProductMessage: string;
 
   private readonly successfulDeleteProductMessage: string;
 
@@ -22,15 +22,15 @@ class ViewOrderBasePage extends BOBasePage {
 
   private readonly errorAddSameProductInInvoice: (invoice: string) => string;
 
-  private readonly noAvailableDocumentsMessage: string;
+  public readonly noAvailableDocumentsMessage: string;
 
-  private readonly updateSuccessfullMessage: string;
+  public readonly updateSuccessfullMessage: string;
 
   private readonly commentSuccessfullMessage: string;
 
-  private readonly validationSendMessage: string;
+  public readonly validationSendMessage: string;
 
-  private readonly errorAssignSameStatus: string;
+  public readonly errorAssignSameStatus: string;
 
   private readonly discountMustBeNumberErrorMessage: string;
 
@@ -239,5 +239,3 @@ class ViewOrderBasePage extends BOBasePage {
     return this.elementVisible(page, this.returnProductsButton, 2000);
   }
 }
-
-export default new ViewOrderBasePage();

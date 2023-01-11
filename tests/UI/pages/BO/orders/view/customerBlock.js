@@ -1,4 +1,4 @@
-import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 
 require('module-alias/register');
 // Needed to create customer in orders page
@@ -9,7 +9,7 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
  * @class
  * @extends ViewOrderBasePage
  */
-class CustomerBlock extends viewOrderBasePage.constructor {
+class CustomerBlock extends ViewOrderBasePage {
   /**
    * @constructs
    * Setting up texts and selectors to use on view/edit customer block
