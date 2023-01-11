@@ -10,17 +10,17 @@ import type {Page} from 'playwright';
 export default class ViewOrderBasePage extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly partialRefundValidationMessage: string;
+  public readonly partialRefundValidationMessage: string;
 
   public readonly successfulAddProductMessage: string;
 
-  private readonly successfulDeleteProductMessage: string;
+  public readonly successfulDeleteProductMessage: string;
 
-  private readonly errorMinimumQuantityMessage: string;
+  public readonly errorMinimumQuantityMessage: string;
 
-  private readonly errorAddSameProduct: string;
+  public readonly errorAddSameProduct: string;
 
-  private readonly errorAddSameProductInInvoice: (invoice: string) => string;
+  public readonly errorAddSameProductInInvoice: (invoice: string) => string;
 
   public readonly noAvailableDocumentsMessage: string;
 
@@ -32,13 +32,13 @@ export default class ViewOrderBasePage extends BOBasePage {
 
   public readonly errorAssignSameStatus: string;
 
-  private readonly discountMustBeNumberErrorMessage: string;
+  public readonly discountMustBeNumberErrorMessage: string;
 
-  private readonly invalidPercentValueErrorMessage: string;
+  public readonly invalidPercentValueErrorMessage: string;
 
-  private readonly percentValueNotPositiveErrorMessage: string;
+  public readonly percentValueNotPositiveErrorMessage: string;
 
-  private readonly discountCannotExceedTotalErrorMessage: string;
+  public readonly discountCannotExceedTotalErrorMessage: string;
 
   private readonly orderID: string;
 

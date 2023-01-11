@@ -17,7 +17,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import creditSlipsPage from '@pages/FO/myAccount/creditSlips';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import ordersPage from '@pages/BO/orders';
-import viewOrderProductsBlockPage from '@pages/BO/orders/view/productsBlock';
+import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
@@ -188,8 +188,8 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         await viewOrderBasePage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderProductsBlockPage.addPartialRefundProduct(page, 1, 1);
-        await expect(textMessage).to.contains(viewOrderProductsBlockPage.partialRefundValidationMessage);
+        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
+        await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
       });
 
       it('should check if \'Credit slip\' document is created', async function () {
