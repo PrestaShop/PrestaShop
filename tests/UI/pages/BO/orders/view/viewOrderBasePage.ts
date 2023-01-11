@@ -26,7 +26,7 @@ export default class ViewOrderBasePage extends BOBasePage {
 
   public readonly updateSuccessfullMessage: string;
 
-  private readonly commentSuccessfullMessage: string;
+  public readonly commentSuccessfullMessage: string;
 
   public readonly validationSendMessage: string;
 
