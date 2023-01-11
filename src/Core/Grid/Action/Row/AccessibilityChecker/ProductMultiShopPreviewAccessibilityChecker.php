@@ -47,6 +47,11 @@ class ProductMultiShopPreviewAccessibilityChecker implements AccessibilityChecke
         $this->multiStoreContext = $multiStoreContext;
     }
 
+    /**
+     * @param array{associated_shops_ids?: array<int>} $record
+     *
+     * @return bool
+     */
     public function isGranted(array $record)
     {
         if ($this->multiStoreContext->isSingleShopContext()) {

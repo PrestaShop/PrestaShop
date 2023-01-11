@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Class UpdateProductStatusCommand update a given product status
  *
- * @deprecated You should use UpdateProductCommand instead
+ * @deprecated since 8.1 and will be removed in next major version.
  */
 class UpdateProductStatusCommand
 {
@@ -55,6 +55,11 @@ class UpdateProductStatusCommand
      */
     public function __construct(int $productId, bool $enable)
     {
+        @trigger_error(sprintf(
+            'Using %s command has been deprecated in 8.1 you should use %s instead.',
+            self::class,
+            UpdateProductCommand::class
+        ), E_USER_DEPRECATED);
         $this->productId = new ProductId($productId);
         $this->enable = $enable;
     }

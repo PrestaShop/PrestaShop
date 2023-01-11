@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusHandlerInterface;
 
 /**
+ * @deprecated since 8.1 and will be removed in next major version.
+ *
  * @internal
  */
 class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface

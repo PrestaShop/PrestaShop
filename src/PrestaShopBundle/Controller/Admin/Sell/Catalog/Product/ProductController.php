@@ -527,7 +527,7 @@ class ProductController extends FrameworkBundleAdminController
             /** @var ProductMultiShopRepository $productRepository */
             $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
             $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
-            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId) {
+            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
                 return $shopId->getValue();
             }, $productShopIds)));
             $this->addFlash(
