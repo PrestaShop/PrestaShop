@@ -211,14 +211,23 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
     }
 
     /**
-     * @param Image $image
-     * @param ShopId[] $shopsToRemoveImageFrom
+     * @param ImageId $imageId
+     * @param ShopId[] $shopIds
      *
      * @return void
      */
-    public function deleteFromShops(Image $image, array $shopsToRemoveImageFrom)
+    public function deleteFromShops(ImageId $imageId, array $shopIds): void
     {
-        $this->deleteObjectModelFromShops($image, $shopsToRemoveImageFrom, CannotDeleteProductImageException::class);
+        foreach ($shopIds as $shopId) {
+            $this->checkShopAssociation($imageId->getValue(), Image::class, $shopId);
+        }
+
+        $this->deleteObjectModelFromShops(
+            // We fetch the image from first shop, the values don't matter anyway we just need an Image instance
+            $this->get($imageId, reset($shopIds)),
+            $shopIds,
+            CannotDeleteProductImageException::class
+        );
     }
 
     /**
@@ -317,7 +326,6 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
                     'cover' => ':cover',
                 ]
             )
-
             ->setParameter('productId', (int) $image->id_product)
             ->setParameter('imageId', (int) $image->id)
             ->setParameter('shopId', $shopId->getValue())

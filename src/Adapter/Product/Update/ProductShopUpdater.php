@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
@@ -235,7 +236,15 @@ class ProductShopUpdater
     private function copyImageAssociations(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
     {
         $imagesFromSourceShop = $this->productImageMultiShopRepository->getImages($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $targetImageIds = array_map(static function (ImageId $imageId): int {
+            return $imageId->getValue();
+        }, $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($targetShopId->getValue())));
+
         foreach ($imagesFromSourceShop as $image) {
+            // skip image if it is already associated with the target shop
+            if (in_array((int) $image->id, $targetImageIds, true)) {
+                continue;
+            }
             $this->productImageMultiShopRepository->associateImageToShop($image, $targetShopId);
         }
     }

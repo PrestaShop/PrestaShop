@@ -57,7 +57,7 @@ class SetProductImagesForAllShopHandler implements SetProductImagesForAllShopHan
             $image->associateTo($shopsToAddImageTo, $command->getProductId()->getValue());
             if (!empty($shopsToRemoveImageFrom)) {
                 $this->productImageMultiShopRepository->deleteFromShops(
-                    $image,
+                    new ImageId((int) $image->id),
                     array_map(
                         static function (int $shopId): ShopId {
                             return new ShopId($shopId);
