@@ -47,3 +47,11 @@ export {
   OrderHistory,
   OrderProduct,
 };
+type MerchandiseReturns = {
+  orderReference: string
+  fileName: string
+  status: string
+  dateIssued: string
+}
+
+export {Order, OrderHistory, MerchandiseReturns};

@@ -1,11 +1,16 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import files from '@utils/files';
+import {Statuses} from '@data/demo/orderStatuses';
+import date from '@utils/date';
 
 // Import common tests
+import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {
+  enableMerchandiseReturns,
+  disableMerchandiseReturns,
+} from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 import foHomePage from '@pages/FO/home';
@@ -16,49 +21,49 @@ import invoicesPage from '@pages/BO/orders/invoices';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
+import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 
 // Import data
-import Customers from '@data/demo/customers';
-import OrderStatuses from '@data/demo/orderStatuses';
-import PaymentMethods from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import OrderData from '@data/faker/order';
+import {DefaultCustomer} from '@data/demo/customer';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import {Order, MerchandiseReturns} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 // context
-const baseContext: string = 'functional_FO_userAccount_orderHistory_orderDetails_downloadInvoice';
+const baseContext: string = 'functional_FO_userAccount_orderHistory_orderDetails_requestMerchandiseReturn';
 
 /*
 Pre-condition:
-- Create 2 orders by default customer
+- Create order by default customer
+- Enable merchandise return
 Scenario:
-- Change the first order status to Shipped
-- Go to FO and check the invoice for the first order
-- Check that no invoice is visible for the second order
+- Change order status to Delivered
+- Go to order details page
+- Create merchandise return
+- Check the created return
+Post-condition:
+- Disable merchandise return
  */
-describe('FO - Account - Order details : Download invoice', async () => {
+describe('FO - Account - Order details : Request merchandise return', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let fileName: string;
+  let orderReference: string;
 
-  const orderData: OrderData = new OrderData({
-    customer: Customers.johnDoe,
-    products: [
-      {
-        product: Products.demo_1,
-        quantity: 1,
-      },
-    ],
-    paymentMethod: PaymentMethods.wirePayment,
-  });
+  const orderData: Order = {
+    customer: DefaultCustomer,
+    productId: 1,
+    productQuantity: 2,
+    paymentMethod: PaymentMethods.wirePayment.moduleName,
+  };
+  const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create order
   createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
-  // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
+  // Pre-condition: Enable merchandise returns
+  enableMerchandiseReturns(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -70,7 +75,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Change the first order status to \'Delivered\'', async () => {
+  describe('Change the created order status to \'Delivered\'', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -98,23 +103,22 @@ describe('FO - Account - Order details : Download invoice', async () => {
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
+    it(`should change the order status to '${Statuses.delivered.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
-      await expect(result).to.equal(OrderStatuses.shipped.name);
+      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.delivered.status);
+      await expect(result).to.equal(Statuses.delivered.status);
     });
 
-    it('should get the invoice file name', async function () {
+    it('should get the order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
-      // Get invoice file name
-      fileName = await orderPageTabListBlock.getFileName(page) as string;
-      await expect(fileName).not.null;
+      orderReference = await orderPageTabListBlock.getOrderReference(page) as string;
+      await expect(orderReference).not.null;
     });
   });
 
-  describe('Download invoice', async () => {
+  describe('Request merchandise return', async () => {
     it('should go to FO home page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCreateAccount', baseContext);
 
@@ -136,7 +140,7 @@ describe('FO - Account - Order details : Download invoice', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, Customers.johnDoe);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
 
       const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -169,50 +173,35 @@ describe('FO - Account - Order details : Download invoice', async () => {
       await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
     });
 
-    it('should download the invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDownloadFile', baseContext);
+    it('should check the existence of order return form', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      const downloadFilePath: string | null = await orderDetailsPage.downloadInvoice(page);
-
-      const doesFileExist: boolean = await files.doesFileExist(downloadFilePath, 5000);
-      await expect(doesFileExist, 'File is not downloaded!').to.be.true;
-
-      const exist: boolean = await files.isTextInPDF(downloadFilePath, fileName);
-      await expect(exist).to.be.true;
+      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+      await expect(result).to.be.true;
     });
 
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage2', baseContext);
+    it('should create a merchandise return and check if merchandise return page is displayed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createMerchandiseReturn', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await orderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
 
-      const pageTitle: string = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
     });
 
-    it('should go to order history page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage2', baseContext);
+    it('should check the merchandise returns table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkMerchandiseReturnsTable', baseContext);
 
-      await foMyAccountPage.goToHistoryAndDetailsPage(page);
-
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
-    });
-
-    it('should go to order details page of the second order in list', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrderDetails2', baseContext);
-
-      await foOrderHistoryPage.goToDetailsPage(page, 2);
-
-      const pageTitle: string = await orderDetailsPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(orderDetailsPage.pageTitle);
-    });
-
-    it('should check that no invoice is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNoInvoiceIsVisible', baseContext);
-
-      const isInvoiceVisible: boolean = await orderDetailsPage.isInvoiceVisible(page);
-      await expect(isInvoiceVisible).to.be.false;
+      const result: MerchandiseReturns = await foMerchandiseReturnsPage.getMerchandiseReturnsDetails(page);
+      await Promise.all([
+        expect(result.orderReference).to.equal(orderReference),
+        expect(result.fileName).to.contains('#RE'),
+        expect(result.status).to.equal('Waiting for confirmation'),
+        expect(result.dateIssued).to.equal(today),
+      ]);
     });
   });
+
+  // Post-condition: Disable merchandise returns
+  disableMerchandiseReturns(`${baseContext}_postTest_1`);
 });
