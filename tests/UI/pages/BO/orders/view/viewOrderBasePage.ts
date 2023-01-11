@@ -239,3 +239,5 @@ export default class ViewOrderBasePage extends BOBasePage {
     return this.elementVisible(page, this.returnProductsButton, 2000);
   }
 }
+
+module.exports = ViewOrderBasePage;

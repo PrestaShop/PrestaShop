@@ -225,7 +225,13 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param shipping {number} Shipping cost to set
    * @returns {Promise<string>}
    */
-  async addPartialRefundProduct(page: Page, productRow: number, quantity: number = 0, amount: number = 0, shipping: number = 0): Promise<string> {
+  async addPartialRefundProduct(
+    page: Page,
+    productRow: number,
+    quantity: number = 0,
+    amount: number = 0,
+    shipping: number = 0,
+  ): Promise<string> {
     await this.waitForVisibleSelector(page, this.refundProductQuantity(1));
     await this.setValue(page, this.refundProductQuantity(productRow), quantity);
     if (amount !== 0) {
