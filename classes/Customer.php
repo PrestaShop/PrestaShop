@@ -785,12 +785,13 @@ class CustomerCore extends ObjectModel
                         `id_lang` = ' . (int) $idLang . '
                         AND `id_customer` = ' . (int) $this->id . '
                         AND a.`deleted` = 0
-                        AND a.`active` = 1
-                    ORDER BY a.`alias`';
+                        AND a.`active` = 1';
 
         if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
         }
+
+        $sql .= ' ORDER BY a.`alias`';
 
         return $sql;
     }
