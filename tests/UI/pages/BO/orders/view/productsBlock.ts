@@ -1,6 +1,5 @@
 import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
-
-require('module-alias/register');
+import {Page} from "playwright";
 
 /**
  * Products block, contains functions that can be used on view/edit products block on view order page
@@ -8,6 +7,122 @@ require('module-alias/register');
  * @extends ViewOrderBasePage
  */
 class ProductsBlock extends ViewOrderBasePage {
+  private readonly productsCountSpan: string;
+
+  private readonly orderProductsLoading: string;
+
+  private readonly orderProductsTable: string;
+
+  private readonly orderProductsRowTable: (row: number) => string;
+
+  private readonly orderProductsTableNameColumn: (row: number) => string;
+
+  private readonly orderProductsTableProductName: (row: number) => string;
+
+  private readonly orderProductsTableProductReference: (row: number) => string;
+
+  private readonly orderProductsTableProductBasePrice: (row: number) => string;
+
+  private readonly orderProductsTableProductQuantity: (row: number) => string;
+
+  private readonly orderProductsTableProductAvailable: (row: number) => string;
+
+  private readonly orderProductsTableProductPrice: (row: number) => string;
+
+  private readonly deleteProductButton: (row: number) => string;
+
+  private readonly editProductButton: (row: number) => string;
+
+  private readonly productQuantitySpan: (row: number) => string;
+
+  private readonly orderProductsEditRowTable: string;
+
+  private readonly editProductQuantityInput: string;
+
+  private readonly editProductPriceInput: string;
+
+  private readonly UpdateProductButton: string;
+
+  private readonly modalConfirmNewPrice: string;
+
+  private readonly modalConfirmNewPriceSubmitButton: string;
+
+  private readonly orderTotalPriceSpan: string;
+
+  private readonly orderWrappingTotal: string;
+
+  private readonly orderTotalDiscountsSpan: string;
+
+  private readonly addProductButton: string;
+
+  private readonly addProductTableRow: string;
+
+  private readonly addProductRowSearch: string;
+
+  private readonly addProductRowQuantity: string;
+
+  private readonly addProductRowPrice: string;
+
+  private readonly addProductRowStockLocation: string;
+
+  private readonly addProductAvailable: string;
+
+  private readonly addProductTotalPrice: string;
+
+  private readonly addProductInvoiceSelect: string;
+
+  private readonly addProductNewInvoiceCarrierName: string;
+
+  private readonly addProductNewInvoiceFreeShippingCheckbox: string;
+
+  private readonly addProductNewInvoiceFreeShippingDiv: string;
+
+  private readonly addProductAddButton: string;
+
+  private readonly addProductCancelButton: string;
+
+  private readonly addProductModalConfirmNewInvoice: string;
+
+  private readonly addProductCreateNewInvoiceButton: string;
+
+  private readonly addDiscountButton: string;
+
+  private readonly orderDiscountModal: string;
+
+  private readonly addOrderCartRuleNameInput: string;
+
+  private readonly addOrderCartRuleTypeSelect: string;
+
+  private readonly addOrderCartRuleValueInput: string;
+
+  private readonly addOrderCartRuleAddButton: string;
+
+  private readonly discountListTable: string;
+
+  private readonly discountListRowTable: (row: number) => string;
+
+  private readonly discountListNameColumn: (row: number) => string;
+
+  private readonly discountListDiscountColumn: (row: number) => string;
+
+  private readonly discountDeleteIcon: (row: number) => string;
+
+  private readonly refundProductQuantity: (row: number) => string;
+
+  private readonly refundProductAmount: (row: number) => string;
+
+  private readonly refundShippingCost: (row: number) => string;
+
+  private readonly partialRefundSubmitButton: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on products block
@@ -21,18 +136,18 @@ class ProductsBlock extends ViewOrderBasePage {
 
     // Products table
     this.orderProductsTable = '#orderProductsTable';
-    this.orderProductsRowTable = (row) => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
-    this.orderProductsTableNameColumn = (row) => `${this.orderProductsRowTable(row)} td.cellProductName`;
-    this.orderProductsTableProductName = (row) => `${this.orderProductsTableNameColumn(row)} p.productName`;
-    this.orderProductsTableProductReference = (row) => `${this.orderProductsTableNameColumn(row)} p.productReference`;
-    this.orderProductsTableProductBasePrice = (row) => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
-    this.orderProductsTableProductQuantity = (row) => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
-    this.orderProductsTableProductAvailable = (row) => `${this.orderProductsRowTable(row)}
+    this.orderProductsRowTable = (row: number) => `${this.orderProductsTable} tbody tr:nth-child(${row})`;
+    this.orderProductsTableNameColumn = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductName`;
+    this.orderProductsTableProductName = (row: number) => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductReference = (row: number) => `${this.orderProductsTableNameColumn(row)} p.productReference`;
+    this.orderProductsTableProductBasePrice = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
+    this.orderProductsTableProductQuantity = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
+    this.orderProductsTableProductAvailable = (row: number) => `${this.orderProductsRowTable(row)}
      td.cellProductAvailableQuantity`;
-    this.orderProductsTableProductPrice = (row) => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
-    this.deleteProductButton = (row) => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
-    this.editProductButton = (row) => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
-    this.productQuantitySpan = (row) => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
+    this.orderProductsTableProductPrice = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
+    this.deleteProductButton = (row: number) => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
+    this.editProductButton = (row: number) => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
+    this.productQuantitySpan = (row: number) => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
 
     // Edit row table
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
@@ -78,15 +193,15 @@ class ProductsBlock extends ViewOrderBasePage {
 
     // Discount table
     this.discountListTable = 'table.table.discountList';
-    this.discountListRowTable = (row) => `${this.discountListTable} tbody tr:nth-child(${row})`;
-    this.discountListNameColumn = (row) => `${this.discountListRowTable(row)} td.discountList-name`;
-    this.discountListDiscountColumn = (row) => `${this.discountListRowTable(row)} td[data-role='discountList-value']`;
-    this.discountDeleteIcon = (row) => `${this.discountListRowTable(row)} a.delete-cart-rule`;
+    this.discountListRowTable = (row: number) => `${this.discountListTable} tbody tr:nth-child(${row})`;
+    this.discountListNameColumn = (row: number) => `${this.discountListRowTable(row)} td.discountList-name`;
+    this.discountListDiscountColumn = (row: number) => `${this.discountListRowTable(row)} td[data-role='discountList-value']`;
+    this.discountDeleteIcon = (row: number) => `${this.discountListRowTable(row)} a.delete-cart-rule`;
 
     // Refund form
-    this.refundProductQuantity = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
-    this.refundProductAmount = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
-    this.refundShippingCost = (row) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
+    this.refundProductQuantity = (row: number) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
+    this.refundProductAmount = (row: number) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
+    this.refundShippingCost = (row: number) => `${this.orderProductsRowTable(row)} input[id*='cancel_product_shipping_amount']`;
     this.partialRefundSubmitButton = 'button#cancel_product_save';
 
     // Pagination selectors
@@ -110,7 +225,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param shipping {number} Shipping cost to set
    * @returns {Promise<string>}
    */
-  async addPartialRefundProduct(page, productRow, quantity = 0, amount = 0, shipping = 0) {
+  async addPartialRefundProduct(page: Page, productRow: number, quantity: number = 0, amount: number = 0, shipping: number = 0): Promise<string> {
     await this.waitForVisibleSelector(page, this.refundProductQuantity(1));
     await this.setValue(page, this.refundProductQuantity(productRow), quantity);
     if (amount !== 0) {
@@ -130,7 +245,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getProductsNumber(page) {
+  getProductsNumber(page: Page) : Promise<number> {
     return this.getNumberFromText(page, this.productsCountSpan);
   }
 
@@ -140,7 +255,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Product row on table
    * @returns {Promise<string>}
    */
-  getProductNameFromTable(page, row) {
+  getProductNameFromTable(page: Page, row: number): Promise<string> {
     return this.getTextContent(page, this.orderProductsTableProductName(row));
   }
 
@@ -151,7 +266,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param quantity {number} Quantity to edit
    * @returns {Promise<number>}
    */
-  async modifyProductQuantity(page, row, quantity) {
+  async modifyProductQuantity(page: Page, row: number, quantity: number): Promise<number> {
     await this.dialogListener(page);
     await Promise.all([
       page.click(this.editProductButton(row)),
@@ -174,8 +289,8 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param price {number} Price to edit
    * @returns {Promise<void>}
    */
-  async modifyProductPrice(page, row, price) {
-    this.dialogListener(page);
+  async modifyProductPrice(page: Page, row: number, price: number): Promise<void> {
+    await this.dialogListener(page);
 
     await this.waitForSelectorAndClick(page, this.editProductButton(row));
     await this.setValue(page, this.editProductPriceInput, price);
@@ -198,8 +313,8 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param price {number} Price to edit
    * @returns {Promise<void>}
    */
-  async modifyProductPriceForMultiInvoice(page, row, price) {
-    this.dialogListener(page);
+  async modifyProductPriceForMultiInvoice(page: Page, row: number, price: number): Promise<void> {
+    await this.dialogListener(page);
 
     await Promise.all([
       page.click(this.editProductButton(row)),
@@ -224,9 +339,9 @@ class ProductsBlock extends ViewOrderBasePage {
    * Delete product
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async deleteProduct(page, row) {
+  async deleteProduct(page: Page, row: number): Promise<string|null> {
     await this.dialogListener(page);
     if (await this.elementVisible(page, this.growlMessageBlock)) {
       await this.closeGrowlMessage(page);
@@ -245,7 +360,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderTotalPrice(page) {
+  getOrderTotalPrice(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderTotalPriceSpan, 1000);
   }
 
@@ -254,7 +369,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderWrappingTotal(page) {
+  getOrderWrappingTotal(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderWrappingTotal);
   }
 
@@ -263,7 +378,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getOrderTotalDiscounts(page) {
+  getOrderTotalDiscounts(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
   }
 
@@ -273,7 +388,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param invoice {string} The invoice to select from dropdown list
    * @returns {Promise<void>}
    */
-  async selectInvoice(page, invoice = 'Create a new invoice') {
+  async selectInvoice(page: Page, invoice: string = 'Create a new invoice'): Promise<void> {
     await this.selectByVisibleText(page, this.addProductInvoiceSelect, invoice);
   }
 
@@ -282,7 +397,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getInvoicesFromSelectOptions(page) {
+  getInvoicesFromSelectOptions(page: Page): Promise<string> {
     return this.getTextContent(page, this.addProductInvoiceSelect);
   }
 
@@ -291,7 +406,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getNewInvoiceCarrierName(page) {
+  getNewInvoiceCarrierName(page: Page): Promise<string> {
     return this.getTextContent(page, this.addProductNewInvoiceCarrierName);
   }
 
@@ -300,7 +415,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isFreeShippingSelected(page) {
+  isFreeShippingSelected(page: Page): Promise<boolean> {
     return this.isChecked(page, this.addProductNewInvoiceFreeShippingCheckbox);
   }
 
@@ -309,7 +424,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async selectFreeShippingCheckbox(page) {
+  async selectFreeShippingCheckbox(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.addProductNewInvoiceFreeShippingDiv);
   }
 
@@ -319,7 +434,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param quantity {number} Product quantity to add
    * @returns {Promise<void>}
    */
-  async addQuantity(page, quantity) {
+  async addQuantity(page: Page, quantity: number): Promise<void> {
     await this.setValue(page, this.addProductRowQuantity, quantity);
   }
 
@@ -329,7 +444,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param price {float} Value of price to update
    * @returns {Promise<void>}
    */
-  async updateProductPrice(page, price) {
+  async updateProductPrice(page: Page, price: number): Promise<void> {
     await this.setValue(page, this.addProductRowPrice, price);
   }
 
@@ -338,9 +453,9 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @param quantity {number} Product quantity to add
    * @param createNewInvoice {boolean} True if we need to create new invoice
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async addProductToCart(page, quantity = 1, createNewInvoice = false) {
+  async addProductToCart(page: Page, quantity: number = 1, createNewInvoice: boolean = false): Promise<string|null> {
     await this.closeGrowlMessage(page);
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
@@ -358,7 +473,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async cancelAddProductToCart(page) {
+  async cancelAddProductToCart(page: Page): Promise<void> {
     await this.waitForSelectorAndClick(page, this.addProductCancelButton);
   }
 
@@ -367,7 +482,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddButtonDisabled(page) {
+  isAddButtonDisabled(page: Page): Promise<boolean> {
     return this.elementVisible(page, `${this.addProductAddButton}[disabled]`, 1000);
   }
 
@@ -376,7 +491,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isAddProductTableRowVisible(page) {
+  isAddProductTableRowVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.addProductTableRow, 1000);
   }
 
@@ -386,7 +501,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Product row on table
    * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
-  async getProductDetails(page, row) {
+  async getProductDetails(page: Page, row: number) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
       reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
@@ -406,7 +521,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param name {string} Product name to search
    * @returns {Promise<void>}
    */
-  async searchProduct(page, name) {
+  async searchProduct(page: Page, name: string): Promise<void> {
     await this.waitForSelectorAndClick(page, this.addProductButton);
     await this.setValue(page, this.addProductRowSearch, name);
     await this.waitForSelectorAndClick(page, `${this.addProductTableRow} a`);
@@ -417,7 +532,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{stockLocation: string, available: number}>}
    */
-  async getSearchedProductDetails(page) {
+  async getSearchedProductDetails(page: Page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
@@ -430,7 +545,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<{available: number, price: float}>}
    */
-  async getSearchedProductInformation(page) {
+  async getSearchedProductInformation(page: Page) {
     return {
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
@@ -443,7 +558,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param discountData {{name: string, type: string, value:number}} Data to set on discount form
    * @returns {Promise<string>}
    */
-  async addDiscount(page, discountData) {
+  async addDiscount(page: Page, discountData): Promise<string> {
     await this.waitForSelectorAndClick(page, this.addDiscountButton);
     await this.waitForVisibleSelector(page, this.orderDiscountModal);
     await this.waitForSelectorAndClick(page, this.addOrderCartRuleNameInput);
@@ -465,7 +580,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isDiscountListTableVisible(page) {
+  async isDiscountListTableVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.discountListTable, 2000);
   }
 
@@ -476,12 +591,12 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async getTextColumnFromDiscountTable(page, column, row = 1) {
+  async getTextColumnFromDiscountTable(page: Page, column: string, row: number = 1): Promise<string> {
     switch (column) {
       case 'name':
-        return this.getTextContent(page, this.discountListNameColumn(row, 'name'));
+        return this.getTextContent(page, this.discountListNameColumn(row));
       case 'value':
-        return this.getTextContent(page, this.discountListDiscountColumn(row, 'value'));
+        return this.getTextContent(page, this.discountListDiscountColumn(row));
       default:
         throw new Error(`The column ${column} is not visible in discount table`);
     }
@@ -493,7 +608,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteDiscount(page, row = 1) {
+  async deleteDiscount(page: Page, row: number = 1): Promise<string> {
     await this.waitForSelectorAndClick(page, this.discountDeleteIcon(row));
 
     return this.getTextContent(page, this.alertBlock);
@@ -505,7 +620,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getPaginationLabel(page) {
+  async getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -514,7 +629,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -525,7 +640,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.scrollTo(page, this.productsCountSpan);
     await this.waitForSelectorAndClick(page, this.paginationPreviousLink);
 
@@ -538,7 +653,7 @@ class ProductsBlock extends ViewOrderBasePage {
    * @param number {number} Pagination number to select
    * @returns {Promise<boolean>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<boolean> {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
 
@@ -546,4 +661,4 @@ class ProductsBlock extends ViewOrderBasePage {
   }
 }
 
-module.exports = new ProductsBlock();
+export default new ProductsBlock();
