@@ -81,7 +81,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
         $contextShopId,
         $contextShopRootCategoryId,
         GroupDataProvider $groupDataProvider,
-        CategoryProvider $categoryProvider,
+        UrlProviderInterface $categoryProvider,
         Router $router
     ) {
         $this->queryBus = $queryBus;
