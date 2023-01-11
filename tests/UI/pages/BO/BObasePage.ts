@@ -958,3 +958,5 @@ export default class BOBasePage extends CommonPage {
     await this.waitForSelector(page, this.menuMobileButton, mobileSize ? 'visible' : 'hidden');
   }
 }
+
+module.exports = BOBasePage;
