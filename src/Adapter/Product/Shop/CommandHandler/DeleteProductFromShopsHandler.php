@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\DeleteProductFromShopsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -96,20 +95,11 @@ class DeleteProductFromShopsHandler implements DeleteProductFromShopsHandlerInte
      */
     private function removeImages(ProductId $productId, array $shopIds): void
     {
-        // first collect all the images from shops and make sure they are not duplicating
-        $imageIds = [];
         foreach ($shopIds as $shopId) {
-            $imageIds = array_merge(
-                $imageIds,
-                array_map(static function (ImageId $imageId): int {
-                    return $imageId->getValue();
-                }, $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($shopId->getValue())))
-            );
-        }
-
-        // then remove each of those images from all the specified shops
-        foreach ($imageIds as $imageId) {
-            $this->productImageMultiShopRepository->deleteFromShops(new ImageId($imageId), $shopIds);
+            $imageIds = $this->productImageMultiShopRepository->getImagesIds($productId, ShopConstraint::shop($shopId->getValue()));
+            foreach ($imageIds as $imageId) {
+                $this->productImageMultiShopRepository->deleteFromShops($imageId, [$shopId]);
+            }
         }
     }
 }
