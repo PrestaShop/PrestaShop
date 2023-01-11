@@ -133,21 +133,21 @@ describe('BO - Catalog - Products : Duplicate product', async () => {
     it('should click on bulk actions button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnBulkDeleteButton', baseContext);
 
-      const textMessage: string = await productsPage.clickOnBulkDeleteProducts(page);
+      const textMessage: string = await productsPage.clickOnBulkActionsProducts(page, 'delete');
       await expect(textMessage).to.equal('Deleting 2 products');
     });
 
     it('should bulk delete products', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteProduct', baseContext);
 
-      const textMessage: string = await productsPage.bulkDeleteProduct(page);
+      const textMessage: string = await productsPage.bulkActionsProduct(page, 'delete');
       await expect(textMessage).to.equal('Deleting 2 / 2 products');
     });
 
     it('should close progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeProgressModal', baseContext);
 
-      const isModalVisible: boolean = await productsPage.closeBulkDeleteProgressModal(page);
+      const isModalVisible: boolean = await productsPage.closeBulkActionsProgressModal(page, 'delete');
       await expect(isModalVisible).to.be.true;
     });
 
