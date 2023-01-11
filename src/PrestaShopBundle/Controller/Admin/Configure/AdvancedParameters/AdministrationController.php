@@ -165,7 +165,7 @@ class AdministrationController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($data);
             } catch (FormDataProviderException $e) {
-                $errorMessageFactory = $this->get('prestashop.form.error_message.configuration_error_factory');
+                $errorMessageFactory = $this->get(ConfigurationErrorFactory::class);
                 $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
 
                 return $this->redirectToRoute('admin_administration');

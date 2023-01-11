@@ -2,18 +2,24 @@ services:
   PrestaShopBundle\Form\ErrorMessage\LabelProvider:
 
   PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory:
+    autowire: true
+    public: false
     arguments:
       - !tagged core.configuration_error_factory
-      - '@prestashop.form.error_message.label_provider'
+      - '@PrestaShopBundle\Form\ErrorMessage\LabelProvider'
       - '@translator'
 
   PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider:
+    autowire: true
+    public: false
     arguments:
       - '@translator'
       - '@prestashop.core.admin.lang.repository'
     tags: [ 'core.configuration_error_factory' ]
 
   PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider:
+    autowire: true
+    public: false
     arguments:
       - '@translator'
     tags: [ 'core.configuration_error_factory' ]
