@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import customerSettingPage from '@pages/BO/shopParameters/customerSettings';
+import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import titlesPage from '@pages/BO/shopParameters/customerSettings/titles';
 import addTitlePage from '@pages/BO/shopParameters/customerSettings/titles/add';
 
@@ -57,16 +57,16 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async 
       dashboardPage.shopParametersParentLink,
       dashboardPage.customerSettingsLink,
     );
-    await customerSettingPage.closeSfToolBar(page);
+    await customerSettingsPage.closeSfToolBar(page);
 
-    const pageTitle = await customerSettingPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
+    const pageTitle = await customerSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
   });
 
   it('should go to \'Titles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
-    await customerSettingPage.goToTitlesPage(page);
+    await customerSettingsPage.goToTitlesPage(page);
 
     const pageTitle = await titlesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(titlesPage.pageTitle);

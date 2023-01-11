@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
-import {options} from '@pages/BO/shopParameters/customerSettings/options';
+import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 import emailPage from '@pages/BO/advancedParameters/email';
 import customersPage from '@pages/BO/customers';
 
@@ -78,7 +78,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -90,10 +89,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
       const result = await customerSettingsPage.setOptionStatus(
         page,
-        options.OPTION_EMAIL_REGISTRATION,
+        CustomerSettingsOptions.OPTION_EMAIL_REGISTRATION,
         test.args.enable,
       );
-
       await expect(result).to.contains(customerSettingsPage.successfulUpdateMessage);
     });
 
@@ -102,7 +100,6 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
-
       await foHomePage.changeLanguage(page, 'en');
 
       // Create account

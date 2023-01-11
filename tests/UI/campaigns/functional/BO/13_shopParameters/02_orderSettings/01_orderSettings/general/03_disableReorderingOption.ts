@@ -77,7 +77,6 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
-
       // Change language
       await homePage.changeLanguage(page, 'en');
 

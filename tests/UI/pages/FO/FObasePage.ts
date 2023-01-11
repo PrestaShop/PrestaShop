@@ -9,7 +9,7 @@ import type {Page} from 'playwright';
  * @extends CommonPage
  */
 export default class FOBasePage extends CommonPage {
-  private readonly content: string;
+  public readonly content: string;
 
   private readonly desktopLogo: string;
 

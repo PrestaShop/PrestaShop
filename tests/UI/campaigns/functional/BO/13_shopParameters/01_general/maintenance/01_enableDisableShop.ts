@@ -138,7 +138,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
 
     page = await homePage.closePage(browserContext, page, 0);
 
-    const result = await maintenancePage.addMaintenanceIPAddress(page, null);
+    const result = await maintenancePage.addMaintenanceIPAddress(page, '');
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 

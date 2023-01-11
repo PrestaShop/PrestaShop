@@ -106,16 +106,12 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
-
       // Change FO language
       await homePage.changeLanguage(page, 'en');
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 

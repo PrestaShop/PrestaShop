@@ -1,5 +1,10 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+// Import pages
+import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import TagData from '@data/faker/tag';
+
+import {Page} from 'playwright';
 
 /**
  * Add tag page, contains selectors and functions for the page
@@ -7,6 +12,22 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddTag extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly languageInput: string;
+
+  private readonly productSelect: string;
+
+  private readonly moveToLeftButton: string;
+
+  private readonly moveToRightButton: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add tag page
@@ -31,9 +52,9 @@ class AddTag extends BOBasePage {
    * Create/Edit tag
    * @param page {Page} Browser tab
    * @param tagData {TagData} Data to set to tag form
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async setTag(page, tagData) {
+  async setTag(page: Page, tagData: TagData): Promise<string> {
     await this.setValue(page, this.nameInput, tagData.name);
     await this.selectByVisibleText(page, this.languageInput, tagData.language);
     // Choose product
@@ -46,4 +67,4 @@ class AddTag extends BOBasePage {
   }
 }
 
-module.exports = new AddTag();
+export default new AddTag();

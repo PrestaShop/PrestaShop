@@ -64,7 +64,6 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
     await testContext.addContextItem(this, 'testIdentifier', 'goToTagsPage', baseContext);
 
     await searchPage.goToTagsPage(page);
-
     numberOfTags = await tagsPage.getNumberOfElementInGrid(page);
 
     const pageTitle = await tagsPage.getPageTitle(page);
@@ -188,10 +187,10 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         const sortedTable = await tagsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);

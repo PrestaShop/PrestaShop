@@ -9,9 +9,9 @@ import {Page} from 'playwright';
  * @extends CommonPage
  */
 export default class BOBasePage extends CommonPage {
-  public readonly successfulCreationMessage: string;
+  public successfulCreationMessage: string;
 
-  public readonly successfulUpdateMessage: string;
+  public successfulUpdateMessage: string;
 
   public readonly successfulDeleteMessage: string;
 
@@ -63,9 +63,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly dashboardLink: string;
 
-  private readonly ordersParentLink: string;
+  public readonly ordersParentLink: string;
 
-  private readonly ordersLink: string;
+  public readonly ordersLink: string;
 
   private readonly invoicesLink: string;
 
@@ -151,7 +151,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly translationsLink: string;
 
-  private readonly shopParametersParentLink: string;
+  public readonly shopParametersParentLink: string;
 
   private readonly shopParametersGeneralLink: string;
 
@@ -159,15 +159,15 @@ export default class BOBasePage extends CommonPage {
 
   private readonly productSettingsLink: string;
 
-  private readonly customerSettingsLink: string;
+  public readonly customerSettingsLink: string;
 
-  private readonly contactLink: string;
+  public readonly contactLink: string;
 
   private readonly trafficAndSeoLink: string;
 
   private readonly searchLink: string;
 
-  private readonly advancedParametersLink: string;
+  public readonly advancedParametersLink: string;
 
   private readonly informationLink: string;
 
@@ -175,7 +175,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly administrationLink: string;
 
-  private readonly emailLink: string;
+  public readonly emailLink: string;
 
   private readonly importLink: string;
 
@@ -191,7 +191,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly securityLink: string;
 
-  private readonly multistoreLink: string;
+  public readonly multistoreLink: string;
 
   private readonly menuTabLink: string;
 
@@ -207,7 +207,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly alertBlock: string;
 
-  private readonly alertSuccessBlock: string;
+  protected readonly alertSuccessBlock: string;
 
   private readonly alertDangerBlock: string;
 

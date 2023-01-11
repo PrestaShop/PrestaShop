@@ -243,8 +243,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
         );
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
@@ -303,7 +303,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 20);
       expect(paginationNumber).to.equal('1');
     });
 
@@ -324,7 +324,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
-      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');
+      const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, 50);
       expect(paginationNumber).to.equal('1');
     });
   });
@@ -345,7 +345,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
       const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
 
       for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
-        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name', 3);
+        const textColumn = await statusesPage.getTextColumn(page, tableName, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });

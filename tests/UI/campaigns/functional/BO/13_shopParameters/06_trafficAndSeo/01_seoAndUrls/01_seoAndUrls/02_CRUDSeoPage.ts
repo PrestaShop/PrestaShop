@@ -49,7 +49,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo p
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);

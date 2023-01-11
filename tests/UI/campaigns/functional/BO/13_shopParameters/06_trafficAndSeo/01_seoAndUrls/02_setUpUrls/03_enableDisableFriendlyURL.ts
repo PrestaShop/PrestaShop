@@ -2,12 +2,14 @@
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
+// Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import seoAndUrlsPage from '@pages/BO/shopParameters/trafficAndSeo/seoAndUrls';
+// Import FO pages
 import foHomePage from '@pages/FO/home';
 
 import {expect} from 'chai';
@@ -41,7 +43,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
       dashboardPage.shopParametersParentLink,
       dashboardPage.trafficAndSeoLink,
     );
-
     await seoAndUrlsPage.closeSfToolBar(page);
 
     const pageTitle = await seoAndUrlsPage.getPageTitle(page);
@@ -87,7 +88,6 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', a
 
     // Go to FO
     page = await seoAndUrlsPage.viewMyShop(page);
-
     await foHomePage.changeLanguage(page, 'en');
 
     const url = await foHomePage.getCurrentURL(page);
