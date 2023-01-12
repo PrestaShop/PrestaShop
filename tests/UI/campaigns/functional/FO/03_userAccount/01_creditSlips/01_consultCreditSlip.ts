@@ -25,7 +25,7 @@ import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
@@ -169,11 +169,11 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
         await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
-      it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-        await expect(result).to.equal(Statuses.paymentAccepted.status);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        await expect(result).to.equal(OrderStatuses.paymentAccepted.name);
       });
 
       it('should check if the button \'Partial Refund\' is visible', async function () {

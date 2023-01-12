@@ -14,7 +14,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -58,7 +58,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Disable',
         status: false,
-        orderStatus: Statuses.shipped.status,
+        orderStatus: OrderStatuses.shipped.name,
         isInvoiceCreated: 'no invoice document created',
       },
     },
@@ -66,7 +66,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
       args: {
         action: 'Enable',
         status: true,
-        orderStatus: Statuses.paymentAccepted.status,
+        orderStatus: OrderStatuses.paymentAccepted.name,
         isInvoiceCreated: 'an invoice document created',
       },
     },

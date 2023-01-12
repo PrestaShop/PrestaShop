@@ -26,7 +26,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import Address from '@data/demo/address';
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import type Order from '@data/types/order';
@@ -300,11 +300,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
       });
 
-      it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus1', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-        await expect(textResult).to.equal(Statuses.paymentAccepted.status);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        await expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
       });
 
       it('should check that there is no carrier', async function () {
@@ -540,11 +540,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     });
 
     describe('Create invoice', async () => {
-      it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus2', baseContext);
 
-        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-        await expect(textResult).to.equal(Statuses.paymentAccepted.status);
+        const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        await expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
       });
 
       it('should get the invoice file name', async function () {

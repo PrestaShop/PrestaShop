@@ -4,6 +4,7 @@ import addCustomerPage from '@pages/BO/customers/add';
 
 // Import data
 import type ProductData from '@data/faker/product';
+import type OrderStatusData from '@data/faker/orderStatus';
 
 import type {Frame, Page} from 'playwright';
 
@@ -1173,11 +1174,11 @@ class AddOrder extends BOBasePage {
   /**
    * Set order status
    * @param page {Page} Browser tab
-   * @param orderStatus {{id: number, status: string}} Order status to choose
+   * @param orderStatus {OrderStatusData} Order status to choose
    * @returns {Promise<void>}
    */
-  async setOrderStatus(page: Page, orderStatus): Promise<void> {
-    await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.status);
+  async setOrderStatus(page: Page, orderStatus: OrderStatusData): Promise<void> {
+    await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.name);
   }
 
   /**
@@ -1200,7 +1201,7 @@ class AddOrder extends BOBasePage {
    * Set summary block
    * @param page {Page} Browser tab
    * @param paymentMethodName {string} Payment method to choose
-   * @param orderStatus {{id: number, status: string}} Order status to choose
+   * @param orderStatus {OrderStatusData} Order status to choose
    * @returns {Promise<void>}
    */
   async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus): Promise<void> {

@@ -14,8 +14,8 @@ import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
-import OrderStatusFaker from '@data/faker/orderStatus';
+import OrderStatuses from '@data/demo/orderStatuses';
+import OrderStatusData from '@data/faker/orderStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -93,7 +93,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_order_state',
-            filterValue: Statuses.paymentAccepted.id.toString(),
+            filterValue: OrderStatuses.paymentAccepted.id.toString(),
             filterTypeOf: 'numeric',
           },
       },
@@ -103,7 +103,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: Statuses.shipped.status,
+            filterValue: OrderStatuses.shipped.name,
             filterTypeOf: 'string',
           },
       },
@@ -143,7 +143,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
             testIdentifier: 'filterByEmailTemplate',
             filterType: 'input',
             filterBy: 'template',
-            filterValue: Statuses.canceled.emailTemplate,
+            filterValue: OrderStatuses.canceled.emailTemplate,
             filterTypeOf: 'string',
           },
       },
@@ -273,7 +273,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pa
     describe(`Create order status n°${index + 1} in BO`, async () => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const orderStatusData: OrderStatusFaker = new OrderStatusFaker({name: `todelete${index}`});
+      const orderStatusData: OrderStatusData = new OrderStatusData({name: `todelete${index}`});
 
       it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderStatusPage${index}`, baseContext);

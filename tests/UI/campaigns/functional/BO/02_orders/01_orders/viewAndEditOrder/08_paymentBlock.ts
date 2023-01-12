@@ -19,7 +19,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import {Currencies} from '@data/demo/currencies';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import type Order from '@data/types/order';
@@ -398,11 +398,11 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
     });
 
-    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-      await expect(textResult).to.equal(Statuses.paymentAccepted.status);
+      const textResult = await orderPageMessagesBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+      await expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the payments number is equal to 1', async function () {

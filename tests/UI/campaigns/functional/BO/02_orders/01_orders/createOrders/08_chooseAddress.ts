@@ -22,7 +22,7 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
@@ -153,7 +153,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, Statuses.paymentAccepted);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, OrderStatuses.paymentAccepted);
 
       const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);

@@ -13,7 +13,7 @@ import ordersPage from '@pages/BO/orders';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -79,7 +79,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
 
       const textResult = await ordersPage.bulkUpdateOrdersStatus(
         page,
-        Statuses.paymentAccepted.status,
+        OrderStatuses.paymentAccepted.name,
         false,
         [1, 2],
       );
@@ -91,7 +91,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkOrderStatus${index + 1}`, baseContext);
 
         const orderStatus = await ordersPage.getTextColumn(page, 'osname', index + 1);
-        await expect(orderStatus, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);
+        await expect(orderStatus, 'Order status is not correct').to.equal(OrderStatuses.paymentAccepted.name);
       });
     });
   });

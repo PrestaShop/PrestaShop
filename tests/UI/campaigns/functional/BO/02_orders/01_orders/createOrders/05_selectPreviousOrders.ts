@@ -19,11 +19,12 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
+import OrderStatusData from '@data/faker/orderStatus';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -65,7 +66,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
   const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
-  const orderStatus: string = Statuses.paymentAccepted;
+  const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
 
   // Pre-condition: Create new customer
   createCustomerTest(newCustomer, `${baseContext}_preTest_1`);

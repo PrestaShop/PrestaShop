@@ -11,7 +11,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -72,14 +72,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order st
     numberOfOrderStatuses = await statusesPage.resetAndGetNumberOfLines(page, tableName);
     await expect(numberOfOrderStatuses).to.be.above(0);
 
-    await statusesPage.filterTable(page, tableName, 'input', 'name', Statuses.shipped.status);
+    await statusesPage.filterTable(page, tableName, 'input', 'name', OrderStatuses.shipped.name);
 
     const numberOfLinesAfterFilter = await statusesPage.getNumberOfElementInGrid(page, tableName);
     await expect(numberOfLinesAfterFilter).to.be.above(0);
 
     for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
       const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name');
-      await expect(textColumn).to.contains(Statuses.shipped.status);
+      await expect(textColumn).to.contains(OrderStatuses.shipped.name);
     }
   });
 

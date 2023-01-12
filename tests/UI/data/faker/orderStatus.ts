@@ -1,15 +1,46 @@
-const {faker} = require('@faker-js/faker');
+import OrderStatusCreator from '@data/types/orderStatus';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new order status to use on creation form on order status page on BO
  * @class
  */
-class OrderStatusData {
+export default class OrderStatusData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly color: string;
+
+  public readonly logableOn: boolean;
+
+  public readonly invoiceOn: boolean;
+
+  public readonly hiddenOn: boolean;
+
+  public readonly sendEmailOn: boolean;
+
+  public readonly pdfInvoiceOn: boolean;
+
+  public readonly pdfDeliveryOn: boolean;
+
+  public readonly shippedOn: boolean;
+
+  public readonly paidOn: boolean;
+
+  public readonly deliveryOn: boolean;
+
+  public readonly emailTemplate: string;
+
   /**
    * Constructor for class OrderStatusData
-   * @param orderStatusToCreate {Object} Could be used to force the value of some members
+   * @param orderStatusToCreate {OrderStatusCreator} Could be used to force the value of some members
    */
-  constructor(orderStatusToCreate = {}) {
+  constructor(orderStatusToCreate: OrderStatusCreator = {}) {
+    /** @type {number} Name of the status */
+    this.id = orderStatusToCreate.id || 0;
+
     /** @type {string} Name of the status */
     this.name = orderStatusToCreate.name || `order_status_${faker.lorem.word()}`;
 
@@ -42,7 +73,8 @@ class OrderStatusData {
 
     /** @type {boolean} True to show delivery PDF */
     this.deliveryOn = orderStatusToCreate.deliveryOn === undefined ? true : orderStatusToCreate.deliveryOn;
+
+    /** @type {string} Email Template */
+    this.emailTemplate = orderStatusToCreate.emailTemplate === undefined ? '' : orderStatusToCreate.emailTemplate;
   }
 }
-
-module.exports = OrderStatusData;

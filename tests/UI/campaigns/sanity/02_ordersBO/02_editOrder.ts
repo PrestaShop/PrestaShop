@@ -11,7 +11,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -75,8 +75,8 @@ describe('BO - Orders - Orders : Edit Order BO', async () => {
   it('should modify the order status and check the validation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editOrderStatus', baseContext);
 
-    const orderStatus = await orderPageProductsBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-    await expect(orderStatus).to.equal(Statuses.paymentAccepted.status);
+    const orderStatus = await orderPageProductsBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+    await expect(orderStatus).to.equal(OrderStatuses.paymentAccepted.name);
   });
 
   // Logout from BO

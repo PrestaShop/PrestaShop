@@ -26,7 +26,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import TaxRuleData from '@data/faker/taxRule';
@@ -293,11 +293,11 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
+      it(`should change the order status to '${OrderStatuses.paymentAccepted.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-        await expect(result).to.equal(Statuses.paymentAccepted.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+        await expect(result).to.equal(OrderStatuses.paymentAccepted.name);
       });
 
       it('should download the invoice', async function () {

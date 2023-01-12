@@ -15,7 +15,7 @@ import ordersPage from '@pages/BO/orders';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -99,7 +99,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
     it('should update order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+      const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
       await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
     });
 
@@ -107,7 +107,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
+      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
     });
   });
 

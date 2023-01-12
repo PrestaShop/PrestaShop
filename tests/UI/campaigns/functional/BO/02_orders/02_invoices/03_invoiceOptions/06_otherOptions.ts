@@ -15,7 +15,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import InvoiceOptionFaker from '@data/faker/invoice';
 import type Order from '@data/types/order';
@@ -114,11 +114,11 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should download the invoice', async function () {

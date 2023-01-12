@@ -24,7 +24,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {Languages} from '@data/demo/languages';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
@@ -355,7 +355,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
-      expect(carts).to.contains(Statuses.awaitingBankWire.status);
+      expect(carts).to.contains(OrderStatuses.awaitingBankWire.name);
       expect(carts).to.contains('€0.00');
     });
 
@@ -478,8 +478,8 @@ describe('BO - Customers - Customers : View information about customer', async (
     it('should modify order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyOrderStatus', baseContext);
 
-      const result = await orderPageCustomerBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageCustomerBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
@@ -520,7 +520,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
       expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
-      expect(carts).to.contains(Statuses.shipped.status);
+      expect(carts).to.contains(OrderStatuses.shipped.name);
       expect(carts).to.contains(Products.demo_1.finalPrice);
     });
 

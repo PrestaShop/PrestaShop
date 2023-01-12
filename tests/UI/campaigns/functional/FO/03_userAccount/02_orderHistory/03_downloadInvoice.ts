@@ -20,7 +20,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -92,11 +92,11 @@ describe('FO - Account - Order history : download invoice', async () => {
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should get the invoice file name', async function () {

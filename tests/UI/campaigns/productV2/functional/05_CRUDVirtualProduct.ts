@@ -26,7 +26,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/BO/advancedParameters/newFeatures';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
@@ -260,7 +260,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       it('should update order status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const textResult: string = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+        const textResult: string = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
         await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
       });
 

@@ -14,7 +14,7 @@ import invoicesPage from '@pages/BO/orders/invoices/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -76,11 +76,11 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
   });
 

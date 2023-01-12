@@ -17,7 +17,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -88,11 +88,11 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     const tests = [
