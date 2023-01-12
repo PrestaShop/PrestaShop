@@ -16,7 +16,7 @@ import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseRetur
 import editMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns/edit';
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import viewOrderPage from '@pages/BO/orders/view/viewOrderPage';
+import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 // Import FO pages
 import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
@@ -184,14 +184,14 @@ describe('FO - Account : Consult return details', async () => {
         // View order
         await ordersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await viewOrderBasePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
       it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, Statuses.shipped.status);
         await expect(result).to.equal(Statuses.shipped.status);
       });
 
@@ -221,7 +221,7 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
         // Click on view my shop
-        page = await viewOrderPage.viewMyShop(page);
+        page = await viewOrderBasePage.viewMyShop(page);
         // Change FO language
         await homePage.changeLanguage(page, 'en');
 

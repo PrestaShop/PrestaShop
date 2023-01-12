@@ -4,7 +4,7 @@ import type {
   WaitForNavigationWaitUntil,
 } from '@data/types/playwright';
 
-import {
+import type {
   BrowserContext, ElementHandle, FileChooser, Frame, Page,
 } from 'playwright';
 import {Unboxed} from 'playwright-core/types/structs';
