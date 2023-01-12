@@ -146,8 +146,8 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'choices' => [
-                    $this->trans('Product default category','Admin.Shopparameters.Feature') => 'default',
-                    $this->trans('Category the product was accessed from','Admin.Shopparameters.Feature') => 'current',
+                    $this->trans('Product default category', 'Admin.Shopparameters.Feature') => 'default',
+                    $this->trans('Category the product was accessed from', 'Admin.Shopparameters.Feature') => 'current',
                 ],
                 'choice_translation_domain' => 'Admin.Global',
                 'placeholder' => false,
