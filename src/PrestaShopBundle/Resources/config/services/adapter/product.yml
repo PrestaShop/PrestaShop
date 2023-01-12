@@ -267,7 +267,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.product.pack.update.product_pack_updater'
-      - '@prestashop.adapter.product.combination.update.combination_deleter'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
       - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
       - '@prestashop.adapter.product.pack.repository.product_pack_repository'
