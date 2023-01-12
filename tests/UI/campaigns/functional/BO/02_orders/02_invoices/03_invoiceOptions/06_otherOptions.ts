@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import login steps
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -49,7 +49,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   };
 
   // Pre-condition: Create order in FO
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {

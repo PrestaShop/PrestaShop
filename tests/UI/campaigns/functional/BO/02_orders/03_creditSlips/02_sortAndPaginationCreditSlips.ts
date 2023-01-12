@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -65,7 +65,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
 
   for (let i = 0; i < numberOfOrderToCreate; i++) {
     // Pre-condition: Create order in FO
-    createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
+    foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
 
     // eslint-disable-next-line no-loop-func
     describe(`Create Credit slip n°${i + 1}`, async () => {

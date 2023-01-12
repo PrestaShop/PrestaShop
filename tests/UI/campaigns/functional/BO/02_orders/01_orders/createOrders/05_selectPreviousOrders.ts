@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import customersPage from '@pages/BO/customers';
@@ -74,7 +74,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   createAddressTest(newAddress, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

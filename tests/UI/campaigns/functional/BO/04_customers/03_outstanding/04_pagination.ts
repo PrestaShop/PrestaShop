@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
@@ -70,7 +70,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
 
     const creationTests: number[] = new Array(numberOfOrdersToCreate).fill(0, 0, numberOfOrdersToCreate);
     creationTests.forEach((value: number, index: number) => {
-      createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
+      foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
 
       // Pre-condition: Update order status to payment accepted
       describe('Update order status to payment accepted', async () => {

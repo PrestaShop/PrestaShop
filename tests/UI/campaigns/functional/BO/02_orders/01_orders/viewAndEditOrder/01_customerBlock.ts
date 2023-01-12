@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createAccountTest, createAddressTest} from '@commonTests/FO/createAccount';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import customersPage = require('@pages/BO/customers');
@@ -80,7 +80,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   createAddressTest(customerLoginData, secondAddressData, `${baseContext}_preTest_3`);
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_4`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_4`);
 
   // before and after functions
   before(async function () {

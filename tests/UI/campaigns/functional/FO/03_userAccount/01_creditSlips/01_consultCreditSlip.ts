@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import {createAccountTest} from '@commonTests/FO/createAccount';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 // Import BO pages
@@ -73,7 +73,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {

@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import FO pages
 import checkoutPage from '@pages/FO/checkout';
@@ -50,7 +50,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
   };
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
