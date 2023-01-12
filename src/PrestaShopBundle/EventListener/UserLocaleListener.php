@@ -28,7 +28,7 @@ namespace PrestaShopBundle\EventListener;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class UserLocaleListener
 {
@@ -39,7 +39,7 @@ class UserLocaleListener
         $this->prestaShopContext = $context->getContext();
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if (isset($this->prestaShopContext->employee) && $this->prestaShopContext->employee->isLoggedBack()) {
             $request = $event->getRequest();

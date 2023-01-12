@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Utility;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -46,11 +46,11 @@ class AdapterSecurityAdmin
      * Check if employee is logged in
      * If not loggedin in, redirect to admin home page
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @return void
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
     }
 }
