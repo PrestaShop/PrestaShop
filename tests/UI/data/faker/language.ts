@@ -1,20 +1,45 @@
-const {faker} = require('@faker-js/faker');
+import LanguageCreator from '@data/types/language';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new language to use on creation form on language page on BO
  * @class
  */
-class LanguageData {
+export default class LanguageData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly isoCode: string;
+
+  public readonly languageCode: string;
+
+  public readonly dateFormat: string;
+
+  public readonly fullDateFormat: string;
+
+  public readonly isRtl: boolean;
+
+  public readonly enabled: boolean;
+
+  public readonly flag: string;
+
+  public readonly noPicture: string;
+
   /**
    * Constructor for class LanguageData
-   * @param LanguageToCreate {Object} Could be used to force the value of some members
+   * @param LanguageToCreate {LanguageCreator} Could be used to force the value of some members
    */
-  constructor(LanguageToCreate = {}) {
+  constructor(LanguageToCreate: LanguageCreator = {}) {
+    /** @type {string} ID of the language */
+    this.id = LanguageToCreate.id || 0;
+
     /** @type {string} Name of the language */
     this.name = LanguageToCreate.name || `test_language_${faker.lorem.word()}`;
 
     /** @type {string} Iso code of the language */
-    this.isoCode = LanguageToCreate.isoCode;
+    this.isoCode = LanguageToCreate.isoCode || 'en';
 
     /** @type {string} Language of the code */
     this.languageCode = LanguageToCreate.languageCode || this.isoCode;
@@ -38,4 +63,3 @@ class LanguageData {
     this.noPicture = LanguageToCreate.noPicture || `no_picture_${this.name}.png`;
   }
 }
-module.exports = LanguageData;

@@ -23,7 +23,7 @@ import foHomePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';

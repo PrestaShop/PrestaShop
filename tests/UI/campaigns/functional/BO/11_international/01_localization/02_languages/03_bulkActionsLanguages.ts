@@ -13,7 +13,7 @@ import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
 // Import data
-import LanguageFaker from '@data/faker/language';
+import LanguageData from '@data/faker/language';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,8 +31,8 @@ describe('BO - International - Languages : Bulk disable, enable and delete langu
   let page: Page;
   let numberOfLanguages: number = 0;
 
-  const firstLanguageData: LanguageFaker = new LanguageFaker({name: 'languageToDelete1', isoCode: 'fi'});
-  const secondLanguageData: LanguageFaker = new LanguageFaker({name: 'languageToDelete2', isoCode: 'ca'});
+  const firstLanguageData: LanguageData = new LanguageData({name: 'languageToDelete1', isoCode: 'fi'});
+  const secondLanguageData: LanguageData = new LanguageData({name: 'languageToDelete2', isoCode: 'ca'});
 
   // before and after functions
   before(async function () {
@@ -93,7 +93,7 @@ describe('BO - International - Languages : Bulk disable, enable and delete langu
   });
 
   describe('Create 2 Languages', async () => {
-    [firstLanguageData, secondLanguageData].forEach((languageToCreate, index) => {
+    [firstLanguageData, secondLanguageData].forEach((languageToCreate: LanguageData, index: number) => {
       it('should go to add new language page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewLanguage${index + 1}`, baseContext);
 

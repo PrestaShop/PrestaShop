@@ -13,7 +13,7 @@ import tagsPage from '@pages/BO/shopParameters/search/tags';
 import addTagPage from '@pages/BO/shopParameters/search/tags/add';
 
 // Import data
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 import TagData from '@data/faker/tag';
 
 import {expect} from 'chai';

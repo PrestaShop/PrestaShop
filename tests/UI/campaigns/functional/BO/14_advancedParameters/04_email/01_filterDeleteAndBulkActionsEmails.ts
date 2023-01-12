@@ -20,7 +20,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
@@ -168,7 +168,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_mail',
-            filterValue: 1,
+            filterValue: '1',
           },
       },
       {

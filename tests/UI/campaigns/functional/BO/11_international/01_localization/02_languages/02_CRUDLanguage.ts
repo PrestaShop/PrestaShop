@@ -16,7 +16,7 @@ import addLanguagePage from '@pages/BO/international/languages/add';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import LanguageFaker from '@data/faker/language';
+import LanguageData from '@data/faker/language';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,8 +35,8 @@ describe('BO - International - Languages : CRUD language', async () => {
   let page: Page;
   let numberOfLanguages: number = 0;
 
-  const createLanguageData: LanguageFaker = new LanguageFaker({isoCode: 'de'});
-  const editLanguageData: LanguageFaker = new LanguageFaker({isoCode: 'nl', enabled: false});
+  const createLanguageData: LanguageData = new LanguageData({isoCode: 'de'});
+  const editLanguageData: LanguageData = new LanguageData({isoCode: 'nl', enabled: false});
 
   // before and after functions
   before(async function () {
