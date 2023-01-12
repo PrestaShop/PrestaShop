@@ -11,7 +11,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,8 +30,8 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
   let numberOfProducts: number = 0;
   let numberOfFilteredProductsAfterDuplicate: number = 0;
 
-  const firstProductData: ProductFaker = new ProductFaker({name: 'TO DELETE 1', type: 'Standard product'});
-  const secondProductData: ProductFaker = new ProductFaker({name: 'TO DELETE 2', type: 'Standard product'});
+  const firstProductData: ProductData = new ProductData({name: 'TO DELETE 1', type: 'Standard product'});
+  const secondProductData: ProductData = new ProductData({name: 'TO DELETE 2', type: 'Standard product'});
 
   // before and after functions
   before(async function () {
@@ -68,7 +68,7 @@ describe('BO - Catalog - Products : Bulk actions products', async () => {
     await expect(numberOfProducts).to.be.above(0);
   });
 
-  [firstProductData, secondProductData].forEach((productData: ProductFaker, index: number) => {
+  [firstProductData, secondProductData].forEach((productData: ProductData, index: number) => {
     it(`should create product n°${index + 1}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createProduct${index + 1}`, baseContext);
 

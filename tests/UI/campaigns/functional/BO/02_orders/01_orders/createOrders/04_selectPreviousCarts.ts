@@ -26,7 +26,7 @@ import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -486,7 +486,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     });
 
     [
-      {args: {columnName: 'image', result: Products.demo_1.thumbnailImage}},
+      {args: {columnName: 'image', result: Products.demo_1.thumbImage}},
       {args: {columnName: 'title', result: Products.demo_1.name, result_2: Products.demo_1.reference}},
       {args: {columnName: 'unit_price', result: `€${Products.demo_1.finalPrice}`}},
       {args: {columnName: 'quantity', result: 1}},

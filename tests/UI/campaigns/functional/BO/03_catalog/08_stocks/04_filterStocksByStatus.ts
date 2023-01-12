@@ -12,7 +12,7 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import stocksPage from '@pages/BO/catalog/stocks';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,7 +29,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
   let page: Page;
   let numberOfProducts: number = 0;
 
-  const productData: ProductFaker = new ProductFaker({type: 'Standard product', status: false});
+  const productData: ProductData = new ProductData({type: 'Standard product', status: false});
 
   // before and after functions
   before(async function () {

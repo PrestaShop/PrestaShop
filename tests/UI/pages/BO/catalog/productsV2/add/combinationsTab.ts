@@ -1,7 +1,10 @@
-import type {Page} from 'playwright';
-
 // Import page
 import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import {ProductAttributes} from '@data/types/product';
+
+import type {Page} from 'playwright';
 
 /**
  * Combinations tab on new product V2 page, contains functions that can be used on the page
@@ -312,10 +315,10 @@ class CombinationsTab extends BOBasePage {
   /**
    * Set product attributes
    * @param page {Page} Browser tab
-   * @param attributes {Object} Combinations of the product
+   * @param attributes {ProductAttributes[]} Combinations of the product
    * @returns {Promise<string>}
    */
-  async setProductAttributes(page: Page, attributes: object): Promise<string> {
+  async setProductAttributes(page: Page, attributes: ProductAttributes[]): Promise<string> {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
     if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.generateCombinationButton);
@@ -324,11 +327,10 @@ class CombinationsTab extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, this.generateCombinationsModal);
-    const keys = Object.keys(attributes);
-    /*eslint-disable*/
-    for (const key of keys) {
-      for (const value of attributes[key]) {
-        await this.selectAttribute(page, `${key} : ${value}`);
+
+    for (let i: number = 0; i < attributes.length; i++) {
+      for (let j: number = 0; j < attributes[i].values.length; j++) {
+        await this.selectAttribute(page, `${attributes[i].name} : ${attributes[i].values[j]}`);
       }
     }
     /* eslint-enable */
@@ -339,9 +341,9 @@ class CombinationsTab extends BOBasePage {
   /**
    * Generate combinations
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async generateCombinations(page: Page): Promise<string> {
+  async generateCombinations(page: Page): Promise<string|null> {
     await this.waitForSelectorAndClick(page, this.generateCombinationsButtonOnModal);
 
     return this.getGrowlMessageContent(page);
@@ -377,9 +379,9 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param combinationData {object} Data to set to edit combination
    * @param row {number} Row in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string> {
+  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string|null> {
     await this.closeGrowlMessage(page);
     await this.setValue(page, `${this.combinationListTableColumn(row, 'reference')}`, combinationData.reference);
     await this.setValue(
@@ -403,9 +405,9 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param action {string} Delete/cancel
    * @param row {number} Row in table
-   * @returns {Promise<string|boolean>}
+   * @returns {Promise<string|null|boolean>}
    */
-  async clickOnDeleteIcon(page: Page, action: string, row: number = 1): Promise<string | boolean> {
+  async clickOnDeleteIcon(page: Page, action: string, row: number = 1): Promise<string | null | boolean> {
     await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'delete')}`);
 
     if (action === 'cancel') {
@@ -504,11 +506,11 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param column {string} Column name to get text content
    * @param row {number} Row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string> {
+  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string|null> {
     const selector: string = this.combinationListTableColumn(row, column);
-    let text: string;
+    let text: string|null = '';
 
     switch (column) {
       case 'combination_id':
@@ -542,10 +544,10 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @param numberOfCombinations {number} Number of combinations
    * @param column {string} Column name to get all rows text content
-   * @return {Promise<Array<string>>}
+   * @return {Promise<(string|null)[]>}
    */
-  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<Array<string>> {
-    const allRowsContentTable = [];
+  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string|null)[]> {
+    const allRowsContentTable: (string|null)[] = [];
 
     for (let i = 1; i <= numberOfCombinations; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
@@ -609,7 +611,16 @@ class CombinationsTab extends BOBasePage {
    */
   async getNumberOfCombinationsFromList(page: Page): Promise<number> {
     const footerText = await this.getTextContent(page, this.paginationLabel);
-    const numberOfCombinations = /\d+/g.exec(footerText.match(/out of ([0-9]+)/)).toString();
+
+    if (!footerText) {
+      return 0;
+    }
+    const result = footerText.match(/out of ([0-9]+)/);
+
+    if (!result) {
+      return 0;
+    }
+    const numberOfCombinations = /\d+/g.exec(result).toString();
 
     return parseInt(numberOfCombinations, 10);
   }

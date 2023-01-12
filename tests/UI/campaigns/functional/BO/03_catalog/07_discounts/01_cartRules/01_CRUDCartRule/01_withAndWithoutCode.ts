@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
 import {expect} from 'chai';

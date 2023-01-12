@@ -8,7 +8,7 @@ import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

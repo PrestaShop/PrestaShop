@@ -12,7 +12,7 @@ import productsPage from '@pages/BO/catalog/products/index';
 import addProductPage from '@pages/BO/catalog/products/add';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -180,7 +180,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
   const creationTests: number[] = new Array(3).fill(0, 0, 10);
   describe('Create 3 products in BO', async () => {
     creationTests.forEach((test: number, index: number) => {
-      const createProductData: ProductFaker = new ProductFaker({
+      const createProductData: ProductData = new ProductData({
         name: `todelete${index}`,
         type: 'Standard product',
         productHasCombinations: false,

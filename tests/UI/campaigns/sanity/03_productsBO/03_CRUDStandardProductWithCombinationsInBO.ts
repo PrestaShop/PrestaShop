@@ -13,8 +13,8 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import ProductFaker from '@data/faker/product';
-import {ProductDetailsBasic} from '@data/types/product';
+import ProductData from '@data/faker/product';
+import {ProductDetails} from '@data/types/product';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,18 +26,18 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   + 'with combinations in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
-  let productInformation: ProductDetailsBasic = {
+  let productInformation: ProductDetails = {
     price: 0,
     name: '',
     description: '',
-    shortDescription: '',
+    summary: '',
   };
 
-  const productWithCombinations = new ProductFaker({
+  const productWithCombinations: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: true,
   });
-  const editedProductWithCombinations = new ProductFaker({
+  const editedProductWithCombinations: ProductData = new ProductData({
     type: 'Standard product',
     productHasCombinations: true,
   });
@@ -120,7 +120,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
       expect(productInformation.name).to.equal(productWithCombinations.name),
       expect(productInformation.price).to.equal(productWithCombinations.price),
       expect(productInformation.description).to.contains(productWithCombinations.description),
-      expect(productInformation.shortDescription).to.contains(productWithCombinations.summary),
+      expect(productInformation.summary).to.contains(productWithCombinations.summary),
     ]);
   });
 
@@ -162,7 +162,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await Promise.all([
       expect(productInformation.name).to.equal(editedProductWithCombinations.name),
       expect(productInformation.price).to.equal(editedProductWithCombinations.price),
-      expect(productInformation.shortDescription).to.contains(editedProductWithCombinations.summary),
+      expect(productInformation.summary).to.contains(editedProductWithCombinations.summary),
       expect(productInformation.description).to.contains(editedProductWithCombinations.description),
     ]);
   });

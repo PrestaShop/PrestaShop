@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/productsV2';
 
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import {Categories} from '@data/demo/categories';
 
 const baseContext: string = 'productV2_functional_filterProducts';

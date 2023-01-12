@@ -32,7 +32,7 @@ import AddressFaker from '@data/faker/address';
 import ContactUsFakerData from '@data/faker/contactUs';
 import CustomerFaker from '@data/faker/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

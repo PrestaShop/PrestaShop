@@ -33,7 +33,7 @@ import Address from '@data/demo/address';
 import {DefaultCustomer} from '@data/demo/customer';
 import {Statuses} from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
 import Order from '@data/types/order';
 

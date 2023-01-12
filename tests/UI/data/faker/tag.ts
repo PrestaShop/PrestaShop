@@ -1,11 +1,12 @@
 // Import data
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import {Languages} from '@data/demo/languages';
+import type ProductData from '@data/faker/product';
 import TagCreator from '@data/types/tag';
 
 import {faker} from '@faker-js/faker';
 
-const productsNames: string[] = Object.values(Products).map((product) => product.name);
+const productsNames: string[] = Object.values(Products).map((product: ProductData) => product.name);
 const languagesNames: string[] = Object.values(Languages).map((language) => language.name);
 
 /**

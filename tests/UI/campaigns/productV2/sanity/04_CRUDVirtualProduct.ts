@@ -17,7 +17,7 @@ import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_sanity_CRUDVirtualProduct';
 
@@ -26,14 +26,14 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
   let page: Page;
 
   // Data to create virtual product
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'virtual',
     taxRule: 'No tax',
     quantity: 50,
     minimumQuantity: 1,
     status: true,
   });
-  const editProductData: ProductFaker = new ProductFaker({
+  const editProductData: ProductData = new ProductData({
     type: 'virtual',
     taxRule: 'FR Taux réduit (10%)',
     quantity: 100,
@@ -133,7 +133,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.summary).to.equal(newProductData.summary),
         await expect(result.description).to.equal(newProductData.description),
       ]);
     });

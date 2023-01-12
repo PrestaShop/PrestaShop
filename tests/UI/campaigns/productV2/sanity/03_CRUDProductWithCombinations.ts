@@ -17,7 +17,7 @@ import createProductsPage from '@pages/BO/catalog/productsV2/add';
 import combinationsTab from '@pages/BO/catalog/productsV2/add/combinationsTab';
 
 // Import data
-import ProductFaker from '@data/faker/product';
+import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_sanity_CRUDProductWithCombinations';
 
@@ -26,7 +26,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
   let page: Page;
 
   // Data to create product with combinations
-  const newProductData: ProductFaker = new ProductFaker({
+  const newProductData: ProductData = new ProductData({
     type: 'combinations',
     taxRule: 'No tax',
     quantity: 50,
@@ -34,16 +34,22 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     status: true,
   });
   // Data to edit product with combinations
-  const editProductData: ProductFaker = new ProductFaker({
+  const editProductData: ProductData = new ProductData({
     type: 'combinations',
     taxRule: 'No tax',
     quantity: 100,
     minimumQuantity: 1,
     status: true,
-    attributes: {
-      color: ['Grey', 'Taupe', 'Red'],
-      size: ['L', 'XL'],
-    },
+    attributes: [
+      {
+        name: 'color',
+        values: ['Grey', 'Taupe', 'Red'],
+      },
+      {
+        name: 'size',
+        values: ['L', 'XL'],
+      },
+    ],
   });
 
   // Pre-condition: Enable new product page
@@ -166,18 +172,21 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductInformation', baseContext);
 
-      let result: object = await foProductPage.getProductInformation(page);
+      const result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(newProductData.price),
-        await expect(result.shortDescription).to.equal(newProductData.summary),
+        await expect(result.summary).to.equal(newProductData.summary),
         await expect(result.description).to.equal(newProductData.description),
       ]);
 
-      result = await foProductPage.getProductAttributes(page);
+      const productAttributes = await foProductPage.getProductAttributes(page);
+      console.log(result);
       await Promise.all([
-        await expect(result.size).to.equal(newProductData.attributes.size.join(' ')),
-        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
+        // color
+        await expect(productAttributes[0].value).to.equal(newProductData.attributes[1].values.join(' ')),
+        // size
+        await expect(productAttributes[1].value).to.equal(newProductData.attributes[0].values.join(' ')),
       ]);
     });
 
@@ -246,18 +255,18 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      let result: object = await foProductPage.getProductInformation(page);
+      const result: object = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price),
         await expect(result.description).to.equal(editProductData.description),
       ]);
 
-      result = await foProductPage.getProductAttributes(page);
+      const productAttributes = await foProductPage.getProductAttributes(page);
       await Promise.all([
-        await expect(result.size).to.equal(
-          `${newProductData.attributes.size.join(' ')} ${editProductData.attributes.size.join(' ')}`),
-        await expect(result.color).to.equal(newProductData.attributes.color.join(' ')),
+        await expect(productAttributes[0].value).to.equal(
+          `${newProductData.attributes[1].values.join(' ')} ${editProductData.attributes[1].values.join(' ')}`),
+        await expect(productAttributes[1].value).to.equal(newProductData.attributes[0].values.join(' ')),
       ]);
     });
 

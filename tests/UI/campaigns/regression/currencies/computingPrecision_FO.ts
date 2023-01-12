@@ -30,7 +30,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 import {Currencies} from '@data/demo/currencies';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Products} from '@data/demo/products';
+import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 import Order from '@data/types/order';
 
