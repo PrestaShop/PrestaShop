@@ -24,7 +24,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {groupAccess} from '@data/demo/groupAccess';
+import Groups from '@data/demo/groups';
 import CarrierFaker from '@data/faker/carrier';
 
 import {expect} from 'chai';
@@ -103,13 +103,13 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await expect(pageTitle).to.contains(groupsPage.pageTitle);
     });
 
-    it(`should filter by '${groupAccess.customer.name}'`, async function () {
+    it(`should filter by '${Groups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName1', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', groupAccess.customer.name);
+      await groupsPage.filterTable(page, 'input', 'b!name', Groups.customer.name);
 
       const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains(groupAccess.customer.name);
+      await expect(textColumn).to.contains(Groups.customer.name);
     });
 
     it('should go to edit group page', async function () {
@@ -419,13 +419,13 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
       await expect(pageTitle).to.contains(groupsPage.pageTitle);
     });
 
-    it(`should filter by '${groupAccess.customer.name}'`, async function () {
+    it(`should filter by '${Groups.customer.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByGroupName2', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', groupAccess.customer.name);
+      await groupsPage.filterTable(page, 'input', 'b!name', Groups.customer.name);
 
       const textColumn = await groupsPage.getTextColumn(page, 1, 'b!name');
-      await expect(textColumn).to.contains(groupAccess.customer.name);
+      await expect(textColumn).to.contains(Groups.customer.name);
     });
 
     it('should go to edit group page', async function () {
