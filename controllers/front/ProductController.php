@@ -1351,7 +1351,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * Generates breadcrumb according to product categories and his category subtree.
+     * Generates breadcrumb according to product category tree.
      * If the product is accessed from another category than product default category, it will generate the breadcrumb according to current category.
      *
      * @return array
