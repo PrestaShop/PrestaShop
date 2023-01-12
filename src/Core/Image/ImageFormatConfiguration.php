@@ -37,7 +37,7 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
 
     public const IMAGE_FORMAT_CONFIGURATION_KEY = 'PS_IMAGE_FORMAT';
 
-    public $supportedFormats = ['jpg', 'png', 'webp', 'avif'];
+    public const SUPPORTED_FORMATS = ['jpg', 'png', 'webp', 'avif'];
 
     /**
      * @var ConfigurationInterface
@@ -56,7 +56,7 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
 
     public function addGenerationFormat(string $format): void
     {
-        if (!in_array($format, $this->supportedFormats)) {
+        if (!in_array($format, self::SUPPORTED_FORMATS)) {
             throw new ImageFormatConfigurationException(sprintf('Image format %s unknown or not supported', $format));
         }
 
@@ -71,7 +71,7 @@ class ImageFormatConfiguration implements ImageFormatConfigurationInterface
     public function setListOfGenerationFormats(array $formatList): void
     {
         foreach ($formatList as $format) {
-            if (!in_array($format, $this->supportedFormats)) {
+            if (!in_array($format, self::SUPPORTED_FORMATS)) {
                 throw new ImageFormatConfigurationException(sprintf('Image format %s unknown or not supported', $format));
             }
         }

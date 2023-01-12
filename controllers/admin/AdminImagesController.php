@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
  * @property ImageType $object
@@ -427,6 +428,10 @@ class AdminImagesControllerCore extends AdminController
 
         if ($this->isMultipleImageFormatFeatureEnabled && !$this->errors && $value) {
             $this->imageFormatConfiguration->setListOfGenerationFormats($value);
+            // update field values
+            foreach (ImageFormatConfiguration::SUPPORTED_FORMATS as $format) {
+                $this->fields_options['images']['fields']['PS_IMAGE_FORMAT']['value_multiple'][$format] = in_array($format, $value);
+            }
         }
     }
 
@@ -470,10 +475,11 @@ class AdminImagesControllerCore extends AdminController
                 } elseif ((int) Tools::getValue('PS_WEBP_QUALITY') < 0
                     || (int) Tools::getValue('PS_WEBP_QUALITY') > 100) {
                     $this->errors[] = $this->trans('Incorrect value for the selected WebP image compression.', [], 'Admin.Design.Notification');
-                } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
-                    || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
+                } elseif (!Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
                     || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))
                     || !Configuration::updateValue('PS_WEBP_QUALITY', Tools::getValue('PS_WEBP_QUALITY'))) {
+                    $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
+                } elseif (!$this->isMultipleImageFormatFeatureEnabled && !Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))) {
                     $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
                 } else {
                     $this->confirmations[] = $this->_conf[6];
