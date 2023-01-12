@@ -4,8 +4,8 @@ import testContext from '@utils/testContext';
 import files from '@utils/files';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 import loginCommon from '@commonTests/BO/loginBO';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 import foHomePage from '@pages/FO/home';
@@ -50,10 +50,10 @@ describe('FO - Account - Order details : download invoice', async () => {
   };
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {

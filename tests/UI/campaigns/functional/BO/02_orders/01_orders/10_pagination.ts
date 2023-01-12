@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -53,7 +53,7 @@ describe('BO - Orders : Pagination of orders table', async () => {
   const orderNumber: number = 6;
 
   for (let i = 1; i <= orderNumber; i++) {
-    createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
+    foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
   }
 
   // before and after functions

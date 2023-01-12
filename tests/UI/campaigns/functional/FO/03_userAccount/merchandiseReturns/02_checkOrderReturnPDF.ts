@@ -10,7 +10,7 @@ import {
   disableMerchandiseReturns,
 } from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 // Import BO pages
@@ -72,7 +72,7 @@ describe('FO - Account : Check order return PDF', async () => {
   };
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
+  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable merchandise returns
   enableMerchandiseReturns(`${baseContext}_preTest_2`);

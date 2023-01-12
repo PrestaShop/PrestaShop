@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {bulkDeleteCustomersTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByGuestTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -51,7 +51,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   describe('PRE-TEST: Create 16 orders by guest in FO', async () => {
     const creationTests: number[] = new Array(16).fill(0, 0, 16);
     creationTests.forEach((value: number, index: number) => {
-      createOrderByGuestTest(orderByGuestData, `${baseContext}_preTest_${index}`);
+      foOrderCommon.createOrderByGuestTest(orderByGuestData, `${baseContext}_preTest_${index}`);
     });
   });
 

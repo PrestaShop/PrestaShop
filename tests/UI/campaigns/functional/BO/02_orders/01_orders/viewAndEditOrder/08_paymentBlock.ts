@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -97,10 +97,10 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   };
 
   // Pre-condition: Create first order by default customer
-  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
+  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create second order by default customer
-  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_2`);
+  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create currency
   createCurrencyTest(Currencies.mad, `${baseContext}_preTest_3`);

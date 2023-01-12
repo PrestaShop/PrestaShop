@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import foOrderCommon from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -53,7 +53,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   };
 
   // Pre-condition - Create order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
