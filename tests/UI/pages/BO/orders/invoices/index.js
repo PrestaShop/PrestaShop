@@ -171,7 +171,7 @@ class Invoice extends BOBasePage {
   /**
    * Set invoiceNumber, LegalFreeText, footerText
    * @param page {Page} Browser tab
-   * @param data {object} Values to set on invoice option inputs
+   * @param data {InvoiceData} Values to set on invoice option inputs
    * @returns {Promise<void>}
    */
   async setInputOptions(page, data) {

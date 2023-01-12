@@ -17,7 +17,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import InvoiceOptionFaker from '@data/faker/invoice';
+import InvoiceData from '@data/faker/invoice';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -40,7 +40,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let fileName: string;
   let filePath: string|null;
 
-  const invoiceData: InvoiceOptionFaker = new InvoiceOptionFaker({legalFreeText: 'Legal free text'});
+  const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
   const orderByCustomerData: Order = {
     customer: DefaultCustomer,
     productId: 1,

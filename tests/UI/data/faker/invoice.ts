@@ -1,15 +1,25 @@
-const {faker} = require('@faker-js/faker');
+import InvoiceCreator from '@data/types/invoice';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new invoice to use on option form on invoice page on BO
  * @class
  */
-class InvoiceData {
+export default class InvoiceData {
+  public readonly invoiceNumber: string;
+
+  public readonly legalFreeText: string;
+
+  public readonly footerText: string;
+
+  public readonly prefix: string;
+
   /**
    * Constructor for class InvoiceData
-   * @param invoiceOptions {Object} Could be used to force the value of some members
+   * @param invoiceOptions {InvoiceCreator} Could be used to force the value of some members
    */
-  constructor(invoiceOptions = {}) {
+  constructor(invoiceOptions: InvoiceCreator = {}) {
     /** @type {number} Invoice number to set on form */
     this.invoiceNumber = invoiceOptions.invoiceNumber || faker.datatype.number({min: 100, max: 200}).toString();
 
@@ -23,5 +33,3 @@ class InvoiceData {
     this.prefix = invoiceOptions.prefix || `#${faker.lorem.word()}`;
   }
 }
-
-module.exports = InvoiceData;
