@@ -1454,10 +1454,9 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.details.details_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     parent: 'form.type.translatable.aware'
-    public: true
+    public: false
     arguments:
       - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
