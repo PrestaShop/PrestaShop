@@ -24,25 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
 /**
- * Handles command that deletes stores
+ * Interface for AddStoreHandler
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+interface AddStoreHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AddStoreCommand $command
      */
-    public function handle(BulkDeleteStoreCommand $command): void
-    {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
-    }
+    public function handle(AddStoreCommand $command): StoreId;
 }

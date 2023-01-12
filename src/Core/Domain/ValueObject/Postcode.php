@@ -26,23 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Handles command that deletes stores
+ * Class Postcode is responsible for providing valid postcode value.
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+class Postcode extends ValueObject
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function handle(BulkDeleteStoreCommand $command): void
+    private $postcode;
+
+    /**
+     * @throws DomainConstraintException
+     */
+    public function __construct(string $postcode)
     {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
+        parent::__construct();
+
+        $this->validate($postcode, [
+            new NotBlank(),
+            new TypedRegex(['type' => TypedRegex::TYPE_POST_CODE]),
+        ], "$postcode is not a valid postcode");
+
+        $this->postcode = $postcode;
+    }
+
+    public function getValue(): string
+    {
+        return $this->postcode;
     }
 }

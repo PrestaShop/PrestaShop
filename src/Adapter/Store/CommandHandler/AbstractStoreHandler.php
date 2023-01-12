@@ -28,21 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 
 /**
- * Handles command that deletes stores
+ * Class AbstractStoreHandler.
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+class AbstractStoreHandler extends AbstractObjectModelHandler
 {
     /**
-     * {@inheritdoc}
+     * @var StoreRepository
      */
-    public function handle(BulkDeleteStoreCommand $command): void
+    protected $storeRepository;
+
+    public function __construct(StoreRepository $storeRepository)
     {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
+        $this->storeRepository = $storeRepository;
     }
 }

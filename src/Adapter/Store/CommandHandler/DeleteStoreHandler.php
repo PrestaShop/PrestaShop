@@ -30,23 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\DeleteStoreHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 
 /**
  * Handles command that deletes store
  */
-class DeleteStoreHandler implements DeleteStoreHandlerInterface
+class DeleteStoreHandler extends AbstractStoreHandler implements DeleteStoreHandlerInterface
 {
-    /**
-     * @var StoreRepository
-     */
-    private $storeRepository;
-
-    public function __construct(StoreRepository $storeRepository)
-    {
-        $this->storeRepository = $storeRepository;
-    }
-
     /**
      * {@inheritdoc}
      */

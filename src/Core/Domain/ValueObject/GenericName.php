@@ -26,23 +26,39 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Handles command that deletes stores
+ * Class GenericName is responsible for providing valid city name value.
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+class GenericName extends ValueObject
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function handle(BulkDeleteStoreCommand $command): void
+    private $genericName;
+
+    /**
+     * @throws DomainConstraintException
+     */
+    public function __construct(string $genericName)
     {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
+        parent::__construct();
+
+        $this->validate($genericName, [
+            new NotBlank(),
+            new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME]),
+        ], "$genericName is not a valid generic name");
+
+        $this->genericName = $genericName;
+    }
+
+    public function getValue(): string
+    {
+        return $this->genericName;
     }
 }

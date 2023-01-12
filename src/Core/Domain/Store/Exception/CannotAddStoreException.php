@@ -26,23 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
 /**
- * Handles command that deletes stores
+ * Thrown when cannot add store
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+class CannotAddStoreException extends StoreException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(BulkDeleteStoreCommand $command): void
-    {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
-    }
 }

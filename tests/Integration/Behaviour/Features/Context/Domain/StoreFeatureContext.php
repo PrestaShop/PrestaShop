@@ -26,13 +26,19 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
+use Country;
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use RuntimeException;
 use Store;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -41,6 +47,74 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
     private const DUMMY_STORE_ID = 1;
+
+    /**
+     * @When I add new store :reference with the following details:
+     */
+    public function addNewStoreWithTheFollowingDetails(TableNode $table, string $reference): void
+    {
+        $data = $this->localizeByRows($table);
+
+        try {
+            $addStoreCommand = new AddStoreCommand(
+                Country::getIdByName($this->getDefaultLangId(), $data['country']),
+                $data['postcode'],
+                $data['city'],
+                $this->getIdsByReferences($data['shops'])
+            );
+
+            $dataHours = $data['hours'] ?? [];
+            foreach ($dataHours as $key => $dataHour) {
+                $dataHours[$key] = json_encode($dataHour);
+            }
+
+            $addStoreCommand
+                ->setStateId($data['state'] ?? null)
+                ->setLatitude($data['latitude'] ?? null)
+                ->setLongitude($data['longitude'] ?? null)
+                ->setPhone($data['phone'] ?? null)
+                ->setFax($data['fax'] ?? null)
+                ->setEmail($data['email'] ?? null)
+                ->setLocalizedNames($data['name'] ?? [])
+                ->setLocalizedAddress1($data['address1'] ?? [])
+                ->setLocalizedAddress2($data['address2'] ?? [])
+                ->setLocalizedHours($dataHours)
+                ->setLocalizedNotes($data['note'] ?? [])
+            ;
+
+            /** @var StoreId */
+            $storeId = $this->getCommandBus()->handle($addStoreCommand);
+
+            SharedStorage::getStorage()->set($reference, $storeId->getValue());
+        } catch (StoreException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then store :reference should have the following details:
+     *
+     * @param string $reference
+     * @param TableNode $table
+     */
+    public function storeShouldHaveTheFollowingDetails(TableNode $table, string $reference): void
+    {
+        $data = $this->localizeByRows($table);
+
+        foreach ($data['hours'] as $key => $dataHour) {
+            $data['hours'][$key] = json_encode($dataHour);
+        }
+
+        /** @var int */
+        $storeId = SharedStorage::getStorage()->get($reference);
+
+        $expectedEditableStore = $this->mapToEditableStore($storeId, $data);
+
+        /** @var StoreForEditing $editableStore */
+        $editableStore = $this->getQueryBus()->handle(new GetStoreForEditing($storeId));
+
+        Assert::assertEquals($expectedEditableStore, $editableStore);
+    }
 
     /**
      * @When I toggle :reference
@@ -62,18 +136,13 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function bulkToggleStatus(string $action, string $storeReferences): void
     {
         $expectedStatus = 'enable' === $action;
-        $storeIds = [];
-
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $store = SharedStorage::getStorage()->get($storeReference);
-            $storeIds[$storeReference] = (int) $store->id;
-        }
+        $storeIds = $this->getIdsByReferences($storeReferences);
 
         $bulkUpdateCommand = new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds);
         $this->getCommandBus()->handle($bulkUpdateCommand);
 
         foreach ($storeIds as $reference => $id) {
-            SharedStorage::getStorage()->set($reference, new Store($id));
+            SharedStorage::getStorage()->set($reference, $id);
         }
     }
 
@@ -84,11 +153,11 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function deleteStore(string $storeReference): void
     {
-        /** @var Store $store */
-        $store = SharedStorage::getStorage()->get($storeReference);
+        /** @var int */
+        $storeId = SharedStorage::getStorage()->get($storeReference);
 
         try {
-            $this->getCommandBus()->handle(new DeleteStoreCommand((int) $store->id));
+            $this->getCommandBus()->handle(new DeleteStoreCommand($storeId));
         } catch (StoreNotFoundException $e) {
             $this->setLastException($e);
         }
@@ -101,10 +170,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      */
     public function bulkDeleteStores(string $storeReferences): void
     {
-        $storeIds = [];
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $storeIds[] = (int) SharedStorage::getStorage()->get($storeReference)->id;
-        }
+        $storeIds = $this->getIdsByReferences($storeReferences);
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteStoreCommand($storeIds));
@@ -127,6 +193,46 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals((bool) $storeUpdated->isActive(), $isEnabled);
     }
 
+    private function mapToEditableStore(int $storeId, array $data): StoreForEditing
+    {
+        return new StoreForEditing(
+            $storeId,
+            true,
+            array_values($this->getIdsByReferences($data['shops'])),
+            Country::getIdByName($this->getDefaultLangId(), $data['country']),
+            $data['postcode'],
+            $data['city'],
+            $data['state'] ?? null,
+            $data['latitude'] ?? null,
+            $data['longitude'] ?? null,
+            $data['phone'] ?? null,
+            $data['fax'] ?? null,
+            $data['email'] ?? null,
+            $data['name'] ?? [],
+            $data['address1'] ?? [],
+            $data['address2'] ?? [],
+            $data['hours'] ?? [],
+            $data['note'] ?? []
+        );
+    }
+
+    /**
+     * @param string $referencesAsString
+     *
+     * @return int[]
+     */
+    private function getIdsByReferences(string $referencesAsString): array
+    {
+        $references = PrimitiveUtils::castStringArrayIntoArray($referencesAsString);
+        $ids = [];
+
+        foreach ($references as $reference) {
+            $ids[$reference] = $this->getSharedStorage()->get($reference);
+        }
+
+        return $ids;
+    }
+
     /**
      * @Then /^stores "(.+)" should be (enabled|disabled)$/
      *
@@ -142,11 +248,18 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 
     public function assertStoreStatus(string $storeReference, string $expectedStatus): void
     {
-        /** @var Store $store */
-        $store = SharedStorage::getStorage()->get($storeReference);
+        /** @var int */
+        $storeId = SharedStorage::getStorage()->get($storeReference);
+
+        try {
+            /** @var StoreForEditing */
+            $store = $this->getCommandBus()->handle(new GetStoreForEditing($storeId));
+        } catch (StoreNotFoundException $e) {
+            throw new RuntimeException(sprintf('Unable to retrieve store "%s" to check status', $storeReference));
+        }
 
         $isEnabled = 'enabled' === $expectedStatus;
-        $actualStatus = (bool) $store->active;
+        $actualStatus = $store->isActive();
 
         if ($actualStatus !== $isEnabled) {
             throw new RuntimeException(sprintf('Store "%s" is %s, but it was expected to be %s', $storeReference, $actualStatus ? 'enabled' : 'disabled', $expectedStatus));
@@ -168,12 +281,12 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 
     public function assertStorePresence(string $storeReference, string $expectedPresence): void
     {
-        /** @var Store $store */
-        $store = SharedStorage::getStorage()->get($storeReference);
+        /** @var int */
+        $storeId = SharedStorage::getStorage()->get($storeReference);
 
         $isToBePresent = 'exist' === $expectedPresence;
         $isToBeDeleted = 'be deleted' === $expectedPresence;
-        $query = new GetStoreForEditing((int) $store->id);
+        $query = new GetStoreForEditing($storeId);
         try {
             $storeQueried = $this->getQueryBus()->handle($query);
             if ($storeQueried && $isToBeDeleted) {

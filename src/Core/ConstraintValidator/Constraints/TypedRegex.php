@@ -60,6 +60,7 @@ class TypedRegex extends Constraint
     public const TYPE_WEBSERVICE_KEY = 'webservice_key';
     public const TYPE_LINK_REWRITE = 'link_rewrite';
     public const TYPE_ZIP_CODE_FORMAT = 'zip_code_format';
+    public const TYPE_COORDINATE = 'coordinate';
 
     /**
      * @var string

@@ -26,23 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\ValueObject;
+use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Handles command that deletes stores
+ * Class Hours is responsible for providing valid hours value.
  */
-class BulkDeleteStoreHandler extends AbstractStoreHandler implements BulkDeleteStoreHandlerInterface
+class Hours extends ValueObject
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function handle(BulkDeleteStoreCommand $command): void
+    private $hours;
+
+    /**
+     * @throws DomainConstraintException
+     */
+    public function __construct(string $hours)
     {
-        foreach ($command->getStoreIds() as $storeId) {
-            $this->storeRepository->delete($storeId);
-        }
+        parent::__construct();
+
+        $this->validate($hours, [
+            new NotBlank(),
+            new Json(),
+        ], "$hours is not valid hours");
+
+        $this->hours = $hours;
+    }
+
+    public function getValue(): string
+    {
+        return $this->hours;
     }
 }
