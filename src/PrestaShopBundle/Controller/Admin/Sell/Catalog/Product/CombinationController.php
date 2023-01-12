@@ -42,12 +42,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationN
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -159,15 +159,30 @@ class CombinationController extends FrameworkBundleAdminController
         return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
     }
 
-    public function searchProductCombinationsAction(Request $request, ProductId $productId, string $languageCode): JsonResponse
-    {
-        $shopId = (int) $request->query->get('shopId');
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $productId
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchProductCombinationsAction(
+        Request $request,
+        int $productId,
+        ?int $shopId,
+        ?int $languageId
+    ): JsonResponse {
         $searchPhrase = $request->query->get('q', '');
-
         $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
 
-        $rep = $this->get('PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository');
-        $results = $rep->searchProductCombinations($productId, $shopConstraint, $searchPhrase);
+        $results = $this->getQueryBus()->handle(new SearchProductCombinations(
+            $productId,
+            $languageId ?: $this->getContextLangId(),
+            $shopConstraint,
+            $searchPhrase
+        ));
 
         return $this->json($results);
     }

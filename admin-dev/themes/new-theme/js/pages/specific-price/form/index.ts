@@ -119,6 +119,7 @@ $(() => {
       type: 'GET',
       delay: 250,
       data(params: any) {
+        debugger;
         return {
           q: params.term,
         };
