@@ -12,7 +12,7 @@ import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import OrderMessageFaker from '@data/faker/orderMessage';
+import OrderMessageData from '@data/faker/orderMessage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +68,9 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
   describe('Create 10 order messages in BO', async () => {
     const tests = new Array(10).fill(0, 0, 10);
     tests.forEach((test, index) => {
-      const createOrderMessageData = new OrderMessageFaker({name: `toSortAndPaginate${index}`});
+      const createOrderMessageData: OrderMessageData = new OrderMessageData({
+        name: `toSortAndPaginate${index}`,
+      });
 
       it('should go to add new order message page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewOrderMessagePage${index}`, baseContext);

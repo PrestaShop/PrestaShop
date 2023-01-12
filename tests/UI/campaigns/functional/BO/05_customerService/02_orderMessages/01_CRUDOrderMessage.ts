@@ -11,7 +11,7 @@ import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import OrderMessageFaker from '@data/faker/orderMessage';
+import OrderMessageData from '@data/faker/orderMessage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,8 +28,8 @@ describe('BO - Customer Service - Order Messages : CRUD order message', async ()
   let page: Page;
   let numberOfOrderMessages: number = 0;
 
-  const createOrderMessageData: OrderMessageFaker = new OrderMessageFaker();
-  const editOrderMessageData: OrderMessageFaker = new OrderMessageFaker();
+  const createOrderMessageData: OrderMessageData = new OrderMessageData();
+  const editOrderMessageData: OrderMessageData = new OrderMessageData();
 
   // before and after functions
   before(async function () {

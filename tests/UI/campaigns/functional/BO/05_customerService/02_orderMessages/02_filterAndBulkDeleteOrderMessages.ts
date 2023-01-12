@@ -11,7 +11,7 @@ import addOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import OrderMessageFaker from '@data/faker/orderMessage';
+import OrderMessageData from '@data/faker/orderMessage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,8 +28,8 @@ describe('BO - Customer Service - Order Messages : Filter and bulk delete order 
   let page: Page;
   let numberOfOrderMessages: number = 0;
 
-  const firstOrderMessageData: OrderMessageFaker = new OrderMessageFaker({name: 'todelete'});
-  const secondOrderMessageData: OrderMessageFaker = new OrderMessageFaker({name: 'todelete2'});
+  const firstOrderMessageData: OrderMessageData = new OrderMessageData({name: 'todelete'});
+  const secondOrderMessageData: OrderMessageData = new OrderMessageData({name: 'todelete2'});
 
   // before and after functions
   before(async function () {
