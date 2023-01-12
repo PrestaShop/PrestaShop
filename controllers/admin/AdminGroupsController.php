@@ -704,7 +704,7 @@ class AdminGroupsControllerCore extends AdminController
     {
         if (!Group::isFeatureActive()) {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
-            $url = '<a href="' . $adminPerformanceUrl . '#featuresDetachables">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
+            $url = '<a href="' . $adminPerformanceUrl . '">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
             $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', ['%url%' => $url], 'Admin.Catalog.Notification'));
 
             $this->context->smarty->assign([
