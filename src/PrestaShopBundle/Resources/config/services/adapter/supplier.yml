@@ -22,7 +22,7 @@ services:
     arguments:
       - '@prestashop.adapter.supplier.supplier_order_validator'
       - '@prestashop.adapter.supplier.provider.supplier_address'
-      - '@prestashop.adapter.product.update.product_supplier_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater'
       - '%database_prefix%'
     public: false
 

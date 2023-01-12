@@ -95,7 +95,7 @@ services:
     class: PrestaShopBundle\Model\Product\AdminModelAdapter
     arguments:
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.admin.wrapper.product"
+      - '@PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper'
       - "@prestashop.adapter.tools"
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.supplier"

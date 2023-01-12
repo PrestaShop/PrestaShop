@@ -1662,7 +1662,7 @@ services:
     arguments:
       - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
       - '@prestashop.core.admin.url_generator'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     public: true
     tags:
       - { name: form.type }
@@ -1971,7 +1971,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.tax.tax_computer'
     tags:
       - { name: form.type }

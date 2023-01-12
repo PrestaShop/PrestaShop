@@ -60,7 +60,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater
     arguments:
       - '@prestashop.core.stock.stock_manager'
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
       - '@prestashop.adapter.legacy.configuration'

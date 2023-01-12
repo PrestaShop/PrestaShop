@@ -89,7 +89,7 @@ class ProductShopFeatureContext extends AbstractProductFeatureContext
         $shopId = $this->getSharedStorage()->get($shopReference);
 
         /** @var ProductMultiShopRepository $productRepository */
-        $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+        $productRepository = CommonFeatureContext::getContainer()->get(ProductMultiShopRepository::class);
         $defaultShopId = $productRepository->getProductDefaultShopId(new ProductId($productId));
         Assert::assertEquals($shopId, $defaultShopId->getValue());
     }

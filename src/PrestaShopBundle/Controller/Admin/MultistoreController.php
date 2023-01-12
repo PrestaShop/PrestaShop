@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -98,7 +99,7 @@ class MultistoreController extends FrameworkBundleAdminController
         $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
 
         // Filter shops that are not associated to product
-        $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+        $productRepository = $this->get(ProductMultiShopRepository::class);
         $productShops = $productRepository->getAssociatedShopIds(new ProductId($productId));
 
         if (!empty($productShops)) {
