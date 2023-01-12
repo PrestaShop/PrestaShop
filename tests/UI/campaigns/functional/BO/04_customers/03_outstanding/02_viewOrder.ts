@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
+import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
@@ -161,5 +161,5 @@ describe('BO - Customers - Outstanding : View order', async () => {
   });
 
   // Post-Condition : Disable B2B
-  disableB2BTest(baseContext);
+  boShopParametersB2BCommon.disableB2BTest(baseContext);
 });

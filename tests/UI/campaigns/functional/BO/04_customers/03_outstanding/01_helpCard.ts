@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
+import boShopParametersB2BCommon from '@commonTests/BO/shopParameters/b2b';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -29,7 +29,7 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
   let page: Page;
 
   // Pre-Condition : Enable B2B
-  enableB2BTest(baseContext);
+  boShopParametersB2BCommon.enableB2BTest(baseContext);
 
   // before and after functions
   before(async function () {
@@ -80,5 +80,5 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
   });
 
   // Post-Condition : Disable B2B
-  disableB2BTest(baseContext);
+  boShopParametersB2BCommon.disableB2BTest(baseContext);
 });
