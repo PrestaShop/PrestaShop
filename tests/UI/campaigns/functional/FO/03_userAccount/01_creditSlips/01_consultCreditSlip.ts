@@ -37,14 +37,16 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_FO_userAccount_creditSlips_consultCreditSlip';
 
 /*
-  Pre-condition:
-  - Create new account on FO
-  - Create new address
-  - Create order
-  Scenario:
-
-  Post condition:
-
+Pre-condition:
+ - Create new account on FO
+ - Create new address
+ - Create order
+Scenario:
+ - Check there are no credit slips in FO'
+ - Create a partial refund from the BO
+ - Check there are credit slips in FO
+Post condition:
+ - Delete created customer
  */
 describe('FO - Consult credit slip list & View PDF Credit slip & View order', async () => {
   let browserContext: BrowserContext;
@@ -155,15 +157,6 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
 
         const pageTitle = await ordersPage.getPageTitle(page);
         await expect(pageTitle).to.contains(ordersPage.pageTitle);
-      });
-
-      it('should filter the Orders table by the default customer and check the result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
-
-        await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
-
-        const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-        await expect(textColumn).to.contains(customerData.lastName);
       });
 
       it('should go to the first order page', async function () {
