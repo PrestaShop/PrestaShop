@@ -105,11 +105,12 @@
 			var files = e.originalEvent.dataTransfer.files;
 			$('#{$id|escape:'html':'UTF-8'}')[0].files = files;
         {if isset($accept) && !empty($accept)}
-        if(validType(files[0], "{$accept}")) {
-          console.log(files[0].type);
-        }
+          if (validType(files[0], "{$accept}")) {
+            $(this).val(files[0].name);
+          }
+          {else}
+            $(this).val(files[0].name);
         {/if}
-			$(this).val(files[0].name);
 		});
 
 		$('#{$id|escape:'html':'UTF-8'}').change(function(e) {
