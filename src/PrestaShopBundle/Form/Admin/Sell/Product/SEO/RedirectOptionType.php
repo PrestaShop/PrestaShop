@@ -125,14 +125,22 @@ class RedirectOptionType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => [
-                    $this->trans('No redirection (404)', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
-                    $this->trans('No redirection (410)', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
+                    $this->trans('Default behavior from configuration', 'Admin.Catalog.Feature') => RedirectType::TYPE_DEFAULT,
+                    $this->trans('No redirection (200), display product', 'Admin.Catalog.Feature') => RedirectType::TYPE_SUCCESS_DISPLAYED,
+                    $this->trans('No redirection (404), display product', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND_DISPLAYED,
+                    $this->trans('No redirection (410), display product', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE_DISPLAYED,
+                    $this->trans('No redirection (404), display error page', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
+                    $this->trans('No redirection (410), display error page', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
                     $this->trans('Permanent redirection to a category (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_PERMANENT,
                     $this->trans('Temporary redirection to a category (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_TEMPORARY,
                     $this->trans('Permanent redirection to a product (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_PERMANENT,
                     $this->trans('Temporary redirection to a product (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
                 ],
                 'modify_all_shops' => true,
+                'external_link' => [
+                    'text' => $this->trans('[1]Edit default behavior[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_product_preferences') . '#configuration_fieldset_products',
+                ],
             ])
             ->add('target', EntitySearchInputType::class, [
                 'required' => false,
@@ -198,8 +206,12 @@ class RedirectOptionType extends TranslatorAwareType
     private function getRedirectionAlertMessages(): array
     {
         return [
-            $this->trans('No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help'),
-            $this->trans('No redirection (410) = Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help'),
+            $this->trans('Default behavior is specified in the Shop Parameters > Product settings page.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (200), display product = Do not redirect anywhere, display product as discontinued and return normal 200 response.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (404), display product = Do not redirect anywhere, display product as discontinued and return 404 "Not Found" response.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (410), display product = Do not redirect anywhere, display product as discontinued and return 410 "Gone" response.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (404), display error page = Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (410), display error page = Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help'),
             $this->trans('Permanent redirection (301) = Permanently display another product or category instead.', 'Admin.Catalog.Help'),
             $this->trans('Temporary redirection (302) = Temporarily display another product or category instead.', 'Admin.Catalog.Help'),
         ];

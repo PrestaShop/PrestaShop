@@ -26,7 +26,7 @@ const foCreateAccountPage = require('@pages/FO/myAccount/add');
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 
-const baseContext = 'functional_BO_shopParameters_customerSettings_customers_sendAnEmailAfterRegistration';
+const baseContext = 'functional_BO_shopParameters_customerSettings_customers_sendEmailAfterRegistration';
 
 let browserContext;
 let page;

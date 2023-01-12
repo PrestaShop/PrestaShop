@@ -71,7 +71,7 @@ function deleteNonOrderedShoppingCarts(baseContext = 'commonTests-deleteNonOrder
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'status');
         await expect(textColumn).to.contains('Non ordered');
       }
     });

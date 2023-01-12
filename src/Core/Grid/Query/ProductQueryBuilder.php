@@ -103,13 +103,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
-            ->select('p.`id_product`, p.`reference`')
+            ->addSelect('p.`id_product`, p.`reference`')
             ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
+            ->addSelect('img_lang.legend')
             ->addSelect('p.`id_tax_rules_group`')
-            ->addSelect('pc.`position`, pc.`id_category`')
         ;
 
         // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting
@@ -125,8 +125,15 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
         ;
+
+        // Any sorting that is not based on position can be applied
+        if ($searchCriteria->getOrderBy() !== 'position') {
+            $this->searchCriteriaApplicator->applySorting($searchCriteria, $qb);
+        } elseif (array_key_exists('id_category', $searchCriteria->getFilters())) {
+            // Sort by position only works when we filter by category, so we need to be cautious and apply it only when the filter is present
+            $this->searchCriteriaApplicator->applySorting($searchCriteria, $qb);
+        }
 
         return $qb;
     }
@@ -178,15 +185,28 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop',
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
-            ->rightJoin(
-                   'p',
-                   $this->dbPrefix . 'category_product',
-                   'pc',
-                   'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
-               )
-            ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
+            ->leftJoin(
+                'img_shop',
+                $this->dbPrefix . 'image_lang',
+                'img_lang',
+                'img_shop.`id_image` = img_lang.`id_image` AND img_lang.`id_lang` = :id_lang'
+            )
             ->andWhere('p.`state`=1')
         ;
+
+        $filteredCategoryId = $this->getFilteredCategoryId($filterValues);
+        if (null !== $filteredCategoryId) {
+            $qb
+                ->rightJoin(
+                    'p',
+                    $this->dbPrefix . 'category_product',
+                    'pc',
+                    'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+                )
+                ->setParameter('categoryId', $filteredCategoryId)
+                ->addSelect('pc.`position`, pc.`id_category`')
+            ;
+        }
 
         $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
 
@@ -276,7 +296,8 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 $qb->setParameter('category', '%' . $filter . '%');
             }
 
-            if ('position' === $filterName) {
+            // Filter by position is only relevant when a category has been selected
+            if (array_key_exists('id_category', $filterValues) && 'position' === $filterName) {
                 $qb->andWhere('pc.`position` = :position');
                 $qb->setParameter('position', $filter);
             }
@@ -285,7 +306,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         return $qb;
     }
 
-    private function getFilteredCategoryId(array $filterValues): int
+    private function getFilteredCategoryId(array $filterValues): ?int
     {
         foreach ($filterValues as $filterName => $filter) {
             if ('id_category' === $filterName) {
@@ -293,6 +314,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             }
         }
 
-        return $this->configuration->getInt('PS_HOME_CATEGORY');
+        return null;
     }
 }

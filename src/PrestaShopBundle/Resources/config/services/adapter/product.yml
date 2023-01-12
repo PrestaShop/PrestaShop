@@ -402,12 +402,15 @@ services:
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.currency.repository.currency_repository'
 
-  prestashop.adapter.product.repository.product_supplier_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
+  PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.validate.product_supplier_validator'
+
+  prestashop.adapter.product.repository.product_supplier_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository
+    deprecated: ~
 
   prestashop.adapter.product.update.product_supplier_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater
@@ -544,6 +547,16 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand
 
+  prestashop.adapter.product.stock.command_handler.update_product_stock_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler\UpdateProductStockHandler
+    arguments:
+      - '@prestashop.adapter.product.stock.update.product_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockCommand
+
   prestashop.adapter.product.update.filler.product_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ProductFiller
     arguments:
@@ -582,4 +595,8 @@ services:
 
   prestashop.adapter.product.update.filler.shipping_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\ShippingFiller
+    tags: [ 'core.product_filler' ]
+
+  prestashop.adapter.product.update.filler.stock_information_filler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\Filler\StockInformationFiller
     tags: [ 'core.product_filler' ]

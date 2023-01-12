@@ -20,7 +20,7 @@ const addSeoAndUrlPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndU
 const {orderReturn, pdfOrderReturn} = require('@data/demo/seoPages');
 const SeoPageFaker = require('@data/faker/seoPage');
 
-const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_CRUDSeoPage';
+const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_seoAndUrls_CRUDSeoPage';
 
 let browserContext;
 let page;

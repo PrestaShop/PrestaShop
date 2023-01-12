@@ -14,7 +14,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const attributesPage = require('@pages/BO/catalog/attributes');
 const featuresPage = require('@pages/BO/catalog/features');
 
-const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_helpCard';
+const baseContext = 'functional_BO_catalog_attributesAndFeatures_features_features_helpCard';
 
 let browserContext;
 let page;

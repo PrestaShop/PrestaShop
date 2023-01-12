@@ -1,5 +1,7 @@
+// Import pages
+import CommonPage from '@pages/commonPage';
+
 require('module-alias/register');
-const CommonPage = require('@pages/commonPage');
 
 /**
  * FO parent page, contains functions that can be used on all FO page
@@ -437,7 +439,7 @@ class FOBasePage extends CommonPage {
         selector = this.newProductsLink;
         break;
 
-      case 'Best sales':
+      case 'Best sellers':
         selector = this.bestSalesLink;
         break;
 

@@ -1,7 +1,6 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
@@ -10,7 +9,6 @@ const {expect} = require('chai');
 
 // Import utils
 const basicHelper = require('@utils/basicHelper');
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -34,7 +32,7 @@ const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_customers_outstanding_filterSortOutstanding';
+const baseContext = 'functional_BO_customers_outstanding_sortFilterOutstanding';
 
 let browserContext;
 let page;
@@ -50,8 +48,8 @@ const createCustomerData3 = new CustomerFaker();
 const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
 
 // Const used to get today date format
-const today = getDateFormat('yyyy-mm-dd');
-const dateToCheck = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('yyyy-mm-dd');
+const dateToCheck = date.getDateFormat('mm/dd/yyyy');
 
 /*
 Pre-condition:

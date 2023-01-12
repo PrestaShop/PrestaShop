@@ -1,4 +1,5 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
 import mailHelper from '@utils/mailHelper';
 
@@ -8,7 +9,6 @@ import testContext from '@utils/testContext';
 require('module-alias/register');
 
 const {expect} = require('chai');
-const {getDateFormat} = require('@utils/date');
 
 // Import BO common tests
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
@@ -40,7 +40,7 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 
 let browserContext;
 let page;
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 
 const orderNote = 'Test order note';
 

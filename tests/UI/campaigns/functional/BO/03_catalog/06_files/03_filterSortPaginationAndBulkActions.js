@@ -24,7 +24,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const filesPage = require('@pages/BO/catalog/files');
 const addFilePage = require('@pages/BO/catalog/files/add');
 
-const baseContext = 'functional_BO_advancedParams_team_profiles_filterSortPaginationAndBulkActionsFile';
+const baseContext = 'functional_BO_catalog_files_filterSortPaginationAndBulkActions';
 
 let browserContext;
 let page;

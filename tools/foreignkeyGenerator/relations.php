@@ -861,6 +861,15 @@ $relations = array(
         ),
     ),
 
+    'product_attribute_lang' => array(
+        'id_lang' => array(
+            'lang' => 'id_lang',
+        ),
+        'id_product_attribute' => array(
+            'product_attribute' => 'id_product_attribute',
+        ),
+    ),
+
     'product_download' => array(
         'id_product' => array(
             'product' => 'id_product',

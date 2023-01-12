@@ -37,7 +37,7 @@ require_once dirname(__FILE__) . '/../config/config.inc.php';
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
 Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
-Context::getContext()->currency = Context::getContext()->currency ?? new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+Context::getContext()->currency = Context::getContext()->currency ?? Currency::getDefaultCurrency();
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {

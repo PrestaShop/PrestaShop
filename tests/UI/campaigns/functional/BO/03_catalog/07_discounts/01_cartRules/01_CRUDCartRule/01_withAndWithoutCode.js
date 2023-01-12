@@ -1,13 +1,9 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -33,7 +29,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-const pastDate = getDateFormat('yyyy-mm-dd', 'past');
+const pastDate = date.getDateFormat('yyyy-mm-dd', 'past');
 
 const cartRuleWithoutCode = new CartRuleFaker(
   {

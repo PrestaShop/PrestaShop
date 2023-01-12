@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -34,7 +30,7 @@ const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkA
 
 let browserContext;
 let page;
-const today = getDateFormat('yyyy-mm-dd');
+const today = date.getDateFormat('yyyy-mm-dd');
 
 let numberOfEmails = 0;
 

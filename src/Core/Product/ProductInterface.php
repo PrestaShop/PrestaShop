@@ -40,4 +40,8 @@ interface ProductInterface
     public const REDIRECT_TYPE_PRODUCT_FOUND = RedirectType::TYPE_PRODUCT_TEMPORARY;
     public const REDIRECT_TYPE_NOT_FOUND = RedirectType::TYPE_NOT_FOUND;
     public const REDIRECT_TYPE_GONE = RedirectType::TYPE_GONE;
+    public const REDIRECT_TYPE_DEFAULT = RedirectType::TYPE_DEFAULT;
+    public const REDIRECT_TYPE_NOT_FOUND_DISPLAYED = RedirectType::TYPE_NOT_FOUND_DISPLAYED;
+    public const REDIRECT_TYPE_GONE_DISPLAYED = RedirectType::TYPE_GONE_DISPLAYED;
+    public const REDIRECT_TYPE_SUCCESS_DISPLAYED = RedirectType::TYPE_SUCCESS_DISPLAYED;
 }

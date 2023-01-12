@@ -110,6 +110,18 @@ class CombinationStockUpdater
     {
         $updatableProperties = [];
 
+        $localizedLaterLabels = $properties->getLocalizedAvailableLaterLabels();
+        if (null !== $localizedLaterLabels) {
+            $combination->available_later = $localizedLaterLabels;
+            $updatableProperties['available_later'] = array_keys($localizedLaterLabels);
+        }
+
+        $localizedNowLabels = $properties->getLocalizedAvailableNowLabels();
+        if (null !== $localizedNowLabels) {
+            $combination->available_now = $localizedNowLabels;
+            $updatableProperties['available_now'] = array_keys($localizedNowLabels);
+        }
+
         if (null !== $properties->getAvailableDate()) {
             $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
@@ -128,11 +140,6 @@ class CombinationStockUpdater
         if (null !== $properties->isLowStockAlertEnabled()) {
             $combination->low_stock_alert = $properties->isLowStockAlertEnabled();
             $updatableProperties[] = 'low_stock_alert';
-        }
-
-        if (null !== $properties->getLocation()) {
-            $combination->location = $properties->getLocation();
-            $updatableProperties[] = 'location';
         }
 
         return $updatableProperties;

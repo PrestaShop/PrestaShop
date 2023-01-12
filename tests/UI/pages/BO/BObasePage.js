@@ -1,5 +1,7 @@
+// Import pages
+import CommonPage from '@pages/commonPage';
+
 require('module-alias/register');
-const CommonPage = require('@pages/commonPage');
 
 /**
  * BO parent page, contains functions that can be used on all BO page

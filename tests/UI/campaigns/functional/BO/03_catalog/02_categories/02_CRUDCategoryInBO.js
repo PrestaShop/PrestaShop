@@ -28,7 +28,7 @@ const categoryPage = require('@pages/FO/category');
 // Import data
 const CategoryFaker = require('@data/faker/category');
 
-const baseContext = 'functional_BO_catalog_categories_CRUDCategoriesInBO';
+const baseContext = 'functional_BO_catalog_categories_CRUDCategoryInBO';
 
 let browserContext;
 let page;

@@ -37,6 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackExceptio
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
@@ -65,6 +67,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
     /**
      * @param PackId $productId
      * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<array<string, string>>
      *                                      e.g [
@@ -74,8 +77,12 @@ class ProductPackRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function getPackedProducts(PackId $productId, LanguageId $languageId): array
+    public function getPackedProducts(PackId $productId, LanguageId $languageId, ShopConstraint $shopConstraint): array
     {
+        if ($shopConstraint->getShopGroupId() || $shopConstraint->forAllShops()) {
+            throw new InvalidShopConstraintException('Product Pack has no features related with shop group or all shops, use single shop constraint');
+        }
+
         $this->assertProductExists($productId);
         $productIdValue = $productId->getValue();
 
@@ -85,17 +92,26 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 ->from($this->dbPrefix . 'pack', 'pack')
                 ->leftJoin('pack', $this->dbPrefix . 'product', 'product', 'pack.id_product_item = product.id_product')
                 ->leftJoin('pack', $this->dbPrefix . 'product_attribute', 'attribute', 'pack.id_product_attribute_item = attribute.id_product_attribute')
-                ->leftJoin('pack', $this->dbPrefix . 'product_lang', 'language', 'pack.id_product_item = language.id_product')
+                ->leftJoin(
+                    'pack',
+                    $this->dbPrefix . 'product_lang',
+                    'language',
+                    // We use product default shop as fallback in case the required shop is not associated to the product
+                    'product.id_product = language.id_product AND language.id_lang = :idLanguage AND (language.id_shop = :idShop OR language.id_shop = product.id_shop_default)'
+                )
                 ->where('pack.id_product_pack = :idProduct')
-                ->andWhere('language.id_lang = :idLanguage')
                 ->orderBy('pack.id_product_item', 'ASC')
                 ->setParameter('idProduct', $productId->getValue())
-                ->setParameter('idLanguage', $languageId->getValue());
+                ->setParameter('idLanguage', $languageId->getValue())
+                ->setParameter('idShop', $shopConstraint->getShopId()->getValue())
+                ->addGroupBy('product.id_product')
+                ->addGroupBy('attribute.id_product_attribute')
+            ;
             $packedProducts = $qb->execute()->fetchAll();
         } catch (Throwable $exception) {
             throw new CoreException(
                 sprintf(
-                    'Error occurred when fetching related products for product #%d',
+                    'Error occurred when fetching packed products for pack #%d',
                     $productIdValue
                 ),
                 $exception->getCode(),
@@ -152,7 +168,8 @@ class ProductPackRepository extends AbstractObjectModelRepository
         $packIdValue = $packId->getValue();
 
         try {
-            if (!Pack::deleteItems($packIdValue)) {
+            // We don't reset cache_is_pack for product we want to keep it tru as long as product type doesn't change
+            if (!Pack::deleteItems($packIdValue, false)) {
                 throw new ProductPackException(
                     sprintf('Failed to remove products from pack #%d', $packIdValue),
                     ProductPackException::FAILED_DELETING_PRODUCTS_FROM_PACK

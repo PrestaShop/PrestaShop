@@ -47,6 +47,9 @@ export default class AsyncToggleColumnExtension {
           event.preventDefault();
         }
 
+        const $newStateInput = $button.find('input:checked');
+        const newState = Boolean($newStateInput.val());
+
         $.post({
           url: $button.data('toggle-url'),
         })
@@ -59,14 +62,32 @@ export default class AsyncToggleColumnExtension {
               return;
             }
 
-            window.showErrorMessage(response.message);
+            this.showErrorMessage(response.message, $newStateInput.prop('name'), !newState);
           })
           .catch((error: AjaxError) => {
             const response = error.responseJSON;
-
-            window.showErrorMessage(response.message);
+            this.showErrorMessage(response.message, $newStateInput.prop('name'), !newState);
           });
       });
+  }
+
+  private showErrorMessage(message: string, switchName: string, initialState: boolean): void {
+    // We need to toggle back the switch state
+    this.toggleSwitch(switchName, initialState);
+
+    window.showErrorMessage(message);
+  }
+
+  private toggleSwitch(switchName: string, checked: boolean): void {
+    const $switchOn = $(`[name="${switchName}"][value="1"]`);
+    const $switchOff = $(`[name="${switchName}"][value="0"]`);
+
+    if ($switchOn.is(':checked') !== checked) {
+      $switchOn.prop('checked', checked);
+    }
+    if ($switchOff.is(':checked') === checked) {
+      $switchOff.prop('checked', !checked);
+    }
   }
 
   /**

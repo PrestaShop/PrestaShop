@@ -1963,7 +1963,7 @@ class OrderCore extends ObjectModel
         if ($order_payment->id_currency == $this->id_currency) {
             $this->total_paid_real += $order_payment->amount;
         } else {
-            $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            $default_currency = Currency::getDefaultCurrencyId();
             if ($order_payment->id_currency === $default_currency) {
                 $this->total_paid_real += Tools::ps_round(
                     Tools::convertPrice((float) $order_payment->amount, $this->id_currency, false),

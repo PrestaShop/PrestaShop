@@ -18,7 +18,7 @@ const addTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 
 const TaxRuleFaker = require('@data/faker/taxRuleGroup');
 
-const baseContext = 'functional_BO_international_taxes_quickEditAndBulkActions';
+const baseContext = 'functional_BO_international_taxes_taxRules_quickEditAndBulkActions';
 
 let browserContext;
 let page;

@@ -19,7 +19,7 @@ const {demoBrands} = require('@data/demo/brands');
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
 
-const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_filterAndQuickEditBrands';
+const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_filterAndQuickEditBrands';
 
 let browserContext;
 let page;

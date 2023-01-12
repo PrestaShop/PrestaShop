@@ -412,7 +412,7 @@ class ProductFormDataProviderTest extends TestCase
             'minimal_quantity' => 7,
             'location' => 'top shelf',
             'low_stock_threshold' => 5,
-            'low_stock_alert' => true,
+            'disabling_switch_low_stock_threshold' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
             'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
@@ -475,7 +475,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options']['disabling_switch_low_stock_threshold'] = true;
         $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
         $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
@@ -1317,7 +1317,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
-            $product['low_stock_alert'] ?? false,
+            $product['disabling_switch_low_stock_threshold'] ?? false,
             $product['available_now'] ?? [],
             $product['available_later'] ?? [],
             $product['location'] ?? 'location',
@@ -1591,7 +1591,7 @@ class ProductFormDataProviderTest extends TestCase
                 'options' => [
                     'stock_location' => 'location',
                     'low_stock_threshold' => 0,
-                    'low_stock_alert' => false,
+                    'disabling_switch_low_stock_threshold' => false,
                 ],
                 'virtual_product_file' => [
                     'has_file' => false,

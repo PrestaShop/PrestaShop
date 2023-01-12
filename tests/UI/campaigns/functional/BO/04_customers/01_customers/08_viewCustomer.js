@@ -1,15 +1,11 @@
 // Import utils
+import date from '@utils/date';
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
 require('module-alias/register');
 
 const {expect} = require('chai');
-
-// Import utils
-const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/BO/loginBO');
@@ -42,7 +38,7 @@ const baseContext = 'functional_BO_customers_customers_viewCustomer';
 
 let browserContext;
 let page;
-const today = getDateFormat('mm/dd/yyyy');
+const today = date.getDateFormat('mm/dd/yyyy');
 
 let numberOfCustomers = 0;
 

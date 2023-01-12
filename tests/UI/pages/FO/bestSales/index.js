@@ -14,7 +14,7 @@ class BestSales extends FOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Best sales';
+    this.pageTitle = 'Best sellers';
   }
 }
 
