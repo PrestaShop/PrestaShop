@@ -40,7 +40,7 @@ class ImageManagerCore
     public const ERROR_MEMORY_LIMIT = 3;
 
     // IMAGETYPE_AVIF constant is only available in php 8.1, so we make our own here
-    public const PS_IMAGETYPE_AVIF = 19;
+    private const PS_IMAGETYPE_AVIF = 19;
 
     public const MIME_TYPE_SUPPORTED = [
         'image/gif',

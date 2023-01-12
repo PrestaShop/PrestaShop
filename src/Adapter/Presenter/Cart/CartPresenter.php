@@ -89,7 +89,6 @@ class CartPresenter implements PresenterInterface
         $this->priceFormatter = new PriceFormatter();
         $this->link = $context->link;
         $this->translator = $context->getTranslator();
-
         $this->imageRetriever = new ImageRetriever($this->link);
         $this->taxConfiguration = new TaxConfiguration();
     }

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Image\Exception\ImageFormatConfigurationException
 
 class ImageFormatConfiguration implements ImageFormatConfigurationInterface
 {
-    public const SEPARATOR = ',';
+    private const SEPARATOR = ',';
 
     public const IMAGE_FORMAT_CONFIGURATION_KEY = 'PS_IMAGE_FORMAT';
 

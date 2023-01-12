@@ -52,6 +52,40 @@ class AdminImagesControllerCore extends AdminController
         $this->className = 'ImageType';
 
         parent::__construct();
+
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+                'icon' => 'icon-trash',
+            ],
+        ];
+
+        $this->fields_list = [
+            'id_image_type' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
+            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
+            'width' => ['title' => $this->trans('Width', [], 'Admin.Global'),  'suffix' => ' px'],
+            'height' => ['title' => $this->trans('Height', [], 'Admin.Global'),  'suffix' => ' px'],
+            'products' => ['title' => $this->trans('Products', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'categories' => ['title' => $this->trans('Categories', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'manufacturers' => ['title' => $this->trans('Brands', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+            'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
+        ];
+
+        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
+        $this->display_move = false;
+        $dir = _PS_PRODUCT_IMG_DIR_;
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false && $this->display_move == false) {
+                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
+                        $this->display_move = true;
+                    }
+                }
+                closedir($dh);
+            }
+        }
     }
 
     public function init()
@@ -192,40 +226,6 @@ class AdminImagesControllerCore extends AdminController
                 'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
         ];
-
-        $this->bulk_actions = [
-            'delete' => [
-                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                'icon' => 'icon-trash',
-            ],
-        ];
-
-        $this->fields_list = [
-            'id_image_type' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
-            'name' => ['title' => $this->trans('Name', [], 'Admin.Global')],
-            'width' => ['title' => $this->trans('Width', [], 'Admin.Global'),  'suffix' => ' px'],
-            'height' => ['title' => $this->trans('Height', [], 'Admin.Global'),  'suffix' => ' px'],
-            'products' => ['title' => $this->trans('Products', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'categories' => ['title' => $this->trans('Categories', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'manufacturers' => ['title' => $this->trans('Brands', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'suppliers' => ['title' => $this->trans('Suppliers', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-            'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
-        ];
-
-        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
-        $this->display_move = false;
-        $dir = _PS_PRODUCT_IMG_DIR_;
-        if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== false && $this->display_move == false) {
-                    if (!is_dir($dir . DIRECTORY_SEPARATOR . $file) && $file[0] != '.' && is_numeric($file[0])) {
-                        $this->display_move = true;
-                    }
-                }
-                closedir($dh);
-            }
-        }
 
         if ($this->display_move) {
             $this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = [
