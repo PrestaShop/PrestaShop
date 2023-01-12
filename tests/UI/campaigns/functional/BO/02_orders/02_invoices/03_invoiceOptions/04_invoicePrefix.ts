@@ -13,7 +13,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import InvoiceOptionsFaker from '@data/faker/invoice';
+import InvoiceData from '@data/faker/invoice';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,7 +32,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
   let page: Page;
   let fileName: string;
 
-  const invoiceData: InvoiceOptionsFaker = new InvoiceOptionsFaker();
+  const invoiceData: InvoiceData = new InvoiceData();
   const defaultPrefix: string = '#IN';
 
   // before and after functions
