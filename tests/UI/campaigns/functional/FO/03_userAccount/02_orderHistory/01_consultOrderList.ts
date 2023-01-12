@@ -4,9 +4,9 @@ import testContext from '@utils/testContext';
 import date from '@utils/date';
 
 // Import common tests
-import {createAccountTest} from '@commonTests/FO/createAccount';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import foAccountCommon from '@commonTests/FO/account';
 import foOrderCommon from '@commonTests/FO/order';
 
 // Import FO pages
@@ -61,7 +61,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create new account
-  createAccountTest(customerData, `${baseContext}_enableNewProduct`);
+  foAccountCommon.createAccountTest(customerData, `${baseContext}_enableNewProduct`);
 
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);

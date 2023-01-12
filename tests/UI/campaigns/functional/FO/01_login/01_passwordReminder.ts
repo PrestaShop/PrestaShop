@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/configSMTP';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createAccountTest} from '@commonTests/FO/createAccount';
+import foAccountCommon from '@commonTests/FO/account';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
@@ -54,7 +54,7 @@ describe('FO - Login : Password reminder', async () => {
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
 
   // Pre-condition : Create new customer on FO
-  createAccountTest(customerData, `${baseContext}_preTest_2`);
+  foAccountCommon.createAccountTest(customerData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {

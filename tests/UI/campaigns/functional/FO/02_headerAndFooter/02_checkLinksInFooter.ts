@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCacheTest} from '@commonTests/BO/advancedParameters/deleteCache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createAccountTest} from '@commonTests/FO/createAccount';
+import foAccountCommon from '@commonTests/FO/account';
 
 // Import pages
 // Import BO pages
@@ -66,7 +66,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
   const createCustomerData: CustomerFaker = new CustomerFaker();
 
   // Pre-condition: Create new account on FO
-  createAccountTest(createCustomerData, `${baseContext}_preTest1`);
+  foAccountCommon.createAccountTest(createCustomerData, `${baseContext}_preTest1`);
 
   // Pre-condition: Delete cache
   deleteCacheTest(`${baseContext}_preTest2`);
