@@ -159,7 +159,7 @@ class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
-                        'route_fragment' => 'tab-product_specifications-tab',
+                        'route_fragment' => 'tab-product_details-tab',
                         'attr' => $editAttributes,
                     ])
             )
