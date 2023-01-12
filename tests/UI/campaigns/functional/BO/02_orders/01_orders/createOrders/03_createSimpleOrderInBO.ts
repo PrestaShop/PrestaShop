@@ -117,7 +117,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
       const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
-      await expect(orderStatus).to.equal(orderToMake.orderStatus.status);
+      await expect(orderStatus).to.equal(orderToMake.orderStatus.name);
     });
 
     it('should check order total price', async function () {
