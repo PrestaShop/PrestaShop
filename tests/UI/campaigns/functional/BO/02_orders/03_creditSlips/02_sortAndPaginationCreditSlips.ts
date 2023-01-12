@@ -16,7 +16,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -101,7 +101,7 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
         await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -109,8 +109,8 @@ describe('BO - Orders - Credit slips : Sort (by ID, Date and OrderID) and Pagina
           `${baseContext}_preTest_${i}`,
         );
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-        await expect(result).to.equal(Statuses.shipped.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        await expect(result).to.equal(OrderStatuses.shipped.name);
       });
 
       it('should add a partial refund', async function () {

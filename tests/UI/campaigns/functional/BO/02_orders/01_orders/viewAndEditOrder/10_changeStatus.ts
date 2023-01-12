@@ -14,7 +14,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -120,7 +120,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'selectSameStatus', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(Statuses.awaitingBankWire.status);
+      expect(actualStatus).to.be.equal(OrderStatuses.awaitingBankWire.name);
 
       await orderPageTabListBlock.selectOrderStatus(page, actualStatus);
     });
@@ -153,11 +153,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(isButtonVisible, 'Partial refund button is visible!').to.be.false;
     });
 
-    it(`should select the status '${Statuses.canceled.status}'`, async function () {
+    it(`should select the status '${OrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectCanceledStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.canceled.status);
-      await expect(result).to.equal(Statuses.canceled.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.canceled.name);
+      await expect(result).to.equal(OrderStatuses.canceled.name);
     });
 
     it('should check that the statuses number is equal to 2', async function () {
@@ -167,11 +167,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(statusesNumber).to.be.equal(2);
     });
 
-    it(`should check that the actual status is '${Statuses.canceled.status}'`, async function () {
+    it(`should check that the actual status is '${OrderStatuses.canceled.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(Statuses.canceled.status);
+      expect(actualStatus).to.be.equal(OrderStatuses.canceled.name);
     });
 
     it('should check that \'Partial refund\' button is not visible', async function () {
@@ -195,11 +195,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(isButtonVisible, 'Partial refund button is visible!').to.be.false;
     });
 
-    it(`should select the status '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should select the status '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectPaymentAcceptedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-      await expect(result).to.equal(Statuses.paymentAccepted.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+      await expect(result).to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the statuses number is equal to 3', async function () {
@@ -209,11 +209,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(statusesNumber).to.be.equal(3);
     });
 
-    it(`should check that the actual status is '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should check that the actual status is '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus2', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(Statuses.paymentAccepted.status);
+      expect(actualStatus).to.be.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('should check that \'Partial refund\' button is visible', async function () {
@@ -247,11 +247,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(doesFileExist, 'File is not downloaded!').to.be.true;
     });
 
-    it(`should select the status '${Statuses.shipped.status}'`, async function () {
+    it(`should select the status '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'selectShippedStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check that the statuses number is equal to 4', async function () {
@@ -261,11 +261,11 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
       await expect(statusesNumber).to.be.equal(4);
     });
 
-    it(`should check that the actual status is '${Statuses.shipped.status}'`, async function () {
+    it(`should check that the actual status is '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus3', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
-      expect(actualStatus).to.be.equal(Statuses.shipped.status);
+      expect(actualStatus).to.be.equal(OrderStatuses.shipped.name);
     });
 
     it('should click on \'View delivery slip\' button and check that the file is downloaded', async function () {

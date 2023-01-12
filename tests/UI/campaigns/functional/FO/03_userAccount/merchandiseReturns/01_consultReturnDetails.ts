@@ -29,7 +29,7 @@ import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import Order from '@data/types/order';
@@ -129,7 +129,7 @@ describe('FO - Account : Consult return details', async () => {
   });
 
   describe(`Case 2 : Check merchandise returns status '${ReturnStatuses.waitingForConfirmation.name}'`, async () => {
-    describe(`Change the created orders status to '${Statuses.shipped.status}'`, async () => {
+    describe(`Change the created orders status to '${OrderStatuses.shipped.name}'`, async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
       });
@@ -188,11 +188,11 @@ describe('FO - Account : Consult return details', async () => {
         await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
       });
 
-      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-        const result = await viewOrderBasePage.modifyOrderStatus(page, Statuses.shipped.status);
-        await expect(result).to.equal(Statuses.shipped.status);
+        const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        await expect(result).to.equal(OrderStatuses.shipped.name);
       });
 
       it('should go to \'Orders > Orders\' page', async function () {

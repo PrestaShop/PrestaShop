@@ -18,9 +18,10 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 // Import data
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
+import OrderStatusData from '@data/faker/orderStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -61,7 +62,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     isRecyclablePackage: false,
   };
   const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
-  const orderStatus = Statuses.paymentAccepted;
+  const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
   const giftMessage: string = 'Gift message to test';
 
   before(async function () {

@@ -24,7 +24,7 @@ import productPage from '@pages/FO/product';
 // Import data
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
@@ -555,7 +555,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       await addOrderPage.setSummaryAndCreateOrder(
         page,
         PaymentMethods.checkPayment.moduleName,
-        Statuses.paymentAccepted,
+        OrderStatuses.paymentAccepted,
       );
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);

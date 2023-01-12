@@ -15,7 +15,7 @@ import ordersPage from '@pages/BO/orders';
 import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import data
-import OrderStatusFaker from '@data/faker/orderStatus';
+import OrderStatusData from '@data/faker/orderStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,8 +35,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
   let numberOfOrderStatuses: number = 0;
 
   const tableName: string = 'order';
-  const createOrderStatusData: OrderStatusFaker = new OrderStatusFaker();
-  const editOrderStatusData: OrderStatusFaker = new OrderStatusFaker({name: `edit_${createOrderStatusData.name}`});
+  const createOrderStatusData: OrderStatusData = new OrderStatusData();
+  const editOrderStatusData: OrderStatusData = new OrderStatusData({name: `edit_${createOrderStatusData.name}`});
 
   // before and after functions
   before(async function () {

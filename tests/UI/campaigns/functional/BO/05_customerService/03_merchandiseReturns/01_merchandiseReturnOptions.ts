@@ -25,7 +25,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
@@ -207,11 +207,11 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
       await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-      const result = await viewOrderBasePage.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await viewOrderBasePage.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {

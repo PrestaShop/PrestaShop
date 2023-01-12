@@ -18,7 +18,7 @@ import checkoutPage from '@pages/FO/checkout';
 // Import data
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
@@ -292,7 +292,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder3', baseContext);
 
           await addOrderPage.setPaymentMethod(page, paymentMethod);
-          await addOrderPage.setOrderStatus(page, Statuses.paymentAccepted);
+          await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
 
           const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, true);
           await expect(isOrderCreated, 'The order is created!').to.be.true;
