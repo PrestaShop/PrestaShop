@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
@@ -80,7 +80,7 @@ class ProductShopUpdater
     private $productStockUpdater;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -100,7 +100,7 @@ class ProductShopUpdater
         ShopRepository $shopRepository,
         ProductImageMultiShopRepository $productImageMultiShopRepository,
         ProductStockUpdater $productStockUpdater,
-        CombinationMultiShopRepository $combinationMultiShopRepository,
+        CombinationRepository $combinationMultiShopRepository,
         CombinationStockUpdater $combinationStockUpdater,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {

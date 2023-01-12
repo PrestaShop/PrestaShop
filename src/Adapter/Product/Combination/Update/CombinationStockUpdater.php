@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
@@ -55,7 +55,7 @@ class CombinationStockUpdater
     private $stockAvailableRepository;
 
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -76,7 +76,7 @@ class CombinationStockUpdater
 
     public function __construct(
         StockAvailableMultiShopRepository $stockAvailableRepository,
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         MovementReasonRepository $movementReasonRepository,
         StockManager $stockManager,
         Configuration $configuration

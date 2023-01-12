@@ -69,6 +69,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @var ProductImagePathFactory
      */
     protected $productImagePathFactory;
+
     /**
      * @var CombinationRepository
      */
@@ -79,6 +80,7 @@ class ProductImageRepository extends AbstractObjectModelRepository
      * @param string $dbPrefix
      * @param ProductImageValidator $productImageValidator
      * @param ProductImagePathFactory $productImagePathFactory
+     * @param CombinationRepository $combinationRepository
      */
     public function __construct(
         Connection $connection,

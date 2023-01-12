@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 class DefaultCombinationUpdater
 {
     /**
-     * @var CombinationMultiShopRepository
+     * @var CombinationRepository
      */
     private $combinationRepository;
 
@@ -50,11 +50,11 @@ class DefaultCombinationUpdater
     private $productRepository;
 
     /**
-     * @param CombinationMultiShopRepository $combinationRepository
+     * @param CombinationRepository $combinationRepository
      * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
-        CombinationMultiShopRepository $combinationRepository,
+        CombinationRepository $combinationRepository,
         ProductMultiShopRepository $productRepository
     ) {
         $this->combinationRepository = $combinationRepository;

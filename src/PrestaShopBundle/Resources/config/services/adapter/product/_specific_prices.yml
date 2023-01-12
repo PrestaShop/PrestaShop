@@ -73,7 +73,7 @@ services:
     arguments:
       - '@prestashop.adapter.shop.repository.shop_group_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@prestashop.adapter.currency.repository.currency_repository'
       - '@prestashop.adapter.country.repository.country_repository'
       - '@prestashop.adapter.customer.group.repository.group_repository'

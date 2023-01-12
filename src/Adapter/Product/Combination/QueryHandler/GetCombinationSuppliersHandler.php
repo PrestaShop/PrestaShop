@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements GetCombinationSuppliersHandlerInterface
 {
@@ -58,11 +57,11 @@ class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler impl
      */
     public function handle(GetCombinationSuppliers $query): array
     {
-        $combination = $this->combinationRepository->get($query->getCombinationId());
+        $combinationId = $query->getCombinationId();
 
         return $this->getProductSuppliersInfo(
-            new ProductId((int) $combination->id_product),
-            $query->getCombinationId()
+            $this->combinationRepository->getProductId($combinationId),
+            $combinationId
         );
     }
 }
