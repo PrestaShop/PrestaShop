@@ -12,7 +12,7 @@ import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
 
 // Import data
-import OrderReturnStatusFaker from '@data/faker/orderReturnStatus';
+import OrderReturnStatusData from '@data/faker/orderReturnStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,8 +31,8 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
   let numberOfOrderReturnStatuses: number = 0;
 
   const tableName: string = 'order_return';
-  const createOrderReturnStatusData: OrderReturnStatusFaker = new OrderReturnStatusFaker();
-  const editOrderStatusData: OrderReturnStatusFaker = new OrderReturnStatusFaker({
+  const createOrderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData();
+  const editOrderStatusData: OrderReturnStatusData = new OrderReturnStatusData({
     name: `edit_${createOrderReturnStatusData.name}`,
   });
 

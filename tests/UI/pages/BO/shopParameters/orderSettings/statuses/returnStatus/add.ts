@@ -1,4 +1,9 @@
+// Import pages
 import BOBasePage from '@pages/BO/BObasePage';
+
+// Import data
+import OrderReturnStatusData from '@data/faker/orderReturnStatus';
+
 import {Page} from 'playwright';
 
 /**
@@ -41,7 +46,7 @@ class AddOrderReturnStatus extends BOBasePage {
    * @param orderReturnStatusData {OrderReturnStatusData} Data to set on order return status form
    * @return {Promise<string>}
    */
-  async setOrderReturnStatus(page: Page, orderReturnStatusData): Promise<string> {
+  async setOrderReturnStatus(page: Page, orderReturnStatusData: OrderReturnStatusData): Promise<string> {
     await this.setValue(page, this.nameInput, orderReturnStatusData.name);
 
     // Set color

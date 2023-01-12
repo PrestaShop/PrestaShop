@@ -28,7 +28,7 @@ import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -128,7 +128,7 @@ describe('FO - Account : Consult return details', async () => {
     });
   });
 
-  describe(`Case 2 : Check merchandise returns status '${ReturnStatuses.waitingForConfirmation.name}'`, async () => {
+  describe(`Case 2 : Check merchandise returns status '${OrderReturnStatuses.waitingForConfirmation.name}'`, async () => {
     describe(`Change the created orders status to '${OrderStatuses.shipped.name}'`, async () => {
       it('should login in BO', async function () {
         await loginCommon.loginBO(this, page);
@@ -285,7 +285,7 @@ describe('FO - Account : Consult return details', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus', baseContext);
 
         const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        await expect(packageStatus).to.equal(ReturnStatuses.waitingForConfirmation.name);
+        await expect(packageStatus).to.equal(OrderReturnStatuses.waitingForConfirmation.name);
       });
 
       it('should verify the order return date issued', async function () {
@@ -317,7 +317,7 @@ describe('FO - Account : Consult return details', async () => {
         const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
         await expect(orderReturnInfo)
           .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
-          .and.to.contains(ReturnStatuses.waitingForConfirmation.name)
+          .and.to.contains(OrderReturnStatuses.waitingForConfirmation.name)
           .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
             + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
       });
@@ -325,10 +325,10 @@ describe('FO - Account : Consult return details', async () => {
   });
 
   const tests = [
-    {args: {status: ReturnStatuses.waitingForPackage.name}},
-    {args: {status: ReturnStatuses.packageReceived.name}},
-    {args: {status: ReturnStatuses.returnDenied.name}},
-    {args: {status: ReturnStatuses.returnCompleted.name}},
+    {args: {status: OrderReturnStatuses.waitingForPackage.name}},
+    {args: {status: OrderReturnStatuses.packageReceived.name}},
+    {args: {status: OrderReturnStatuses.returnDenied.name}},
+    {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ];
   tests.forEach((test, index) => {
     describe(`Case ${index + 3} : Check merchandise returns with the status ${test.args.status}`, async () => {
