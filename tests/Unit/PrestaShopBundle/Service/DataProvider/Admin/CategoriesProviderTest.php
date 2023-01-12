@@ -158,7 +158,7 @@ class CategoriesProviderTest extends TestCase
     {
         $gamification = $this->mockModule('gamification');
         $cronjobs = $this->mockModule('cronjobs');
-        $myCustomTheme = $this->mockModule('my_theme', null, 'administration');
+        $myCustomTheme = $this->mockModule('my_theme', null);
         $this->assertEquals(
             [
                 'categories' => (object) [
