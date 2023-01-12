@@ -13,7 +13,7 @@ import localizationPage from '@pages/BO/international/localization';
 import homePage from '@pages/FO/home';
 
 // Import Data
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

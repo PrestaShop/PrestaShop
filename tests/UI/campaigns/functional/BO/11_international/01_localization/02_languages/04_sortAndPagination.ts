@@ -14,7 +14,7 @@ import languagesPage from '@pages/BO/international/languages';
 import addLanguagePage from '@pages/BO/international/languages/add';
 
 // Import data
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
