@@ -1,15 +1,26 @@
-const {faker} = require('@faker-js/faker');
+import OrderReturnStatusCreator from '@data/types/orderReturnStatus';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new order return status to use on creation form on order return status page on BO
  * @class
  */
-class OrderReturnStatusData {
+export default class OrderReturnStatusData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly color: string;
+
   /**
    * Constructor for class OrderReturnStatusData
    * @param orderReturnStatusToCreate {Object} Could be used to force the value of some members
    */
-  constructor(orderReturnStatusToCreate = {}) {
+  constructor(orderReturnStatusToCreate: OrderReturnStatusCreator = {}) {
+    /** @type {number} ID of the status */
+    this.id = orderReturnStatusToCreate.id || 0;
+
     /** @type {string} Name of the status */
     this.name = orderReturnStatusToCreate.name || `order_return_status_${faker.lorem.word()}`;
 
@@ -17,5 +28,3 @@ class OrderReturnStatusData {
     this.color = orderReturnStatusToCreate.color || faker.internet.color();
   }
 }
-
-module.exports = OrderReturnStatusData;

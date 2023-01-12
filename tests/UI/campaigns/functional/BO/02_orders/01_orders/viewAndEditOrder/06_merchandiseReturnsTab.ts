@@ -27,7 +27,7 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
@@ -314,9 +314,9 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   });
 
   [
-    {args: {status: ReturnStatuses.waitingForPackage.name}},
-    {args: {status: ReturnStatuses.packageReceived.name}},
-    {args: {status: ReturnStatuses.returnCompleted.name}},
+    {args: {status: OrderReturnStatuses.waitingForPackage.name}},
+    {args: {status: OrderReturnStatuses.packageReceived.name}},
+    {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ].forEach((test, index: number) => {
     describe(`Update status of merchandise return to '${test.args.status}'`, async () => {
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {

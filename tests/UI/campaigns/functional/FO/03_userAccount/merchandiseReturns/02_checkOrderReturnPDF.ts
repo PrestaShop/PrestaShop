@@ -34,7 +34,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -253,7 +253,7 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus1', baseContext);
 
       const packageStatus = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-      await expect(packageStatus).to.equal(ReturnStatuses.waitingForConfirmation.name);
+      await expect(packageStatus).to.equal(OrderReturnStatuses.waitingForConfirmation.name);
     });
 
     it('should verify the order return date issued', async function () {
@@ -285,14 +285,14 @@ describe('FO - Account : Check order return PDF', async () => {
       const orderReturnInfo = await returnDetailsPage.getOrderReturnInfo(page);
       await expect(orderReturnInfo)
         .to.contains(`on ${orderDate} ${returnDetailsPage.orderReturnCardBlock}`)
-        .and.to.contains(ReturnStatuses.waitingForConfirmation.name)
+        .and.to.contains(OrderReturnStatuses.waitingForConfirmation.name)
         .and.to.contains(`List of items to be returned: Product Quantity ${Products.demo_1.name} `
           + `(Size: S - Color: White) Reference: ${Products.demo_1.reference} 1`);
     });
   });
 
   describe('Check the return details PDF', async () => {
-    describe(`Change the merchandise returns status to '${ReturnStatuses.waitingForPackage.name}'`, async () => {
+    describe(`Change the merchandise returns status to '${OrderReturnStatuses.waitingForPackage.name}'`, async () => {
       it('should go to BO', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToBO', baseContext);
 
@@ -350,7 +350,7 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should edit merchandise returns status', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editReturnStatus', baseContext);
 
-        const textResult = await editMerchandiseReturnsPage.setStatus(page, ReturnStatuses.waitingForPackage.name);
+        const textResult = await editMerchandiseReturnsPage.setStatus(page, OrderReturnStatuses.waitingForPackage.name);
         await expect(textResult).to.contains(editMerchandiseReturnsPage.successfulUpdateMessage);
       });
     });
@@ -391,7 +391,7 @@ describe('FO - Account : Check order return PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderReturnStatus2', baseContext);
 
         const fileName = await foMerchandiseReturnsPage.getTextColumn(page, 'status');
-        await expect(fileName).to.be.equal(ReturnStatuses.waitingForPackage.name);
+        await expect(fileName).to.be.equal(OrderReturnStatuses.waitingForPackage.name);
       });
 
       it('should download the return form', async function () {
