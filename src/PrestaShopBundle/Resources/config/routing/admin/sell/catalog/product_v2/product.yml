@@ -284,3 +284,16 @@ admin_products_v2_search_combinations:
     _legacy_controller: AdminProducts
   requirements:
     languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+
+admin_products_v2_search_product_combinations:
+  path: /{productId}/search-combinations/{languageCode}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchProductCombinationsAction
+    _legacy_controller: AdminProducts
+    languageCode: en-US
+  requirements:
+    productId: \d+
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+  options:
+    expose: true

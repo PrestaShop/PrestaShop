@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -156,6 +157,19 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
+    }
+
+    public function searchProductCombinationsAction(Request $request, ProductId $productId, string $languageCode): JsonResponse
+    {
+        $shopId = (int) $request->query->get('shopId');
+        $searchPhrase = $request->query->get('q', '');
+
+        $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+
+        $rep = $this->get('PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository');
+        $results = $rep->searchProductCombinations($productId, $shopConstraint, $searchPhrase);
+
+        return $this->json($results);
     }
 
     /**
