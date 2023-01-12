@@ -11,7 +11,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-import ImageTypeFaker from '@data/faker/imageType';
+import ImageTypeData from '@data/faker/imageType';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -27,9 +27,9 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   let page: Page;
   let numberOfImageTypes: number = 0;
 
-  const ImageTypesToCreate: ImageTypeFaker[] = [
-    new ImageTypeFaker({name: 'todelete1'}),
-    new ImageTypeFaker({name: 'todelete2'}),
+  const ImageTypesToCreate: ImageTypeData[] = [
+    new ImageTypeData({name: 'todelete1'}),
+    new ImageTypeData({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -68,7 +68,7 @@ describe('BO - Design - Image Settings : Bulk delete image types', async () => {
   });
 
   describe('Create 2 image types in BO', async () => {
-    ImageTypesToCreate.forEach((ImageTypeToCreate, index) => {
+    ImageTypesToCreate.forEach((ImageTypeToCreate: ImageTypeData, index: number) => {
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewImageTypePage${index + 1}`, baseContext);
 

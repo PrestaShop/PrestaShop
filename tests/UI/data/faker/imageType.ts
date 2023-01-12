@@ -1,15 +1,37 @@
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
+import ImageTypeCreator from '@data/types/imageType';
 
 /**
  * Create new image type to use on creation form on image type page on BO
  * @class
  */
-class ImageTypeData {
+export default class ImageTypeData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly width: number;
+
+  public readonly height: number;
+
+  public readonly productsStatus: boolean;
+
+  public readonly categoriesStatus: boolean;
+
+  public readonly manufacturersStatus: boolean;
+
+  public readonly suppliersStatus: boolean;
+
+  public readonly storesStatus: boolean;
+
   /**
    * Constructor for class ImageTypeData
-   * @param imageTypeToCreate {Object} Could be used to force the value of some members
+   * @param imageTypeToCreate {ImageTypeCreator} Could be used to force the value of some members
    */
-  constructor(imageTypeToCreate = {}) {
+  constructor(imageTypeToCreate: ImageTypeCreator = {}) {
+    /** @type {number} ID of the image type */
+    this.id = imageTypeToCreate.id || 0;
+
     /** @type {string} Name of the image type */
     this.name = imageTypeToCreate.name || faker.lorem.word();
 
@@ -33,12 +55,10 @@ class ImageTypeData {
 
     /** @type {boolean} To activate type for suppliers */
     this.suppliersStatus = imageTypeToCreate.suppliersStatus === undefined
-      ? true : imageTypeToCreate.categoriesStatus;
+      ? true : imageTypeToCreate.suppliersStatus;
 
     /** @type {boolean} To activate type for stores */
     this.storesStatus = imageTypeToCreate.storesStatus === undefined
-      ? true : imageTypeToCreate.categoriesStatus;
+      ? true : imageTypeToCreate.storesStatus;
   }
 }
-
-module.exports = ImageTypeData;
