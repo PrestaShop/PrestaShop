@@ -1,11 +1,10 @@
+import Groups from '@data/demo/groups';
 import Titles from '@data/demo/titles';
 
 const {faker} = require('@faker-js/faker');
 
-const {groupAccess} = require('@data/demo/groupAccess');
-
 const genders = Object.values(Titles).map((title) => title.name);
-const groups = Object.values(groupAccess).map((group) => group.name);
+const groups = Object.values(Groups).map((group) => group.name);
 const risksRating = ['None', 'Low', 'Medium', 'High'];
 
 /**

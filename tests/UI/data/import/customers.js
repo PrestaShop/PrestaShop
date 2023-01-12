@@ -1,7 +1,8 @@
-const {faker} = require('@faker-js/faker');
-const {groupAccess} = require('@data/demo/groupAccess');
+import Groups from '@data/demo/groups';
 
-const groups = Object.values(groupAccess).map((group) => group.name);
+const {faker} = require('@faker-js/faker');
+
+const groups = Object.values(Groups).map((group) => group.name);
 
 const records = [];
 

@@ -1,6 +1,6 @@
-const {faker} = require('@faker-js/faker');
+import Groups from '@data/demo/groups';
 
-const {groupAccess} = require('@data/demo/groupAccess');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new category to use on creation category form on BO
@@ -27,9 +27,9 @@ class CategoryData {
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();
 
-    /** @type {string} Customer group that could access to the category */
+    /** @type {GroupData} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
-      || faker.helpers.arrayElement(groupAccess);
+      || faker.helpers.arrayElement(Groups);
   }
 }
 
