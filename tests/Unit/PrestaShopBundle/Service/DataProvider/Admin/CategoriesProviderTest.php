@@ -365,110 +365,7 @@ class CategoriesProviderTest extends TestCase
         );
     }
 
-    public function testGetCategoriesMenuWithModulesWithParentEnglishName()
-    {
-        $gamification = $this->mockModule('gamification', null, 'Promotions & Marketing');
-        $cronjobs = $this->mockModule('cronjobs', null, 'Product Page');
-        $noTabsNoCategories = $this->mockModule('example');
-        $this->assertEquals(
-            [
-                'categories' => (object) [
-                    'tab' => null,
-                    'name' => 'Categories',
-                    'refMenu' => 'categories',
-                    'modules' => [],
-                    'subMenu' => [
-                        'Administration' => (object) [
-                            'tab' => 'administration',
-                            'name' => 'Administration',
-                            'refMenu' => '440',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Design & Navigation' => (object) [
-                            'tab' => 'front_office_features',
-                            'name' => 'Design & Navigation',
-                            'refMenu' => '507',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Promotions & Marketing' => (object) [
-                            'tab' => 'pricing_promotion',
-                            'name' => 'Promotions & Marketing',
-                            'refMenu' => '496',
-                            'modules' => [$gamification],
-                            'subMenu' => [],
-                        ],
-                        'Product Page' => (object) [
-                            'tab' => 'administration',
-                            'name' => 'Product Page',
-                            'refMenu' => '460',
-                            'modules' => [$cronjobs],
-                            'subMenu' => [],
-                        ],
-                        'Payment' => (object) [
-                            'tab' => 'payments_gateways',
-                            'name' => 'Payment',
-                            'refMenu' => '481',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Shipping & Logistics' => (object) [
-                            'tab' => 'shipping_logistics',
-                            'name' => 'Shipping & Logistics',
-                            'refMenu' => '518',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Traffic & Marketplaces' => (object) [
-                            'tab' => 'checkout',
-                            'name' => 'Traffic & Marketplaces',
-                            'refMenu' => '488',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Customers' => (object) [
-                            'tab' => 'administration',
-                            'name' => 'Customers',
-                            'refMenu' => '475',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Facebook & Social Networks' => (object) [
-                            'tab' => 'advertising_marketing',
-                            'name' => 'Facebook & Social Networks',
-                            'refMenu' => '455',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'Specialized Platforms' => (object) [
-                            'tab' => 'others',
-                            'name' => 'Specialized Platforms',
-                            'refMenu' => '469',
-                            'modules' => [],
-                            'subMenu' => [],
-                        ],
-                        'other' => (object) [
-                            'tab' => 'other',
-                            'name' => 'Other',
-                            'refMenu' => 'other',
-                            'modules' => [$noTabsNoCategories],
-                            'subMenu' => [],
-                        ],
-                    ],
-                ],
-            ],
-            $this->provider->getCategoriesMenu(
-                [
-                    $gamification,
-                    $cronjobs,
-                    $noTabsNoCategories,
-                ]
-            )
-        );
-    }
-
-    private function mockModule(string $moduleName, string $tab = null, string $categoryName = null)
+    private function mockModule(string $moduleName, string $tab = null)
     {
         $mock = $this->getMockBuilder(Module::class)
             ->getMock();
@@ -476,10 +373,6 @@ class CategoriesProviderTest extends TestCase
 
         if ($tab !== null) {
             $mock->attributes->set('tab', $tab);
-        }
-
-        if ($categoryName !== null) {
-            $mock->attributes->set('categoryParentEnglishName', $categoryName);
         }
 
         return $mock;
