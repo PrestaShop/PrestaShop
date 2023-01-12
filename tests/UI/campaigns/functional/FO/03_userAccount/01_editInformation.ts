@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createAccountTest} from '@commonTests/FO/createAccount';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import foAccountCommon from '@commonTests/FO/account';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
@@ -62,7 +62,7 @@ describe('FO - Account : Edit information', async () => {
   const editCustomerData9: CustomerFaker = new CustomerFaker({password: 'test edit information'});
 
   // Pre-condition: Create new account on FO
-  createAccountTest(createCustomerData, `${baseContext}_preTest`);
+  foAccountCommon.createAccountTest(createCustomerData, `${baseContext}_preTest`);
 
   // before and after functions
   before(async function () {

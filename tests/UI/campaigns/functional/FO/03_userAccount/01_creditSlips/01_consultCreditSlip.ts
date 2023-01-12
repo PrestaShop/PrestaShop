@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createAccountTest} from '@commonTests/FO/createAccount';
+import foAccountCommon from '@commonTests/FO/account';
 import foOrderCommon from '@commonTests/FO/order';
 
 // Import pages
@@ -69,7 +69,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   };
 
   // Pre-condition: Create new account on FO
-  createAccountTest(customerData, `${baseContext}_preTest_1`);
+  foAccountCommon.createAccountTest(customerData, `${baseContext}_preTest_1`);
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
   // Pre-condition: Create order
