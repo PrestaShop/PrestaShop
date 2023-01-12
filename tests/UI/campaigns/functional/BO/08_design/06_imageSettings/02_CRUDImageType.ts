@@ -11,7 +11,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-import ImageTypeFaker from '@data/faker/imageType';
+import ImageTypeData from '@data/faker/imageType';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,8 +28,8 @@ describe('BO - Design - Image Settings : CRUD image type in BO', async () => {
   let page: Page;
   let numberOfImageTypes: number = 0;
 
-  const createImageTypeData: ImageTypeFaker = new ImageTypeFaker();
-  const editImageTypeData: ImageTypeFaker = new ImageTypeFaker();
+  const createImageTypeData: ImageTypeData = new ImageTypeData();
+  const editImageTypeData: ImageTypeData = new ImageTypeData();
 
   // before and after functions
   before(async function () {
