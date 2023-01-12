@@ -7,7 +7,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends BOBasePage
  */
-export default class ViewOrderBasePage extends BOBasePage {
+class ViewOrderBasePage extends BOBasePage {
   public readonly pageTitle: string;
 
   public readonly partialRefundValidationMessage: string;
@@ -240,4 +240,5 @@ export default class ViewOrderBasePage extends BOBasePage {
   }
 }
 
-module.exports = ViewOrderBasePage;
+const viewOrderBasePage = new ViewOrderBasePage();
+export {viewOrderBasePage, ViewOrderBasePage};

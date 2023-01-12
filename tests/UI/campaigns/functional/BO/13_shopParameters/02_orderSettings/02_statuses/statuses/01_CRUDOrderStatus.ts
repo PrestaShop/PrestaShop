@@ -12,7 +12,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/add';
 import ordersPage from '@pages/BO/orders';
-import viewOrderPage from '@pages/BO/orders/view/viewOrderPage';
+import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import data
 import OrderStatusFaker from '@data/faker/orderStatus';
@@ -135,14 +135,14 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, updat
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await viewOrderBasePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(viewOrderBasePage.pageTitle);
     });
 
     it(`should check if the order status '${createOrderStatusData.name}' is visible`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDoesStatusVisible', baseContext);
 
-      const isStatusExist = await viewOrderPage.doesStatusExist(page, createOrderStatusData.name);
+      const isStatusExist = await viewOrderBasePage.doesStatusExist(page, createOrderStatusData.name);
       await expect(isStatusExist, 'Status does not exist').to.be.true;
     });
   });

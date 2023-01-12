@@ -1,4 +1,4 @@
-import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 import type {Page} from 'playwright';
 

@@ -1,6 +1,6 @@
-import ViewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
-import {Frame, Page} from 'playwright';
+import type {Frame, Page} from 'playwright';
 
 /**
  * Tab list block, contains functions that can be used on status, documents, carriers and merchandise returns tabs
