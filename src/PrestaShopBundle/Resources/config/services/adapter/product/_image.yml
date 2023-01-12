@@ -35,7 +35,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\CommandHandler\SetProductImagesForAllShopHandler
     arguments:
       - '@prestashop.adapter.product.image.repository.product_image_repository'
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
 
     tags:
@@ -83,7 +83,7 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@prestashop.adapter.product.image.validate.product_image_validator'
 
   prestashop.adapter.product.image.update.product_image_updater:

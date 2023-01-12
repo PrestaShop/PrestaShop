@@ -39,7 +39,7 @@ services:
     abstract: true
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.category.repository.category_repository'
 
   prestashop.adapter.category.command_handler.delete_category_handler:

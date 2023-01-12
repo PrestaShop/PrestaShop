@@ -78,7 +78,7 @@ services:
       - '@prestashop.adapter.country.repository.country_repository'
       - '@prestashop.adapter.customer.group.repository.group_repository'
       - '@prestashop.adapter.customer.repository.customer_repository'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.core.util.number.number_extractor'
 
   prestashop.adapter.product.specific_price.repository.specific_price_repository:

@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Category;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
@@ -132,7 +134,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $language = $this->getContext()->language;
         $request->getSession()->set('_locale', $language->locale);
-        $request = $this->get('prestashop.adapter.product.filter_categories_request_purifier')->purify($request);
+        $request = $this->get(FilterCategoriesRequestPurifier::class)->purify($request);
 
         /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
@@ -282,7 +284,7 @@ class ProductController extends FrameworkBundleAdminController
 
         /** @var ProductInterfaceProvider $productProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $totalCount = 0;
 
         $this->get('prestashop.service.product')->cleanupOldTempProducts();
@@ -467,7 +469,7 @@ class ProductController extends FrameworkBundleAdminController
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
         $modelMapper = $this->get('prestashop.adapter.admin.model.product');
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
 
         $form = $this->createProductForm($product, $modelMapper);
 
@@ -1267,7 +1269,7 @@ class ProductController extends FrameworkBundleAdminController
         $modelMapper = new AdminModelAdapter(
             $product,
             $this->get('prestashop.adapter.legacy.context'),
-            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get(AdminProductWrapper::class),
             $this->get('prestashop.adapter.tools'),
             $productAdapter,
             $this->get('prestashop.adapter.data_provider.supplier'),

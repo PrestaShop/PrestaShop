@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,7 +46,7 @@ class SupplierController extends FrameworkBundleAdminController
      */
     public function refreshProductSupplierCombinationFormAction($idProduct, $supplierIds)
     {
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $response = new Response();
 
@@ -73,7 +74,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         $modelMapper = new ProductAdminModelAdapter(
             $this->get('prestashop.adapter.legacy.context'),
-            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get(AdminProductWrapper::class),
             $this->get('prestashop.adapter.tools'),
             $this->get('prestashop.adapter.data_provider.product'),
             $this->get('prestashop.adapter.data_provider.supplier'),

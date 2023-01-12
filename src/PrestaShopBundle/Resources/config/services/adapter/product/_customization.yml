@@ -16,14 +16,14 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter
     arguments:
       - '@prestashop.adapter.product.customization.repository.customization_field_repository'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
 
   prestashop.adapter.product.customization.update.product_customization_field_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater
     arguments:
       - '@prestashop.adapter.product.customization.repository.customization_field_repository'
       - '@prestashop.adapter.product.customization.update.customization_field_deleter'
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
 
   prestashop.adapter.product.customization.query_handler.get_product_customization_fields_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandler
@@ -46,7 +46,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandler
     arguments:
       - '@prestashop.adapter.product.customization.update.customization_field_deleter'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.product.customization.update.product_customization_field_updater'
     tags:
       - name: tactician.handler

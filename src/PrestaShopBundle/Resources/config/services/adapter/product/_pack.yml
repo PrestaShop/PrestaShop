@@ -11,7 +11,7 @@ services:
   prestashop.adapter.product.pack.update.product_pack_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.product.pack.repository.product_pack_repository'
 
   prestashop.adapter.product.pack.command_handler.set_pack_products_handler:

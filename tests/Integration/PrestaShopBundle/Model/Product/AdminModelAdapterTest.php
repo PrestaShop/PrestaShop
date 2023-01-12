@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Model\Product;
 
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -178,7 +179,7 @@ class AdminModelAdapterTest extends KernelTestCase
         $this->product = $this->fakeProduct();
         $this->adminModelAdapter = new AdminModelAdapter(
             self::$kernel->getContainer()->get('prestashop.adapter.legacy.context'),
-            self::$kernel->getContainer()->get('prestashop.adapter.admin.wrapper.product'),
+            self::$kernel->getContainer()->get(AdminProductWrapper::class),
             self::$kernel->getContainer()->get('prestashop.adapter.tools'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.product'),
             self::$kernel->getContainer()->get('prestashop.adapter.data_provider.supplier'),
