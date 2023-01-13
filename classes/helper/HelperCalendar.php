@@ -145,8 +145,12 @@ class HelperCalendarCore extends Helper
         return $this->_date_format;
     }
 
-    public function setDateFrom($value = '-31 days')
+    public function setDateFrom($value)
     {
+        if (empty($value)) {
+            $value = '-31 days';
+        }
+
         if (!is_string($value)) {
             throw new PrestaShopException('Date must be a string');
         }
@@ -165,8 +169,12 @@ class HelperCalendarCore extends Helper
         return $this->_date_from;
     }
 
-    public function setDateTo($value = '-31 days')
+    public function setDateTo($value)
     {
+        if (empty($value)) {
+            $value = '-31 days';
+        }
+
         if (!is_string($value)) {
             throw new PrestaShopException('Date must be a string');
         }
