@@ -161,6 +161,26 @@ class ModuleManager implements ModuleManagerInterface
         return $uninstalled;
     }
 
+    public function delete(string $name): bool
+    {
+        if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
+            throw new Exception($this->translator->trans(
+                'You are not allowed to delete the module %module%.',
+                ['%module%' => $name],
+                'Admin.Modules.Notification'
+            ));
+        }
+
+        $module = $this->moduleRepository->getModule($name);
+
+        $path = $this->moduleRepository->getModulePath($name);
+        $this->filesystem->remove($path);
+
+        $this->dispatch(ModuleManagementEvent::DELETE, $module);
+
+        return true;
+    }
+
     public function upgrade(string $name, $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {

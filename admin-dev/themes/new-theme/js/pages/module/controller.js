@@ -904,6 +904,7 @@ class AdminModuleController {
       'bulk-disable-mobile': 'disableMobile',
       'bulk-enable-mobile': 'enableMobile',
       'bulk-reset': 'reset',
+      'bulk-delete': 'delete',
     };
 
     // Note no grid selector used yet since we do not needed it at dev time

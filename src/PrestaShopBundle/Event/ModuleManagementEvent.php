@@ -40,6 +40,7 @@ class ModuleManagementEvent extends Event
     public const DISABLE_MOBILE = 'module.disable.mobile';
     public const UPGRADE = 'module.upgrade';
     public const RESET = 'module.reset';
+    public const DELETE = 'module.delete';
 
     /** @var ModuleInterface */
     private $module;
