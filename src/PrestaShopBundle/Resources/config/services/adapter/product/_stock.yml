@@ -2,28 +2,22 @@ services:
   _defaults:
     public: true
 
-  prestashop.adapter.product.stock.validate.stock_available_validator:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator: ~
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@prestashop.adapter.product.stock.validate.stock_available_validator'
-
-  prestashop.adapter.product.stock.repository.stock_available_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository
-    deprecated: ~
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@prestashop.adapter.product.stock.validate.stock_available_validator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator'
       - '@prestashop.adapter.shop.repository.shop_group_repository'
 
-  prestashop.adapter.product.stock.repository.stock_movement_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
@@ -32,37 +26,30 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
-  prestashop.adapter.product.stock.repository.movement_reason_repository:
-    alias: PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository
-    deprecated: ~
-
-  prestashop.adapter.product.stock.query_handler.get_product_stock_movements_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler
+  PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.product.stock.repository.stock_movement_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements
 
-  prestashop.adapter.product.stock.query_handler.get_combination_stock_movements_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler
+  PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetCombinationStockMovementsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.product.stock.repository.stock_movement_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository'
       - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements
 
-  prestashop.adapter.product.stock.update.product_stock_updater:
-    class: PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater
+  PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
     arguments:
       - '@prestashop.core.stock.stock_manager'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.hook.manager'
       - '@prestashop.adapter.shop.repository.shop_group_repository'
