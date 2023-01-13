@@ -1,5 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
+import OrderStatusData from '@data/faker/orderStatus';
+
 import type {Page} from 'playwright';
 
 /**
@@ -72,7 +74,7 @@ class AddOrderStatus extends BOBasePage {
    * @param orderStatusData {OrderStatusData} Data to set on order status form
    * @return {Promise<string>}
    */
-  async setOrderStatus(page: Page, orderStatusData): Promise<string> {
+  async setOrderStatus(page: Page, orderStatusData: OrderStatusData): Promise<string> {
     await this.setValue(page, this.nameInput, orderStatusData.name);
 
     // Set icon for order status

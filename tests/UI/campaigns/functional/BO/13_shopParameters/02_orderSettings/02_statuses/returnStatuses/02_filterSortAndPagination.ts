@@ -13,8 +13,8 @@ import statusesPage from '@pages/BO/shopParameters/orderSettings/statuses';
 import addOrderReturnStatusPage from '@pages/BO/shopParameters/orderSettings/statuses/returnStatus/add';
 
 // Import data
-import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
-import OrderReturnStatusFaker from '@data/faker/orderReturnStatus';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
+import OrderReturnStatusData from '@data/faker/orderReturnStatus';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -88,7 +88,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_order_return_state',
-            filterValue: ReturnStatuses.packageReceived.id.toString(),
+            filterValue: OrderReturnStatuses.packageReceived.id.toString(),
             idColumn: 1,
           },
       },
@@ -98,7 +98,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
             testIdentifier: 'filterByName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: ReturnStatuses.returnCompleted.name,
+            filterValue: OrderReturnStatuses.returnCompleted.name,
             idColumn: 2,
           },
       },
@@ -219,7 +219,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
 
   creationTests.forEach((test, index) => {
     describe(`Create order return status n°${index + 1} in BO`, async () => {
-      const orderReturnStatusData = new OrderReturnStatusFaker({name: `todelete${index}`});
+      const orderReturnStatusData: OrderReturnStatusData = new OrderReturnStatusData({name: `todelete${index}`});
 
       it('should go to add new order status group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddOrderReturnStatusPage${index}`, baseContext);

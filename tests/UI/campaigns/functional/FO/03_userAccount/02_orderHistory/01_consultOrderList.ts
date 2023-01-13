@@ -16,7 +16,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import foMyAccountPage from '@pages/FO/myAccount';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
@@ -151,7 +151,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
         await expect(result.date).to.equal(today),
         await expect(result.price).to.equal(`€${Products.demo_1.finalPrice}`),
         await expect(result.paymentType).to.equal(PaymentMethods.wirePayment.displayName),
-        await expect(result.status).to.equal(Statuses.awaitingBankWire.status),
+        await expect(result.status).to.equal(OrderStatuses.awaitingBankWire.name),
         await expect(result.invoice).to.equal('-'),
       ]);
     });

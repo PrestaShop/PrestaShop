@@ -11,7 +11,7 @@ import localizationPage from '@pages/BO/international/localization';
 import languagesPage from '@pages/BO/international/languages';
 
 // Import data
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

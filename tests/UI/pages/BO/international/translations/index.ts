@@ -8,13 +8,13 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class Translations extends BOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
-  private readonly validationMessage: string;
+  public readonly validationMessage: string;
 
   private readonly validationResetMessage: string;
 
-  private readonly successAlertMessage: string;
+  public readonly successAlertMessage: string;
 
   private readonly typeOfTranslationSelect: string;
 

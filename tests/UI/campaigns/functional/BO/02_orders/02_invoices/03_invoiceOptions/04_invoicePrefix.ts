@@ -12,8 +12,8 @@ import invoicesPage from '@pages/BO/orders/invoices/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
-import InvoiceOptionsFaker from '@data/faker/invoice';
+import OrderStatuses from '@data/demo/orderStatuses';
+import InvoiceData from '@data/faker/invoice';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,7 +32,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
   let page: Page;
   let fileName: string;
 
-  const invoiceData: InvoiceOptionsFaker = new InvoiceOptionsFaker();
+  const invoiceData: InvoiceData = new InvoiceData();
   const defaultPrefix: string = '#IN';
 
   // before and after functions
@@ -98,11 +98,11 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it(`should check that the invoice file name contain the prefix '${invoiceData.prefix}'`, async function () {

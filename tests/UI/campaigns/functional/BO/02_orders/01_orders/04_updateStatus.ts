@@ -19,7 +19,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -98,11 +98,11 @@ describe('BO - orders : Update order status', async () => {
 
   describe('Change orders status in BO then check it in FO', async () => {
     [
-      {args: {orderStatus: Statuses.canceled}},
-      {args: {orderStatus: Statuses.paymentAccepted}},
-      {args: {orderStatus: Statuses.delivered}},
+      {args: {orderStatus: OrderStatuses.canceled}},
+      {args: {orderStatus: OrderStatuses.paymentAccepted}},
+      {args: {orderStatus: OrderStatuses.delivered}},
     ].forEach((test, index: number) => {
-      describe(`Change orders status to '${test.args.orderStatus.status}' in BO`, async () => {
+      describe(`Change orders status to '${test.args.orderStatus.name}' in BO`, async () => {
         it('should update order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
@@ -114,10 +114,10 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-          await expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.status);
+          await expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.name);
         });
 
-        if (test.args.orderStatus.status === Statuses.paymentAccepted.status) {
+        if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
           it('should download invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
@@ -155,7 +155,7 @@ describe('BO - orders : Update order status', async () => {
           });
         }
 
-        if (test.args.orderStatus.status === Statuses.delivered.status) {
+        if (test.args.orderStatus.name === OrderStatuses.delivered.name) {
           it('should download delivery slip', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
@@ -239,10 +239,10 @@ describe('BO - orders : Update order status', async () => {
           await testContext.addContextItem(this, 'testIdentifier', `checkLastOrderStatus${index}`, baseContext);
 
           const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
-          await expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.status);
+          await expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.name);
         });
 
-        if (test.args.orderStatus.status === Statuses.paymentAccepted.status) {
+        if (test.args.orderStatus.name === OrderStatuses.paymentAccepted.name) {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 

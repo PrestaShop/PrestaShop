@@ -11,7 +11,7 @@ import imageSettingsPage from '@pages/BO/design/imageSettings';
 import addImageTypePage from '@pages/BO/design/imageSettings/add';
 
 // Import data
-import ImageTypeFaker from '@data/faker/imageType';
+import ImageTypeData from '@data/faker/imageType';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +68,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
   describe('Create 15 image types', async () => {
     const creationTests: number[] = new Array(15).fill(0, 0, 15);
     creationTests.forEach((test: number, index: number) => {
-      const createImageTypeData = new ImageTypeFaker({name: `todelete${index}`});
+      const createImageTypeData: ImageTypeData = new ImageTypeData({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddImageTypePage${index}`, baseContext);

@@ -1,6 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Page} from 'playwright';
+import GroupData from '@data/faker/group';
 
 /**
  * Add group page, contains functions that can be used on the page
@@ -83,7 +84,7 @@ class AddGroup extends BOBasePage {
    * @param groupData {GroupData} Data to set on create/edit form
    * @return {Promise<string>}
    */
-  async createEditGroup(page: Page, groupData): Promise<string> {
+  async createEditGroup(page: Page, groupData: GroupData): Promise<string> {
     await this.changeLanguage(page, 1);
     await this.setValue(page, this.nameInput(1), groupData.name);
 
@@ -94,7 +95,7 @@ class AddGroup extends BOBasePage {
 
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, groupData.priceDisplayMethod);
 
-    await this.setChecked(page, this.showPricesToggle(groupData ? 'on' : 'off'));
+    await this.setChecked(page, this.showPricesToggle(groupData.shownPrices ? 'on' : 'off'));
 
     // Save group
     await this.clickAndWaitForNavigation(page, this.saveButton);

@@ -12,7 +12,7 @@ import invoicesPage from '@pages/BO/orders/invoices/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 
 import {use, expect} from 'chai';
 import chaiString from 'chai-string';
@@ -111,11 +111,11 @@ describe('BO - Orders - Invoices : Enable/Disable current year', async () => {
         await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
-      it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+      it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'updateStatusEnabledCurrentYearInTheEnd', baseContext);
 
-        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-        await expect(result).to.equal(Statuses.shipped.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+        await expect(result).to.equal(OrderStatuses.shipped.name);
       });
 
       it('should check that the invoice file name contain current year at the end', async function () {

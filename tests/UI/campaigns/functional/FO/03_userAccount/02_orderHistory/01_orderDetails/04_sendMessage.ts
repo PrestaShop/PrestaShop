@@ -23,7 +23,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
@@ -153,14 +153,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should update order status to '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should update order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+      const textResult = await ordersPage.setOrderStatus(page, 1, OrderStatuses.paymentAccepted);
       await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-      await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
+      await expect(orderStatus, 'Order status was not updated').to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('disconnect from BO', async function () {

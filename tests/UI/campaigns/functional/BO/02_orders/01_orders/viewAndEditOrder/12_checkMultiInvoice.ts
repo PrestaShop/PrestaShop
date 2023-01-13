@@ -18,7 +18,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import type Order from '@data/types/order';
@@ -149,10 +149,10 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // 2 - Create first invoice
   describe('Create the first invoice', async () => {
-    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await orderPageTabListBlock.updateOrderStatus(page, Statuses.paymentAccepted.status);
+      const textResult = await orderPageTabListBlock.updateOrderStatus(page, OrderStatuses.paymentAccepted.name);
       await expect(textResult).to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 

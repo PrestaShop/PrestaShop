@@ -12,7 +12,7 @@ import deliverySlipsPage from '@pages/BO/orders/deliverySlips/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import DeliverySlipOptionsFaker from '@data/faker/deliverySlipOptions';
 
 import {expect} from 'chai';
@@ -73,7 +73,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
     });
   });
 
-  describe(`Update the order status to '${Statuses.shipped.status}' and check the file name`, async () => {
+  describe(`Update the order status to '${OrderStatuses.shipped.name}' and check the file name`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -96,11 +96,11 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it(`should check that the delivery slip file name contain '${deliverySlipData.prefix}'`, async function () {

@@ -12,7 +12,7 @@ import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 import addGroupPage from '@pages/BO/shopParameters/customerSettings/groups/add';
 
 // Import data
-import GroupFaker from '@data/faker/group';
+import GroupData from '@data/faker/group';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,9 +25,9 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
   let page: Page;
   let numberOfGroups: number = 0;
 
-  const groupsToCreate: GroupFaker[] = [
-    new GroupFaker({name: 'todelete1'}),
-    new GroupFaker({name: 'todelete2'}),
+  const groupsToCreate: GroupData[] = [
+    new GroupData({name: 'todelete1'}),
+    new GroupData({name: 'todelete2'}),
   ];
 
   // before and after functions
@@ -76,7 +76,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
   });
 
   describe('Create 2 groups in BO', async () => {
-    groupsToCreate.forEach((groupToCreate, index) => {
+    groupsToCreate.forEach((groupToCreate: GroupData, index: number) => {
       it('should go to add new group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewGroupPage${index + 1}`, baseContext);
 

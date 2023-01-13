@@ -27,8 +27,8 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {ReturnStatuses} from '@data/demo/orderReturnStatuses';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -85,7 +85,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe(`Change the new order status to '${Statuses.shipped.status}'`, async () => {
+  describe(`Change the new order status to '${OrderStatuses.shipped.name}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -129,11 +129,11 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(result).to.equal(Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(result).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
@@ -314,9 +314,9 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   });
 
   [
-    {args: {status: ReturnStatuses.waitingForPackage.name}},
-    {args: {status: ReturnStatuses.packageReceived.name}},
-    {args: {status: ReturnStatuses.returnCompleted.name}},
+    {args: {status: OrderReturnStatuses.waitingForPackage.name}},
+    {args: {status: OrderReturnStatuses.packageReceived.name}},
+    {args: {status: OrderReturnStatuses.returnCompleted.name}},
   ].forEach((test, index: number) => {
     describe(`Update status of merchandise return to '${test.args.status}'`, async () => {
       it('should go to \'Customer Service > Merchandise Returns\' page', async function () {

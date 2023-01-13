@@ -17,7 +17,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import addresses from '@data/demo/address';
 import {Carriers} from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import type Order from '@data/types/order';
@@ -63,7 +63,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       freeShipping: true,
     },
     paymentMethod: PaymentMethods.checkPayment.moduleName,
-    orderStatus: Statuses.paymentAccepted,
+    orderStatus: OrderStatuses.paymentAccepted,
     totalPrice: (Products.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
   };
 
@@ -117,7 +117,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
       const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
-      await expect(orderStatus).to.equal(orderToMake.orderStatus.status);
+      await expect(orderStatus).to.equal(orderToMake.orderStatus.name);
     });
 
     it('should check order total price', async function () {

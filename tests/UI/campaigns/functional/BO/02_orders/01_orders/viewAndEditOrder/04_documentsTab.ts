@@ -17,7 +17,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -317,11 +317,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       await expect(amountValue).to.not.equal('');
     });
 
-    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+    it(`should change the order status to '${OrderStatuses.paymentAccepted.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-      await expect(textResult).to.equal(Statuses.paymentAccepted.status);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.paymentAccepted.name);
+      await expect(textResult).to.equal(OrderStatuses.paymentAccepted.name);
     });
 
     it('should check that the button \'Enter payment\' is not visible', async function () {
@@ -331,11 +331,11 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
       await expect(isVisible).to.be.false;
     });
 
-    it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
+    it(`should change the order status to '${OrderStatuses.shipped.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusShipped', baseContext);
 
-      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-      await expect(textResult).to.equal(Statuses.shipped.status);
+      const textResult = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+      await expect(textResult).to.equal(OrderStatuses.shipped.name);
     });
 
     it('should check that documents number is equal to 2', async function () {

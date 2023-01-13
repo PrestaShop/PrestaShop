@@ -16,7 +16,7 @@ import foHomePage from '@pages/FO/home';
 
 // Import data
 import {Currencies} from '@data/demo/currencies';
-import {Languages} from '@data/demo/languages';
+import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

@@ -17,7 +17,7 @@ import shoppingCartViewPage from '@pages/BO/orders/shoppingCarts/view';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';
@@ -198,7 +198,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
       // Choose payment method
       await addOrderPage.setPaymentMethod(page, PaymentMethods.checkPayment.moduleName);
       // Set order status
-      await addOrderPage.setOrderStatus(page, Statuses.paymentAccepted);
+      await addOrderPage.setOrderStatus(page, OrderStatuses.paymentAccepted);
       // Create the order
       await addOrderPage.clickOnCreateOrderButton(page);
 

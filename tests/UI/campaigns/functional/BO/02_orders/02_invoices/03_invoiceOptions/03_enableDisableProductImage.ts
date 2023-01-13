@@ -22,7 +22,7 @@ import productPage from '@pages/FO/product';
 
 // Importing data
 import {DefaultCustomer} from '@data/demo/customer';
-import {Statuses} from '@data/demo/orderStatuses';
+import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
@@ -208,11 +208,11 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
-        it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
+        it(`should change the order status to '${OrderStatuses.shipped.name}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
-          await expect(result).to.equal(Statuses.shipped.status);
+          const result = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.shipped.name);
+          await expect(result).to.equal(OrderStatuses.shipped.name);
         });
 
         it('should download the invoice', async function () {

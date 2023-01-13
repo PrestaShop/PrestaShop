@@ -11,7 +11,7 @@ import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import groupsPage from '@pages/BO/shopParameters/customerSettings/groups';
 
 // Import data
-import {groupAccess} from '@data/demo/groupAccess';
+import Groups from '@data/demo/groups';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -77,7 +77,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_group',
-            filterValue: groupAccess.visitor.id.toString(),
+            filterValue: Groups.visitor.id.toString(),
           },
       },
       {
@@ -86,7 +86,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'b!name',
-            filterValue: groupAccess.visitor.name,
+            filterValue: Groups.visitor.name,
           },
       },
       {
@@ -95,7 +95,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
             testIdentifier: 'filterDiscount',
             filterType: 'input',
             filterBy: 'reduction',
-            filterValue: groupAccess.visitor.discount.toString(),
+            filterValue: Groups.visitor.discount.toString(),
           },
       },
       {
@@ -113,7 +113,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
             testIdentifier: 'filterShopPrices',
             filterType: 'select',
             filterBy: 'show_prices',
-            filterValue: groupAccess.visitor.showPrices ? '1' : '0',
+            filterValue: Groups.visitor.shownPrices ? '1' : '0',
           },
         expected: 'Yes',
       },
