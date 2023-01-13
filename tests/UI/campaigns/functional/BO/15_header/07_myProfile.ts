@@ -21,7 +21,7 @@ import employeesPage from '@pages/BO/advancedParameters/team/index';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 // Import data
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 
 const baseContext: string = 'functional_BO_header_myProfile';
 
@@ -29,7 +29,7 @@ describe('BO - Header : My profile', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const employeeData = new EmployeeFaker({
+  const employeeData = new EmployeeData({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',

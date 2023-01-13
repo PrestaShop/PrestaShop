@@ -7,7 +7,7 @@ import contactUsPage from '@pages/FO/contactUs';
 import homePage from '@pages/FO/home';
 
 // Import data
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -55,6 +55,6 @@ describe('FO - Contact us : Check mail link on contact us page', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'checkEmailUsLink', baseContext);
 
     const emailUsLinkHref = await contactUsPage.getEmailUsLink(page);
-    await expect(emailUsLinkHref).to.equal(`mailto:${DefaultEmployee.email}`);
+    await expect(emailUsLinkHref).to.equal(`mailto:${Employees.DefaultEmployee.email}`);
   });
 });

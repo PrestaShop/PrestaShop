@@ -1,4 +1,4 @@
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 import {config} from 'dotenv';
 
 config();
@@ -14,10 +14,10 @@ global.URLHasPort = (global.FO.URL).match(/:\d+.+/) !== null;
 
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
-  EMAIL: process.env.LOGIN || DefaultEmployee.email,
-  PASSWD: process.env.PASSWD || DefaultEmployee.password,
-  FIRSTNAME: process.env.FIRSTNAME || DefaultEmployee.firstName,
-  LASTNAME: process.env.LASTNAME || DefaultEmployee.lastName,
+  EMAIL: process.env.LOGIN || Employees.DefaultEmployee.email,
+  PASSWD: process.env.PASSWD || Employees.DefaultEmployee.password,
+  FIRSTNAME: process.env.FIRSTNAME || Employees.DefaultEmployee.firstName,
+  LASTNAME: process.env.LASTNAME || Employees.DefaultEmployee.lastName,
 };
 
 global.INSTALL = {

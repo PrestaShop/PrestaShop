@@ -9,7 +9,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import data
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard/index';
@@ -161,7 +161,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: DefaultEmployee.lastName,
+            filterValue: Employees.DefaultEmployee.lastName,
           },
       },
       {

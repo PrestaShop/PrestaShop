@@ -22,7 +22,7 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 
 // Import data
 import ProductData from '@data/faker/product';
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 import Products from '@data/demo/products';
 
 const baseContext: string = 'productV2_functional_CRUDPackOfProducts';
@@ -327,7 +327,7 @@ describe('BO - Catalog - Products : CRUD pack of products', async () => {
       const result: object = await packTab.getStockMovement(page, 1);
       await Promise.all([
         await expect(result.dateTime).to.contains(todayDate),
-        await expect(result.employee).to.equal(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`),
+        await expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
         await expect(result.quantity).to.equal(editPackData.quantity),
       ]);
     });

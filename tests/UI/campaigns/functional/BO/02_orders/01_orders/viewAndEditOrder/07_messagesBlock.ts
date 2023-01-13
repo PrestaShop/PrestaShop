@@ -22,7 +22,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
@@ -218,7 +218,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       const message = await foOrderHistoryPage.getMessageRow(page);
       await expect(message)
         .to.contain(today)
-        .and.to.contain(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`)
+        .and.to.contain(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`)
         .and.to.contain(textMessage.substring(0, textMessage.indexOf('Me') - 1));
     });
 
