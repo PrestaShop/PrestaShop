@@ -27,7 +27,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@prestashop.core.util.number.number_extractor'
@@ -42,7 +42,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetEditableCombinationsListHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
@@ -53,7 +53,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
     tags:
@@ -67,7 +67,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater:
