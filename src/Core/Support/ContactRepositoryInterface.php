@@ -38,19 +38,5 @@ interface ContactRepositoryInterface
      *
      * @return array
      */
-    public function findAllByLangId(int $langId);
-
-    /**
-     * Return available categories contacts.
-     *
-     * @return array<array<string, string|null>>
-     */
-    public function getCategoriesContacts(): array;
-
-    /**
-     * Return all contacts.
-     *
-     * @return array<array<string, string|null>>
-     */
-    public function getContacts(): array;
+    public function findAllByLangId($langId);
 }

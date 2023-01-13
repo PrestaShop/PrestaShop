@@ -24,43 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Contact\Repository;
 
-namespace PrestaShop\PrestaShop\Adapter\Support;
-
-use CustomerThread;
-use PrestaShop\PrestaShop\Adapter\Entity\Contact;
-use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface as DomainContactRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
-
-/**
- * Class ContactRepository is responsible for retrieving contact data from database.
- *
- * @internal
- */
-class ContactRepository implements ContactRepositoryInterface, DomainContactRepositoryInterface
+interface ContactRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function findAllByLangId($langId)
-    {
-        return Contact::getContacts($langId);
-    }
+    public function getCategoriesContacts(): array;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCategoriesContacts(): array
-    {
-        return Contact::getCategoriesContacts();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContacts(): array
-    {
-        return CustomerThread::getContacts();
-    }
+    public function getContacts(): array;
 }

@@ -102,13 +102,16 @@ services:
   PrestaShop\PrestaShop\Adapter\Kpi\AverageResponseTimeKpi:
     arguments:
       - '@translator'
+      - "@prestashop.adapter.legacy.context"
 
   prestashop.adapter.kpi.messages_per_thread:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\MessagesPerThreadKpi'
     arguments:
       - '@translator'
+      - "@prestashop.adapter.legacy.context"
 
   prestashop.adapter.kpi.pending_discussion_threads:
     class: 'PrestaShop\PrestaShop\Adapter\Kpi\PendingDiscussionThreadsKpi'
     arguments:
       - '@translator'
+      - "@prestashop.adapter.legacy.context"

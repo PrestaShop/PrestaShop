@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use ConfigurationKPI;
 use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,30 +42,34 @@ class PendingDiscussionThreadsKpi implements KpiInterface
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    public function __construct(TranslatorInterface $translator, LegacyContext $context)
     {
         $this->translator = $translator;
+        $this->context = $context;
     }
 
-    public function render()
+    public function render(): string
     {
         /** @var Context $context */
-        $context = Context::getContext();
         $time = time();
 
         $helper = new HelperKpi();
         $helper->id = 'box-pending-messages';
         $helper->icon = 'mail';
         $helper->color = 'color1';
-        $helper->href = $context->link->getAdminLink('AdminCustomerThreads');
+        $helper->href = $this->context->getAdminLink('AdminCustomerThreads');
         $helper->title = $this->translator->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
-        $helper->source = $context->link->getAdminLink(
+        $helper->source = $this->context->getAdminLink(
             'AdminStats',
             true,
-            [],
             [
                 'ajax' => 1,
                 'action' => 'getKpi',

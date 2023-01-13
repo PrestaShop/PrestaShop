@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use ConfigurationKPI;
-use Context;
 use HelperKpi;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,15 +41,19 @@ class AverageResponseTimeKpi implements KpiInterface
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    public function __construct(TranslatorInterface $translator, LegacyContext $context)
     {
         $this->translator = $translator;
+        $this->context = $context;
     }
 
-    public function render()
+    public function render(): string
     {
-        /** @var Context $context */
-        $context = Context::getContext();
         $time = time();
 
         $helper = new HelperKpi();
@@ -61,10 +65,9 @@ class AverageResponseTimeKpi implements KpiInterface
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
-        $helper->source = $context->link->getAdminLink(
+        $helper->source = $this->context->getAdminLink(
             'AdminStats',
                 true,
-                [],
                 [
                     'ajax' => 1,
                     'action' => 'getKpi',
