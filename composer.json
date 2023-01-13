@@ -244,15 +244,6 @@
         ],
         "unit-tests": [
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
-        ],
-        "post-cmd": [
-          "bin/console cache:clear --no-warmup"
-        ],
-        "post-install-cmd": [
-          "@post-cmd"
-        ],
-        "post-update-cmd": [
-          "@post-cmd"
         ]
     },
     "scripts-descriptions": {
