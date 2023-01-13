@@ -2691,18 +2691,16 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_hook Hook ID
      *
-     * @return int position
+     * @return int position or 0 if hook not found
      */
     public function getPosition($id_hook)
     {
-        $result = Db::getInstance()->getRow('
+        return (int) Db::getInstance()->getValue('
             SELECT `position`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
             AND `id_module` = ' . (int) $this->id . '
             AND `id_shop` = ' . (int) Context::getContext()->shop->id);
-
-        return $result['position'];
     }
 
     /**
