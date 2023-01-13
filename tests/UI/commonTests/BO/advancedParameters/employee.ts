@@ -1,33 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import addEmployeePage from '@pages/BO/advancedParameters/team/add';
+import dashboardPage from '@pages/BO/dashboard';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-
-let numberOfEmployees = 0;
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfEmployees: number = 0;
 
 /**
  * Function to create employee
  * @param employeeData {EmployeeData} Data to set in employee form
  * @param baseContext {string} String to identify the test
  */
-function createEmployeeTest(employeeData, baseContext = 'commonTests-createEmployeeTest') {
+function createEmployeeTest(employeeData: object, baseContext: string = 'commonTests-createEmployeeTest'): void {
   describe('PRE-TEST: Create employee', async () => {
     // before and after functions
     before(async function () {
@@ -67,6 +62,7 @@ function createEmployeeTest(employeeData, baseContext = 'commonTests-createEmplo
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
 
       await employeesPage.goToAddNewEmployeePage(page);
+
       const pageTitle = await addEmployeePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
     });
@@ -85,7 +81,7 @@ function createEmployeeTest(employeeData, baseContext = 'commonTests-createEmplo
  * @param employeeData {EmployeeData} Data to set to delete employee
  * @param baseContext {string} String to identify the test
  */
-function deleteEmployeeTest(employeeData, baseContext = 'commonTests-deleteEmployeeTest') {
+function deleteEmployeeTest(employeeData: object, baseContext: string = 'commonTests-deleteEmployeeTest'): void {
   describe('POST-TEST: Delete employee', async () => {
     // before and after functions
     before(async function () {
@@ -139,4 +135,4 @@ function deleteEmployeeTest(employeeData, baseContext = 'commonTests-deleteEmplo
   });
 }
 
-module.exports = {createEmployeeTest, deleteEmployeeTest};
+export {createEmployeeTest, deleteEmployeeTest};
