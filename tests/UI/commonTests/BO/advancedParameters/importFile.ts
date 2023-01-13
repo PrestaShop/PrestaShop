@@ -1,23 +1,19 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const importPage = require('@pages/BO/advancedParameters/import');
+import dashboardPage from '@pages/BO/dashboard';
+import importPage from '@pages/BO/advancedParameters/import';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to import file
@@ -25,7 +21,11 @@ let page;
  * @param entityToImport {string} Value to import
  * @param baseContext {string} String to identify the test
  */
-function importFileTest(fileName, entityToImport, baseContext = 'commonTests-importFileTest') {
+function importFileTest(
+  fileName: string,
+  entityToImport: string,
+  baseContext: string = 'commonTests-importFileTest',
+): void {
   describe(`PRE-TEST: Import file '${fileName}'`, async () => {
     // before and after functions
     before(async function () {
@@ -49,7 +49,6 @@ function importFileTest(fileName, entityToImport, baseContext = 'commonTests-imp
         dashboardPage.advancedParametersLink,
         dashboardPage.importLink,
       );
-
       await importPage.closeSfToolBar(page);
 
       const pageTitle = await importPage.getPageTitle(page);
@@ -99,4 +98,4 @@ function importFileTest(fileName, entityToImport, baseContext = 'commonTests-imp
   });
 }
 
-module.exports = {importFileTest};
+export default importFileTest;
