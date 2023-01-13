@@ -5,8 +5,8 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import foAccountCommon from '@commonTests/FO/account';
-import foOrderCommon from '@commonTests/FO/order';
+import {createAccountTest, createAddressTest} from '@commonTests/FO/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import customersPage = require('@pages/BO/customers');
@@ -71,16 +71,16 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   };
 
   // Pre-Condition: create customer
-  foAccountCommon.createAccountTest(customerData, `${baseContext}_preTest_1`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create first address
-  foAccountCommon.createAddressTest(customerLoginData, firstAddressData, `${baseContext}_preTest_2`);
+  createAddressTest(customerLoginData, firstAddressData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create second address
-  foAccountCommon.createAddressTest(customerLoginData, secondAddressData, `${baseContext}_preTest_3`);
+  createAddressTest(customerLoginData, secondAddressData, `${baseContext}_preTest_3`);
 
   // Pre-condition: Create order
-  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_4`);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_4`);
 
   // before and after functions
   before(async function () {

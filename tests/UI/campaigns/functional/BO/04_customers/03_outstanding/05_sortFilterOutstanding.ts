@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
@@ -96,7 +96,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       createAddressTest(addressData, `${baseContext}_preTest_createAddress_${index}`);
 
       // Pre-condition : Create order from the FO
-      foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_createOrder_${index}`);
+      createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_createOrder_${index}`);
 
       // Pre-Condition : Update order status to payment accepted
       describe('PRE-TEST : Update order status to payment accepted', async () => {

@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 import {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
@@ -67,7 +67,7 @@ describe('FO - Account : Consult return details', async () => {
   };
 
   // Pre-condition: Create order
-  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable merchandise returns
   enableMerchandiseReturns(`${baseContext}_preTest_2`);

@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 // Import BO pages
@@ -62,7 +62,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
   const messageToSendData = {product: '', message: 'Test customer message'};
 
   // Pre-condition - Create order by default customer
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {

@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import foAccountCommon from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
 import homePage from '@pages/FO/home';
@@ -59,7 +59,7 @@ describe('FO - Account : View vouchers', async () => {
   });
 
   // Pre-condition: Create new account on FO
-  foAccountCommon.createAccountTest(customerData, `${baseContext}_preTest_1`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create 2 cart rules for the created customer
   [firstCartRule, secondCartRule].forEach((cartRule, index) => {

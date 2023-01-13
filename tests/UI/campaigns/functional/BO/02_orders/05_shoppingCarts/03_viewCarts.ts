@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import foShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/shoppingCart';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -66,7 +66,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   // Pre-condition: Create address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
   // Pre-condition: Create a non-ordered shopping cart being connected in the FO
-  foShoppingCart.createShoppingCart(orderData, `${baseContext}_preTest_3`);
+  createShoppingCart(orderData, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {

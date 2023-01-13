@@ -10,7 +10,7 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -142,7 +142,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   };
 
   // Pre-condition - Create first order from FO
-  foOrderCommon.createOrderByCustomerTest(firstOrderByCustomer, `${baseContext}_preTest_1`);
+  createOrderByCustomerTest(firstOrderByCustomer, `${baseContext}_preTest_1`);
 
   // Pre-condition - Enable Ecotax
   enableEcoTaxTest(`${baseContext}_preTest_2`);

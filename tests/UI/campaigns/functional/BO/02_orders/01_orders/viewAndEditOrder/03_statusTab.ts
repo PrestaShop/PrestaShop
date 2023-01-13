@@ -9,7 +9,7 @@ import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advanced
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/createDeleteEmployee';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -96,10 +96,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   createEmployeeTest(createEmployeeData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create order by guest
-  foOrderCommon.createOrderByGuestTest(orderByGuestData, `${baseContext}_preTest_3`);
+  createOrderByGuestTest(orderByGuestData, `${baseContext}_preTest_3`);
 
   // Pre-condition: Create order by default customer
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_4`);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_4`);
 
   // before and after functions
   before(async function () {

@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {bulkDeleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -119,7 +119,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   };
 
   // Pre-condition - Create order by default customer
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
