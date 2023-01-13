@@ -53,6 +53,8 @@ interface ModuleManagerInterface
 
     public function reset(string $name, bool $keepData = false): bool;
 
+    public function delete(string $name): bool;
+
     public function postInstall(string $name): bool;
 
     public function isInstalled(string $name): bool;
