@@ -216,6 +216,7 @@ class CombinationItemType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'combination-row-actions',
                 ],
+                'block_prefix' => '_combination_row_actions',
             ])
         ;
     }

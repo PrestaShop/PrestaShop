@@ -57,6 +57,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ButtonCollectionType extends AbstractType
 {
+    private const DEFAULT_MAX_INLINE_BUTTONS = 1;
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['buttons'] as $buttonOptions) {
@@ -75,6 +76,7 @@ class ButtonCollectionType extends AbstractType
         }
         $view->vars['button_groups'] = $buttonGroups;
         $view->vars['justify_content'] = $options['justify_content'];
+        $view->vars['max_inline_buttons'] = $options['max_inline_buttons'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -84,6 +86,7 @@ class ButtonCollectionType extends AbstractType
                 'label' => false,
                 'buttons' => [],
                 'justify_content' => 'space-between',
+                'max_inline_buttons' => self::DEFAULT_MAX_INLINE_BUTTONS,
             ])
             ->setAllowedTypes('buttons', 'array')
             ->setNormalizer('buttons', function (Options $options, $buttons) {
