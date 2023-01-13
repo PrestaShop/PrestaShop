@@ -103,3 +103,10 @@ admin_customer_threads_contact_options_update:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::contactOptionsUpdate
     _legacy_controller: AdminCustomerThreads
     #  _legacy_link: AdminCustomerThreads
+
+admin_customer_threads_settings_update:
+  path: /settings
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::processAction
+    _legacy_controller: AdminCustomerThreads

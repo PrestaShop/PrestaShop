@@ -32,14 +32,24 @@ use ConfigurationKPI;
 use Context;
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PendingDiscussionThreadsKpi implements KpiInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function render()
     {
         /** @var Context $context */
         $context = Context::getContext();
-        $translator = $context->getTranslator();
         $time = time();
 
         $helper = new HelperKpi();
@@ -47,11 +57,20 @@ class PendingDiscussionThreadsKpi implements KpiInterface
         $helper->icon = 'mail';
         $helper->color = 'color1';
         $helper->href = $context->link->getAdminLink('AdminCustomerThreads');
-        $helper->title = $translator->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
+        $helper->title = $this->translator->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
-        $helper->source = $context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=pending_messages';
+        $helper->source = $context->link->getAdminLink(
+            'AdminStats',
+            true,
+            [],
+            [
+                'ajax' => 1,
+                'action' => 'getKpi',
+                'kpi' => 'pending_messages',
+            ]
+        );
         $helper->refresh = (bool) (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time);
 
         return $helper->generate();

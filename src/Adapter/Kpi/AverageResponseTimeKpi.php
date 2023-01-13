@@ -32,26 +32,45 @@ use ConfigurationKPI;
 use Context;
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AverageResponseTimeKpi implements KpiInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function render()
     {
         /** @var Context $context */
         $context = Context::getContext();
-        $translator = $context->getTranslator();
         $time = time();
 
         $helper = new HelperKpi();
         $helper->id = 'box-age';
         $helper->icon = 'watch';
         $helper->color = 'color2';
-        $helper->title = $translator->trans('Average Response Time', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
+        $helper->title = $this->translator->trans('Average Response Time', [], 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
-        $helper->source = $context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+        $helper->source = $context->link->getAdminLink(
+            'AdminStats',
+                true,
+                [],
+                [
+                    'ajax' => 1,
+                    'action' => 'getKpi',
+                    'kpi' => 'avg_msg_response_time',
+                ]
+            );
         $helper->refresh = (bool) (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time);
 
         return $helper->generate();

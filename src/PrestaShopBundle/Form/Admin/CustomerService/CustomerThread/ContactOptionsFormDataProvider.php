@@ -26,26 +26,40 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+namespace PrestaShopBundle\Form\Admin\CustomerService\CustomerThread;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand;
+use PrestaShop\PrestaShop\Adapter\Configuration\ContactOptionsConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class UpdateContactOptionsHandler implements UpdateContactOptionsInterface
+/**
+ * This class is responsible of managing the data manipulated using forms
+ * in "Customer service > Customer service" page, "Contact options" form.
+ */
+class ContactOptionsFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var ContactOptionsConfiguration
      */
-    private $configuration;
+    private $contactOptionsConfiguration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ContactOptionsConfiguration $contactOptionsConfiguration)
     {
-        $this->configuration = $configuration;
+        $this->contactOptionsConfiguration = $contactOptionsConfiguration;
     }
 
-    public function handle(UpdateContactOptionsCommand $command): void
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
     {
-        $this->configuration->set('PS_CUSTOMER_SERVICE_FILE_UPLOAD', $command->getAllowFileUploading());
-        $this->configuration->set('PS_CUSTOMER_SERVICE_SIGNATURE', $command->getDefaultMessage());
+        return $this->contactOptionsConfiguration->getConfiguration();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->contactOptionsConfiguration->updateConfiguration($data);
     }
 }

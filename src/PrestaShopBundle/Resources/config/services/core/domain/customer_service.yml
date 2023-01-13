@@ -4,16 +4,14 @@ services:
 
   prestashop.core.domain.customer_service.command_handler.delete_customer_thread_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\DeleteCustomerThreadHandler'
-    arguments:
-      - '@prestashop.core.domain.customer_service.repository.customer_thread_repository'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand
 
   prestashop.core.domain.customer_service.command_handler.bulk_delete_customer_thread_handler:
     class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\BulkDeleteCustomerThreadHandler'
-    arguments:
-      - '@prestashop.core.domain.customer_service.repository.customer_thread_repository'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\BulkDeleteCustomerThreadCommand
@@ -72,8 +70,7 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand
 
-  prestashop.core.domain.customer_service.repository.customer_thread_repository:
-    class: 'PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository'
+  PrestaShop\PrestaShop\Core\Domain\CustomerService\Repository\CustomerThreadRepository:
 
   PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler\GetCustomerServicesSummaryHandlerInterface:
 
@@ -82,10 +79,3 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary
-
-  PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler\UpdateContactOptionsHandler:
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand

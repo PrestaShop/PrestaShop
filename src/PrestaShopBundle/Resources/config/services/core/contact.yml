@@ -1,5 +1,5 @@
 services:
   _defaults:
-    public: true
+    public: false
 
   PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface: '@PrestaShop\PrestaShop\Adapter\Support\ContactRepository'

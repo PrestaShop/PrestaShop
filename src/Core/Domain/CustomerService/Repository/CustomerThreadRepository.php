@@ -61,4 +61,9 @@ class CustomerThreadRepository extends AbstractObjectModelRepository
     {
         $this->deleteObjectModel($this->get($customerThreadId), CannotDeleteCustomerThreadException::class);
     }
+
+    public function getTotalCustomerThreads($where = null): int
+    {
+        return CustomerThread::getTotalCustomerThreads($where);
+    }
 }

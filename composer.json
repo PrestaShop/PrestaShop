@@ -164,7 +164,8 @@
             "ergebnis/composer-normalize": true,
             "phpstan/extension-installer": true,
             "phpunit/phpunit": true,
-            "symfony/phpunit-bridge": true
+            "symfony/phpunit-bridge": true,
+            "phpstan/extension-installer": true
         },
         "platform": {
             "php": "7.2.5"

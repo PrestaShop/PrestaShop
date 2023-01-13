@@ -118,6 +118,10 @@ services:
       - '@translator'
       - '@prestashop.adapter.validate'
 
+  PrestaShop\PrestaShop\Adapter\Configuration\ContactOptionsConfiguration:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
   prestashop.adapter.order.delivery.slip.options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
     arguments:

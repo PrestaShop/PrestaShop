@@ -26,11 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository;
 
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand;
+use CustomerMessage;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-interface UpdateContactOptionsInterface
+class CustomerMessageRepository extends AbstractObjectModelRepository
 {
-    public function handle(UpdateContactOptionsCommand $command): void;
+    public function getTotalCustomerMessages($where = null): int
+    {
+        return CustomerMessage::getTotalCustomerMessages($where);
+    }
 }

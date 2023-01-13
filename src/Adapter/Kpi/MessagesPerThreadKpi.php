@@ -32,26 +32,45 @@ use ConfigurationKPI;
 use Context;
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MessagesPerThreadKpi implements KpiInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function render()
     {
         /** @var Context $context */
         $context = Context::getContext();
-        $translator = $context->getTranslator();
         $time = time();
 
         $helper = new HelperKpi();
         $helper->id = 'box-messages-per-thread';
         $helper->icon = 'message';
         $helper->color = 'color3';
-        $helper->title = $translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
-        $helper->subtitle = $translator->trans('30 days', [], 'Admin.Global');
+        $helper->title = $this->translator->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
-        $helper->source = $context->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=messages_per_thread';
+        $helper->source = $context->link->getAdminLink(
+            'AdminStats',
+                true,
+                [],
+                [
+                    'ajax' => 1,
+                    'action' => 'getKpi',
+                    'kpi' => 'messages_per_thread',
+                ]
+            );
         $helper->refresh = (bool) (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time);
 
         return $helper->generate();

@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Repository\CustomerMessageRepository:
+
