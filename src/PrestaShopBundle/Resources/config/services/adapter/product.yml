@@ -252,7 +252,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
-      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository:
     arguments:
@@ -266,11 +266,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.product.pack.update.product_pack_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
       - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
       - '@prestashop.adapter.product.stock.update.product_stock_updater'
-      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DeleteProductHandler:
     arguments:
