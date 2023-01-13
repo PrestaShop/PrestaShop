@@ -1,29 +1,25 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const featureFlagPage = require('@pages/BO/advancedParameters/featureFlag');
+import featureFlagPage from '@pages/BO/advancedParameters/featureFlag';
+import dashboardPage from '@pages/BO/dashboard';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to enable new product page
  * @param baseContext {string} String to identify the test
  */
-function enableNewProductPageTest(baseContext = 'commonTests-enableNewProductPage') {
+function enableNewProductPageTest(baseContext: string = 'commonTests-enableNewProductPage'): void {
   describe('PRE-TEST: Enable "New product page - Single store"', async () => {
     // before and after functions
     before(async function () {
@@ -47,7 +43,6 @@ function enableNewProductPageTest(baseContext = 'commonTests-enableNewProductPag
         dashboardPage.advancedParametersLink,
         dashboardPage.featureFlagLink,
       );
-
       await featureFlagPage.closeSfToolBar(page);
 
       const pageTitle = await featureFlagPage.getPageTitle(page);
@@ -67,7 +62,7 @@ function enableNewProductPageTest(baseContext = 'commonTests-enableNewProductPag
  * Function to disable new product page
  * @param baseContext {string} String to identify the test
  */
-function disableNewProductPageTest(baseContext = 'commonTests-disableNewProductPage') {
+function disableNewProductPageTest(baseContext: string = 'commonTests-disableNewProductPage'): void {
   describe('POST-TEST: Disable "New product page - Single store"', async () => {
     // before and after functions
     before(async function () {
@@ -91,7 +86,6 @@ function disableNewProductPageTest(baseContext = 'commonTests-disableNewProductP
         dashboardPage.advancedParametersLink,
         dashboardPage.featureFlagLink,
       );
-
       await featureFlagPage.closeSfToolBar(page);
 
       const pageTitle = await featureFlagPage.getPageTitle(page);
@@ -107,4 +101,4 @@ function disableNewProductPageTest(baseContext = 'commonTests-disableNewProductP
   });
 }
 
-module.exports = {enableNewProductPageTest, disableNewProductPageTest};
+export {enableNewProductPageTest, disableNewProductPageTest};
