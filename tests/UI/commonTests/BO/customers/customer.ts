@@ -1,32 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
+import customersPage from '@pages/BO/customers';
+import addCustomerPage from '@pages/BO/customers/add';
+import dashboardPage from '@pages/BO/dashboard';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfCustomers;
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfCustomers: number;
 
 /**
  * Function to create customer
  * @param customerData {CustomerData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createCustomerTest(customerData, baseContext = 'commonTests-createCustomerTest') {
+function createCustomerTest(customerData: object, baseContext: string = 'commonTests-createCustomerTest'): void {
   describe('PRE-TEST: Create customer', async () => {
     // before and after functions
     before(async function () {
@@ -75,7 +71,7 @@ function createCustomerTest(customerData, baseContext = 'commonTests-createCusto
  * @param customerData {CustomerData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createCustomerB2BTest(customerData, baseContext = 'commonTests-createCustomerB2BTest') {
+function createCustomerB2BTest(customerData: object, baseContext: string = 'commonTests-createCustomerB2BTest'): void {
   describe('PRE-TEST: Create B2B customer', async () => {
     // before and after functions
     before(async function () {
@@ -124,7 +120,7 @@ function createCustomerB2BTest(customerData, baseContext = 'commonTests-createCu
  * @param customerData {CustomerData} Data to set to delete customer
  * @param baseContext {string} String to identify the test
  */
-function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCustomerTest') {
+function deleteCustomerTest(customerData: object, baseContext: string = 'commonTests-deleteCustomerTest'): void {
   describe('POST-TEST: Delete customer', async () => {
     // before and after functions
     before(async function () {
@@ -189,7 +185,11 @@ function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCusto
  * @param value {string} Value to set in filter input to delete
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteCustomersTest(filterBy, value, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
+function bulkDeleteCustomersTest(
+  filterBy: string,
+  value: string,
+  baseContext: string = 'commonTests-deleteCustomersByBulkActionsTest',
+): void {
   describe('POST-TEST: Delete customers by bulk actions', async () => {
     // before and after functions
     before(async function () {
@@ -248,7 +248,7 @@ function bulkDeleteCustomersTest(filterBy, value, baseContext = 'commonTests-del
   });
 }
 
-module.exports = {
+export {
   deleteCustomerTest,
   createCustomerTest,
   createCustomerB2BTest,

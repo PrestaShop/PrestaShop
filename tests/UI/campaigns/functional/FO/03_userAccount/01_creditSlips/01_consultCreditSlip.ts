@@ -6,7 +6,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
-import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
