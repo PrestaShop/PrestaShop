@@ -1,29 +1,25 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const performancePage = require('@pages/BO/advancedParameters/performance');
+import dashboardPage from '@pages/BO/dashboard';
+import performancePage from '@pages/BO/advancedParameters/performance';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to clear cache
  * @param baseContext {string} String to identify the test
  */
-function deleteCacheTest(baseContext = 'commonTests-deleteCache') {
+function deleteCacheTest(baseContext: string = 'commonTests-deleteCache'): void {
   describe('PRE-TEST: Delete cache', async () => {
     // before and after functions
     before(async function () {
@@ -47,7 +43,6 @@ function deleteCacheTest(baseContext = 'commonTests-deleteCache') {
         dashboardPage.advancedParametersLink,
         dashboardPage.performanceLink,
       );
-
       await performancePage.closeSfToolBar(page);
 
       const pageTitle = await performancePage.getPageTitle(page);
@@ -63,4 +58,4 @@ function deleteCacheTest(baseContext = 'commonTests-deleteCache') {
   });
 }
 
-module.exports = {deleteCacheTest};
+export default deleteCacheTest;
