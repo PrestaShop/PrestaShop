@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard/index';
 import pagesPage from '@pages/BO/design/pages/index';
 
 // Import data
-import {Pages} from '@data/demo/CMSpage';
+import CMSPages from '@data/demo/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -72,7 +72,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterById',
             filterType: 'input',
             filterBy: 'id_cms',
-            filterValue: Pages.delivery.id.toString(),
+            filterValue: CMSPages.delivery.id.toString(),
           },
       },
       {
@@ -81,7 +81,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByLink',
             filterType: 'input',
             filterBy: 'link_rewrite',
-            filterValue: Pages.aboutUs.url,
+            filterValue: CMSPages.aboutUs.url,
           },
       },
       {
@@ -90,7 +90,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByMetaTitle',
             filterType: 'input',
             filterBy: 'meta_title',
-            filterValue: Pages.termsAndCondition.title,
+            filterValue: CMSPages.termsAndCondition.title,
           },
       },
       {
@@ -99,7 +99,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByPosition',
             filterType: 'input',
             filterBy: 'position',
-            filterValue: Pages.securePayment.position.toString(),
+            filterValue: CMSPages.securePayment.position.toString(),
           },
       },
       {
@@ -108,7 +108,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
             testIdentifier: 'filterByActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Pages.securePayment.displayed ? '1' : '0',
+            filterValue: CMSPages.securePayment.displayed ? '1' : '0',
           },
       },
     ];
@@ -158,7 +158,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
         pagesTableName,
         'input',
         'meta_title',
-        Pages.termsAndCondition.title,
+        CMSPages.termsAndCondition.title,
       );
 
       const numberOfPagesAfterFilter = await pagesPage.getNumberOfElementInGrid(page, pagesTableName);
@@ -170,7 +170,7 @@ describe('BO - Design - Pages : Filter and quick edit pages table', async () => 
       }
 
       const textColumn = await pagesPage.getTextColumnFromTableCmsPage(page, 1, 'meta_title');
-      await expect(textColumn).to.contains(Pages.termsAndCondition.title);
+      await expect(textColumn).to.contains(CMSPages.termsAndCondition.title);
     });
 
     [
