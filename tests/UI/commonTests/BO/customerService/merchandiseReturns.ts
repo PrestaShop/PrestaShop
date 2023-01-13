@@ -1,29 +1,25 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const merchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
+import dashboardPage from '@pages/BO/dashboard';
+import merchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to enable merchandise returns
  * @param baseContext {string} String to identify the test
  */
-function enableMerchandiseReturns(baseContext = 'commonTests-enableMerchandiseReturnsTest') {
+function enableMerchandiseReturns(baseContext: string = 'commonTests-enableMerchandiseReturnsTest'): void {
   describe('PRE-TEST: Enable merchandise returns', async () => {
     // before and after functions
     before(async function () {
@@ -67,7 +63,7 @@ function enableMerchandiseReturns(baseContext = 'commonTests-enableMerchandiseRe
  * Function to disable merchandise returns
  * @param baseContext {string} String to identify the test
  */
-function disableMerchandiseReturns(baseContext = 'commonTests-disableMerchandiseReturnsTest') {
+function disableMerchandiseReturns(baseContext: string = 'commonTests-disableMerchandiseReturnsTest'): void {
   describe('POST-TEST: Disable merchandise returns', async () => {
     // before and after functions
     before(async function () {
@@ -105,4 +101,4 @@ function disableMerchandiseReturns(baseContext = 'commonTests-disableMerchandise
   });
 }
 
-module.exports = {enableMerchandiseReturns, disableMerchandiseReturns};
+export {enableMerchandiseReturns, disableMerchandiseReturns};

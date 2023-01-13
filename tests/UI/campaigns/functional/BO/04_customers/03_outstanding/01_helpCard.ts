@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {disableB2BTest,enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
+import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';

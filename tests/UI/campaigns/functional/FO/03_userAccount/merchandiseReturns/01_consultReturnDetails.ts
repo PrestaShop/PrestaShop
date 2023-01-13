@@ -3,12 +3,9 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
+import {enableMerchandiseReturns, disableMerchandiseReturns} from '@commonTests/BO/customerService/merchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
-import {
-  enableMerchandiseReturns,
-  disableMerchandiseReturns,
-} from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 
 // Import pages
 // Import BO pages

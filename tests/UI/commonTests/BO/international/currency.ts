@@ -22,7 +22,7 @@ let page: Page;
  * @param currencyData {CurrencyData} Data to set to create currency
  * @param baseContext {string} String to identify the test
  */
-function createCurrencyTest(currencyData, baseContext: string = 'commonTests-createCurrencyTest'): void {
+function createCurrencyTest(currencyData: object, baseContext: string = 'commonTests-createCurrencyTest'): void {
   describe('PRE-TEST: Create currency', async () => {
     // before and after functions
     before(async function () {
@@ -84,7 +84,7 @@ function createCurrencyTest(currencyData, baseContext: string = 'commonTests-cre
  * @param currencyData {CurrencyData} Data to set to delete currency
  * @param baseContext {string} String to identify the test
  */
-function deleteCurrencyTest(currencyData, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
+function deleteCurrencyTest(currencyData: object, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
   describe('POST-TEST: Delete currency', async () => {
     // before and after functions
     before(async function () {
