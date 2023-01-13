@@ -1,12 +1,13 @@
 // Import data
-import {countries} from '@data/demo/countries';
+import Countries from '@data/demo/countries';
 import tax from '@data/demo/tax';
+import type CountryData from '@data/faker/country';
 import TaxRuleBehaviour from '@data/demo/taxRuleBehaviour';
 import TaxRuleCreator from '@data/types/taxRule';
 
 import {faker} from '@faker-js/faker';
 
-const countriesNames: string[] = Object.values(countries).map((country) => country.name);
+const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
 /**
  * Create new tax rule to use on tax rule form on BO

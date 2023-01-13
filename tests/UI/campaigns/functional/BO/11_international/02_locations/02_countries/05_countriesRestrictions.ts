@@ -18,7 +18,7 @@ import addressesPage from '@pages/FO/myAccount/addresses';
 import newAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-import {countries} from '@data/demo/countries';
+import Countries from '@data/demo/countries';
 import {DefaultCustomer} from '@data/demo/customer';
 
 import {expect} from 'chai';
@@ -83,19 +83,19 @@ describe('BO - International - Countries : Restrict country selections in front 
     await expect(numberOfCountries).to.be.above(0);
   });
 
-  it(`should search for the country '${countries.afghanistan.name}'`, async function () {
+  it(`should search for the country '${Countries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToEnable', baseContext);
 
-    await countriesPage.filterTable(page, 'input', 'b!name', countries.afghanistan.name);
+    await countriesPage.filterTable(page, 'input', 'b!name', Countries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
     await expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.afghanistan.name);
-    await expect(textColumn).to.equal(countries.afghanistan.name);
+    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    await expect(textColumn).to.equal(Countries.afghanistan.name);
   });
 
-  it(`should enable the country '${countries.afghanistan.name}'`, async function () {
+  it(`should enable the country '${Countries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enableCountry', baseContext);
 
     await countriesPage.setCountryStatus(page, 1, true);
@@ -152,12 +152,12 @@ describe('BO - International - Countries : Restrict country selections in front 
       await expect(pageTitle, 'Fail to open addresses page').to.contains(addressesPage.pageTitle);
     });
 
-    it(`should check if the country '${countries.afghanistan.name}' exist`, async function () {
+    it(`should check if the country '${Countries.afghanistan.name}' exist`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `checkIsNewCountryExist${index}`, baseContext);
 
       await addressesPage.openNewAddressForm(page);
 
-      const countryExist = await newAddressesPage.countryExist(page, countries.afghanistan.name);
+      const countryExist = await newAddressesPage.countryExist(page, Countries.afghanistan.name);
       await expect(countryExist).to.equal(status.args.isCountryVisible);
     });
 
@@ -180,16 +180,16 @@ describe('BO - International - Countries : Restrict country selections in front 
     });
   });
 
-  it(`should search for the country '${countries.afghanistan.name}'`, async function () {
+  it(`should search for the country '${Countries.afghanistan.name}'`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByNameToDisable', baseContext);
 
-    await countriesPage.filterTable(page, 'input', 'b!name', countries.afghanistan.name);
+    await countriesPage.filterTable(page, 'input', 'b!name', Countries.afghanistan.name);
 
     const numberOfCountriesAfterFilter = await countriesPage.getNumberOfElementInGrid(page);
     await expect(numberOfCountriesAfterFilter).to.be.equal(1);
 
-    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name', countries.afghanistan.name);
-    await expect(textColumn).to.equal(countries.afghanistan.name);
+    const textColumn = await countriesPage.getTextColumnFromTable(page, 1, 'b!name');
+    await expect(textColumn).to.equal(Countries.afghanistan.name);
   });
 
   it('should disable the country', async function () {

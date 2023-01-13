@@ -44,7 +44,7 @@ class AddCountry extends BOBasePage {
   async createEditCountry(page, countryData) {
     await this.setValue(page, this.nameInput, countryData.name);
     await this.setValue(page, this.isoCodeInput, countryData.isoCode);
-    await this.setValue(page, this.callPrefixInput, countryData.callPrefix);
+    await this.setValue(page, this.callPrefixInput, countryData.callPrefix.toString());
     await this.selectByVisibleText(page, this.defaultCurrencySelect, countryData.currency);
     await this.selectByVisibleText(page, this.zoneSelect, countryData.zone);
     await this.setChecked(page, this.needZipCodeLabel(countryData.needZipCode ? 'on' : 'off'));
