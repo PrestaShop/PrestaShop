@@ -1,32 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const localizationPage = require('@pages/BO/international/localization');
-const currenciesPage = require('@pages/BO/international/currencies');
-const addCurrencyPage = require('@pages/BO/international/currencies/add');
+import dashboardPage from '@pages/BO/dashboard';
+import currenciesPage from '@pages/BO/international/currencies';
+import addCurrencyPage from '@pages/BO/international/currencies/add';
+import localizationPage from '@pages/BO/international/localization';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to create currency
  * @param currencyData {CurrencyData} Data to set to create currency
  * @param baseContext {string} String to identify the test
  */
-function createCurrencyTest(currencyData, baseContext = 'commonTests-createCurrencyTest') {
+function createCurrencyTest(currencyData, baseContext: string = 'commonTests-createCurrencyTest'): void {
   describe('PRE-TEST: Create currency', async () => {
     // before and after functions
     before(async function () {
@@ -88,7 +84,7 @@ function createCurrencyTest(currencyData, baseContext = 'commonTests-createCurre
  * @param currencyData {CurrencyData} Data to set to delete currency
  * @param baseContext {string} String to identify the test
  */
-function deleteCurrencyTest(currencyData, baseContext = 'commonTests-deleteCurrencyTest') {
+function deleteCurrencyTest(currencyData, baseContext: string = 'commonTests-deleteCurrencyTest'): void {
   describe('POST-TEST: Delete currency', async () => {
     // before and after functions
     before(async function () {
@@ -147,4 +143,4 @@ function deleteCurrencyTest(currencyData, baseContext = 'commonTests-deleteCurre
   });
 }
 
-module.exports = {createCurrencyTest, deleteCurrencyTest};
+export {createCurrencyTest, deleteCurrencyTest};
