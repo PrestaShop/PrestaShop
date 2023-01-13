@@ -121,7 +121,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@prestashop.adapter.category.repository.category_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@prestashop.adapter.attachment.attachment_repository'
       - '@prestashop.adapter.tax.tax_computer'
@@ -268,7 +268,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter'
-      - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
 
