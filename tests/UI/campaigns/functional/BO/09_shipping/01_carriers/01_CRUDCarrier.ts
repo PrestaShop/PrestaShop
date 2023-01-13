@@ -20,7 +20,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import CarrierFaker from '@data/faker/carrier';
+import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,8 +40,8 @@ describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   let numberOfCarriers: number = 0;
   let carrierID: string = '0';
 
-  const createCarrierData: CarrierFaker = new CarrierFaker({freeShipping: false, zoneID: 4, allZones: false});
-  const editCarrierData: CarrierFaker = new CarrierFaker({
+  const createCarrierData: CarrierData = new CarrierData({freeShipping: false, zoneID: 4, allZones: false});
+  const editCarrierData: CarrierData = new CarrierData({
     freeShipping: false,
     rangeSup: 50,
     allZones: true,

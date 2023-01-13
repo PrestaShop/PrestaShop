@@ -16,7 +16,7 @@ import orderPageMessagesBlock from '@pages/BO/orders/view/messagesBlock';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
+import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';

@@ -12,7 +12,7 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
 // Import data
-import CarrierFaker from '@data/faker/carrier';
+import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -69,7 +69,7 @@ describe('BO - Shipping - Carriers : Quick edit and bulk actions carriers', asyn
     creationTests.forEach((test, index) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const carrierData: CarrierFaker = new CarrierFaker({name: `todelete${index}`});
+      const carrierData: CarrierData = new CarrierData({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);
