@@ -271,11 +271,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_MODULE) && !isset($GLOBALS[$name_var])) {
             $GLOBALS[$name_var] = [];
         } elseif (isset($_MODULE)) {
-            if (is_array($GLOBALS[$name_var]) && is_array($_MODULE)) {
-                $GLOBALS[$name_var] = array_merge($GLOBALS[$name_var], $_MODULE);
-            } else {
-                $GLOBALS[$name_var] = $_MODULE;
-            }
+            $GLOBALS[$name_var] = $_MODULE;
         }
     }
 
