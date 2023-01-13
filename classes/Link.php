@@ -1597,7 +1597,7 @@ class LinkCore
      * @param Shop $shop
      * @param int|null $idShop
      *
-     * @return array
+     * @return array<string>
      */
     private function getShopDomainActive(Shop $shop, ?int $idShop): array
     {
