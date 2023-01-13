@@ -99,5 +99,5 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
-      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
