@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {importFileTest} from '@commonTests/BO/advancedParameters/importFile';
-import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/monitoring';
+import bulkDeleteProductsTest from '@commonTests/BO/catalog/monitoring';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
