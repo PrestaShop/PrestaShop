@@ -20,7 +20,7 @@ import foNewAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import CountryFaker from '@data/faker/country';
+import CountryData from '@data/faker/country';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,18 +37,18 @@ describe('BO - International - Countries : CRUD country', async () => {
   let page: Page;
   let numberOfCountries: number = 0;
 
-  const createCountryData: CountryFaker = new CountryFaker({
+  const createCountryData: CountryData = new CountryData({
     name: 'countryTest',
     isoCode: 'CT',
-    callPrefix: '216',
+    callPrefix: 216,
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const editCountryData:CountryFaker = new CountryFaker({
+  const editCountryData:CountryData = new CountryData({
     name: 'countryTestEdit',
     isoCode: 'CT',
-    callPrefix: '333',
+    callPrefix: 333,
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: false,

@@ -1,7 +1,8 @@
-const {faker} = require('@faker-js/faker');
-const {countries} = require('@data/demo/countries');
+import Countries from '@data/demo/countries';
 
-const countriesNames = Object.values(countries).map((country) => country.name);
+const {faker} = require('@faker-js/faker');
+
+const countriesNames = Object.values(Countries).map((country) => country.name);
 
 /**
  * Create new brand address to use in brand address form on BO

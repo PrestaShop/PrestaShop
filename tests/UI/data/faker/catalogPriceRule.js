@@ -1,10 +1,9 @@
+import Countries from '@data/demo/countries';
 import Groups from '@data/demo/groups';
 
 const {faker} = require('@faker-js/faker');
 
-const {countries} = require('@data/demo/countries');
-
-const countriesNames = Object.values(countries).map((country) => country.name);
+const countriesNames = Object.values(Countries).map((country) => country.name);
 const groupAccessNames = Object.values(Groups).map((group) => group.name);
 
 const currencies = ['All currencies', 'Euro'];

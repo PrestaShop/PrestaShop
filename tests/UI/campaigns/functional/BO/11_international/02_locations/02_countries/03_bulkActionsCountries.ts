@@ -12,7 +12,7 @@ import countriesPage from '@pages/BO/international/locations/countries';
 import addCountryPage from '@pages/BO/international/locations/countries/add';
 
 // Import data
-import CountryFaker from '@data/faker/country';
+import CountryData from '@data/faker/country';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,18 +30,18 @@ describe('BO - International - Countries : Bulk actions', async () => {
   let page: Page;
   let numberOfCountries: number = 0;
 
-  const firstCountryToCreate: CountryFaker = new CountryFaker({
+  const firstCountryToCreate: CountryData = new CountryData({
     name: 'todelete1',
     isoCode: 'CT',
-    callPrefix: '216',
+    callPrefix: 216,
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: true,
   });
-  const secondCountryToCreate: CountryFaker = new CountryFaker({
+  const secondCountryToCreate: CountryData = new CountryData({
     name: 'todelete2',
     isoCode: 'JF',
-    callPrefix: '333',
+    callPrefix: 333,
     currency: 'Euro',
     zipCodeFormat: 'NNNN',
     active: false,
@@ -93,7 +93,7 @@ describe('BO - International - Countries : Bulk actions', async () => {
 
   describe('Create country', async () => {
     [firstCountryToCreate, secondCountryToCreate]
-      .forEach((countryToCreate, index) => {
+      .forEach((countryToCreate: CountryData, index: number) => {
         it('should go to add new country page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCountryPage${index}`, baseContext);
 

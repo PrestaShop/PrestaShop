@@ -1,9 +1,9 @@
+import Countries from '@data/demo/countries';
 import States from '@data/demo/states';
 
-const {faker} = require('@faker-js/faker');
-const {countries} = require('@data/demo/countries');
+import {faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(countries).map((country) => country.name);
+const countriesNames = Object.values(Countries).map((country) => country.name);
 const statesNames = Object.values(States).map((state) => state.name);
 
 /**
