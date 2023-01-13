@@ -1248,7 +1248,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        // check field range
+        // Range validation allows you to check if the value is between the defined boundaries (min and max options)
         if (!in_array('range', $skip) && isset($data['range']['min'], $data['range']['max'])) {
             $range = $data['range'];
             if ($value < $range['min'] || $value > $range['max']) {

@@ -265,9 +265,15 @@ Feature: Update product stock from Back Office (BO)
     And product "product2" should have following stock information:
       | quantity | -2147483648 |
     When I update product "product2" stock with following information:
+      | delta_quantity | -1 |
+    Then I should get error that stock available quantity is invalid
+    When I update product "product2" stock with following information:
       | delta_quantity | 4294967295 |
     And product "product2" should have following stock information:
       | quantity | 2147483647 |
+    When I update product "product2" stock with following information:
+      | delta_quantity | 1 |
+    Then I should get error that stock available quantity is invalid
 
   Scenario: I try to update product quantity with to big numbers
     Given I add product "product3" with following information:
