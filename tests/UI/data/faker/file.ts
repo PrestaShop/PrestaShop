@@ -1,15 +1,27 @@
-const {faker} = require('@faker-js/faker');
+import FileCreator from '@data/types/file';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new file to use on creation form on file page on BO
  * @class
  */
-class FileData {
+export default class FileData {
+  public readonly name: string;
+
+  public readonly frName: string;
+
+  public readonly description: string;
+
+  public readonly frDescription: string;
+
+  public readonly filename: string;
+
   /**
    * Constructor for class FileData
-   * @param fileToCreate {Object} Could be used to force the value of some members
+   * @param fileToCreate {FileCreator} Could be used to force the value of some members
    */
-  constructor(fileToCreate = {}) {
+  constructor(fileToCreate: FileCreator = {}) {
     /** @type {string} Name of the file on the list */
     this.name = fileToCreate.name || faker.system.fileName().substring(0, 32);
 
@@ -26,5 +38,3 @@ class FileData {
     this.filename = `${this.name}.txt`;
   }
 }
-
-module.exports = FileData;

@@ -13,7 +13,7 @@ import addFilePage from '@pages/BO/catalog/files/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import FileFaker from '@data/faker/file';
+import FileData from '@data/faker/file';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -66,7 +66,7 @@ describe('BO - Catalog - Files : Filter, sort, pagination and bulk actions files
   describe('Create 11 files in BO', async () => {
     const creationTests: number[] = new Array(11).fill(0, 0, 11);
     creationTests.forEach((test: number, index: number) => {
-      const createFileData: FileFaker = new FileFaker({name: `todelete${index}`});
+      const createFileData: FileData = new FileData({name: `todelete${index}`});
       before(() => files.createFile('.', createFileData.filename, `test ${createFileData.filename}`));
 
       it('should go to new file page', async function () {

@@ -12,7 +12,7 @@ import addFilePage from '@pages/BO/catalog/files/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import FileFaker from '@data/faker/file';
+import FileData from '@data/faker/file';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +29,8 @@ describe('BO - Catalog - Files : CRUD file', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createFileData: FileFaker = new FileFaker();
-  const editFileData: FileFaker = new FileFaker();
+  const createFileData: FileData = new FileData();
+  const editFileData: FileData = new FileData();
 
   // before and after functions
   before(async function () {
