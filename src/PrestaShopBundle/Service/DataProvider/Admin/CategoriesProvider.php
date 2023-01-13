@@ -69,7 +69,7 @@ class CategoriesProvider
         $this->modulesTheme = $modulesTheme;
 
         // A list of categories and subcategories we got from local YML file
-        // This was previously fetched from addons
+        // In the past, this was fetched from addons marketplace
         $this->categoriesFromSource = $this->sortCategories($addonsCategories);
         $this->categories = $this->initializeCategories($this->categoriesFromSource);
     }
@@ -199,12 +199,12 @@ class CategoriesProvider
     private function findModuleCategory(ModuleInterface $installedProduct, array $categories): string
     {
         // If the module is on a list of "modules to enable" in current theme's YML file, they get
-        // a hardcoded special category
+        // a hardcoded special category "Theme modules"
         if (in_array($installedProduct->attributes->get('name'), $this->modulesTheme)) {
             return self::CATEGORY_THEME;
         }
 
-        // Let's get tab from the module file
+        // Look it up by module tab attribute, as declared in the categories file
         $moduleCategory = $this->getParentCategoryFromTabAttribute($installedProduct);
         if (array_key_exists($moduleCategory, $categories['categories']->subMenu)) {
             return $moduleCategory;
