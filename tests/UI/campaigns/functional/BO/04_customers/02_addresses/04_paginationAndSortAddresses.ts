@@ -5,7 +5,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {importFileTest} from '@commonTests/BO/advancedParameters/importFile';
+import importFileTest from '@commonTests/BO/advancedParameters/importFile';
 import {bulkDeleteAddressesTest} from '@commonTests/BO/customers/address';
 import loginCommon from '@commonTests/BO/loginBO';
 
