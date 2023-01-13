@@ -9,7 +9,7 @@ import testContext from '@utils/testContext';
 
 // Import BO commons tests
 import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/createDeleteEmployee';
-import {setPermissions} from '@commonTests/BO/advancedParameters/setPermissions';
+import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
