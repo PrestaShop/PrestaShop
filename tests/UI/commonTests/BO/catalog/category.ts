@@ -1,31 +1,30 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const categoriesPage = require('@pages/BO/catalog/categories');
+import dashboardPage from '@pages/BO/dashboard';
+import categoriesPage from '@pages/BO/catalog/categories';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfCategories;
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfCategories: number;
 
 /**
  * Function to bulk delete categories
  * @param categoryData {object} Category to delete
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteCategoriesTest(categoryData, baseContext = 'commonTests-bulkDeleteCategoriesTest') {
+function bulkDeleteCategoriesTest(
+  categoryData: object,
+  baseContext: string = 'commonTests-bulkDeleteCategoriesTest',
+): void {
   describe('POST-TEST: BUlk delete categories', async () => {
     // before and after functions
     before(async function () {
@@ -49,7 +48,6 @@ function bulkDeleteCategoriesTest(categoryData, baseContext = 'commonTests-bulkD
         dashboardPage.catalogParentLink,
         dashboardPage.categoriesLink,
       );
-
       await categoriesPage.closeSfToolBar(page);
 
       const pageTitle = await categoriesPage.getPageTitle(page);
@@ -88,4 +86,4 @@ function bulkDeleteCategoriesTest(categoryData, baseContext = 'commonTests-bulkD
   });
 }
 
-module.exports = {bulkDeleteCategoriesTest};
+export default bulkDeleteCategoriesTest;
