@@ -25,7 +25,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
@@ -45,7 +45,7 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
-      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
@@ -55,7 +55,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
-      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation
@@ -80,7 +80,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator:
     arguments:
-      - '@prestashop.core.product.combination.generator.combination_generator'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'

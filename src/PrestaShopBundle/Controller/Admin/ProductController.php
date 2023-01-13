@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
+use PrestaShop\PrestaShop\Core\Product\ProductCsvExporter;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Entity\Attribute;
@@ -1216,7 +1217,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function exportAction()
     {
-        return $this->get('prestashop.core.product.csv_exporter')->export();
+        return $this->get(ProductCsvExporter::class)->export();
     }
 
     /**
