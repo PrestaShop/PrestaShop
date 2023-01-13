@@ -46,8 +46,8 @@
         {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
       </button>
       {% if isMultistoreActive %}
-        {% set deleteLabel = 'Delete %combinations_number% combinations from shop "%shop%"'|trans({'%shop%': contextShopName}, 'Admin.Catalog.Feature') %}
-        {% set modalMessage = 'Are you sure you want to delete selected combinations from shop "%shop%"?'|trans({'%shop%': contextShopName}, 'Admin.Catalog.Notification') %}
+        {% set deleteLabel = 'Delete %combinations_number% combinations from shop "%shop%"'|trans({'%shop%': shopName}, 'Admin.Catalog.Feature') %}
+        {% set modalMessage = 'Are you sure you want to delete selected combinations from shop "%shop%"?'|trans({'%shop%': shopName}, 'Admin.Catalog.Notification') %}
       {% else %}
         {% set deleteLabel = 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') %}
         {% set modalMessage = 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Notification') %}
@@ -69,7 +69,7 @@
         data-download-error-log="{{ 'Download error log'|trans({}, 'Admin.Catalog.Feature') }}"
         data-view-error-log="{{ 'View %error_count% error logs'|trans({}, 'Admin.Catalog.Feature') }}"
         data-view-error-title="{{ 'Error log'|trans({}, 'Admin.Catalog.Feature') }}"
-        data-context-shop-id="{{ contextShopId }}"
+        data-shop-id="{{ shopId }}"
       >
         {{ deleteLabel }}
       </button>

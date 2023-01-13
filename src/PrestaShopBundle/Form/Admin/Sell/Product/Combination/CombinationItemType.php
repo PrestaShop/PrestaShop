@@ -51,6 +51,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CombinationItemType extends TranslatorAwareType
 {
     /**
+     * Limit of action buttons to show before they are wrapped into a dropdown
+     */
+    private const INLINE_ACTIONS_LIMIT = 1;
+
+    /**
      * @var Currency
      */
     protected $defaultCurrency;
@@ -83,6 +88,12 @@ class CombinationItemType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if ($this->multistoreFeature->isActive()) {
+            $deleteItemMessage = $this->trans('Delete selected item from current shop?', 'Admin.Notifications.Warning');
+        } else {
+            $deleteItemMessage = $this->trans('Delete selected item?', 'Admin.Notifications.Warning');
+        }
+
         $actionButtons = [
             'edit' => [
                 'type' => IconButtonType::class,
@@ -104,12 +115,12 @@ class CombinationItemType extends TranslatorAwareType
                     'attr' => [
                         'class' => 'delete-combination-item tooltip-link',
                         'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                        'data-modal-message' => $this->trans('Delete selected item from current shop?', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $deleteItemMessage,
                         'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                         'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                         'data-toggle' => 'pstooltip',
                         'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
-                        'data-context-shop-id' => $this->contextShopId,
+                        'data-shop-id' => $this->contextShopId,
                     ],
                 ],
             ],
@@ -225,8 +236,7 @@ class CombinationItemType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'combination-row-actions',
                 ],
-                'block_prefix' => '_combination_row_actions',
-                'max_inline_buttons' => 1,
+                'inline_buttons_limit' => self::INLINE_ACTIONS_LIMIT,
             ])
         ;
     }

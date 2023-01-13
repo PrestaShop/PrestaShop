@@ -129,7 +129,7 @@ export default class BulkDeleteHandler {
       let shopId = null;
 
       if (bulkDeleteBtn.id !== CombinationMap.bulkDeleteBtnAllShopsId) {
-        shopId = <number> <unknown> bulkDeleteBtn.dataset.contextShopId;
+        shopId = <number> <unknown> bulkDeleteBtn.dataset.shopId;
       }
 
       try {

@@ -289,8 +289,8 @@ class CombinationController extends FrameworkBundleAdminController
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $combinationsForm->createView(),
             'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
-            'contextShopName' => $contextShop->name,
-            'contextShopId' => $contextShop->id,
+            'shopName' => $contextShop->name,
+            'shopId' => $contextShop->id,
         ]);
     }
 

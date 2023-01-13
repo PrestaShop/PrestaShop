@@ -78,7 +78,7 @@ export default class RowDeleteHandler {
       async () => {
         const response = await this.combinationsService.deleteCombination(
           this.findCombinationId(button),
-          allShops ? null : <number> <unknown> button.dataset.contextShopId,
+          allShops ? null : <number> <unknown> button.dataset.shopId,
         );
         $.growl({message: response.message});
         this.eventEmitter.emit(CombinationEvents.combinationDeleted);
