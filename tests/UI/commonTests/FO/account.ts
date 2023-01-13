@@ -10,20 +10,18 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-// Import expect from chai
-const {expect} = require('chai');
-
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to create account in FO
  * @param customerData {object} Data to set when creating the account
  * @param baseContext {string} String to identify the test
  */
-function createAccountTest(customerData, baseContext = 'commonTests-createAccountTest') {
+function createAccountTest(customerData: object, baseContext: string = 'commonTests-createAccountTest'): void {
   describe('PRE-TEST: Create account on FO', async () => {
     // before and after functions
     before(async function () {
@@ -78,9 +76,13 @@ function createAccountTest(customerData, baseContext = 'commonTests-createAccoun
   });
 }
 
-function createAddressTest(customerLoginData, addressData, baseContext = 'commonTests-createAddressTest') {
+function createAddressTest(
+  customerLoginData: object,
+  addressData: object,
+  baseContext: string = 'commonTests-createAddressTest',
+): void {
   describe('PRE-TEST: Create address on FO', async () => {
-    // before and after functions
+  // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
       page = await helper.newTab(browserContext);
@@ -165,4 +167,4 @@ function createAddressTest(customerLoginData, addressData, baseContext = 'common
   });
 }
 
-module.exports = {createAccountTest, createAddressTest};
+export {createAccountTest, createAddressTest};

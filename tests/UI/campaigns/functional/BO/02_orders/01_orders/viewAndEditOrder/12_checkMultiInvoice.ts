@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderSpecificProductTest} from '@commonTests/FO/createOrder';
+import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';

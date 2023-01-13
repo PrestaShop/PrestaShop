@@ -4,8 +4,8 @@ import testContext from '@utils/testContext';
 import files from '@utils/files';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 import loginCommon from '@commonTests/BO/loginBO';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 import foHomePage from '@pages/FO/home';

@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/configSMTP';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createAccountTest} from '@commonTests/FO/createAccount';
+import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
 import homePage from '@pages/FO/home';

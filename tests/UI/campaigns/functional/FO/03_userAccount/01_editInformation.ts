@@ -3,8 +3,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createAccountTest} from '@commonTests/FO/createAccount';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
 import homePage from '@pages/FO/home';

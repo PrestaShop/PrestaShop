@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 // Import common tests
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';

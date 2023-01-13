@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/createDeleteProduct';
-import {createOrderSpecificProductTest} from '@commonTests/FO/createOrder';
+import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages

@@ -8,7 +8,7 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduc
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByGuestTest} from '@commonTests/FO/createOrder';
+import {createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';

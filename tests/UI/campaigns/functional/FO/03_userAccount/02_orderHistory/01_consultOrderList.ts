@@ -4,10 +4,10 @@ import testContext from '@utils/testContext';
 import date from '@utils/date';
 
 // Import common tests
-import {createAccountTest} from '@commonTests/FO/createAccount';
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createAccountTest} from '@commonTests/FO/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';

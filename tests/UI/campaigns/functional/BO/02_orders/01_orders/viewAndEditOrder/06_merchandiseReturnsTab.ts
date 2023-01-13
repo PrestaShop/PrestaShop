@@ -9,7 +9,7 @@ import {
   disableMerchandiseReturns,
 } from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';

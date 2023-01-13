@@ -7,8 +7,8 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {createAccountTest} from '@commonTests/FO/createAccount';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createAccountTest} from '@commonTests/FO/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 // Import BO pages

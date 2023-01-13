@@ -9,14 +9,14 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
-import Order from '@data/types/order';
+import type {Order} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
 /**
  * Function to Create a non-ordered shopping cart connected in the FO
- * @param orderData {object} Data to set when creating the order
+ * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createShoppingCart(orderData: Order, baseContext: string = 'commonTests-createShoppingCart'): void {
@@ -97,4 +97,4 @@ function createShoppingCart(orderData: Order, baseContext: string = 'commonTests
   });
 }
 
-export default {createShoppingCart};
+export default createShoppingCart;

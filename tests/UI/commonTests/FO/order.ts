@@ -11,20 +11,21 @@ import searchResultsPage from '@pages/FO/searchResults';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/checkout';
 
-require('module-alias/register');
+// Import data
+import {Order} from '@data/types/order';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to create simple order by customer in FO
  * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createOrderByCustomerTest') {
+function createOrderByCustomerTest(orderData: Order, baseContext: string = 'commonTests-createOrderByCustomerTest'): void {
   describe('PRE-TEST: Create order by customer on FO', async () => {
     // before and after functions
     before(async function () {
@@ -61,6 +62,7 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, orderData.customer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -70,10 +72,8 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
-
       // Go to the first product page
       await homePage.goToProductPage(page, orderData.productId);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);
 
@@ -118,7 +118,10 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
  * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-createOrderSpecificProductTest') {
+function createOrderSpecificProductTest(
+  orderData: Order,
+  baseContext: string = 'commonTests-createOrderSpecificProductTest',
+): void {
   describe(`PRE-TEST: Create order contain '${orderData.product.name}' by default customer in FO`, async () => {
     // before and after functions
     before(async function () {
@@ -135,7 +138,6 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
 
       // Go to FO and change language
       await homePage.goToFo(page);
-
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -155,6 +157,7 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, orderData.customer);
+
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -172,7 +175,6 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await searchResultsPage.goToProductPage(page, 1);
-
       // Add the product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);
 
@@ -217,7 +219,7 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
  * @param orderData {Order} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrderByGuestTest') {
+function createOrderByGuestTest(orderData: Order, baseContext: string = 'commonTests-createOrderByGuestTest'): void {
   describe('PRE-TEST: Create order by guest in FO', async () => {
     // before and after functions
     before(async function () {
@@ -234,7 +236,6 @@ function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrde
 
       // Go to FO and change language
       await homePage.goToFo(page);
-
       await homePage.changeLanguage(page, 'en');
 
       const isHomePage = await homePage.isHomePage(page);
@@ -245,13 +246,10 @@ function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrde
       await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       await homePage.goToHomePage(page);
-
       // Go to the fourth product page
       await homePage.goToProductPage(page, orderData.productId);
-
       // Add the created product to the cart
       await productPage.addProductToTheCart(page, orderData.productQuantity);
-
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -291,4 +289,4 @@ function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrde
   });
 }
 
-module.exports = {createOrderByCustomerTest, createOrderSpecificProductTest, createOrderByGuestTest};
+export {createOrderByCustomerTest, createOrderSpecificProductTest, createOrderByGuestTest};

@@ -5,8 +5,8 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createAccountTest, createAddressTest} from '@commonTests/FO/createAccount';
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createAccountTest, createAddressTest} from '@commonTests/FO/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import customersPage = require('@pages/BO/customers');
