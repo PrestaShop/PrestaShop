@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
