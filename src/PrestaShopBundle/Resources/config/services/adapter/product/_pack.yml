@@ -37,7 +37,7 @@ services:
       - '@prestashop.adapter.product.pack.repository.product_pack_repository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@translator'
     tags:
       - name: tactician.handler

@@ -65,7 +65,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
 
     public function __construct()
     {
-        $this->productImageRepository = $this->getContainer()->get('prestashop.adapter.product.image.repository.product_image_repository');
+        $this->productImageRepository = $this->getContainer()->get(ProductImageRepository::class);
     }
 
     /**
