@@ -119,16 +119,13 @@ $(() => {
       type: 'GET',
       delay: 250,
       data(params: any) {
-        debugger;
         return {
           q: params.term,
         };
       },
       processResults(data: any) {
-        const res = data.items.map((item: any) => ({id: item.id, text: item.name}));
-
         return {
-          results: res,
+          results: data.map((item: any) => ({id: item.combinationId, text: item.combinationName})),
         };
       },
     },
