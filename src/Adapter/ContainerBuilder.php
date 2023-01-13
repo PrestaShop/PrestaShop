@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Container\LegacyContainerBuilder;
 use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShopBundle\DependencyInjection\Compiler\LoadServicesFromModulesPass;
 use PrestaShopBundle\Exception\ServiceContainerException;
+use PrestaShopBundle\PrestaShopBundle;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\ConfigCache;
@@ -134,13 +135,13 @@ class ContainerBuilder
         $container = $this->loadDumpedContainer();
         if (null === $container) {
             $container = $this->compileContainer();
+        } else {
+            $this->loadModulesAutoloader($container);
         }
 
         // synthetic definitions can't be compiled
         $container->set('shop', $container->get('context')->shop);
         $container->set('employee', $container->get('context')->employee);
-
-        $this->loadModulesAutoloader($container);
 
         return $container;
     }
@@ -170,7 +171,7 @@ class ContainerBuilder
         //If the container builder is modified the container logically should be rebuilt
         $container->addResource(new FileResource(__FILE__));
 
-        $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
+        $container->addCompilerPass(new LoadServicesFromModulesPass($this->containerName), PassConfig::TYPE_BEFORE_OPTIMIZATION, PrestaShopBundle::LOAD_MODULE_SERVICES_PASS_PRIORITY);
         $container->addCompilerPass(new LegacyCompilerPass());
 
         //Build extensions
@@ -184,6 +185,7 @@ class ContainerBuilder
         }
 
         $this->loadServicesFromConfig($container);
+        $this->loadModulesAutoloader($container);
         $container->compile();
 
         //Dump the container file
