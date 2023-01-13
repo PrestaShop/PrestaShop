@@ -87,6 +87,7 @@ class CombinationItemType extends TranslatorAwareType
             'edit' => [
                 'type' => IconButtonType::class,
                 'options' => [
+                    'label' => $this->trans('Edit', 'Admin.Actions'),
                     'icon' => 'mode_edit',
                     'attr' => [
                         'class' => 'edit-combination-item tooltip-link',
@@ -225,6 +226,7 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-row-actions',
                 ],
                 'block_prefix' => '_combination_row_actions',
+                'max_inline_buttons' => 1,
             ])
         ;
     }

@@ -1734,6 +1734,7 @@ $product-page-padding-bottom: 80px !default;
       &-row-actions {
         display: flex;
         align-items: center;
+        margin: 0;
       }
 
       &-image {
@@ -1747,6 +1748,7 @@ $product-page-padding-bottom: 80px !default;
       td {
         .form-check-radio {
           margin-bottom: 0;
+          padding-top: 0;
 
           .form-check-label {
             justify-content: center;
@@ -1759,6 +1761,12 @@ $product-page-padding-bottom: 80px !default;
 
         .delta-quantity {
           max-width: 15rem;
+
+          .delta_quantity_delta-widget {
+            display: flex;
+            margin: 0;
+            align-items: center;
+          }
 
           &-quantity {
             max-width: 10rem;

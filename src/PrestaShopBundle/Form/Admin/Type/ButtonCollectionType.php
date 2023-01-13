@@ -78,6 +78,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['button_groups'] = $buttonGroups;
         $view->vars['justify_content'] = $options['justify_content'];
         $view->vars['max_inline_buttons'] = $options['max_inline_buttons'];
+        $view->vars['force_labels'] = $options['force_labels'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -88,6 +89,7 @@ class ButtonCollectionType extends AbstractType
                 'buttons' => [],
                 'justify_content' => 'space-between',
                 'max_inline_buttons' => self::DEFAULT_MAX_INLINE_BUTTONS,
+                'force_labels' => false,
             ])
             ->setAllowedTypes('buttons', 'array')
             ->setNormalizer('buttons', function (Options $options, $buttons) {

@@ -1505,9 +1505,36 @@
   <div {{ block('widget_attributes') }}>
     {% for group, buttons in button_groups %}
       <div class="btn-group group-{{ group }}">
-        {% for button in buttons %}
-          {{- form_widget(attribute(form, button)) -}}
+        {# Render inline actions #}
+        {% set maxInlineButtons = form.vars.max_inline_buttons %}
+        {% for action in form.children %}
+          {% if loop.index <= maxInlineButtons %}
+            {# Remove labels from inline elements if they are not forced #}
+            {% if form.vars.force_labels %}
+              {% set actionLabel = action.vars.label %}
+            {% else %}
+              {% set actionLabel = '' %}
+            {% endif %}
+            {{ form_widget(action, {'label': actionLabel}) }}
+          {% endif %}
         {% endfor %}
+
+        {# Render remaining actions in dropdown #}
+        {% if form.children|length > maxInlineButtons %}
+          <a class="btn btn-link dropdown-toggle dropdown-toggle-dots dropdown-toggle-split no-rotate"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+          >
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            {% for action in form.children|slice(maxInlineButtons) %}
+              {{ form_widget(action, {'attr': {
+                'class': 'dropdown-item ' ~ action.vars.attr.class|default('')|trim
+              }}) }}
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
   </div>
