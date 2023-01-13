@@ -1681,7 +1681,7 @@ services:
     parent: 'form.type.translatable.aware'
     arguments:
       - '@router'
-      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
     public: true
     tags:
       - { name: form.type }
