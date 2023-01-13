@@ -3,7 +3,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to share your ideas. Please take the time to provide as much detail as possible.
+        Thank you for sharing your ideas. Please take the time to provide as much detail as possible.
   - type: textarea
     id: problem
     attributes:
