@@ -18,7 +18,7 @@ import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
 import CategoryPageFaker from '@data/faker/CMScategory';
-import PageFaker from '@data/faker/CMSpage';
+import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,8 +41,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
 
   const createCategoryData: CategoryPageFaker = new CategoryPageFaker();
   const editCategoryData: CategoryPageFaker = new CategoryPageFaker({name: `update${createCategoryData.name}`});
-  const createPageData: PageFaker = new PageFaker();
-  const editPageData: PageFaker = new PageFaker({
+  const createPageData: CMSPageData = new CMSPageData();
+  const editPageData: CMSPageData = new CMSPageData({
     displayed: false,
     title: `update${createPageData.title}`,
   });

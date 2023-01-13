@@ -1,7 +1,8 @@
-import {faker} from '@faker-js/faker';
 import Countries from '@data/demo/countries';
-import SupplierCreator from '@data/types/supplier';
 import type CountryData from '@data/faker/country';
+import SupplierCreator from '@data/types/supplier';
+
+import {faker} from '@faker-js/faker';
 
 const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
