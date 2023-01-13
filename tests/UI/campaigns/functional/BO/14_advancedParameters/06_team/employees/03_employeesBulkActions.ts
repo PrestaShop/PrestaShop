@@ -11,7 +11,7 @@ import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
 // Import data
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -20,20 +20,16 @@ const baseContext: string = 'functional_BO_advancedParameters_team_employees_emp
 
 // Create Employees, Then disable / Enable and Delete with Bulk actions
 describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delete Employees', async () => {
-  const firstEmployeeData: EmployeeFaker = new EmployeeFaker(
-    {
-      firstName: 'todelete',
-      defaultPage: 'Orders',
-      permissionProfile: 'Logistician',
-    },
-  );
-  const secondEmployeeData: EmployeeFaker = new EmployeeFaker(
-    {
-      firstName: 'todelete',
-      defaultPage: 'Orders',
-      permissionProfile: 'Logistician',
-    },
-  );
+  const firstEmployeeData: EmployeeData = new EmployeeData({
+    firstName: 'todelete',
+    defaultPage: 'Orders',
+    permissionProfile: 'Logistician',
+  });
+  const secondEmployeeData: EmployeeData = new EmployeeData({
+    firstName: 'todelete',
+    defaultPage: 'Orders',
+    permissionProfile: 'Logistician',
+  });
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -77,9 +73,9 @@ describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delet
 
   // 1 : Create employees and Filter with all inputs and selects in grid table in BO
   describe('Create employees then filter the table', async () => {
-    const employeesToCreate = [firstEmployeeData, secondEmployeeData];
+    const employeesToCreate: EmployeeData[] = [firstEmployeeData, secondEmployeeData];
 
-    employeesToCreate.forEach((employeeToCreate, index) => {
+    employeesToCreate.forEach((employeeToCreate: EmployeeData, index: number) => {
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
 

@@ -14,7 +14,7 @@ import productsPage from '@pages/BO/catalog/products/index';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -23,19 +23,17 @@ const baseContext: string = 'functional_BO_advancedParameters_team_employees_CRU
 
 // Create, Read, Update and Delete Employee in BO
 describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Employee in BO', async () => {
-  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',
   });
-
-  const firstEditEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const firstEditEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Orders',
     language: 'English (English)',
     permissionProfile: 'Salesman',
   });
-
-  const secondEditEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const secondEditEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Orders',
     language: 'English (English)',
     permissionProfile: 'Salesman',

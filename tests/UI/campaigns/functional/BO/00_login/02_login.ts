@@ -7,8 +7,8 @@ import loginPage from '@pages/BO/login/index';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {DefaultEmployee} from '@data/demo/employees';
-import EmployeeFaker from '@data/faker/employee';
+import Employees from '@data/demo/employees';
+import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,7 +19,7 @@ describe('BO - Login : Login in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const employeeData: EmployeeFaker = new EmployeeFaker({password: '123456789'});
+  const employeeData: EmployeeData = new EmployeeData({password: '123456789'});
 
   // before and after functions
   before(async function () {
@@ -52,7 +52,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter an invalid email', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidEmail', baseContext);
 
-    await loginPage.failedLogin(page, employeeData.email, DefaultEmployee.password);
+    await loginPage.failedLogin(page, employeeData.email, Employees.DefaultEmployee.password);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
@@ -61,7 +61,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter an invalid password', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterInvalidPassword', baseContext);
 
-    await loginPage.failedLogin(page, DefaultEmployee.email, employeeData.password);
+    await loginPage.failedLogin(page, Employees.DefaultEmployee.email, employeeData.password);
 
     const loginError = await loginPage.getLoginError(page);
     await expect(loginError).to.contains(loginPage.loginErrorText);
@@ -70,7 +70,7 @@ describe('BO - Login : Login in BO', async () => {
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.successLogin(page, DefaultEmployee.email, DefaultEmployee.password);
+    await loginPage.successLogin(page, Employees.DefaultEmployee.email, Employees.DefaultEmployee.password);
 
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);

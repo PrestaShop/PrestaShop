@@ -19,12 +19,12 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import AddressFaker from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildev';
 import type Order from '@data/types/order';
 
@@ -68,7 +68,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   const addressData: AddressFaker = new AddressFaker({country: 'France'});
   const customerData: CustomerFaker = new CustomerFaker({password: ''});
   // New employee data
-  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Dashboard',
     language: 'English (English)',
     permissionProfile: 'SuperAdmin',
@@ -223,7 +223,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkEmployeeName1', baseContext);
 
       const employeeName = await orderPageTabListBlock.getTextColumnFromHistoryTable(page, 'employee', 1);
-      await expect(employeeName).to.be.equal(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`);
+      await expect(employeeName).to.be.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`);
     });
 
     it('should check the date from the table', async function () {

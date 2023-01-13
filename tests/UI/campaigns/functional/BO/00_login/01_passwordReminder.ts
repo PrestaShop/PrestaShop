@@ -14,7 +14,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import loginPage from '@pages/BO/login/index';
 
 // Import data
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildev';
 
 import {expect} from 'chai';
@@ -42,7 +42,7 @@ describe('BO - Login : Password reminder', async () => {
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Your new password';
-  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Products',
     language: 'English (English)',
     permissionProfile: 'Salesman',

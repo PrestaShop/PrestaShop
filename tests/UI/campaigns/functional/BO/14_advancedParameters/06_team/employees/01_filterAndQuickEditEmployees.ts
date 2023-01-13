@@ -11,8 +11,8 @@ import employeesPage from '@pages/BO/advancedParameters/team/index';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
 // Import data
-import {DefaultEmployee} from '@data/demo/employees';
-import EmployeeFaker from '@data/faker/employee';
+import Employees from '@data/demo/employees';
+import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,7 +26,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
 
   let numberOfEmployees: number = 0;
 
-  const createEmployeeData: EmployeeFaker = new EmployeeFaker({
+  const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Orders',
     permissionProfile: 'Logistician',
     active: false,
@@ -95,7 +95,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: DefaultEmployee.lastName,
+            filterValue: Employees.DefaultEmployee.lastName,
           },
       },
       {
