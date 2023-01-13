@@ -61,6 +61,8 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageCategoryDefinition
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CmsPageDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
+use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageCategoryFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\CmsPageFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -537,7 +539,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         $positionDefinition = $this->get('prestashop.core.grid.cms_page_category.position_definition');
 
-        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
 
         try {
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
@@ -548,7 +550,7 @@ class CmsPageController extends FrameworkBundleAdminController
             return $this->redirectToIndexPageById($cmsCategoryParentId);
         }
 
-        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+        $updater = $this->get(GridPositionUpdaterInterface::class);
 
         try {
             $updater->update($positionUpdate);
@@ -589,7 +591,7 @@ class CmsPageController extends FrameworkBundleAdminController
         ];
 
         $positionDefinition = $this->get('prestashop.core.grid.cms_page.position_definition');
-        $positionUpdateFactory = $this->get('prestashop.core.grid.position.position_update_factory');
+        $positionUpdateFactory = $this->get(PositionUpdateFactoryInterface::class);
 
         try {
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
@@ -600,7 +602,7 @@ class CmsPageController extends FrameworkBundleAdminController
             return $this->redirectToParentIndexPage($cmsCategoryParentId);
         }
 
-        $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
+        $updater = $this->get(GridPositionUpdaterInterface::class);
 
         try {
             $updater->update($positionUpdate);

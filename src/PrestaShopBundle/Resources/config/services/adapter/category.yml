@@ -130,8 +130,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
-  prestashop.adapter.category.repository.category_preview_repository:
-    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository
+  PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository:
     arguments:
       - '@prestashop.adapter.category.repository.category_repository'
       - '@prestashop.adapter.image.category_image_path_factory'
@@ -141,7 +140,7 @@ services:
     arguments:
       - '@prestashop.core.category.name_builder.category_display_name_builder'
       - '@prestashop.adapter.context_state_manager'
-      - '@prestashop.adapter.shop.repository.shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
     tags:
       - name: tactician.handler

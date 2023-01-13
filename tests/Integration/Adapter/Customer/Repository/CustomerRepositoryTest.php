@@ -44,7 +44,7 @@ class CustomerRepositoryTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $this->customerRepository = self::$container->get('prestashop.adapter.customer.repository.customer_repository');
+        $this->customerRepository = self::$container->get(CustomerRepository::class);
     }
 
     public function testGetThrowsException(): void

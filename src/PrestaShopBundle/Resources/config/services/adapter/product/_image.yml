@@ -6,7 +6,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - "@prestashop.adapter.image.image_validator"
+      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand
@@ -16,7 +16,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - "@prestashop.adapter.image.image_validator"
+      - '@PrestaShop\PrestaShop\Adapter\Image\ImageValidator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand
@@ -41,7 +41,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImagesHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages
@@ -56,7 +56,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler\GetProductImageHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage
@@ -68,7 +68,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository:
@@ -81,11 +81,19 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader'
-      - '@prestashop.core.grid.position.position_update_factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
       - '@prestashop.core.grid.image.position_definition'
-      - '@prestashop.core.grid.position.doctrine_grid_position_updater'
+      - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
 
+  PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory:
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.shop.url.product_image_folder_provider").getUrl()'
+      - !php/const _PS_TMP_IMG_DIR_
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
+
+  # This is an alternative service that also generates product image path, but it returns absolute file path not urls
   prestashop.adapter.product.image.product_image_filesystem_path_factory:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
     arguments:
@@ -93,18 +101,10 @@ services:
       - !php/const _PS_TMP_IMG_DIR_
       - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
 
-  prestashop.adapter.product.image.product_image_url_factory:
-    class: PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory
-    public: true
-    arguments:
-      - '@=service("prestashop.adapter.shop.url.product_image_folder_provider").getUrl()'
-      - !php/const _PS_TMP_IMG_DIR_
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.iso_code'
-
   PrestaShop\PrestaShop\Adapter\Product\Image\Uploader\ProductImageUploader:
     arguments:
       - '@prestashop.adapter.product.image.product_image_filesystem_path_factory'
       - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - "@prestashop.adapter.image.image_generator"
-      - "@prestashop.core.hook.dispatcher"
+      - '@PrestaShop\PrestaShop\Adapter\Image\ImageGenerator'
+      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'

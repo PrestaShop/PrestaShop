@@ -15,7 +15,7 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator'
-      - '@prestashop.adapter.shop.repository.shop_group_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository:
     arguments:
@@ -24,7 +24,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository:
     arguments:
-      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler\GetProductStockMovementsHandler:
     arguments:
@@ -46,10 +46,10 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater:
     arguments:
-      - '@prestashop.core.stock.stock_manager'
+      - '@PrestaShop\PrestaShop\Core\Stock\StockManager'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.hook.manager'
-      - '@prestashop.adapter.shop.repository.shop_group_repository'
+      - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
+      - '@PrestaShop\PrestaShop\Adapter\HookManager'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'

@@ -5,5 +5,5 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository'
-      - '@prestashop.adapter.category.repository.category_preview_repository'
-      - '@prestashop.adapter.legacy.context'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository'
+      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
