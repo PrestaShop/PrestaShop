@@ -24,6 +24,7 @@
  */
 
 import Router from '@components/router';
+import {devtools} from "vue";
 
 const {$} = window;
 
@@ -43,31 +44,30 @@ export default class CombinationsService {
     this.orderWay = null;
   }
 
-  deleteCombination(combinationId: number, allShops: boolean): JQuery.jqXHR<any> {
+  deleteCombination(combinationId: number, shopId: number|null): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
         combinationId,
+        shopId: shopId ?? 0,
       }),
       type: 'DELETE',
-      data: {
-        allShops: allShops ? 1 : 0,
-      },
     });
   }
 
   bulkDeleteCombinations(
     productId: number,
     combinationIds: number[],
-    allShops: boolean,
+    shopId: number|null,
     abortSignal: AbortSignal,
   ): Promise<Response> {
     const formData = new FormData();
     formData.append('combinationIds', JSON.stringify(combinationIds));
-    formData.append('allShops', allShops ? '1' : '0');
 
     return fetch(
-      this.router.generate('admin_products_combinations_bulk_delete', {productId}),
-      {
+      this.router.generate('admin_products_combinations_bulk_delete', {
+        productId,
+        shopId: shopId ?? 0,
+      }), {
         method: 'POST',
         body: formData,
         signal: abortSignal,

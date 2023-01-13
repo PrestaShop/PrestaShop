@@ -60,15 +60,22 @@ class CombinationItemType extends TranslatorAwareType
      */
     private $multistoreFeature;
 
+    /**
+     * @var int
+     */
+    private $contextShopId;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         Currency $defaultCurrency,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
         $this->multistoreFeature = $multistoreFeature;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -101,6 +108,7 @@ class CombinationItemType extends TranslatorAwareType
                         'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                         'data-toggle' => 'pstooltip',
                         'data-original-title' => $this->trans('Delete', 'Admin.Actions'),
+                        'data-context-shop-id' => $this->contextShopId,
                     ],
                 ],
             ],

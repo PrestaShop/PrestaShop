@@ -281,6 +281,7 @@ class CombinationController extends FrameworkBundleAdminController
     public function paginatedListAction(int $productId): Response
     {
         $combinationsForm = $this->getCombinationListFormBuilder()->getForm();
+        $contextShop = $this->getContext()->shop;
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'productId' => $productId,
@@ -288,7 +289,8 @@ class CombinationController extends FrameworkBundleAdminController
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $combinationsForm->createView(),
             'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
-            'contextShopName' => $this->getContext()->shop->name,
+            'contextShopName' => $contextShop->name,
+            'contextShopId' => $contextShop->id,
         ]);
     }
 
@@ -373,17 +375,17 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      *
-     * @param Request $request
      * @param int $combinationId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function deleteAction(Request $request, int $combinationId): JsonResponse
+    public function deleteAction(int $combinationId, ?int $shopId): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new DeleteCombinationCommand(
                 $combinationId,
-                $request->request->get('allShops') ? ShopConstraint::allShops() : ShopConstraint::shop($this->getContextShopId())
+                $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
             ));
         } catch (Exception $e) {
             return $this->json([
@@ -399,12 +401,13 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
-     * @param int $productId
      * @param Request $request
+     * @param int $productId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function bulkDeleteAction(int $productId, Request $request): JsonResponse
+    public function bulkDeleteAction(Request $request, int $productId, ?int $shopId): JsonResponse
     {
         $combinationIds = $request->request->get('combinationIds');
         if (!$combinationIds) {
@@ -417,7 +420,7 @@ class CombinationController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
                 $productId,
                 json_decode($combinationIds),
-                $request->request->get('allShops') ? ShopConstraint::allShops() : ShopConstraint::shop($this->getContextShopId())
+                $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
             ));
         } catch (Exception $e) {
             if ($e instanceof BulkCombinationException) {

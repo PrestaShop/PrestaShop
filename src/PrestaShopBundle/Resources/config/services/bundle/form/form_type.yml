@@ -1897,6 +1897,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - '@prestashop.adapter.feature.multistore'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - { name: form.type }
 

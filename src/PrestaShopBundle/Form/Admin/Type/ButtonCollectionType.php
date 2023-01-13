@@ -58,6 +58,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ButtonCollectionType extends AbstractType
 {
     private const DEFAULT_MAX_INLINE_BUTTONS = 1;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['buttons'] as $buttonOptions) {
