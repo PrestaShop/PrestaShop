@@ -288,6 +288,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
     arguments:
       - '@translator'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.core.form.choice_provider.zone_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
