@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
+import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages

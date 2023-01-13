@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
-import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
+import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
