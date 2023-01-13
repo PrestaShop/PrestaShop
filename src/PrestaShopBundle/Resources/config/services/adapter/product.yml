@@ -348,7 +348,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
     tags:
       - name: tactician.handler
@@ -425,7 +425,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater:
     arguments:
