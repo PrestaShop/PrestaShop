@@ -3,4 +3,3 @@ services:
     public: true
 
   PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface: '@PrestaShop\PrestaShop\Adapter\Support\ContactRepository'
-
