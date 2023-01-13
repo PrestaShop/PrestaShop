@@ -18,7 +18,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\FeatureValue\QueryHandler\GetProductFeatureValuesHandler:
     arguments:
-      - '@prestashop.adapter.feature.repository.feature_value_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues
@@ -28,5 +28,5 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.feature.repository.feature_repository'
-      - '@prestashop.adapter.feature.repository.feature_value_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
