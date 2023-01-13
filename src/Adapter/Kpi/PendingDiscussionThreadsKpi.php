@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use ConfigurationKPI;
-use Context;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
@@ -55,7 +54,6 @@ class PendingDiscussionThreadsKpi implements KpiInterface
 
     public function render(): string
     {
-        /** @var Context $context */
         $time = time();
 
         $helper = new HelperKpi();

@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Contact\Repository\ContactRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
-use PrestaShop\PrestaShop\Core\Support\ContactRepositoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**

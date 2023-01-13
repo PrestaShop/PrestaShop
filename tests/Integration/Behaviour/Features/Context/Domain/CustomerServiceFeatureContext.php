@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Command\AddContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\DeleteCustomerThreadCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\ReplyToCustomerThreadCommand;
-use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateContactOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Command\UpdateCustomerThreadStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerThreadNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerServiceSummary;
@@ -43,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Query\GetCustomerThreadFor
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerServiceSummary;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\QueryResult\CustomerThreadView;
 use PrestaShop\PrestaShop\Core\Domain\CustomerService\ValueObject\CustomerThreadStatus;
+use PrestaShop\PrestaShop\Core\Form\Handler;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\NoExceptionAlthoughExpectedException;
@@ -62,9 +62,15 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
      */
     private $configuration;
 
+    /**
+     * @var Handler
+     */
+    private $contactOptionsHandler;
+
     public function __construct()
     {
         $this->configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->contactOptionsHandler = CommonFeatureContext::getContainer()->get('prestashop.adapter.customer_service.contact_options.form_handler');
     }
 
     /**
@@ -313,9 +319,12 @@ class CustomerServiceFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $table->getRowsHash();
 
-        $defaultLang = [$this->configuration->get('PS_LANG_DEFAULT'), $data['defaultMessage']];
-        $this->getCommandBus()->handle(
-            new UpdateContactOptionsCommand(PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']), $defaultLang)
+        $defaultLangMessage = [$this->configuration->get('PS_LANG_DEFAULT'), $data['defaultMessage']];
+        $this->contactOptionsHandler->save(
+            [
+                'PS_CUSTOMER_SERVICE_SIGNATURE' => $defaultLangMessage,
+                'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => PrimitiveUtils::castStringBooleanIntoBoolean($data['allowFileUploading']),
+            ]
         );
     }
 
