@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
+import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
 

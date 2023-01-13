@@ -1,29 +1,25 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const taxesPage = require('@pages/BO/international/taxes');
+import dashboardPage from '@pages/BO/dashboard';
+import taxesPage from '@pages/BO/international/taxes';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to enable Ecotax
  * @param baseContext {string} String to identify the test
  */
-function enableEcoTaxTest(baseContext = 'commonTests-enableEcoTaxTest') {
+function enableEcoTaxTest(baseContext: string = 'commonTests-enableEcoTaxTest'): void {
   describe('PRE-TEST: Enable Ecotax', async () => {
     // before and after functions
     before(async function () {
@@ -63,7 +59,7 @@ function enableEcoTaxTest(baseContext = 'commonTests-enableEcoTaxTest') {
  * Function to disable eco tax
  * @param baseContext {string} String to identify the test
  */
-function disableEcoTaxTest(baseContext = 'commonTests-disableEcoTaxTest') {
+function disableEcoTaxTest(baseContext: string = 'commonTests-disableEcoTaxTest'): void {
   describe('POST-TEST: Disable Ecotax', async () => {
     // before and after functions
     before(async function () {
@@ -99,4 +95,4 @@ function disableEcoTaxTest(baseContext = 'commonTests-disableEcoTaxTest') {
   });
 }
 
-module.exports = {enableEcoTaxTest, disableEcoTaxTest};
+export {enableEcoTaxTest, disableEcoTaxTest};
