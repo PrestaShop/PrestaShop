@@ -23,18 +23,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombination;
-
-interface SearchProductCombinationsHandlerInterface
+class ProductCombination
 {
     /**
-     * @param SearchProductCombinations $query
-     *
-     * @return ProductCombination[]
+     * @var int
      */
-    public function handle(SearchProductCombinations $query): array;
+    private $combinationId;
+
+    /**
+     * @var string
+     */
+    private $combinationName;
+
+    /**
+     * @param int $combinationId
+     * @param string $combinationName
+     */
+    public function __construct(
+        int $combinationId,
+        string $combinationName
+    ) {
+        $this->combinationId = $combinationId;
+        $this->combinationName = $combinationName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCombinationId(): int
+    {
+        return $this->combinationId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCombinationName(): string
+    {
+        return $this->combinationName;
+    }
 }

@@ -16,6 +16,7 @@ services:
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator'
 
   PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder:
+    public: false
     arguments:
       - '@translator'
       # separator between attributes (ex : size: M, color: blue), to be replaced by a configuration parameter (env or php const)
@@ -24,3 +25,7 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTRIBUTE_ANCHOR_SEPARATOR")'
 
   PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
+
+  prestashop.core.product.combination.name_builder.combination_name_builder:
+    deprecated: ~
+    alias: PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder

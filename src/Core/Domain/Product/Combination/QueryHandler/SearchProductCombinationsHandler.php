@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombination;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 
 class SearchProductCombinationsHandler implements SearchProductCombinationsHandlerInterface
 {
@@ -38,22 +40,42 @@ class SearchProductCombinationsHandler implements SearchProductCombinationsHandl
     private $combinationRepository;
 
     /**
+     * @var CombinationNameBuilderInterface
+     */
+    private $combinationNameBuilder;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param CombinationNameBuilderInterface $combinationNameBuilder
      */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        CombinationNameBuilderInterface $combinationNameBuilder
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->combinationNameBuilder = $combinationNameBuilder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function handle(SearchProductCombinations $query): array
     {
-        //@todo: implement result with generated name
-        return $this->combinationRepository->searchProductCombinations(
+        $combinationsAttributesInformation = $this->combinationRepository->searchProductCombinations(
             $query->getProductId(),
             $query->getLanguageId(),
             $query->getShopConstraint(),
             $query->getSearchPhrase()
         );
+
+        $productCombinations = [];
+        foreach ($combinationsAttributesInformation as $combinationId => $combinationAttributesInformation) {
+            $productCombinations[] = new ProductCombination(
+                $combinationId,
+                $this->combinationNameBuilder->buildName($combinationAttributesInformation)
+            );
+        }
+
+        return $productCombinations;
     }
 }
