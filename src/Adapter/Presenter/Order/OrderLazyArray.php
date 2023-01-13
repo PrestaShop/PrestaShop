@@ -179,7 +179,11 @@ class OrderLazyArray extends AbstractLazyArray
             $orderProduct['id_product_attribute'] = $orderProduct['product_attribute_id'];
 
             $productPrice = $includeTaxes ? 'product_price_wt' : 'product_price';
-            $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
+            if (is_array($orderProduct['customizedDatas']) && count($orderProduct['customizedDatas'])) {
+                $totalPrice = $includeTaxes ? 'total_customization_wt' : 'total_customization';
+            } else {
+                $totalPrice = $includeTaxes ? 'total_wt' : 'total_price';
+            }
 
             $orderProduct['price'] = $this->priceFormatter->format(
                 $orderProduct[$productPrice],
