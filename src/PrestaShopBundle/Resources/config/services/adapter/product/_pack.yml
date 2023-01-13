@@ -30,7 +30,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@translator'

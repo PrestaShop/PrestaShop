@@ -5,7 +5,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
     tags:
       - name: tactician.handler

@@ -98,6 +98,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationIdChoiceProvider'
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

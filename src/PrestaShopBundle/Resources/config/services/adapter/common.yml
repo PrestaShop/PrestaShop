@@ -2,8 +2,11 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\PrestaShop\Adapter\Configuration: ~
+
   prestashop.adapter.legacy.configuration:
-    class: PrestaShop\PrestaShop\Adapter\Configuration
+    alias: PrestaShop\PrestaShop\Adapter\Configuration
+    deprecated: ~
 
   prestashop.adapter.tools:
     class: PrestaShop\PrestaShop\Adapter\Tools
