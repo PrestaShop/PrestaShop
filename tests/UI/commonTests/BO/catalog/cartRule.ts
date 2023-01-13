@@ -1,32 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
-const addCartRulePage = require('@pages/BO/catalog/discounts/add');
+import cartRulesPage from '@pages/BO/catalog/discounts';
+import addCartRulePage from '@pages/BO/catalog/discounts/add';
+import dashboardPage from '@pages/BO/dashboard';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfCartRules;
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfCartRules: number;
 
 /**
  * Function to create cart rule
  * @param cartRuleData {CartRuleData} Cart rule data to create
  * @param baseContext {string} String to identify the test
  */
-function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartRuleTest') {
+function createCartRuleTest(cartRuleData: object, baseContext: string = 'commonTests-createCartRuleTest'): void {
   describe('PRE-TEST: Create cart rule', async () => {
     // before and after functions
     before(async function () {
@@ -85,7 +81,7 @@ function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartR
  * @param cartRuleName {string} Cart rule name to delete
  * @param baseContext {string} String to identify the test
  */
-function deleteCartRuleTest(cartRuleName, baseContext = 'commonTests-deleteCartRuleTest') {
+function deleteCartRuleTest(cartRuleName: string, baseContext : string = 'commonTests-deleteCartRuleTest'): void {
   describe('POST-TEST: Delete cart rule', async () => {
     // before and after functions
     before(async function () {
@@ -141,7 +137,7 @@ function deleteCartRuleTest(cartRuleName, baseContext = 'commonTests-deleteCartR
  * Function to bulk delete cart rule
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTest') {
+function bulkDeleteCartRuleTest(baseContext: string = 'commonTests-bulkDeleteCartRuleTest'): void {
   describe('POST-TEST: Bulk delete cart rule', async () => {
     // before and after functions
     before(async function () {
@@ -193,4 +189,4 @@ function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTes
   });
 }
 
-module.exports = {createCartRuleTest, deleteCartRuleTest, bulkDeleteCartRuleTest};
+export {createCartRuleTest, deleteCartRuleTest, bulkDeleteCartRuleTest};

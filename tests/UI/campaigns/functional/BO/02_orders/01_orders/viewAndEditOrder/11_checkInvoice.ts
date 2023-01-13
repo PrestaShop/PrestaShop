@@ -6,7 +6,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';

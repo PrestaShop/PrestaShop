@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderSpecificProductTest} from '@commonTests/FO/order';
