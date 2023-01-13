@@ -1,32 +1,28 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const addressesPage = require('@pages/BO/customers/addresses');
-const addAddressPage = require('@pages/BO/customers/addresses/add');
+import addressesPage from '@pages/BO/customers/addresses';
+import addAddressPage from '@pages/BO/customers/addresses/add';
+import dashboardPage from '@pages/BO/dashboard';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
-let numberOfAddresses = 0;
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfAddresses: number = 0;
 
 /**
  * Function to create address
  * @param addressData {AddressData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createAddressTest(addressData, baseContext = 'commonTests-createAddressTest') {
+function createAddressTest(addressData: object, baseContext: string = 'commonTests-createAddressTest'): void {
   describe('PRE-TEST: Create address', async () => {
     // before and after functions
     before(async function () {
@@ -90,7 +86,11 @@ function createAddressTest(addressData, baseContext = 'commonTests-createAddress
  * @param value {string} Value to set in filter input to delete
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteAddressesTest(filterBy, value, baseContext = 'commonTests-deleteAddressesByBulkActionsTest') {
+function bulkDeleteAddressesTest(
+  filterBy: string,
+  value: string,
+  baseContext: string = 'commonTests-deleteAddressesByBulkActionsTest',
+): void {
   describe('POST-TEST: Delete addresses by bulk actions', async () => {
     // before and after functions
     before(async function () {
@@ -153,4 +153,4 @@ function bulkDeleteAddressesTest(filterBy, value, baseContext = 'commonTests-del
   });
 }
 
-module.exports = {createAddressTest, bulkDeleteAddressesTest};
+export {createAddressTest, bulkDeleteAddressesTest};
