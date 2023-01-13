@@ -10,7 +10,7 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduc
 import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import boOrdersShoppingCartsCommon from '@commonTests/BO/orders/shoppingCarts';
+import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -261,7 +261,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   createCartRuleTest(newCartRuleData, baseContext);
 
   // Pre-condition: Delete non ordered shopping carts
-  boOrdersShoppingCartsCommon.deleteNonOrderedShoppingCarts(baseContext);
+  deleteNonOrderedShoppingCarts(baseContext);
 
   // Pre-condition: Get the available stock of demo products
   describe('PRE-TEST: Get the available stock of the ordered demo products', async () => {

@@ -161,5 +161,5 @@ describe('BO - Customers - Outstanding : View order', async () => {
   });
 
   // Post-Condition : Disable B2B
-  boShopParametersB2BCommon.disableB2BTest(baseContext);
+  disableB2BTest(baseContext);
 });
