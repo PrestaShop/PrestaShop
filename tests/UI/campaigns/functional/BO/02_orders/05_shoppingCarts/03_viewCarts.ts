@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
-import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createCustomerTest, deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 import createShoppingCart from '@commonTests/FO/shoppingCart';
 
