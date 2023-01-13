@@ -1797,7 +1797,7 @@ services:
     arguments:
       - '@prestashop.core.form.choice_provider.currency_by_id'
       - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
-      - '@prestashop.adapter.currency.repository.currency_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
       - '@form.form_cloner'
     tags:
       - { name: form.type }

@@ -606,7 +606,7 @@ class CombinationController extends FrameworkBundleAdminController
      */
     private function getFallbackImageUrl(): string
     {
-        $imageUrlFactory = $this->get('prestashop.adapter.product.image.product_image_url_factory');
+        $imageUrlFactory = $this->get(ProductImagePathFactory::class);
 
         return $imageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }

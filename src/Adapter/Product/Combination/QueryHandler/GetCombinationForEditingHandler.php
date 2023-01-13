@@ -31,13 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 use Combination;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
@@ -108,7 +108,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $taxComputer;
 
     /**
-     * @var Configuration
+     * @var ShopConfigurationInterface
      */
     private $configuration;
 
@@ -127,7 +127,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
-     * @param Configuration $configuration
+     * @param ShopConfigurationInterface $configuration
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
@@ -140,7 +140,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
-        Configuration $configuration,
+        ShopConfigurationInterface $configuration,
         ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->combinationRepository = $combinationRepository;

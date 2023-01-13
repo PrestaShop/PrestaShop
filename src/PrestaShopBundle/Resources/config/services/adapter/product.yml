@@ -75,7 +75,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsForAssociationHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
@@ -93,12 +93,12 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
       - '@prestashop.adapter.tax.tax_computer'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
       - '@translator'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
-      - "@prestashop.adapter.shop.repository.shop_repository"
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator:
@@ -117,7 +117,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler:
     arguments:
-      - '@prestashop.core.util.number.number_extractor'
+      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@prestashop.adapter.category.repository.category_repository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
@@ -127,7 +127,7 @@ services:
       - '@prestashop.adapter.tax.tax_computer'
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
       - '@PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
       - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.core.category.name_builder.category_display_name_builder'
@@ -154,8 +154,8 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductsPositionsHandler:
     arguments:
       - '@prestashop.core.grid.product.position_definition'
-      - '@prestashop.core.grid.position.position_update_factory'
-      - '@prestashop.core.grid.position.doctrine_grid_position_updater'
+      - '@PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface'
+      - '@PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand
@@ -318,7 +318,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@prestashop.adapter.supplier.repository.supplier_repository'
-      - '@prestashop.adapter.currency.repository.currency_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
     arguments:
@@ -349,7 +349,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
-      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts
@@ -431,7 +431,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@prestashop.adapter.shop.repository.shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
@@ -473,7 +473,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\PricesFiller:
     tags: [ 'core.product_filler' ]
     arguments:
-      - '@prestashop.core.util.number.number_extractor'
+      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
       - '@prestashop.adapter.legacy.configuration'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller:

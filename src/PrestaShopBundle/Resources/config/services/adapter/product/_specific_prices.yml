@@ -14,7 +14,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
-      - '@prestashop.adapter.customer.repository.customer_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing
@@ -59,19 +59,19 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
 
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator:
     arguments:
-      - '@prestashop.adapter.shop.repository.shop_group_repository'
-      - '@prestashop.adapter.shop.repository.shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@prestashop.adapter.currency.repository.currency_repository'
-      - '@prestashop.adapter.country.repository.country_repository'
-      - '@prestashop.adapter.customer.group.repository.group_repository'
-      - '@prestashop.adapter.customer.repository.customer_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.core.util.number.number_extractor'
+      - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
 
   PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository:
     public: true
@@ -79,4 +79,4 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator'
-      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
