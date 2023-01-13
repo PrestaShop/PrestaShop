@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.product.specific_price.update.specific_price_priority_updater'
+      - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater'
 
   prestashop.adapter.product_pagination.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
