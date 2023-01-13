@@ -8,7 +8,7 @@ import type {BrowserContext, Page} from 'playwright';
 import testContext from '@utils/testContext';
 
 // Import BO commons tests
-import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/createDeleteEmployee';
+import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
 import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 import loginCommon from '@commonTests/BO/loginBO';
 
