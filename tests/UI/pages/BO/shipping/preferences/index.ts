@@ -1,6 +1,7 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
 import type {Page} from 'playwright';
+import CarrierData from '@data/faker/carrier';
 
 class Preferences extends BOBasePage {
   public readonly pageTitle: string;
@@ -61,10 +62,10 @@ class Preferences extends BOBasePage {
   /**
    * Set default carrier in carrier options form
    * @param page {Page} Browser tab
-   * @param carrier {object} List of carriers
+   * @param carrier {CarrierData} List of carriers
    * @return {Promise<string>}
    */
-  async setDefaultCarrier(page: Page, carrier): Promise<string> {
+  async setDefaultCarrier(page: Page, carrier: CarrierData): Promise<string> {
     await this.selectByVisibleText(
       page,
       this.defaultCarrierSelect,

@@ -22,7 +22,7 @@ import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
+import Carriers from '@data/demo/carriers';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressFaker from '@data/faker/address';

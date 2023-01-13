@@ -13,8 +13,8 @@ import carriersPage from '@pages/BO/shipping/carriers';
 import addCarrierPage from '@pages/BO/shipping/carriers/add';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
-import CarrierFaker from '@data/faker/carrier';
+import Carriers from '@data/demo/carriers';
+import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -98,7 +98,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
             testIdentifier: 'filterByStatus',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: Carriers.default.status ? '1' : '0',
+            filterValue: Carriers.default.enable ? '1' : '0',
           },
         expected: 'Enabled',
       },
@@ -232,7 +232,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
     creationTests.forEach((test, index) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
-      const carrierData = new CarrierFaker({name: `todelete${index}`});
+      const carrierData: CarrierData = new CarrierData({name: `todelete${index}`});
 
       it('should go to add new carrier page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCarrierPage${index}`, baseContext);

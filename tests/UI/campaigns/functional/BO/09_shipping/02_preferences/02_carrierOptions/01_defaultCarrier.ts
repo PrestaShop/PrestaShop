@@ -16,8 +16,9 @@ import foProductPage from '@pages/FO/product';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
+import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
+import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,13 +64,12 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
-  // @todo : Migration data/demo/carriers.js
-  const carriers: any[] = [
+  const carriers: CarrierData[] = [
     Carriers.myCarrier,
     Carriers.default,
   ];
 
-  carriers.forEach((carrier, index) => {
+  carriers.forEach((carrier: CarrierData, index: number) => {
     describe(`Set default carrier to '${carrier.name}' and check result in FO`, async () => {
       it(`should set default carrier to ${carrier.name} in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);

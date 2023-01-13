@@ -16,7 +16,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
+import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';

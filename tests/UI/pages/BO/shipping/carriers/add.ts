@@ -12,9 +12,9 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class AddCarrier extends BOBasePage {
-  private readonly pageTitleCreate: string;
+  public readonly pageTitleCreate: string;
 
-  private readonly pageTitleEdit: string;
+  public readonly pageTitleEdit: string;
 
   private readonly carrierForm: string;
 
@@ -148,7 +148,7 @@ class AddCarrier extends BOBasePage {
       await page.click(this.allZonesRadioButton);
       await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
     } else {
-      await page.click(this.zoneRadioButton(carrierData.zoneID));
+      await page.click(this.zoneRadioButton(carrierData.zoneID.toString()));
     }
     await page.click(this.nextButton);
 

@@ -22,7 +22,7 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {Carriers} from '@data/demo/carriers';
+import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
@@ -318,7 +318,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
 
       const isPaymentStepDisplayed = await checkoutPage.chooseShippingMethodAndAddComment(
         page,
-        Carriers.myCarrier.id = 2,
+        Carriers.myCarrier.id,
       );
       await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
     });
