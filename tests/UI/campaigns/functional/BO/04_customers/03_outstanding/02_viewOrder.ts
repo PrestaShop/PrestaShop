@@ -10,8 +10,8 @@ import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
 import dashboardPage from '@pages/BO/dashboard';
-import ordersPage from '@pages/BO/orders/index';
-import viewOrderBasePage from '@pages/BO/orders/view/viewOrderBasePage';
+import ordersPage from '@pages/BO/orders';
+import {viewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
@@ -93,11 +93,14 @@ describe('BO - Customers - Outstanding : View order', async () => {
 
       await ordersPage.resetFilter(page);
 
-      orderId = await ordersPage.getTextColumn(page, 'id_order', 1) as string;
+      orderId = parseInt(
+        await ordersPage.getTextColumn(page, 'id_order', 1),
+        10,
+      );
       await expect(orderId).to.be.at.least(1);
 
-      orderReference = await ordersPage.getTextColumn(page, 'reference', 1) as string;
-      await expect(orderReference).to.not.be.null;
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      await expect(orderReference).to.not.equal('');
     });
 
     it('should update order status', async function () {

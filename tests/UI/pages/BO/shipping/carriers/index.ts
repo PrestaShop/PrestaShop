@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class Carriers extends BOBasePage {
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
   private readonly successfulUpdateStatusMessage: string;
 

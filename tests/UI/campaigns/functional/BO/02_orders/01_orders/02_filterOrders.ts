@@ -151,12 +151,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
         const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
-
-        if (typeof textColumn === 'number') {
-          await expect(textColumn.toString()).to.equal(test.args.filterValue);
-        } else {
-          await expect(textColumn).to.equal(test.args.filterValue);
-        }
+        await expect(textColumn).to.equal(test.args.filterValue);
       }
     });
 

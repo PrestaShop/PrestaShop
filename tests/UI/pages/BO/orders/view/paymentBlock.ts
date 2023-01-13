@@ -1,12 +1,45 @@
-require('module-alias/register');
-const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
+import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Payment block, contains functions that can be used on view/edit payment block on view order page
  * @class
  * @extends ViewOrderBasePage
  */
-class PaymentBlock extends ViewOrderBasePage.constructor {
+class PaymentBlock extends ViewOrderBasePage {
+  private readonly orderPaymentsBlock: string;
+
+  private readonly orderPaymentsTitle: string;
+
+  private readonly paymentDateInput: string;
+
+  private readonly paymentMethodInput: string;
+
+  private readonly transactionIDInput: string;
+
+  private readonly paymentAmountInput: string;
+
+  private readonly paymentCurrencySelect: string;
+
+  private readonly paymentInvoiceSelect: string;
+
+  private readonly paymentAddButton: string;
+
+  private readonly paymentWarning: string;
+
+  private readonly paymentsGridTable: string;
+
+  private readonly paymentsTableBody: string;
+
+  private readonly paymentsTableRow: (row: number) => string;
+
+  private readonly paymentsTableColumn: (row: number, column: string) => string;
+
+  private readonly paymentsTableDetailsButton: (row: number) => string;
+
+  private readonly paymentTableRowDetails: (row: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on payment block
@@ -27,10 +60,10 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
     this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
     this.paymentsGridTable = 'table[data-role=\'payments-grid-table\']';
     this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
-    this.paymentsTableRow = (row) => `${this.paymentsTableBody} tr:nth-child(${row})`;
-    this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td[data-role='${column}-column']`;
-    this.paymentsTableDetailsButton = (row) => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
-    this.paymentTableRowDetails = (row) => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
+    this.paymentsTableRow = (row: number) => `${this.paymentsTableBody} tr:nth-child(${row})`;
+    this.paymentsTableColumn = (row: number, column: string) => `${this.paymentsTableRow(row)} td[data-role='${column}-column']`;
+    this.paymentsTableDetailsButton = (row: number) => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
+    this.paymentTableRowDetails = (row: number) => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
   }
 
   /*
@@ -41,7 +74,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getPaymentsNumber(page) {
+  getPaymentsNumber(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.orderPaymentsTitle);
   }
 
@@ -50,8 +83,8 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {*}
    */
-  getPaymentAmountInputValue(page) {
-    return page.$eval(this.paymentAmountInput, (el) => el.value);
+  getPaymentAmountInputValue(page: Page): Promise<string> {
+    return page.$eval(this.paymentAmountInput, (el: HTMLInputElement) => el.value);
   }
 
   /**
@@ -61,7 +94,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param invoice {string} Invoice number to select
    * @returns {Promise<string>}
    */
-  async addPayment(page, paymentData, invoice = '') {
+  async addPayment(page: Page, paymentData, invoice: string = ''): Promise<string> {
     await this.setValue(page, this.paymentDateInput, paymentData.date);
     await this.setValue(page, this.paymentMethodInput, paymentData.paymentMethod);
     await this.setValue(page, this.transactionIDInput, paymentData.transactionID);
@@ -85,7 +118,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param row {number} Row on table
    * @returns {Promise<number>}
    */
-  getInvoiceID(page, row = 1) {
+  getInvoiceID(page: Page, row: number = 1): Promise<number> {
     return this.getNumberFromText(page, this.paymentsTableColumn(row, 'invoice'));
   }
 
@@ -94,7 +127,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPaymentWarning(page) {
+  getPaymentWarning(page: Page): Promise<string> {
     return this.getTextContent(page, this.paymentWarning);
   }
 
@@ -104,7 +137,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param row {number} Row on table
    * @returns {Promise<{date: string, amount: string, paymentMethod: string, invoice: string, transactionID: string}>}
    */
-  async getPaymentsDetails(page, row = 1) {
+  async getPaymentsDetails(page: Page, row: number = 1) {
     return {
       date: await this.getTextContent(page, this.paymentsTableColumn(row, 'date')),
       paymentMethod: await this.getTextContent(page, this.paymentsTableColumn(row, 'payment-method')),
@@ -120,7 +153,7 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param row {number} Row on table - Start by 2
    * @returns {Promise<string>}
    */
-  async displayPaymentDetail(page, row = 2) {
+  async displayPaymentDetail(page: Page, row: number = 2): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paymentsTableDetailsButton(row - 1));
 
     return this.getTextContent(page, this.paymentTableRowDetails(row));
@@ -131,9 +164,9 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getCurrencySelectOptions(page) {
+  getCurrencySelectOptions(page: Page): Promise<string> {
     return this.getTextContent(page, this.paymentCurrencySelect);
   }
 }
 
-module.exports = new PaymentBlock();
+export default new PaymentBlock();

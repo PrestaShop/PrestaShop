@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import ordersPage from '@pages/BO/orders';
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
+import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import {Carriers} from '@data/demo/carriers';

@@ -23,7 +23,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly userProfileIconNonMigratedPages: string;
 
-  private readonly userProfileIcon: string;
+  protected readonly userProfileIcon: string;
 
   private readonly userProfileFirstname: string;
 
@@ -67,11 +67,11 @@ export default class BOBasePage extends CommonPage {
 
   public readonly ordersLink: string;
 
-  private readonly invoicesLink: string;
+  public readonly invoicesLink: string;
 
-  private readonly creditSlipsLink: string;
+  public readonly creditSlipsLink: string;
 
-  private readonly deliverySlipslink: string;
+  public readonly deliverySlipslink: string;
 
   private readonly shoppingCartsLink: string;
 
@@ -205,7 +205,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly growlCloseButton: string;
 
-  private readonly alertBlock: string;
+  protected alertBlock: string;
 
   protected readonly alertSuccessBlock: string;
 
