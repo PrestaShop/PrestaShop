@@ -1,33 +1,32 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
+import dashboardPage from '@pages/BO/dashboard';
+import productsPage from '@pages/BO/catalog/products';
+import addProductPage from '@pages/BO/catalog/products/add';
 
-// Import expect from chai
-const {expect} = require('chai');
+// Import data
+import ProductData from '@data/faker/product';
 
-let browserContext;
-let page;
-let numberOfProducts;
-let numberOfProductsToDelete;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+let browserContext: BrowserContext;
+let page: Page;
+let numberOfProducts: number;
+let numberOfProductsToDelete: number;
 
 /**
  * Function to create standard product
  * @param productData {ProductData} Data to set to create product
  * @param baseContext {string} String to identify the test
  */
-function createProductTest(productData, baseContext = 'commonTests-createProductTest') {
+function createProductTest(productData: ProductData, baseContext: string = 'commonTests-createProductTest'): void {
   describe(`PRE-TEST: Create product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
@@ -47,7 +46,6 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
-
       await productsPage.closeSfToolBar(page);
 
       const pageTitle = await productsPage.getPageTitle(page);
@@ -84,7 +82,7 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
  * @param productData {ProductData} Data to set to delete product
  * @param baseContext {string} String to identify the test
  */
-function deleteProductTest(productData, baseContext = 'commonTests-deleteProductTest') {
+function deleteProductTest(productData: ProductData, baseContext: string = 'commonTests-deleteProductTest'): void {
   describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
@@ -130,7 +128,7 @@ function deleteProductTest(productData, baseContext = 'commonTests-deleteProduct
  * @param productName {string} Value to set on product name input
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteProductsTest(productName, baseContext = 'commonTests-bulkDeleteProductsTest') {
+function bulkDeleteProductsTest(productName: string, baseContext: string = 'commonTests-bulkDeleteProductsTest'): void {
   describe('POST-TEST: Bulk delete created products', async () => {
     // before and after functions
     before(async function () {
@@ -190,4 +188,4 @@ function bulkDeleteProductsTest(productName, baseContext = 'commonTests-bulkDele
   });
 }
 
-module.exports = {createProductTest, deleteProductTest, bulkDeleteProductsTest};
+export {createProductTest, deleteProductTest, bulkDeleteProductsTest};

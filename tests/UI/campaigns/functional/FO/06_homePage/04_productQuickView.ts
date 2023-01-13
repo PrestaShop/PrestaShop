@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/createDeleteProduct';
+import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/product';
 import categoryPage from '@pages/FO/category';
 
 // Import FO pages

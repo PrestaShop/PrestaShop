@@ -4,7 +4,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonSteps
-import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
+import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
