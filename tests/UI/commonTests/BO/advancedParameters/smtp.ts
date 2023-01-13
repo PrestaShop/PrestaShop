@@ -1,35 +1,30 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login steps
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-const emailPage = require('@pages/BO/advancedParameters/email');
+import emailPage from '@pages/BO/advancedParameters/email';
+import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
+import {DefaultCustomer} from '@data/demo/customer';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
-// Maildev config
 const {smtpServer, smtpPort} = global.maildevConfig;
 
 /**
  * Setup SMTP configuration
  * @param baseContext {string} String to identify the test
  */
-function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
+function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): void {
   describe('PRE-TEST: Setup SMTP config', async () => {
     // before and after functions
     before(async function () {
@@ -53,7 +48,6 @@ function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
         dashboardPage.advancedParametersLink,
         dashboardPage.emailLink,
       );
-
       await emailPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
@@ -70,7 +64,6 @@ function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
         DefaultCustomer.password,
         smtpPort,
       );
-
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
   });
@@ -80,7 +73,7 @@ function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
  * Reset SMTP configuration
  * @param baseContext {string} String to identify the test
  */
-function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
+function resetSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): void {
   describe('POST-TEST: Reset SMTP config', async () => {
     // before and after functions
     before(async function () {
@@ -104,7 +97,6 @@ function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
         dashboardPage.advancedParametersLink,
         dashboardPage.emailLink,
       );
-
       await emailPage.closeSfToolBar(page);
 
       const pageTitle = await emailPage.getPageTitle(page);
@@ -120,4 +112,4 @@ function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
   });
 }
 
-module.exports = {setupSmtpConfigTest, resetSmtpConfigTest};
+export {setupSmtpConfigTest, resetSmtpConfigTest};
