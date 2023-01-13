@@ -9,7 +9,7 @@ import {
   disableMerchandiseReturns,
 } from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import boMerchandiseReturnsPage from '@pages/BO/customerService/merchandiseReturns';
@@ -70,7 +70,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   };
 
   // Pre-condition: Create order by default customer
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable merchandise returns
   enableMerchandiseReturns(`${baseContext}_preTest_2`);

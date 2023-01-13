@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import foShoppingCart from '@commonTests/FO/shoppingCart';
+import createShoppingCart from '@commonTests/FO/shoppingCart';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -41,7 +41,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
   };
 
   // Pre-condition: Create 1 order in FO
-  foShoppingCart.createShoppingCart(orderByCustomerData, `${baseContext}_preTest_1`);
+  createShoppingCart(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {

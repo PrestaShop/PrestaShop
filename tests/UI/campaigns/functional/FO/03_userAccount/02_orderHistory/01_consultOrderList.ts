@@ -6,8 +6,8 @@ import date from '@utils/date';
 // Import common tests
 import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import foAccountCommon from '@commonTests/FO/account';
-import foOrderCommon from '@commonTests/FO/order';
+import {createAccountTest} from '@commonTests/FO/account';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import FO pages
 import foHomePage from '@pages/FO/home';
@@ -61,7 +61,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create new account
-  foAccountCommon.createAccountTest(customerData, `${baseContext}_enableNewProduct`);
+  createAccountTest(customerData, `${baseContext}_enableNewProduct`);
 
   // Pre-condition: Create new address
   createAddressTest(addressData, `${baseContext}_preTest_2`);
@@ -123,7 +123,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
   });
 
   // Pre-condition: Create order
-  foOrderCommon.createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
 
   describe('Check that one order has been placed in order history', async () => {
     it('should reload the FO page', async function () {

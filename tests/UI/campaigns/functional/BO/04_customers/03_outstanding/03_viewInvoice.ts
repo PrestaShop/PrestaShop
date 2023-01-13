@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages
 import outstandingPage from '@pages/BO/customers/outstanding';
@@ -56,7 +56,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
   enableB2BTest(baseContext);
 
   // Pre-condition: Create order in FO
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {

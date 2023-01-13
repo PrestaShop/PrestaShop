@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import {createProductTest, deleteProductTest} from '@commonTests/BO/catalog/createDeleteProduct';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -64,7 +64,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
   createProductTest(product, baseContext);
 
   // Pre-condition: Create order by default customer
-  foOrderCommon.createOrderSpecificProductTest(orderByCustomerData, baseContext);
+  createOrderSpecificProductTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {

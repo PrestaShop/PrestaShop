@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import common tests
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -43,7 +43,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
   const orderNumber = 2;
 
   for (let i = 1; i <= orderNumber; i++) {
-    foOrderCommon.createOrderByCustomerTest(orderByCustomerData, `${baseContext}_${i}`);
+    createOrderByCustomerTest(orderByCustomerData, `${baseContext}_${i}`);
   }
 
   // before and after functions

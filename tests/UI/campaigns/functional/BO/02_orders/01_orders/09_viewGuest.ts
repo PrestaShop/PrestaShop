@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import viewCustomerPage from '@pages/BO/customers/view';
@@ -50,7 +50,7 @@ describe('BO - Orders : View guest from orders page', async () => {
   };
 
   // Pre-condition: Create order by guest in FO
-  foOrderCommon.createOrderByGuestTest(orderByGuestData, baseContext);
+  createOrderByGuestTest(orderByGuestData, baseContext);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCacheTest} from '@commonTests/BO/advancedParameters/deleteCache';
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import foAccountCommon from '@commonTests/FO/account';
+import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
 import cartPage from '@pages/FO/cart';
@@ -57,7 +57,7 @@ describe('FO - Account : CRUD address', async () => {
   deleteCacheTest(baseContext);
 
   // Pre-condition
-  foAccountCommon.createAccountTest(newCustomerData, baseContext);
+  createAccountTest(newCustomerData, baseContext);
 
   // before and after functions
   before(async function () {

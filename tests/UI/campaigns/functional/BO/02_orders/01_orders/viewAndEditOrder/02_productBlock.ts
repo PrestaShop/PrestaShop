@@ -8,7 +8,7 @@ import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduc
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import cartRulesPage from '@pages/BO/catalog/discounts';
@@ -197,7 +197,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const newPrice: number = 25;
 
   // Pre-condition: Create order by guest
-  foOrderCommon.createOrderByGuestTest(orderData, `${baseContext}_preTest_1`);
+  createOrderByGuestTest(orderData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(`${baseContext}_preTest_2`);

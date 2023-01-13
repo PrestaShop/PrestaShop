@@ -5,7 +5,7 @@ import testContext from '@utils/testContext';
 // Import commonTests
 import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByGuestTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -56,10 +56,10 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   };
 
   // Pre-condition: Create first order in FO
-  foOrderCommon.createOrderByGuestTest(firstOrderByGuestData, `${baseContext}_preTest_1`);
+  createOrderByGuestTest(firstOrderByGuestData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create second order in FO
-  foOrderCommon.createOrderByGuestTest(secondOrderByGuestData, `${baseContext}_preTest_2`);
+  createOrderByGuestTest(secondOrderByGuestData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {

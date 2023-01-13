@@ -7,7 +7,7 @@ import testContext from '@utils/testContext';
 import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
 import {createProductTest, bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderSpecificProductTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -89,7 +89,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   createProductTest(secondProduct, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create order by default customer
-  foOrderCommon.createOrderSpecificProductTest(orderByCustomerData, `${baseContext}_preTest_3`);
+  createOrderSpecificProductTest(orderByCustomerData, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {

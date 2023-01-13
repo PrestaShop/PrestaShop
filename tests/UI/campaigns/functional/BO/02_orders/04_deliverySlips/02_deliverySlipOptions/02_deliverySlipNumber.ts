@@ -4,7 +4,7 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import foOrderCommon from '@commonTests/FO/order';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
@@ -47,7 +47,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
   const deliverySlipData: DeliverySlipOptionsFaker = new DeliverySlipOptionsFaker();
 
   // Pre-condition: Create order in FO
-  foOrderCommon.createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
