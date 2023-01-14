@@ -27,7 +27,8 @@ import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 import SpecificPriceEventMap from '@pages/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
-import Router from "@components/router";
+import CombinationSelector from '@pages/specific-price/form/combination-selector';
+import Router from '@components/router';
 
 const {$} = window;
 
@@ -108,26 +109,5 @@ $(() => {
     $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
 
-  const router = new Router();
-  $('#specific_price_combination_id').select2({
-    minimumResultsForSearch: 3,
-    ajax: {
-      url: router.generate('admin_products_v2_search_product_combinations', {
-        productId: 18,
-      }),
-      dataType: 'json',
-      type: 'GET',
-      delay: 250,
-      data(params: any) {
-        return {
-          q: params.term,
-        };
-      },
-      processResults(data: any) {
-        return {
-          results: data.map((item: any) => ({id: item.combinationId, text: item.combinationName})),
-        };
-      },
-    },
-  });
+  new CombinationSelector(new Router(), 18);
 });

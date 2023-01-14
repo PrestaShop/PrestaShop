@@ -24,6 +24,7 @@
  */
 
 export default {
+  formContainer: 'form[name="specific_price"]',
   currencyId: '#specific_price_groups_currency_id',
   customerSearchContainer: '#specific_price_customer',
   priceInput: '#specific_price_fixed_price',
@@ -37,4 +38,6 @@ export default {
   customerItem: '#specific_price_customer_list .entity-item',
   switchReductionName: 'specific_price[impact][disabling_switch_reduction]',
   switchFixedName: 'specific_price[impact][disabling_switch_fixed_price_tax_excluded]',
+  shopIdSelect: '#specific_price_groups_shop_id',
+  combinationIdSelect: '#specific_price_combination_id',
 };
