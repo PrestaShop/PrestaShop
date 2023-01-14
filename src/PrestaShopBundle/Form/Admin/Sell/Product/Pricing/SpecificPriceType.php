@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -37,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -64,6 +66,11 @@ class SpecificPriceType extends TranslatorAwareType
     private $productRepository;
 
     /**
+     * @var EventSubscriberInterface
+     */
+    private $specificPriceCombinationListener;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
@@ -75,12 +82,14 @@ class SpecificPriceType extends TranslatorAwareType
         array $locales,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        EventSubscriberInterface $specificPriceCombinationListener
     ) {
         parent::__construct($translator, $locales);
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
         $this->productRepository = $productRepository;
+        $this->specificPriceCombinationListener = $specificPriceCombinationListener;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -123,9 +132,12 @@ class SpecificPriceType extends TranslatorAwareType
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
             $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
-                'placeholder' => $this->trans('All combinations', 'Admin.Global'),
-                'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
                 'required' => false,
+                'attr' => [
+                    'data-selected-id' => $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID,
+                    'data-all-combinations-label' => $this->trans('All combinations', 'Admin.Global'),
+                    'data-all-combinations-value' => NoCombinationId::NO_COMBINATION_ID,
+                ],
             ]);
         }
 
@@ -160,6 +172,8 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('impact', SpecificPriceImpactType::class)
         ;
+
+        $builder->addEventSubscriber($this->specificPriceCombinationListener);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -1655,14 +1655,14 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.pricing.specific_price_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType:
     parent: 'form.type.translatable.aware'
     arguments:
       - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
       - '@prestashop.core.admin.url_generator'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-    public: true
+      - '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
+    public: false
     tags:
       - { name: form.type }
 
@@ -1839,6 +1839,12 @@ services:
       - '@prestashop.adapter.form.choice_provider.feature_values_choice_provider'
       - '@form.form_cloner'
     public: true
+
+  PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener:
+    arguments:
+      - '@form.form_cloner'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
+    public: false
 
   form.type.sell.product.event_listener.product_type_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
@@ -2168,3 +2174,4 @@ services:
     public: true
     tags:
       - { name: form.type }
+

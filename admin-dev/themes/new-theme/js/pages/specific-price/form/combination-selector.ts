@@ -27,6 +27,19 @@ import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 
 const {$} = window;
 
+interface CombinationChoice {
+  combinationId: number,
+  combinationName: string,
+}
+
+interface jQuerySelect2Choice {
+  id: number,
+  text: string,
+}
+interface jQuerySelect2Results {
+  results: jQuerySelect2Choice[]
+}
+
 export default class CombinationSelector {
   readonly productId: number;
 
@@ -47,26 +60,49 @@ export default class CombinationSelector {
     this.initComponent();
   }
 
-  initComponent(): void {
-    $(SpecificPriceMap.combinationIdSelect).select2({
+  async initComponent(): Promise<void> {
+    const $combinationIdSelect = $(SpecificPriceMap.combinationIdSelect);
+
+    // inside select2 callback "this" is the jquery component,
+    // so we need to assign a var to reach actual "this" (the combinationSelector) inside the callback
+    const self = this;
+
+    $combinationIdSelect.select2({
       minimumResultsForSearch: 3,
       ajax: {
         url: () => this.getUrl(),
         dataType: 'json',
         type: 'GET',
         delay: 250,
-        data(params: any) {
+        data(params: Record<string, string>): Record<string, string> {
           return {
             q: params.term,
           };
         },
-        processResults(data: any) {
-          return {
-            results: data.map((item: any) => ({id: item.combinationId, text: item.combinationName})),
-          };
+        processResults(data: CombinationChoice[]): jQuerySelect2Results {
+          const allCombinationsChoice = <CombinationChoice> self.getAllCombinationsChoice();
+          const results = <jQuerySelect2Choice[]> [{
+            id: allCombinationsChoice.combinationId,
+            text: allCombinationsChoice.combinationName,
+          }];
+
+          results.push(...data.map((combination: CombinationChoice) => ({
+            id: combination.combinationId,
+            text: combination.combinationName,
+          })));
+
+          return {results};
         },
       },
     });
+    this.fillSelectedChoice($combinationIdSelect);
+  }
+
+  async getCombinationChoices(): Promise<CombinationChoice[]> {
+    const response: Response = await fetch(this.getUrl());
+    const data = response.json();
+
+    return data.then((resp) => resp);
   }
 
   getUrl(): string {
@@ -82,5 +118,32 @@ export default class CombinationSelector {
     }
 
     return this.router.generate('admin_products_v2_search_product_combinations', routeParams);
+  }
+
+  async fillSelectedChoice($combinationIdSelect: JQuery): Promise<void> {
+    const selectedId = Number($combinationIdSelect.data('selected-id'));
+
+    let selectedChoice = this.getAllCombinationsChoice();
+
+    if (selectedId !== selectedChoice.combinationId) {
+      // @todo: improve performance. Add id filter to endpoint and only get one combination instead of loading all.
+      // @todo: move ajax part to combinations-service
+      const choices = <CombinationChoice[]> await this.getCombinationChoices();
+      selectedChoice = <CombinationChoice> choices.find(
+        (choice: CombinationChoice) => Number($combinationIdSelect.data('selected-id')) === Number(choice.combinationId));
+    }
+
+    $combinationIdSelect.prepend(
+      `<option selected value="${selectedChoice.combinationId}">${selectedChoice.combinationName}</option>`,
+    );
+  }
+
+  getAllCombinationsChoice(): CombinationChoice {
+    const combinationIdSelect = <HTMLSelectElement> this.container.querySelector(SpecificPriceMap.combinationIdSelect);
+
+    return {
+      combinationId: Number(combinationIdSelect.dataset.allCombinationsValue),
+      combinationName: String(combinationIdSelect.dataset.allCombinationsLabel),
+    };
   }
 }
