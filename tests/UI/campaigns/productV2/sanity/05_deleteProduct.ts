@@ -138,7 +138,7 @@ describe('BO - Catalog - Products : Delete product', async () => {
     it('should delete product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
-      const textMessage: string = await productsPage.deleteProduct(page);
+      const textMessage: string = await productsPage.clickOnConfirmDialogButton(page);
       await expect(textMessage).to.equal(productsPage.successfulDeleteMessage);
     });
 
