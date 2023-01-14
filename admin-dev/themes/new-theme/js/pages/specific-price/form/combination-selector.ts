@@ -34,6 +34,8 @@ export default class CombinationSelector {
 
   private container: HTMLElement;
 
+  private shopId: number|null;
+
   constructor(
     router: Router,
     productId: number,
@@ -41,6 +43,7 @@ export default class CombinationSelector {
     this.router = router;
     this.productId = productId;
     this.container = <HTMLElement>document.querySelector(SpecificPriceMap.formContainer);
+    this.shopId = null;
     this.initComponent();
   }
 
@@ -48,9 +51,7 @@ export default class CombinationSelector {
     $(SpecificPriceMap.combinationIdSelect).select2({
       minimumResultsForSearch: 3,
       ajax: {
-        url: this.router.generate('admin_products_v2_search_product_combinations', {
-          productId: this.productId,
-        }),
+        url: () => this.getUrl(),
         dataType: 'json',
         type: 'GET',
         delay: 250,
@@ -66,5 +67,20 @@ export default class CombinationSelector {
         },
       },
     });
+  }
+
+  getUrl(): string {
+    const routeParams = <Record<string, number>> {
+      productId: this.productId,
+    };
+
+    const shopIdSelect = <HTMLSelectElement> this.container.querySelector(SpecificPriceMap.shopIdSelect);
+    const shopId = Number(shopIdSelect.value) ?? null;
+
+    if (shopId) {
+      routeParams.shopId = shopId;
+    }
+
+    return this.router.generate('admin_products_v2_search_product_combinations', routeParams);
   }
 }
