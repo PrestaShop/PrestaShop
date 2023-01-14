@@ -1,0 +1,45 @@
+title: "[Idea] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for sharing your ideas. Please take the time to provide as much detail as possible.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: Describe what problem you would like to see solved.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: The solution
+      description: Describe the solution(s) that you imagine for the aforementioned problem.
+      placeholder: Changing XYZ would help because...
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Alternatives
+      description: Are there any other solutions to that problem that you have considered?
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other helpful information or screenshots here.
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Do you plan to work on this subject?
+      description: While optional, taking matters into your own hands will significantly increase the chances that it gets done. Plase select all that apply for you.
+      options:
+        - label: I'm willing to contribute a [formal specification](https://github.com/PrestaShop/prestashop-specs).
+        - label: I'm willing to provide any wireframes or design assets required for this feature.
+        - label: I'm willing to submit a Pull Request that implements this feature.
+        - label: I'm willing to help verify that the implemented feature works as intended and produces no unintended side effects.
