@@ -31,7 +31,7 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
       - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
-      - '@prestashop.adapter.tax.tax_computer'
+      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'

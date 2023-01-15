@@ -2,8 +2,11 @@ services:
   _defaults:
     public: true
 
-  prestashop.core.category.name_builder.category_display_name_builder:
-    class: 'PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
+  PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder:
     arguments:
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - ' > '
+
+  prestashop.core.category.name_builder.category_display_name_builder:
+    alias: PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder
+    deprecated: ~

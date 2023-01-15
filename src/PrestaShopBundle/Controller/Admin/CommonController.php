@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Context;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
@@ -209,7 +210,7 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
-        $tools = $this->get('prestashop.adapter.tools');
+        $tools = $this->get(Tools::class);
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
             'footer' => $tools->purifyHTML($footer),

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,7 +62,7 @@ class WarehouseController extends FrameworkBundleAdminController
             $product,
             $this->get('prestashop.adapter.legacy.context'),
             $this->get(AdminProductWrapper::class),
-            $this->get('prestashop.adapter.tools'),
+            $this->get(Tools::class),
             $this->get('prestashop.adapter.data_provider.product'),
             $this->get('prestashop.adapter.data_provider.supplier'),
             $this->get('prestashop.adapter.data_provider.warehouse'),

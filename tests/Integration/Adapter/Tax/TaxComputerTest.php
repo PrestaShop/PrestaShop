@@ -51,7 +51,7 @@ class TaxComputerTest extends KernelTestCase
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();
-        $this->taxComputer = $container->get('prestashop.adapter.tax.tax_computer');
+        $this->taxComputer = $container->get(TaxComputer::class);
     }
 
     /**

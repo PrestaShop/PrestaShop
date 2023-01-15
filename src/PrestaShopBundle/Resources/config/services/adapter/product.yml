@@ -9,50 +9,59 @@ services:
     decorates: prestashop.core.admin.data_provider.product_interface
     arguments:
       - "@doctrine.orm.entity_manager"
-      - "@prestashop.adapter.image_manager"
+      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "@prestashop.static_cache.adapter"
     public: false
 
   prestashop.adapter.admin.data_provider.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataProvider
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater:
     class: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
     decorates: prestashop.core.admin.data_updater.product_interface
     public: false
     arguments:
-      - "@prestashop.core.hook.dispatcher"
+      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
       - "@prestashop.static_cache.adapter"
 
   prestashop.adapter.admin.data_updater.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductDataUpdater
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper:
     arguments:
       - "@translator"
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.getAssociatedShops()"
-      - "@prestashop.core.localization.locale.context_locale"
-      - "@prestashop.utils.float_parser"
+      - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
+      - '@PrestaShopBundle\Utils\FloatParser'
 
   prestashop.adapter.admin.wrapper.product:
     alias: PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper: ~
 
   prestashop.adapter.admin.controller.attribute_generator:
     alias: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier: ~
 
   prestashop.adapter.product.filter_categories_request_purifier:
-    alias: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
+    alias: PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier
+    deprecated: ~
+
+  PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater: ~
 
   prestashop.adapter.product.list_parameters_updater:
-    class: 'PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater'
+    alias: PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater
+    deprecated: ~
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AssignProductToCategoryHandler:
     tags:
-      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand }
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AssignProductToCategoryCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler:
     arguments:
@@ -63,11 +72,11 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\SearchProductsHandler:
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      - '@prestashop.core.localization.locale.context_locale'
-      - '@prestashop.adapter.tools'
-      - '@prestashop.adapter.data_provider.currency'
-      - '@prestashop.adapter.context_state_manager'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.id'
+      - '@PrestaShop\PrestaShop\Core\Localization\LocaleInterface'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
+      - '@PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface'
+      - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts
@@ -88,16 +97,16 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator:
     arguments:
       - '@prestashop.core.grid.data.factory.product'
-      - '@prestashop.core.localization.locale.repository'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      - '@prestashop.adapter.tax.tax_computer'
-      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      - '@PrestaShop\PrestaShop\Core\Localization\Locale\Repository'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.getLocale()'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_CURRENCY_DEFAULT")'
+      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().country.id'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
       - '@translator'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_TAX")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_USE_ECOTAX")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_ECOTAX_TAX_RULES_GROUP_ID")'
       - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
 
@@ -110,27 +119,27 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductLightGridDataFactoryDecorator:
     arguments:
       - '@prestashop.core.grid.data.factory.product'
-      - '@prestashop.core.localization.locale.repository'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_STOCK_MANAGEMENT")'
+      - '@PrestaShop\PrestaShop\Core\Localization\Locale\Repository'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().language.getLocale()'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_CURRENCY_DEFAULT")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_STOCK_MANAGEMENT")'
 
   PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@prestashop.adapter.attachment.attachment_repository'
-      - '@prestashop.adapter.tax.tax_computer'
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
+      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_COUNTRY_DEFAULT")'
       - '@PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider'
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory'
       - '@PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.core.category.name_builder.category_display_name_builder'
+      - '@PrestaShop\PrestaShop\Adapter\Configuration'
+      - '@PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing
@@ -138,7 +147,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
@@ -178,7 +187,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler:
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_HOME_CATEGORY")'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
     tags:
@@ -239,19 +248,19 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductAttachmentUpdater:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.attachment.attachment_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator:
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_LANG_DEFAULT")'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
-      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
-      - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository:
@@ -259,9 +268,9 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
-      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
-      - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().shop.id_category'
+      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater:
     arguments:
@@ -317,7 +326,7 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.supplier.repository.supplier_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository:
@@ -330,9 +339,9 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@prestashop.adapter.supplier.repository.supplier_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository'
-      - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_CURRENCY_DEFAULT")'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater:
     arguments:
@@ -400,11 +409,11 @@ services:
   PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.core.hook.dispatcher'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
+      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
       - '@prestashop.adapter.shop.context'
       - '@translator'
-      - '@prestashop.core.util.string.string_modifier'
+      - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
 
   PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater:
     arguments:
@@ -420,7 +429,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater:
     arguments:
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository:
     arguments:
@@ -462,7 +471,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\BasicInformationFiller:
     arguments:
-      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").get("PS_LANG_DEFAULT")'
     tags:
       # its important that BasicInformationFiller is prioritized before the SeoFiller, because of link_rewrite overriding
       - { name: 'core.product_filler', priority: 10 }
@@ -474,14 +483,14 @@ services:
     tags: [ 'core.product_filler' ]
     arguments:
       - '@PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor'
-      - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Configuration'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller:
     tags: [ 'core.product_filler' ]
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.category.repository.category_repository'
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\Filler\DetailsFiller:
     tags: [ 'core.product_filler' ]

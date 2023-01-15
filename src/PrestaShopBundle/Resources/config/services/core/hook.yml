@@ -26,7 +26,7 @@ services:
     arguments:
       - '%hook_descriptions%'
       - '@prestashop.core.util.string.string_validator'
-      - '@prestashop.core.util.string.string_modifier'
+      - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
 
 parameters:
   hook_descriptions:

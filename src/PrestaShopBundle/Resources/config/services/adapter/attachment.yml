@@ -58,16 +58,19 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand' }
 
-  prestashop.adapter.attachment.attachment_repository:
-    class: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository
+  PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  prestashop.adapter.attachment.attachment_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository
+    deprecated: ~
+
   prestashop.adapter.attachment.query_handler.get_attachment_information_handler:
     class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationHandler
     arguments:
-      - '@prestashop.adapter.attachment.attachment_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation
@@ -75,7 +78,7 @@ services:
   prestashop.adapter.attachment.query_handler.search_attachment_handler:
     class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\SearchAttachmentHandler
     arguments:
-      - '@prestashop.adapter.attachment.attachment_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment
