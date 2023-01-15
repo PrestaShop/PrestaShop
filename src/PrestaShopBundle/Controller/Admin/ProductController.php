@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier;
 use PrestaShop\PrestaShop\Adapter\Product\ListParametersUpdater;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -74,7 +75,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tools;
+use Tools as LegacyTools;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -143,7 +144,7 @@ class ProductController extends FrameworkBundleAdminController
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         /** @var ListParametersUpdater $listParametersUpdater */
-        $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+        $listParametersUpdater = $this->get(ListParametersUpdater::class);
         $listParameters = $listParametersUpdater->buildListParameters(
             $request->query->all(),
             $persistedFilterParameters,
@@ -297,7 +298,7 @@ class ProductController extends FrameworkBundleAdminController
             // get old values from persistence (before the current update)
             $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
             /** @var ListParametersUpdater $listParametersUpdater */
-            $listParametersUpdater = $this->get('prestashop.adapter.product.list_parameters_updater');
+            $listParametersUpdater = $this->get(ListParametersUpdater::class);
             $listParameters = $listParametersUpdater->buildListParameters(
                 $request->query->all(),
                 $persistedFilterParameters,
@@ -663,7 +664,7 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
-            'max_upload_size' => Tools::formatBytes(UploadedFile::getMaxFilesize()),
+            'max_upload_size' => LegacyTools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT),
             'drawerModules' => $drawerModules,
@@ -1271,7 +1272,7 @@ class ProductController extends FrameworkBundleAdminController
             $product,
             $this->get('prestashop.adapter.legacy.context'),
             $this->get(AdminProductWrapper::class),
-            $this->get('prestashop.adapter.tools'),
+            $this->get(Tools::class),
             $productAdapter,
             $this->get('prestashop.adapter.data_provider.supplier'),
             $this->get('prestashop.adapter.data_provider.warehouse'),

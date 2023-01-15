@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
@@ -54,7 +55,7 @@ class CategoryController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         $commandBus = $this->get('prestashop.core.command_bus');
-        $tools = $this->get('prestashop.adapter.tools');
+        $tools = $this->get(Tools::class);
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
         $currentIdShop = $shopContext->getContextShopID();

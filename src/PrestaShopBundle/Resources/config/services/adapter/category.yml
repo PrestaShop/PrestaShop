@@ -40,7 +40,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
 
   prestashop.adapter.category.command_handler.delete_category_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\CommandHandler\DeleteCategoryHandler
@@ -124,21 +124,24 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryIsEnabled
 
-  prestashop.adapter.category.repository.category_repository:
-    class: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
+  PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
 
+  prestashop.adapter.category.repository.category_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository
+    deprecated: ~
+
   PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository:
     arguments:
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
       - '@prestashop.adapter.image.category_image_path_factory'
 
   prestashop.adapter.category.query_handler.get_categories_tree_handler:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
     arguments:
-      - '@prestashop.core.category.name_builder.category_display_name_builder'
+      - '@PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
       - '@prestashop.adapter.context_state_manager'
       - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"

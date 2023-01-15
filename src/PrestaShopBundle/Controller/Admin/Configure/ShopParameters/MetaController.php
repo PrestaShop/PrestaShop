@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Meta\Exception\MetaNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
@@ -432,7 +433,7 @@ class MetaController extends FrameworkBundleAdminController
             $presentedGrid = $this->presentGrid($grid);
         }
 
-        $tools = $this->get('prestashop.adapter.tools');
+        $tools = $this->get(Tools::class);
         $urlFileChecker = $this->get('prestashop.core.util.url.url_file_checker');
         $hostingInformation = $this->get('prestashop.adapter.hosting_information');
         $defaultRoutesProvider = $this->get('prestashop.adapter.data_provider.default_route');

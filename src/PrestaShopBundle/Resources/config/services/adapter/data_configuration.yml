@@ -65,7 +65,7 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@filesystem'
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
       - '%themes_dir%'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme_name'
 

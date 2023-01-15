@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierLogoThumbnailProvider'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '@prestashop.adapter.image_manager'
+      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
 
   prestashop.adapter.supplier.provider.supplier_address:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider'
@@ -98,5 +98,4 @@ services:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
 
-  prestashop.adapter.supplier.repository.supplier_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
+  PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository: ~
