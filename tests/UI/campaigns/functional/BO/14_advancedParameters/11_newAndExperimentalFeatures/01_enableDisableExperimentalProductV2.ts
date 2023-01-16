@@ -118,7 +118,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsV1Page', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -127,16 +127,16 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       );
       await productsPageV1.closeSfToolBar(page);
 
-      const pageTitle = await productsPageV1.getPageTitle(page);
+      const pageTitle: string = await productsPageV1.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPageV1.pageTitle);
     });
 
     it('should go to Add product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductV1Page', baseContext);
 
       await productsPageV1.goToAddProductPage(page);
 
-      const createProductTitle = await addProductPage.getPageTitle(page);
+      const createProductTitle: string = await addProductPage.getPageTitle(page);
       await expect(createProductTitle).to.contains(addProductPage.pageTitle);
     });
   });
