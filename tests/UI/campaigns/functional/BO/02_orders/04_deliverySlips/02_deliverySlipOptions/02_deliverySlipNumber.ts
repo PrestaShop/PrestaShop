@@ -8,7 +8,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import deliverySlipsPage from '@pages/BO/orders/deliverySlips/index';
+import deliverySlipsPage from '@pages/BO/orders/deliverySlips';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
