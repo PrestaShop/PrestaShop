@@ -1,19 +1,48 @@
 import Countries from '@data/demo/countries';
+import CountryData from '@data/faker/country';
+import BrandAddressCreator from '@data/types/brandAddress';
 
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(Countries).map((country) => country.name);
+const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
 /**
  * Create new brand address to use in brand address form on BO
  * @class
  */
-class BrandAddressData {
+export default class BrandAddressData {
+  public readonly id: number;
+
+  public readonly brandName: string;
+
+  public readonly firstName: string;
+
+  public readonly lastName: string;
+
+  public readonly address: string;
+
+  public readonly secondaryAddress: string;
+
+  public readonly postalCode: string;
+
+  public readonly city: string;
+
+  public readonly country: string;
+
+  public readonly homePhone: string;
+
+  public readonly mobilePhone: string;
+
+  public readonly other: string;
+
   /**
    * Constructor for class brandAddressData
-   * @param brandAddressToCreate {Object} Could be used to force the value of some members
+   * @param brandAddressToCreate {BrandAddressCreator} Could be used to force the value of some members
    */
-  constructor(brandAddressToCreate = {}) {
+  constructor(brandAddressToCreate: BrandAddressCreator = {}) {
+    /** @type {number} ID */
+    this.id = brandAddressToCreate.id || 0;
+
     /** @type {string} Associated brand to the address */
     this.brandName = brandAddressToCreate.brandName || '--';
 
@@ -48,5 +77,3 @@ class BrandAddressData {
     this.other = brandAddressToCreate.other || '';
   }
 }
-
-module.exports = BrandAddressData;

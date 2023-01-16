@@ -1,17 +1,54 @@
-const {faker} = require('@faker-js/faker');
+import BrandCreator from '@data/types/brand';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new brand to use in brand form on BO
  * @class
  */
-class BrandData {
+export default class BrandData {
+  public readonly id: number;
+
+  public readonly name: string;
+
+  public readonly logo: string;
+
+  public readonly shortDescription: string;
+
+  public readonly shortDescriptionFr: string;
+
+  public readonly description: string;
+
+  public readonly descriptionFr: string;
+
+  public readonly metaTitle: string;
+
+  public readonly metaTitleFr: string;
+
+  public readonly metaDescription: string;
+
+  public readonly metaDescriptionFr: string;
+
+  public readonly metaKeywords: string[];
+
+  public readonly metaKeywordsFr: string[];
+
+  public readonly enabled: boolean;
+
+  public readonly addresses: number;
+
+  public readonly products: number;
+
   /**
    * Constructor for class BrandData
-   * @param brandToCreate {Object} Could be used to force the value of some members
+   * @param brandToCreate {BrandCreator} Could be used to force the value of some members
    */
-  constructor(brandToCreate = {}) {
+  constructor(brandToCreate: BrandCreator = {}) {
+    /** @type {number} ID  of the brand */
+    this.id = brandToCreate.id || 0;
+
     /** @type {string} Name of the brand */
-    this.name = brandToCreate.name || faker.company.name('string');
+    this.name = brandToCreate.name || faker.company.name();
 
     /** @type {string} Logo name of the brand */
     this.logo = `${this.name.replace(/[^\w\s]/gi, '')}.png`;
@@ -56,5 +93,3 @@ class BrandData {
     this.products = brandToCreate.products || 0;
   }
 }
-
-module.exports = BrandData;

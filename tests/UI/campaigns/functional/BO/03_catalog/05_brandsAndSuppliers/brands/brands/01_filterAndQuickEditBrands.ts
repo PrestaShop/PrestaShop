@@ -10,7 +10,7 @@ import brandsPage from '@pages/BO/catalog/brands';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {demoBrands} from '@data/demo/brands';
+import Brands from '@data/demo/brands';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -70,7 +70,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_manufacturer',
-            filterValue: demoBrands.first.id.toString(),
+            filterValue: Brands.first.id.toString(),
           },
       },
       {
@@ -79,7 +79,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterName',
             filterType: 'input',
             filterBy: 'name',
-            filterValue: demoBrands.first.name,
+            filterValue: Brands.first.name,
           },
       },
       {
@@ -88,7 +88,7 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: demoBrands.first.enabled ? '1' : '0',
+            filterValue: Brands.first.enabled ? '1' : '0',
           },
       },
     ];
@@ -136,13 +136,13 @@ describe('BO - Catalog - Brands & suppliers : Filter and quick edit Brands table
     it('should filter by brand name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await brandsPage.filterBrands(page, 'input', 'name', demoBrands.first.name);
+      await brandsPage.filterBrands(page, 'input', 'name', Brands.first.name);
 
       const numberOfBrandsAfterFilter = await brandsPage.getNumberOfElementInGrid(page, tableName);
       await expect(numberOfBrandsAfterFilter).to.be.at.most(numberOfBrands);
 
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
-      await expect(textColumn).to.contains(demoBrands.first.name);
+      await expect(textColumn).to.contains(Brands.first.name);
     });
 
     [

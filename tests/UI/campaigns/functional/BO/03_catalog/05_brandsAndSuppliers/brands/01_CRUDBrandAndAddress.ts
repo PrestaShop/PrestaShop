@@ -14,8 +14,8 @@ import viewBrandPage from '@pages/BO/catalog/brands/view';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import BrandFaker from '@data/faker/brand';
-import BrandAddressFaker from '@data/faker/brandAddress';
+import BrandData from '@data/faker/brand';
+import BrandAddressData from '@data/faker/brandAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,10 +31,10 @@ describe('BO - Catalog - Brands & suppliers : CRUD Brand and Address', async () 
 
   const brandsTable: string = 'manufacturer';
   const addressesTable: string = 'manufacturer_address';
-  const createBrandData: BrandFaker = new BrandFaker();
-  const editBrandData: BrandFaker = new BrandFaker();
-  const createBrandAddressData: BrandAddressFaker = new BrandAddressFaker({brandName: createBrandData.name});
-  const editBrandAddressData: BrandAddressFaker = new BrandAddressFaker({brandName: editBrandData.name});
+  const createBrandData: BrandData = new BrandData();
+  const editBrandData: BrandData = new BrandData();
+  const createBrandAddressData: BrandAddressData = new BrandAddressData({brandName: createBrandData.name});
+  const editBrandAddressData: BrandAddressData = new BrandAddressData({brandName: editBrandData.name});
 
   // before and after functions
   before(async function () {
