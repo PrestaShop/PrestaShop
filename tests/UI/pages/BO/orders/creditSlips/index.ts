@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Credit slips page, contains functions that can be used on credit slips page
@@ -7,6 +8,66 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CreditSlips extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageTitleFR: string;
+
+  public readonly errorMessageWhenGenerateFileByDate: string;
+
+  private readonly creditSlipGridPanel: string;
+
+  private readonly creditSlipsGridTitle: string;
+
+  private readonly creditSlipGridTable: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationBlock: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly creditSlipsFilterColumnInput: (filterBy: string) => string;
+
+  private readonly creditSlipsTableRow: (row: number) => string;
+
+  private readonly creditSlipsTableColumn: (row: number, column: string) => string;
+
+  private readonly creditSlipDownloadButton: (id: number) => string;
+
+  private readonly generateByDateForm: string;
+
+  private readonly dateFromInput: string;
+
+  private readonly dateToInput: string;
+
+  private readonly generatePdfByDateButton: string;
+
+  private readonly creditSlipOptionsForm: string;
+
+  private readonly invoicePrefixENInput: string;
+
+  private readonly invoicePrefixFRInput: string;
+
+  private readonly languageDropDownButton: string;
+
+  private readonly invoicePrefixFrenchSelect: string;
+
+  private readonly saveCreditSlipOptionsButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on credit slips page
@@ -29,8 +90,8 @@ class CreditSlips extends BOBasePage {
 
     // Sort Credit Slip Selectors
     this.tableHead = `${this.creditSlipGridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationBlock = '.pagination-block';
@@ -39,10 +100,10 @@ class CreditSlips extends BOBasePage {
     this.paginationNextLink = `${this.creditSlipGridPanel} #pagination_next_url`;
     this.paginationPreviousLink = `${this.creditSlipGridPanel} .pagination .previous a.page-link`;
 
-    this.creditSlipsFilterColumnInput = (filterBy) => `#credit_slip_${filterBy}`;
-    this.creditSlipsTableRow = (row) => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
-    this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
-    this.creditSlipDownloadButton = (id) => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
+    this.creditSlipsFilterColumnInput = (filterBy: string) => `#credit_slip_${filterBy}`;
+    this.creditSlipsTableRow = (row: number) => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
+    this.creditSlipsTableColumn = (row: number, column: string) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
+    this.creditSlipDownloadButton = (id: number) => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
 
     // By date form
     this.generateByDateForm = '#form-generate-credit-slips-by-date';
@@ -67,7 +128,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -78,7 +139,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.creditSlipsGridTitle);
   }
 
@@ -87,7 +148,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -99,7 +160,7 @@ class CreditSlips extends BOBasePage {
    * @param value {string} value to filter with
    * @returns {Promise<void>}
    */
-  async filterCreditSlips(page, filterBy, value = '') {
+  async filterCreditSlips(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.creditSlipsFilterColumnInput(filterBy), value.toString());
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
@@ -112,7 +173,7 @@ class CreditSlips extends BOBasePage {
    * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<void>}
    */
-  async filterCreditSlipsByDate(page, dateFrom, dateTo) {
+  async filterCreditSlipsByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.creditSlipsFilterColumnInput('date_issued_from'), dateFrom);
     await page.type(this.creditSlipsFilterColumnInput('date_issued_to'), dateTo);
     // click on search
@@ -126,7 +187,7 @@ class CreditSlips extends BOBasePage {
    * @param column {string} Column name to get
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTableCreditSlips(page, row, column) {
+  async getTextColumnFromTableCreditSlips(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.creditSlipsTableColumn(row, column));
   }
 
@@ -134,9 +195,9 @@ class CreditSlips extends BOBasePage {
    * Download credit slip
    * @param page {Page} Browser tab
    * @param row {number} Credit slip row on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  downloadCreditSlip(page, row = 1) {
+  downloadCreditSlip(page: Page, row: number = 1): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.creditSlipDownloadButton(row));
   }
 
@@ -147,7 +208,7 @@ class CreditSlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<string>}
    */
-  async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
+  async generatePDFByDateAndDownload(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string|null> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
     return this.clickAndWaitForDownload(page, this.generatePdfByDateButton);
@@ -160,7 +221,7 @@ class CreditSlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<string>}
    */
-  async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
+  async generatePDFByDateAndFail(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
     return this.getAlertDangerBlockParagraphContent(page);
@@ -173,7 +234,7 @@ class CreditSlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<void>}
    */
-  async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
+  async setValuesForGeneratingPDFByDate(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<void> {
     if (dateFrom) {
       await this.setValue(page, this.dateFromInput, dateFrom);
     }
@@ -189,7 +250,7 @@ class CreditSlips extends BOBasePage {
    * @param prefixFR {string} Prefix on french language value to change
    * @returns {Promise<void>}
    */
-  async changePrefix(page, prefixEN, prefixFR = prefixEN) {
+  async changePrefix(page: Page, prefixEN: string, prefixFR: string = prefixEN): Promise<void> {
     await this.setValue(page, this.invoicePrefixENInput, prefixEN);
     await this.waitForSelectorAndClick(page, this.languageDropDownButton);
     await this.waitForSelectorAndClick(page, this.invoicePrefixFrenchSelect);
@@ -201,7 +262,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async deletePrefix(page) {
+  async deletePrefix(page: Page): Promise<void> {
     await this.clearInput(page, this.invoicePrefixENInput);
     await this.waitForSelectorAndClick(page, this.languageDropDownButton);
     await this.waitForSelectorAndClick(page, this.invoicePrefixFrenchSelect);
@@ -210,9 +271,9 @@ class CreditSlips extends BOBasePage {
 
   /** Save credit slip options
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
-  async saveCreditSlipOptions(page) {
+  async saveCreditSlipOptions(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -225,7 +286,7 @@ class CreditSlips extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -244,10 +305,10 @@ class CreditSlips extends BOBasePage {
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
-    let rowContent;
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
+    let rowContent: string;
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       rowContent = await this.getTextColumnFromTableCreditSlips(page, i, column);
@@ -263,7 +324,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -273,7 +334,7 @@ class CreditSlips extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -287,7 +348,7 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -298,11 +359,11 @@ class CreditSlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new CreditSlips();
+export default new CreditSlips();
