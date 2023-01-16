@@ -11,7 +11,7 @@ import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
 // Import data
-import ContactFaker from '@data/faker/contact';
+import ContactData from '@data/faker/contact';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
   let page: Page;
   let numberOfContacts: number = 0;
 
-  const firstContactData: ContactFaker = new ContactFaker({title: 'todelete'});
-  const secondContactData: ContactFaker = new ContactFaker({title: 'todelete'});
+  const firstContactData: ContactData = new ContactData({title: 'todelete'});
+  const secondContactData: ContactData = new ContactData({title: 'todelete'});
 
   // before and after functions
   before(async function () {
