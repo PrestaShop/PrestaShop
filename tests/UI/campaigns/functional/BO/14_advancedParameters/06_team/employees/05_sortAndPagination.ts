@@ -12,7 +12,7 @@ import employeesPage from '@pages/BO/advancedParameters/team/index';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
 // Import data
-import EmployeeFaker from '@data/faker/employee';
+import EmployeeData from '@data/faker/employee';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,7 +26,7 @@ Pagination
 Delete created employees
  */
 describe('BO - Advanced Parameters - Team : Sort and pagination employees', async () => {
-  const employeeData: EmployeeFaker = new EmployeeFaker();
+  const employeeData: EmployeeData = new EmployeeData();
 
   let browserContext: BrowserContext;
   let page: Page;
@@ -71,8 +71,8 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
   // 1 : Create 10 employees
   const tests = new Array(10).fill(0, 0, 10);
   describe('Create 10 employees in BO', async () => {
-    tests.forEach((test, index) => {
-      const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
+    tests.forEach((test: number, index: number) => {
+      const employeeToCreate = new EmployeeData({email: `${employeeData.email}${index}`});
 
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);

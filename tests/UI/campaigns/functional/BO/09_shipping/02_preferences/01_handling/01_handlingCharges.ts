@@ -25,7 +25,7 @@ import productPage from '@pages/FO/product';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import Groups from '@data/demo/groups';
-import CarrierFaker from '@data/faker/carrier';
+import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,7 +47,7 @@ describe('BO - Shipping - Preferences : Test handling charges for carriers in FO
   let page: Page;
   let newCarrierID: string = '0';
 
-  const createCarrierData: CarrierFaker = new CarrierFaker({
+  const createCarrierData: CarrierData = new CarrierData({
     freeShipping: false,
     allZones: true,
     handlingCosts: true,

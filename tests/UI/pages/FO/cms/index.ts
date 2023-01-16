@@ -9,9 +9,9 @@ import FOBasePage from '@pages/FO/FObasePage';
 class CMS extends FOBasePage {
   public readonly pageNotFound: string;
 
-  private readonly pageTitle: string;
+  public readonly pageTitle: string;
 
-  private readonly pageContent: string;
+  public readonly pageContent: string;
 
   /**
    * @constructs

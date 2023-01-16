@@ -1,8 +1,9 @@
+import Countries from '@data/demo/countries';
+
 const {faker} = require('@faker-js/faker');
 const {DefaultCustomer} = require('@data/demo/customer');
-const {countries} = require('@data/demo/countries');
 
-const countriesNames = Object.values(countries).map((country) => country.name);
+const countriesNames = Object.values(Countries).map((country) => country.name);
 
 const records = [];
 

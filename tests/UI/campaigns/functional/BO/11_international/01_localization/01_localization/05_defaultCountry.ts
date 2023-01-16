@@ -12,7 +12,7 @@ import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 
 // Import Data
-import {countries} from '@data/demo/countries';
+import Countries from '@data/demo/countries';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,7 +33,7 @@ describe('BO - International - Localization : Update default country', async () 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const countriesToTest: string[] = [countries.netherlands.name, countries.france.name];
+  const countriesToTest: string[] = [Countries.netherlands.name, Countries.france.name];
 
   // before and after functions
   before(async function () {

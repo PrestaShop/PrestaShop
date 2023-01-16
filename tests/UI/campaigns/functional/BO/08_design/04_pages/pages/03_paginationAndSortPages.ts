@@ -12,7 +12,7 @@ import pagesPage from '@pages/BO/design/pages/index';
 import addPagePage from '@pages/BO/design/pages/add';
 
 // Import data
-import PageFaker from '@data/faker/CMSpage';
+import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -70,8 +70,8 @@ describe('BO - design - Pages : Pagination and sort Pages table', async () => {
   // 1 : Create 11 pages
   describe('Create 11 pages in BO', async () => {
     const tests = new Array(11).fill(0, 0, 11);
-    tests.forEach((test, index) => {
-      const createPageData = new PageFaker({title: `todelete${index}`});
+    tests.forEach((test: number, index: number) => {
+      const createPageData: CMSPageData = new CMSPageData({title: `todelete${index}`});
 
       it('should go to add new page page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPagePage${index}`, baseContext);

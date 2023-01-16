@@ -12,7 +12,7 @@ import pagesPage from '@pages/BO/design/pages/index';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-import PageFaker from '@data/faker/CMSpage';
+import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,8 +28,8 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
   let page: Page;
   let numberOfPages: number = 0;
 
-  const firstPageData: PageFaker = new PageFaker({title: 'todelete'});
-  const secondPageData: PageFaker = new PageFaker({title: 'todelete'});
+  const firstPageData: CMSPageData = new CMSPageData({title: 'todelete'});
+  const secondPageData: CMSPageData = new CMSPageData({title: 'todelete'});
   const pagesTable: string = 'cms_page';
 
   // before and after functions
@@ -69,7 +69,7 @@ describe('Bo - Design - Pages : Enable/Disable/Delete pages with Bulk Actions', 
 
   // 1 : Create 2 pages In BO
   describe('Create 2 pages', async () => {
-    [firstPageData, secondPageData].forEach((pageToCreate, index) => {
+    [firstPageData, secondPageData].forEach((pageToCreate: CMSPageData, index: number) => {
       it('should go to add new page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddPage${index + 1}`, baseContext);
 

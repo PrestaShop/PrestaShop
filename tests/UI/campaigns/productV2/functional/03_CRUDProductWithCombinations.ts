@@ -23,7 +23,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import ProductData from '@data/faker/product';
-import {DefaultEmployee} from '@data/demo/employees';
+import Employees from '@data/demo/employees';
 
 const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
 
@@ -270,7 +270,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
       const result: object = await combinationsTab.getRecentStockMovements(page);
       await Promise.all([
         await expect(result.dateTime).to.contains(todayDate),
-        await expect(result.employee).to.equal(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`),
+        await expect(result.employee).to.equal(`${Employees.DefaultEmployee.firstName} ${Employees.DefaultEmployee.lastName}`),
         await expect(result.quantity).to.equal(secondCombinationData.quantity),
       ]);
     });

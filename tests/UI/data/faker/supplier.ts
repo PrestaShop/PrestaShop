@@ -1,8 +1,10 @@
-import {faker} from '@faker-js/faker';
-import {countries} from '@data/demo/countries';
+import Countries from '@data/demo/countries';
+import type CountryData from '@data/faker/country';
 import SupplierCreator from '@data/types/supplier';
 
-const countriesNames: string[] = Object.values(countries).map((country) => country.name);
+import {faker} from '@faker-js/faker';
+
+const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
 
 /**
  * Create new supplier to use on supplier creation form on BO
