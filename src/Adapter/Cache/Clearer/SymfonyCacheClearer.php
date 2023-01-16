@@ -28,9 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
 use Hook;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tools;
 
@@ -41,8 +39,6 @@ use Tools;
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
-    private $shutdownRegistered = false;
-
     /**
      * {@inheritdoc}
      */
@@ -57,34 +53,9 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             return;
         }
 
-        if ($this->shutdownRegistered) {
-            return;
-        }
-
-        $this->shutdownRegistered = true;
-        register_shutdown_function(function () use ($kernel) {
-            // The cache may have been removed by Tools::clearSf2Cache, it happens during install
-            // process, in which case we don't run the cache:clear command because it is not only
-            // useless it will simply fail as the container caches classes have been removed
-            $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
-            if (!file_exists($cacheDir)) {
-                return;
-            }
-
-            $application = new Application($kernel);
-            $application->setAutoExit(false);
-
-            // Clear cache
-            $input = new ArrayInput([
-                'command' => 'cache:clear',
-                '--no-optional-warmers' => true,
-                '--env' => _PS_ENV_,
-            ]);
-
-            $output = new NullOutput();
-            $application->run($input, $output);
-
-            Hook::exec('actionClearSf2Cache');
-        });
+        // Remove the cache folder, and then reboot the kernel
+        (new Filesystem())->remove($kernel->getCacheDir());
+        $kernel->reboot($kernel->getCacheDir());
+        Hook::exec('actionClearSf2Cache');
     }
 }
