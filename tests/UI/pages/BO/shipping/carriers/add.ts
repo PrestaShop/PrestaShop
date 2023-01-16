@@ -142,13 +142,13 @@ class AddCarrier extends BOBasePage {
     // Set range sup only if free shipping is disabled
     if (!carrierData.freeShipping) {
       await this.setValue(page, this.rangeSupInput, carrierData.rangeSup);
-    }
 
-    if (carrierData.allZones) {
-      await page.click(this.allZonesRadioButton);
-      await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
-    } else {
-      await page.click(this.zoneRadioButton(carrierData.zoneID.toString()));
+      if (carrierData.allZones) {
+        await page.click(this.allZonesRadioButton);
+        await this.setValue(page, this.allZonesValueInput, carrierData.allZonesValue);
+      } else {
+        await page.click(this.zoneRadioButton(carrierData.zoneID.toString()));
+      }
     }
     await page.click(this.nextButton);
 
