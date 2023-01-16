@@ -16,7 +16,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import {DefaultCustomer} from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
-import DeliverySlipOptionsFaker from '@data/faker/deliverySlipOptions';
+import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -44,7 +44,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
     productQuantity: 5,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
   };
-  const deliverySlipData: DeliverySlipOptionsFaker = new DeliverySlipOptionsFaker();
+  const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
 
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
