@@ -314,7 +314,7 @@ class FrontControllerCore extends Controller
             Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
-        // If the theme is missing, we need to die immediately
+        // If the theme is missing, we need to throw an Exception
         if (!is_dir(_PS_THEME_DIR_)) {
             throw new PrestaShopException($this->trans('Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.', [basename(rtrim(_PS_THEME_DIR_, '/\\'))], 'Admin.Design.Notification'));
         }
