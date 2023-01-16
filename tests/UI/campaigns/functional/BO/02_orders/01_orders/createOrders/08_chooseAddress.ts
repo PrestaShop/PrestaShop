@@ -25,7 +25,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -58,11 +58,11 @@ describe('BO - Orders - Create order : Choose address', async () => {
   // Const used for the payment status
   const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
   // Variable used to create new address in Pre-condition
-  const newAddressToCreate: AddressFaker = new AddressFaker({email: DefaultCustomer.email, lastName: 'test', country: 'France'});
+  const newAddressToCreate: AddressData = new AddressData({email: DefaultCustomer.email, lastName: 'test', country: 'France'});
   // Variable used to edit demo address
-  const addressToEditData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressToEditData: AddressData = new AddressData({country: 'France'});
   // Variable used to add new address from new order page
-  const newAddressData: AddressFaker = new AddressFaker({lastName: 'test', country: 'France'});
+  const newAddressData: AddressData = new AddressData({lastName: 'test', country: 'France'});
 
   // Pre-condition: Create new address
   createAddressTest(newAddressToCreate, `${baseContext}_preTest_1`);

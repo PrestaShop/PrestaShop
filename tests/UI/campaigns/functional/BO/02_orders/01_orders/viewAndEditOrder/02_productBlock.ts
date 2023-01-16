@@ -20,7 +20,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CartRuleFaker from '@data/faker/cartRule';
 import CustomerFaker from '@data/faker/customer';
 import ProductData from '@data/faker/product';
@@ -72,7 +72,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
   const orderData: Order = {
     customer: customerData,

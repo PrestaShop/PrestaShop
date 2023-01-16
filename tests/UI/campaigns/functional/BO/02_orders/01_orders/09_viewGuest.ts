@@ -14,7 +14,7 @@ import ordersPage from '@pages/BO/orders';
 
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import type Order from '@data/types/order';
 
@@ -39,7 +39,7 @@ describe('BO - Orders : View guest from orders page', async () => {
   let page: Page;
 
   const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
   const orderByGuestData: Order = {
     customer: customerData,

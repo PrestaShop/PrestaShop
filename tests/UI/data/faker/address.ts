@@ -1,21 +1,65 @@
 import Countries from '@data/demo/countries';
 import States from '@data/demo/states';
+import type CountryData from '@data/faker/country';
+import type StateData from '@data/faker/state';
+import type AddressCreator from '@data/types/address';
 
 import {faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(Countries).map((country) => country.name);
-const statesNames = Object.values(States).map((state) => state.name);
+const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
+const statesNames: string[] = Object.values(States).map((state: StateData) => state.name);
 
 /**
  * Create new address to use in customer address form on BO and FO
  * @class
  */
-class AddressData {
+export default class AddressData {
+  public readonly id: number;
+
+  public readonly firstName: string;
+
+  public readonly lastName: string;
+
+  public readonly email: string;
+
+  public readonly dni: string;
+
+  public readonly alias: string;
+
+  public readonly company: string;
+
+  public readonly vatNumber: string;
+
+  public readonly address: string;
+
+  public readonly secondAddress: string;
+
+  public readonly postalCode: string;
+
+  public readonly city: string;
+
+  public readonly country: string;
+
+  public readonly state: string;
+
+  public readonly phone: string;
+
+  public readonly other: string;
+
   /**
    * Constructor for class AddressData
-   * @param addressToCreate {Object} Could be used to force the value of some members
+   * @param addressToCreate {AddressCreator} Could be used to force the value of some members
    */
-  constructor(addressToCreate = {}) {
+  constructor(addressToCreate: AddressCreator = {}) {
+    /** @type {string} Tax identification number of the customer */
+    this.id = addressToCreate.id || 0;
+
+    /** @type {string} Customer firstname */
+    this.firstName = addressToCreate.firstName || faker.name.firstName();
+
+    /** @type {string} Customer lastname */
+    this.lastName = addressToCreate.lastName || faker.name.lastName();
+
     /** @type {string} Related customer email */
     this.email = addressToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
 
@@ -24,12 +68,6 @@ class AddressData {
 
     /** @type {string} Address alias or name */
     this.alias = addressToCreate.alias || faker.address.streetAddress();
-
-    /** @type {string} Customer firstname */
-    this.firstName = addressToCreate.firstName || faker.name.firstName();
-
-    /** @type {string} Customer lastname */
-    this.lastName = addressToCreate.lastName || faker.name.lastName();
 
     /** @type {string} Company name if it's a company address */
     this.company = (addressToCreate.company || faker.company.name()).substring(0, 63);
@@ -56,11 +94,9 @@ class AddressData {
     this.state = addressToCreate.state || faker.helpers.arrayElement(statesNames);
 
     /** @type {string} Phone number */
-    this.phone = addressToCreate.homePhone || faker.phone.number('01########');
+    this.phone = addressToCreate.phone || faker.phone.number('01########');
 
     /** @type {string} Other information to add on address */
     this.other = addressToCreate.other || '';
   }
 }
-
-module.exports = AddressData;

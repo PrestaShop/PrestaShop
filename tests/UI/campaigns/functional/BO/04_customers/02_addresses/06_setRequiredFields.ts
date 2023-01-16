@@ -18,7 +18,7 @@ import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import FakerAddress from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,8 +35,8 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
   let browserContext: BrowserContext;
   let page: Page;
 
-  const addressDataWithVatNumber: FakerAddress = new FakerAddress({country: 'France', vatNumber: '0102030405'});
-  const addressDataWithoutVatNumber: FakerAddress = new FakerAddress({country: 'France'});
+  const addressDataWithVatNumber: AddressData = new AddressData({country: 'France', vatNumber: '0102030405'});
+  const addressDataWithoutVatNumber: AddressData = new AddressData({country: 'France'});
 
   // before and after functions
   before(async function () {

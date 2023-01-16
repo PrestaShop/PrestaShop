@@ -28,7 +28,7 @@ import productPage from '@pages/FO/product';
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import ContactUsFakerData from '@data/faker/contactUs';
 import CustomerData from '@data/faker/customer';
 
@@ -66,7 +66,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   const customerData: CustomerData = new CustomerData({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
   const date: Date = new Date();
-  const addressData: AddressFaker = new AddressFaker({
+  const addressData: AddressData = new AddressData({
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',

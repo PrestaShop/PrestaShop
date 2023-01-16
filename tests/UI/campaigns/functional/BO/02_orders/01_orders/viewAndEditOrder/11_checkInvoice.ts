@@ -10,7 +10,7 @@ import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
 import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import {createOrderByCustomerTest} from '@commonTests/FO/order';
+import {createOrderByCustomerTest, createOrderSpecificProductTest} from '@commonTests/FO/order';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';
@@ -23,7 +23,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Address from '@data/demo/address';
+import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
@@ -293,8 +293,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should change the \'Invoice address\'', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress1', baseContext);
 
-        const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-          + `${Address.third.postalCode} ${Address.third.city}`;
+        const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
+          + `${Addresses.third.postalCode} ${Addresses.third.city}`;
 
         const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -359,13 +359,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Delivery Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.be.true;
         });
@@ -376,12 +376,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath as string,
             'Billing Address,,'
-            + `${Address.third.firstName} ${Address.third.lastName},`
-            + `${Address.third.company},`
-            + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
-            + `${Address.third.country},`
-            + `${Address.third.phone}`,
+            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
+            + `${Addresses.third.company},`
+            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
+            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
+            + `${Addresses.third.country},`
+            + `${Addresses.third.phone}`,
           );
           await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
         });
@@ -592,13 +592,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Delivery Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.be.true;
         });
@@ -609,13 +609,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath as string,
             'Billing Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
         });
@@ -663,7 +663,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             `${customizedProduct.name}, ,`
             + `€${customizedProduct.price.toFixed(2)}, ,`
             + '1, ,'
-            + `€${(customizedProduct.price * 1).toFixed(2)}`,
+            + `€${customizedProduct.price.toFixed(2)}`,
           );
           await expect(
             productPriceExist,
@@ -787,13 +787,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Delivery Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.be.true;
         });
@@ -804,13 +804,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath as string,
             'Billing Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
         });
@@ -1027,13 +1027,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Delivery Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.be.true;
         });
@@ -1044,13 +1044,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const billingAddressExist = await files.isTextInPDF(
             filePath as string,
             'Billing Address,,'
-            + `${Address.second.firstName} ${Address.second.lastName},`
-            + `${Address.second.company},`
-            + `${Address.second.address},`
-            + `${Address.second.secondAddress},`
-            + `${Address.second.postalCode} ${Address.second.city},`
-            + `${Address.second.country},`
-            + `${Address.second.phone}`,
+            + `${Addresses.second.firstName} ${Addresses.second.lastName},`
+            + `${Addresses.second.company},`
+            + `${Addresses.second.address},`
+            + `${Addresses.second.secondAddress},`
+            + `${Addresses.second.postalCode} ${Addresses.second.city},`
+            + `${Addresses.second.country},`
+            + `${Addresses.second.phone}`,
           );
           await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
         });
@@ -1170,8 +1170,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Shipping address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress2', baseContext);
 
-          const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.postalCode} ${Address.third.city}`;
+          const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
+            + `${Addresses.third.postalCode} ${Addresses.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1193,12 +1193,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Delivery Address,,'
-            + `${Address.third.firstName} ${Address.third.lastName},`
-            + `${Address.third.company},`
-            + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
-            + `${Address.third.country},`
-            + `${Address.third.phone}`,
+            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
+            + `${Addresses.third.company},`
+            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
+            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
+            + `${Addresses.third.country},`
+            + `${Addresses.third.phone}`,
           );
           await expect(deliveryAddressExist, 'Delivery address is not correct!').to.be.true;
         });
@@ -1206,8 +1206,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should change the \'Invoice address\'', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress3', baseContext);
 
-          const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.postalCode} ${Address.third.city}`;
+          const addressToSelect = `${Addresses.third.id}- ${Addresses.third.address} ${Addresses.third.secondAddress} `
+            + `${Addresses.third.postalCode} ${Addresses.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1229,12 +1229,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const deliveryAddressExist = await files.isTextInPDF(
             filePath as string,
             'Billing Address,,'
-            + `${Address.third.firstName} ${Address.third.lastName},`
-            + `${Address.third.company},`
-            + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
-            + `${Address.third.country},`
-            + `${Address.third.phone}`,
+            + `${Addresses.third.firstName} ${Addresses.third.lastName},`
+            + `${Addresses.third.company},`
+            + `${Addresses.third.address} ${Addresses.third.secondAddress},`
+            + `${Addresses.third.city}, ${Addresses.third.state} ${Addresses.third.postalCode},`
+            + `${Addresses.third.country},`
+            + `${Addresses.third.phone}`,
           );
           await expect(deliveryAddressExist, 'Billing address is not correct!').to.be.true;
         });

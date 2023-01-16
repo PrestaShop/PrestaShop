@@ -22,7 +22,7 @@ import {DefaultCustomer} from '@data/demo/customer';
 import Employees from '@data/demo/employees';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildev';
@@ -65,7 +65,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const orderNote: string = 'Test order note';
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressData: AddressData = new AddressData({country: 'France'});
   const customerData: CustomerFaker = new CustomerFaker({password: ''});
   // New employee data
   const createEmployeeData: EmployeeData = new EmployeeData({

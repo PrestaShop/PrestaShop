@@ -1,6 +1,9 @@
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import {ViewOrderBasePage} from '@pages/BO/orders/view/viewOrderBasePage';
 
+// Import data
+import AddressData from '@data/faker/address';
+
 import type {Frame, Page} from 'playwright';
 
 /**
@@ -139,7 +142,7 @@ class CustomerBlock extends ViewOrderBasePage {
    * @param addressData {AddressData} Shipping address data to edit
    * @returns {Promise<string>}
    */
-  async editExistingShippingAddress(page: Page, addressData): Promise<string> {
+  async editExistingShippingAddress(page: Page, addressData: AddressData): Promise<string> {
     await this.waitForSelectorAndClick(page, this.shippingAddressToolTipLink);
     await this.waitForSelectorAndClick(page, this.editShippingAddressButton);
 

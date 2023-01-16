@@ -14,7 +14,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import addresses from '@data/demo/address';
+import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
@@ -57,7 +57,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     ],
     deliveryAddress: 'Mon adresse',
     invoiceAddress: 'Mon adresse',
-    addressValue: addresses.second,
+    addressValue: Addresses.second,
     deliveryOption: {
       name: `${Carriers.default.name} - ${Carriers.default.delay}`,
       freeShipping: true,

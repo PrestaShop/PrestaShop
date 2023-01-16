@@ -2,6 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 import type {Page} from 'playwright';
+import AddressData from '@data/faker/address';
 
 /**
  * Add address page, contains functions that can be used on the page
@@ -87,10 +88,10 @@ class AddAddress extends FOBasePage {
   /**
    * Fill address form and save
    * @param page {Page} Browser tab
-   * @param addressData {object} Address's information to fill on form
+   * @param addressData {AddressData} Address's information to fill on form
    * @returns {Promise<string>}
    */
-  async setAddress(page: Page, addressData: object): Promise<string> {
+  async setAddress(page: Page, addressData: AddressData): Promise<string> {
     // Set alias if added (optional)
     if (addressData.alias) {
       await this.setValue(page, this.aliasInput, addressData.alias);

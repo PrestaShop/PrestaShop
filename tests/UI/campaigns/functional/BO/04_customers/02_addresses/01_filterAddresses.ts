@@ -10,7 +10,7 @@ import addressesPage from '@pages/BO/customers/addresses';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import Address from '@data/demo/address';
+import Addresses from '@data/demo/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +68,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_address',
-            filterValue: Address.first.id.toString(),
+            filterValue: Addresses.first.id.toString(),
           },
       },
       {
@@ -77,7 +77,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: Address.second.firstName,
+            filterValue: Addresses.second.firstName,
           },
       },
       {
@@ -86,7 +86,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterLanstName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: Address.third.lastName,
+            filterValue: Addresses.third.lastName,
           },
       },
       {
@@ -95,7 +95,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterAddress',
             filterType: 'input',
             filterBy: 'address1',
-            filterValue: Address.first.address,
+            filterValue: Addresses.first.address,
           },
       },
       {
@@ -104,7 +104,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: Address.second.postalCode,
+            filterValue: Addresses.second.postalCode,
           },
       },
       {
@@ -113,7 +113,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterCity',
             filterType: 'input',
             filterBy: 'city',
-            filterValue: Address.third.city,
+            filterValue: Addresses.third.city,
           },
       },
       {
@@ -122,7 +122,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterIdCountry',
             filterType: 'select',
             filterBy: 'id_country',
-            filterValue: Address.first.country,
+            filterValue: Addresses.first.country,
           },
       },
     ];

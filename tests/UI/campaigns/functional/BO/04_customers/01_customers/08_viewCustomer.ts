@@ -27,7 +27,7 @@ import Languages from '@data/demo/languages';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 
 import {expect} from 'chai';
@@ -55,8 +55,8 @@ describe('BO - Customers - Customers : View information about customer', async (
   // Init data
   const createCustomerData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Customer'});
   const editCustomerData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
-  const address: AddressFaker = new AddressFaker({city: 'Paris', country: 'France'});
-  const createAddressData: AddressFaker = new AddressFaker({country: 'France'});
+  const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
+  const createAddressData: AddressData = new AddressData({country: 'France'});
 
   // Get customer birthdate format 'mm/dd/yyyy'
   const mmBirth: string = `0${createCustomerData.monthOfBirth}`.slice(-2);

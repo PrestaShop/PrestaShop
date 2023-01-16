@@ -12,6 +12,7 @@ import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import AddressData from '@data/faker/address';
 
 let browserContext: BrowserContext;
 let page: Page;
@@ -78,7 +79,7 @@ function createAccountTest(customerData: object, baseContext: string = 'commonTe
 
 function createAddressTest(
   customerLoginData: object,
-  addressData: object,
+  addressData: AddressData,
   baseContext: string = 'commonTests-createAddressTest',
 ): void {
   describe('PRE-TEST: Create address on FO', async () => {

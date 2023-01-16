@@ -22,7 +22,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import OrderStatusData from '@data/faker/orderStatus';
 import type Order from '@data/types/order';
@@ -55,7 +55,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
 
   const today: string = date.getDateFormat('yyyy-mm-dd');
   const newCustomer: CustomerFaker = new CustomerFaker();
-  const newAddress: AddressFaker = new AddressFaker({
+  const newAddress: AddressData = new AddressData({
     email: newCustomer.email,
     country: 'France',
   });

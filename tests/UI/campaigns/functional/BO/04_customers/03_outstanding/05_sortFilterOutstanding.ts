@@ -19,7 +19,7 @@ import ordersPage from '@pages/BO/orders';
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import type Order from '@data/types/order';
 
@@ -77,7 +77,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       await loginCommon.loginBO(this, page);
     });
     customersData.forEach((customerData, index = 1) => {
-      const addressData: AddressFaker = new AddressFaker({
+      const addressData: AddressData = new AddressData({
         email: customerData.email,
         country: 'France',
       });

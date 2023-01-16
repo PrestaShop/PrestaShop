@@ -26,7 +26,7 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data
-import Address from '@data/demo/address';
+import Addresses from '@data/demo/address';
 import {DefaultCustomer} from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
@@ -411,9 +411,9 @@ describe('FO - Account : Check order return PDF', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
         const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${DefaultCustomer.firstName}`
-          + ` ${DefaultCustomer.lastName},${Address.second.company},${Address.second.address},`
-          + `${Address.second.secondAddress},${Address.second.postalCode} ${Address.second.city}`
-          + `,${Address.second.country},${Address.second.phone},,`);
+          + ` ${DefaultCustomer.lastName},${Addresses.second.company},${Addresses.second.address},`
+          + `${Addresses.second.secondAddress},${Addresses.second.postalCode} ${Addresses.second.city}`
+          + `,${Addresses.second.country},${Addresses.second.phone},,`);
 
         await expect(isVisible, 'Billing and delivery address are not correct!').to.be.true;
       });

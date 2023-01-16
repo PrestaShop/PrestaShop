@@ -25,7 +25,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 import Carriers from '@data/demo/carriers';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 
 import {expect} from 'chai';
@@ -50,9 +50,9 @@ describe('BO - Orders : Preview order', async () => {
   let page: Page;
 
   const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
-  const editShippingAddressData: AddressFaker = new AddressFaker({country: 'France'});
-  const editInvoiceAddressData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressData: AddressData = new AddressData({country: 'France'});
+  const editShippingAddressData: AddressData = new AddressData({country: 'France'});
+  const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});
   const shippingDetailsData = {
     trackingNumber: '123654789',
     carrier: Carriers.myCarrier.name,

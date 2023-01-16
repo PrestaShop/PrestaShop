@@ -20,7 +20,7 @@ import productPage from '@pages/FO/product';
 // Import data
 import Products from '@data/demo/products';
 import CustomerFaker from '@data/faker/customer';
-import FakerAddress from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -49,9 +49,9 @@ describe('FO - Account : CRUD address', async () => {
   let secondAddressPosition: number = 0;
 
   const newCustomerData: CustomerFaker = new CustomerFaker();
-  const createAddressData: FakerAddress = new FakerAddress({country: 'France'});
-  const editAddressData: FakerAddress = new FakerAddress({country: 'France'});
-  const secondAddressData: FakerAddress = new FakerAddress({country: 'France'});
+  const createAddressData: AddressData = new AddressData({country: 'France'});
+  const editAddressData: AddressData = new AddressData({country: 'France'});
+  const secondAddressData: AddressData = new AddressData({country: 'France'});
 
   // Pre-condition: Delete cache
   deleteCacheTest(baseContext);

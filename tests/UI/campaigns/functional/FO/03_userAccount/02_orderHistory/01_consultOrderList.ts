@@ -18,7 +18,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import {Order, OrderHistory} from '@data/types/order';
 import Products from '@data/demo/products';
@@ -48,7 +48,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
   let page: Page;
 
   const customerData: CustomerFaker = new CustomerFaker();
-  const addressData: AddressFaker = new AddressFaker({
+  const addressData: AddressData = new AddressData({
     email: customerData.email,
     country: 'France',
   });

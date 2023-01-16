@@ -27,7 +27,7 @@ import loginPage from '@pages/FO/login';
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 import Order from '@data/types/order';
 
@@ -57,7 +57,7 @@ describe('FO - Consult credit slip list & View PDF Credit slip & View order', as
   let filePath: string;
 
   const customerData: CustomerFaker = new CustomerFaker();
-  const addressData: AddressFaker = new AddressFaker({
+  const addressData: AddressData = new AddressData({
     email: customerData.email,
     country: 'France',
   });

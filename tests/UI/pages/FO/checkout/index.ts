@@ -1,6 +1,9 @@
 // Import pages
 import FOBasePage from '@pages/FO/FObasePage';
 
+// Import data
+import AddressData from '@data/faker/address';
+
 import type {Page} from 'playwright';
 
 /**
@@ -630,10 +633,10 @@ class Checkout extends FOBasePage {
   /**
    * Fill address form, used for delivery and invoice addresses
    * @param page {Page} Browser tab
-   * @param address {object} Address's information to fill form with
+   * @param address {AddressData} Address's information to fill form with
    * @returns {Promise<void>}
    */
-  async fillAddressForm(page: Page, address: any): Promise<void> {
+  async fillAddressForm(page: Page, address: AddressData): Promise<void> {
     await this.setValue(page, this.addressStepCompanyInput, address.company);
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
@@ -646,11 +649,11 @@ class Checkout extends FOBasePage {
   /**
    * Set address step
    * @param page {Page} Browser tab
-   * @param deliveryAddress {object} Address's information to add (for delivery)
-   * @param invoiceAddress {object} Address's information to add (for invoice)
+   * @param deliveryAddress {AddressData|null} Address's information to add (for delivery)
+   * @param invoiceAddress {AddressData|null} Address's information to add (for invoice)
    * @returns {Promise<boolean>}
    */
-  async setAddress(page: Page, deliveryAddress: object, invoiceAddress: object | null = null): Promise<boolean> {
+  async setAddress(page: Page, deliveryAddress: AddressData, invoiceAddress: AddressData|null = null): Promise<boolean> {
     // Set delivery address
     await this.fillAddressForm(page, deliveryAddress);
 

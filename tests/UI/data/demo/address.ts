@@ -1,5 +1,7 @@
-module.exports = {
-  first: {
+import AddressData from '@data/faker/address';
+
+export default {
+  first: new AddressData({
     id: 1,
     firstName: 'Anonymous',
     lastName: 'Anonymous',
@@ -7,8 +9,8 @@ module.exports = {
     postalCode: '00000',
     city: 'Anonymous',
     country: 'France',
-  },
-  second: {
+  }),
+  second: new AddressData({
     id: 2,
     firstName: 'John',
     lastName: 'DOE',
@@ -19,15 +21,15 @@ module.exports = {
     city: 'Paris',
     country: 'France',
     phone: '0102030405',
-  },
-  third: {
+  }),
+  third: new AddressData({
     id: 5,
-    dni: null,
+    dni: '',
     alias: 'My address',
     firstName: 'John',
     lastName: 'DOE',
     company: 'My Company',
-    vatNumber: null,
+    vatNumber: '',
     address: '16, Main street',
     secondAddress: '2nd floor',
     postalCode: '33133',
@@ -35,6 +37,6 @@ module.exports = {
     state: 'Florida',
     country: 'United States',
     phone: '0102030405',
-    other: null,
-  },
+    other: '',
+  }),
 };

@@ -21,7 +21,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 import CustomerFaker from '@data/faker/customer';
 
 import {expect} from 'chai';
@@ -48,8 +48,8 @@ Check that the 2 addresses are different
 describe('FO - Guest checkout: Use different invoice address', async () => {
   // Create faker data
   const guestData: CustomerFaker = new CustomerFaker({password: ''});
-  const deliveryAddress: AddressFaker = new AddressFaker({country: 'France'});
-  const invoiceAddress: AddressFaker = new AddressFaker({country: 'France'});
+  const deliveryAddress: AddressData = new AddressData({country: 'France'});
+  const invoiceAddress: AddressData = new AddressData({country: 'France'});
 
   let browserContext: BrowserContext;
   let page: Page;
