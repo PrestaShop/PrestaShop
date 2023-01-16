@@ -462,6 +462,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\DeleteCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SearchCombinationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SearchProductCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationImagesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
