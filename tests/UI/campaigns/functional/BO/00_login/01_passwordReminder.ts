@@ -11,7 +11,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
 import dashboardPage from '@pages/BO/dashboard';
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 
 // Import data
 import EmployeeData from '@data/faker/employee';

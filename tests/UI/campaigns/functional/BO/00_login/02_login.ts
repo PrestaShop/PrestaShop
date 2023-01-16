@@ -3,7 +3,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import pages
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data

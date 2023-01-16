@@ -15,15 +15,19 @@ export default {
     password: string = global.BO.PASSWD,
   ): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'loginBO');
+
     await loginPage.goTo(page, global.BO.URL);
     await loginPage.successLogin(page, email, password);
+
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
   },
 
   async logoutBO(mochaContext: Context, page: Page): Promise<void> {
     await testContext.addContextItem(mochaContext, 'testIdentifier', 'logoutBO');
+
     await dashboardPage.logoutBO(page);
+
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.contains(loginPage.pageTitle);
   },

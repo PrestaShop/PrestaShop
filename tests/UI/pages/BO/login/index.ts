@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * BO login page, contains texts, selectors and functions to use on the page.
@@ -7,6 +8,30 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Login extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly loginErrorText: string;
+
+  public readonly resetPasswordSuccessText: string;
+
+  private readonly emailInput: string;
+
+  private readonly passwordInput: string;
+
+  private readonly submitLoginButton: string;
+
+  private readonly alertDangerDiv: string;
+
+  private readonly alertDangerTextBlock: string;
+
+  private readonly forgotPasswordLink: string;
+
+  private readonly resetPasswordEmailFormField: string;
+
+  private readonly resetPasswordButton: string;
+
+  private readonly resetPasswordSuccessConfirmationText: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use
@@ -40,7 +65,7 @@ class Login extends BOBasePage {
    * @param email {string} String of employee email
    * @return {Promise<void>}
    */
-  async fillEmailInput(page, email) {
+  async fillEmailInput(page: Page, email: string): Promise<void> {
     await this.setValue(page, this.emailInput, email);
   }
 
@@ -50,7 +75,7 @@ class Login extends BOBasePage {
    * @param password {string} String of employee password
    * @return {Promise<void>}
    */
-  async fillPasswordInput(page, password) {
+  async fillPasswordInput(page: Page, password: string): Promise<void> {
     await this.setValue(page, this.passwordInput, password);
   }
 
@@ -61,7 +86,7 @@ class Login extends BOBasePage {
    * @param password {string} String of employee password
    * @return {Promise<void>}
    */
-  async fillForm(page, email, password) {
+  async fillForm(page: Page, email: string, password: string): Promise<void> {
     await this.fillEmailInput(page, email);
     await this.fillPasswordInput(page, password);
   }
@@ -72,7 +97,7 @@ class Login extends BOBasePage {
    * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
-  async clickOnLoginButton(page, waitForNavigation) {
+  async clickOnLoginButton(page: Page, waitForNavigation: boolean): Promise<void> {
     // Wait for navigation if the login is successful
     if (waitForNavigation) {
       await this.clickAndWaitForNavigation(page, this.submitLoginButton);
@@ -88,7 +113,7 @@ class Login extends BOBasePage {
    * @param password {string} String of employee password
    * @returns {Promise<void>}
    */
-  async successLogin(page, email, password) {
+  async successLogin(page: Page, email: string, password: string): Promise<void> {
     await this.fillForm(page, email, password);
     await this.clickOnLoginButton(page, true);
   }
@@ -100,7 +125,7 @@ class Login extends BOBasePage {
    * @param password {string} String of employee password
    * @return {Promise<void>}
    */
-  async failedLogin(page, email, password) {
+  async failedLogin(page: Page, email: string, password: string): Promise<void> {
     await this.fillForm(page, email, password);
     await this.clickOnLoginButton(page, false);
   }
@@ -110,7 +135,7 @@ class Login extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getLoginError(page) {
+  getLoginError(page: Page): Promise<string> {
     return this.getTextContent(page, this.alertDangerTextBlock);
   }
 
@@ -120,7 +145,7 @@ class Login extends BOBasePage {
    * @param page
    * @return {Promise<void>}
    */
-  async goToForgotPasswordView(page) {
+  async goToForgotPasswordView(page: Page): Promise<void> {
     await page.click(this.forgotPasswordLink);
     await this.waitForVisibleSelector(page, this.resetPasswordButton);
   }
@@ -131,7 +156,7 @@ class Login extends BOBasePage {
    * @param email {string} String of employee email
    * @return {Promise<void>}
    */
-  async fillResetPasswordEmailInput(page, email) {
+  async fillResetPasswordEmailInput(page: Page, email: string): Promise<void> {
     await this.setValue(page, this.resetPasswordEmailFormField, email);
   }
 
@@ -141,7 +166,7 @@ class Login extends BOBasePage {
    * @param email {string} String of employee email
    * @returns {Promise<void>}
    */
-  async sendResetPasswordLink(page, email) {
+  async sendResetPasswordLink(page: Page, email: string): Promise<void> {
     await this.goToForgotPasswordView(page);
     await this.fillResetPasswordEmailInput(page, email);
     await page.click(this.resetPasswordButton);
@@ -152,9 +177,9 @@ class Login extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getResetPasswordSuccessMessage(page) {
+  getResetPasswordSuccessMessage(page: Page): Promise<string> {
     return this.getTextContent(page, this.resetPasswordSuccessConfirmationText);
   }
 }
 
-module.exports = new Login();
+export default new Login();

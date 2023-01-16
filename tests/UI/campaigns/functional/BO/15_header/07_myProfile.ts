@@ -13,7 +13,7 @@ import setPermissions from '@commonTests/BO/advancedParameters/setPermissions';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products/index';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
