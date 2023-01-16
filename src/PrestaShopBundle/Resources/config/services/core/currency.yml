@@ -32,3 +32,6 @@ services:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - '@prestashop.core.currency.exchange_rate.circuit_breaker'
       - '@cache.app'
+
+  prestashop.core.localization.currency.pattern_transformer:
+    class: PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer

@@ -69,18 +69,26 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
     protected $validator;
 
     /**
+     * @var PatternTransformer
+     */
+    protected $patternTransformer;
+
+    /**
      * @param LocaleRepository $localeRepoCLDR
      * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
+     * @param PatternTransformer $patternTransformer
      */
     public function __construct(
         LocaleRepository $localeRepoCLDR,
         array $languages,
-        CurrencyCommandValidator $validator
+        CurrencyCommandValidator $validator,
+        PatternTransformer $patternTransformer
     ) {
         $this->localeRepoCLDR = $localeRepoCLDR;
         $this->languages = $languages;
         $this->validator = $validator;
+        $this->patternTransformer = $patternTransformer;
     }
 
     /**
@@ -129,7 +137,6 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
      */
     protected function applyPatternTransformations(Currency $entity, array $localizedTransformations)
     {
-        $transformer = new PatternTransformer();
         $localizedPatterns = [];
         foreach ($localizedTransformations as $langId => $transformationType) {
             if (empty($transformationType)) {
@@ -137,7 +144,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
             }
 
             $languageCurrencyPattern = $this->getCurrencyPatternByLanguageId($langId);
-            $localizedPatterns[$langId] = $transformer->transform($languageCurrencyPattern, $transformationType);
+            $localizedPatterns[$langId] = $this->patternTransformer->transform($languageCurrencyPattern, $transformationType);
         }
         $entity->setLocalizedPatterns($localizedPatterns);
     }

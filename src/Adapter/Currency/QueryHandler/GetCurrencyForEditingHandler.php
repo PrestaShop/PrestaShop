@@ -46,11 +46,19 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
     private $contextShopId;
 
     /**
+     * @var PatternTransformer
+     */
+    private $patternTransformer;
+
+    /**
      * @param int $contextShopId
      */
-    public function __construct($contextShopId)
-    {
+    public function __construct(
+        int $contextShopId,
+        PatternTransformer $patternTransformer
+    ) {
         $this->contextShopId = $contextShopId;
+        $this->patternTransformer = $patternTransformer;
     }
 
     /**
@@ -68,10 +76,9 @@ final class GetCurrencyForEditingHandler implements GetCurrencyForEditingHandler
             throw new CurrencyNotFoundException(sprintf('Currency object with id "%s" was not found for editing', $query->getCurrencyId()->getValue()));
         }
 
-        $transformer = new PatternTransformer();
         $transformations = [];
         foreach ($entity->getLocalizedPatterns() as $langId => $pattern) {
-            $transformations[$langId] = !empty($pattern) ? $transformer->getTransformationType($pattern) : '';
+            $transformations[$langId] = !empty($pattern) ? $this->patternTransformer->getTransformationType($pattern) : '';
         }
 
         return new EditableCurrency(
