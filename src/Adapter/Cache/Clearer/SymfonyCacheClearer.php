@@ -28,8 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
 use AppKernel;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface as SymfonyCacheClearerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tools;
 
@@ -51,18 +53,12 @@ final class SymfonyCacheClearer implements CacheClearerInterface
     private $fs;
 
     /**
-     * @var SymfonyCacheClearerInterface
-     */
-    private $cacheClearer;
-
-    /**
      * @var array
      */
     private $warmupFolders = [];
 
-    public function __construct(SymfonyCacheClearerInterface $cacheClearer)
+    public function __construct()
     {
-        $this->cacheClearer = $cacheClearer;
         $this->fs = new Filesystem();
     }
 
@@ -105,9 +101,28 @@ final class SymfonyCacheClearer implements CacheClearerInterface
                 $this->fs->remove($warmupDir);
             }
         }, $this->warmupFolders);
-        $this->fs->remove($kernel->getCacheDir());
+        $this->runCacheClearCommand($kernel);
+    }
+
+    private function runCacheClearCommand(AppKernel $kernel): void
+    {
+        $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
+        if (!file_exists($cacheDir)) {
+            return;
+        }
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
         // Clear cache
-        $this->cacheClearer->clear($kernel->getCacheDir());
+        $input = new ArrayInput([
+            'command' => 'cache:clear',
+            '--no-optional-warmers' => true,
+            '--env' => _PS_ENV_,
+        ]);
+
+        $output = new NullOutput();
+        $application->run($input, $output);
     }
 
     /**
@@ -123,7 +138,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
         while (file_exists($warmupDir)) {
             ++$offset;
             // Keep the same length for the name
-            $warmupDir = substr($cacheDir, 0, strlen($cacheDir) - strlen((string) $offset)) . $offset;
+            $warmupDir = substr($cacheDir, 0, strlen($cacheDir) - strlen((string) $offset) - 1) . $offset;
         }
 
         return $warmupDir;
