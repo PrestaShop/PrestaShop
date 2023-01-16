@@ -16,7 +16,7 @@ import taxesPage from '@pages/BO/international/taxes/index';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import cartPage from '@pages/FO/cart';

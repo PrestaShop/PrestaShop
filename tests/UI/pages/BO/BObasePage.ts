@@ -141,9 +141,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly preferencesLink: string;
 
-  private readonly internationalParentLink: string;
+  public readonly internationalParentLink: string;
 
-  private readonly taxesLink: string;
+  public readonly taxesLink: string;
 
   private readonly localizationLink: string;
 
