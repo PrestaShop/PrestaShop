@@ -737,7 +737,7 @@ class FrontControllerCore extends Controller
             $this->maintenance = true;
 
             $is_admin = (int) (new Cookie('psAdmin'))->id_employee;
-            $maintenance_allow_admins = (int) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
+            $maintenance_allow_admins = (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS');
             if ($is_admin && $maintenance_allow_admins) {
                 return;
             }
