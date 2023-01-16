@@ -13,6 +13,8 @@ services:
 
   prestashop.adapter.cache.clearer.symfony_cache_clearer:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer'
+    arguments:
+      - '@cache_clearer'
 
   prestashop.adapter.cache.clearer.xml_cache_clearer:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\Clearer\XmlCacheClearer'

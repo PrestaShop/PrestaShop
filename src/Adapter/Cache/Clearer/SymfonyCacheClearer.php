@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 
-use Hook;
+use AppKernel;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -39,6 +39,32 @@ use Tools;
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
+    /**
+     * @var bool
+     */
+    private $shutdownRegistered = false;
+
+    /**
+     * @var Filesystem
+     */
+    private $fs;
+
+    /**
+     * @var CacheClearerInterface
+     */
+    private $cacheClearer;
+
+    /**
+     * @var array
+     */
+    private $warmupFolders = [];
+
+    public function __construct(CacheClearerInterface $cacheClearer)
+    {
+        $this->cacheClearer = $cacheClearer;
+        $this->fs = new Filesystem();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -53,9 +79,52 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             return;
         }
 
-        // Remove the cache folder, and then reboot the kernel
-        (new Filesystem())->remove($kernel->getCacheDir());
-        $kernel->reboot($kernel->getCacheDir());
-        Hook::exec('actionClearSf2Cache');
+        // Reboot kernel right away so that it is up to date for the current process
+        $this->rebootKernel($kernel);
+
+        if (!$this->shutdownRegistered) {
+            $this->shutdownRegistered = true;
+            register_shutdown_function(function () use ($kernel) {
+                $this->clearCacheFolders($kernel);
+            });
+        }
+    }
+
+    private function rebootKernel(AppKernel $kernel): void
+    {
+        $warmupDir = $this->getNewWarmupCacheDir($kernel);
+        $this->warmupFolders[] = $warmupDir;
+        $kernel->reboot($warmupDir);
+    }
+
+    private function clearCacheFolders(AppKernel $kernel): void
+    {
+        array_map(function ($warmupDir) {
+            if (file_exists($warmupDir)) {
+                $this->fs->remove($warmupDir);
+            }
+        }, $this->warmupFolders);
+        $this->fs->remove($kernel->getCacheDir());
+        // Clear cache
+        $this->cacheClearer->clear($kernel->getCacheDir());
+    }
+
+    /**
+     * @param AppKernel $kernel
+     *
+     * @return string
+     */
+    private function getNewWarmupCacheDir(AppKernel $kernel): string
+    {
+        $cacheDir = $kernel->getCacheDir();
+        $offset = 0;
+        $warmupDir = $cacheDir;
+        while (file_exists($warmupDir)) {
+            ++$offset;
+            // Keep the same length for the name
+            $warmupDir = substr($cacheDir, 0, strlen($cacheDir) - strlen((string) $offset)) . $offset;
+        }
+
+        return $warmupDir;
     }
 }
