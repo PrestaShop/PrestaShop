@@ -2,7 +2,7 @@ install: composer assets
 
 composer:
 	composer install
-	bin/console cache:clear --no-warmup
+	./bin/console cache:clear --no-warmup
 
 assets:
 	./tools/assets/build.sh
