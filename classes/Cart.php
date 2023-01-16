@@ -1856,6 +1856,9 @@ class CartCore extends ObjectModel
         bool $preserveGiftsRemoval = true,
         bool $useOrderPrices = false
     ) {
+        if(!count(self::$_nbProducts)){
+            return self::delete();
+        }
         if (isset(self::$_nbProducts[$this->id])) {
             unset(self::$_nbProducts[$this->id]);
         }
