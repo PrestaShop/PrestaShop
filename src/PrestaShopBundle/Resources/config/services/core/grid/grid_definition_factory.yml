@@ -357,3 +357,9 @@ services:
       - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
       - '@prestashop.core.form.choice_provider.customer_thread_statuses_choice_provider'
     public: true
+
+  PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AuthorizedApplicationGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: false
+    autowire: true

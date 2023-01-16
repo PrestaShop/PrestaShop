@@ -26,24 +26,32 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
+namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\AuthorizationServer;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Manages the "Configure > Advanced Parameters > Authorization Server" page.
- */
-class AuthorizationServerController extends FrameworkBundleAdminController
+final class ApiAccessesStatesColumn extends AbstractColumn
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
-     * @return Response
+     * {@inheritdoc}
      */
-    public function indexAction(): Response
+    public function getType(): string
     {
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/index.html.twig');
+        return 'api_accesses_states';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
+        parent::configureOptions($resolver);
+
+        $resolver
+            ->setRequired([
+                'field',
+            ])
+            ->setAllowedTypes('field', 'string');
     }
 }

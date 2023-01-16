@@ -44,6 +44,7 @@ module.exports = {
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
+    authorization_server: './js/pages/authorization-server',
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
     cart_rule: './js/pages/cart-rule',
