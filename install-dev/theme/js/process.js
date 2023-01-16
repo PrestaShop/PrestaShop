@@ -161,11 +161,25 @@ function install_error(step, errors) {
   if (errors) {
     var list_errors = errors;
 
-    if ($.type(list_errors) == 'string') {
-      list_errors = [];
-      list_errors[0] = errors;
-    } else if ($.type(list_errors) == 'array') {
-      list_errors = [list_errors[0]];
+    switch (typeof list_errors) {
+      case 'string':
+        list_errors = [errors];
+        break;
+
+      case 'array':
+        list_errors = [list_errors[0]];
+        break;
+
+      case 'object':
+        let err = []
+        $.each(list_errors, function(prop, val){
+          if (typeof val === 'array') {
+            val = val.map(function(v){ return "<li>" + v + "</li>"});
+          }
+          err.push(prop + ' <ul>' + val + '</ul>');
+        });
+        list_errors = err;
+        break;
     }
 
     var display = '<ol>';
