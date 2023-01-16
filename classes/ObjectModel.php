@@ -286,9 +286,17 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
         }
 
-        $parameters['legacy'] = 'htmlspecialchars';
+        if (isset($parameters['_raw'])) {
+            @trigger_error(
+                'The _raw parameter is deprecated and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+            unset($parameters['_raw']);
 
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+            return $this->translator->trans($id, $parameters, $domain, $locale);
+        }
+
+        return htmlspecialchars($this->translator->trans($id, $parameters, $domain, $locale), ENT_NOQUOTES);
     }
 
     /**

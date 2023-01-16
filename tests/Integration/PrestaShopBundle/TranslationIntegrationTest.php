@@ -110,12 +110,6 @@ class TranslationIntegrationTest extends KernelTestCase
             'Modules.Mymodule.Foobar',
             ['%message%' => 'bad idea'],
         ];
-        yield 'translation with htmlspecialchars and sprintf' => [
-            '&lt;a href="test"&gt;10 Succesful deletion "&lt;b&gt;stringTest&lt;/b&gt;"&lt;/a&gt;',
-            '<a href="test">%d Succesful deletion "%s"</a>',
-            'Admin.Notifications.Success',
-            ['legacy' => 'htmlspecialchars', 10, '<b>stringTest</b>'],
-        ];
     }
 
     /**
