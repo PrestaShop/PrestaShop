@@ -5,12 +5,12 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
+import {createFeatureTest, bulkDeleteFeaturesTest} from '@commonTests/BO/catalog/features';
 
 // Import pages
+import dashboardPage from '@pages/BO/dashboard';
 import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
-import addFeaturePage from '@pages/BO/catalog/features/addFeature';
-import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
 import FeatureData from '@data/faker/feature';
@@ -21,17 +21,25 @@ import type {BrowserContext, Page} from 'playwright';
 const baseContext: string = 'functional_BO_catalog_attributesAndFeatures_features_features_sortPaginationAndBulkDelete';
 
 /*
-Go to Attributes & Features page
-Go to Features tab
-Create 18 new features
-Pagination next and previous
-Sort features table by ID, Name and Position
-Delete the created features by bulk actions
+Pre-condition:
+- Create 18 new features
+Scenario:
+- Pagination next and previous
+- Sort features table by ID, Name and Position
+Post-condition:
+- Delete the created features by bulk actions
  */
-describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by bulk actions features', async () => {
+describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delete features', async () => {
   let browserContext: BrowserContext;
   let page: Page;
   let numberOfFeatures: number = 0;
+
+  // PRE-condition : Create 19 features
+  const creationTests: number[] = new Array(19).fill(0, 0, 19);
+  creationTests.forEach((test: number, index: number) => {
+    const createFeatureData: FeatureData = new FeatureData({name: `toDelete${index}`});
+    createFeatureTest(createFeatureData, `${baseContext}_preTest${index}`);
+  });
 
   // before and after functions
   before(async function () {
@@ -43,28 +51,30 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  // 2 : Pagination
+  describe('Pagination next and previous', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Catalog > Attributes & Features\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
+    it('should go to \'Catalog > Attributes & Features\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAttributesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.attributesAndFeaturesLink,
-    );
-    await attributesPage.closeSfToolBar(page);
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.attributesAndFeaturesLink,
+      );
+      await attributesPage.closeSfToolBar(page);
 
     const pageTitle = await attributesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should go to Features page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
+    it('should go to Features page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
-    await attributesPage.goToFeaturesPage(page);
+      await attributesPage.goToFeaturesPage(page);
 
     const pageTitle = await featuresPage.getPageTitle(page);
     await expect(pageTitle).to.contains(featuresPage.pageTitle);
@@ -73,31 +83,6 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
     await expect(numberOfFeatures).to.be.above(0);
   });
 
-  // 1 : Create 19 new features
-  const creationTests: number[] = new Array(19).fill(0, 0, 19);
-  describe('Create 19 new features in BO', async () => {
-    creationTests.forEach((test: number, index: number) => {
-      const createFeatureData: FeatureData = new FeatureData({name: `todelete${index}`});
-      it('should go to add new feature page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewFeaturePage${index}`, baseContext);
-
-        await featuresPage.goToAddFeaturePage(page);
-
-        const pageTitle = await addFeaturePage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addFeaturePage.createPageTitle);
-      });
-
-      it(`should create feature n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createNewFeature${index}`, baseContext);
-
-        const textResult = await addFeaturePage.setFeature(page, createFeatureData);
-        await expect(textResult).to.contains(featuresPage.successfulCreationMessage);
-      });
-    });
-  });
-
-  // 2 : Pagination
-  describe('Pagination next and previous', async () => {
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
@@ -196,29 +181,6 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
     });
   });
 
-  // 4 : Delete created features by bulk actions
-  describe('Bulk delete features', async () => {
-    it('should filter by feature name \'toDelete\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
-
-      await featuresPage.filterTable(page, 'b!name', 'toDelete');
-
-      const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
-      await expect(numberOfFeaturesAfterFilter).to.be.equal(19);
-    });
-
-    it('should delete features by Bulk Actions and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
-
-      const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);
-      await expect(deleteTextResult).to.be.contains(featuresPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
-
-      const numberOfFeaturesAfterReset = await featuresPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfFeaturesAfterReset).to.equal(numberOfFeatures);
-    });
-  });
+  // POST-condition : Delete created features
+  bulkDeleteFeaturesTest('toDelete', baseContext);
 });
