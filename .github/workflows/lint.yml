@@ -92,7 +92,7 @@ jobs:
     name: YAML Lint (YamlLint Check)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
       - name: Install YAMLLint
