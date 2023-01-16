@@ -14,6 +14,14 @@ import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_FO_homePage_displaySomeProducts';
 
+/*
+- Go to FO
+- Check the block of popular products
+- Check the banner and the custom text block
+- Check the block of products on sale
+- Check the block of new products
+- Check the block of best sellers
+ */
 describe('FO - Home Page : Display some products', async () => {
   let browserContext: BrowserContext;
   let page: Page;

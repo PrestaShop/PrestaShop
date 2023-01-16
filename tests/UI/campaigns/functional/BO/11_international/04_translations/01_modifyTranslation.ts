@@ -78,7 +78,7 @@ describe('BO - International - Translation : Edit', async () => {
   it('should check the translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTranslation', baseContext);
 
-    const title = await homePage.getPopularProductTitle(page);
+    const title = await homePage.getBlockTitle(page);
     await expect(title).to.contain('translate');
   });
 
@@ -112,7 +112,7 @@ describe('BO - International - Translation : Edit', async () => {
   it('should check the translation', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkTranslationAfterReset', baseContext);
 
-    const title = await homePage.getPopularProductTitle(page);
+    const title = await homePage.getBlockTitle(page);
     await expect(title).to.equal('Produits populaires');
   });
 });

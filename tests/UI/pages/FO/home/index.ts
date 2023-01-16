@@ -308,19 +308,19 @@ class Home extends FOBasePage {
 
     switch (blockID) {
       case 1:
-        columnSelector = this.productsBlockTitle(2) as string;
+        columnSelector = this.productsBlockTitle(2);
         break;
 
       case 2:
-        columnSelector = this.productsBlockTitle(5) as string;
+        columnSelector = this.productsBlockTitle(5);
         break;
 
       case 3:
-        columnSelector = this.productsBlockTitle(6) as string;
+        columnSelector = this.productsBlockTitle(6);
         break;
 
       case 4:
-        columnSelector = this.productsBlockTitle(7) as string;
+        columnSelector = this.productsBlockTitle(7);
         break;
 
       default:
