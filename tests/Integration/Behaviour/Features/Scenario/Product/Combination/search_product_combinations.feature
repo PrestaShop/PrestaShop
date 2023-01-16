@@ -21,6 +21,15 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
     And I enable multishop feature
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And attribute group "Size" named "Size" in en language exists
+    And attribute group "Color" named "Color" in en language exists
+    And I associate attribute group "Size" with shops "shop1,shop2"
+    And I associate attribute group "Color" with shops "shop1,shop2"
+    And I associate attribute "M" with shops "shop1,shop2"
+    And I associate attribute "L" with shops "shop1,shop2"
+    And I associate attribute "White" with shops "shop1,shop2"
+    And I associate attribute "Black" with shops "shop1,shop2"
+    And I associate attribute "Blue" with shops "shop1,shop2"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
@@ -51,11 +60,15 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | product1Blue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
 
   Scenario: Search combinations by attributes
-    # @todo: doesn't work. Apparently fixture attributes are only generated in one shop. That raises questions like -
-    # how did it work in all other scenarios? - We are missing some parts, because it shouldn't be possible to generate
-    # combination for certain shop if it is missing the required attributes in attribute_shop table.
-    When I search product "product1" combinations by phrase "color" in language "en" for shop "shop2" limited to "2" results I should see following results:
+    When I search product "product1" combinations by phrase "b" in language "en" for shop "shop2" limited to "20" results I should see following results:
       | id reference  | combination name |
-      | product1White | Color - White    |
       | product1Black | Color - Black    |
       | product1Blue  | Color - Blue     |
+    When I search product "product1" combinations by phrase "white" in language "en" for shop "shop2" limited to "20" results I should see following results:
+      | id reference  | combination name |
+      | product1White | Color - White    |
+    When I search product "product1" combinations by phrase "white" in language "en" for shop "shop1" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1MWhite | Size - M, Color - White |
+    # @todo: add scnearios to search by attribute group and for all shops

@@ -71,6 +71,31 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I associate attribute group ":attributeGroupReference" with shops ":shopReferences"
+     *
+     * @param string $attributeGroupReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function associateAttributeGroupWithShops(string $attributeGroupReference, string $shopReferences): void
+    {
+        $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
+        $attributeGroup = new LegacyAttributeGroup($attributeGroupId);
+
+        if ($attributeGroupId !== (int) $attributeGroup->id) {
+            throw new RuntimeException(
+                sprintf(
+                'Failed to load Attribute group with id %d. Referenced as "%s"',
+                    $attributeGroupId,
+                    $attributeGroupReference
+                )
+            );
+        }
+        $attributeGroup->associateTo($this->referencesToIds($shopReferences));
+    }
+
+    /**
      * @Given there is a list of following attribute groups:
      *
      * @param TableNode $tableNode

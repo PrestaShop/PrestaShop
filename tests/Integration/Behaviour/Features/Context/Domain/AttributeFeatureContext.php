@@ -64,4 +64,29 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         Assert::assertNotNull($foundAttributeId, sprintf('Attribute named "%s" was not found', $name));
         $this->getSharedStorage()->set($attributeReference, $foundAttributeId);
     }
+
+    /**
+     * @Given I associate attribute ":attributeReference" with shops ":shopReferences"
+     *
+     * @param string $attributeReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function associateAttributeWithShops(string $attributeReference, string $shopReferences): void
+    {
+        $attributeId = $this->getSharedStorage()->get($attributeReference);
+        $attribute = new ProductAttribute($attributeId);
+
+        if ($attributeId !== (int) $attribute->id) {
+            throw new RuntimeException(
+                sprintf(
+                    'Failed to load Attribute with id %d. Referenced as "%s"',
+                    $attributeId,
+                    $attributeReference
+                )
+            );
+        }
+        $attribute->associateTo($this->referencesToIds($shopReferences));
+    }
 }

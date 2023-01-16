@@ -28,9 +28,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
-use Language;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombination;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -59,6 +59,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
         int $limit,
         ProductCombinationsResult $expectedResults
     ): void {
+        /** @var ProductCombinationsResult $productCombinationsResults */
         $productCombinationsResults = $this->getQueryBus()->handle(new SearchProductCombinations(
             $this->getSharedStorage()->get($productReference),
             (int) Language::getIdByIso($langIso),
