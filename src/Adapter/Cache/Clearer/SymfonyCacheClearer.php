@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use AppKernel;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface as SymfonyCacheClearerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Tools;
 
@@ -50,7 +51,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
     private $fs;
 
     /**
-     * @var CacheClearerInterface
+     * @var SymfonyCacheClearerInterface
      */
     private $cacheClearer;
 
@@ -59,7 +60,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
      */
     private $warmupFolders = [];
 
-    public function __construct(CacheClearerInterface $cacheClearer)
+    public function __construct(SymfonyCacheClearerInterface $cacheClearer)
     {
         $this->cacheClearer = $cacheClearer;
         $this->fs = new Filesystem();
