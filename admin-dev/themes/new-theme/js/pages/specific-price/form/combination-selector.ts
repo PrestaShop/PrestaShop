@@ -72,7 +72,7 @@ export default class CombinationSelector {
     const self = this;
 
     $combinationIdSelect.select2({
-      minimumResultsForSearch: 3,
+      minimumResultsForSearch: $combinationIdSelect.data('minimum-results-for-search'),
       ajax: {
         url: () => this.getUrl(),
         dataType: 'json',
@@ -84,7 +84,8 @@ export default class CombinationSelector {
           };
         },
         processResults(data: ProductCombinationsResult): jQuerySelect2Results {
-          const allCombinationsChoice = <CombinationChoice> self.getAllCombinationsChoice();
+          // prepend the "all combinations" choice to the top of the list
+          const allCombinationsChoice = <CombinationChoice> self.getChoiceForAllCombinations();
           const results = <jQuerySelect2Choice[]> [{
             id: allCombinationsChoice.combinationId,
             text: allCombinationsChoice.combinationName,
@@ -99,14 +100,6 @@ export default class CombinationSelector {
         },
       },
     });
-    this.fillSelectedChoice($combinationIdSelect);
-  }
-
-  async getCombinationChoices(): Promise<CombinationChoice[]> {
-    const response: Response = await fetch(this.getUrl());
-    const data = response.json();
-
-    return data.then((resp) => resp);
   }
 
   getUrl(): string {
@@ -124,25 +117,7 @@ export default class CombinationSelector {
     return this.router.generate('admin_products_v2_search_product_combinations', routeParams);
   }
 
-  async fillSelectedChoice($combinationIdSelect: JQuery): Promise<void> {
-    const selectedId = Number($combinationIdSelect.data('selected-id'));
-
-    let selectedChoice = this.getAllCombinationsChoice();
-
-    if (selectedId !== selectedChoice.combinationId) {
-      // @todo: improve performance. Add id filter to endpoint and only get one combination instead of loading all.
-      // @todo: move ajax part to combinations-service
-      const choices = <CombinationChoice[]> await this.getCombinationChoices();
-      selectedChoice = <CombinationChoice> choices.find(
-        (choice: CombinationChoice) => Number($combinationIdSelect.data('selected-id')) === Number(choice.combinationId));
-    }
-
-    $combinationIdSelect.prepend(
-      `<option selected value="${selectedChoice.combinationId}">${selectedChoice.combinationName}</option>`,
-    );
-  }
-
-  getAllCombinationsChoice(): CombinationChoice {
+  getChoiceForAllCombinations(): CombinationChoice {
     const combinationIdSelect = <HTMLSelectElement> this.container.querySelector(SpecificPriceMap.combinationIdSelect);
 
     return {

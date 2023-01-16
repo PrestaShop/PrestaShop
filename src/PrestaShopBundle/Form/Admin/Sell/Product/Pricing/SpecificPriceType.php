@@ -27,13 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
@@ -51,11 +56,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SpecificPriceType extends TranslatorAwareType
 {
     /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $combinationIdChoiceProvider;
-
-    /**
      * @var UrlGeneratorInterface
      */
     private $urlGenerator;
@@ -66,30 +66,48 @@ class SpecificPriceType extends TranslatorAwareType
     private $productRepository;
 
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @var EventSubscriberInterface
      */
     private $specificPriceCombinationListener;
 
     /**
+     * @var CombinationNameBuilderInterface
+     */
+    private $combinationNameBuilder;
+
+    /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
      * @param ProductRepository $productRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
         ProductRepository $productRepository,
-        EventSubscriberInterface $specificPriceCombinationListener
+        AttributeRepository $attributeRepository,
+        EventSubscriberInterface $specificPriceCombinationListener,
+        CombinationNameBuilderInterface $combinationNameBuilder,
+        int $contextLanguageId
     ) {
         parent::__construct($translator, $locales);
-        $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
         $this->productRepository = $productRepository;
+        $this->attributeRepository = $attributeRepository;
         $this->specificPriceCombinationListener = $specificPriceCombinationListener;
+        $this->combinationNameBuilder = $combinationNameBuilder;
+        $this->languageId = $contextLanguageId;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -133,9 +151,13 @@ class SpecificPriceType extends TranslatorAwareType
             $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'required' => false,
+                'choices' => $this->getSelectedChoices($builder),
                 'attr' => [
-                    'data-selected-id' => $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID,
-                    'data-all-combinations-label' => $this->trans('All combinations', 'Admin.Global'),
+                    // select2 jQuery component is added in javascript manually for this ChoiceType
+                    'data-minimum-results-for-search' => 7,
+                    // we still need to pass all combinations choice to javascript
+                    // to prepend it to the ajax-fetched list of combination choices
+                    'data-all-combinations-label' => $this->getAllCombinationsChoiceLabel(),
                     'data-all-combinations-value' => NoCombinationId::NO_COMBINATION_ID,
                 ],
             ]);
@@ -185,5 +207,47 @@ class SpecificPriceType extends TranslatorAwareType
             'required' => false,
             'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/FormTheme/specific_price.html.twig',
         ]);
+    }
+
+    /**
+     * Provides choices list with a selected choice only (so it can be shown during page load).
+     * All the other choices are retrieved through ajax in javascript side.
+     *
+     * @param FormBuilderInterface $builder
+     *
+     * @return array<string, int>
+     */
+    private function getSelectedChoices(FormBuilderInterface $builder): array
+    {
+        $combinationIdValue = (int) $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID;
+
+        return [
+            $this->getCombinationName($combinationIdValue) => $combinationIdValue
+        ];
+    }
+
+    /**
+     * @param int $combinationIdValue
+     *
+     * @return string
+     */
+    private function getCombinationName(int $combinationIdValue): string
+    {
+        if (NoCombinationId::NO_COMBINATION_ID === $combinationIdValue) {
+            return $this->getAllCombinationsChoiceLabel();
+        }
+
+        $combinationId = new CombinationId($combinationIdValue);
+        $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
+            [$combinationId],
+            new LanguageId($this->languageId)
+        );
+
+        return $this->combinationNameBuilder->buildName($attributesInformation[$combinationId->getValue()]);
+    }
+
+    private function getAllCombinationsChoiceLabel(): string
+    {
+        return $this->trans('All combinations', 'Admin.Global');
     }
 }
