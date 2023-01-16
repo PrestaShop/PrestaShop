@@ -1660,7 +1660,7 @@ services:
     arguments:
       - '@prestashop.core.admin.url_generator'
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShopBundle\Form\Admin\Sell\Product\EventListener\SpecificPriceCombinationListener'
       - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'

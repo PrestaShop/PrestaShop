@@ -66,7 +66,8 @@ class SearchProductCombinationsHandler implements SearchProductCombinationsHandl
             $query->getProductId(),
             $query->getLanguageId(),
             $query->getShopConstraint(),
-            $query->getSearchPhrase()
+            $query->getSearchPhrase(),
+            $query->getLimit()
         );
 
         $productCombinations = [];

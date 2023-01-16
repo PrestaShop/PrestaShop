@@ -297,6 +297,5 @@ admin_products_v2_search_product_combinations:
     productId: \d+
     shopId: \d+
     languageId: \d+
-    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
   options:
     expose: true

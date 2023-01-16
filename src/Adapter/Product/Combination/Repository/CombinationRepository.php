@@ -623,13 +623,15 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         ProductId $productId,
         LanguageId $languageId,
         ShopConstraint $shopConstraint,
-        string $searchPhrase
+        string $searchPhrase,
+        ?int $limit = null
     ): array {
         $combinationIds = $this->searchCombinationIdsByAttributes(
             $productId,
             $languageId,
             $shopConstraint,
-            $searchPhrase
+            $searchPhrase,
+            $limit
         );
 
         return $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $languageId);
@@ -732,7 +734,8 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         ProductId $productId,
         LanguageId $languageId,
         ShopConstraint $shopConstraint,
-        string $searchPhrase
+        string $searchPhrase,
+        ?int $limit
     ): array {
         if ($shopConstraint->getShopGroupId()) {
             throw new CombinationException('Group shop constraint not supported');
@@ -771,6 +774,10 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('attributes', $attributeIds, Connection::PARAM_INT_ARRAY)
             ->setParameter('productId', $productId->getValue())
         ;
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
 
         $results = $qb->execute()->fetchAll();
         if (!$results) {

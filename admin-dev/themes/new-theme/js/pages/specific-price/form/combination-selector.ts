@@ -70,11 +70,12 @@ export default class CombinationSelector {
     // inside select2 callback "this" is the jquery component,
     // so we need to assign a var to reach actual "this" (the combinationSelector) inside the callback
     const self = this;
+    const limit = $combinationIdSelect.data('minimum-results-for-search');
 
     $combinationIdSelect.select2({
-      minimumResultsForSearch: $combinationIdSelect.data('minimum-results-for-search'),
+      minimumResultsForSearch: limit,
       ajax: {
-        url: () => this.getUrl(),
+        url: () => this.getUrl(limit),
         dataType: 'json',
         type: 'GET',
         delay: 250,
@@ -102,9 +103,10 @@ export default class CombinationSelector {
     });
   }
 
-  getUrl(): string {
+  getUrl(limit: number): string {
     const routeParams = <Record<string, number>> {
       productId: this.productId,
+      limit,
     };
 
     const shopIdSelect = <HTMLSelectElement> this.container.querySelector(SpecificPriceMap.shopIdSelect);

@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class SearchProductCombinations
 {
+    public const DEFAULT_RESULTS_LIMIT = 20;
+
     /**
      * @var ProductId
      */
@@ -54,6 +56,11 @@ class SearchProductCombinations
     private $searchPhrase;
 
     /**
+     * @var int
+     */
+    private $limit;
+
+    /**
      * @param int $productId
      * @param int $languageId
      * @param ShopConstraint $shopConstraint
@@ -63,12 +70,14 @@ class SearchProductCombinations
         int $productId,
         int $languageId,
         ShopConstraint $shopConstraint,
-        string $searchPhrase
+        string $searchPhrase,
+        int $limit = self::DEFAULT_RESULTS_LIMIT
     ) {
         $this->productId = new ProductId($productId);
         $this->languageId = new LanguageId($languageId);
         $this->shopConstraint = $shopConstraint;
         $this->searchPhrase = $searchPhrase;
+        $this->limit = $limit;
     }
 
     /**
@@ -101,5 +110,13 @@ class SearchProductCombinations
     public function getSearchPhrase(): string
     {
         return $this->searchPhrase;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
     }
 }

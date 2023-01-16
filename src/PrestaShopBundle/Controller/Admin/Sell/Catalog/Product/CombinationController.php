@@ -184,7 +184,8 @@ class CombinationController extends FrameworkBundleAdminController
             $productId,
             $languageId ?: $this->getContextLangId(),
             $shopConstraint,
-            $searchPhrase
+            $searchPhrase,
+            $request->query->getInt('limit', SearchProductCombinations::DEFAULT_RESULTS_LIMIT)
         ));
 
         return $this->json(['combinations' => $results->getProductCombinations()]);

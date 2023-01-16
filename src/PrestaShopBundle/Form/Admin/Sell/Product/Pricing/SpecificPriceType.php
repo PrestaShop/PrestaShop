@@ -32,12 +32,10 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
@@ -55,6 +53,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceType extends TranslatorAwareType
 {
+    private const COMBINATION_RESULTS_LIMIT = 20;
+
     /**
      * @var UrlGeneratorInterface
      */
@@ -154,7 +154,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'choices' => $this->getSelectedChoices($builder),
                 'attr' => [
                     // select2 jQuery component is added in javascript manually for this ChoiceType
-                    'data-minimum-results-for-search' => 7,
+                    'data-minimum-results-for-search' => self::COMBINATION_RESULTS_LIMIT,
                     // we still need to pass all combinations choice to javascript
                     // to prepend it to the ajax-fetched list of combination choices
                     'data-all-combinations-label' => $this->getAllCombinationsChoiceLabel(),
@@ -219,10 +219,10 @@ class SpecificPriceType extends TranslatorAwareType
      */
     private function getSelectedChoices(FormBuilderInterface $builder): array
     {
-        $combinationIdValue = (int) $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID;
+        $combinationIdValue = $builder->getData()['combination_id'] ?? NoCombinationId::NO_COMBINATION_ID;
 
         return [
-            $this->getCombinationName($combinationIdValue) => $combinationIdValue
+            $this->getCombinationName($combinationIdValue) => $combinationIdValue,
         ];
     }
 
