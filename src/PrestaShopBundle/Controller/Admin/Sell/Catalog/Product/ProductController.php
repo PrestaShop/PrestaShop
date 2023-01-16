@@ -306,7 +306,7 @@ class ProductController extends FrameworkBundleAdminController
 
         if (null === $shopId) {
             /** @var ProductMultiShopRepository $productRepository */
-            $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+            $productRepository = $this->get(ProductMultiShopRepository::class);
             $shopId = $productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
         }
 
@@ -525,7 +525,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             /** @var ProductMultiShopRepository $productRepository */
-            $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+            $productRepository = $this->get(ProductMultiShopRepository::class);
             $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
             $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
                 return $shopId->getValue();
