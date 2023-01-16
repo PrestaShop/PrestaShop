@@ -176,7 +176,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
     it('should check the existence of order return form', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'isOrderReturnFormVisible', baseContext);
 
-      const result = await orderDetailsPage.isOrderReturnFormVisible(page);
+      const result: boolean = await orderDetailsPage.isOrderReturnFormVisible(page);
       await expect(result).to.be.true;
     });
 
@@ -185,7 +185,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
 
       await orderDetailsPage.requestMerchandiseReturn(page, 'Test merchandise returns');
 
-      const pageTitle = await foMerchandiseReturnsPage.getPageTitle(page);
+      const pageTitle: string = await foMerchandiseReturnsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(foMerchandiseReturnsPage.pageTitle);
     });
 
