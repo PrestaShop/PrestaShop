@@ -6,24 +6,21 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
+import dashboardPage from '@pages/BO/dashboard';
 import customerSettingsPage from '@pages/BO/shopParameters/customerSettings';
 import CustomerSettingsOptions from '@pages/BO/shopParameters/customerSettings/options';
 
-require('module-alias/register');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-const {expect} = require('chai');
-
-// Import pages
-const dashboardPage = require('@pages/BO/dashboard');
-
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to enable B2B mode
  * @param baseContext {string} String to identify the test
  */
-function enableB2BTest(baseContext = 'commonTests-enableB2BTest') {
+function enableB2BTest(baseContext: string = 'commonTests-enableB2BTest'): void {
   describe('PRE-TEST: Enable B2B', async () => {
     // before and after functions
     before(async function () {
@@ -70,7 +67,7 @@ function enableB2BTest(baseContext = 'commonTests-enableB2BTest') {
  * Function to disable B2B mode
  * @param baseContext {string} String to identify the test
  */
-function disableB2BTest(baseContext = 'commonTests-disableB2BTest') {
+function disableB2BTest(baseContext: string = 'commonTests-disableB2BTest'): void {
   describe('POST-TEST: Disable B2B', async () => {
     // before and after functions
     before(async function () {
@@ -94,7 +91,6 @@ function disableB2BTest(baseContext = 'commonTests-disableB2BTest') {
         dashboardPage.shopParametersParentLink,
         dashboardPage.customerSettingsLink,
       );
-
       await customerSettingsPage.closeSfToolBar(page);
 
       const pageTitle = await customerSettingsPage.getPageTitle(page);
@@ -114,4 +110,4 @@ function disableB2BTest(baseContext = 'commonTests-disableB2BTest') {
   });
 }
 
-module.exports = {enableB2BTest, disableB2BTest};
+export {enableB2BTest, disableB2BTest};

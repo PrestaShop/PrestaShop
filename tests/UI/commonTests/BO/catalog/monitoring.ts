@@ -1,29 +1,26 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const monitoringPage = require('@pages/BO/catalog/monitoring');
+import monitoringPage from '@pages/BO/catalog/monitoring';
+import dashboardPage from '@pages/BO/dashboard';
 
-let browserContext;
-let page;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
+
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to bulk delete all elements on table
  * @param tableID {string} Table name to bulk delete elements
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteProductsTest(tableID, baseContext = `commonTests-bulkDelete${tableID}Test`) {
+function bulkDeleteProductsTest(tableID: string, baseContext: string = `commonTests-bulkDelete${tableID}Test`): void {
   describe(`POST-TEST: Bulk delete products from '${tableID}' table`, async () => {
     // before and after functions
     before(async function () {
@@ -68,4 +65,4 @@ function bulkDeleteProductsTest(tableID, baseContext = `commonTests-bulkDelete${
   });
 }
 
-module.exports = {bulkDeleteProductsTest};
+export default bulkDeleteProductsTest;

@@ -1,24 +1,20 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const employeesPage = require('@pages/BO/advancedParameters/team/index');
-const permissionsPage = require('@pages/BO/advancedParameters/team/permissions/index');
+import dashboardPage from '@pages/BO/dashboard';
+import employeesPage from '@pages/BO/advancedParameters/team/index';
+import permissionsPage from '@pages/BO/advancedParameters/team/permissions/index';
 
-// Import expect from chai
-const {expect} = require('chai');
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
-let browserContext;
-let page;
+let browserContext: BrowserContext;
+let page: Page;
 
 /**
  * Function to set the employee permissions
@@ -26,7 +22,11 @@ let page;
  * @param permissionsData {array}
  * @param baseContext {string}
  */
-function setPermissions(profileName, permissionsData, baseContext = 'commonTests-setPermissions') {
+function setPermissions(
+  profileName: string,
+  permissionsData: object[],
+  baseContext: string = 'commonTests-setPermissions',
+): void {
   describe('PRE-TEST: Set permissions to a profile', async () => {
     // before and after functions
     before(async function () {
@@ -69,8 +69,8 @@ function setPermissions(profileName, permissionsData, baseContext = 'commonTests
       await expect(isSubTabOpened, 'Profile sub-tab is not opened!').to.be.true;
     });
 
-    permissionsData.forEach((permission) => {
-      permission.accesses.forEach((access) => {
+    permissionsData.forEach((permission: object) => {
+      permission.accesses.forEach((access: string) => {
         it(`should set the permission ${access} on the ${permission.className}`, async function () {
           await testContext.addContextItem(
             this,
@@ -87,4 +87,4 @@ function setPermissions(profileName, permissionsData, baseContext = 'commonTests
   });
 }
 
-module.exports = {setPermissions};
+export default setPermissions;

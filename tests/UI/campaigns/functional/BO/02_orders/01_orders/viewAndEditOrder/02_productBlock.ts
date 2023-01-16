@@ -3,10 +3,10 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
-import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
-import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
+import {deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
+import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByGuestTest} from '@commonTests/FO/order';
 

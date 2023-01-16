@@ -5,9 +5,9 @@ import mailHelper from '@utils/mailHelper';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/configSMTP';
-import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/createDeleteEmployee';
-import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {setupSmtpConfigTest, resetSmtpConfigTest} from '@commonTests/BO/advancedParameters/smtp';
+import {createEmployeeTest, deleteEmployeeTest} from '@commonTests/BO/advancedParameters/employee';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import loginCommon from '@commonTests/BO/loginBO';
 import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
 

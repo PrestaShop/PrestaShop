@@ -1,30 +1,27 @@
 // Import utils
 import helper from '@utils/helpers';
-
-// Import test context
 import testContext from '@utils/testContext';
 
-// Import login test
+// Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
 
-require('module-alias/register');
-
-const {expect} = require('chai');
-
 // Import BO pages
-const dashboardPage = require('@pages/BO/dashboard');
-const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
+import dashboardPage from '@pages/BO/dashboard';
+import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
-let browserContext;
-let page;
-let numberOfShoppingCarts = 0;
-let numberOfNonOrderedShoppingCarts = 0;
+import {expect} from 'chai';
+import type {BrowserContext, Page} from 'playwright';
 
 /**
- * Function to delete non ordered shopping carts
+ * Function to delete non-ordered shopping carts
  * @param baseContext {string} String to identify the test
  */
-function deleteNonOrderedShoppingCarts(baseContext = 'commonTests-deleteNonOrderedShoppingCartsTest') {
+function deleteNonOrderedShoppingCarts(baseContext: string = 'commonTests-deleteNonOrderedShoppingCartsTest'): void {
+  let browserContext: BrowserContext;
+  let page: Page;
+  let numberOfShoppingCarts: number = 0;
+  let numberOfNonOrderedShoppingCarts: number = 0;
+
   describe('PRE-TEST: Delete the non-ordered shopping carts', async () => {
     // before and after functions
     before(async function () {
@@ -94,4 +91,4 @@ function deleteNonOrderedShoppingCarts(baseContext = 'commonTests-deleteNonOrder
   });
 }
 
-module.exports = {deleteNonOrderedShoppingCarts};
+export default deleteNonOrderedShoppingCarts;

@@ -5,12 +5,12 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
-import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/createDeleteProduct';
-import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/createDeleteCurrency';
-import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/enableDisableEcoTax';
+import {createCartRuleTest, deleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
+import {bulkDeleteProductsTest} from '@commonTests/BO/catalog/product';
+import {createCurrencyTest, deleteCurrencyTest} from '@commonTests/BO/international/currency';
+import {enableEcoTaxTest, disableEcoTaxTest} from '@commonTests/BO/international/ecoTax';
 import loginCommon from '@commonTests/BO/loginBO';
-import {deleteNonOrderedShoppingCarts} from '@commonTests/BO/orders/shoppingCarts';
+import deleteNonOrderedShoppingCarts from '@commonTests/BO/orders/shoppingCarts';
 
 // Import BO pages
 import productsPage from '@pages/BO/catalog/products';

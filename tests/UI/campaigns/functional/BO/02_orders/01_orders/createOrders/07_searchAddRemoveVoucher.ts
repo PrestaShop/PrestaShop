@@ -5,7 +5,7 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import common tests
-import {createCartRuleTest, bulkDeleteCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
+import {createCartRuleTest, bulkDeleteCartRuleTest} from '@commonTests/BO/catalog/cartRule';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages

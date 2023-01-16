@@ -6,9 +6,9 @@ import testContext from '@utils/testContext';
 
 // Import commonTests
 import loginCommon from '@commonTests/BO/loginBO';
-import {createAddressTest} from '@commonTests/BO/customers/createDeleteAddress';
-import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/createDeleteCustomer';
-import {enableB2BTest, disableB2BTest} from '@commonTests/BO/shopParameters/enableDisableB2B';
+import {createAddressTest} from '@commonTests/BO/customers/address';
+import {createCustomerB2BTest, bulkDeleteCustomersTest} from '@commonTests/BO/customers/customer';
+import {disableB2BTest, enableB2BTest} from '@commonTests/BO/shopParameters/b2b';
 import {createOrderByCustomerTest} from '@commonTests/FO/order';
 
 // Import pages

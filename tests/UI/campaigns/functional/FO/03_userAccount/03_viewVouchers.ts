@@ -4,8 +4,8 @@ import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
 
 // Import commonTests
-import {createCartRuleTest} from '@commonTests/BO/catalog/createDeleteCartRule';
-import {deleteCustomerTest} from '@commonTests/BO/customers/createDeleteCustomer';
+import {createCartRuleTest} from '@commonTests/BO/catalog/cartRule';
+import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
 import {createAccountTest} from '@commonTests/FO/account';
 
 // Import FO pages
