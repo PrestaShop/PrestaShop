@@ -15,16 +15,20 @@ services:
       - 0
       - '%ps_cache_dir%/localization'
 
-  prestashop.core.localization.locale.repository:
-    class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
+  PrestaShop\PrestaShop\Core\Localization\Locale\Repository:
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
       - '@prestashop.core.localization.currency.repository'
+
+  prestashop.core.localization.locale.repository:
+    alias: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
 
   prestashop.core.localization.locale.context_locale:
     factory: [ '@prestashop.core.localization.locale.repository', 'getLocale' ]
     class: PrestaShop\PrestaShop\Core\Localization\Locale
     arguments: [ '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()' ]
+
+  PrestaShop\PrestaShop\Core\Localization\LocaleInterface: '@prestashop.core.localization.locale.context_locale'
 
   prestashop.core.localization.currency.repository:
     class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository

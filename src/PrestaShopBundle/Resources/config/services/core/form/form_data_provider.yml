@@ -170,7 +170,7 @@ services:
   prestashop.core.form.identifiable_object.data_provider.product_shops_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductShopsFormDataProvider'
     arguments:
-      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:

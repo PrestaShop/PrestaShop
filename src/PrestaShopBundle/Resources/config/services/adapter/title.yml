@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '@prestashop.adapter.image_manager'
+      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - !php/const _PS_GENDERS_DIR_
 
   prestashop.adapter.title.command_handler.delete_title_handler:

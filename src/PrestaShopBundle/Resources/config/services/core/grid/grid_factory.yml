@@ -380,7 +380,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.product'
-      - '@prestashop.adapter.product.grid.data.factory.product_grid_data_factory_decorator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductGridDataFactoryDecorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
@@ -388,7 +388,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.product.shops'
-      - '@prestashop.adapter.product.grid.data.factory.product_shops_grid_data_factory_decorator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductShopsGridDataFactoryDecorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 
@@ -396,7 +396,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
     arguments:
       - '@prestashop.core.grid.definition.factory.product_light'
-      - '@prestashop.adapter.product.grid.data.factory.product_light_grid_data_factory_decorator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory\ProductLightGridDataFactoryDecorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
 

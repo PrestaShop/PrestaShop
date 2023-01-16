@@ -98,7 +98,7 @@ class UpdateProductFeatureValuesFeatureContext extends AbstractProductFeatureCon
     private function storeCreatedFeatureValuesReferences(array $featureValueIds, array $featureValuesData): void
     {
         /** @var FeatureValueRepository $featureValueRepository */
-        $featureValueRepository = $this->getContainer()->get('prestashop.adapter.feature.repository.feature_value_repository');
+        $featureValueRepository = $this->getContainer()->get(FeatureValueRepository::class);
         foreach ($featureValueIds as $featureValueId) {
             $featureValue = $featureValueRepository->get($featureValueId);
             foreach ($featureValuesData as $featureValueDatum) {

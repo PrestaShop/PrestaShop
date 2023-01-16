@@ -57,7 +57,7 @@ services:
   prestashop.adapter.employee.avatar_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\AvatarProvider'
     arguments:
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
 
   prestashop.adapter.employee.data_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Employee\EmployeeDataProvider'

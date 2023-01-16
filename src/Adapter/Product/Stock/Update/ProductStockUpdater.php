@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -76,14 +76,9 @@ class ProductStockUpdater
     private $movementReasonRepository;
 
     /**
-     * @var Configuration
+     * @var ShopConfigurationInterface
      */
     private $configuration;
-
-    /**
-     * @var bool
-     */
-    private $advancedStockEnabled;
 
     /**
      * @var HookManager
@@ -95,7 +90,7 @@ class ProductStockUpdater
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
         MovementReasonRepository $movementReasonRepository,
-        Configuration $configuration,
+        ShopConfigurationInterface $configuration,
         HookManager $hookManager
     ) {
         $this->stockManager = $stockManager;
@@ -103,7 +98,6 @@ class ProductStockUpdater
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->movementReasonRepository = $movementReasonRepository;
         $this->configuration = $configuration;
-        $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
         $this->hookManager = $hookManager;
     }
 
@@ -126,7 +120,7 @@ class ProductStockUpdater
 
         $this->updateStockByShopConstraint($stockAvailable, $properties, $shopConstraint);
 
-        if ($this->advancedStockEnabled && $product->depends_on_stock) {
+        if ($this->isAdvancedStockEnabled($shopConstraint) && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
         }
     }
@@ -190,7 +184,7 @@ class ProductStockUpdater
                 new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, $shopConstraint))
             );
 
-            if ($this->advancedStockEnabled) {
+            if ($this->isAdvancedStockEnabled($shopConstraint)) {
                 StockAvailable::synchronize($productId->getValue(), $shopId->getValue());
             }
         }
@@ -357,5 +351,10 @@ class ProductStockUpdater
                 'id_shop' => (int) $affectedShopId,
             ]
         );
+    }
+
+    private function isAdvancedStockEnabled(ShopConstraint $shopConstraint): bool
+    {
+        return (bool) $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT', null, $shopConstraint);
     }
 }

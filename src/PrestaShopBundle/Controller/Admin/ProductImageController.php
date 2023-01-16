@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use ImageManager;
+use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +51,7 @@ class ProductImageController extends FrameworkBundleAdminController
     public function uploadImageAction($idProduct, Request $request)
     {
         $response = new JsonResponse();
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $return_data = [];
 
         if ($idProduct == 0 || !$request->isXmlHttpRequest()) {
@@ -114,7 +115,7 @@ class ProductImageController extends FrameworkBundleAdminController
     public function updateImagePositionAction(Request $request)
     {
         $response = new JsonResponse();
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $json = $request->request->get('json');
 
         if (!empty($json) && $request->isXmlHttpRequest()) {
@@ -137,7 +138,7 @@ class ProductImageController extends FrameworkBundleAdminController
     public function formAction($idImage, Request $request)
     {
         $locales = $this->get('prestashop.adapter.legacy.context')->getLanguages();
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         if ($idImage == 0 || !$request->isXmlHttpRequest()) {
@@ -198,7 +199,7 @@ class ProductImageController extends FrameworkBundleAdminController
     public function deleteAction($idImage, Request $request)
     {
         $response = new JsonResponse();
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
 
         if (!$request->isXmlHttpRequest()) {
             return $response;

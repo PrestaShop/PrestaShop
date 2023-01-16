@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\GridPositionUpdaterInterface;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition;
-use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactory;
+use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 use PrestaShop\PrestaShop\Core\Image\Exception\CannotUnlinkImageException;
 
 class ProductImageUpdater
@@ -53,7 +53,7 @@ class ProductImageUpdater
     private $productImageUploader;
 
     /**
-     * @var PositionUpdateFactory
+     * @var PositionUpdateFactoryInterface
      */
     private $positionUpdateFactory;
 
@@ -74,13 +74,13 @@ class ProductImageUpdater
 
     /**
      * @param ProductImageUploader $productImageUploader
-     * @param PositionUpdateFactory $positionUpdateFactory
+     * @param PositionUpdateFactoryInterface $positionUpdateFactory
      * @param PositionDefinition $positionDefinition
      * @param GridPositionUpdaterInterface $positionUpdater
      */
     public function __construct(
         ProductImageUploader $productImageUploader,
-        PositionUpdateFactory $positionUpdateFactory,
+        PositionUpdateFactoryInterface $positionUpdateFactory,
         PositionDefinition $positionDefinition,
         GridPositionUpdaterInterface $positionUpdater,
         ProductImageMultiShopRepository $productImageMultiShopRepository
