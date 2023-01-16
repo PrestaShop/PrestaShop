@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombination;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 
 class SearchProductCombinationsHandler implements SearchProductCombinationsHandlerInterface
@@ -59,7 +60,7 @@ class SearchProductCombinationsHandler implements SearchProductCombinationsHandl
     /**
      * {@inheritDoc}
      */
-    public function handle(SearchProductCombinations $query): array
+    public function handle(SearchProductCombinations $query): ProductCombinationsResult
     {
         $combinationsAttributesInformation = $this->combinationRepository->searchProductCombinations(
             $query->getProductId(),
@@ -76,6 +77,6 @@ class SearchProductCombinationsHandler implements SearchProductCombinationsHandl
             );
         }
 
-        return $productCombinations;
+        return new ProductCombinationsResult($productCombinations);
     }
 }

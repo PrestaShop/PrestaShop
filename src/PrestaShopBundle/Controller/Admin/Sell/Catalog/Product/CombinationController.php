@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -164,7 +165,8 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $productId
-     * @param string $languageCode
+     * @param int|null $shopId
+     * @param int|null $languageId
      *
      * @return JsonResponse
      */
@@ -177,6 +179,7 @@ class CombinationController extends FrameworkBundleAdminController
         $searchPhrase = $request->query->get('q', '');
         $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
 
+        /** @var ProductCombinationsResult $results */
         $results = $this->getQueryBus()->handle(new SearchProductCombinations(
             $productId,
             $languageId ?: $this->getContextLangId(),
@@ -184,7 +187,7 @@ class CombinationController extends FrameworkBundleAdminController
             $searchPhrase
         ));
 
-        return $this->json($results);
+        return $this->json(['combinations' => $results->getProductCombinations()]);
     }
 
     /**

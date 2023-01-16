@@ -32,6 +32,10 @@ interface CombinationChoice {
   combinationName: string,
 }
 
+interface ProductCombinationsResult {
+  combinations: CombinationChoice[]
+}
+
 interface jQuerySelect2Choice {
   id: number,
   text: string,
@@ -79,14 +83,14 @@ export default class CombinationSelector {
             q: params.term,
           };
         },
-        processResults(data: CombinationChoice[]): jQuerySelect2Results {
+        processResults(data: ProductCombinationsResult): jQuerySelect2Results {
           const allCombinationsChoice = <CombinationChoice> self.getAllCombinationsChoice();
           const results = <jQuerySelect2Choice[]> [{
             id: allCombinationsChoice.combinationId,
             text: allCombinationsChoice.combinationName,
           }];
 
-          results.push(...data.map((combination: CombinationChoice) => ({
+          results.push(...data.combinations.map((combination: CombinationChoice) => ({
             id: combination.combinationId,
             text: combination.combinationName,
           })));
