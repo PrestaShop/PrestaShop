@@ -75,7 +75,7 @@ class ProductSimplePresenter
 
     }
 
-    public static function getInstance(Context $context = null)
+    public static function getInstance(Context $context = null): self
     {
         if (empty(self::$instance)) {
             self::$instance = new self($context);
@@ -89,7 +89,7 @@ class ProductSimplePresenter
      * @return ProductLazyArray|null
      * @throws ReflectionException
      */
-    public function present(Product $product)
+    public function present(Product $product): ?ProductLazyArray
     {
         if (!Validate::isLoadedObject($product)) {
             return null;
@@ -110,7 +110,7 @@ class ProductSimplePresenter
      * @param Product[] $products
      * @return ProductLazyArray[]|array
      */
-    public function presentProducts(array $products)
+    public function presentProducts(array $products): array
     {
         $result = [];
 
@@ -131,7 +131,7 @@ class ProductSimplePresenter
      * @param mixed $product
      * @return bool
      */
-    public function isProduct($product)
+    public function isProduct($product): bool
     {
         return $product instanceof Product;
     }
