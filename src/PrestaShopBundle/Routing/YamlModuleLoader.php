@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Routing;
 
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use RuntimeException;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Route;
@@ -42,12 +43,18 @@ class YamlModuleLoader extends Loader
     private $activeModulesPaths;
 
     /**
+     * @var ModuleRepository
+     */
+    private $moduleRepository;
+
+    /**
      * @var bool we load the route collection only once per request
      */
     private $isLoaded = false;
 
-    public function __construct(array $activeModulesPaths)
+    public function __construct(array $activeModulesPaths, ModuleRepository $moduleRepository)
     {
+        $this->moduleRepository = $moduleRepository;
         $this->activeModulesPaths = $activeModulesPaths;
     }
 
@@ -62,6 +69,7 @@ class YamlModuleLoader extends Loader
 
         $routes = new RouteCollection();
 
+        $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
         foreach ($this->activeModulesPaths as $modulePath) {
             $routingFile = $modulePath . '/config/routes.yml';
             if (file_exists($routingFile)) {
