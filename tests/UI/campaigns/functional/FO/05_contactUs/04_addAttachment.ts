@@ -19,7 +19,7 @@ import foLoginPage from '@pages/FO/login';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,7 +39,7 @@ describe('FO - Contact us : Add attachment', async () => {
   let idCustomer: string;
   let messageDateTime: string;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsData: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',

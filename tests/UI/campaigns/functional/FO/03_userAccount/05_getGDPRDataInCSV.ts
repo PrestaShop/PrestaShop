@@ -29,7 +29,7 @@ import productPage from '@pages/FO/product';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
@@ -74,7 +74,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
     city: 'Paris',
     company: 'PrestaShop',
   });
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsData: MessageData = new MessageData({
     firstName: customerData.firstName,
     lastName: customerData.lastName,
     subject: 'Customer service',

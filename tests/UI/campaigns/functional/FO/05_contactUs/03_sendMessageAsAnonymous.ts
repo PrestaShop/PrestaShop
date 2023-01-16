@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -36,26 +36,26 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsEmptyEmail: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsEmptyEmail: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
-  const contactUsInvalidEmail: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsInvalidEmail: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
-  const contactUsEmptyContent: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsEmptyContent: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',
     emailAddress: DefaultCustomer.email,
     message: '',
   });
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsData: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',

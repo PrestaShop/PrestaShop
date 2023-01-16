@@ -18,7 +18,7 @@ import foLoginPage from '@pages/FO/login';
 
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -33,7 +33,7 @@ describe('BO - Customer Service : Change status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({subject: 'Customer service', reference: 'OHSATSERP'});
+  const contactUsData: MessageData = new MessageData({subject: 'Customer service', reference: 'OHSATSERP'});
 
   // before and after functions
   before(async function () {

@@ -20,7 +20,7 @@ import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 // Import demo data
 import {DefaultCustomer} from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,15 +31,13 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData(
-    {
-      firstName: DefaultCustomer.firstName,
-      lastName: DefaultCustomer.lastName,
-      subject: 'Customer service',
-      emailAddress: DefaultCustomer.email,
-      reference: Orders.firstOrder.ref,
-    },
-  );
+  const contactUsData: MessageData = new MessageData({
+    firstName: DefaultCustomer.firstName,
+    lastName: DefaultCustomer.lastName,
+    subject: 'Customer service',
+    emailAddress: DefaultCustomer.email,
+    reference: Orders.firstOrder.ref,
+  });
 
   // before and after functions
   before(async function () {

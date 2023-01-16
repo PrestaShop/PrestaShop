@@ -29,7 +29,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import AddressData from '@data/faker/address';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 import CustomerFaker from '@data/faker/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -77,16 +77,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     city: 'Paris',
     company: 'PrestaShop',
   });
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData(
-    {
-      firstName: customerData.firstName,
-      lastName: customerData.lastName,
-      subject: 'Customer service',
-      message: 'Message test',
-      emailAddress: customerData.email,
-      reference: orderReference,
-    },
-  );
+  const contactUsData: MessageData = new MessageData({
+    firstName: customerData.firstName,
+    lastName: customerData.lastName,
+    subject: 'Customer service',
+    message: 'Message test',
+    emailAddress: customerData.email,
+    reference: orderReference,
+  });
 
   // before and after functions
   before(async function () {

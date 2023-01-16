@@ -18,7 +18,7 @@ import foLoginPage from '@pages/FO/login';
 // Import data
 import {DefaultCustomer} from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,7 +35,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
+  const contactUsData: MessageData = new MessageData({
     firstName: DefaultCustomer.firstName,
     lastName: DefaultCustomer.lastName,
     subject: 'Customer service',
