@@ -1,8 +1,5 @@
 name: Cron Update PHP Modules
-on:
-  schedule:
-    - cron: '0 23 * * *'
-  workflow_dispatch:
+on: [ push, pull_request ]
 
 permissions:
   contents: read
