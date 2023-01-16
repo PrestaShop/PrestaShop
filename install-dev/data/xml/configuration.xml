@@ -901,5 +901,8 @@ Country</value>
     <configuration id="PS_IMAGE_FORMAT" name="PS_IMAGE_FORMAT">
       <value>jpg</value>
     </configuration>
+    <configuration id="PS_LANGUAGE_I18N_URL" name="PS_LANGUAGE_I18N_URL">
+      <value>https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip</value>
+    </configuration>
   </entities>
 </entity_configuration>

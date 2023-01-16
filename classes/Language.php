@@ -1235,7 +1235,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
         $file = self::getPathToCachedTranslationPack($locale, $type);
-        $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
+
+        $baseUrl = self::EMAILS_LANGUAGE_PACK_URL;
+        if ($type === self::PACK_TYPE_SYMFONY) {
+            $baseUrl = Configuration::get('PS_LANGUAGE_I18N_URL', null) ?: self::SF_LANGUAGE_PACK_URL;
+        }
+
         $url = str_replace(
             [
                 '%version%',
@@ -1245,7 +1250,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 _PS_VERSION_,
                 $locale,
             ],
-            $url
+            $baseUrl
         );
 
         if (!is_writable(dirname($file))) {

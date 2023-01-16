@@ -56,6 +56,7 @@ class AdvancedConfiguration implements DataConfigurationInterface
         return [
             'language_identifier' => $this->configuration->get('PS_LOCALE_LANGUAGE'),
             'country_identifier' => $this->configuration->get('PS_LOCALE_COUNTRY'),
+            'translation_pack_url' => $this->configuration->get('PS_LANGUAGE_I18N_URL'),
         ];
     }
 
@@ -69,6 +70,7 @@ class AdvancedConfiguration implements DataConfigurationInterface
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_LOCALE_LANGUAGE', $config['language_identifier']);
             $this->configuration->set('PS_LOCALE_COUNTRY', $config['country_identifier']);
+            $this->configuration->set('PS_LANGUAGE_I18N_URL', $config['translation_pack_url']);
         }
 
         return $errors;
@@ -81,6 +83,7 @@ class AdvancedConfiguration implements DataConfigurationInterface
     {
         return isset(
             $config['language_identifier'],
+            $config['translation_pack_url'],
             $config['country_identifier']
         );
     }

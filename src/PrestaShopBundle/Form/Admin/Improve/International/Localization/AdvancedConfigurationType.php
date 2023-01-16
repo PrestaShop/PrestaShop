@@ -61,6 +61,13 @@ class AdvancedConfigurationType extends TranslatorAwareType
                     'The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).',
                     'Admin.International.Help'
                 ),
-            ]);
+            ])
+            ->add('translation_pack_url', TextType::class, [
+                'label' => $this->trans(
+                    'Localisation pack url',
+                    'Admin.International.Feature'
+                ),
+            ])
+        ;
     }
 }
