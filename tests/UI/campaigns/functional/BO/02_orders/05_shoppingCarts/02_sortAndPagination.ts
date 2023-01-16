@@ -196,7 +196,7 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
           const nonSortedTableFloat: number[] = nonSortedTable.map((text:string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text:string): number => parseFloat(text));
 
-          const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
