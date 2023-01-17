@@ -14,7 +14,7 @@ import addCatalogPriceRulePage from '@pages/BO/catalog/discounts/catalogPriceRul
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import PriceRuleFaker from '@data/faker/catalogPriceRule';
+import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -37,7 +37,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
 
   const today: string = date.getDateFormat('yyyy-mm-dd');
   const dateToCheck: string = date.getDateFormat('mm/dd/yyyy');
-  const priceRuleData: PriceRuleFaker = new PriceRuleFaker({fromDate: today, toDate: today});
+  const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({fromDate: today, toDate: today});
 
   // before and after functions
   before(async function () {
@@ -81,7 +81,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   describe('Create 21 catalog price rules in BO', async () => {
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test: number, index: number) => {
-      const priceRuleData: PriceRuleFaker = new PriceRuleFaker({
+      const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
         name: `todelete${index}`,
         fromDate: today,
         toDate: today,
