@@ -109,5 +109,5 @@ $(() => {
     $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
 
-  new CombinationSelector(new Router(), 18);
+  new CombinationSelector(new Router(), Number($(SpecificPriceMap.productIdInput).val()));
 });

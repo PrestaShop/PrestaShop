@@ -24,6 +24,7 @@
  */
 
 export default {
+  productIdInput: '#specific_price_product_id',
   formContainer: 'form[name="specific_price"]',
   currencyId: '#specific_price_groups_currency_id',
   customerSearchContainer: '#specific_price_customer',
