@@ -114,17 +114,20 @@ if (empty($pullRequestBodyBumpModules)) {
 
 $branch = $argv[1] ?? 'develop';
 
+$prTable = '| Questions         | Answers' . PHP_EOL;
+$prTable .= '| ----------------- | -------------------------------------------------------' . PHP_EOL;
+$prTable .= '| Branch?           | ' . $branch . PHP_EOL;
+$prTable .= '| Description?      | Updated PrestaShop composer packages, details below.' . PHP_EOL;
+$prTable .= '| Type?             | improvement' . PHP_EOL;
+$prTable .= '| Category?         | CO' . PHP_EOL;
+$prTable .= '| BC breaks?        | no' . PHP_EOL;
+$prTable .= '| Deprecations?     | no' . PHP_EOL;
+$prTable .= '| Fixed ticket?     | N/A' . PHP_EOL;
+$prTable .= '| How to test?      | N/A' . PHP_EOL;
+$prTable .= '<br><br>' . PHP_EOL;
+$prTable .= $pullRequestBodyBumpModules . PHP_EOL;
+
 file_put_contents(
     'cron_php_update_modules.txt',
-    '| Questions         | Answers' . PHP_EOL
-        . '| ----------------- | -----------------' . PHP_EOL
-        . '| Branch?           | ' . $branch . PHP_EOL
-        . '| Description?      | ' . $pullRequestBodyBumpModules . PHP_EOL
-        . '| Type?             | improvement' . PHP_EOL
-        . '| Category?         | CO' . PHP_EOL
-        . '| BC breaks?        | no' . PHP_EOL
-        . '| Deprecations?     | no' . PHP_EOL
-        . '| Fixed ticket?     | N/A' . PHP_EOL
-        . '| How to test?      | N/A' . PHP_EOL
-        . '| Possible impacts? | N/A' . PHP_EOL
+    $prTable
 );

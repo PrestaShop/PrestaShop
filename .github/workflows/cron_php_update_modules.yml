@@ -50,6 +50,7 @@ jobs:
         run: |
           FILE_CONTENT=$(cat cron_php_update_modules.txt)
           echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
+          rm cron_php_update_modules.txt
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
