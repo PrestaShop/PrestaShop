@@ -89,9 +89,9 @@ final class SymfonyCacheClearer implements CacheClearerInterface
 
     private function rebootKernel(AppKernel $kernel): void
     {
-        $warmupDir = $this->getNewWarmupCacheDir($kernel);
-        $this->warmupFolders[] = $warmupDir;
-        $kernel->reboot($warmupDir);
+        //$warmupDir = $this->getNewWarmupCacheDir($kernel);
+        //$this->warmupFolders[] = $warmupDir;
+        $kernel->reboot($kernel->getCacheDir());
     }
 
     private function clearCacheFolders(AppKernel $kernel): void
