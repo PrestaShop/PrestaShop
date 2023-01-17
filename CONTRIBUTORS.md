@@ -36,6 +36,7 @@ GitHub contributors:
 - Alexandre Bru
 - Alexandre Debusschere
 - Alexandre Segura
+- Alexandre Boyer
 - alexdee2007
 - AlexEven
 - Alexey Svistunov
