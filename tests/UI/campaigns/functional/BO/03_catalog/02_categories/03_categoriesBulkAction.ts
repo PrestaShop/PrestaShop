@@ -12,7 +12,7 @@ import addCategoryPage from '@pages/BO/catalog/categories/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import CategoryFaker from '@data/faker/category';
+import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -25,8 +25,8 @@ describe('BO - Catalog - Categories : Enable/Disable/Delete categories by Bulk A
   let page: Page;
   let numberOfCategories: number = 0;
 
-  const firstCategoryData: CategoryFaker = new CategoryFaker({name: 'todelete'});
-  const secondCategoryData: CategoryFaker = new CategoryFaker({name: 'todeletetwo'});
+  const firstCategoryData: CategoryData = new CategoryData({name: 'todelete'});
+  const secondCategoryData: CategoryData = new CategoryData({name: 'todeletetwo'});
 
   // before and after functions
   before(async function () {

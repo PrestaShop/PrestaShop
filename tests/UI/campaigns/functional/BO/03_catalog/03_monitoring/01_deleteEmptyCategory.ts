@@ -13,7 +13,7 @@ import monitoringPage from '@pages/BO/catalog/monitoring';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import CategoryFaker from '@data/faker/category';
+import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,7 +31,7 @@ describe('BO - Catalog - Monitoring : Create empty category and delete it from m
   let numberOfCategories: number = 0;
   let numberOfEmptyCategories: number = 0;
 
-  const createCategoryData: CategoryFaker = new CategoryFaker();
+  const createCategoryData: CategoryData = new CategoryData();
 
   // before and after functions
   before(async function () {
