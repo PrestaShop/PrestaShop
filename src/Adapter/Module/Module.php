@@ -454,9 +454,9 @@ class Module implements ModuleInterface
     {
         $img = $this->attributes->get('img');
         if (empty($img)) {
-            $this->attributes->set('img', __PS_BASE_URI__ . 'img/questionmark.png');
+            $this->attributes->set('img', __PS_BASE_URI__ . 'img/module/default.png');
         }
-        $this->attributes->set('logo', __PS_BASE_URI__ . 'img/questionmark.png');
+        $this->attributes->set('logo', __PS_BASE_URI__ . 'img/module/default.png');
 
         foreach (['logo.png', 'logo.gif'] as $logo) {
             $logo_path = _PS_MODULE_DIR_ . $this->get('name') . DIRECTORY_SEPARATOR . $logo;

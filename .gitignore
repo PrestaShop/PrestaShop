@@ -51,6 +51,7 @@ npm-debug.log.*
 !/img/preston-login-wink@2x.png
 !/img/preston-login@2x.png
 !/img/questionmark.png
+!/img/module/default.png
 !/img/genders/index.php
 !/img/admin/index.php
 !/img/c/index.php
