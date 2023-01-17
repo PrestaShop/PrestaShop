@@ -94,13 +94,14 @@ class QuickAccessCore extends ObjectModel
             return false;
         }
 
+        $context = Context::getContext();
         foreach ($quickAccess as $index => $quick) {
             // first, clean url to have a real quickLink
-            $quick['link'] = Context::getContext()->link->getQuickLink($quick['link']);
+            $quick['link'] = $context->link->getQuickLink($quick['link']);
             $tokenString = $idEmployee;
 
             if ('../' === $quick['link'] && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $url = Context::getContext()->shop->getBaseURL();
+                $url = $context->shop->getBaseURL();
                 if (!$url) {
                     unset($quickAccess[$index]);
 
@@ -117,11 +118,11 @@ class QuickAccessCore extends ObjectModel
 
                     $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
-                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
+                $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
                 if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
                     //if new product page feature is enabled we create new product v2 modal popup
                     if (self::productPageV2Enabled()) {
-                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
+                        $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
                         $quickAccess[$index]['class'] = 'new-product-button';
                     }
                 }
