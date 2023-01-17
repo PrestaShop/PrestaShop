@@ -1,15 +1,29 @@
-const {faker} = require('@faker-js/faker');
+import CmsCategoryCreator from '@data/types/cmsCategory';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new cms category to use on creation cms category form on BO
  * @class
  */
-class CMSCategoryData {
+export default class CMSCategoryData {
+  public readonly name: string;
+
+  public readonly displayed: boolean;
+
+  public readonly description: string;
+
+  public readonly metaTitle: string;
+
+  public readonly metaDescription: string;
+
+  public readonly metaKeywords: string;
+
   /**
    * Constructor for class CMSCategoryData
-   * @param categoryToCreate {Object} Could be used to force the value of some members
+   * @param categoryToCreate {CmsCategoryCreator} Could be used to force the value of some members
    */
-  constructor(categoryToCreate = {}) {
+  constructor(categoryToCreate: CmsCategoryCreator = {}) {
     /** @type {string} Name of the page category */
     this.name = categoryToCreate.name || faker.commerce.department();
 
@@ -29,5 +43,3 @@ class CMSCategoryData {
     this.metaKeywords = faker.commerce.department();
   }
 }
-
-module.exports = CMSCategoryData;

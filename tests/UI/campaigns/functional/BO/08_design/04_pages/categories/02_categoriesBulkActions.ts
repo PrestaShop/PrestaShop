@@ -11,7 +11,7 @@ import pagesPage from '@pages/BO/design/pages/index';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-import CategoryFaker from '@data/faker/CMScategory';
+import CMSCategoryData from '@data/faker/CMScategory';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -26,8 +26,8 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
   let page: Page;
   let numberOfCategories: number = 0;
 
-  const firstCategoryData: CategoryFaker = new CategoryFaker({name: 'todelete'});
-  const secondCategoryData: CategoryFaker = new CategoryFaker({name: 'todelete'});
+  const firstCategoryData: CMSCategoryData = new CMSCategoryData({name: 'todelete'});
+  const secondCategoryData: CMSCategoryData = new CMSCategoryData({name: 'todelete'});
   const categoriesTableName: string = 'cms_page_category';
 
   // before and after functions
@@ -70,7 +70,7 @@ describe('BO - Design - Pages : Enable/Disable/Delete categories with Bulk Actio
 
   // 1 : Create 2 categories In BO
   describe('Create 2 categories', async () => {
-    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: CategoryFaker, index: number) => {
+    [firstCategoryData, secondCategoryData].forEach((categoryToCreate: CMSCategoryData, index: number) => {
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddCategory${index + 1}`, baseContext);
 

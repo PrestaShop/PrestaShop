@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
-import CategoryPageFaker from '@data/faker/CMScategory';
+import CMSCategoryData from '@data/faker/CMScategory';
 import CMSPageData from '@data/faker/CMSpage';
 
 import {expect} from 'chai';
@@ -39,8 +39,8 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
   let numberOfPages: number = 0;
   let categoryID: string = '0';
 
-  const createCategoryData: CategoryPageFaker = new CategoryPageFaker();
-  const editCategoryData: CategoryPageFaker = new CategoryPageFaker({name: `update${createCategoryData.name}`});
+  const createCategoryData: CMSCategoryData = new CMSCategoryData();
+  const editCategoryData: CMSCategoryData = new CMSCategoryData({name: `update${createCategoryData.name}`});
   const createPageData: CMSPageData = new CMSPageData();
   const editPageData: CMSPageData = new CMSPageData({
     displayed: false,
