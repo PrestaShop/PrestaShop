@@ -81,7 +81,7 @@ export default class CategoriesManager {
       this.getDefaultCategoryId(),
     ));
     this.eventEmitter.on(ProductEventMap.categories.applyCategoryTreeChanges, (eventData) => {
-      this.tagsRenderer.render(eventData.categories, this.getDefaultCategoryId());
+      this.tagsRenderer.render(eventData.categories);
       this.eventEmitter.emit(ProductEventMap.categories.categoriesUpdated);
     });
   }
@@ -173,12 +173,16 @@ export default class CategoriesManager {
       const newDefaultCategoryId = Number(currentTarget.value);
       const categories = this.collectCategories()
         .map((category) => ({...category, isDefault: category.id === newDefaultCategoryId}));
-      this.tagsRenderer.render(categories, this.getDefaultCategoryId());
+      this.tagsRenderer.render(categories);
     });
   }
 
   private listenCategoryChanges(): void {
-    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.renderDefaultCategorySelection());
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => {
+      this.renderDefaultCategorySelection();
+      // if there is only one category left selected, it must be re-rendered without the removal element
+      this.tagsRenderer.render(this.collectCategories());
+    });
   }
 
   private getDefaultCategoryId(): number {
