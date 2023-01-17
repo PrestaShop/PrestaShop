@@ -89,4 +89,31 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
         }
         $attribute->associateTo($this->referencesToIds($shopReferences));
     }
+
+    /**
+     * @Given attribute ":attributeReference" is not associated to shops ":shopReferences"
+     *
+     * @param string $attributeReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function assertAttributeIsNotAssociatedToShops(string $attributeReference, string $shopReferences): void
+    {
+        $attributeId = $this->getSharedStorage()->get($attributeReference);
+        $attribute = new ProductAttribute($attributeId);
+        $shopIds = $this->referencesToIds($shopReferences);
+
+        foreach ($shopIds as $shopId) {
+            if (in_array($shopId, $attribute->id_shop_list)) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Attribute with id "%d" is associated with shop "%d"',
+                        $attributeId,
+                        $shopId
+                    )
+                );
+            }
+        }
+    }
 }

@@ -71,4 +71,94 @@ Feature: Search attribute combinations for product in Back Office (BO) of multip
       | id reference   | combination name        |
       | product1SWhite | Size - S, Color - White |
       | product1MWhite | Size - M, Color - White |
-    # @todo: add scnearios to search by attribute group and for all shops
+    When I search product "product1" combinations by phrase "b" in language "en" for all shops limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
+      | product1Black  | Color - Black           |
+      | product1Blue   | Color - Blue            |
+    When I search product "product1" combinations by phrase "b" in language "en" for all shops limited to "3" results I should see following results:
+      | id reference   | combination name        |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MBlack | Size - M, Color - Black |
+    When I search product "product1" combinations by phrase "white" in language "en" for all shops limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1MWhite | Size - M, Color - White |
+      | product1White  | Color - White           |
+
+  Scenario: Search combinations by attribute groups
+    And I associate attribute group "Color" with shops "shop1"
+    When I search product "product1" combinations by phrase "color" in language "en" for shop "shop1" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
+    When I search product "product1" combinations by phrase "color" in language "en" for all shops limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
+      | product1White  | Color - White           |
+      | product1Black  | Color - Black           |
+      | product1Blue   | Color - Blue            |
+    When I search product "product1" combinations by phrase "size" in language "en" for shop "shop1" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
+    When I search product "product1" combinations by phrase "size" in language "en" for all shops limited to "20" results I should see following results:
+      | id reference   | combination name        |
+      | product1SWhite | Size - S, Color - White |
+      | product1SBlack | Size - S, Color - Black |
+      | product1SBlue  | Size - S, Color - Blue  |
+      | product1MWhite | Size - M, Color - White |
+      | product1MBlack | Size - M, Color - Black |
+      | product1MBlue  | Size - M, Color - Blue  |
+    When I search product "product1" combinations by phrase "size" in language "en" for shop "shop2" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+
+  # @todo: this scnenario reproduces a problem which needs discussion.
+  #  The combinations are in that shop even though the attribute groups/attributes doesnt exist in that shop
+  Scenario: Search for combinations by attribute groups which doesn't exist in shop should not find any combinations
+    Given I copy product "product1" from shop "shop1" to shop "shop3"
+    And attribute group "Color" is not associated to shops "shop3"
+    And product "product1" should have the following combinations for shops "shop3":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    When I search product "product1" combinations by phrase "Color" in language "en" for shop "shop3" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+
+  # @todo: this scnenario reproduces a problem which needs discussion.
+  #  The combinations are in that shop even though the attribute groups/attributes doesnt exist in that shop
+  Scenario: Search for combinations by attribute which doesn't exist in shop should not find any combinations
+    Given I copy product "product1" from shop "shop1" to shop "shop4"
+    And attribute "White" is not associated to shops "shop4"
+    And product "product1" should have the following combinations for shops "shop4":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    When I search product "product1" combinations by phrase "White" in language "en" for shop "shop4" limited to "20" results I should see following results:
+      | id reference   | combination name        |
+

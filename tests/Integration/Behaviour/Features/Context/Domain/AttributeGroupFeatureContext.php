@@ -96,6 +96,33 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given attribute group ":attributeGroupReference" is not associated to shops ":shopReferences"
+     *
+     * @param string $attributeGroupReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function assertAttributeGroupIsNotAssociatedToShops(string $attributeGroupReference, string $shopReferences): void
+    {
+        $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
+        $attributeGroup = new LegacyAttributeGroup($attributeGroupId);
+        $shopIds = $this->referencesToIds($shopReferences);
+
+        foreach ($shopIds as $shopId) {
+            if (in_array($shopId, $attributeGroup->id_shop_list)) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Attribute group with id "%d" is associated with shop "%d"',
+                        $attributeGroupId,
+                        $shopId
+                    )
+                );
+            }
+        }
+    }
+
+    /**
      * @Given there is a list of following attribute groups:
      *
      * @param TableNode $tableNode

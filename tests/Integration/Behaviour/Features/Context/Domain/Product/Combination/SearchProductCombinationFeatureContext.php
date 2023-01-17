@@ -51,7 +51,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      *
      * @return void
      */
-    public function searchProductCombinations(
+    public function searchProductCombinationsForShop(
         string $productReference,
         string $searchPhrase,
         string $langIso,
@@ -59,16 +59,44 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
         int $limit,
         ProductCombinationsResult $expectedResults
     ): void {
-        /** @var ProductCombinationsResult $productCombinationsResults */
-        $productCombinationsResults = $this->getQueryBus()->handle(new SearchProductCombinations(
-            $this->getSharedStorage()->get($productReference),
-            (int) Language::getIdByIso($langIso),
-            ShopConstraint::shop($this->getSharedStorage()->get($shopReference)),
+        $this->searchProductCombinations(
+            $productReference,
             $searchPhrase,
-            $limit
-        ));
+            $langIso,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference)),
+            $limit,
+            $expectedResults
+        );
+    }
 
-        Assert::assertEquals($expectedResults, $productCombinationsResults);
+    /**
+     * @When I search product ":productReference" combinations by phrase ":searchPhrase" in language ":langIso" for all shops limited to ":limit" results I should see following results:
+     *
+     * @param string $productReference
+     * @param string $searchPhrase
+     * @param string $langIso
+     * @param int $limit
+     * @param ProductCombinationsResult $expectedResults
+     *
+     * @see transformProductCombinationsResult for $expectedResults type transformation
+     *
+     * @return void
+     */
+    public function searchProductCombinationsForAllShops(
+        string $productReference,
+        string $searchPhrase,
+        string $langIso,
+        int $limit,
+        ProductCombinationsResult $expectedResults
+    ): void {
+        $this->searchProductCombinations(
+            $productReference,
+            $searchPhrase,
+            $langIso,
+            ShopConstraint::allShops(),
+            $limit,
+            $expectedResults
+        );
     }
 
     /**
@@ -89,5 +117,37 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
         }
 
         return new ProductCombinationsResult($productCombinations);
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $searchPhrase
+     * @param string $langIso
+     * @param ShopConstraint $shopConstraint
+     * @param int $limit
+     * @param ProductCombinationsResult $expectedResults
+     *
+     * @see transformProductCombinationsResult for $expectedResults type transformation
+     *
+     * @return void
+     */
+    private function searchProductCombinations(
+        string $productReference,
+        string $searchPhrase,
+        string $langIso,
+        ShopConstraint $shopConstraint,
+        int $limit,
+        ProductCombinationsResult $expectedResults
+    ): void {
+        /** @var ProductCombinationsResult $productCombinationsResults */
+        $productCombinationsResults = $this->getQueryBus()->handle(new SearchProductCombinations(
+            $this->getSharedStorage()->get($productReference),
+            (int) Language::getIdByIso($langIso),
+            $shopConstraint,
+            $searchPhrase,
+            $limit
+        ));
+
+        Assert::assertEquals($expectedResults, $productCombinationsResults);
     }
 }
