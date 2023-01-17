@@ -2659,8 +2659,6 @@ class AdminControllerCore extends Controller
                 $this->addJS(_PS_JS_DIR_ . 'admin/notifications.js');
             }
 
-            // Specific Admin Theme
-            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
             $username = $this->get('prestashop.user_provider')->getUsername();
             $token = $this->get('security.csrf.token_manager')
                 ->getToken($username)
@@ -2673,6 +2671,9 @@ class AdminControllerCore extends Controller
                 ],
             ]);
         }
+
+        // Specific Admin Theme
+        $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/overrides.css', 'all', PHP_INT_MAX);
 
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product_default_theme.css', 'all', 0);
         $this->addJS([
