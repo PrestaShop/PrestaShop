@@ -15,7 +15,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foVouchersPage from '@pages/FO/myAccount/vouchers';
 
 // Import data
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
@@ -42,17 +42,17 @@ describe('FO - Account : View vouchers', async () => {
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const expirationDate: string = date.getDateFormat('mm/dd/yyyy', 'future');
   const customerData: CustomerData = new CustomerData({});
-  const firstCartRule: CartRuleFaker = new CartRuleFaker({
+  const firstCartRule: CartRuleData = new CartRuleData({
     code: 'promo20',
-    customer: customerData.email,
+    customer: customerData,
     discountType: 'Percent',
     discountPercent: 20,
     dateFrom: pastDate,
     dateTo: futureDate,
   });
-  const secondCartRule: CartRuleFaker = new CartRuleFaker({
+  const secondCartRule: CartRuleData = new CartRuleData({
     code: 'freeShipping',
-    customer: customerData.email,
+    customer: customerData,
     freeShipping: true,
     dateFrom: pastDate,
     dateTo: futureDate,

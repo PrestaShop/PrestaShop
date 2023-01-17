@@ -17,7 +17,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 
 // Import data
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
 import AddressData from '@data/faker/address';
 
@@ -41,7 +41,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
   let browserContext: BrowserContext;
   let page: Page;
 
-  const percentCartRule: CartRuleFaker = new CartRuleFaker({
+  const percentCartRule: CartRuleData = new CartRuleData({
     name: 'discount100',
     code: 'discount100',
     discountType: 'Percent',

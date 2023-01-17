@@ -19,7 +19,7 @@ import addOrderPage from '@pages/BO/orders/add';
 import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,7 +50,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
   // Data to create cart rule without code
-  const cartRuleWithoutCodeData: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithoutCodeData: CartRuleData = new CartRuleData({
     name: 'WithoutCode',
     dateFrom: pastDate,
     discountType: 'Amount',
@@ -61,7 +61,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     },
   });
   // Data to create cart rule with code
-  const cartRuleWithCodeData: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithCodeData: CartRuleData = new CartRuleData({
     name: 'WithCode',
     code: 'Discount',
     discountType: 'Amount',
@@ -72,21 +72,21 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     },
   });
   // Data to create disabled cart rule from add order page
-  const disabledCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const disabledCartRuleData: CartRuleData = new CartRuleData({
     name: 'Disabled',
     status: false,
     discountType: 'Percent',
     discountPercent: 20,
   });
   // Data to create cart rule with gift
-  const cartRuleWithGiftData: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithGiftData: CartRuleData = new CartRuleData({
     name: 'WithGift',
     code: 'gift',
     freeGift: true,
     freeGiftProduct: Products.demo_13,
   });
   // Data to create cart rule with Free shipping
-  const cartRuleFreeShippingData: CartRuleFaker = new CartRuleFaker({name: 'FreeShipping', code: 'free', freeShipping: true});
+  const cartRuleFreeShippingData: CartRuleData = new CartRuleData({name: 'FreeShipping', code: 'free', freeShipping: true});
 
   // Pre-condition: Create cart rule without code
   createCartRuleTest(cartRuleWithoutCodeData, `${baseContext}_preTest_1`);

@@ -19,7 +19,7 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,13 +30,13 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     code: '4QABV6L3',
-    customer: Customers.johnDoe.email,
+    customer: Customers.johnDoe,
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const editCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const editCartRuleData: CartRuleData = new CartRuleData({
     code: '3PAJA6B3',
     discountType: 'Percent',
     discountPercent: 30,

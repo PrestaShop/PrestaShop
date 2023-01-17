@@ -12,7 +12,7 @@ import addCartRulePage from '@pages/BO/catalog/discounts/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -68,7 +68,7 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
   describe('Create 21 cart rules', async () => {
     const creationTests: number[] = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test: number, index: number) => {
-      const cartRuleData: CartRuleFaker = new CartRuleFaker({
+      const cartRuleData: CartRuleData = new CartRuleData({
         name: `todelete${index}`,
         discountType: 'Percent',
         discountPercent: 20,

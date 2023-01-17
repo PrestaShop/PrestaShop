@@ -24,7 +24,7 @@ import addOrderPage from '@pages/BO/orders/add';
 import {Currencies} from '@data/demo/currencies';
 import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';
@@ -164,7 +164,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     behaviourOutOfStock: 'Default behavior',
   });
   // Data to create cart rule
-  const newCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     applyDiscountTo: 'Specific product',
     dateFrom: pastDate,
     product: productWithCartRule.name,

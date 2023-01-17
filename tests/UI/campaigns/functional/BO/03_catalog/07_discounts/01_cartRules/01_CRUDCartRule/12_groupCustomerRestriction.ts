@@ -19,7 +19,7 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,7 +30,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
   let browserContext: BrowserContext;
   let page: Page;
 
-  const cartRuleCode: CartRuleFaker = new CartRuleFaker({
+  const cartRuleCode: CartRuleData = new CartRuleData({
     name: 'addCartRuleName',
     code: '4QABV6L3',
     customerGroupSelection: true,

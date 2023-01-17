@@ -21,7 +21,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
 import AddressData from '@data/faker/address';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
 import ProductData from '@data/faker/product';
 import {PaymentMethods} from '@data/demo/paymentMethods';
@@ -186,7 +186,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-  const newCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     code: '4QABV6L3',
     discountType: 'Percent',
     discountPercent: 20,

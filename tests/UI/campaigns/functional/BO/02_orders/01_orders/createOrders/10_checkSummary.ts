@@ -21,7 +21,7 @@ import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -45,7 +45,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
   let page: Page;
 
   // Data to create cart rule with code
-  const cartRuleWithCodeData: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithCodeData: CartRuleData = new CartRuleData({
     name: 'WithCode',
     code: 'Discount',
     discountType: 'Amount',
