@@ -13,7 +13,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
@@ -39,7 +39,7 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
 
   // New order by customer data
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -79,10 +79,10 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should go to the first order page', async function () {

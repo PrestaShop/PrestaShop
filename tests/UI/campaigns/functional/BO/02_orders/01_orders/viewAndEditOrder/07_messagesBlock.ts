@@ -21,7 +21,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Employees from '@data/demo/employees';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
@@ -54,7 +54,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
   const secondMessageData = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
   // New order by customer data
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -101,13 +101,13 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer1', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -184,7 +184,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -306,7 +306,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -373,7 +373,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
 
       textMessage = await orderPageMessagesBlock.getTextMessage(page, 3, 'customer');
       await expect(textMessage, 'Sender or date is not correct!')
-        .to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName} ${today}`)
+        .to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName} ${today}`)
         .and.to.contains(messageToSendData.message);
     });
   });

@@ -11,7 +11,7 @@ import customersPage from '@pages/BO/customers';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -73,7 +73,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_customer',
-            filterValue: DefaultCustomer.id.toString(),
+            filterValue: Customers.johnDoe.id.toString(),
           },
       },
       {
@@ -82,7 +82,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterSocialTitle',
             filterType: 'select',
             filterBy: 'social_title',
-            filterValue: DefaultCustomer.socialTitle,
+            filterValue: Customers.johnDoe.socialTitle,
           },
       },
       {
@@ -91,7 +91,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterFirstName',
             filterType: 'input',
             filterBy: 'firstname',
-            filterValue: DefaultCustomer.firstName,
+            filterValue: Customers.johnDoe.firstName,
           },
       },
       {
@@ -100,7 +100,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterLastName',
             filterType: 'input',
             filterBy: 'lastname',
-            filterValue: DefaultCustomer.lastName,
+            filterValue: Customers.johnDoe.lastName,
           },
       },
       {
@@ -109,7 +109,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterEmail',
             filterType: 'input',
             filterBy: 'email',
-            filterValue: DefaultCustomer.email,
+            filterValue: Customers.johnDoe.email,
           },
       },
       {
@@ -118,7 +118,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: DefaultCustomer.enabled ? '1' : '0',
+            filterValue: Customers.johnDoe.enabled ? '1' : '0',
           },
       },
       {
@@ -127,7 +127,7 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
             testIdentifier: 'filterNewsletter',
             filterType: 'select',
             filterBy: 'newsletter',
-            filterValue: DefaultCustomer.newsletter ? '1' : '0',
+            filterValue: Customers.johnDoe.newsletter ? '1' : '0',
           },
       },
       {
@@ -228,14 +228,14 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
 
   // 2 : Editing customers from grid table
   describe('Quick edit customers', async () => {
-    it(`should filter by email '${DefaultCustomer.email}'`, async function () {
+    it(`should filter by email '${Customers.johnDoe.email}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
       await customersPage.filterCustomers(
         page,
         'input',
         'email',
-        DefaultCustomer.email,
+        Customers.johnDoe.email,
       );
 
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);

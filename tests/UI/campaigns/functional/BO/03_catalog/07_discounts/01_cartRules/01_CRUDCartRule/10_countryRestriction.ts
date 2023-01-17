@@ -21,7 +21,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Countries from '@data/demo/countries';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
@@ -223,7 +223,7 @@ describe('BO - Catalog - Cart rules : Case 10 - Country Restriction', async () =
 
       await checkoutPage.clickOnSignIn(page);
 
-      const isCustomerConnected = await checkoutPage.customerLogin(page, DefaultCustomer);
+      const isCustomerConnected = await checkoutPage.customerLogin(page, Customers.johnDoe);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 

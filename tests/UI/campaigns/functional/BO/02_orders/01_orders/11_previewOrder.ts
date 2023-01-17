@@ -26,7 +26,7 @@ import Carriers from '@data/demo/carriers';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -49,7 +49,7 @@ describe('BO - Orders : Preview order', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
+  const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
   const editShippingAddressData: AddressData = new AddressData({country: 'France'});
   const editInvoiceAddressData: AddressData = new AddressData({country: 'France'});

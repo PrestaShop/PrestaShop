@@ -17,7 +17,7 @@ import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
@@ -132,10 +132,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
@@ -264,10 +264,10 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       await expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer1', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;

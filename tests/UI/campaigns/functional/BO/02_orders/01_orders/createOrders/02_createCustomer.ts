@@ -12,7 +12,7 @@ import ordersPage from '@pages/BO/orders';
 import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,7 +30,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerFaker = new CustomerFaker();
+  const customerData: CustomerData = new CustomerData();
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

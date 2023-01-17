@@ -19,7 +19,7 @@ import loginFOPage from '@pages/FO/login';
 import foCreateAccountPage from '@pages/FO/myAccount/add';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,8 +39,8 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an emai
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const firstCustomerToCreate: CustomerFaker = new CustomerFaker();
-  const secondCustomerToCreate: CustomerFaker = new CustomerFaker();
+  const firstCustomerToCreate: CustomerData = new CustomerData();
+  const secondCustomerToCreate: CustomerData = new CustomerData();
 
   // before and after functions
   before(async function () {

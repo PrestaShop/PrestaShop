@@ -18,7 +18,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
 import OrderStatuses from '@data/demo/orderStatuses';
@@ -43,7 +43,7 @@ describe('FO - Account - Order details : download invoice', async () => {
   let fileName: string;
 
   const orderData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -131,7 +131,7 @@ describe('FO - Account - Order details : download invoice', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

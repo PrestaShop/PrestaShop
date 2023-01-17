@@ -1,7 +1,7 @@
 import Countries from '@data/demo/countries';
+import Customers from '@data/demo/customer';
 
-const {faker} = require('@faker-js/faker');
-const {DefaultCustomer} = require('@data/demo/customer');
+import {faker} from '@faker-js/faker';
 
 const countriesNames = Object.values(Countries).map((country) => country.name);
 
@@ -13,8 +13,8 @@ function createRecord() {
       id: i + 3,
       alias: faker.address.streetAddress(),
       active: faker.datatype.number({min: 0, max: 1}),
-      email: DefaultCustomer.email,
-      customerID: DefaultCustomer.id,
+      email: Customers.johnDoe.email,
+      customerID: Customers.johnDoe.id,
       manufacturer: '',
       supplier: '',
       company: faker.company.name(),

@@ -27,7 +27,7 @@ import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 
 // Import data
 import Addresses from '@data/demo/address';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -62,7 +62,7 @@ describe('FO - Account : Check order return PDF', async () => {
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
   const orderData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -105,10 +105,10 @@ describe('FO - Account : Check order return PDF', async () => {
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should get the order ID', async function () {
@@ -188,7 +188,7 @@ describe('FO - Account : Check order return PDF', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'logonFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, DefaultCustomer);
+      await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;
@@ -410,8 +410,8 @@ describe('FO - Account : Check order return PDF', async () => {
       it('should check the Billing & delivery address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkBillingAddress', baseContext);
 
-        const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${DefaultCustomer.firstName}`
-          + ` ${DefaultCustomer.lastName},${Addresses.second.company},${Addresses.second.address},`
+        const isVisible = await files.isTextInPDF(filePath, `Billing & Delivery Address,,${Customers.johnDoe.firstName}`
+          + ` ${Customers.johnDoe.lastName},${Addresses.second.company},${Addresses.second.address},`
           + `${Addresses.second.secondAddress},${Addresses.second.postalCode} ${Addresses.second.city}`
           + `,${Addresses.second.country},${Addresses.second.phone},,`);
 

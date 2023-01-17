@@ -16,7 +16,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -89,7 +89,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering opti
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;

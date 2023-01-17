@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
@@ -71,7 +71,7 @@ describe('BO - Customer Service : Change status', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import CarrierData from '@data/faker/carrier';
 
 import {expect} from 'chai';
@@ -104,7 +104,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultCustomer);
+          await foCheckoutPage.customerLogin(page, Customers.johnDoe);
         }
 
         // Address step - Go to delivery step

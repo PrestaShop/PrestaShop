@@ -17,7 +17,7 @@ import foLoginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
@@ -32,7 +32,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
 
   const newCartRuleData: CartRuleFaker = new CartRuleFaker({
     code: '4QABV6L3',
-    customer: DefaultCustomer.email,
+    customer: Customers.johnDoe.email,
     discountType: 'Percent',
     discountPercent: 20,
   });
@@ -111,7 +111,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -223,7 +223,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

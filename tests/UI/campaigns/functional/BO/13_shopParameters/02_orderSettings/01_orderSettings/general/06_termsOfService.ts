@@ -16,7 +16,7 @@ import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -119,7 +119,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of servic
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultCustomer);
+        await checkoutPage.customerLogin(page, Customers.johnDoe);
       }
 
       // Address step - Go to delivery step

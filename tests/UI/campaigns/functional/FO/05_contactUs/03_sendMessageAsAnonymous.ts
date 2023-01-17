@@ -16,7 +16,7 @@ import foContactUsPage from '@pages/FO/contactUs';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
@@ -37,29 +37,29 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let page: Page;
 
   const contactUsEmptyEmail: MessageData = new MessageData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
   const contactUsInvalidEmail: MessageData = new MessageData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
   const contactUsEmptyContent: MessageData = new MessageData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
     message: '',
   });
   const contactUsData: MessageData = new MessageData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
   });
 
   // before and after functions

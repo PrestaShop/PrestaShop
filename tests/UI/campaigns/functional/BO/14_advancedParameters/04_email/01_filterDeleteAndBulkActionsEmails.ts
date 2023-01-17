@@ -19,7 +19,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Languages from '@data/demo/languages';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
@@ -90,7 +90,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
 
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, DefaultCustomer);
+      await checkoutPage.customerLogin(page, Customers.johnDoe);
     });
 
     it('should go to delivery step', async function () {
@@ -177,7 +177,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
             identifier: 'filterByRecipient',
             filterType: 'input',
             filterBy: 'recipient',
-            filterValue: DefaultCustomer.email,
+            filterValue: Customers.johnDoe.email,
           },
       },
       {

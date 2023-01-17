@@ -18,7 +18,7 @@ import homePage from '@pages/FO/home';
 
 // Import data
 import CartRuleFaker from '@data/faker/cartRule';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
@@ -48,7 +48,7 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
     discountPercent: 100,
     freeShipping: true,
   });
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
+  const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
 
   // before and after functions

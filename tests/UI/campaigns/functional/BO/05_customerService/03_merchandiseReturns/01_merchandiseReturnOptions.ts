@@ -24,7 +24,7 @@ import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 
@@ -80,7 +80,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultCustomer);
+    await foLoginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -191,10 +191,10 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
     it('should filter the Orders table by the default customer and check the result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should go to the first order page', async function () {
@@ -239,7 +239,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         await testContext.addContextItem(this, 'testIdentifier', `goToAccountPage${index}`, baseContext);
 
         await homePage.goToLoginPage(page);
-        await foLoginPage.customerLogin(page, DefaultCustomer);
+        await foLoginPage.customerLogin(page, Customers.johnDoe);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected).to.be.true;

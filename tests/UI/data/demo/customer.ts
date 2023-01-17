@@ -1,6 +1,8 @@
-module.exports = {
-  DefaultCustomer: {
-    id: '2',
+import CustomerData from '@data/faker/customer';
+
+export default {
+  johnDoe: new CustomerData({
+    id: 2,
     socialTitle: 'Mr.',
     firstName: 'John',
     lastName: 'DOE',
@@ -11,5 +13,5 @@ module.exports = {
     newsletter: true,
     partnerOffers: true,
     defaultCustomerGroup: 'Customer',
-  },
+  }),
 };

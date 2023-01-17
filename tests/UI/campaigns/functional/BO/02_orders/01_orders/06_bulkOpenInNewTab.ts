@@ -15,7 +15,7 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -37,8 +37,8 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCustomerData: CustomerFaker = new CustomerFaker();
-  const secondCustomerData: CustomerFaker = new CustomerFaker();
+  const firstCustomerData: CustomerData = new CustomerData();
+  const secondCustomerData: CustomerData = new CustomerData();
   const addressData: AddressData = new AddressData({country: 'France'});
   const firstOrderByGuestData: Order = {
     customer: firstCustomerData,

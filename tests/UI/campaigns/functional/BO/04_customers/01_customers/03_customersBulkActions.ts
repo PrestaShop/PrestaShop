@@ -11,7 +11,7 @@ import addCustomerPage from '@pages/BO/customers/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -27,8 +27,8 @@ describe('BO - Customers - Customers : Customers bulk actions', async () => {
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const firstCustomerData: CustomerFaker = new CustomerFaker({firstName: 'todelete'});
-  const secondCustomerData: CustomerFaker = new CustomerFaker({firstName: 'todelete'});
+  const firstCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
+  const secondCustomerData: CustomerData = new CustomerData({firstName: 'todelete'});
 
   // before and after functions
   before(async function () {

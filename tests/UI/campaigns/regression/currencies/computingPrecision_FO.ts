@@ -28,7 +28,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
 import {Currencies} from '@data/demo/currencies';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
@@ -232,7 +232,7 @@ describe(
       it('should sign in with default customer', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'loginInFO', baseContext);
 
-        await foLoginPage.customerLogin(page, DefaultCustomer);
+        await foLoginPage.customerLogin(page, Customers.johnDoe);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

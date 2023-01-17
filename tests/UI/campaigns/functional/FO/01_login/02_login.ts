@@ -7,8 +7,8 @@ import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
-import CustomerFaker from '@data/faker/customer';
+import Customers from '@data/demo/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -19,9 +19,9 @@ describe('FO - Login : Login in FO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const firstCredentialsData: CustomerFaker = new CustomerFaker();
-  const secondCredentialsData: CustomerFaker = new CustomerFaker({password: DefaultCustomer.password});
-  const thirdCredentialsData: CustomerFaker = new CustomerFaker({email: DefaultCustomer.email});
+  const firstCredentialsData: CustomerData = new CustomerData();
+  const secondCredentialsData: CustomerData = new CustomerData({password: Customers.johnDoe.password});
+  const thirdCredentialsData: CustomerData = new CustomerData({email: Customers.johnDoe.email});
 
   // before and after functions
   before(async function () {
@@ -95,7 +95,7 @@ describe('FO - Login : Login in FO', async () => {
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-    await loginPage.customerLogin(page, DefaultCustomer);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;

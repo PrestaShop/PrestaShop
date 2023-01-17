@@ -17,7 +17,7 @@ import loginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import CartRuleFaker from '@data/faker/cartRule';
 
@@ -130,7 +130,7 @@ describe('BO - Catalog - Cart rules : Case 12 - Customer Group Restriction', asy
     it('should enter a valid credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
-      await loginPage.customerLogin(page, DefaultCustomer);
+      await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;

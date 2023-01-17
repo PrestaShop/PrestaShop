@@ -16,7 +16,7 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Importing data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -98,7 +98,7 @@ describe('BO - Payment - Preferences : Configure currency restrictions', async (
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultCustomer);
+        await checkoutPage.customerLogin(page, Customers.johnDoe);
       }
 
       // Address step - Go to delivery step

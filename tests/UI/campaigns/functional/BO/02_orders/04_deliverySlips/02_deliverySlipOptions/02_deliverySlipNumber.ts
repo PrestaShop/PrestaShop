@@ -13,7 +13,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
 import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
@@ -39,7 +39,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
   let fileName: string;
 
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 5,
     paymentMethod: PaymentMethods.wirePayment.moduleName,

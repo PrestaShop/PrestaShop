@@ -18,7 +18,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 
 // Import demo data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
@@ -32,10 +32,10 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   let page: Page;
 
   const contactUsData: MessageData = new MessageData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
     reference: Orders.firstOrder.ref,
   });
 
@@ -74,7 +74,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   it('should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await loginPage.customerLogin(page, DefaultCustomer);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

@@ -21,7 +21,7 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -49,7 +49,7 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let numberOfShoppingCarts: number;
   let orderId: string;
 
-  const customerData: CustomerFaker = new CustomerFaker();
+  const customerData: CustomerData = new CustomerData();
   const orderData: Order = {
     customer: customerData,
     product: Products.demo_1,

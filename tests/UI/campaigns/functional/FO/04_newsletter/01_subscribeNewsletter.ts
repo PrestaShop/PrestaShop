@@ -18,7 +18,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {ModuleInformation} from '@data/types/module';
 
 import {expect} from 'chai';
@@ -69,7 +69,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should subscribe to newsletter with already used email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeWithAlreadyUsedEmail', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
+      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, Customers.johnDoe.email);
       await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.alreadyUsedEmailMessage);
     });
   });
@@ -87,7 +87,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -106,7 +106,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should unsubscribe from newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'unsubscribeFromNewsLetter', baseContext);
 
-      const unsubscribeAlertText = await foAccountIdentityPage.unsubscribeNewsletter(page, DefaultCustomer.password);
+      const unsubscribeAlertText = await foAccountIdentityPage.unsubscribeNewsletter(page, Customers.johnDoe.password);
       await expect(unsubscribeAlertText).to.contains(foAccountIdentityPage.successfulUpdateMessage);
     });
   });
@@ -151,7 +151,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatEmailIsNotInTable', baseContext);
 
       const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
-      await expect(subscribedUserList).to.not.contains(DefaultCustomer.email);
+      await expect(subscribedUserList).to.not.contains(Customers.johnDoe.email);
     });
 
     it('should logout from BO', async function () {
@@ -172,7 +172,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should subscribe to newsletter', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'subscribeToNewsletter', baseContext);
 
-      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, DefaultCustomer.email);
+      const newsletterSubscribeAlertMessage = await foHomePage.subscribeToNewsletter(page, Customers.johnDoe.email);
       await expect(newsletterSubscribeAlertMessage).to.contains(foHomePage.successSubscriptionMessage);
     });
   });
@@ -210,7 +210,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkIfSubscriptionIsInTable', baseContext);
 
       const subscribedUserList = await psEmailSubscriptionPage.getListOfNewsletterRegistrationEmails(page);
-      await expect(subscribedUserList).to.contains(DefaultCustomer.email);
+      await expect(subscribedUserList).to.contains(Customers.johnDoe.email);
     });
 
     it('should logout from BO', async function () {

@@ -1,4 +1,4 @@
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {Page} from 'playwright';
 
 /**
@@ -30,8 +30,8 @@ const loginBO = async function (page: Page): Promise<void> {
  * @return {Promise<void>}
  */
 const loginFO = async function (page: Page): Promise<void> {
-  await page.type('#login-form input[name=email]', DefaultCustomer.email);
-  await page.type('#login-form input[name=password]', DefaultCustomer.password);
+  await page.type('#login-form input[name=email]', Customers.johnDoe.email);
+  await page.type('#login-form input[name=password]', Customers.johnDoe.password);
 
   await Promise.all([
     page.click('#submit-login'),

@@ -14,7 +14,7 @@ import invoicesPage from '@pages/BO/orders/invoices/index';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import InvoiceData from '@data/faker/invoice';
@@ -42,7 +42,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
 
   const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,

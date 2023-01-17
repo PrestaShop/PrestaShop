@@ -12,17 +12,18 @@ import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import AddressData from '@data/faker/address';
+import type AddressData from '@data/faker/address';
+import type CustomerData from '@data/faker/customer';
 
 let browserContext: BrowserContext;
 let page: Page;
 
 /**
  * Function to create account in FO
- * @param customerData {object} Data to set when creating the account
+ * @param customerData {CustomerData} Data to set when creating the account
  * @param baseContext {string} String to identify the test
  */
-function createAccountTest(customerData: object, baseContext: string = 'commonTests-createAccountTest'): void {
+function createAccountTest(customerData: CustomerData, baseContext: string = 'commonTests-createAccountTest'): void {
   describe('PRE-TEST: Create account on FO', async () => {
     // before and after functions
     before(async function () {

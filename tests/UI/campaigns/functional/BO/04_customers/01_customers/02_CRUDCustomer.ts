@@ -16,7 +16,7 @@ import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,8 +29,8 @@ describe('BO - Customers - Customers : CRUD Customer in BO', async () => {
   let page: Page;
   let numberOfCustomers: number = 0;
 
-  const createCustomerData: CustomerFaker = new CustomerFaker();
-  const editCustomerData: CustomerFaker = new CustomerFaker({enabled: false});
+  const createCustomerData: CustomerData = new CustomerData();
+  const editCustomerData: CustomerData = new CustomerData({enabled: false});
 
   // before and after functions
   before(async function () {

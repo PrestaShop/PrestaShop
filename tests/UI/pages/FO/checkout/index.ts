@@ -5,6 +5,7 @@ import FOBasePage from '@pages/FO/FObasePage';
 import AddressData from '@data/faker/address';
 
 import type {Page} from 'playwright';
+import CustomerData from '@data/faker/customer';
 
 /**
  * Checkout page, contains functions that can be used on the page
@@ -685,10 +686,10 @@ class Checkout extends FOBasePage {
   /**
    * Fill personal information form and click on continue
    * @param page {Page} Browser tab
-   * @param customerData {object} Guest Customer's information to fill on form
+   * @param customerData {CustomerData} Guest Customer's information to fill on form
    * @return {Promise<boolean>}
    */
-  async setGuestPersonalInformation(page: Page, customerData: any): Promise<boolean> {
+  async setGuestPersonalInformation(page: Page, customerData: CustomerData): Promise<boolean> {
     await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
 
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);

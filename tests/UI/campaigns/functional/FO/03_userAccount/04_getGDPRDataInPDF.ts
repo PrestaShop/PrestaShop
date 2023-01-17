@@ -30,7 +30,7 @@ import productPage from '@pages/FO/product';
 // Import data
 import AddressData from '@data/faker/address';
 import MessageData from '@data/faker/message';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
@@ -66,7 +66,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerFaker = new CustomerFaker({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
+  const customerData: CustomerData = new CustomerData({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const dateNow: Date = new Date();
   const addressData: AddressData = new AddressData({

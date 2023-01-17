@@ -23,7 +23,7 @@ import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import OrderStatusData from '@data/faker/orderStatus';
 import type Order from '@data/types/order';
 
@@ -54,7 +54,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   let orderIframe: Frame|null;
 
   const today: string = date.getDateFormat('yyyy-mm-dd');
-  const newCustomer: CustomerFaker = new CustomerFaker();
+  const newCustomer: CustomerData = new CustomerData();
   const newAddress: AddressData = new AddressData({
     email: newCustomer.email,
     country: 'France',

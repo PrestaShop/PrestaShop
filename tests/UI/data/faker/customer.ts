@@ -1,22 +1,62 @@
 import Groups from '@data/demo/groups';
 import Titles from '@data/demo/titles';
+import type GroupData from '@data/faker/group';
+import type TitleData from '@data/faker/title';
+import type CustomerCreator from '@data/types/customer';
 
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
 
-const genders = Object.values(Titles).map((title) => title.name);
-const groups = Object.values(Groups).map((group) => group.name);
-const risksRating = ['None', 'Low', 'Medium', 'High'];
+const genders: string[] = Object.values(Titles).map((title: TitleData) => title.name);
+const groups: string[] = Object.values(Groups).map((group: GroupData) => group.name);
+const risksRating: string[] = ['None', 'Low', 'Medium', 'High'];
 
 /**
  * Create new customer to use on creation form on customer page on BO and FO
  * @class
  */
-class CustomerData {
+export default class CustomerData {
+  public readonly id: number;
+
+  public readonly socialTitle: string;
+
+  public readonly firstName: string;
+
+  public readonly lastName: string;
+
+  public email: string;
+
+  public password: string;
+
+  public readonly birthDate: Date;
+
+  public readonly yearOfBirth: string;
+
+  public readonly monthOfBirth: string;
+
+  public readonly dayOfBirth: string;
+
+  public readonly enabled: boolean;
+
+  public readonly partnerOffers: boolean;
+
+  public readonly newsletter: boolean;
+
+  public readonly defaultCustomerGroup: string;
+
+  public readonly company: string;
+
+  public readonly allowedOutstandingAmount: number;
+
+  public readonly riskRating: string;
+
   /**
    * Constructor for class CustomerData
-   * @param customerToCreate {Object} Could be used to force the value of some members
+   * @param customerToCreate {CustomerCreator} Could be used to force the value of some members
    */
-  constructor(customerToCreate = {}) {
+  constructor(customerToCreate: CustomerCreator = {}) {
+    /** @type {number} ID of the customer */
+    this.id = customerToCreate.id || 0;
+
     /** @type {string} Social title of the customer (Mr, Mrs) */
     this.socialTitle = customerToCreate.socialTitle || faker.helpers.arrayElement(genders);
 
@@ -30,7 +70,7 @@ class CustomerData {
     this.email = customerToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
 
     /** @type {string} Password for the customer account */
-    this.password = customerToCreate.password === undefined ? faker.internet.password : customerToCreate.password;
+    this.password = customerToCreate.password === undefined ? faker.internet.password() : customerToCreate.password;
 
     /** @type {Date} Birthdate of the customer */
     this.birthDate = faker.date.between('1950-01-01', '2000-12-31');
@@ -69,5 +109,3 @@ class CustomerData {
     this.riskRating = customerToCreate.riskRating || faker.helpers.arrayElement(risksRating);
   }
 }
-
-module.exports = CustomerData;

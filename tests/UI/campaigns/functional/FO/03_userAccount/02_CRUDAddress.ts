@@ -19,7 +19,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import Products from '@data/demo/products';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
@@ -48,7 +48,7 @@ describe('FO - Account : CRUD address', async () => {
   let firstAddressPosition: number = 0;
   let secondAddressPosition: number = 0;
 
-  const newCustomerData: CustomerFaker = new CustomerFaker();
+  const newCustomerData: CustomerData = new CustomerData();
   const createAddressData: AddressData = new AddressData({country: 'France'});
   const editAddressData: AddressData = new AddressData({country: 'France'});
   const secondAddressData: AddressData = new AddressData({country: 'France'});

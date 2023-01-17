@@ -16,7 +16,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
@@ -42,7 +42,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
   const todayDate: string = date.getDateFormat('yyyy-mm-dd');
   const todayDateToCheck: string = date.getDateFormat('mm/dd/yyyy');
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 5,
     paymentMethod: PaymentMethods.wirePayment.moduleName,

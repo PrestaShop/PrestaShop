@@ -17,7 +17,7 @@ import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
@@ -94,7 +94,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
 
       // Go to create account page
       await foHomePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await foHomePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;

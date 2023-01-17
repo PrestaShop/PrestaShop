@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import Order from '@data/types/order';
 
@@ -35,7 +35,7 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
   let numberOfShoppingCartsAfterFilter: number;
 
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     product: Products.demo_1,
     productQuantity: 1,
   };

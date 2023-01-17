@@ -33,8 +33,8 @@ import storesPage from '@pages/FO/stores';
 import termsAndConditionsOfUsePage from '@pages/FO/termsAndConditionsOfUse';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
-import CustomerFaker from '@data/faker/customer';
+import Customers from '@data/demo/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +63,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   const today: Date = new Date();
   const currentYear: string = today.getFullYear().toString();
-  const createCustomerData: CustomerFaker = new CustomerFaker();
+  const createCustomerData: CustomerData = new CustomerData();
 
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest1`);
@@ -158,7 +158,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
       await homePage.goToLoginPage(page);
-      await loginPage.customerLogin(page, DefaultCustomer);
+      await loginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await loginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

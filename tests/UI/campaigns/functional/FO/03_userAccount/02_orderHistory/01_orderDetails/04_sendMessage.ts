@@ -22,7 +22,7 @@ import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -84,7 +84,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -190,7 +190,7 @@ describe('FO - Account : Send a message with an ordered product', async () => {
     it('Should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -238,14 +238,14 @@ describe('FO - Account : Send a message with an ordered product', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerName', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'customer');
-      await expect(email).to.contain(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`);
+      await expect(email).to.contain(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
     });
 
     it('should check customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerEmail', baseContext);
 
       const email = await customerServicePage.getTextColumn(page, 1, 'a!email');
-      await expect(email).to.contain(DefaultCustomer.email);
+      await expect(email).to.contain(Customers.johnDoe.email);
     });
 
     it('should check message type', async function () {

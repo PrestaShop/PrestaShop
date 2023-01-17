@@ -17,7 +17,7 @@ import orderSettingsPage from '@pages/BO/shopParameters/orderSettings';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -133,10 +133,10 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;

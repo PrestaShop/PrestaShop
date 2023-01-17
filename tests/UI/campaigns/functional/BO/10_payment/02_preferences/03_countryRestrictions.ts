@@ -16,7 +16,7 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -114,7 +114,7 @@ describe('BO - Payment - Preferences : Configure country restrictions', async ()
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
 
-        const isStepLoginComplete = await checkoutPage.customerLogin(page, DefaultCustomer);
+        const isStepLoginComplete = await checkoutPage.customerLogin(page, Customers.johnDoe);
         await expect(isStepLoginComplete, 'Step Personal information is not complete').to.be.true;
       }
     });

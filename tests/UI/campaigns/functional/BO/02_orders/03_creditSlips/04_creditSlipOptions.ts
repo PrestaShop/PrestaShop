@@ -15,7 +15,7 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
@@ -54,7 +54,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
   });
   // New order by customer
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     product,
     productQuantity: 3,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
