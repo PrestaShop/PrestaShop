@@ -90,6 +90,8 @@ class CartControllerCore extends FrontController
                 $this->errors[] = $isAvailable;
             }
         }
+
+        CartRule::autoRemoveFromCart();
     }
 
     /**

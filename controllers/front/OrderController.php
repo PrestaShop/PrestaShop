@@ -73,6 +73,7 @@ class OrderControllerCore extends FrontController
     {
         parent::init();
         $this->cartChecksum = new CartChecksum(new AddressChecksum());
+        CartRule::autoRemoveFromCart();
     }
 
     public function postProcess()

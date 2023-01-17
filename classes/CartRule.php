@@ -1733,11 +1733,29 @@ class CartRuleCore extends ObjectModel
         }
 
         static $errors = [];
+        $now = time();
         foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
             if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
+                $errors[] = $error;
+            }
+
+            // Perform additional checks for validity
+            if (!$cart_rule['obj']->active) {
+                $errors[] = $cart_rule['obj']->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
+            }
+            if (!$cart_rule['obj']->quantity) {
+                $errors[] = $cart_rule['obj']->trans('This voucher has already been used', [], 'Shop.Notifications.Error');
+            }
+            if (strtotime($cart_rule['obj']->date_from) > $now) {
+                $errors[] = $cart_rule['obj']->trans('This voucher is not valid yet', [], 'Shop.Notifications.Error');
+            }
+            if (strtotime($cart_rule['obj']->date_to) < $now) {
+                $errors[] = $cart_rule['obj']->trans('This voucher has expired', [], 'Shop.Notifications.Error');
+            }
+
+            if (!empty($errors)) {
                 $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
-                $errors[] = $error;
             }
         }
 
