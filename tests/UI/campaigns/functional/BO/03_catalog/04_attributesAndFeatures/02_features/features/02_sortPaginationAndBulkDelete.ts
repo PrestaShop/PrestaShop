@@ -77,7 +77,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and delete by 
   const creationTests: number[] = new Array(19).fill(0, 0, 19);
   describe('Create 19 new features in BO', async () => {
     creationTests.forEach((test: number, index: number) => {
-      const createFeatureData = new FeatureData({name: `todelete${index}`});
+      const createFeatureData: FeatureData = new FeatureData({name: `todelete${index}`});
       it('should go to add new feature page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewFeaturePage${index}`, baseContext);
 
