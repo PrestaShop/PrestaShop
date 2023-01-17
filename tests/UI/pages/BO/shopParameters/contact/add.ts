@@ -1,6 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import {Page} from 'playwright';
-import ContactData from "@data/faker/contact";
+import ContactData from '@data/faker/contact';
 
 /**
  * Add contact page, contains functions that can be used on the page

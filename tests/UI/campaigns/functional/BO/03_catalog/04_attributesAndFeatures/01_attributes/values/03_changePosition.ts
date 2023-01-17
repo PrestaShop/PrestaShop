@@ -11,7 +11,7 @@ import viewAttributePage from '@pages/BO/catalog/attributes/view';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Attributes} from '@data/demo/attributes';
+import Attributes from '@data/demo/attributes';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
