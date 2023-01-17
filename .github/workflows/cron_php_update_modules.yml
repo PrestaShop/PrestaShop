@@ -20,7 +20,6 @@ jobs:
         BRANCH:
           - develop
           - 8.0.x
-          - 1.7.8.x
     env:
       GH_BRANCH: ${{ matrix.BRANCH }}
 
@@ -47,11 +46,14 @@ jobs:
         run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
 
       - name: Update PrestaShop packages
-        run: echo "PULL_REQUEST_BODY='$(cat cron_php_update_modules.txt)'" >> $GITHUB_ENV
+        id: updated-packages
+        run: |
+          FILE_CONTENT=$(cat cron_php_update_modules.txt)
+          echo PR_BODY=$FILE_CONTENT >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
-        if: env.PULL_REQUEST_BODY != ''
+        if: ${{steps.updated-packages.outputs.PR_BODY}} != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: cron-php-update-modules-${{ env.GH_BRANCH }}
@@ -59,6 +61,6 @@ jobs:
           committer: PrestonBot <noreply@github.com>
           author: prestonBot <prestonBot@users.noreply.github.com>
           title: 'Updated PrestaShop Packages'
-          body: ${{ env.PULL_REQUEST_BODY }}
+          body: ${{steps.updated-packages.outputs.PR_BODY}}
           base: ${{ env.GH_BRANCH }}
           delete-branch: true
