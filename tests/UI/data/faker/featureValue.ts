@@ -1,10 +1,8 @@
-import Features from '@data/demo/features';
-import type FeatureData from '@data/faker/feature';
 import type {FeatureValueCreator} from '@data/types/feature';
 
 import {faker} from '@faker-js/faker';
 
-const featuresNames: string[] = Object.values(Features).map((feature: FeatureData) => feature.name);
+const featuresNames: string[] = ['Composition', 'Property'];
 
 /**
  * Create new feature value to use on feature value form on BO

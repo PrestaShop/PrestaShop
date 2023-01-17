@@ -9,6 +9,7 @@ type CustomerCreator = {
   dayOfBirth?: string
   email?: string
   password?: string
+  birthDate?: Date
   enabled?: boolean
   newsletter?: boolean
   partnerOffers?: boolean

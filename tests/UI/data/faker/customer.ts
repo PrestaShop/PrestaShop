@@ -73,7 +73,7 @@ export default class CustomerData {
     this.password = customerToCreate.password === undefined ? faker.internet.password() : customerToCreate.password;
 
     /** @type {Date} Birthdate of the customer */
-    this.birthDate = faker.date.between('1950-01-01', '2000-12-31');
+    this.birthDate = customerToCreate.birthDate || faker.date.between('1950-01-01', '2000-12-31');
 
     /** @type {string} Year of the birth 'yyyy' */
     this.yearOfBirth = customerToCreate.yearOfBirth || this.birthDate.getFullYear().toString();

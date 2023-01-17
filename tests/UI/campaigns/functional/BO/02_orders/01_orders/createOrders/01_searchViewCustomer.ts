@@ -133,7 +133,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
       const customerCardContent = await addOrderPage.getCustomerCardBody(page, 1);
       await expect(customerCardContent)
         .to.contains(Customers.johnDoe.email)
-        .and.to.contains(Customers.johnDoe.birthDate)
+        .and.to.contains(Customers.johnDoe.birthDate.toJSON().slice(0, 10))
         .and.to.contains(Customers.johnDoe.defaultCustomerGroup);
     });
 

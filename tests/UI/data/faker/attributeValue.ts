@@ -1,10 +1,8 @@
-import Attributes from '@data/demo/attributes';
-import type AttributeData from '@data/faker/attribute';
 import {AttributeValueCreator} from '@data/types/attribute';
 
 import {faker} from '@faker-js/faker';
 
-const attributesNames: string[] = Object.values(Attributes).map((attribute: AttributeData) => attribute.name);
+const attributesNames: string[] = ['Size', 'Color', 'Dimension', 'Paper Type'];
 
 /**
  * Create new attribute value to use on attribute value form on BO
