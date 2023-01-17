@@ -276,7 +276,7 @@ class CartControllerCore extends FrontController
                         }
                     }
                 } elseif (
-                    $id_cart_rule = (int) Tools::getValue('deleteDiscount')
+                    ($id_cart_rule = (int) Tools::getValue('deleteDiscount'))
                     && Validate::isUnsignedId($id_cart_rule)
                 ) {
                     $this->context->cart->removeCartRule($id_cart_rule);
