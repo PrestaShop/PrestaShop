@@ -5,7 +5,7 @@ admin_cart_rules_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::indexAction'
     _legacy_controller: AdminCartRules
-    _legacy_link: AdminCartRule
+    _legacy_link: AdminCartRules
     _legacy_feature_flag: cart_rule
 
 admin_cart_rules_search:
