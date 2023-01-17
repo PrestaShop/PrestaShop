@@ -39,6 +39,11 @@ class AppKernel extends Kernel
     const RELEASE_VERSION = 1;
 
     /**
+     * @var string
+     */
+    protected $latestWarmupDir;
+
+    /**
      * {@inheritdoc}
      */
     public function registerBundles()
@@ -135,7 +140,13 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return _PS_CACHE_DIR_;
+        return $this->latestWarmupDir ?: _PS_CACHE_DIR_;
+    }
+
+    public function reboot($warmupDir)
+    {
+        $this->latestWarmupDir = $warmupDir;
+        parent::reboot($warmupDir);
     }
 
     /**
