@@ -421,26 +421,6 @@ class UpdateCombinationCommand
     }
 
     /**
-     * @return bool|null
-     */
-    public function isLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return $this
-     */
-    public function setLowStockAlert(bool $enabled): self
-    {
-        $this->lowStockAlertEnabled = $enabled;
-
-        return $this;
-    }
-
-    /**
      * @return DateTimeInterface|null
      */
     public function getAvailableDate(): ?DateTimeInterface
@@ -458,14 +438,6 @@ class UpdateCombinationCommand
         $this->availableDate = $availableDate;
 
         return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function getLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
     }
 
     /**

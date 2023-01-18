@@ -92,7 +92,6 @@ class StockInformationFillerTest extends CombinationFillerTestCase
         $command = $this->getEmptyCommand()
             ->setLocalizedAvailableNowLabels($localizedAvailableNow)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
-            ->setLowStockAlert(true)
             ->setLowStockThreshold(42)
             ->setMinimalQuantity(10)
             ->setAvailableDate(new DateTime('2022-10-10'))

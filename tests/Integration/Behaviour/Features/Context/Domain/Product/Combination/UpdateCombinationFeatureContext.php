@@ -175,9 +175,6 @@ class UpdateCombinationFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['low stock threshold'])) {
             $command->setLowStockThreshold((int) $dataRows['low stock threshold']);
         }
-        if (isset($dataRows['low stock alert is enabled'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']));
-        }
         if (isset($dataRows['available date'])) {
             $command->setAvailableDate(new DateTime($dataRows['available date']));
         }

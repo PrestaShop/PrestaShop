@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
@@ -176,7 +177,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ];
 
         $command = $this->getSingleShopCommand();
-        $command->setLowStockAlert(false);
+        $command->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE);
         yield [
             [
                 'stock' => [
@@ -352,8 +353,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         $allShopsCommand = $this
             ->getAllShopsCommand()
             ->setMinimalQuantity(1)
-            ->setLowStockThreshold(5)
-            ->setLowStockAlert(false)
+            ->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE)
             ->setAvailableDate(new DateTime('2022-10-10'))
         ;
         yield [
@@ -389,7 +389,7 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
         ;
         $allShopsCommand = $this
             ->getAllShopsCommand()
-            ->setLowStockAlert(false)
+            ->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE)
             ->setAvailableDate(new NullDateTime())
         ;
         yield [
