@@ -2176,4 +2176,3 @@ services:
     public: true
     tags:
       - { name: form.type }
-
