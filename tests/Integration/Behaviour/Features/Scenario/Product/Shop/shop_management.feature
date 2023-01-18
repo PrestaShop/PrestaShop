@@ -639,3 +639,8 @@ Feature: Copy product from shop to shop.
     And product "product1" should have following images for shops "shop1":
       | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
       | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    # copy product again to make sure there are no images left from the previous product, therefore no uniqueConstraint errors
+    When I copy product "product1" from shop "shop1" to shop "shop2"
+    Then product "product1" should have following images for shops "shop1,shop2":
+      | image reference | is cover | legend[en-US] | legend[fr-FR] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
