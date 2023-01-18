@@ -1027,7 +1027,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 2 => 'Isparduota',
             ])
             ->setActive(true)
-            ->setLowStockAlert(true)
             ->setLowStockThreshold(10)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
             ->setAvailableDate(new DateTime('2022-10-11'))
