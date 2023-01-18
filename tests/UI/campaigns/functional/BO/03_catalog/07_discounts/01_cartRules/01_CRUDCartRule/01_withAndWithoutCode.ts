@@ -18,7 +18,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,13 +30,13 @@ describe('BO - Catalog - Cart rules : CRUD cart rule with/without code', async (
   let page: Page;
 
   const pastDate: string = date.getDateFormat('yyyy-mm-dd', 'past');
-  const cartRuleWithoutCode: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithoutCode: CartRuleData = new CartRuleData({
     dateFrom: pastDate,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const cartRuleWithCode: CartRuleFaker = new CartRuleFaker({
+  const cartRuleWithCode: CartRuleData = new CartRuleData({
     name: 'withCode',
     code: '4QABV6L3',
     discountType: 'Percent',

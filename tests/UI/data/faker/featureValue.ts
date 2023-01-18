@@ -1,19 +1,32 @@
-const {faker} = require('@faker-js/faker');
+import type {FeatureValueCreator} from '@data/types/feature';
 
-const {Features} = require('@data/demo/features');
+import {faker} from '@faker-js/faker';
 
-const featuresNames = Object.values(Features).map((feature) => feature.name);
+const featuresNames: string[] = ['Composition', 'Property'];
 
 /**
  * Create new feature value to use on feature value form on BO
  * @class
  */
-class FeatureValueData {
+export default class FeatureValueData {
+  public readonly id:number;
+
+  public readonly featureName:string;
+
+  public readonly value:string;
+
+  public readonly url:string;
+
+  public readonly metaTitle:string;
+
   /**
    * Constructor for class ValueData
-   * @param valueToCreate {Object} Could be used to force the value of some members
+   * @param valueToCreate {FeatureValueCreator} Could be used to force the value of some members
    */
-  constructor(valueToCreate = {}) {
+  constructor(valueToCreate: FeatureValueCreator = {}) {
+    /** @type {number} ID of the feature */
+    this.id = valueToCreate.id || 0;
+
     /** @type {string} Name of the parent feature */
     this.featureName = valueToCreate.featureName || faker.helpers.arrayElement(featuresNames);
 
@@ -27,5 +40,3 @@ class FeatureValueData {
     this.metaTitle = valueToCreate.metaTitle || faker.lorem.word();
   }
 }
-
-module.exports = FeatureValueData;

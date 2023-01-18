@@ -13,7 +13,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import DeliverySlipOptionsFaker from '@data/faker/deliverySlipOptions';
+import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,7 +31,7 @@ describe('BO - Orders - Delivery slips : Update delivery slip prefix and check t
   let page: Page;
   let fileName: string;
 
-  const deliverySlipData: DeliverySlipOptionsFaker = new DeliverySlipOptionsFaker();
+  const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
   const defaultPrefix: string = '#DE';
 
   // before and after functions

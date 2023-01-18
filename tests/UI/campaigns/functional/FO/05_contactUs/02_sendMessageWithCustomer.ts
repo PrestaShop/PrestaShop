@@ -16,9 +16,9 @@ import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,11 +35,11 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+  const contactUsData: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
     reference: Orders.firstOrder.ref,
   });
 
@@ -78,7 +78,7 @@ describe('FO - Contact us : Send message from contact us page with customer logg
   it('should sign in with default customer', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'sighInFo', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultCustomer);
+    await foLoginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

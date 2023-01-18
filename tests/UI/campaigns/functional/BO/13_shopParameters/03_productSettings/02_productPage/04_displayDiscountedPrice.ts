@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import PriceRuleFaker from '@data/faker/catalogPriceRule';
+import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -28,17 +28,15 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
   let browserContext: BrowserContext;
   let page: Page;
 
-  const priceRuleData: PriceRuleFaker = new PriceRuleFaker(
-    {
-      currency: 'All currencies',
-      country: 'All countries',
-      group: 'All groups',
-      reductionType: 'Amount',
-      reductionTax: 'Tax included',
-      fromQuantity: 3,
-      reduction: 20,
-    },
-  );
+  const priceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
+    currency: 'All currencies',
+    country: 'All countries',
+    group: 'All groups',
+    reductionType: 'Amount',
+    reductionTax: 'Tax included',
+    fromQuantity: 3,
+    reduction: 20,
+  });
   // Unit discount in Volume discounts table(Product page FO)
   const unitDiscountToCheck: string = '€20.00';
   // Unit price in Volume discounts table(Product page FO)

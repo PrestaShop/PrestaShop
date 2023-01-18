@@ -164,7 +164,7 @@ class AddCartRule extends BOBasePage {
     // Set Customer
     // Customer will not be set if we want to use the cart rule for any customer
     if (cartRuleData.customer) {
-      await this.setValue(page, this.singleCustomerInput, cartRuleData.customer);
+      await this.setValue(page, this.singleCustomerInput, cartRuleData.customer.email);
       await this.waitForVisibleSelector(page, `${this.singleCustomerResultBlock}:not([style*='display: none;'])`);
       await page.click(this.singleCustomerResultItem);
     }

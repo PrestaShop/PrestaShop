@@ -11,7 +11,7 @@ import contactsPage from '@pages/BO/shopParameters/contact';
 import addContactPage from '@pages/BO/shopParameters/contact/add';
 
 // Import data
-import ContactFaker from '@data/faker/contact';
+import ContactData from '@data/faker/contact';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in 
   let page: Page;
   let numberOfContacts: number = 0;
 
-  const createContactData: ContactFaker = new ContactFaker();
-  const editContactData: ContactFaker = new ContactFaker({saveMessage: false});
+  const createContactData: ContactData = new ContactData();
+  const editContactData: ContactData = new ContactData({saveMessage: false});
 
   // before and after functions
   before(async function () {

@@ -28,9 +28,9 @@ import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 import productPage from '@pages/FO/product';
 
 // Import data
-import AddressFaker from '@data/faker/address';
-import ContactUsFakerData from '@data/faker/contactUs';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import MessageData from '@data/faker/message';
+import CustomerData from '@data/faker/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
@@ -66,10 +66,10 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerFaker = new CustomerFaker({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
+  const customerData: CustomerData = new CustomerData({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const dateNow: Date = new Date();
-  const addressData: AddressFaker = new AddressFaker({
+  const addressData: AddressData = new AddressData({
     firstName: 'Marc',
     lastName: 'Beier',
     country: 'France',
@@ -77,16 +77,14 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     city: 'Paris',
     company: 'PrestaShop',
   });
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData(
-    {
-      firstName: customerData.firstName,
-      lastName: customerData.lastName,
-      subject: 'Customer service',
-      message: 'Message test',
-      emailAddress: customerData.email,
-      reference: orderReference,
-    },
-  );
+  const contactUsData: MessageData = new MessageData({
+    firstName: customerData.firstName,
+    lastName: customerData.lastName,
+    subject: 'Customer service',
+    message: 'Message test',
+    emailAddress: customerData.email,
+    reference: orderReference,
+  });
 
   // before and after functions
   before(async function () {

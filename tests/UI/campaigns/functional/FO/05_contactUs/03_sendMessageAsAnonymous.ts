@@ -16,8 +16,8 @@ import foContactUsPage from '@pages/FO/contactUs';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
-import ContactUsFakerData from '@data/faker/contactUs';
+import Customers from '@data/demo/customer';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -36,30 +36,30 @@ describe('FO - Contact us : Send message from contact us page with customer not 
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsEmptyEmail: ContactUsFakerData = new ContactUsFakerData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+  const contactUsEmptyEmail: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: '',
   });
-  const contactUsInvalidEmail: ContactUsFakerData = new ContactUsFakerData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+  const contactUsInvalidEmail: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: 'demo@prestashop',
   });
-  const contactUsEmptyContent: ContactUsFakerData = new ContactUsFakerData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+  const contactUsEmptyContent: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
     message: '',
   });
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData({
-    firstName: DefaultCustomer.firstName,
-    lastName: DefaultCustomer.lastName,
+  const contactUsData: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
   });
 
   // before and after functions

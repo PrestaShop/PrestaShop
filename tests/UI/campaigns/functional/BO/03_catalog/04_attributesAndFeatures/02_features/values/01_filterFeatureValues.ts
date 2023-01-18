@@ -12,7 +12,7 @@ import featuresPage from '@pages/BO/catalog/features';
 import viewFeaturePage from '@pages/BO/catalog/features/view';
 
 // Import data
-import {Features} from '@data/demo/features';
+import Features from '@data/demo/features';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -95,7 +95,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
           {
             testIdentifier: 'filterId',
             filterBy: 'id_feature_value',
-            filterValue: Features.composition.values.polyester.id.toString(),
+            filterValue: Features.composition.values[0].id.toString(),
           },
       },
       {
@@ -103,7 +103,7 @@ describe('BO - Catalog - Attributes & Features : Filter feature values table', a
           {
             testIdentifier: 'filterValue',
             filterBy: 'value',
-            filterValue: Features.composition.values.polyester.value,
+            filterValue: Features.composition.values[0].value,
           },
       },
     ];

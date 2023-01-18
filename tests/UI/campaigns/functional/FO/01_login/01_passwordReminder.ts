@@ -15,7 +15,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import passwordReminderPage from '@pages/FO/passwordReminder';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 import MailDevEmail from '@data/types/maildev';
 
 import {expect} from 'chai';
@@ -44,9 +44,9 @@ describe('FO - Login : Password reminder', async () => {
   let mailListener: MailDev;
 
   const resetPasswordMailSubject: string = 'Password query confirmation';
-  const customerData: CustomerFaker = new CustomerFaker();
+  const customerData: CustomerData = new CustomerData();
   const newPassword: string = 'new test password';
-  const customerNewPassword: CustomerFaker = new CustomerFaker();
+  const customerNewPassword: CustomerData = new CustomerData();
   customerNewPassword.email = customerData.email;
   customerNewPassword.password = newPassword;
 

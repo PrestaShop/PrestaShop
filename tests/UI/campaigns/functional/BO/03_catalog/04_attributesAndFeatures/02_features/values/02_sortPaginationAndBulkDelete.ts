@@ -107,7 +107,10 @@ describe('BO - Catalog - Catalog > Attributes & Features : Sort, pagination and 
     });
 
     creationTests.forEach((test: number, index: number) => {
-      const createFeatureValueData = new FeatureValueData({featureName: 'Composition', value: `todelete${index}`});
+      const createFeatureValueData: FeatureValueData = new FeatureValueData({
+        featureName: 'Composition',
+        value: `todelete${index}`,
+      });
       it(`should create value n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createNewValue${index}`, baseContext);
 

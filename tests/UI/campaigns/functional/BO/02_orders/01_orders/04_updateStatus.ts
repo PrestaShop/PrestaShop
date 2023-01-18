@@ -18,7 +18,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
@@ -48,7 +48,7 @@ describe('BO - orders : Update order status', async () => {
   let orderId: number;
 
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -219,7 +219,7 @@ describe('BO - orders : Update order status', async () => {
           it('should sign in with default customer', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `sighInFoToCheckStatus${index}`, baseContext);
 
-            await foLoginPage.customerLogin(page, DefaultCustomer);
+            await foLoginPage.customerLogin(page, Customers.johnDoe);
 
             const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
             await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

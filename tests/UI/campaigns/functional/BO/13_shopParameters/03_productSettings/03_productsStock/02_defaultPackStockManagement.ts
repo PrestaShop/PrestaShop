@@ -20,7 +20,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
@@ -167,7 +167,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         it('should sign in with default customer', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `sighInFO${index}`, baseContext);
 
-          await foLoginPage.customerLogin(page, DefaultCustomer);
+          await foLoginPage.customerLogin(page, Customers.johnDoe);
 
           const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
           await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

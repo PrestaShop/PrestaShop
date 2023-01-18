@@ -12,7 +12,7 @@ import addBrandAddressPage from '@pages/BO/catalog/brands/addAddress';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import BrandAddressFaker from '@data/faker/brandAddress';
+import BrandAddressData from '@data/faker/brandAddress';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -71,7 +71,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
   const creationAddressTests: number[] = new Array(10).fill(0, 0, 10);
   describe('Create 10 new Addresses in BO', async () => {
     creationAddressTests.forEach((test: number, index: number) => {
-      const createAddressData = new BrandAddressFaker({city: `todelete${index}`});
+      const createAddressData: BrandAddressData = new BrandAddressData({city: `todelete${index}`});
 
       it('should go to add new address page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);

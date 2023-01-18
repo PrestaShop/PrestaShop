@@ -17,7 +17,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -101,7 +101,7 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary',
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultCustomer);
+        await checkoutPage.customerLogin(page, Customers.johnDoe);
       }
 
       // Address step - Go to delivery step

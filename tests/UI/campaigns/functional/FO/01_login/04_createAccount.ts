@@ -11,7 +11,7 @@ import loginPage from '@pages/FO/login';
 import createAccountPage from '@pages/FO/myAccount/add';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,7 +22,7 @@ describe('FO - Login : Create account', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerFaker = new CustomerFaker();
+  const customerData: CustomerData = new CustomerData();
 
   // before and after functions
   before(async function () {

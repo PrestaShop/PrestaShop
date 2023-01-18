@@ -8,7 +8,7 @@ import loginPage from '@pages/FO/login';
 import myAccountPage from '@pages/FO/myAccount';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -42,7 +42,7 @@ describe('FO - User Account : LogOut', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 
     await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, DefaultCustomer);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;

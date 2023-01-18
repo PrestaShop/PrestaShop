@@ -12,7 +12,7 @@ import pagesPage from '@pages/BO/design/pages/index';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 
 // Import data
-import CategoryPageFaker from '@data/faker/CMScategory';
+import CMSCategoryData from '@data/faker/CMScategory';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -72,7 +72,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
   describe('Create 11 categories in BO', async () => {
     const tests: number[] = new Array(11).fill(0, 0, 11);
     tests.forEach((test: number, index: number) => {
-      const createCategoryData = new CategoryPageFaker({name: `todelete${index}`});
+      const createCategoryData: CMSCategoryData = new CMSCategoryData({name: `todelete${index}`});
 
       it('should go to add new page category', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewPageCategoryPage${index}`, baseContext);

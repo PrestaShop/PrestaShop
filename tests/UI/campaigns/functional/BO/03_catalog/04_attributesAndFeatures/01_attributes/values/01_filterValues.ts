@@ -11,7 +11,7 @@ import viewAttributePage from '@pages/BO/catalog/attributes/view';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {Attributes} from '@data/demo/attributes';
+import Attributes from '@data/demo/attributes';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -88,7 +88,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterId',
             filterBy: 'id_attribute',
-            filterValue: Attributes.color.values.pink.id.toString(),
+            filterValue: Attributes.color.values[13].id.toString(),
           },
       },
       {
@@ -96,7 +96,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterName',
             filterBy: 'b!name',
-            filterValue: Attributes.color.values.white.value,
+            filterValue: Attributes.color.values[3].value,
           },
       },
       {
@@ -104,7 +104,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterColor',
             filterBy: 'a!color',
-            filterValue: Attributes.color.values.camel.color,
+            filterValue: Attributes.color.values[7].color,
           },
       },
       {
@@ -112,7 +112,7 @@ describe('BO - Catalog - Attributes & Features : Filter attribute values table',
           {
             testIdentifier: 'filterPosition',
             filterBy: 'a!position',
-            filterValue: (Attributes.color.values.green.position - 1),
+            filterValue: (Attributes.color.values[10].position - 1),
           },
       },
     ];

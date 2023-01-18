@@ -10,7 +10,7 @@ import homePage from '@pages/FO/home';
 import loginPage from '@pages/FO/login';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
@@ -58,7 +58,7 @@ describe('BO - Checkout : Order a product and check order confirmation', async (
   it('should sign In in FO with default account', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    await loginPage.customerLogin(page, DefaultCustomer);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
     const connected = await homePage.isCustomerConnected(page);
     await expect(connected, 'Customer is not connected in FO').to.be.true;

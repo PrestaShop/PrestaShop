@@ -70,7 +70,7 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
   const creationTests: number[] = new Array(17).fill(0, 0, 17);
   describe('Create 17 new attributes in BO', async () => {
     creationTests.forEach((test: number, index: number) => {
-      const createAttributeData = new AttributeData({name: `todelete${index}`});
+      const createAttributeData: AttributeData = new AttributeData({name: `todelete${index}`});
       it('should go to add new attribute page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAttributePage${index}`, baseContext);
 

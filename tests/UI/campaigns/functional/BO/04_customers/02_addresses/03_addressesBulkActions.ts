@@ -11,7 +11,7 @@ import addAddressPage from '@pages/BO/customers/addresses/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,7 +24,7 @@ describe('BO - Customers - Addresses : Addresses bulk actions', async () => {
   let page: Page;
   let numberOfAddresses: number = 0;
 
-  const addressData: AddressFaker = new AddressFaker({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
+  const addressData: AddressData = new AddressData({address: 'todelete', email: 'pub@prestashop.com', country: 'France'});
 
   // before and after functions
   before(async function () {

@@ -1,19 +1,41 @@
-const {faker} = require('@faker-js/faker');
+import {AttributeValueCreator} from '@data/types/attribute';
 
-const {Attributes} = require('@data/demo/attributes');
+import {faker} from '@faker-js/faker';
 
-const attributesNames = Object.values(Attributes).map((attribute) => attribute.name);
+const attributesNames: string[] = ['Size', 'Color', 'Dimension', 'Paper Type'];
 
 /**
  * Create new attribute value to use on attribute value form on BO
  * @class
  */
-class AttributeValueData {
+export default class AttributeValueData {
+  public readonly id: number;
+
+  public readonly position: number;
+
+  public readonly attributeName: string;
+
+  public readonly value: string;
+
+  public readonly url: string;
+
+  public readonly metaTitle: string;
+
+  public readonly color: string;
+
+  public readonly textureFileName: string;
+
   /**
    * Constructor for class ValueData
    * @param valueToCreate {Object} Could be used to force the value of some members
    */
-  constructor(valueToCreate = {}) {
+  constructor(valueToCreate: AttributeValueCreator = {}) {
+    /** @type {number} ID */
+    this.id = valueToCreate.id || 0;
+
+    /** @type {number} Position */
+    this.position = valueToCreate.position || 0;
+
     /** @type {string} Name of the parent attribute */
     this.attributeName = valueToCreate.attributeName || faker.helpers.arrayElement(attributesNames);
 
@@ -33,5 +55,3 @@ class AttributeValueData {
     this.textureFileName = valueToCreate.textureFileName || faker.system.commonFileName('txt');
   }
 }
-
-module.exports = AttributeValueData;

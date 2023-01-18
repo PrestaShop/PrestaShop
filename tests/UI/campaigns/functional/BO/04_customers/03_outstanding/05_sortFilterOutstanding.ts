@@ -19,8 +19,8 @@ import ordersPage from '@pages/BO/orders';
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import CustomerData from '@data/faker/customer';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -49,11 +49,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   let numberOutstanding: number;
 
   // New B2B customers
-  const createCustomerData1: CustomerFaker = new CustomerFaker();
-  const createCustomerData2: CustomerFaker = new CustomerFaker();
-  const createCustomerData3: CustomerFaker = new CustomerFaker();
+  const createCustomerData1: CustomerData = new CustomerData();
+  const createCustomerData2: CustomerData = new CustomerData();
+  const createCustomerData3: CustomerData = new CustomerData();
 
-  const customersData: CustomerFaker[] = [createCustomerData1, createCustomerData2, createCustomerData3];
+  const customersData: CustomerData[] = [createCustomerData1, createCustomerData2, createCustomerData3];
 
   // Const used to get today date format
   const today: string = date.getDateFormat('yyyy-mm-dd');
@@ -76,8 +76,8 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
-    customersData.forEach((customerData, index = 1) => {
-      const addressData: AddressFaker = new AddressFaker({
+    customersData.forEach((customerData: CustomerData, index: number = 1) => {
+      const addressData: AddressData = new AddressData({
         email: customerData.email,
         country: 'France',
       });

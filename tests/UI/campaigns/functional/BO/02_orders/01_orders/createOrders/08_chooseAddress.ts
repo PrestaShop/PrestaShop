@@ -21,11 +21,11 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -58,11 +58,11 @@ describe('BO - Orders - Create order : Choose address', async () => {
   // Const used for the payment status
   const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
   // Variable used to create new address in Pre-condition
-  const newAddressToCreate: AddressFaker = new AddressFaker({email: DefaultCustomer.email, lastName: 'test', country: 'France'});
+  const newAddressToCreate: AddressData = new AddressData({email: Customers.johnDoe.email, lastName: 'test', country: 'France'});
   // Variable used to edit demo address
-  const addressToEditData: AddressFaker = new AddressFaker({country: 'France'});
+  const addressToEditData: AddressData = new AddressData({country: 'France'});
   // Variable used to add new address from new order page
-  const newAddressData: AddressFaker = new AddressFaker({lastName: 'test', country: 'France'});
+  const newAddressData: AddressData = new AddressData({lastName: 'test', country: 'France'});
 
   // Pre-condition: Create new address
   createAddressTest(newAddressToCreate, `${baseContext}_preTest_1`);
@@ -105,10 +105,10 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
@@ -191,10 +191,10 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await expect(pageTitle).to.contains(addOrderPage.pageTitle);
     });
 
-    it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+    it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer2', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
       await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;
@@ -331,7 +331,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       it('should sign in with customer credentials', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-        await foLoginPage.customerLogin(page, DefaultCustomer);
+        await foLoginPage.customerLogin(page, Customers.johnDoe);
 
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -416,10 +416,10 @@ describe('BO - Orders - Create order : Choose address', async () => {
         await expect(pageTitle).to.contains(addOrderPage.pageTitle);
       });
 
-      it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
+      it(`should choose customer ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer3', baseContext);
 
-        await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+        await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
         const isCartsTableVisible = await addOrderPage.chooseCustomer(page);
         await expect(isCartsTableVisible, 'History block is not visible!').to.be.true;

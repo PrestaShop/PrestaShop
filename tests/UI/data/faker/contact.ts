@@ -1,15 +1,34 @@
-const {faker} = require('@faker-js/faker');
+import ContactCreator from '@data/types/contact';
+
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new contact to use on creation contact form on BO
  * @class
  */
-class ContactData {
+export default class ContactData {
+  public readonly id: number;
+
+  public readonly firstName: string;
+
+  public readonly lastName: string;
+
+  public readonly title: string;
+
+  public readonly email: string;
+
+  public readonly saveMessage: boolean;
+
+  public readonly description: string;
+
   /**
    * Constructor for class ContactData
-   * @param contactToCreate {Object} Could be used to force the value of some members
+   * @param contactToCreate {ContactCreator} Could be used to force the value of some members
    */
-  constructor(contactToCreate = {}) {
+  constructor(contactToCreate: ContactCreator = {}) {
+    /** @type {number} ID of the contact */
+    this.id = contactToCreate.id || 0;
+
     /** @type {string} Firstname of the contact */
     this.firstName = contactToCreate.firstName || faker.name.firstName();
 
@@ -29,5 +48,3 @@ class ContactData {
     this.description = contactToCreate.description || faker.lorem.sentence();
   }
 }
-
-module.exports = ContactData;

@@ -1,17 +1,31 @@
 import Groups from '@data/demo/groups';
+import type GroupData from '@data/faker/group';
+import type CategoryCreator from '@data/types/category';
 
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
 
 /**
  * Create new category to use on creation category form on BO
  * @class
  */
-class CategoryData {
+export default class CategoryData {
+  public readonly name: string;
+
+  public readonly displayed: boolean;
+
+  public readonly description: string;
+
+  public readonly metaTitle: string;
+
+  public readonly metaDescription: string;
+
+  public readonly groupAccess: GroupData;
+
   /**
    * Constructor for class CategoryData
    * @param categoryToCreate {Object} Could be used to force the value of some members
    */
-  constructor(categoryToCreate = {}) {
+  constructor(categoryToCreate: CategoryCreator = {}) {
     /** @type {string} Name of the category */
     this.name = categoryToCreate.name || `${faker.color.human()} ${faker.commerce.department()}`;
 
@@ -29,8 +43,6 @@ class CategoryData {
 
     /** @type {GroupData} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
-      || faker.helpers.arrayElement(Groups);
+      || faker.helpers.arrayElement([Groups.customer, Groups.guest, Groups.visitor]);
   }
 }
-
-module.exports = CategoryData;

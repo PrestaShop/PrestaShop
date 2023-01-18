@@ -3,6 +3,7 @@ import BOBasePage from '@pages/BO/BObasePage';
 import addCustomerPage from '@pages/BO/customers/add';
 
 // Import data
+import type CustomerData from '@data/faker/customer';
 import type ProductData from '@data/faker/product';
 import type OrderStatusData from '@data/faker/orderStatus';
 
@@ -16,7 +17,7 @@ import type {Frame, Page} from 'playwright';
 class AddOrder extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly noCustomerFoundText: string;
+  public readonly noCustomerFoundText: string;
 
   public readonly noProductFoundText: string;
 
@@ -413,7 +414,7 @@ class AddOrder extends BOBasePage {
    * @param customerData {CustomerData} Customer data fake object
    * @returns {Promise<string>}
    */
-  async addNewCustomer(page: Page, customerData): Promise<string> {
+  async addNewCustomer(page: Page, customerData: CustomerData): Promise<string> {
     await page.click(this.addCustomerLink);
     await this.waitForVisibleSelector(page, this.iframe);
 

@@ -11,7 +11,7 @@ import cartRulesPage from '@pages/BO/catalog/discounts';
 import addCartRulePage from '@pages/BO/catalog/discounts/add';
 
 // Import data
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -29,13 +29,13 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
   let page: Page;
   let numberOfCartRules: number = 0;
 
-  const firstCartRule: CartRuleFaker = new CartRuleFaker({
+  const firstCartRule: CartRuleData = new CartRuleData({
     name: 'todelete1',
     code: '4QABV6I0',
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const secondCartRule: CartRuleFaker = new CartRuleFaker({
+  const secondCartRule: CartRuleData = new CartRuleData({
     name: 'todelete2',
     code: '3PAJA674',
     discountType: 'Percent',
@@ -78,7 +78,7 @@ describe('BO - Catalog - Discounts : Filter, quick edit and bulk actions cart ru
 
   describe('Create 2 cart rules', async () => {
     [firstCartRule, secondCartRule]
-      .forEach((cartRuleToCreate: CartRuleFaker, index: number) => {
+      .forEach((cartRuleToCreate: CartRuleData, index: number) => {
         it('should go to new cart rule page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToNewCartRulePage${index}`, baseContext);
 

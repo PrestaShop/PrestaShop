@@ -2,7 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
-import type Customer from '@data/types/customer';
+import type CustomerData from '@data/faker/customer';
 
 import type {Page} from 'playwright';
 
@@ -63,11 +63,11 @@ class Login extends FOBasePage {
   /**
    * Login in FO
    * @param page {Page} Browser tab
-   * @param customer {Customer} Customer's information (email and password)
+   * @param customer {CustomerData} Customer's information (email and password)
    * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
-  async customerLogin(page: Page, customer: Customer, waitForNavigation: boolean = true): Promise<void> {
+  async customerLogin(page: Page, customer: CustomerData, waitForNavigation: boolean = true): Promise<void> {
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
     if (waitForNavigation) {

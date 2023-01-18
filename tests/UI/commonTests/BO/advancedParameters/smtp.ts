@@ -10,7 +10,7 @@ import emailPage from '@pages/BO/advancedParameters/email';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -60,8 +60,8 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
       const alertSuccessMessage = await emailPage.setupSmtpParameters(
         page,
         smtpServer,
-        DefaultCustomer.email,
-        DefaultCustomer.password,
+        Customers.johnDoe.email,
+        Customers.johnDoe.password,
         smtpPort,
       );
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);

@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
-import CategoryFaker from '@data/faker/category';
+import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,9 +32,9 @@ describe('BO - Catalog - Categories : CRUD Category in BO', async () => {
   let categoryID: string = '0';
   let subcategoryID: string = '0';
 
-  const createCategoryData: CategoryFaker = new CategoryFaker();
-  const createSubCategoryData: CategoryFaker = new CategoryFaker({name: 'subCategoryToCreate'});
-  const editCategoryData: CategoryFaker = new CategoryFaker({displayed: false, name: `update${createCategoryData.name}`});
+  const createCategoryData: CategoryData = new CategoryData();
+  const createSubCategoryData: CategoryData = new CategoryData({name: 'subCategoryToCreate'});
+  const editCategoryData: CategoryData = new CategoryData({displayed: false, name: `update${createCategoryData.name}`});
 
   // before and after functions
   before(async function () {

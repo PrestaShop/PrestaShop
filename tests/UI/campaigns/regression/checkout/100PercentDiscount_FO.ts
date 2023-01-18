@@ -17,9 +17,9 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import homePage from '@pages/FO/home';
 
 // Import data
-import CartRuleFaker from '@data/faker/cartRule';
-import CustomerFaker from '@data/faker/customer';
-import AddressFaker from '@data/faker/address';
+import CartRuleData from '@data/faker/cartRule';
+import CustomerData from '@data/faker/customer';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,15 +41,15 @@ describe('Regression - Checkout: Create 100% discount with free shipping discoun
   let browserContext: BrowserContext;
   let page: Page;
 
-  const percentCartRule: CartRuleFaker = new CartRuleFaker({
+  const percentCartRule: CartRuleData = new CartRuleData({
     name: 'discount100',
     code: 'discount100',
     discountType: 'Percent',
     discountPercent: 100,
     freeShipping: true,
   });
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const customerData: CustomerData = new CustomerData({password: ''});
+  const addressData: AddressData = new AddressData({country: 'France'});
 
   // before and after functions
   before(async function () {

@@ -19,7 +19,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -178,7 +178,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultCustomer);
+          await foCheckoutPage.customerLogin(page, Customers.johnDoe);
         }
 
         // Address step - Go to delivery step

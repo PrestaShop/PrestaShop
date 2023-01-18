@@ -27,7 +27,7 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
@@ -212,7 +212,7 @@ describe('BO - Catalog - Products : CRUD virtual product', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultCustomer);
+        await checkoutPage.customerLogin(page, Customers.johnDoe);
       });
 
       it('should go to payment step', async function () {

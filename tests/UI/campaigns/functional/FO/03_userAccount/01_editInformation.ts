@@ -13,7 +13,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import accountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,25 +41,25 @@ describe('FO - Account : Edit information', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const createCustomerData: CustomerFaker = new CustomerFaker();
+  const createCustomerData: CustomerData = new CustomerData();
   // New customer data with empty new password
-  const editCustomerData1: CustomerFaker = new CustomerFaker({password: ''});
+  const editCustomerData1: CustomerData = new CustomerData({password: ''});
   // New customer data with repeated letters
-  const editCustomerData2: CustomerFaker = new CustomerFaker({password: 'abcabcabc'});
+  const editCustomerData2: CustomerData = new CustomerData({password: 'abcabcabc'});
   // New customer data with password below 8
-  const editCustomerData3: CustomerFaker = new CustomerFaker({password: 'presta'});
+  const editCustomerData3: CustomerData = new CustomerData({password: 'presta'});
   // New customer data with an old similar password
-  const editCustomerData4: CustomerFaker = new CustomerFaker({password: 'testoune'});
+  const editCustomerData4: CustomerData = new CustomerData({password: 'testoune'});
   // New customer data with simple characters password
-  const editCustomerData5: CustomerFaker = new CustomerFaker({password: 'prestash'});
+  const editCustomerData5: CustomerData = new CustomerData({password: 'prestash'});
   // New customer data with common password
-  const editCustomerData6: CustomerFaker = new CustomerFaker({password: 'azerty123'});
+  const editCustomerData6: CustomerData = new CustomerData({password: 'azerty123'});
   // New customer data with top 10 common password
-  const editCustomerData7: CustomerFaker = new CustomerFaker({password: '123456789'});
+  const editCustomerData7: CustomerData = new CustomerData({password: '123456789'});
   // New customer data with same characters
-  const editCustomerData8: CustomerFaker = new CustomerFaker({password: 'aaaaaaaaa'});
+  const editCustomerData8: CustomerData = new CustomerData({password: 'aaaaaaaaa'});
   // New customer data with good password
-  const editCustomerData9: CustomerFaker = new CustomerFaker({password: 'test edit information'});
+  const editCustomerData9: CustomerData = new CustomerData({password: 'test edit information'});
 
   // Pre-condition: Create new account on FO
   createAccountTest(createCustomerData, `${baseContext}_preTest`);

@@ -25,7 +25,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
@@ -229,7 +229,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultCustomer);
+        await checkoutPage.customerLogin(page, Customers.johnDoe);
       });
 
       it('should go to delivery step', async function () {

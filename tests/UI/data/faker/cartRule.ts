@@ -1,19 +1,76 @@
 import Products from '@data/demo/products';
+import ProductData from '@data/faker/product';
+import type {CartRuleCreator, CartRuleDiscountAmount, CartRuleMinimalAmount} from '@data/types/cartRule';
 
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
+import CustomerData from '@data/faker/customer';
 
-const ProductsNames = Object.values(Products).map((product) => product.name);
+const productsNames: string[] = Object.values(Products).map((product: ProductData) => product.name);
 
 /**
  * Create new cart rule to use on creation cart rule form on BO
  * @class
  */
-class CartRuleData {
+export default class CartRuleData {
+  public readonly name: string;
+
+  public readonly description: string;
+
+  public readonly code: string;
+
+  public readonly generateCode: boolean;
+
+  public readonly highlight: boolean;
+
+  public readonly partialUse: boolean;
+
+  public readonly priority: number;
+
+  public readonly status: boolean;
+
+  public readonly customer: CustomerData|null;
+
+  public readonly dateFrom: string|null;
+
+  public readonly dateTo: string|null;
+
+  public readonly minimumAmount: CartRuleMinimalAmount;
+
+  public readonly quantity: number;
+
+  public readonly quantityPerUser: number;
+
+  public readonly carrierRestriction: boolean;
+
+  public readonly countrySelection: boolean;
+
+  public readonly countryIDToRemove: number;
+
+  public readonly customerGroupSelection: boolean;
+
+  public readonly freeShipping: boolean;
+
+  public readonly discountType: string;
+
+  public readonly discountPercent: number|null;
+
+  public readonly discountAmount: CartRuleDiscountAmount|null;
+
+  public readonly applyDiscountTo: string;
+
+  public readonly product: string|null;
+
+  public readonly excludeDiscountProducts: boolean;
+
+  public readonly freeGift: boolean;
+
+  public readonly freeGiftProduct: ProductData|null;
+
   /**
    * Constructor for class CartRuleData
    * @param cartRuleToCreate {Object} Could be used to force the value of some members
    */
-  constructor(cartRuleToCreate = {}) {
+  constructor(cartRuleToCreate: CartRuleCreator = {}) {
     // Information
     /** @type {string} Name of the cart rule */
     this.name = cartRuleToCreate.name || faker.commerce.department();
@@ -30,7 +87,7 @@ class CartRuleData {
     /** @type {boolean} True to display cart rule highlight */
     this.highlight = cartRuleToCreate.highlight === undefined ? false : cartRuleToCreate.highlight;
 
-    /** @type {string} True to enable partial use */
+    /** @type {boolean} True to enable partial use */
     this.partialUse = cartRuleToCreate.partialUse === undefined ? true : cartRuleToCreate.partialUse;
 
     /** @type {number} Priority of the cart rule */
@@ -40,29 +97,21 @@ class CartRuleData {
     this.status = cartRuleToCreate.status === undefined ? true : cartRuleToCreate.status;
 
     // Conditions
-    /** @type {string|boolean} Specific customer for the cart rule or false to disable it */
-    this.customer = cartRuleToCreate.customer || false;
+    /** @type {CustomerData|null} Specific customer for the cart rule or null to disable it */
+    this.customer = cartRuleToCreate.customer || null;
 
-    /** @type {string|boolean} Starting date for the cart rule or false to disable it */
-    this.dateFrom = cartRuleToCreate.dateFrom || false;
+    /** @type {string|null} Starting date for the cart rule or null to disable it */
+    this.dateFrom = cartRuleToCreate.dateFrom || null;
 
-    /** @type {string|boolean} Ending date for the cart rule or false to disable it */
-    this.dateTo = cartRuleToCreate.dateTo || false;
+    /** @type {string|null} Ending date for the cart rule or null to disable it */
+    this.dateTo = cartRuleToCreate.dateTo || null;
 
-    /** @type {{shipping: string, currency: string, tax: string, value: number}} Minimum amount parameters */
-    this.minimumAmount = {
-      /** @type {number} Value of the minimum amount */
-      value: cartRuleToCreate.minimumAmount === undefined ? 0 : cartRuleToCreate.minimumAmount.value,
-
-      /** @type {string} Currency used on minimum amount */
-      currency: cartRuleToCreate.minimumAmount === undefined ? 'EUR' : cartRuleToCreate.minimumAmount.currency,
-
-      /** @type {string} Tax used on the minimum amount */
-      tax: cartRuleToCreate.minimumAmount === undefined ? 'Tax included' : cartRuleToCreate.minimumAmount.tax,
-
-      /** @type {string} Shipping used on minimum amount */
-      shipping: cartRuleToCreate.minimumAmount === undefined
-        ? 'Shipping included' : cartRuleToCreate.minimumAmount.shipping,
+    /** @type {CartRuleMinimalAmount} Minimum amount parameters */
+    this.minimumAmount = cartRuleToCreate.minimumAmount || {
+      value: 0,
+      currency: 'EUR',
+      tax: 'Tax included',
+      shipping: 'Shipping included',
     };
 
     /** @type {number} Amount of times that cart rule could be used */
@@ -90,34 +139,29 @@ class CartRuleData {
     /** @type {string} Discount type of the cart rule */
     this.discountType = cartRuleToCreate.discountType || 'None';
 
-    /** @type {number|undefined} Discount percent for the cart rule */
-    this.discountPercent = undefined;
+    /** @type {number|null} Discount percent for the cart rule */
+    this.discountPercent = null;
 
-    /** @type {{currency: string, tax: string, value: number}|undefined} Discount amount values for the cart rule */
-    this.discountAmount = undefined;
+    /** @type {CartRuleDiscountAmount|null} Discount amount values for the cart rule */
+    this.discountAmount = null;
 
     if (this.discountType === 'Percent') {
       this.discountPercent = cartRuleToCreate.discountPercent || faker.datatype.number({min: 10, max: 80});
     } else if (this.discountType === 'Amount') {
-      this.discountAmount = {
-        /** @type {number} Value of the discount amount */
-        value: cartRuleToCreate.discountAmount === undefined ? 0 : cartRuleToCreate.discountAmount.value,
-
-        /** @type {string} Currency used for the discount amount */
-        currency: cartRuleToCreate.discountAmount === undefined ? 'EUR' : cartRuleToCreate.discountAmount.currency,
-
-        /** @type {string} Tax that will be used for the discount amount */
-        tax: cartRuleToCreate.discountAmount === undefined ? 'Tax included' : cartRuleToCreate.discountAmount.tax,
+      this.discountAmount = cartRuleToCreate.discountAmount || {
+        value: 0,
+        currency: 'EUR',
+        tax: 'Tax included',
       };
     }
 
     /** @type {string} Object to apply discount on it */
     this.applyDiscountTo = cartRuleToCreate.applyDiscountTo || 'Order';
 
-    /** @type {string|undefined} Name of the product to apply cart rule */
-    this.product = undefined;
+    /** @type {string|null} Name of the product to apply cart rule */
+    this.product = null;
     if (this.applyDiscountTo === 'Specific product') {
-      this.product = cartRuleToCreate.product || faker.helpers.arrayElement(ProductsNames);
+      this.product = cartRuleToCreate.product || faker.helpers.arrayElement(productsNames);
     }
 
     /** @type {boolean} True to exclude discount of specific products */
@@ -127,11 +171,10 @@ class CartRuleData {
     /** @type {boolean} True to enable free gift */
     this.freeGift = cartRuleToCreate.freeGift === undefined ? false : cartRuleToCreate.freeGift;
 
+    /** @type {ProductData|null} Product to set for the free gift */
+    this.freeGiftProduct = null;
     if (this.freeGift) {
-      /** @type {{name: string, price: number}} Product to set for the free gift */
-      this.freeGiftProduct = cartRuleToCreate.freeGiftProduct;
+      this.freeGiftProduct = cartRuleToCreate.freeGiftProduct || null;
     }
   }
 }
-
-module.exports = CartRuleData;

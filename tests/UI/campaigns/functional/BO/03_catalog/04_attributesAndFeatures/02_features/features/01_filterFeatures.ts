@@ -11,7 +11,7 @@ import attributesPage from '@pages/BO/catalog/attributes';
 import featuresPage from '@pages/BO/catalog/features';
 
 // Import data
-import {Features} from '@data/demo/features';
+import Features from '@data/demo/features';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

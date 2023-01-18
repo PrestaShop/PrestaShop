@@ -11,7 +11,7 @@ import addAddressPage from '@pages/BO/customers/addresses/add';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import AddressFaker from '@data/faker/address';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -24,8 +24,8 @@ describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
   let page: Page;
   let numberOfAddresses: number = 0;
 
-  const createAddressData: AddressFaker = new AddressFaker({email: 'pub@prestashop.com', country: 'France'});
-  const editAddressData: AddressFaker = new AddressFaker({country: 'France'});
+  const createAddressData: AddressData = new AddressData({email: 'pub@prestashop.com', country: 'France'});
+  const editAddressData: AddressData = new AddressData({country: 'France'});
 
   // before and after functions
   before(async function () {

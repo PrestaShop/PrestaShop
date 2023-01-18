@@ -17,9 +17,9 @@ import foLoginPage from '@pages/FO/login';
 import foProductPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
-import CartRuleFaker from '@data/faker/cartRule';
+import CartRuleData from '@data/faker/cartRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -30,13 +30,13 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     code: '4QABV6L3',
-    customer: DefaultCustomer.email,
+    customer: Customers.johnDoe,
     discountType: 'Percent',
     discountPercent: 20,
   });
-  const editCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const editCartRuleData: CartRuleData = new CartRuleData({
     code: '3PAJA6B3',
     discountType: 'Percent',
     discountPercent: 30,
@@ -111,7 +111,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -223,7 +223,7 @@ describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

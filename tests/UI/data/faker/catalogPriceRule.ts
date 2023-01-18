@@ -1,25 +1,48 @@
 import Countries from '@data/demo/countries';
 import Groups from '@data/demo/groups';
+import type CountryData from '@data/faker/country';
+import type GroupData from '@data/faker/group';
+import type CatalogPriceRuleCreator from '@data/types/catalogPriceRule';
 
-const {faker} = require('@faker-js/faker');
+import {faker} from '@faker-js/faker';
 
-const countriesNames = Object.values(Countries).map((country) => country.name);
-const groupAccessNames = Object.values(Groups).map((group) => group.name);
+const countriesNames: string[] = Object.values(Countries).map((country: CountryData) => country.name);
+const groupAccessNames: string[] = Object.values(Groups).map((group: GroupData) => group.name);
 
-const currencies = ['All currencies', 'Euro'];
-const reductionType = ['Amount', 'Percentage'];
-const reductionTax = ['Tax excluded', 'Tax included'];
+const currencies: string[] = ['All currencies', 'Euro'];
+const reductionType: string[] = ['Amount', 'Percentage'];
+const reductionTax: string[] = ['Tax excluded', 'Tax included'];
 
 /**
  * Create new catalog price rule to use on creation catalog price rule form on BO
  * @class
  */
-class CatalogPriceRuleData {
+export default class CatalogPriceRuleData {
+  public readonly name: string;
+
+  public readonly currency: string;
+
+  public readonly country: string;
+
+  public readonly group: string;
+
+  public readonly fromQuantity: number;
+
+  public readonly fromDate: string;
+
+  public readonly toDate: string;
+
+  public readonly reductionType: string;
+
+  public readonly reductionTax: string;
+
+  public readonly reduction: number;
+
   /**
    * Constructor for class CatalogPriceRuleData
-   * @param priceRuleToCreate {Object} Could be used to force the value of some members
+   * @param priceRuleToCreate {CatalogPriceRuleCreator} Could be used to force the value of some members
    */
-  constructor(priceRuleToCreate = {}) {
+  constructor(priceRuleToCreate: CatalogPriceRuleCreator = {}) {
     /** @type {string} Name of the price rule */
     this.name = priceRuleToCreate.name || faker.commerce.department();
 
@@ -53,5 +76,3 @@ class CatalogPriceRuleData {
     this.reduction = priceRuleToCreate.reduction || faker.datatype.number({min: 20, max: 30});
   }
 }
-
-module.exports = CatalogPriceRuleData;

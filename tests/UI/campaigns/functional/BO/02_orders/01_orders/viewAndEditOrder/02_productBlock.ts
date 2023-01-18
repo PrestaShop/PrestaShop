@@ -20,9 +20,9 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import AddressFaker from '@data/faker/address';
-import CartRuleFaker from '@data/faker/cartRule';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import CartRuleData from '@data/faker/cartRule';
+import CustomerData from '@data/faker/customer';
 import ProductData from '@data/faker/product';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -71,8 +71,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const customerData: CustomerData = new CustomerData({password: ''});
+  const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
   const orderData: Order = {
     customer: customerData,
@@ -186,7 +186,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     lowStockLevel: 3,
     behaviourOutOfStock: 'Default behavior',
   });
-  const newCartRuleData: CartRuleFaker = new CartRuleFaker({
+  const newCartRuleData: CartRuleData = new CartRuleData({
     code: '4QABV6L3',
     discountType: 'Percent',
     discountPercent: 20,

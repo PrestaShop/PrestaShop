@@ -21,7 +21,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import contactUsPage from '@pages/FO/contactUs';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import type ContactUsData from '@data/types/contactUs';
@@ -51,7 +51,7 @@ describe('FO - Order confirmation : Contact us', async () => {
   const contactUsData: ContactUsData = {
     subject: 'Customer service',
     message: 'Test message to customer service for order reference',
-    emailAddress: DefaultCustomer.email,
+    emailAddress: Customers.johnDoe.email,
     reference: '',
   };
 
@@ -96,7 +96,7 @@ describe('FO - Order confirmation : Contact us', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
       const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -193,7 +193,7 @@ describe('FO - Order confirmation : Contact us', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkTheFormInfos', baseContext);
 
       const emailFieldValue = await contactUsPage.getEmailFieldValue(page);
-      await expect(emailFieldValue).to.contains(DefaultCustomer.email);
+      await expect(emailFieldValue).to.contains(Customers.johnDoe.email);
     });
 
     it('should select the order', async function () {

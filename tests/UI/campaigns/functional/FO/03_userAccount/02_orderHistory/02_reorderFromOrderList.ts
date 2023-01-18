@@ -15,7 +15,7 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Products from '@data/demo/products';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
@@ -43,7 +43,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
   let page: Page;
 
   const orderData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -84,7 +84,7 @@ describe('FO - Account - Order history : Reorder from order list', async () => {
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

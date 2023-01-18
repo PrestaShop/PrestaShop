@@ -10,6 +10,9 @@ import customersPage from '@pages/BO/customers';
 import addCustomerPage from '@pages/BO/customers/add';
 import dashboardPage from '@pages/BO/dashboard';
 
+// Import data
+import CustomerData from '@data/faker/customer';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -22,7 +25,7 @@ let numberOfCustomers: number;
  * @param customerData {CustomerData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createCustomerTest(customerData: object, baseContext: string = 'commonTests-createCustomerTest'): void {
+function createCustomerTest(customerData: CustomerData, baseContext: string = 'commonTests-createCustomerTest'): void {
   describe('PRE-TEST: Create customer', async () => {
     // before and after functions
     before(async function () {
@@ -71,7 +74,7 @@ function createCustomerTest(customerData: object, baseContext: string = 'commonT
  * @param customerData {CustomerData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createCustomerB2BTest(customerData: object, baseContext: string = 'commonTests-createCustomerB2BTest'): void {
+function createCustomerB2BTest(customerData: CustomerData, baseContext: string = 'commonTests-createCustomerB2BTest'): void {
   describe('PRE-TEST: Create B2B customer', async () => {
     // before and after functions
     before(async function () {
@@ -120,7 +123,7 @@ function createCustomerB2BTest(customerData: object, baseContext: string = 'comm
  * @param customerData {CustomerData} Data to set to delete customer
  * @param baseContext {string} String to identify the test
  */
-function deleteCustomerTest(customerData: object, baseContext: string = 'commonTests-deleteCustomerTest'): void {
+function deleteCustomerTest(customerData: CustomerData, baseContext: string = 'commonTests-deleteCustomerTest'): void {
   describe('POST-TEST: Delete customer', async () => {
     // before and after functions
     before(async function () {

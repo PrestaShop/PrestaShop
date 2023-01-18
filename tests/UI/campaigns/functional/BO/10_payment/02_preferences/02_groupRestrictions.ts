@@ -18,9 +18,9 @@ import homePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import AddressData from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,8 +34,8 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
   let numberOfCustomers: number = 0;
 
   const address: AddressData = new AddressData({city: 'Paris', country: 'France'});
-  const visitorData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
-  const guestData: CustomerFaker = new CustomerFaker({defaultCustomerGroup: 'Guest'});
+  const visitorData: CustomerData = new CustomerData({defaultCustomerGroup: 'Visitor'});
+  const guestData: CustomerData = new CustomerData({defaultCustomerGroup: 'Guest'});
 
   // before and after functions
   before(async function () {
@@ -117,7 +117,7 @@ describe('BO - Payment - Preferences : Configure group restrictions', async () =
     [
       {args: {groupName: 'Visitor', id: '0', customer: visitorData}},
       {args: {groupName: 'Guest', id: '1', customer: guestData}},
-      {args: {groupName: 'Customer', id: '2', customer: DefaultCustomer}},
+      {args: {groupName: 'Customer', id: '2', customer: Customers.johnDoe}},
     ].forEach((group, groupIndex) => {
       describe(`Configure '${group.args.groupName}' group restrictions then check in FO`, async () => {
         const tests = [

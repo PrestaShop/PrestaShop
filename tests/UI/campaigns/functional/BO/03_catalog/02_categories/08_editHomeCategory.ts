@@ -18,7 +18,7 @@ import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
 import {Categories} from '@data/demo/categories';
-import CategoryFaker from '@data/faker/category';
+import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,7 +31,7 @@ describe('BO - Catalog - Categories : Edit home category', async () => {
   let page: Page;
   let categoryID: string;
 
-  const editCategoryData: CategoryFaker = new CategoryFaker({name: 'Home'});
+  const editCategoryData: CategoryData = new CategoryData({name: 'Home'});
 
   // before and after functions
   before(async function () {

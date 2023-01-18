@@ -18,9 +18,9 @@ import myAccountPage from '@pages/FO/myAccount';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 
 // Import demo data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import {Orders} from '@data/demo/orders';
-import ContactUsFakerData from '@data/faker/contactUs';
+import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -31,15 +31,13 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const contactUsData: ContactUsFakerData = new ContactUsFakerData(
-    {
-      firstName: DefaultCustomer.firstName,
-      lastName: DefaultCustomer.lastName,
-      subject: 'Customer service',
-      emailAddress: DefaultCustomer.email,
-      reference: Orders.firstOrder.ref,
-    },
-  );
+  const contactUsData: MessageData = new MessageData({
+    firstName: Customers.johnDoe.firstName,
+    lastName: Customers.johnDoe.lastName,
+    subject: 'Customer service',
+    emailAddress: Customers.johnDoe.email,
+    reference: Orders.firstOrder.ref,
+  });
 
   // before and after functions
   before(async function () {
@@ -76,7 +74,7 @@ describe('FO - Account : Contact us on GDPR page', async () => {
   it('should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await loginPage.customerLogin(page, DefaultCustomer);
+    await loginPage.customerLogin(page, Customers.johnDoe);
 
     const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

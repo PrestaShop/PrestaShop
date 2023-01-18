@@ -1,5 +1,6 @@
 import BOBasePage from '@pages/BO/BObasePage';
 import {Page} from 'playwright';
+import ContactData from '@data/faker/contact';
 
 /**
  * Add contact page, contains functions that can be used on the page
@@ -79,7 +80,7 @@ class AddContact extends BOBasePage {
    * @param contactData {ContactData} Data to set on contact form
    * @returns {Promise<string>}
    */
-  async createEditContact(page: Page, contactData): Promise<string> {
+  async createEditContact(page: Page, contactData: ContactData): Promise<string> {
     await this.setValue(page, this.titleInputEN, contactData.title);
     await this.setValue(page, this.emailAddressInput, contactData.email);
     await this.setValue(page, this.descriptionTextareaEN, contactData.description);

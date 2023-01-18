@@ -17,7 +17,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
@@ -70,7 +70,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   });
   // New order by customer data
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     product: firstProduct,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -128,13 +128,13 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       await expect(numberOfOrders, 'Number of orders is not correct!').to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn, 'Lastname is not correct').to.contains(DefaultCustomer.lastName);
+      await expect(textColumn, 'Lastname is not correct').to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {

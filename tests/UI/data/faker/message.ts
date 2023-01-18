@@ -1,17 +1,33 @@
-const {faker} = require('@faker-js/faker');
+import MessageCreator from '@data/types/message';
 
-const subject = ['Customer service', 'Webmaster'];
+import {faker} from '@faker-js/faker';
+
+const subject: string[] = ['Customer service', 'Webmaster'];
 
 /**
  * Create new message to use on contact us form page on FO
  * @class
  */
-class MessageData {
+export default class MessageData {
+  public readonly subject: string;
+
+  public readonly firstName: string;
+
+  public readonly lastName: string;
+
+  public readonly emailAddress: string;
+
+  public readonly reference: string;
+
+  public readonly fileName: string;
+
+  public readonly message: string;
+
   /**
    * Constructor for class MessageData
-   * @param messageToCreate {Object} Could be used to force the value of some members
+   * @param messageToCreate {MessageCreator} Could be used to force the value of some members
    */
-  constructor(messageToCreate = {}) {
+  constructor(messageToCreate: MessageCreator = {}) {
     /** @type {string} Subject of the message */
     this.subject = messageToCreate.subject || faker.helpers.arrayElement(subject);
 
@@ -27,10 +43,10 @@ class MessageData {
       : messageToCreate.emailAddress;
 
     /** @type {string} Reference for on order if used */
-    this.reference = messageToCreate.reference;
+    this.reference = messageToCreate.reference || '';
 
     /** @type {string} Attachment name to add to the message */
-    this.fileName = faker.lorem.word();
+    this.fileName = messageToCreate.fileName || faker.lorem.word();
 
     /** @type {string} Content of the message */
     this.message = messageToCreate.message === undefined
@@ -38,5 +54,3 @@ class MessageData {
       : messageToCreate.message;
   }
 }
-
-module.exports = MessageData;

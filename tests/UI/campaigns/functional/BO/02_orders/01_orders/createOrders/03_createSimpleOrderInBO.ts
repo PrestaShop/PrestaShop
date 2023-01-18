@@ -14,9 +14,9 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
-import addresses from '@data/demo/address';
+import Addresses from '@data/demo/address';
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -48,7 +48,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
   let page: Page;
 
   const orderToMake: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     products: [
       {
         value: Products.demo_5,
@@ -57,7 +57,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     ],
     deliveryAddress: 'Mon adresse',
     invoiceAddress: 'Mon adresse',
-    addressValue: addresses.second,
+    addressValue: Addresses.second,
     deliveryOption: {
       name: `${Carriers.default.name} - ${Carriers.default.delay}`,
       freeShipping: true,

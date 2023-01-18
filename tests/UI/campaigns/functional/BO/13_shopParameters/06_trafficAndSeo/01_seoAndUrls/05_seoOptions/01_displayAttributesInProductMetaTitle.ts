@@ -14,7 +14,7 @@ import foHomePage from '@pages/FO/home';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {Attributes} from '@data/demo/attributes';
+import Attributes from '@data/demo/attributes';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';
@@ -60,8 +60,8 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attribut
       args: {
         action: 'enable',
         enable: true,
-        metaTitle: `${Products.demo_1.name} ${Attributes.size.name} ${Attributes.size.values.small.value}`
-          + ` ${Attributes.color.name} ${Attributes.color.values.white.value}`,
+        metaTitle: `${Products.demo_1.name} ${Attributes.size.name} ${Attributes.size.values[0].value}`
+          + ` ${Attributes.color.name} ${Attributes.color.values[3].value}`,
       },
     },
     {

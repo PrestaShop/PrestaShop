@@ -10,6 +10,9 @@ import addressesPage from '@pages/BO/customers/addresses';
 import addAddressPage from '@pages/BO/customers/addresses/add';
 import dashboardPage from '@pages/BO/dashboard';
 
+// Import data
+import AddressData from '@data/faker/address';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -22,7 +25,7 @@ let numberOfAddresses: number = 0;
  * @param addressData {AddressData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
-function createAddressTest(addressData: object, baseContext: string = 'commonTests-createAddressTest'): void {
+function createAddressTest(addressData: AddressData, baseContext: string = 'commonTests-createAddressTest'): void {
   describe('PRE-TEST: Create address', async () => {
     // before and after functions
     before(async function () {

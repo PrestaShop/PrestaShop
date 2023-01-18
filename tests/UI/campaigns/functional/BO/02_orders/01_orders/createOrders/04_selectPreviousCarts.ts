@@ -23,7 +23,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
@@ -172,10 +172,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard1', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      await expect(customerName).to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`);
+      await expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -282,7 +282,7 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
@@ -395,10 +395,10 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
     it('should search for default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkExistentCustomerCard2', baseContext);
 
-      await addOrderPage.searchCustomer(page, DefaultCustomer.email);
+      await addOrderPage.searchCustomer(page, Customers.johnDoe.email);
 
       const customerName = await addOrderPage.getCustomerNameFromResult(page, 1);
-      await expect(customerName).to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`);
+      await expect(customerName).to.contains(`${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`);
     });
 
     it('should click on the choose button of the default customer', async function () {
@@ -465,8 +465,8 @@ describe('BO - Orders - Create Order : Select Previous Carts', async () => {
       const customerInformation = await viewShoppingCartPage
         .getCustomerInformation(shoppingCartPage);
       await expect(customerInformation)
-        .to.contains(`${DefaultCustomer.socialTitle} ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`)
-        .and.to.contains(DefaultCustomer.email)
+        .to.contains(`${Customers.johnDoe.socialTitle} ${Customers.johnDoe.firstName} ${Customers.johnDoe.lastName}`)
+        .and.to.contains(Customers.johnDoe.email)
         .and.to.contains(todayCartFormat);
     });
 

@@ -17,7 +17,7 @@ import productPage from '@pages/FO/product';
 
 // Import data
 import Products from '@data/demo/products';
-import PriceRuleFaker from '@data/faker/catalogPriceRule';
+import CatalogPriceRuleData from '@data/faker/catalogPriceRule';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -35,7 +35,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const newCatalogPriceRuleData: PriceRuleFaker = new PriceRuleFaker({
+  const newCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',
@@ -44,7 +44,7 @@ describe('BO - Catalog - Discounts : CRUD catalog price rules', async () => {
     fromQuantity: 3,
     reduction: 20,
   });
-  const editCatalogPriceRuleData: PriceRuleFaker = new PriceRuleFaker({
+  const editCatalogPriceRuleData: CatalogPriceRuleData = new CatalogPriceRuleData({
     currency: 'All currencies',
     country: 'All countries',
     group: 'All groups',

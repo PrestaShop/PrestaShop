@@ -18,12 +18,12 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 import Employees from '@data/demo/employees';
 import OrderStatuses from '@data/demo/orderStatuses';
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import CustomerData from '@data/faker/customer';
 import EmployeeData from '@data/faker/employee';
 import type MailDevEmail from '@data/types/maildev';
 import type Order from '@data/types/order';
@@ -65,8 +65,8 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
 
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const orderNote: string = 'Test order note';
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
+  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: CustomerData = new CustomerData({password: ''});
   // New employee data
   const createEmployeeData: EmployeeData = new EmployeeData({
     defaultPage: 'Dashboard',
@@ -75,7 +75,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   });
   // New order by customer data
   const orderByCustomerData: Order = {
-    customer: DefaultCustomer,
+    customer: Customers.johnDoe,
     productId: 1,
     productQuantity: 1,
     paymentMethod: PaymentMethods.wirePayment.moduleName,
@@ -380,13 +380,13 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer3', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {
@@ -490,13 +490,13 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await expect(numberOfOrders).to.be.above(0);
     });
 
-    it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
+    it(`should filter the Orders table by 'Customer: ${Customers.johnDoe.lastName}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
 
-      await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
+      await ordersPage.filterOrders(page, 'input', 'customer', Customers.johnDoe.lastName);
 
       const textColumn = await ordersPage.getTextColumn(page, 'customer', 1);
-      await expect(textColumn).to.contains(DefaultCustomer.lastName);
+      await expect(textColumn).to.contains(Customers.johnDoe.lastName);
     });
 
     it('should view the order', async function () {

@@ -14,8 +14,8 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import CustomerData from '@data/faker/customer';
 import Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -36,8 +36,8 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   let browserContext: BrowserContext;
   let page: Page;
 
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
-  const customerData: CustomerFaker = new CustomerFaker({password: '', lastName: 'guest'});
+  const addressData: AddressData = new AddressData({country: 'France'});
+  const customerData: CustomerData = new CustomerData({password: '', lastName: 'guest'});
   // New order by guest data
   const orderByGuestData: Order = {
     customer: customerData,

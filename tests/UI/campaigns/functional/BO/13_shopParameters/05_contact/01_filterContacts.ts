@@ -12,7 +12,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import contactsPage from '@pages/BO/shopParameters/contact';
 
 // Import data
-import {Contacts} from '@data/demo/contacts';
+import Contacts from '@data/demo/contacts';
+
 import type {BrowserContext, Page} from 'playwright';
 
 const baseContext: string = 'functional_BO_shopParameters_contact_filterContacts';

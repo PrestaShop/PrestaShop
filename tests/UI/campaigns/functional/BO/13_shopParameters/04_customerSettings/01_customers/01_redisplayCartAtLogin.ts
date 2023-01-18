@@ -16,7 +16,7 @@ import homePage from '@pages/FO/home';
 import loginFOPage from '@pages/FO/login';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
+import Customers from '@data/demo/customer';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -93,7 +93,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultCustomer);
+      await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
@@ -121,7 +121,7 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display c
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultCustomer);
+      await loginFOPage.customerLogin(page, Customers.johnDoe);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;

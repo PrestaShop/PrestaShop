@@ -2,7 +2,7 @@
 import FOBasePage from '@pages/FO/FObasePage';
 
 // Import data
-import type ContactUsFakerData from '@data/faker/contactUs';
+import type MessageData from '@data/faker/message';
 
 import type {Page} from 'playwright';
 
@@ -16,11 +16,11 @@ class ContactUs extends FOBasePage {
 
   public readonly validationMessage: string;
 
-  private readonly invalidEmail: string;
+  public readonly invalidEmail: string;
 
-  private readonly invalidContent: string;
+  public readonly invalidContent: string;
 
-  private readonly badFileExtensionErrorMessage: string;
+  public readonly badFileExtensionErrorMessage: string;
 
   private readonly emailUsLink: string;
 
@@ -82,11 +82,11 @@ class ContactUs extends FOBasePage {
   /**
    * Send message
    * @param page {Page} Browser tab
-   * @param contactUsData {object} The data for fill the form
+   * @param contactUsData {MessageData} The data for fill the form
    * @param file {string|null} The path of the file to upload
    * @returns {Promise<void>}
    */
-  async sendMessage(page: Page, contactUsData: ContactUsFakerData, file: string|null = null): Promise<void> {
+  async sendMessage(page: Page, contactUsData: MessageData, file: string|null = null): Promise<void> {
     await this.selectByVisibleText(page, this.subjectSelect, contactUsData.subject);
     await this.setValue(page, this.emailAddressInput, contactUsData.emailAddress);
 

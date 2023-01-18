@@ -14,8 +14,8 @@ import ordersPage from '@pages/BO/orders';
 
 // Import data
 import {PaymentMethods} from '@data/demo/paymentMethods';
-import AddressFaker from '@data/faker/address';
-import CustomerFaker from '@data/faker/customer';
+import AddressData from '@data/faker/address';
+import CustomerData from '@data/faker/customer';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';
@@ -38,8 +38,8 @@ describe('BO - Orders : View guest from orders page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const customerData: CustomerFaker = new CustomerFaker({password: ''});
-  const addressData: AddressFaker = new AddressFaker({country: 'France'});
+  const customerData: CustomerData = new CustomerData({password: ''});
+  const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
   const orderByGuestData: Order = {
     customer: customerData,
