@@ -57,7 +57,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       dashboardPage.attributesAndFeaturesLink,
     );
 
-    const pageTitle = await attributesPage.getPageTitle(page);
+    const pageTitle: string = await attributesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
@@ -66,7 +66,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
     it('should reset all filters and get number of attributes in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAttributesFilters', baseContext);
 
-      const numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
+      const numberOfAttributes : number= await attributesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAttributes).to.be.above(2);
     });
 
