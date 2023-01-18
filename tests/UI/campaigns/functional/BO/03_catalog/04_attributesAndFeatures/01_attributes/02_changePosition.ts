@@ -66,23 +66,23 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
     it('should reset all filters and get number of attributes in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetAttributesFilters', baseContext);
 
-      const numberOfAttributes : number= await attributesPage.resetAndGetNumberOfLines(page);
+      const numberOfAttributes: number = await attributesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAttributes).to.be.above(2);
     });
 
     it('should sort by \'position\' \'asc\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
-      const nonSortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
+      const nonSortedTable: string[] = await attributesPage.getAllRowsColumnContent(page, 'a!position');
 
       await attributesPage.sortTable(page, 'a!position', 'up');
 
-      const sortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');
+      const sortedTable: string[] = await attributesPage.getAllRowsColumnContent(page, 'a!position');
 
-      const nonSortedTableFloat = await nonSortedTable.map((text: string): number => parseFloat(text));
-      const sortedTableFloat = await sortedTable.map((text: string): number => parseFloat(text));
+      const nonSortedTableFloat: number[] = await nonSortedTable.map((text: string): number => parseFloat(text));
+      const sortedTableFloat: number[] = await sortedTable.map((text: string): number => parseFloat(text));
 
-      const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+      const expectedResult: number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
       await expect(sortedTableFloat).to.deep.equal(expectedResult);
     });
@@ -91,14 +91,14 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'changeAttributePosition', baseContext);
 
       // Get first row attribute name
-      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const firstRowAttributeName: string = await attributesPage.getTextColumn(page, 1, 'b!name');
 
       // Change position and check successful message
-      const textResult = await attributesPage.changePosition(page, 1, 3);
+      const textResult: string = await attributesPage.changePosition(page, 1, 3);
       await expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
       // Get third row attribute name and check if is equal the first row attribute name before changing position
-      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'b!name');
+      const thirdRowAttributeName: string = await attributesPage.getTextColumn(page, 3, 'b!name');
       await expect(thirdRowAttributeName, 'Changing position was done wrongly').to.equal(firstRowAttributeName);
     });
 
@@ -106,14 +106,14 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'resetAttributePosition', baseContext);
 
       // Get third row attribute name
-      const thirdRowAttributeName = await attributesPage.getTextColumn(page, 3, 'b!name');
+      const thirdRowAttributeName: string = await attributesPage.getTextColumn(page, 3, 'b!name');
 
       // Change position and check successful message
-      const textResult = await attributesPage.changePosition(page, 3, 1);
+      const textResult: string = await attributesPage.changePosition(page, 3, 1);
       await expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
       // Get first row attribute name and check if is equal the first row attribute name before changing position
-      const firstRowAttributeName = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const firstRowAttributeName: string = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(firstRowAttributeName, 'Changing position was done wrongly').to.equal(thirdRowAttributeName);
     });
   });
@@ -124,7 +124,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
 
       await attributesPage.filterTable(page, 'b!name', Attributes.size.name);
 
-      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
+      const textColumn: string = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(Attributes.size.name);
     });
 
@@ -133,7 +133,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
 
       await attributesPage.viewAttribute(page, 1);
 
-      const pageTitle = await viewAttributePage.getPageTitle(page);
+      const pageTitle: string = await viewAttributePage.getPageTitle(page);
       await expect(pageTitle).to.contains(`${viewAttributePage.pageTitle} ${Attributes.size.name}`);
     });
 
@@ -141,7 +141,7 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
     it('should reset all filters and get number of values in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetValueFilters', baseContext);
 
-      const numberOfValues = await viewAttributePage.resetAndGetNumberOfLines(page);
+      const numberOfValues: number = await viewAttributePage.resetAndGetNumberOfLines(page);
       await expect(numberOfValues).to.be.above(2);
     });
 
@@ -149,14 +149,14 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'changeValuePosition', baseContext);
 
       // Get first row attribute name
-      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const firstRowValueName: string = await viewAttributePage.getTextColumn(page, 1, 'b!name');
 
       // Change position and check successful message
-      const textResult = await viewAttributePage.changePosition(page, 1, 3);
+      const textResult: string = await viewAttributePage.changePosition(page, 1, 3);
       await expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
       // Get third row attribute name and check if is equal the first row attribute name before changing position
-      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'b!name');
+      const thirdRowValueName: string = await viewAttributePage.getTextColumn(page, 3, 'b!name');
       await expect(thirdRowValueName, 'Changing position was done wrongly').to.equal(firstRowValueName);
     });
 
@@ -164,14 +164,14 @@ describe('BO - Catalog - Attributes & Features : Change attributes & values posi
       await testContext.addContextItem(this, 'testIdentifier', 'resetValuePosition', baseContext);
 
       // Get third row attribute name
-      const thirdRowValueName = await viewAttributePage.getTextColumn(page, 3, 'b!name');
+      const thirdRowValueName: string = await viewAttributePage.getTextColumn(page, 3, 'b!name');
 
       // Change position and check successful message
-      const textResult = await viewAttributePage.changePosition(page, 3, 1);
+      const textResult: string = await viewAttributePage.changePosition(page, 3, 1);
       await expect(textResult, 'Unable to change position').to.contains(attributesPage.successfulUpdateMessage);
 
       // Get first row attribute name and check if is equal the first row attribute name before changing position
-      const firstRowValueName = await viewAttributePage.getTextColumn(page, 1, 'b!name');
+      const firstRowValueName: string = await viewAttributePage.getTextColumn(page, 1, 'b!name');
       await expect(firstRowValueName, 'Changing position was done wrongly').to.equal(thirdRowValueName);
     });
   });
