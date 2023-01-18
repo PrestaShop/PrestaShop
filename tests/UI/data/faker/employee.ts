@@ -1,5 +1,5 @@
 import Languages from '@data/demo/languages';
-import {Pages} from '@data/demo/pages';
+import Pages from '@data/demo/pages';
 import Profiles from '@data/demo/profiles';
 import LanguageData from '@data/faker/language';
 import ProfileData from '@data/faker/profile';
