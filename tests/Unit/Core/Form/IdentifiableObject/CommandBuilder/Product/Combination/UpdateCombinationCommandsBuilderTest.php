@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshol
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\UpdateCombinationCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 
 class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -239,6 +240,34 @@ class UpdateCombinationCommandsBuilderTest extends AbstractCombinationCommandBui
             [
                 'header' => [
                     'is_default' => null,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE);
+        yield 'low stock threshold is overriden by disabling switch when it is falsy' => [
+            [
+                'stock' => [
+                    'options' => [
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
+                        'low_stock_threshold' => 7,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setLowStockThreshold(8);
+        yield 'low stock threshold is correctly set when disabling switch is truthy' => [
+            [
+                'stock' => [
+                    'options' => [
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                        'low_stock_threshold' => 8,
+                    ],
                 ],
             ],
             [$command],

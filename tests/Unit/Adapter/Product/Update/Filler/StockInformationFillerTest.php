@@ -115,8 +115,8 @@ class StockInformationFillerTest extends ProductFillerTestCase
             [
                 'available_later' => [1, 2],
                 'available_now' => [1, 2],
-                'low_stock_alert',
                 'low_stock_threshold',
+                'low_stock_alert',
                 'minimal_quantity',
                 'pack_stock_type',
                 'available_date',

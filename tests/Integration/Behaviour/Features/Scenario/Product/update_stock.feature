@@ -169,7 +169,6 @@ Feature: Update product stock from Back Office (BO)
     When I update product "product1" with following values:
       | minimal_quantity              | 12           |
       | low_stock_threshold           | 42           |
-      | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |

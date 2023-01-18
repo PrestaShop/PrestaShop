@@ -112,8 +112,8 @@ class StockInformationFillerTest extends CombinationFillerTestCase
                 'available_now' => [1, 2],
                 'available_date',
                 'low_stock_threshold',
-                'minimal_quantity',
                 'low_stock_alert',
+                'minimal_quantity',
             ],
             $expectedCombination,
         ];

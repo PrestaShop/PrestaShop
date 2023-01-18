@@ -61,10 +61,6 @@ class StockInformationFiller implements ProductFillerInterface
             $product->available_now = $localizedNowLabels;
             $updatableProperties['available_now'] = array_keys($localizedNowLabels);
         }
-        if (null !== $command->getLowStockThreshold()) {
-            $product->low_stock_alert = $command->getLowStockThreshold()->isEnabled();
-            $updatableProperties[] = 'low_stock_alert';
-        }
 
         $lowStockThreshold = $command->getLowStockThreshold();
         if (null !== $lowStockThreshold) {
