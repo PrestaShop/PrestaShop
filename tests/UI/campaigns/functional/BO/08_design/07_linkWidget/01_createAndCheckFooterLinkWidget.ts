@@ -15,7 +15,7 @@ import foHomePage from '@pages/FO/home';
 
 // Import data
 import {LinkWidgets} from '@data/demo/linkWidgets';
-import {hooks} from '@data/demo/hooks';
+import Hooks from '@data/demo/hooks';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +63,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
   it('should get link widget number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
 
-    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
     await expect(numberOfLinkWidgetInFooter).to.be.above(0);
   });
 
@@ -83,7 +83,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       const textResult = await addLinkWidgetPage.addLinkWidget(page, LinkWidgets.demo_1);
       await expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
 
-      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
       await expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
     });
   });
@@ -133,14 +133,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
 
       const textResult = await linkWidgetsPage.deleteLinkWidget(
         page,
-        hooks.displayFooter.name,
+        Hooks.displayFooter.name,
         numberOfLinkWidgetInFooter + 1,
       );
       await expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
 
       const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(
         page,
-        hooks.displayFooter.name,
+        Hooks.displayFooter.name,
       );
       await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter);
     });
