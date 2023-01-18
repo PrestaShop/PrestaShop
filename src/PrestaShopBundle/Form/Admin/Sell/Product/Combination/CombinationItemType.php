@@ -89,7 +89,7 @@ class CombinationItemType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($this->multistoreFeature->isActive()) {
-            $deleteItemMessage = $this->trans('Delete selected item from current shop?', 'Admin.Notifications.Warning');
+            $deleteItemMessage = $this->trans('Delete selected item from current store?', 'Admin.Notifications.Warning');
         } else {
             $deleteItemMessage = $this->trans('Delete selected item?', 'Admin.Notifications.Warning');
         }
@@ -130,16 +130,16 @@ class CombinationItemType extends TranslatorAwareType
             $actionButtons['delete_for_all_shops'] = [
                 'type' => IconButtonType::class,
                 'options' => [
-                    'label' => $this->trans('Delete from all shops', 'Admin.Actions'),
+                    'label' => $this->trans('Delete from all stores', 'Admin.Actions'),
                     'icon' => 'delete',
                     'attr' => [
                         'class' => 'delete-combination-all-shops tooltip-link',
                         'data-modal-title' => $this->trans('Delete item', 'Admin.Notifications.Warning'),
-                        'data-modal-message' => $this->trans('Delete selected item from all shops?', 'Admin.Notifications.Warning'),
+                        'data-modal-message' => $this->trans('Delete selected item from all stores?', 'Admin.Notifications.Warning'),
                         'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                         'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                         'data-toggle' => 'pstooltip',
-                        'data-original-title' => $this->trans('Delete from all shops', 'Admin.Actions'),
+                        'data-original-title' => $this->trans('Delete from all stores', 'Admin.Actions'),
                     ],
                 ],
             ];
