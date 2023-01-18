@@ -26,45 +26,57 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Handles submitted application form data
+ */
+final class ApplicationFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @var CommandBusInterface
      */
-    public function create(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+    private $bus;
+
+    /**
+     * @param CommandBusInterface $bus
+     */
+    public function __construct(
+        CommandBusInterface $bus
+    ) {
+        $this->bus = $bus;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update(AuthorizedApplication $application): void
+    public function create(array $data): int
     {
-        $this->getEntityManager()->flush();
+        /** @var ApplicationIdInterface $applicationId */
+        $applicationId = $this->bus->handle(new AddApplicationCommand(
+            $data['name'],
+            $data['description'],
+        ));
+
+        return $applicationId->getValue();
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws ApplicationConstraintException
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
+    public function update($id, array $data): void
     {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
+        $command = new EditApplicationCommand($id);
+        $command->setName($data['name']);
+        $command->setDescription($data['description']);
+        $this->bus->handle($command);
     }
 }

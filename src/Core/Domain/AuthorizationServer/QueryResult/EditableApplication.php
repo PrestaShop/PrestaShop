@@ -26,45 +26,66 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Transfers application data for editing
+ */
+class EditableApplication
 {
     /**
-     * {@inheritdoc}
+     * @var ApplicationIdInterface
      */
-    public function create(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+    private $applicationId;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @param ApplicationIdInterface $applicationId
+     * @param string $name
+     * @param string $description
+     */
+    public function __construct(
+        ApplicationIdInterface $applicationId,
+        string $name,
+        string $description
+    ) {
+        $this->applicationId = $applicationId;
+        $this->name = $name;
+        $this->description = $description;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ApplicationIdInterface
      */
-    public function update(AuthorizedApplication $application): void
+    public function getApplicationId(): ApplicationIdInterface
     {
-        $this->getEntityManager()->flush();
+        return $this->applicationId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
+    public function getName(): string
     {
-        return $this->find($applicationId->getValue());
+        return $this->name;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getByName(string $name): ?AuthorizedApplication
+    public function getDescription(): string
     {
-        return $this->findOneBy(['name' => $name]);
+        return $this->description;
     }
 }

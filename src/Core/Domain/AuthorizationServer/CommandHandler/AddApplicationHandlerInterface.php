@@ -24,47 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
-namespace PrestaShopBundle\Entity\Repository;
-
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Defines contract for AddApplicationHandler
+ */
+interface AddApplicationHandlerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AddApplicationCommand $command
+     *
+     * @return ApplicationIdInterface
      */
-    public function create(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function update(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
-    {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
-    }
+    public function handle(AddApplicationCommand $command): ApplicationIdInterface;
 }

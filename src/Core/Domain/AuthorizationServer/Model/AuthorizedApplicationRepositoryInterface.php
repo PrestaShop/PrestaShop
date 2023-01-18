@@ -26,45 +26,38 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+interface AuthorizedApplicationRepositoryInterface
 {
     /**
-     * {@inheritdoc}
+     * @param AuthorizedApplication $application
+     *
+     * @return void
      */
-    public function create(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
-    }
+    public function create(AuthorizedApplication $application): void;
 
     /**
-     * {@inheritdoc}
+     * @param AuthorizedApplication $application
+     *
+     * @return void
      */
-    public function update(AuthorizedApplication $application): void
-    {
-        $this->getEntityManager()->flush();
-    }
+    public function update(AuthorizedApplication $application): void;
 
     /**
-     * {@inheritdoc}
+     * @param ApplicationIdInterface $applicationId
+     *
+     * @return AuthorizedApplication|null
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
-    {
-        return $this->find($applicationId->getValue());
-    }
+    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication;
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return AuthorizedApplication|null
      */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
-    }
+    public function getByName(string $name): ?AuthorizedApplication;
 }

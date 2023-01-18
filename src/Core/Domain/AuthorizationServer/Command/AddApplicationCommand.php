@@ -26,45 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
-
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Creates application with provided data
+ */
+class AddApplicationCommand
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function create(AuthorizedApplication $application): void
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @param string $name
+     * @param string $description
+     */
+    public function __construct(string $name, string $description)
     {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+        $this->name = $name;
+        $this->description = $description;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function update(AuthorizedApplication $application): void
+    public function getName(): string
     {
-        $this->getEntityManager()->flush();
+        return $this->name;
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
+    public function getDescription(): string
     {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
+        return $this->description;
     }
 }

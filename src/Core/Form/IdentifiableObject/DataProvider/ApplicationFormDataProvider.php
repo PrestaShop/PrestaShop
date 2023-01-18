@@ -26,45 +26,52 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Provides data for authorized application add/edit forms
+ */
+final class ApplicationFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var CommandBusInterface
      */
-    public function create(AuthorizedApplication $application): void
+    private $bus;
+
+    /**
+     * @param CommandBusInterface $bus
+     */
+    public function __construct(CommandBusInterface $bus)
     {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+        $this->bus = $bus;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @throws ApplicationConstraintException
+     */
+    public function getData($id): array
+    {
+        /** @var EditableApplication $editableApplication */
+        $editableApplication = $this->bus->handle(new GetApplicationForEditing((int) $id));
+
+        return [
+            'name' => $editableApplication->getName(),
+            'description' => $editableApplication->getDescription(),
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update(AuthorizedApplication $application): void
+    public function getDefaultData(): array
     {
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
-    {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
+        return [];
     }
 }

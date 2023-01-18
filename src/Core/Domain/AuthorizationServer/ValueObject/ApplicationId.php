@@ -26,45 +26,53 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Provides application id
+ */
+class ApplicationId implements ApplicationIdInterface
 {
     /**
-     * {@inheritdoc}
+     * @var int
      */
-    public function create(AuthorizedApplication $application): void
+    protected $id;
+
+    /**
+     * @param int $id
+     *
+     * @throws ApplicationConstraintException
+     */
+    public function __construct(int $id)
     {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+        $this->assertIsIntegerGreaterThanZero($id);
+        $this->id = $id;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function update(AuthorizedApplication $application): void
+    public function getValue(): int
     {
-        $this->getEntityManager()->flush();
+        return $this->id;
     }
 
     /**
-     * {@inheritdoc}
+     * Validates that the value is integer and is greater than zero
+     *
+     * @param int $value
+     *
+     * @throws ApplicationConstraintException
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
+    private function assertIsIntegerGreaterThanZero(int $value): void
     {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
+        if (!is_int($value) || 0 >= $value) {
+            throw new ApplicationConstraintException(
+                sprintf('Invalid application id "%s".', var_export($value, true)),
+                ApplicationConstraintException::INVALID_ID
+            );
+        }
     }
 }

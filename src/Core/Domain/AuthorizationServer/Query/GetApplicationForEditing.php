@@ -26,45 +26,37 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Entity\Repository;
+namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query;
 
-use Doctrine\ORM\EntityRepository;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
-use PrestaShopBundle\Entity\AuthorizedApplication;
 
-class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
+/**
+ * Gets application for editing in Back Office
+ */
+class GetApplicationForEditing
 {
     /**
-     * {@inheritdoc}
+     * @var ApplicationIdInterface
      */
-    public function create(AuthorizedApplication $application): void
+    private $applicationId;
+
+    /**
+     * @param int $applicationId
+     *
+     * @throws ApplicationConstraintException
+     */
+    public function __construct(int $applicationId)
     {
-        $this->getEntityManager()->persist($application);
-        $this->getEntityManager()->flush();
+        $this->applicationId = new ApplicationId($applicationId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ApplicationIdInterface
      */
-    public function update(AuthorizedApplication $application): void
+    public function getApplicationId(): ApplicationIdInterface
     {
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
-    {
-        return $this->find($applicationId->getValue());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getByName(string $name): ?AuthorizedApplication
-    {
-        return $this->findOneBy(['name' => $name]);
+        return $this->applicationId;
     }
 }
