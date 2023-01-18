@@ -37,8 +37,7 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Add official currency
    * @param page {Page} Browser tab
-   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
-   * decimals: number, enabled: boolean}} Data to set on add currency form
+   * @param currencyData {CurrencyData} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(page, currencyData) {
@@ -81,8 +80,7 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Create unofficial currency
    * @param page {Page} Browser tab
-   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
-   * decimals: number, enabled: boolean}} Data to set on add currency form
+   * @param currencyData {CurrencyData} Data to set on add currency form
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {

@@ -10,7 +10,7 @@ import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import CategoryData from "@data/faker/category";
+import CategoryData from '@data/faker/category';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
 
