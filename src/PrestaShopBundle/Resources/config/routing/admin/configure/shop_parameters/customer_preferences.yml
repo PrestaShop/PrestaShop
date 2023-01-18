@@ -13,3 +13,11 @@ admin_customer_preferences_process:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerPreferencesController::processAction'
     _legacy_controller: AdminCustomerPreferences
     _legacy_link: AdminCustomerPreferences:update
+
+admin_customer_groups:
+  path: /groups
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::indexAction'
+    _legacy_controller: AdminGroups
+    _legacy_link: AdminGroups

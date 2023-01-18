@@ -550,3 +550,11 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'authorized_application'
+
+  prestashop.core.grid.data.factory.customer_groups:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory'
+    arguments:
+      - '@prestashop.core.grid.query_builder.customer_groups' # service id of our query builder
+      - '@prestashop.core.hook.dispatcher' # every doctrine query builder needs the hook dispatcher
+      - '@prestashop.core.grid.query.doctrine_query_parser' # parser to get the raw SQL query
+      - 'customer_groups' # this should match your grid id, in our case it's "products"
