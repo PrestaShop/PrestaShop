@@ -9,6 +9,10 @@ import {faker} from '@faker-js/faker';
  * @class
  */
 export default class CategoryData {
+  public readonly id: number;
+
+  public readonly position: number;
+
   public readonly name: string;
 
   public readonly displayed: boolean;
@@ -23,9 +27,15 @@ export default class CategoryData {
 
   /**
    * Constructor for class CategoryData
-   * @param categoryToCreate {Object} Could be used to force the value of some members
+   * @param categoryToCreate {CategoryCreator} Could be used to force the value of some members
    */
   constructor(categoryToCreate: CategoryCreator = {}) {
+    /** @type {number} ID of the category */
+    this.id = categoryToCreate.id || 0;
+
+    /** @type {number} Position of the category */
+    this.position = categoryToCreate.position || 0;
+
     /** @type {string} Name of the category */
     this.name = categoryToCreate.name || `${faker.color.human()} ${faker.commerce.department()}`;
 
@@ -33,7 +43,7 @@ export default class CategoryData {
     this.displayed = categoryToCreate.displayed === undefined ? true : categoryToCreate.displayed;
 
     /** @type {string} Description of the category */
-    this.description = faker.lorem.sentence();
+    this.description = categoryToCreate.description || faker.lorem.sentence();
 
     /** @type {string} Meta title of the category */
     this.metaTitle = categoryToCreate.metaTitle || faker.lorem.word();

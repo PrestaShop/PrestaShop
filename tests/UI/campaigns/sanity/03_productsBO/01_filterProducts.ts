@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products';
 
 // Import data
-import {Categories} from '@data/demo/categories';
+import Categories from '@data/demo/categories';
 import Products from '@data/demo/products';
 import tax from '@data/demo/tax';
 

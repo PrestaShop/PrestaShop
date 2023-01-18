@@ -10,7 +10,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import categoriesPage from '@pages/BO/catalog/categories';
 
 // Import data
-import {Categories} from '@data/demo/categories';
+import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
