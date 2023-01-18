@@ -61,16 +61,11 @@ class ProductDataProvider
      * @param int|null $id_shop
      * @param object|null $context
      *
-     * @throws \LogicException If the product id is not set
      *
      * @return Product $product
      */
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {
-        if (!$id_product) {
-            throw new \LogicException('You need to provide a product id', 5002);
-        }
-
         $product = new Product($id_product, $full, $id_lang, $id_shop, $context);
 
         if (!is_array($product->link_rewrite)) {

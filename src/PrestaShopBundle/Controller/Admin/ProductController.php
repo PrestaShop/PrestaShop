@@ -463,6 +463,10 @@ class ProductController extends FrameworkBundleAdminController
         $product = $productAdapter->getProduct($id);
 
         if (!$product || empty($product->id)) {
+            $this->addFlash(
+                'warning',
+                $this->trans('The product you are trying to access doesn\'t exist', 'AdminLoginNotification')
+            );
             return $this->redirectToRoute('admin_product_catalog');
         }
 
