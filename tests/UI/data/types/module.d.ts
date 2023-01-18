@@ -1,6 +1,6 @@
-type ModuleInformation = {
-  tag: string
-  name: string
+type ModuleDataCreator = {
+  tag?: string
+  name?: string
 }
 
-export default ModuleInformation;
+export default ModuleDataCreator;

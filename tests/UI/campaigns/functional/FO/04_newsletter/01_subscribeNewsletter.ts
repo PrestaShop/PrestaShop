@@ -19,7 +19,7 @@ import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {ModuleInformation} from '@data/types/module';
+import ModuleData from '@data/faker/module';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,11 +40,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const moduleInformation: ModuleInformation = {
+  const moduleInformation: ModuleData = new ModuleData({
     tag: 'ps_emailsubscription',
     name: 'Newsletter subscription',
-  };
-  const moduleName: string = 'Newsletter subscription';
+  });
 
   // before and after functions
   before(async function () {
@@ -130,17 +129,17 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
       await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should search for module ${moduleName}`, async function () {
+    it(`should search for module ${moduleInformation.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleName, moduleName);
+      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleInformation);
       await expect(isModuleVisible).to.be.true;
     });
 
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
+      await moduleManagerPage.searchModule(page, moduleInformation);
       await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
@@ -199,7 +198,7 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToNewsletterModuleConfig', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
+      await moduleManagerPage.searchModule(page, moduleInformation);
       await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);

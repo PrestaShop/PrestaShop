@@ -13,7 +13,7 @@ import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {psEmailSubscription} from '@data/demo/modules';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -95,15 +95,15 @@ describe('BO - Customers - Customers : Check customer subscription to newsletter
       await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
-    it(`should go to '${psEmailSubscription.name}' module`, async function () {
+    it(`should go to '${Modules.psEmailSubscription.name}' module`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToEmailSubscriptionModule${index}`, baseContext);
 
       // Search and go to configure module page
-      await moduleManagerPage.searchModule(page, psEmailSubscription.tag, psEmailSubscription.name);
-      await moduleManagerPage.goToConfigurationPage(page, psEmailSubscription.name);
+      await moduleManagerPage.searchModule(page, Modules.psEmailSubscription);
+      await moduleManagerPage.goToConfigurationPage(page, Modules.psEmailSubscription.name);
 
       const pageTitle = await psEmailSubscriptionPage.getPageSubtitle(page);
-      await expect(pageTitle).to.contains(psEmailSubscription.name);
+      await expect(pageTitle).to.contains(Modules.psEmailSubscription.name);
     });
 
     it('should check customer registration to newsletter', async function () {

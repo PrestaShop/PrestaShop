@@ -11,7 +11,7 @@ import moduleConfigurationPage from '@pages/BO/modules/moduleConfiguration';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
 
 // Import data
-import {contactForm} from '@data/demo/modules';
+import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,19 +50,19 @@ describe('BO - Modules - Module Manager : Configure module', async () => {
     await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
   });
 
-  it(`should search for module ${contactForm.name}`, async function () {
+  it(`should search for module ${Modules.contactForm.name}`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
 
-    const isModuleVisible = await moduleManagerPage.searchModule(page, contactForm.tag, contactForm.name);
+    const isModuleVisible = await moduleManagerPage.searchModule(page, Modules.contactForm);
     await expect(isModuleVisible).to.be.true;
   });
 
   it('should go to module configuration page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'configureModule', baseContext);
 
-    await moduleManagerPage.goToConfigurationPage(page, contactForm.name);
+    await moduleManagerPage.goToConfigurationPage(page, Modules.contactForm.name);
 
     const pageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-    await expect(pageSubtitle).to.contains(contactForm.name);
+    await expect(pageSubtitle).to.contains(Modules.contactForm.name);
   });
 });
