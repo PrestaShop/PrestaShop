@@ -29,7 +29,7 @@ import returnDetailsPage from '@pages/FO/myAccount/returnDetails';
 import Addresses from '@data/demo/address';
 import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import Order from '@data/types/order';

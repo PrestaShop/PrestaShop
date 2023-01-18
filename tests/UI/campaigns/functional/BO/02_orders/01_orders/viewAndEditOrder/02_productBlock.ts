@@ -24,7 +24,7 @@ import AddressData from '@data/faker/address';
 import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
 import ProductData from '@data/faker/product';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import type Order from '@data/types/order';
 

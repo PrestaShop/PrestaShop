@@ -1,6 +1,5 @@
 import OrderStatuses from '@data/demo/orderStatuses';
-
-const {PaymentMethods} = require('@data/demo/paymentMethods');
+import PaymentMethods from '@data/demo/paymentMethods';
 
 module.exports = {
   Orders: {

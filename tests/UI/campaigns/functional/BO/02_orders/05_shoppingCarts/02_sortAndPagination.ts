@@ -13,7 +13,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 import Order from '@data/types/order';

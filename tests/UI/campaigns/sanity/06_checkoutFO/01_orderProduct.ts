@@ -11,7 +11,7 @@ import loginPage from '@pages/FO/login';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';

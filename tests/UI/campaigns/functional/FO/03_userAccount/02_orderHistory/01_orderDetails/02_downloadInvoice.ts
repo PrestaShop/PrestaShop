@@ -19,7 +19,7 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
 import OrderStatuses from '@data/demo/orderStatuses';
 

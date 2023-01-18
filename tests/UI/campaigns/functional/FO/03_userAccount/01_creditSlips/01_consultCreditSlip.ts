@@ -26,7 +26,7 @@ import loginPage from '@pages/FO/login';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 import Order from '@data/types/order';

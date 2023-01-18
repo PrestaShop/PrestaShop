@@ -20,7 +20,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 

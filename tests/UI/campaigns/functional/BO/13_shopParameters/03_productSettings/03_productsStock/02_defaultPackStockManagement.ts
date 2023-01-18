@@ -21,7 +21,7 @@ import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
 import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
 import {expect} from 'chai';

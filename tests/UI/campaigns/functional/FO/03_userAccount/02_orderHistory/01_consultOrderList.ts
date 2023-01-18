@@ -17,7 +17,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 import {Order, OrderHistory} from '@data/types/order';

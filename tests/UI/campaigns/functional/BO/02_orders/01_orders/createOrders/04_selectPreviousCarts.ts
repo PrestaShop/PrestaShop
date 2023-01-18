@@ -25,7 +25,7 @@ import productPage from '@pages/FO/product';
 import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';

@@ -21,7 +21,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 // Import data
 import Customers from '@data/demo/customer';
 import Languages from '@data/demo/languages';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

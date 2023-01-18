@@ -17,7 +17,7 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import data
 import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 
 import {expect} from 'chai';

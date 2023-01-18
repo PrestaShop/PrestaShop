@@ -27,7 +27,7 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import Customers from '@data/demo/customer';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 import TaxRuleData from '@data/faker/taxRule';
 import TaxRulesGroupData from '@data/faker/taxRulesGroup';
