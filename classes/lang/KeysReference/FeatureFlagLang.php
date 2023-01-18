@@ -46,3 +46,11 @@ trans('Enable or disable the migrated attribute groups page.', 'Admin.Advparamet
 // Authorization server feature flag
 trans('Authorization server', 'Admin.Advparameters.Feature');
 trans('Enable or disable the authorization server page.', 'Admin.Advparameters.Help');
+
+// Cart rules feature flag
+trans('Cart rules', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated cart rules page.', 'Admin.Advparameters.Help');
+
+// Cart rules feature flag
+trans('Catalog price rules', 'Admin.Advparameters.Feature');
+trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
