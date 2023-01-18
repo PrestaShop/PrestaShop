@@ -6587,16 +6587,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.7.0",
+            "version": "v2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "db945167758ec163b9db60b99c3fe4ca363155c2"
+                "reference": "6f0f08ae3b686aa2bd6e2546980ba70d6024c532"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/db945167758ec163b9db60b99c3fe4ca363155c2",
-                "reference": "db945167758ec163b9db60b99c3fe4ca363155c2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/6f0f08ae3b686aa2bd6e2546980ba70d6024c532",
+                "reference": "6f0f08ae3b686aa2bd6e2546980ba70d6024c532",
                 "shasum": ""
             },
             "require": {
@@ -6624,9 +6624,9 @@
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.7.0"
+                "source": "https://github.com/PrestaShop/ps_emailsubscription/tree/v2.7.1"
             },
-            "time": "2021-07-08T15:24:45+00:00"
+            "time": "2023-01-18T15:52:43+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -7186,25 +7186,28 @@
         },
         {
             "name": "prestashop/ps_specials",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_specials.git",
-                "reference": "536b20a64a8aa7c4eec096ae2adbeb414a94c5ca"
+                "reference": "b8cb0c931f98eaacf59044550f8ca195f3f5bde1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_specials/zipball/536b20a64a8aa7c4eec096ae2adbeb414a94c5ca",
-                "reference": "536b20a64a8aa7c4eec096ae2adbeb414a94c5ca",
+                "url": "https://api.github.com/repos/PrestaShop/ps_specials/zipball/b8cb0c931f98eaacf59044550f8ca195f3f5bde1",
+                "reference": "b8cb0c931f98eaacf59044550f8ca195f3f5bde1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -7215,10 +7218,9 @@
             "description": "PrestaShop - Specials",
             "homepage": "https://github.com/PrestaShop/ps_specials",
             "support": {
-                "issues": "https://github.com/PrestaShop/ps_specials/issues",
-                "source": "https://github.com/PrestaShop/ps_specials/tree/v1.0.1"
+                "source": "https://github.com/PrestaShop/ps_specials/tree/v1.0.2"
             },
-            "time": "2016-11-15T10:55:06+00:00"
+            "time": "2023-01-18T13:48:05+00:00"
         },
         {
             "name": "prestashop/ps_supplierlist",
