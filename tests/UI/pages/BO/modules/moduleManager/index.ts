@@ -169,20 +169,17 @@ class ModuleManager extends BOBasePage {
    * Filter by category
    * @param page {Page} Browser tab
    * @param category {string} Name of module's category to filter with
-   * @return {Promise<number>}
+   * @return {Promise<void>}
    */
-  async filterByCategory(page: Page, category: string): Promise<number> {
+  async filterByCategory(page: Page, category: string): Promise<void> {
     await Promise.all([
       page.click(this.categoriesSelectDiv),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='true']`),
     ]);
-    const categoriesNumber: number = await this.getNumberFromText(page, `${this.categoryDropdownItem(category)} span`);
     await Promise.all([
       page.click(this.categoryDropdownItem(category)),
       this.waitForVisibleSelector(page, `${this.categoriesSelectDiv}[aria-expanded='false']`),
     ]);
-
-    return categoriesNumber;
   }
 
   /**
@@ -195,14 +192,6 @@ class ModuleManager extends BOBasePage {
     const modulesBlocks = await page.$$eval(this.modulesListBlockTitle, (all) => all.map((el) => el.textContent));
 
     return modulesBlocks[position - 1];
-  }
-
-  /**
-   * Is modules list block title visible
-   * @param page {Page} Browser tab
-   */
-  async isModulesListBlockTitleVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.modulesListBlockTitle, 1000);
   }
 }
 

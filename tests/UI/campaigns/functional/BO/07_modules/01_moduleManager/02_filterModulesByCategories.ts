@@ -55,17 +55,10 @@ describe('BO - Modules - Module Manager : Filter modules by Categories', async (
         await testContext.addContextItem(this, 'testIdentifier', `filterByCategory${category}`, baseContext);
 
         // Filter modules by categories
-        const categoriesNumber: number = await moduleManagerPage.filterByCategory(page, category);
+        await moduleManagerPage.filterByCategory(page, category);
 
-        if (categoriesNumber !== 0) {
-          // Check first category displayed
-          const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
-          await expect(firstBlockTitle).to.equal(category);
-        } else {
-          // Check that module title is not visible
-          const isModuleTitleVisible = await moduleManagerPage.isModulesListBlockTitleVisible(page);
-          await expect(isModuleTitleVisible).to.be.false;
-        }
+        const firstBlockTitle = await moduleManagerPage.getBlockModuleTitle(page, 1);
+        await expect(firstBlockTitle).to.equal(category);
       });
     });
   });
