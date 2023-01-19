@@ -283,6 +283,7 @@ class FrontControllerCore extends Controller
             $useSSL = true;
         }
 
+        // Redirect to SSL variant of the page if required and visited in non-ssl mode
         $this->sslRedirection();
 
         if ($this->ajax) {
@@ -297,21 +298,23 @@ class FrontControllerCore extends Controller
 
         ob_start();
 
+        // Initialize URL provider in context, depending on SSL mode
         $protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
         $useSSL = ($this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode();
         $protocol_content = ($useSSL) ? 'https://' : 'http://';
         $link = new Link($protocol_link, $protocol_content);
         $this->context->link = $link;
 
-        if ($id_cart = (int) $this->recoverCart()) {
-            $this->context->cookie->id_cart = (int) $id_cart;
-        }
+        // Attempt to recover cart, if the user is using recovery link
+        // This is used by abandoned cart modules or when sending a prepared order to customer from backoffice
+        $this->recoverCart();
 
+        // Redirect user to login page, if the controller requires authentication
         if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
             Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
-        /* Theme is missing */
+        // If the theme is missing, we need to throw an Exception
         if (!is_dir(_PS_THEME_DIR_)) {
             throw new PrestaShopException($this->trans('Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.', [basename(rtrim(_PS_THEME_DIR_, '/\\'))], 'Admin.Design.Notification'));
         }
@@ -1231,29 +1234,57 @@ class FrontControllerCore extends Controller
      */
     protected function recoverCart()
     {
-        if (($id_cart = (int) Tools::getValue('recover_cart')) && Tools::getValue('token_cart') == md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)) {
-            $cart = new Cart((int) $id_cart);
-            if (Validate::isLoadedObject($cart)) {
-                $customer = new Customer((int) $cart->id_customer);
-                if (Validate::isLoadedObject($customer)) {
-                    $customer->logged = true;
-                    $this->context->customer = $customer;
-                    $this->context->cookie->id_customer = (int) $customer->id;
-                    $this->context->cookie->customer_lastname = $customer->lastname;
-                    $this->context->cookie->customer_firstname = $customer->firstname;
-                    $this->context->cookie->logged = true;
-                    $this->context->cookie->check_cgv = 1;
-                    $this->context->cookie->is_guest = $customer->isGuest();
-                    $this->context->cookie->passwd = $customer->passwd;
-                    $this->context->cookie->email = $customer->email;
-                    $this->context->cookie->id_guest = (int) $cart->id_guest;
-
-                    return $id_cart;
-                }
-            }
+        if (!Tools::isSubmit('recover_cart')) {
+            return false;
         }
 
-        return false;
+        // Get ID cart from URL
+        $id_cart = (int) Tools::getValue('recover_cart');
+
+        // Check if token in URL matches, otherwise, ignore it, probably malicious intentions
+        if (Tools::getValue('token_cart') != md5(_COOKIE_KEY_ . 'recover_cart_' . $id_cart)) {
+            return false;
+        }
+
+        // Create cart object and check if it's still valid. It can be deleted by automated cleaners or manually.
+        $cart = new Cart($id_cart);
+        if (!Validate::isLoadedObject($cart)) {
+            $this->errors[] = $this->trans('This cart has expired.', [], 'Shop.Notifications.Error');
+
+            return false;
+        }
+
+        // Customer - same scenario. It can be deleted by automated cleaners or manually.
+        $customer = new Customer((int) $cart->id_customer);
+        if (!Validate::isLoadedObject($customer)) {
+            $this->errors[] = $this->trans('This cart has expired.', [], 'Shop.Notifications.Error');
+
+            return false;
+        }
+
+        // Check if there is already a finished order with this cart, we notify the customer nicely
+        if ($cart->orderExists()) {
+            $this->errors[] = $this->trans('This cart was already used in an order and has expired.', [], 'Shop.Notifications.Error');
+
+            return false;
+        }
+
+        // Initialize this data into cookie, FrontController will use it later
+        $customer->logged = true;
+        $this->context->customer = $customer;
+        $this->context->cookie->id_customer = (int) $customer->id;
+        $this->context->cookie->customer_lastname = $customer->lastname;
+        $this->context->cookie->customer_firstname = $customer->firstname;
+        $this->context->cookie->logged = true;
+        $this->context->cookie->check_cgv = 1;
+        $this->context->cookie->is_guest = $customer->isGuest();
+        $this->context->cookie->passwd = $customer->passwd;
+        $this->context->cookie->email = $customer->email;
+        $this->context->cookie->id_guest = (int) $cart->id_guest;
+        $this->context->cookie->id_cart = $id_cart;
+
+        // Return the value for backward compatibility
+        return $id_cart;
     }
 
     /**
