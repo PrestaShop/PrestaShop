@@ -1463,25 +1463,24 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.specification.specifications_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType:
     parent: 'form.type.translatable.aware'
-    public: true
+    public: false
     arguments:
       - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_FEATURE_FEATURE_ACTIVE')"
     tags:
       - { name: form.type }
 
-  form.type.sell.product.specification.features_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType'
+  form.type.sell.product.details.features_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\FeaturesType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
 
-  form.type.sell.product.specification.feature_value_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeatureValueType'
+  form.type.sell.product.details.feature_value_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\FeatureValueType'
     parent: 'form.type.translatable.aware'
     arguments:
       - '@prestashop.adapter.form.choice_provider.features_choice_provider'
@@ -1490,15 +1489,15 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.specification.references_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType'
+  form.type.sell.product.details.references_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\ReferencesType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
       - { name: form.type }
 
-  form.type.sell.product.specification.customizations_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\CustomizationsType'
+  form.type.sell.product.details.customizations_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Details\CustomizationsType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:

@@ -770,16 +770,16 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['options']['visibility']['online_only'] = true;
         $expectedOutputData['options']['visibility']['show_price'] = false;
 
-        $expectedOutputData['specifications']['references']['isbn'] = 'isbn_2';
-        $expectedOutputData['specifications']['references']['upc'] = 'upc_2';
-        $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
-        $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
-        $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+        $expectedOutputData['details']['references']['isbn'] = 'isbn_2';
+        $expectedOutputData['details']['references']['upc'] = 'upc_2';
+        $expectedOutputData['details']['references']['ean_13'] = 'ean13_2';
+        $expectedOutputData['details']['references']['mpn'] = 'mpn_2';
+        $expectedOutputData['details']['references']['reference'] = 'reference_2';
 
-        $expectedOutputData['specifications']['condition'] = ProductCondition::USED;
-        $expectedOutputData['specifications']['show_condition'] = true;
+        $expectedOutputData['details']['condition'] = ProductCondition::USED;
+        $expectedOutputData['details']['show_condition'] = true;
 
-        $expectedOutputData['specifications']['attachments']['attached_files'] = [
+        $expectedOutputData['details']['attachments']['attached_files'] = [
             [
                 'attachment_id' => 1,
                 'name' => 'english name',
@@ -946,8 +946,8 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['specifications']['features']['feature_values'] = [];
-        $expectedOutputData['specifications']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_values'] = [];
+        $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 51,
         ];
@@ -956,7 +956,7 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
-        $expectedOutputData['specifications']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
             'custom_value' => $localizedValues,
@@ -1018,7 +1018,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
         ];
 
-        $expectedOutputData['specifications']['customizations']['customization_fields'] = [
+        $expectedOutputData['details']['customizations']['customization_fields'] = [
             [
                 'id' => 1,
                 'name' => $localizedNames,
@@ -1565,7 +1565,7 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
-            'specifications' => [
+            'details' => [
                 'references' => [
                     'mpn' => 'mpn',
                     'upc' => 'upc',

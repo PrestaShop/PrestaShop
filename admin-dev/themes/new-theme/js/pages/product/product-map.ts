@@ -24,7 +24,7 @@
  */
 
 const combinationListFormId = '#combination_list';
-const attachmentsBlockId = '#product_specifications_attachments';
+const attachmentsBlockId = '#product_details_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationClass = 'combination-is-selected';
 const commonBulkSelectAllClass = 'bulk-select-all';
@@ -345,8 +345,8 @@ export default {
     searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
-  conditionSwitch: 'input[name="product[specifications][show_condition]"]',
-  conditionChoiceSelect: '#product_specifications_condition',
+  conditionSwitch: 'input[name="product[details][show_condition]"]',
+  conditionChoiceSelect: '#product_details_condition',
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },

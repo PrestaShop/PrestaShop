@@ -26,10 +26,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Specification;
+namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\FeaturesType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\FeaturesType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

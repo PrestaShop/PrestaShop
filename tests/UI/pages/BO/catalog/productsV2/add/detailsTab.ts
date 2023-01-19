@@ -21,8 +21,8 @@ class DetailsTab extends BOBasePage {
     super();
 
     // Selectors in details tab
-    this.detailsTabLink = '#product_specifications-tab-nav';
-    this.productReferenceInput = '#product_specifications_references_reference';
+    this.detailsTabLink = '#product_details-tab-nav';
+    this.productReferenceInput = '#product_details_references_reference';
   }
 
   /*

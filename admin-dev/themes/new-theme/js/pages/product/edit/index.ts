@@ -49,7 +49,7 @@ import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/product-options-manager';
 import ProductShippingManager from '@pages/product/edit/product-shipping-manager';
-import ProductSpecificationsManager from '@pages/product/edit/product-specifications-manager';
+import ProductDetailsManager from '@pages/product/edit/product-details-manager';
 
 const {$} = window;
 
@@ -138,7 +138,7 @@ $(() => {
   new CustomizationsManager();
   new AttachmentsManager();
   new SpecificPricesManager(productId);
-  new ProductSpecificationsManager();
+  new ProductDetailsManager();
 
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);

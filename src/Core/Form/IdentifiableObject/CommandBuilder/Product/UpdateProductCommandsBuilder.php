@@ -107,13 +107,13 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
-            ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+            ->addMultiShopField('[details][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
         ;
 
         // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
         // and will end up being "" in command if added into config without this if, which causes constraint error
-        if (!empty($formData['specifications']['condition'])) {
-            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
+        if (!empty($formData['details']['condition'])) {
+            $config->addMultiShopField('[details][condition]', 'setCondition', DataField::TYPE_STRING);
         }
 
         return $this;
@@ -170,11 +170,11 @@ class UpdateProductCommandsBuilder implements MultiShopProductCommandsBuilderInt
     private function configureDetails(CommandBuilderConfig $config): self
     {
         $config
-            ->addField('[specifications][references][reference]', 'setReference', DataField::TYPE_STRING)
-            ->addField('[specifications][references][mpn]', 'setMpn', DataField::TYPE_STRING)
-            ->addField('[specifications][references][upc]', 'setUpc', DataField::TYPE_STRING)
-            ->addField('[specifications][references][ean_13]', 'setEan13', DataField::TYPE_STRING)
-            ->addField('[specifications][references][isbn]', 'setIsbn', DataField::TYPE_STRING)
+            ->addField('[details][references][reference]', 'setReference', DataField::TYPE_STRING)
+            ->addField('[details][references][mpn]', 'setMpn', DataField::TYPE_STRING)
+            ->addField('[details][references][upc]', 'setUpc', DataField::TYPE_STRING)
+            ->addField('[details][references][ean_13]', 'setEan13', DataField::TYPE_STRING)
+            ->addField('[details][references][isbn]', 'setIsbn', DataField::TYPE_STRING)
         ;
 
         return $this;

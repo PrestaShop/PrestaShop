@@ -63,7 +63,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
     {
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'condition' => null,
                 ],
             ],
@@ -146,7 +146,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'condition' => 'new',
                 ],
             ],
@@ -157,7 +157,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setShowCondition(true);
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'not_handled' => 0,
                     'show_condition' => 1,
                 ],
@@ -451,7 +451,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setReference('ref');
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'reference' => 'ref',
                     ],
@@ -464,7 +464,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setIsbn('0-8044-2957-X');
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'isbn' => '0-8044-2957-X',
                     ],
@@ -477,7 +477,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setEan13('13');
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'ean_13' => '13',
                     ],
@@ -490,7 +490,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setUpc('1345');
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'upc' => '1345',
                     ],
@@ -508,7 +508,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'header' => [
                     'active' => true,
                 ],
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'mpn' => 'mpn',
                     ],
@@ -605,7 +605,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         ],
                     ],
                 ],
-                'specifications' => [
+                'details' => [
                     'references' => [
                         'isbn' => '0-8044-2957-X',
                         'ean_13' => '13',
@@ -802,7 +802,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'condition' => 'new',
                     self::MODIFY_ALL_SHOPS_PREFIX . 'condition' => true,
                 ],
@@ -814,7 +814,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command->setShowCondition(false);
         yield [
             [
-                'specifications' => [
+                'details' => [
                     'not_handled' => 0,
                     'show_condition' => 0,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'show_condition' => true,

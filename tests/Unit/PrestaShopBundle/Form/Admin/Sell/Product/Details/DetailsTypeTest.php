@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Specification;
+namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Product\Details;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SpecificationsTypeTest extends TestCase
+class DetailsTypeTest extends TestCase
 {
     /**
      * @dataProvider providerBuildForm
@@ -69,7 +69,7 @@ class SpecificationsTypeTest extends TestCase
             return $children;
         });
 
-        $formType = new SpecificationsType($mockTranslatorInterface, [], $mockFormChoiceProviderInterface, $isFeatureEnabled);
+        $formType = new DetailsType($mockTranslatorInterface, [], $mockFormChoiceProviderInterface, $isFeatureEnabled);
         $formType->buildForm($mockFormBuilder, []);
 
         $this->assertEquals($expectedChildren, $mockFormBuilder->all());

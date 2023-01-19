@@ -30,11 +30,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -93,7 +93,7 @@ class EditProductFormType extends TranslatorAwareType
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('specifications', SpecificationsType::class)
+            ->add('details', DetailsType::class)
             ->add('combinations', CombinationsType::class, [
                 'product_id' => $productId,
             ])

@@ -25,7 +25,7 @@
 import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
 import ProductMap from '@pages/product/product-map';
 
-export default class ProductSpecificationsManager {
+export default class ProductDetailsManager {
   constructor() {
     this.initConditionToggler();
   }

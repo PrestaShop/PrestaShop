@@ -42,11 +42,11 @@ final class CustomizationFieldsCommandsBuilder implements MultiShopProductComman
      */
     public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        if (!isset($formData['specifications']['customizations'])) {
+        if (!isset($formData['details']['customizations'])) {
             return [];
         }
 
-        $customizations = $formData['specifications']['customizations'];
+        $customizations = $formData['details']['customizations'];
 
         if (empty($customizations['customization_fields'])) {
             return [new RemoveAllCustomizationFieldsFromProductCommand($productId->getValue())];

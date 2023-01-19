@@ -99,7 +99,7 @@
 {% endblock %}
 
 {% block header_references %}
-  {% set referencesForm = productForm.specifications.references %}
+  {% set referencesForm = productForm.details.references %}
   <div class="product-header-references">
     {% for child in referencesForm.children %}
       {% if child.vars.value is not empty %}
