@@ -82,10 +82,24 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
+                'help' => $this->trans(
+                    'Invalid characters are: %invalidCharacters%',
+                    'Admin.Catalog.Feature',
+                    ['%invalidCharacters%' => '<>;=#{}']
+                ),
                 'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
                     'constraints' => [
-                        new TypedRegex(TypedRegex::TYPE_CATALOG_NAME),
+                        new TypedRegex(
+                            [
+                                'type' => TypedRegex::TYPE_CATALOG_NAME,
+                                'message' => $this->trans(
+                                    'This field contains invalid characters: %invalidCharacters%',
+                                    'Admin.Catalog.Feature',
+                                    ['%invalidCharacters%' => '<>;=#{}']
+                                ),
+                            ]
+                        ),
                         new Length(['max' => ProductSettings::MAX_NAME_LENGTH]),
                     ],
                     'attr' => [
