@@ -10,7 +10,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 
 // Import data
-import taxOptions from '@data/demo/taxOptions';
+import TaxOptions from '@data/demo/taxOptions';
+import TaxOptionData from '@data/faker/taxOption';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -52,7 +53,7 @@ describe('BO - International - Taxes : Edit Tax options with all EcoTax values',
 
   // Testing all options of EcoTax
   describe('Edit tax options', async () => {
-    taxOptions.forEach((taxOption, index) => {
+    TaxOptions.forEach((taxOption: TaxOptionData, index: number) => {
       it(`should edit Tax Option,
       \tEnable Tax:${taxOption.enabled},
       \tDisplay tax in the shopping cart: '${taxOption.displayInShoppingCart}',
