@@ -2187,7 +2187,7 @@ services:
 
   PrestaShopBundle\Form\Admin\AdvancedParameters\AuthorizationServer\ApplicationType:
     parent: 'form.type.translatable.aware'
-    public: true
+    public: false
     tags:
       - { name: form.type }
 

@@ -110,6 +110,7 @@ class ApplicationController extends FrameworkBundleAdminController
             $authorizedApplicationForm->handleRequest($request);
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
             return $this->redirectToRoute('admin_authorized_applications_index');
         }
 
@@ -128,7 +129,7 @@ class ApplicationController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminAuthorizationServer'),
             'enableSidebar' => true,
             'applicationForm' => $authorizedApplicationForm->createView(),
-            'editableApplication' => $editableApplication
+            'editableApplication' => $editableApplication,
         ]);
     }
 

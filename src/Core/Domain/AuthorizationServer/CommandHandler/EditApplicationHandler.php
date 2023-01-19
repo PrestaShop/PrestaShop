@@ -59,7 +59,7 @@ class EditApplicationHandler implements EditApplicationHandlerInterface
      */
     public function handle(EditApplicationCommand $command): void
     {
-        /** @var AuthorizedApplication $application */
+        /** @var ?AuthorizedApplication $application */
         $application = $this->applicationRepository->getById($command->getApplicationId());
 
         if ($application === null) {

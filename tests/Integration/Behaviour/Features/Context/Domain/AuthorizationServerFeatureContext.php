@@ -126,6 +126,7 @@ class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Then authorized application :reference should have the following details:
+     *
      * @throws ApplicationConstraintException
      */
     public function assertAuthorizedApplicationName(string $reference, TableNode $node): void
