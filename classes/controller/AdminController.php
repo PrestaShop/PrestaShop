@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class AdminControllerCore extends Controller
 {
@@ -2140,7 +2141,23 @@ class AdminControllerCore extends Controller
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            try {
+                $tabs[$index]['href'] = $this->context->link->getTabLink($tab);
+            } catch (RouteNotFoundException $e) {
+                // If the route specified is not accessible we remove the tab (it can happen during module install process
+                // the route should be usable in next request/process once the cache has been cleared - on process shutdown).
+                // This is not ideal, but clearing the cache during a process and restart the whole kernel is quite a challenge.
+                $this->get('logger')->addWarning(
+                    sprintf('Route not found in one of the Tab %s', $tab['route_name'] ?? ''),
+                    [
+                        'message' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ]
+                );
+                unset($tabs[$index]);
+                continue;
+            }
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);
