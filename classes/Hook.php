@@ -1085,10 +1085,11 @@ class HookCore extends ObjectModel
                     'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()
                 )
             );
+        } else {
+            $sql->innerJoin('module_shop', 'module_shop', 'module_shop.`id_module` = m.`id_module`');
         }
         $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
         $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
-        $sql->innerJoin('module_shop', 'mshop', 'mshop.`id_module` = m.`id_module`');
         if ($hookName !== 'paymentOptions') {
             $sql->where('h.`name` != "paymentOptions"');
         } elseif ($frontend) {
