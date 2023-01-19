@@ -1954,8 +1954,15 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.combination.bulk_combination_stock_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType'
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType:
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+    tags:
+      - { name: form.type }
+
+  PrestaShopBundle\Form\Admin\Sell\Product\Combination\LowStockThresholdType:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
