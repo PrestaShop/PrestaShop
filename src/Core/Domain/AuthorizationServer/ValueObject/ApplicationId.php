@@ -52,7 +52,7 @@ class ApplicationId
     }
 
     /**
-     * {@inheritdoc}
+     * @return int
      */
     public function getValue(): int
     {
