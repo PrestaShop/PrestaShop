@@ -4292,7 +4292,7 @@ class AdminControllerCore extends Controller
             $obj = new $module->name();
         }
         // Fill module data
-        $module->logo = '../../img/questionmark.png';
+        $module->logo = '../../img/module/default.png';
 
         if (@filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . basename(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR . $module->name
             . DIRECTORY_SEPARATOR . 'logo.gif')) {
