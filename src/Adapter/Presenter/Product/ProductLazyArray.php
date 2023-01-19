@@ -379,26 +379,29 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * See following resources for up-to-date information
+     * https://support.google.com/merchants/answer/6324448
+     * https://schema.org/ItemAvailability
+     *
      * @arrayAccess
      *
      * @return string
      */
     public function getSeoAvailability()
     {
-        $seoAvailability = 'https://schema.org/';
-
         // Availability for displaying discontinued products, if enabled
         if ($this->product['active'] != 1) {
-            $seoAvailability .= 'Discontinued';
-        } elseif ($this->product['quantity'] > 0) {
-            $seoAvailability .= 'InStock';
+            return 'https://schema.org/Discontinued';
+        // If product is in stock or stock management is disabled (= we have everything in stock)
+        } elseif ($this->product['quantity'] > 0 || !$this->configuration->get('PS_STOCK_MANAGEMENT')) {
+            return 'https://schema.org/InStock';
+        // If it's not in stock, but available for order
         } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp']) {
-            $seoAvailability .= 'PreOrder';
+            return 'https://schema.org/BackOrder';
+        // If it's not in stock and not available for order
         } else {
-            $seoAvailability .= 'OutOfStock';
+            return 'https://schema.org/OutOfStock';
         }
-
-        return $seoAvailability;
     }
 
     /**
