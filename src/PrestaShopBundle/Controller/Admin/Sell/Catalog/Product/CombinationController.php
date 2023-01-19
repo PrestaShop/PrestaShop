@@ -347,8 +347,7 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @oaram int $productId
-     *
+     * @param int $productId
      * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
