@@ -349,7 +349,11 @@ class MultiShopProductControllerTest extends GridControllerTestCase
         /** @var TestEntityDTO $filteredProduct */
         $filteredProduct = $products->get(0);
 
-        $shopPreviewsUrl = $this->router->generate('admin_products_grid_shop_previews', ['productId' => $filteredProduct->getId()]);
+        $routeParams = ['productId' => $filteredProduct->getId()];
+        if (!empty($shopContext['group_shop_name'])) {
+            $routeParams['shopGroupId'] = ShopGroup::getIdByName($shopContext['group_shop_name']);
+        }
+        $shopPreviewsUrl = $this->router->generate('admin_products_grid_shop_previews', $routeParams);
         $crawler = $this->client->request('GET', $shopPreviewsUrl);
         $entitiesRows = $crawler->filter('tr:not(.empty_row)');
         $productShopPreviews = $this->parseEntitiesFromRows($entitiesRows);
@@ -367,76 +371,93 @@ class MultiShopProductControllerTest extends GridControllerTestCase
 
     public function getProductShopPreviewsParameters(): iterable
     {
-        $testVariants = [
-            [
-                'shop_context' => [],
-                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
-            ],
-            [
-                'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
-                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
-            ],
-            [
-                'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
-                'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME]['name']],
-            ],
-        ];
-
-        foreach ($testVariants as $testVariant) {
-            yield 'test previews for product on all shops with shop context: ' . var_export($testVariant, true) => [
-                'shop_context' => $testVariant['shop_context'],
-                'filters' => $testVariant['filters'],
-                'shop_previews' => [
-                    0 => array_merge(
-                        static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                        ['shop_name' => static::DEFAULT_SHOP_NAME]
-                    ),
-                    1 => array_merge(
-                        static::ALL_SHOPS_PRODUCT_DATA[static::INDEPENDENT_SHOP_NAME],
-                        ['shop_name' => static::INDEPENDENT_SHOP_NAME]
-                    ),
-                    2 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
-                        ['shop_name' => static::SHARED_SHOP_NAME, 'quantity' => 42]
-                    ),
-                    3 => array_merge(
-                        static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
-                        ['shop_name' => static::SECOND_SHARED_SHOP_NAME, 'quantity' => 42]
-                    ),
-                ],
-            ];
-        }
-
-        $testVariants = [
-            [
-                'shop_context' => [],
-                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
-            ],
-            [
-                'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
-                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
-            ],
-            [
-                'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
-                'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME]['name']],
+        yield 'test previews for product on all shops with all shops context' => [
+            'shop_context' => [],
+            'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                    ['shop_name' => static::DEFAULT_SHOP_NAME]
+                ),
+                1 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::INDEPENDENT_SHOP_NAME],
+                    ['shop_name' => static::INDEPENDENT_SHOP_NAME]
+                ),
+                2 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                    ['shop_name' => static::SHARED_SHOP_NAME, 'quantity' => 42]
+                ),
+                3 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                    ['shop_name' => static::SECOND_SHARED_SHOP_NAME, 'quantity' => 42]
+                ),
             ],
         ];
 
-        foreach ($testVariants as $testVariant) {
-            yield 'test previews for partial product with shop context: ' . var_export($testVariant, true) => [
-                'shop_context' => $testVariant['shop_context'],
-                'filters' => $testVariant['filters'],
-                'shop_previews' => [
-                    0 => array_merge(
-                        static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
-                        ['shop_name' => static::DEFAULT_SHOP_NAME]
-                    ),
-                    1 => array_merge(
-                        static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
-                        ['shop_name' => static::SECOND_SHARED_SHOP_NAME]
-                    ),
-                ],
-            ];
-        }
+        yield 'test previews for product on all shops with default shop group context' => [
+            'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
+            'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                    ['shop_name' => static::DEFAULT_SHOP_NAME]
+                ),
+                1 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::INDEPENDENT_SHOP_NAME],
+                    ['shop_name' => static::INDEPENDENT_SHOP_NAME]
+                ),
+            ],
+        ];
+
+        yield 'test previews for product on all shops with second shop group context' => [
+            'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
+            'filters' => ['product[name]' => static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(static::ALL_SHOPS_PRODUCT_DATA[static::SHARED_SHOP_NAME],
+                    ['shop_name' => static::SHARED_SHOP_NAME, 'quantity' => 42]
+                ),
+                1 => array_merge(
+                    static::ALL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                    ['shop_name' => static::SECOND_SHARED_SHOP_NAME, 'quantity' => 42]
+                ),
+            ],
+        ];
+
+        yield 'test previews for partial product with all shop contexts' => [
+            'shop_context' => [],
+            'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(
+                    static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                    ['shop_name' => static::DEFAULT_SHOP_NAME]
+                ),
+                1 => array_merge(
+                    static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                    ['shop_name' => static::SECOND_SHARED_SHOP_NAME]
+                ),
+            ],
+        ];
+
+        yield 'test previews for partial product with default group shop context' => [
+            'shop_context' => ['group_shop_name' => static::DEFAULT_SHOP_GROUP],
+            'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(
+                    static::PARTIAL_SHOPS_PRODUCT_DATA[static::DEFAULT_SHOP_NAME],
+                    ['shop_name' => static::DEFAULT_SHOP_NAME]
+                ),
+            ],
+        ];
+
+        yield 'test previews for partial product with second shop group context' => [
+            'shop_context' => ['group_shop_name' => static::SHARED_STOCK_SHOP_GROUP],
+            'filters' => ['product[name]' => static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME]['name']],
+            'shop_previews' => [
+                0 => array_merge(
+                    static::PARTIAL_SHOPS_PRODUCT_DATA[static::SECOND_SHARED_SHOP_NAME],
+                    ['shop_name' => static::SECOND_SHARED_SHOP_NAME]
+                ),
+            ],
+        ];
     }
 
     /**

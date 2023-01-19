@@ -24,18 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+namespace PrestaShop\PrestaShop\Core\Shop;
 
-/**
- * @deprecated since 8.1 and will be removed in next major version.
- * Interface for service that set product to be enabled or disabled
- */
-interface UpdateProductStatusHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+
+interface ShopConstraintContextInterface
 {
     /**
-     * @param UpdateProductStatusCommand $command
+     * Returns the shop constraint for the current context.
+     *
+     * @return ShopConstraint
      */
-    public function handle(UpdateProductStatusCommand $command);
+    public function getShopConstraint(): ShopConstraint;
 }

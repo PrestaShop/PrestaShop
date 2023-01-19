@@ -429,6 +429,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater:
     arguments:
+      - '@PrestaShop\PrestaShop\Adapter\ContextStateManager'
       - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository:

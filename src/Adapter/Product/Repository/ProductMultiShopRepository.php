@@ -48,9 +48,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopGroupAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -152,7 +153,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetch();
+        $result = $qb->execute()->fetchAssociative();
         if (empty($result['id_shop_default'])) {
             throw new ProductNotFoundException(sprintf(
                 'Could not find Product with id %d',
@@ -161,6 +162,62 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return new ShopId((int) $result['id_shop_default']);
+    }
+
+    /**
+     * Returns the default shop of a product among a group, if the product's default shop is in the group it will
+     * naturally be returned. In the other case the first shop associated to the product in the group is returned.
+     *
+     * @param ProductId $productId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId
+     */
+    public function getProductDefaultShopIdForGroup(ProductId $productId, ShopGroupId $shopGroupId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('p.id_shop_default, s.id_shop')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->innerJoin(
+                'p',
+                $this->dbPrefix . 'product_shop',
+                'ps',
+                'ps.id_product = p.id_product'
+            )
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = ps.id_shop'
+            )
+            ->where('p.id_product = :productId')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->addOrderBy('s.id_shop', 'ASC')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAllAssociative();
+        if (empty($result)) {
+            throw new ShopGroupAssociationNotFound(sprintf(
+                'Could not find association between Product %d and Shop group %d',
+                $productId->getValue(),
+                $shopGroupId->getValue()
+            ));
+        }
+
+        // By default, the first shop from the group is considered the default one
+        $defaultShopId = (int) $result[0]['id_shop'];
+        foreach ($result as $productShop) {
+            // If one of the shops from the group is the actual product's default shop it takes priority
+            if ((int) $productShop['id_shop_default'] === (int) $productShop['id_shop']) {
+                $defaultShopId = (int) $productShop['id_shop_default'];
+                break;
+            }
+        }
+
+        return new ShopId($defaultShopId);
     }
 
     /**
@@ -174,7 +231,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
     {
         if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+            return $this->getProductByShopGroup($productId, $shopConstraint->getShopGroupId());
         }
 
         if ($shopConstraint->forAllShops()) {
@@ -225,10 +282,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
     {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
         $this->validateProduct($product, $propertiesToUpdate);
         $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
 
@@ -298,10 +351,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function update(Product $product, ShopConstraint $shopConstraint, int $errorCode): void
     {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
         $this->validateProduct($product);
         $this->updateObjectModelForShops(
             $product,
@@ -326,17 +375,38 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             ->setParameter('productId', $productId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
+    }
 
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
+    /**
+     * @param ProductId $productId
+     * @param ShopGroupId $shopGroupId
+     *
+     * @return ShopId[]
+     */
+    public function getAssociatedShopIdsFromGroup(ProductId $productId, ShopGroupId $shopGroupId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ps.id_shop')
+            ->from($this->dbPrefix . 'product_shop', 'ps')
+            ->innerJoin(
+                'ps',
+                $this->dbPrefix . 'shop',
+                's',
+                's.id_shop = ps.id_shop'
+            )
+            ->where('ps.id_product = :productId')
+            ->andWhere('s.id_shop_group = :shopGroupId')
+            ->setParameter('shopGroupId', $shopGroupId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
 
-        return $shops;
+        return array_map(static function (array $shop) {
+            return new ShopId((int) $shop['id_shop']);
+        }, $qb->execute()->fetchAllAssociative());
     }
 
     /**
@@ -492,6 +562,13 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         return $this->getProductByShopId($productId, $defaultShopId);
     }
 
+    private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product
+    {
+        $groupDefaultShopId = $this->getProductDefaultShopIdForGroup($productId, $shopGroupId);
+
+        return $this->getProductByShopId($productId, $groupDefaultShopId);
+    }
+
     /**
      * @param ProductId $productId
      * @param ShopId $shopId
@@ -525,7 +602,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     public function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+            return $this->getAssociatedShopIdsFromGroup($productId, $shopConstraint->getShopGroupId());
         }
 
         if ($shopConstraint->forAllShops()) {

@@ -26,26 +26,38 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
- * @todo: remove this class when UpdateProductCommand is fully integrated
- *        because status in a form will be handled by that command and built in UpdateProductCommandsBuilder
+ * This checker is used in multishop view, the preview action should not be displayed for products
+ * associated to multiple shops. If there is only one it's ok though.
  */
-class ProductStatusCommandsBuilder implements ProductCommandsBuilderInterface
+class ProductMultiShopPreviewAccessibilityChecker implements AccessibilityCheckerInterface
 {
     /**
-     * {@inheritDoc}
+     * @var MultistoreContextCheckerInterface
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    private $multiStoreContext;
+
+    public function __construct(
+        MultistoreContextCheckerInterface $multiStoreContext
+    ) {
+        $this->multiStoreContext = $multiStoreContext;
+    }
+
+    /**
+     * @param array{associated_shops_ids?: array<int>} $record
+     *
+     * @return bool
+     */
+    public function isGranted(array $record)
     {
-        if (!isset($formData['header']['active'])) {
-            return [];
+        if ($this->multiStoreContext->isSingleShopContext()) {
+            return true;
         }
 
-        return [new UpdateProductStatusCommand($productId->getValue(), (bool) $formData['header']['active'])];
+        return empty($record['associated_shops_ids']) || count($record['associated_shops_ids']) === 1;
     }
 }

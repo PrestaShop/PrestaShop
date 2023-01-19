@@ -24,18 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
 /**
- * @deprecated since 8.1 and will be removed in next major version.
- * Interface for service that set product to be enabled or disabled
+ * Thrown when a shop group association is checked but is nonexistent.
  */
-interface UpdateProductStatusHandlerInterface
+class ShopGroupAssociationNotFound extends ShopException
 {
-    /**
-     * @param UpdateProductStatusCommand $command
-     */
-    public function handle(UpdateProductStatusCommand $command);
 }

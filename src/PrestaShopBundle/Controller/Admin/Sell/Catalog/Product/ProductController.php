@@ -37,8 +37,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
@@ -48,9 +48,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
@@ -238,15 +240,18 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param ProductFilters $filters
      * @param int $productId
+     * @param int|null $shopGroupId
      *
      * @return Response
      */
-    public function productShopPreviewsAction(ProductFilters $filters, int $productId): Response
+    public function productShopPreviewsAction(ProductFilters $filters, int $productId, ?int $shopGroupId): Response
     {
+        $shopConstraint = !empty($shopGroupId) ? ShopConstraint::shopGroup($shopGroupId) : ShopConstraint::allShops();
         $gridFactory = $this->get('prestashop.core.grid.factory.product.shops');
         $filters = new ProductFilters(
-            ShopConstraint::allShops(),
+            $shopConstraint,
             [
                 'filters' => [
                     'id_product' => [
@@ -289,14 +294,25 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function previewAction(int $productId): RedirectResponse
+    public function previewAction(int $productId, ?int $shopId): RedirectResponse
     {
-        /** @var bool $isEnabled */
-        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+        $shopConstraint = !empty($shopId) ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
+
+        if (null === $shopId) {
+            /** @var ProductMultiShopRepository $productRepository */
+            $productRepository = $this->get(ProductMultiShopRepository::class);
+            $shopId = $productRepository->getProductDefaultShopId(new ProductId($productId))->getValue();
+        }
 
         /** @var ProductPreviewProvider $previewUrlProvider */
         $previewUrlProvider = $this->get('prestashop.adapter.shop.url.product_preview_provider');
-        $previewUrl = $previewUrlProvider->getUrl($productId, $isEnabled);
+        $previewUrl = $previewUrlProvider->getUrl($productId, $productForEditing->isActive(), $shopId);
 
         return $this->redirect($previewUrl);
     }
@@ -455,15 +471,65 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
      *
-     * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function deleteAction(Request $request, int $productId): Response
+    public function deleteAction(int $productId): Response
     {
         try {
             $this->getCommandBus()->handle(new DeleteProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $productId
+     * @param int $shopId
+     *
+     * @return Response
+     */
+    public function deleteFromShopAction(int $productId, int $shopId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, [$shopId]));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
+     * @param int $productId
+     * @param int $shopGroupId
+     *
+     * @return Response
+     */
+    public function deleteFromShopGroupAction(int $productId, int $shopGroupId): Response
+    {
+        try {
+            /** @var ProductMultiShopRepository $productRepository */
+            $productRepository = $this->get(ProductMultiShopRepository::class);
+            $productShopIds = $productRepository->getShopIdsByConstraint(new ProductId($productId), ShopConstraint::shopGroup($shopGroupId));
+            $this->getCommandBus()->handle(new DeleteProductFromShopsCommand($productId, array_map(static function (ShopId $shopId): int {
+                return $shopId->getValue();
+            }, $productShopIds)));
             $this->addFlash(
                 'success',
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
@@ -504,28 +570,26 @@ class ProductController extends FrameworkBundleAdminController
      * Toggles product status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
-     * @DemoRestricted(redirectRoute="admin_products_v2_index")
      *
      * @param int $productId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function toggleStatusAction(int $productId): JsonResponse
+    public function toggleStatusAction(int $productId, ?int $shopId): JsonResponse
     {
-        if ($this->isDemoModeEnabled()) {
-            return $this->json([
-                'status' => false,
-                'message' => $this->getDemoModeErrorMessage(),
-            ]);
-        }
-
-        /** @var bool $isEnabled */
-        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+        $shopConstraint = !empty($shopId) ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+        /** @var ProductForEditing $productForEditing */
+        $productForEditing = $this->getQueryBus()->handle(new GetProductForEditing(
+            $productId,
+            $shopConstraint,
+            $this->getContextLangId()
+        ));
 
         try {
-            $this->getCommandBus()->handle(
-                new UpdateProductStatusCommand((int) $productId, !$isEnabled)
-            );
+            $command = new UpdateProductCommand($productId, $shopConstraint);
+            $command->setActive(!$productForEditing->isActive());
+            $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
             return $this->json([
                 'status' => false,
@@ -537,6 +601,36 @@ class ProductController extends FrameworkBundleAdminController
             'status' => true,
             'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
         ]);
+    }
+
+    /**
+     * Enable product status and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     * @param int|null $shopGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function enableAction(int $productId, ?int $shopGroupId): RedirectResponse
+    {
+        return $this->updateProductStatus($productId, true, $shopGroupId);
+    }
+
+    /**
+     * Disable product status and redirect to product list.
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     * @param int|null $shopGroupId
+     *
+     * @return RedirectResponse
+     */
+    public function disableAction(int $productId, ?int $shopGroupId): RedirectResponse
+    {
+        return $this->updateProductStatus($productId, false, $shopGroupId);
     }
 
     /**
@@ -915,6 +1009,30 @@ class ProductController extends FrameworkBundleAdminController
             'productShopsForm' => $productShopsForm->createView(),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
         ]);
+    }
+
+    /**
+     * Helper private method to update a product's status.
+     *
+     * @param int $productId
+     * @param bool $isEnabled
+     * @param int|null $shopGroupId
+     *
+     * @return RedirectResponse
+     */
+    private function updateProductStatus(int $productId, bool $isEnabled, ?int $shopGroupId): RedirectResponse
+    {
+        try {
+            $shopConstraint = !empty($shopGroupId) ? ShopConstraint::shopGroup($shopGroupId) : ShopConstraint::allShops();
+            $command = new UpdateProductCommand($productId, $shopConstraint);
+            $command->setActive($isEnabled);
+            $this->getCommandBus()->handle($command);
+            $this->addFlash('success', $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'));
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
     }
 
     /**

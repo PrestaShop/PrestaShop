@@ -42,7 +42,8 @@ trait DeleteActionTrait
         string $deleteRouteParamField,
         string $method = 'POST',
         array $extraRouteParams = [],
-        array $options = []
+        array $options = [],
+        string $actionLabel = null
     ): RowActionInterface {
         $options = array_merge(
             [
@@ -67,7 +68,7 @@ trait DeleteActionTrait
         ));
 
         return (new SubmitRowAction('delete'))
-            ->setName($this->trans('Delete', [], 'Admin.Actions'))
+            ->setName($actionLabel ?? $this->trans('Delete', [], 'Admin.Actions'))
             ->setIcon('delete')
             ->setOptions($options)
         ;

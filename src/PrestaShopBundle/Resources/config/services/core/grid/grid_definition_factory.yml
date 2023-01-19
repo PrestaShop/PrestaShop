@@ -300,17 +300,15 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
       - '@prestashop.adapter.shop.context'
       - '@form.factory'
+      - '@PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\ProductMultiShopPreviewAccessibilityChecker'
     public: true
 
   prestashop.core.grid.definition.factory.product.shops:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductShopsGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-      - '@prestashop.adapter.shop.context'
-      - '@form.factory'
+    parent: 'prestashop.core.grid.definition.factory.product'
     public: true
 
   prestashop.core.grid.definition.factory.product_light:

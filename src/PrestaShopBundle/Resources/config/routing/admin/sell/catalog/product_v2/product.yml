@@ -22,7 +22,7 @@ admin_products_v2_light_list:
     _legacy_controller: AdminProducts
 
 admin_products_v2_preview:
-  path: /{productId}/preview
+  path: /{productId}/preview/{shopId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
@@ -30,6 +30,7 @@ admin_products_v2_preview:
     _legacy_link: AdminProducts:preview
     _legacy_parameters:
       id_product: productId
+    shopId: null
   requirements:
     productId: \d+
 
@@ -55,13 +56,15 @@ admin_products_grid_category_filter:
     _legacy_controller: AdminProducts
 
 admin_products_grid_shop_previews:
-  path: /shop_previews/{productId}
+  path: /shop_previews/{productId}/{shopGroupId}
   methods: [ GET ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::productShopPreviewsAction
     _legacy_controller: AdminProducts
+    shopGroupId: null
   requirements:
     productId: \d+
+    shopGroupId: \d+
 
 admin_products_v2_create:
   path: /create
@@ -126,6 +129,26 @@ admin_products_v2_delete:
   requirements:
     productId: \d+
 
+admin_products_v2_delete_from_shop_group:
+  path: /{productId}/delete_from_shop_group/{shopGroupId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopGroupAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_v2_delete_from_shop:
+  path: /{productId}/delete_from_shop/{shopId}
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteFromShopAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+
+
 admin_products_v2_duplicate:
   path: /{productId}/duplicate
   methods: [ POST ]
@@ -140,7 +163,7 @@ admin_products_v2_duplicate:
     productId: \d+
 
 admin_products_v2_toggle_status:
-  path: /{productId}/toggle_status
+  path: /{productId}/toggle_status/{shopId}
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
@@ -149,8 +172,31 @@ admin_products_v2_toggle_status:
       - AdminProducts:statusproduct
     _legacy_parameters:
       id_product: productId
+    shopId: null
   requirements:
     productId: \d+
+
+admin_products_v2_enable:
+  path: /{productId}/enable/{shopGroupId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::enableAction
+    _legacy_controller: AdminProducts
+    shopGroupId: null
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
+
+admin_products_v2_disable:
+  path: /{productId}/disable/{shopGroupId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::disableAction
+    _legacy_controller: AdminProducts
+    shopGroupId: null
+  requirements:
+    productId: \d+
+    shopGroupId: \d+
 
 admin_products_v2_update_position:
   path: /update_position

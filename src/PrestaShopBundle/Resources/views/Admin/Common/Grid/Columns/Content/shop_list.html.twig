@@ -28,23 +28,33 @@
 {% set shops = record[column.options.field] %}
 {% set productId = record[column.options.product_id_field] %}
 {% set allShops = shops|join(', ') %}
+
+{% set routeParams = {productId: productId} %}
+{% if column.options.shop_group_id is not null %}
+  {% set routeParams = routeParams|merge({shopGroupId: column.options.shop_group_id}) %}
+{% endif %}
+
 <span class="product-shop-list" title="{{ allShops }}" data-shop-ids="{{ shopsIds|join(',') }}">
-  {% set firstShop = shops[0] %}
-  <strong>{{ firstShop }}</strong>
+  <div class="product-shop-list-names">
+    {% set firstShop = shops[0] %}
+    <strong>{{ firstShop }}</strong>
+    {%- if shops|length > 1 -%}
+      ,
+      {% set otherShops = shops|slice(1, shops|length)|join(', ') %}
+      {# if max_displayed_characters is set and is lower that the whole text length the rest of the shops are truncated #}
+      {% if column.options.max_displayed_characters > 0 and allShops|length > column.options.max_displayed_characters %}
+        {{ otherShops|slice(0, column.options.max_displayed_characters - firstShop|length) }}&mldr;
+      {% else %}
+        {{ otherShops }}
+      {% endif %}
+    {%- endif -%}
+  </div>
   {%- if shops|length > 1 -%}
-    ,
-    {% set otherShops = shops|slice(1, shops|length)|join(', ') %}
-    {# if max_displayed_characters is set and is lower that the whole text length the rest of the shops are truncated #}
-    {% if column.options.max_displayed_characters > 0 and allShops|length > column.options.max_displayed_characters %}
-      {{ otherShops|slice(0, column.options.max_displayed_characters - firstShop|length) }}&mldr;
-    {% else %}
-      {{ otherShops }}
-    {% endif %}
-    <span
+    <div
       class="product-shop-details-toggle"
       data-product-id="{{ productId }}"
-      data-shop-previews-url="{{ path('admin_products_grid_shop_previews', {productId: productId}) }}"
+      data-shop-previews-url="{{ path('admin_products_grid_shop_previews', routeParams) }}"
     >
-    </span>
-  {%- endif -%}
+    </div>
+  {% endif %}
 </span>
