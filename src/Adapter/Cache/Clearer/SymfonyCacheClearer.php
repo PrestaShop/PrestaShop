@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Tools;
 
 /**
@@ -57,9 +58,15 @@ final class SymfonyCacheClearer implements CacheClearerInterface
      */
     private $warmupFolders = [];
 
-    public function __construct()
+    /**
+     * @var ResetInterface
+     */
+    private $serviceResetter;
+
+    public function __construct(ResetInterface $serviceResetter)
     {
         $this->fs = new Filesystem();
+        $this->serviceResetter = $serviceResetter;
     }
 
     /**
@@ -91,6 +98,7 @@ final class SymfonyCacheClearer implements CacheClearerInterface
     {
         //$warmupDir = $this->getNewWarmupCacheDir($kernel);
         //$this->warmupFolders[] = $warmupDir;
+        $this->serviceResetter->reset();
         $kernel->reboot($kernel->getCacheDir());
     }
 

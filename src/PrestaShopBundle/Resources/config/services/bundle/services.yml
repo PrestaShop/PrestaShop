@@ -86,6 +86,9 @@ services:
     calls:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
       - [ 'setUserProvider', [ "@=service('prestashop.user_provider')" ] ]
+    tags:
+      - name: kernel.reset
+        method: reset
 
   prestashop.multistore.customized_configuration_checker:
     class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker

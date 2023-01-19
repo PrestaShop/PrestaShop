@@ -30,13 +30,14 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * We extends Symfony Router in order to add a token to each url.
  *
  * This is done for Security purposes.
  */
-class Router extends BaseRouter
+class Router extends BaseRouter implements ResetInterface
 {
     /**
      * @var UserProvider
@@ -81,6 +82,11 @@ class Router extends BaseRouter
     public function setUserProvider(UserProvider $userProvider)
     {
         $this->userProvider = $userProvider;
+    }
+
+    public function reset()
+    {
+        $this->collection = null;
     }
 
     public static function generateTokenizedUrl($url, $token)
