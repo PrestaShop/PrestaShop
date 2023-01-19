@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
  * Defines contract for AddApplicationHandler
@@ -37,7 +37,7 @@ interface AddApplicationHandlerInterface
     /**
      * @param AddApplicationCommand $command
      *
-     * @return ApplicationIdInterface
+     * @return ApplicationId
      */
-    public function handle(AddApplicationCommand $command): ApplicationIdInterface;
+    public function handle(AddApplicationCommand $command): ApplicationId;
 }

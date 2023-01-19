@@ -177,7 +177,7 @@ class ApplicationController extends FrameworkBundleAdminController
                     'An application already exists with this name:',
                     'Admin.Notifications.Error'
                 ),
-                $e instanceof DuplicateApplicationNameException ? $e->getName() : ''
+                $e instanceof DuplicateApplicationNameException ? $e->getDuplicateActionName() : ''
             ),
             ApplicationConstraintException::class => [
                 CustomerConstraintException::INVALID_ID => $this->trans(

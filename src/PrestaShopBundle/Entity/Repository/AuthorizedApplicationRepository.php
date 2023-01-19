@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
 class AuthorizedApplicationRepository extends EntityRepository implements AuthorizedApplicationRepositoryInterface
@@ -55,7 +55,7 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
     /**
      * {@inheritdoc}
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication
+    public function getById(ApplicationId $applicationId): ?AuthorizedApplication
     {
         return $this->find($applicationId->getValue());
     }

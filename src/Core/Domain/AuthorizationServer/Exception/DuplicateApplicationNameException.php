@@ -34,16 +34,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception;
 class DuplicateApplicationNameException extends ApplicationException
 {
     /** @var string */
-    private $name;
+    private $duplicateApplicationName;
 
-    public function __construct(string $name, $message = '', $code = 0, \Throwable $previous = null)
+    public function __construct(string $duplicateApplicationName, $message = '', $code = 0, \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->name = $name;
+        $this->duplicateApplicationName = $duplicateApplicationName;
     }
 
-    public function getName(): string
+    public function getDuplicateActionName(): string
     {
-        return $this->name;
+        return $this->duplicateApplicationName;
     }
 }

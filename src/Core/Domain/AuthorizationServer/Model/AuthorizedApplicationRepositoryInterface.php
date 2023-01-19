@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
 interface AuthorizedApplicationRepositoryInterface
@@ -48,11 +48,11 @@ interface AuthorizedApplicationRepositoryInterface
     public function update(AuthorizedApplication $application): void;
 
     /**
-     * @param ApplicationIdInterface $applicationId
+     * @param ApplicationId $applicationId
      *
      * @return AuthorizedApplication|null
      */
-    public function getById(ApplicationIdInterface $applicationId): ?AuthorizedApplication;
+    public function getById(ApplicationId $applicationId): ?AuthorizedApplication;
 
     /**
      * @param string $name

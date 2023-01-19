@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
 
 /**
  * Gets application for editing in Back Office
@@ -38,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 class GetApplicationForEditing
 {
     /**
-     * @var ApplicationIdInterface
+     * @var ApplicationId
      */
     private $applicationId;
 
@@ -53,9 +52,9 @@ class GetApplicationForEditing
     }
 
     /**
-     * @return ApplicationIdInterface
+     * @return ApplicationId
      */
-    public function getApplicationId(): ApplicationIdInterface
+    public function getApplicationId(): ApplicationId
     {
         return $this->applicationId;
     }

@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationN
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Query\GetApplicationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult\EditableApplication;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
@@ -51,7 +51,7 @@ class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
         $data = $node->getRowsHash();
         $command = new AddApplicationCommand($data['name'], $data['description']);
 
-        /** @var ApplicationIdInterface $applicationId */
+        /** @var ApplicationId $applicationId */
         $applicationId = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($reference, $applicationId);
@@ -75,7 +75,7 @@ class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
     public function updateAuthorizedApplication(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
-        /** @var ApplicationIdInterface $applicationId */
+        /** @var ApplicationId $applicationId */
         $applicationId = SharedStorage::getStorage()->get($reference);
         $command = new EditApplicationCommand($applicationId->getValue());
         $command->setName($data['name']);
@@ -132,7 +132,7 @@ class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
     public function assertAuthorizedApplicationName(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
-        /** @var ApplicationIdInterface $applicationId */
+        /** @var ApplicationId $applicationId */
         $applicationId = SharedStorage::getStorage()->get($reference);
         $expectedEditableApplication = new EditableApplication($applicationId, $data['name'], $data['description']);
         $editableApplication = $this->getQueryBus()->handle(new GetApplicationForEditing($applicationId->getValue()));

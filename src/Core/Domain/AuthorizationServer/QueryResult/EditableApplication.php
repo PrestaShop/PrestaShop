@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
  * Transfers application data for editing
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\Applicatio
 class EditableApplication
 {
     /**
-     * @var ApplicationIdInterface
+     * @var ApplicationId
      */
     private $applicationId;
 
@@ -51,12 +51,12 @@ class EditableApplication
     private $description;
 
     /**
-     * @param ApplicationIdInterface $applicationId
+     * @param ApplicationId $applicationId
      * @param string $name
      * @param string $description
      */
     public function __construct(
-        ApplicationIdInterface $applicationId,
+        ApplicationId $applicationId,
         string $name,
         string $description
     ) {
@@ -66,9 +66,9 @@ class EditableApplication
     }
 
     /**
-     * @return ApplicationIdInterface
+     * @return ApplicationId
      */
-    public function getApplicationId(): ApplicationIdInterface
+    public function getApplicationId(): ApplicationId
     {
         return $this->applicationId;
     }

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\EditApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 
 /**
  * Handles submitted application form data
@@ -58,7 +58,7 @@ final class ApplicationFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data): int
     {
-        /** @var ApplicationIdInterface $applicationId */
+        /** @var ApplicationId $applicationId */
         $applicationId = $this->bus->handle(new AddApplicationCommand(
             $data['name'],
             $data['description'],

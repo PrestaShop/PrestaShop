@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationC
 /**
  * Provides application id
  */
-class ApplicationId implements ApplicationIdInterface
+class ApplicationId
 {
     /**
      * @var int

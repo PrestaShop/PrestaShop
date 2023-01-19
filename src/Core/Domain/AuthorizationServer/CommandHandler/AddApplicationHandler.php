@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationC
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
-use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationIdInterface;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
 /**
@@ -56,7 +55,7 @@ class AddApplicationHandler implements AddApplicationHandlerInterface
      *
      * @throws ApplicationConstraintException|DuplicateApplicationNameException
      */
-    public function handle(AddApplicationCommand $command): ApplicationIdInterface
+    public function handle(AddApplicationCommand $command): ApplicationId
     {
         $application = new AuthorizedApplication();
         $application->setName($command->getName());
