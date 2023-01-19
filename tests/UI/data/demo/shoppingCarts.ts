@@ -1,5 +1,5 @@
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import ShoppingCartData from '@data/faker/shoppingCart';
 
 export default [

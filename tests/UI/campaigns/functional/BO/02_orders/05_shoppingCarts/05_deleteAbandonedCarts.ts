@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import Order from '@data/types/order';
 

@@ -12,7 +12,7 @@ import moduleManagerPage from '@pages/BO/modules/moduleManager';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Modules from '@data/demo/modules';
 
 import {expect} from 'chai';

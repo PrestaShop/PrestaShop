@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import {Orders} from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 

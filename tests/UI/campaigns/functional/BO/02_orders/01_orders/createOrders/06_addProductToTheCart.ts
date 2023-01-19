@@ -22,7 +22,7 @@ import addOrderPage from '@pages/BO/orders/add';
 
 // Import data
 import Currencies from '@data/demo/currencies';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 import ProductData from '@data/faker/product';

@@ -17,7 +17,7 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Order from '@data/types/order';
 import OrderStatuses from '@data/demo/orderStatuses';

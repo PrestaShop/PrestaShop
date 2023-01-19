@@ -19,7 +19,7 @@ import newAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

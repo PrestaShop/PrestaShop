@@ -1,6 +1,6 @@
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import type CarrierData from '@data/faker/carrier';
 import type CustomerData from '@data/faker/customer';
 import ShoppingCartCreator from '@data/types/shoppingCart';

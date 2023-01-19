@@ -16,7 +16,7 @@ import cartPage from '@pages/FO/cart';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

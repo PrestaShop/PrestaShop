@@ -21,7 +21,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import contactUsPage from '@pages/FO/contactUs';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
 import type ContactUsData from '@data/types/contactUs';

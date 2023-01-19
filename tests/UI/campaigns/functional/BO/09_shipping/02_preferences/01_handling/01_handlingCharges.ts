@@ -23,7 +23,7 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Groups from '@data/demo/groups';
 import CarrierData from '@data/faker/carrier';
 

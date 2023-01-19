@@ -11,7 +11,7 @@ import customersPage from '@pages/BO/customers';
 import dashboardPage from '@pages/BO/dashboard';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

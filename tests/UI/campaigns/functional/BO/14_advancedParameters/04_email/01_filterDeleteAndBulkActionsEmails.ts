@@ -19,7 +19,7 @@ import checkoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Languages from '@data/demo/languages';
 import PaymentMethods from '@data/demo/paymentMethods';
 

@@ -12,7 +12,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import type Order from '@data/types/order';
 

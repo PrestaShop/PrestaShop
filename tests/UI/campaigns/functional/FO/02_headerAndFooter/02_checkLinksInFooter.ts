@@ -33,7 +33,7 @@ import storesPage from '@pages/FO/stores';
 import termsAndConditionsOfUsePage from '@pages/FO/termsAndConditionsOfUse';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import CustomerData from '@data/faker/customer';
 
 import {expect} from 'chai';

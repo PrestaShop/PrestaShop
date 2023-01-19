@@ -20,7 +20,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 

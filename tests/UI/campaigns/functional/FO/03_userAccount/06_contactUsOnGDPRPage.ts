@@ -18,7 +18,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import gdprPersonalDataPage from '@pages/FO/myAccount/gdprPersonalData';
 
 // Import demo data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import {Orders} from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 

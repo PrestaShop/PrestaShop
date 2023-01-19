@@ -17,7 +17,7 @@ import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foAddAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';

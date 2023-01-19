@@ -18,7 +18,7 @@ import foMyAccountPage from '@pages/FO/myAccount';
 import foAccountIdentityPage from '@pages/FO/myAccount/identity';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import ModuleData from '@data/faker/module';
 
 import {expect} from 'chai';
