@@ -69,7 +69,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     ],
     paymentMethod: PaymentMethods.wirePayment,
   });
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
 
   // Pre-condition: Create new customer
@@ -302,7 +302,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, orderStatus);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);

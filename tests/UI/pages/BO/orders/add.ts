@@ -1202,12 +1202,12 @@ class AddOrder extends BOBasePage {
   /**
    * Set summary block
    * @param page {Page} Browser tab
-   * @param paymentMethodName {string} Payment method to choose
+   * @param paymentMethodModuleName {string} Payment method to choose
    * @param orderStatus {OrderStatusData} Order status to choose
    * @returns {Promise<void>}
    */
-  async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus: OrderStatusData): Promise<void> {
-    await this.setPaymentMethod(page, paymentMethodName);
+  async setSummaryAndCreateOrder(page: Page, paymentMethodModuleName: string, orderStatus: OrderStatusData): Promise<void> {
+    await this.setPaymentMethod(page, paymentMethodModuleName);
     await this.setOrderStatus(page, orderStatus);
     await this.clickOnCreateOrderButton(page);
   }
@@ -1245,7 +1245,7 @@ class AddOrder extends BOBasePage {
     await this.setDeliveryOption(page, orderToMake.deliveryOption.name, orderToMake.deliveryOption.freeShipping);
 
     // Choose payment method
-    await this.setPaymentMethod(page, orderToMake.paymentMethod.name);
+    await this.setPaymentMethod(page, orderToMake.paymentMethod.moduleName);
 
     // Set order status
     await this.setOrderStatus(page, orderToMake.status);

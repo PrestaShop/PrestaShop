@@ -104,7 +104,7 @@ function createOrderByCustomerTest(orderData: OrderData, baseContext: string = '
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.name);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -205,7 +205,7 @@ function createOrderSpecificProductTest(
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.name);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -280,7 +280,7 @@ function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'com
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.name);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

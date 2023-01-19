@@ -58,7 +58,7 @@ export default class EmployeeData {
     this.password = employeeToCreate.password || 'prestashop_demo';
 
     /** @type {string} Default page where employee should access after login */
-    this.defaultPage = employeeToCreate.defaultPage || faker.helpers.arrayElement(Pages);
+    this.defaultPage = employeeToCreate.defaultPage || faker.helpers.arrayElement(Pages.Pages);
 
     /** @type {string} Default BO language for the employee */
     this.language = employeeToCreate.language

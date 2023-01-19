@@ -61,7 +61,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     tax: 'None',
     isRecyclablePackage: false,
   };
-  const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
+  const paymentMethodModuleName: string = PaymentMethods.checkPayment.moduleName;
   const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
   const giftMessage: string = 'Gift message to test';
 
@@ -241,7 +241,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should set a gift message and complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, orderStatus);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethodModuleName, orderStatus);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);

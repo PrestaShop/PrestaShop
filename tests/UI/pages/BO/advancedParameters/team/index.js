@@ -156,7 +156,7 @@ class Employees extends BOBasePage {
         await this.setValue(page, this.employeeFilterInput(filterBy), value);
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.employeeFilterInput(filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.employeeFilterInput(filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing

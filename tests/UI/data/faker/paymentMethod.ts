@@ -21,9 +21,9 @@ export default class PaymentMethodData {
     this.name = valueToCreate.name || faker.word.noun();
 
     /** @type {string} */
-    this.displayName = valueToCreate.name || this.name;
+    this.displayName = valueToCreate.displayName || this.name;
 
     /** @type {string} */
-    this.moduleName = valueToCreate.name || this.name;
+    this.moduleName = valueToCreate.moduleName || this.name;
   }
 }

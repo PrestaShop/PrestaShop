@@ -60,7 +60,7 @@ describe('FO - Account - Order history : Consult order list', async () => {
         quantity: 1,
       },
     ],
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
+    paymentMethod: PaymentMethods.wirePayment,
   };
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
