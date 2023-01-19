@@ -148,7 +148,7 @@ class CategoryControllerCore extends ProductListingFrontController
     public function getLayout()
     {
         if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
-            return 'layouts/layout-full-width.tpl';
+            return $this->context->shop->theme->getLayoutRelativePathForPage('error');
         }
 
         return parent::getLayout();
