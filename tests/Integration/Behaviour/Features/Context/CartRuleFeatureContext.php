@@ -144,6 +144,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->reduction_percent = $percent;
         $cartRule->reduction_amount = $amount;
         $cartRule->name = [Configuration::get('PS_LANG_DEFAULT') => $cartRuleName];
+        $cartRule->description = $cartRuleName;
         $cartRule->priority = $priority;
         $cartRule->quantity = $cartRuleQuantity;
         $cartRule->quantity_per_user = $cartRuleQuantityPerUser;

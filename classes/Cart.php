@@ -508,7 +508,7 @@ class CartCore extends ObjectModel
             $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
             // Retro compatibility < 1.5.0.2
             $row['id_discount'] = $row['id_cart_rule'];
-            $row['description'] = $row['name'];
+            $row['description'] = $row['obj']->description;
         }
 
         return $result;
