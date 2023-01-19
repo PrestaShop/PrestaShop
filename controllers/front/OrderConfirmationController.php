@@ -39,8 +39,10 @@ class OrderConfirmationControllerCore extends FrontController
     public $id_module;
     public $id_order;
     public $secure_key;
+
     /** @var Order Order object we found by cart ID */
     protected $order;
+
     /** @var Customer Customer object related to the cart */
     protected $customer;
     public $reference; // Deprecated
@@ -297,5 +299,21 @@ class OrderConfirmationControllerCore extends FrontController
         ];
 
         return $breadcrumb;
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @return Customer
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
     }
 }
