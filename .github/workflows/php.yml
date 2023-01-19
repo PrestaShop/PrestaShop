@@ -1,5 +1,16 @@
 name: PHP
-on: [ push, pull_request ]
+on:
+  push:
+    # Do not run after merging a pull request
+    branches-ignore:
+      - 'develop'
+      - '8.0.x'
+      - '1.7.8.x'
+  pull_request:
+    # Do not run when only tests are updated
+    paths-ignore:
+      - 'tests/UI/**'
+
 permissions:
   contents: read
 concurrency:
