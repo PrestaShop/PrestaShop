@@ -11,7 +11,7 @@ import dashboardPage from '@pages/BO/dashboard';
 import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 
 // Import data
-import {ShoppingCarts} from '@data/demo/shoppingCarts';
+import ShoppingCarts from '@data/demo/shoppingCarts';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -129,7 +129,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterCustomer',
           filterType: 'input',
           filterBy: 'c!lastname',
-          filterValue: ShoppingCarts[3].customer,
+          filterValue: ShoppingCarts[3].customer.lastName,
         },
     },
     {
@@ -138,7 +138,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
           testIdentifier: 'filterCarrier',
           filterType: 'input',
           filterBy: 'ca!name',
-          filterValue: ShoppingCarts[0].carrier,
+          filterValue: ShoppingCarts[0].carrier.name,
         },
     },
     {
