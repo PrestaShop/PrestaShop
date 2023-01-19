@@ -33,14 +33,14 @@ class CmsControllerCore extends FrontController
     public $assignCase;
 
     /**
-     * @deprecated Since 8.1, it will be protected on next major.
+     * @deprecated Since 8.1, it will become protected in next major version. Use getCms() method instead.
      *
      * @var CMS|null
      */
     public $cms;
 
     /**
-     * @deprecated Since 8.1, it will be protected on next major.
+     * @deprecated Since 8.1, it will become protected in next major version. Use getCmsCategory() method instead.
      *
      * @var CMSCategory|null
      */
