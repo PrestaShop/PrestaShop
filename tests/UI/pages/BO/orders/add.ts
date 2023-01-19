@@ -8,6 +8,7 @@ import type ProductData from '@data/faker/product';
 import type OrderStatusData from '@data/faker/orderStatus';
 
 import type {Frame, Page} from 'playwright';
+import OrderData from '@data/faker/order';
 
 /**
  * Add order page, contains functions that can be used on create order page
@@ -1205,7 +1206,7 @@ class AddOrder extends BOBasePage {
    * @param orderStatus {OrderStatusData} Order status to choose
    * @returns {Promise<void>}
    */
-  async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus): Promise<void> {
+  async setSummaryAndCreateOrder(page: Page, paymentMethodName: string, orderStatus: OrderStatusData): Promise<void> {
     await this.setPaymentMethod(page, paymentMethodName);
     await this.setOrderStatus(page, orderStatus);
     await this.clickOnCreateOrderButton(page);
@@ -1216,11 +1217,11 @@ class AddOrder extends BOBasePage {
   /**
    * Create order with existing customer
    * @param page {Page} Browser tab
-   * @param orderToMake {object} Order data to create
+   * @param orderToMake {OrderData} Order data to create
    * @param isNewCustomer {boolean} True if the customer is new
    * @returns {Promise<void>}
    */
-  async createOrder(page: Page, orderToMake, isNewCustomer: boolean = false): Promise<void> {
+  async createOrder(page: Page, orderToMake: OrderData, isNewCustomer: boolean = false): Promise<void> {
     // Choose customer
     // If it's a new customer, the creation of customer should be done in test
     // with add customer page
@@ -1234,20 +1235,20 @@ class AddOrder extends BOBasePage {
     // Add products to carts
     for (let i = 0; i < orderToMake.products.length; i++) {
       await this.addProductToCart(
-        page, orderToMake.products[i].value, orderToMake.products[i].value.name, orderToMake.products[i].quantity);
+        page, orderToMake.products[i].product, orderToMake.products[i].product.name, orderToMake.products[i].quantity);
     }
 
     // Choose address
-    await this.chooseAddresses(page, orderToMake.deliveryAddress, orderToMake.invoiceAddress);
+    await this.chooseAddresses(page, orderToMake.deliveryAddress.name, orderToMake.invoiceAddress.name);
 
     // Choose delivery options
     await this.setDeliveryOption(page, orderToMake.deliveryOption.name, orderToMake.deliveryOption.freeShipping);
 
     // Choose payment method
-    await this.setPaymentMethod(page, orderToMake.paymentMethod);
+    await this.setPaymentMethod(page, orderToMake.paymentMethod.name);
 
     // Set order status
-    await this.setOrderStatus(page, orderToMake.orderStatus);
+    await this.setOrderStatus(page, orderToMake.status);
 
     // Create the order
     await this.clickAndWaitForNavigation(page, this.createOrderButton);

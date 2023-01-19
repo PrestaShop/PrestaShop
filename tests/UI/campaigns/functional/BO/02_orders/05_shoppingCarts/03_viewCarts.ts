@@ -22,7 +22,7 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
-import Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -50,11 +50,15 @@ describe('BO - Orders - Shopping carts : View carts', async () => {
   let orderId: string;
 
   const customerData: CustomerData = new CustomerData();
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: customerData,
-    product: Products.demo_1,
-    productQuantity: 1,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+  });
   const addressData: AddressData = new AddressData({
     email: customerData.email,
     country: 'France',

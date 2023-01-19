@@ -1,18 +1,35 @@
-import type Customer from '@data/types/customer';
-import ProductData from '@data/faker/product';
+import type ProductData from '@data/faker/product';
+import type AddressData from '@data/faker/address';
+import type CustomerData from '@data/faker/customer';
+import type PaymentMethodData from '@data/faker/paymentMethod';
+import type OrderStatusData from '@data/faker/orderStatus';
 
-type Order = {
-  reference: string
-  customer: Customer
+type OrderCreator = {
+  id?: number
+  reference?: string
+  newClient?: boolean
+  customer?: CustomerData
+  totalPaid?: number
+  paymentMethod?: PaymentMethodData
+  status?: OrderStatusData
+  delivery?: string
+  deliveryAddress?: AddressData
+  invoiceAddress?: AddressData
+  products?: OrderProduct[]
+  discountPercentValue?: number
+  discountGiftValue?: number
+  totalPrice?: number
+  deliveryOption?: OrderDeliveryOption
+}
+
+type OrderDeliveryOption = {
+  name: string
+  freeShipping: boolean
+}
+
+type OrderProduct = {
   product: ProductData
-  productId: number
-  productQuantity: number
-  paymentMethod: string
-
-  // Discount
-  giftDiscountValue: number
-  percentDiscountValue: number
-  atiPrice: number
+  quantity: number
 }
 
 type OrderHistory = {
@@ -24,4 +41,9 @@ type OrderHistory = {
   invoice: string
 }
 
-export {Order, OrderHistory};
+export {
+  OrderCreator,
+  OrderDeliveryOption,
+  OrderHistory,
+  OrderProduct,
+};

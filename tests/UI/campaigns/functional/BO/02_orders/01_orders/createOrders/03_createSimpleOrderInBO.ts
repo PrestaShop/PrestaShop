@@ -20,7 +20,7 @@ import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -47,25 +47,24 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderToMake: Order = {
+  const orderToMake: OrderData = new OrderData({
     customer: Customers.johnDoe,
     products: [
       {
-        value: Products.demo_5,
+        product: Products.demo_5,
         quantity: 4,
       },
     ],
-    deliveryAddress: 'Mon adresse',
-    invoiceAddress: 'Mon adresse',
-    addressValue: Addresses.second,
+    deliveryAddress: Addresses.second,
+    invoiceAddress: Addresses.second,
     deliveryOption: {
       name: `${Carriers.default.name} - ${Carriers.default.delay}`,
       freeShipping: true,
     },
-    paymentMethod: PaymentMethods.checkPayment.moduleName,
-    orderStatus: OrderStatuses.paymentAccepted,
+    paymentMethod: PaymentMethods.checkPayment,
+    status: OrderStatuses.paymentAccepted,
     totalPrice: (Products.demo_5.priceTaxExcluded * 4) * 1.2, // Price tax included
-  };
+  });
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -117,7 +116,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
       const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
-      await expect(orderStatus).to.equal(orderToMake.orderStatus.name);
+      await expect(orderStatus).to.equal(orderToMake.status.name);
     });
 
     it('should check order total price', async function () {
@@ -132,12 +131,12 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
 
       const shippingAddress = await orderPageCustomerBlock.getShippingAddress(page);
       await expect(shippingAddress)
-        .to.contain(orderToMake.addressValue.firstName)
-        .and.to.contain(orderToMake.addressValue.lastName)
-        .and.to.contain(orderToMake.addressValue.address)
-        .and.to.contain(orderToMake.addressValue.postalCode)
-        .and.to.contain(orderToMake.addressValue.city)
-        .and.to.contain(orderToMake.addressValue.country);
+        .to.contain(orderToMake.deliveryAddress.firstName)
+        .and.to.contain(orderToMake.deliveryAddress.lastName)
+        .and.to.contain(orderToMake.deliveryAddress.address)
+        .and.to.contain(orderToMake.deliveryAddress.postalCode)
+        .and.to.contain(orderToMake.deliveryAddress.city)
+        .and.to.contain(orderToMake.deliveryAddress.country);
     });
 
     it('should check order invoice address', async function () {
@@ -145,12 +144,12 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
 
       const invoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
       await expect(invoiceAddress)
-        .to.contain(orderToMake.addressValue.firstName)
-        .and.to.contain(orderToMake.addressValue.lastName)
-        .and.to.contain(orderToMake.addressValue.address)
-        .and.to.contain(orderToMake.addressValue.postalCode)
-        .and.to.contain(orderToMake.addressValue.city)
-        .and.to.contain(orderToMake.addressValue.country);
+        .to.contain(orderToMake.deliveryAddress.firstName)
+        .and.to.contain(orderToMake.deliveryAddress.lastName)
+        .and.to.contain(orderToMake.deliveryAddress.address)
+        .and.to.contain(orderToMake.deliveryAddress.postalCode)
+        .and.to.contain(orderToMake.deliveryAddress.city)
+        .and.to.contain(orderToMake.deliveryAddress.country);
     });
 
     it('should check products names in cart list', async function () {
@@ -158,7 +157,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
 
       for (let i = 1; i <= orderToMake.products.length; i++) {
         const productName = await orderPageProductsBlock.getProductNameFromTable(page, i);
-        await expect(productName).to.contain(orderToMake.products[i - 1].value.name);
+        await expect(productName).to.contain(orderToMake.products[i - 1].product.name);
       }
     });
   });

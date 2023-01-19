@@ -18,8 +18,8 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -53,12 +53,16 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
     quantity: 20,
   });
   // New order by customer
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product,
-    productQuantity: 3,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product,
+        quantity: 3,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create first product
   createProductTest(product, baseContext);

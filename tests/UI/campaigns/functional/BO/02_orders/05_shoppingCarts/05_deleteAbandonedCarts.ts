@@ -13,7 +13,7 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 // Import data
 import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
-import Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -34,11 +34,15 @@ describe('BO - Orders : Create shopping cart and delete abandoned one', async ()
   let numberOfShoppingCarts: number;
   let numberOfShoppingCartsAfterFilter: number;
 
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product: Products.demo_1,
-    productQuantity: 1,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+  });
 
   // Pre-condition: Create 1 order in FO
   createShoppingCart(orderByCustomerData, `${baseContext}_preTest_1`);

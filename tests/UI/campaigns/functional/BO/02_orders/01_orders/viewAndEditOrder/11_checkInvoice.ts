@@ -28,8 +28,9 @@ import Carriers from '@data/demo/carriers';
 import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import ProductData from '@data/faker/product';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -70,12 +71,16 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Prefix for the new products to simply delete them by bulk actions
   const prefixNewProduct: string = 'TOTEST';
   // First order by customer data
-  const firstOrderByCustomer: Order = {
+  const firstOrderByCustomer: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // Customized product data
   const customizedProduct: ProductData = new ProductData({
     name: `Customized product ${prefixNewProduct}`,
@@ -89,12 +94,16 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     },
   });
   // Second order by customer
-  const secondOrderByCustomer: Order = {
+  const secondOrderByCustomer: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product: customizedProduct,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: customizedProduct,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // Virtual product data
   const virtualProduct: ProductData = new ProductData({
     name: `Virtual product ${prefixNewProduct}`,

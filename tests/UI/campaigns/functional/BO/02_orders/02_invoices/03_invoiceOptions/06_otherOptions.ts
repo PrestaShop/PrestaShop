@@ -17,8 +17,9 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import InvoiceData from '@data/faker/invoice';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,12 +42,16 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
   let filePath: string|null;
 
   const invoiceData: InvoiceData = new InvoiceData({legalFreeText: 'Legal free text'});
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);

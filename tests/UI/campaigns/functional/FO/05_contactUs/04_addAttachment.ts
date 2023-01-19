@@ -18,7 +18,7 @@ import foLoginPage from '@pages/FO/login';
 
 // Import data
 import Customers from '@data/demo/customers';
-import {Orders} from '@data/demo/orders';
+import Orders from '@data/demo/orders';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';
@@ -44,7 +44,7 @@ describe('FO - Contact us : Add attachment', async () => {
     lastName: Customers.johnDoe.lastName,
     subject: 'Customer service',
     emailAddress: Customers.johnDoe.email,
-    reference: Orders.firstOrder.ref,
+    reference: Orders.firstOrder.reference,
   });
 
   // before and after functions

@@ -16,7 +16,8 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,12 +39,16 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
   let filePath: string|null;
 
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-Condition : Create order from FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);

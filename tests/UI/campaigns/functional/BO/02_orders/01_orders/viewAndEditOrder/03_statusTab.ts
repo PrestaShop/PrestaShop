@@ -22,11 +22,12 @@ import Customers from '@data/demo/customers';
 import Employees from '@data/demo/employees';
 import OrderStatuses from '@data/demo/orderStatuses';
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
 import EmployeeData from '@data/faker/employee';
+import OrderData from '@data/faker/order';
 import type MailDevEmail from '@data/types/maildev';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -74,20 +75,28 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     permissionProfile: 'SuperAdmin',
   });
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   // New order by guest data
-  const orderByGuestData: Order = {
+  const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
-    productId: 4,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_5,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);

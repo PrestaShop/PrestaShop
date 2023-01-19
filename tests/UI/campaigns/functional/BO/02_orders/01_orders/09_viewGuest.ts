@@ -14,9 +14,10 @@ import ordersPage from '@pages/BO/orders';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -41,13 +42,17 @@ describe('BO - Orders : View guest from orders page', async () => {
   const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
-  const orderByGuestData: Order = {
+  const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
-    productId: 4,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_5,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order by guest in FO
   createOrderByGuestTest(orderByGuestData, baseContext);

@@ -24,8 +24,8 @@ import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
+import OrderData from '@data/faker/order';
 import OrderStatusData from '@data/faker/orderStatus';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Frame, Page} from 'playwright';
@@ -59,12 +59,16 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     email: newCustomer.email,
     country: 'France',
   });
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: newCustomer,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const paymentMethod: string = PaymentMethods.checkPayment.moduleName;
   const orderStatus: OrderStatusData = OrderStatuses.paymentAccepted;
 

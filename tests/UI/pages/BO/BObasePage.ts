@@ -181,7 +181,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly teamLink: string;
 
-  private readonly databaseLink: string;
+  public readonly databaseLink: string;
 
   private readonly webserviceLink: string;
 

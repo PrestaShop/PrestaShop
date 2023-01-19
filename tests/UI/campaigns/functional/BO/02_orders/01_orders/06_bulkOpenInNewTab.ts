@@ -14,9 +14,10 @@ import orderPageCustomerBlock from '@pages/BO/orders/view/customerBlock';
 
 // Import data
 import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -40,20 +41,28 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   const firstCustomerData: CustomerData = new CustomerData();
   const secondCustomerData: CustomerData = new CustomerData();
   const addressData: AddressData = new AddressData({country: 'France'});
-  const firstOrderByGuestData: Order = {
+  const firstOrderByGuestData: OrderData = new OrderData({
     customer: firstCustomerData,
-    productId: 1,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
-  const secondOrderByGuestData: Order = {
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
+  const secondOrderByGuestData: OrderData = new OrderData({
     customer: secondCustomerData,
-    productId: 1,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create first order in FO
   createOrderByGuestTest(firstOrderByGuestData, `${baseContext}_preTest_1`);
