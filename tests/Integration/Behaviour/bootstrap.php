@@ -31,7 +31,7 @@
 $rootDirectory = __DIR__ . '/../../../';
 
 define('_PS_IN_TEST_', true);
-define('_PS_MODULE_DIR_', __DIR__ . '/../..' . '/Resources/modules/');
+define('_PS_MODULE_DIR_', __DIR__ . '/../../Resources/modules/');
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
