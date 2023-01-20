@@ -76,7 +76,7 @@ class ButtonCollectionType extends AbstractType
         $view->vars['button_groups'] = $buttonGroups;
         $view->vars['justify_content'] = $options['justify_content'];
         $view->vars['inline_buttons_limit'] = $options['inline_buttons_limit'];
-        $view->vars['force_labels'] = $options['force_labels'];
+        $view->vars['use_inline_labels'] = $options['use_inline_labels'];
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -87,7 +87,7 @@ class ButtonCollectionType extends AbstractType
                 'buttons' => [],
                 'justify_content' => 'space-between',
                 'inline_buttons_limit' => null,
-                'force_labels' => false,
+                'use_inline_labels' => true,
             ])
             ->setAllowedTypes('buttons', 'array')
             ->setAllowedTypes('inline_buttons_limit', ['int', 'null'])

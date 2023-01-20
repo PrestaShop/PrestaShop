@@ -1510,7 +1510,7 @@
         {% for action in form.children %}
           {% if inlineButtonsLimit is same as(null) or loop.index <= inlineButtonsLimit %}
             {# Remove labels from inline elements if they are not forced #}
-            {% if form.vars.force_labels %}
+            {% if form.vars.use_inline_labels %}
               {% set actionLabel = action.vars.label %}
             {% else %}
               {% set actionLabel = '' %}

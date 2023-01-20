@@ -237,6 +237,7 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-row-actions',
                 ],
                 'inline_buttons_limit' => self::INLINE_ACTIONS_LIMIT,
+                'use_inline_labels' => false,
             ])
         ;
     }
