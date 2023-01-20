@@ -27,8 +27,11 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * AttributeGroupRepository.
@@ -40,7 +43,7 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
      * @param bool $withAttributes
-     * @param array $attributeIds
+     * @param int[] $attributeIds
      *
      * @return array
      */
@@ -86,5 +89,46 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Asserts that attribute groups exists in all the provided shops.
+     * If at least one of them is missing in any shop, it throws exception.
+     *
+     * @param AttributeGroupId[] $attributeGroupIds
+     * @param ShopId[] $shopIds
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertExistsInEveryShop(array $attributeGroupIds, array $shopIds): void
+    {
+        $attributeGroupIdValues = array_map(static function (AttributeGroupId $attributeGroupId): int {
+            return $attributeGroupId->getValue();
+        }, $attributeGroupIds);
+
+        $shopIdValues = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $qb = $this->createQueryBuilder('ag');
+        $results = $qb
+            ->select('COUNT(ag.id) AS attribute_group_count', 'ags.id AS shop_id')
+            ->innerJoin('ag.shops', 'ags', Join::WITH, $qb->expr()->in('ags.id', ':shopIds'))
+            ->where($qb->expr()->in('ag.id', $attributeGroupIdValues))
+            ->setParameter('shopIds', $shopIdValues)
+            ->groupBy('ags.id')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        $expectedAttributeGroupCount = count($attributeGroupIdValues);
+
+        foreach ($results as $result) {
+            if ((int) $result['attribute_group_count'] === $expectedAttributeGroupCount) {
+                continue;
+            }
+
+            throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
+        }
     }
 }

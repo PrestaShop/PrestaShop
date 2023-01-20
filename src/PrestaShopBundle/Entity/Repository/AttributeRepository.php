@@ -27,7 +27,11 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Parameter;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * AttributeRepository.
@@ -83,6 +87,47 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $attributeGroups;
+    }
+
+    /**
+     * Asserts that attribute exists in all the provided shops.
+     * If at least one of them is missing in any shop, it throws exception.
+     *
+     * @param AttributeId[] $attributeIds
+     * @param ShopId[] $shopIds
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertExistsInEveryShop(array $attributeIds, array $shopIds): void
+    {
+        $attributeIdValues = array_map(static function (AttributeId $attributeId): int {
+            return $attributeId->getValue();
+        }, $attributeIds);
+
+        $shopIdValues = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $qb = $this->createQueryBuilder('a');
+        $results = $qb
+            ->select('COUNT(a.id) AS attribute_count', 'attr_shop.id AS shop_id')
+            ->innerJoin('a.shops', 'attr_shop', Join::WITH, $qb->expr()->in('attr_shop.id', ':shopIds'))
+            ->where($qb->expr()->in('a.id', $attributeIdValues))
+            ->setParameter('shopIds', $shopIdValues)
+            ->groupBy('attr_shop.id')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        $expectedAttributeCount = count($attributeIdValues);
+
+        foreach ($results as $result) {
+            if ((int) $result['attribute_count'] === $expectedAttributeCount) {
+                continue;
+            }
+
+            throw new ShopAssociationNotFound('Provided attributes does not exist in every shop');
+        }
     }
 
     private function getAttributeRow($attribute)

@@ -134,6 +134,11 @@ services:
     arguments:
       - PrestaShopBundle\Entity\AttributeGroup
 
+  PrestaShopBundle\Entity\Repository\AttributeRepository:
+    factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
+    arguments:
+      - PrestaShopBundle\Entity\Attribute
+
   prestashop.core.admin.attribute_group.repository:
     alias: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
     deprecated: ~

@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface;
+use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
+use PrestaShopBundle\Entity\Repository\AttributeRepository;
 use PrestaShopException;
 use Product;
 use SpecificPriceRule;
@@ -73,6 +75,16 @@ class CombinationCreator
     private $stockAvailableMultiShopRepository;
 
     /**
+     * @var AttributeGroupRepository
+     */
+    private $attributeGroupRepository;
+
+    /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    /**
      * @var DefaultCombinationUpdater
      */
     private $defaultCombinationUpdater;
@@ -89,6 +101,8 @@ class CombinationCreator
         CombinationRepository $combinationRepository,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableMultiShopRepository,
+        AttributeGroupRepository $attributeGroupRepository,
+        AttributeRepository $attributeRepository,
         DefaultCombinationUpdater $defaultCombinationUpdater
     ) {
         $this->combinationGenerator = $combinationGenerator;
@@ -96,6 +110,8 @@ class CombinationCreator
         $this->productRepository = $productRepository;
         $this->stockAvailableMultiShopRepository = $stockAvailableMultiShopRepository;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+        $this->attributeGroupRepository = $attributeGroupRepository;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -110,6 +126,7 @@ class CombinationCreator
      */
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopConstraint $shopConstraint): array
     {
+        $this->assertAttributesExistenceInShops($productId, $groupedAttributeIdsList, $shopConstraint);
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
@@ -293,5 +310,22 @@ class CombinationCreator
         } catch (PrestaShopException $e) {
             throw new CoreException('Error occurred when trying to apply specific prices rules', 0, $e);
         }
+    }
+
+    private function assertAttributesExistenceInShops(
+        ProductId $productId,
+        array $groupedAttributeIdsList,
+        ShopConstraint $shopConstraint
+    ): void {
+        $attributeGroupIds = [];
+        $attributeIds = [];
+        foreach ($groupedAttributeIdsList as $groupedAttributeIds) {
+            $attributeGroupIds[] = $groupedAttributeIds->getAttributeGroupId();
+            $attributeIds = array_merge($attributeIds, $groupedAttributeIds->getAttributeIds());
+        }
+
+        $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
+        $this->attributeGroupRepository->assertExistsInEveryShop($attributeGroupIds, $shopIds);
+        $this->attributeRepository->assertExistsInEveryShop($attributeIds, $shopIds);
     }
 }
