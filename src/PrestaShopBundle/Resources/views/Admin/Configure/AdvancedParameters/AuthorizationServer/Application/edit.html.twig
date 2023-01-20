@@ -29,8 +29,3 @@
 {% block content %}
   {% include '@PrestaShop/Admin/Configure/AdvancedParameters/AuthorizationServer/Application/Blocks/form.html.twig' %}
 {% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/authorization-server.bundle.js') }}"></script>
-{% endblock %}
