@@ -206,7 +206,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/atomiix/jwt"
+            "url": "https://github.com/PrestaShop/jwt"
         }
     ],
     "minimum-stability": "dev",
