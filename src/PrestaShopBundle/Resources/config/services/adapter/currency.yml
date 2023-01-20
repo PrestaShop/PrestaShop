@@ -114,3 +114,7 @@ services:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }
 
   PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository: ~
+
+  prestashop.adapter.currency.repository.currency_repository:
+    alias: PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository
+    deprecated: ~
