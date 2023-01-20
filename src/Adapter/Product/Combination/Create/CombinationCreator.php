@@ -126,8 +126,9 @@ class CombinationCreator
      */
     public function createCombinations(ProductId $productId, array $groupedAttributeIdsList, ShopConstraint $shopConstraint): array
     {
-        $this->assertAttributesExistenceInShops($productId, $groupedAttributeIdsList, $shopConstraint);
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
+        $this->assertAttributesExistenceInShops($productId, $groupedAttributeIdsList, $shopConstraint);
+
         if ($product->product_type !== ProductType::TYPE_COMBINATIONS) {
             throw new InvalidProductTypeException(InvalidProductTypeException::EXPECTED_COMBINATIONS_TYPE);
         }

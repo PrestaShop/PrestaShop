@@ -110,10 +110,14 @@ admin_all_attribute_groups:
     shopId: \d+
 
 admin_products_combinations_generate:
-  path: /generate-combinations/{productId}
+  path: /generate-combinations/{productId}/{shopId}
   methods: [ POST ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::generateCombinationsAction
     _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+    shopId: \d+

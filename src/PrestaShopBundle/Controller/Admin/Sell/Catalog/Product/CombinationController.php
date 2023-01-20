@@ -547,11 +547,12 @@ class CombinationController extends FrameworkBundleAdminController
      * )
      *
      * @param int $productId
+     * @param int|null $shopId
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function generateCombinationsAction(int $productId, Request $request): JsonResponse
+    public function generateCombinationsAction(int $productId, ?int $shopId, Request $request): JsonResponse
     {
         $requestAttributeGroups = $request->request->get('attributes');
         $attributes = [];
@@ -564,7 +565,7 @@ class CombinationController extends FrameworkBundleAdminController
             $combinationsIds = $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $productId,
                 $attributes,
-                $request->request->get('applyToAllShops') ? ShopConstraint::allShops() : ShopConstraint::shop((int) $this->getContextShopId())
+                $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
             ));
         } catch (Exception $e) {
             return $this->json([

@@ -215,12 +215,9 @@
        * Used when the user clicks on the Generate button of the modal
        */
       async generateCombinations(): Promise<void> {
-        // @todo: handle single shop and all shops generation
         this.loading = true;
-        const data: Record<string, any> = {
-          attributes: {},
-          applyToAllShops: this.applyToAllShops ? 1 : 0,
-        };
+        const data: Record<string, any> = {attributes: {}};
+
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
           this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
@@ -231,7 +228,11 @@
         });
 
         try {
-          const response = await this.combinationsService.generateCombinations(this.productId, data);
+          const response = await this.combinationsService.generateCombinations(
+            this.productId,
+            this.applyToAllShops ? null : this.shopId,
+            data,
+          );
           $.growl({
             message: this.$t('generator.success', {
               combinationsNb: response.combination_ids.length,
