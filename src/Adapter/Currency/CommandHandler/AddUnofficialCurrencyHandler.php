@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageNotFoundException;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShopException;
 
@@ -62,9 +63,10 @@ final class AddUnofficialCurrencyHandler extends AbstractCurrencyHandler impleme
         LocaleRepository $localeRepoCLDR,
         array $languages,
         CurrencyCommandValidator $validator,
-        CurrencyDataProviderInterface $currencyDataProvider
+        CurrencyDataProviderInterface $currencyDataProvider,
+        PatternTransformer $patternTransformer
     ) {
-        parent::__construct($localeRepoCLDR, $languages, $validator);
+        parent::__construct($localeRepoCLDR, $languages, $validator, $patternTransformer);
         $this->currencyDataProvider = $currencyDataProvider;
     }
 
