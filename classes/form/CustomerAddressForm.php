@@ -120,6 +120,10 @@ class CustomerAddressFormCore extends AbstractForm
 
         $postcode = $this->getField('postcode');
         if ($postcode && $postcode->isRequired()) {
+            $id_country_selected = $this->getField('id_country')->getValue();
+            if (!empty($id_country_selected)) {
+                $this->formatter->setCountry(new Country($id_country_selected));
+            }
             $country = $this->formatter->getCountry();
             if (!$country->checkZipCode($postcode->getValue())) {
                 $postcode->addError($this->translator->trans(
