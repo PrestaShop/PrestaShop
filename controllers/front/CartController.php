@@ -526,7 +526,7 @@ class CartControllerCore extends FrontController
                 );
             } elseif (!$update_quantity) {
                 $this->errors[] = $this->translateProductNameWithAttributes(
-                    'You already have the maximum quantity available for the product [1]%product%[/1].',
+                    'You already selected the maximum quantity available for the product [1]%product%[/1].',
                     $product->name,
                     $productAttributes
                 );
@@ -633,7 +633,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->translateProductNameWithAttributes(
-                    'The product [1]%product%[/1] is now a product with combinations. Please choose one to proceed with your order.',
+                    'The product [1]%product%[/1] is now a product with combinations. Please select one to proceed with your order.',
                    $product['name']
                 );
             }
@@ -647,11 +647,11 @@ class CartControllerCore extends FrontController
 
         if ($product['active']) {
             if ((int) $product['quantity_available'] > 1 || (int) $product['quantity_available'] == 0) {
-                $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
+                $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
             } elseif ((int) $product['quantity_available'] == 1) {
-                $sentence = 'There is only [1]%quantity%[/1] item of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
+                $sentence = 'There's only [1]%quantity%[/1] item of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
             } else {
-                $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Please adjust the quantity to proceed with your order.';
+                $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Adjust the quantity in your cart to proceed with your order.';
             }
 
             return $this->translateProductNameWithAttributes(
