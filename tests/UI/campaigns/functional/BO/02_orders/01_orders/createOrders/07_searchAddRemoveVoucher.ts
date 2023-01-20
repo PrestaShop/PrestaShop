@@ -166,7 +166,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithoutCodeData.name),
-        expect(result.description).to.equal(cartRuleWithoutCodeData.name),
+        expect(result.description).to.equal(cartRuleWithoutCodeData.description),
         expect(result.value).to.equal(cartRuleWithoutCodeData.discountAmount.value),
       ]);
     });
@@ -305,7 +305,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithCodeData.name),
-        expect(result.description).to.equal(cartRuleWithCodeData.name),
+        expect(result.description).to.equal(cartRuleWithCodeData.description),
         expect(result.value).to.equal(cartRuleWithCodeData.discountAmount.value),
       ]);
     });
@@ -425,7 +425,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const result = await addOrderPage.getVoucherDetailsFromTable(page, 1);
       await Promise.all([
         expect(result.name).to.contains(cartRuleWithGiftData.name),
-        expect(result.description).to.equal(cartRuleWithGiftData.name),
+        expect(result.description).to.equal(cartRuleWithGiftData.description),
         expect(result.value).to.equal(Products.demo_12.priceTaxExcluded),
       ]);
     });
@@ -518,7 +518,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
         expect(result.name).to.contains(cartRuleFreeShippingData.name),
-        expect(result.description).to.equal(cartRuleFreeShippingData.name),
+        expect(result.description).to.equal(cartRuleFreeShippingData.description),
         expect(result.value).to.equal(0),
       ]);
     });
@@ -538,7 +538,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       const result = await addOrderPage.getVoucherDetailsFromTable(page);
       await Promise.all([
         expect(result.name).to.contains(cartRuleFreeShippingData.name),
-        expect(result.description).to.equal(cartRuleFreeShippingData.name),
+        expect(result.description).to.equal(cartRuleFreeShippingData.description),
         expect(result.value).to.equal(7),
       ]);
     });
