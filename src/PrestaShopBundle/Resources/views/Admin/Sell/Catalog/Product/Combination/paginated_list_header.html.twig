@@ -46,8 +46,8 @@
         {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
       </button>
       {% if isMultistoreActive %}
-        {% set deleteLabel = 'Delete %combinations_number% combinations from store "%shop%"'|trans({'%shop%': shopName}, 'Admin.Catalog.Feature') %}
-        {% set modalMessage = 'Are you sure you want to delete selected combinations from shop "%shop%"?'|trans({'%shop%': shopName}, 'Admin.Catalog.Notification') %}
+        {% set deleteLabel = 'Delete %combinations_number% combinations from store "%store_name%"'|trans({'%store_name%': shopName}, 'Admin.Catalog.Feature') %}
+        {% set modalMessage = 'Are you sure you want to delete selected combinations from store "%store_name%"?'|trans({'%store_name%': shopName}, 'Admin.Catalog.Notification') %}
       {% else %}
         {% set deleteLabel = 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') %}
         {% set modalMessage = 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Notification') %}
@@ -78,7 +78,7 @@
           id="combination-bulk-delete-btn-all-shops" class="dropdown-item bulk-action-btn bulk-delete-btn" type="button"
           data-btn-label="{{ 'Delete %combinations_number% combinations from all stores'|trans({}, 'Admin.Catalog.Feature') }}"
           data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
-          data-modal-message="{{ 'Are you sure you want to delete selected combinations from all shops?'|trans({}, 'Admin.Catalog.Notification') }}"
+          data-modal-message="{{ 'Are you sure you want to delete selected combinations from all stores?'|trans({}, 'Admin.Catalog.Notification') }}"
           data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
           data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
           data-bulk-chunk-size="10"
