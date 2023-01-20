@@ -329,7 +329,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have no images for shop :shops
+     * @Then product :productReference should have no images for shops :shops
      *
      * @param string $productReference
      * @param string $shopReferences
