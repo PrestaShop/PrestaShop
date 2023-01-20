@@ -49,11 +49,13 @@ export default class BOBasePage extends CommonPage {
 
   private readonly manageYourQuickAccessLink: string;
 
-  private readonly navbarSarchInput: string;
+  private readonly navbarSearchInput: string;
 
   private readonly helpButton: string;
 
   private readonly menuMobileButton: string;
+
+  private readonly notificationsLink: string;
 
   private readonly desktopNavbar: string;
 
@@ -233,9 +235,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly helpDocumentURL: string;
 
-  private readonly invalidTokenContinuelink: string;
+  private readonly invalidTokenContinueLink: string;
 
-  private readonly invalidTokenCancellink: string;
+  private readonly invalidTokenCancelLink: string;
 
   /**
    * @constructs
@@ -269,11 +271,12 @@ export default class BOBasePage extends CommonPage {
     this.quickAddCurrentLink = '#quick-add-link';
     this.quickAccessRemoveLink = '#quick-remove-link';
     this.manageYourQuickAccessLink = '#quick-manage-link';
-    this.navbarSarchInput = '#bo_query';
+    this.navbarSearchInput = '#bo_query';
 
     // Header links
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
+    this.notificationsLink = '#notification';
 
     // left navbar
     this.desktopNavbar = '.nav-bar:not(.mobile-nav)';
@@ -546,8 +549,8 @@ export default class BOBasePage extends CommonPage {
     this.helpDocumentURL = `${this.rightSidebar} div.quicknav-scroller._fullspace object`;
 
     // Invalid token block
-    this.invalidTokenContinuelink = 'a.btn-continue';
-    this.invalidTokenCancellink = 'a.btn-cancel';
+    this.invalidTokenContinueLink = 'a.btn-continue';
+    this.invalidTokenCancelLink = 'a.btn-cancel';
   }
 
   /*
@@ -581,7 +584,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async removeLinkFromQuickAccess(page: Page): Promise<string|null> {
+  async removeLinkFromQuickAccess(page: Page): Promise<string | null> {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAccessRemoveLink);
 
@@ -594,7 +597,7 @@ export default class BOBasePage extends CommonPage {
    * @param pageName {string} Page name to add on quick access
    * @returns {Promise<string|null>}
    */
-  async addCurrentPageToQuickAccess(page: Page, pageName: string): Promise<string|null> {
+  async addCurrentPageToQuickAccess(page: Page, pageName: string): Promise<string | null> {
     await this.dialogListener(page, true, pageName);
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.waitForSelectorAndClick(page, this.quickAddCurrentLink);
@@ -732,6 +735,16 @@ export default class BOBasePage extends CommonPage {
   }
 
   /**
+   * Click on notifications link
+   * @param page {Page} Browser tab
+   */
+  async clickOnNotificationsLink(page: Page): Promise<boolean> {
+
+    await this.waitForSelectorAndClick(page, this.notificationsLink);
+    return this.elementVisible(page, '#notification div.dropdown-menu-right.notifs_dropdown', 1000);
+  }
+
+  /**
    * Returns to the dashboard then logout
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
@@ -755,7 +768,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getCurrentEmployeeAvatar(page: Page): Promise<string|null> {
+  async getCurrentEmployeeAvatar(page: Page): Promise<string | null> {
     if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
       await page.click(this.userProfileIcon);
     } else {
@@ -847,7 +860,7 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async getHelpDocumentURL(page: Page): Promise<string|null> {
+  async getHelpDocumentURL(page: Page): Promise<string | null> {
     return this.getAttributeContent(page, this.helpDocumentURL, 'data');
   }
 
@@ -857,7 +870,7 @@ export default class BOBasePage extends CommonPage {
    * @param timeout {number} Timeout to wait for the selector
    * @return {Promise<string|null>}
    */
-  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string|null> {
+  getGrowlMessageContent(page: Page, timeout: number = 10000): Promise<string | null> {
     return page.textContent(this.growlMessageBlock, {timeout});
   }
 
@@ -927,10 +940,10 @@ export default class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page: Page, url: string, continueToPage: boolean = true): Promise<void> {
     await this.goTo(page, url);
-    if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
+    if (await this.elementVisible(page, this.invalidTokenContinueLink, 10000)) {
       await this.clickAndWaitForNavigation(
         page,
-        continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+        continueToPage ? this.invalidTokenContinueLink : this.invalidTokenCancelLink,
       );
     }
   }
@@ -942,7 +955,7 @@ export default class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async search(page: Page, query: string): Promise<void> {
-    await this.setValue(page, this.navbarSarchInput, query);
+    await this.setValue(page, this.navbarSearchInput, query);
     await page.keyboard.press('Enter');
     await page.waitForNavigation({waitUntil: 'networkidle'});
   }
