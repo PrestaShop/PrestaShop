@@ -440,7 +440,7 @@ class LinkCore
         $params = [];
         if (Validate::isLoadedObject($category)) {
             $params['id'] = $category->id;
-        } elseif (isset($category['id_category'])) {
+        } elseif (is_array($category) && isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
         } elseif (is_int($category) || (is_string($category) && ctype_digit($category))) {
             $params['id'] = (int) $category;
