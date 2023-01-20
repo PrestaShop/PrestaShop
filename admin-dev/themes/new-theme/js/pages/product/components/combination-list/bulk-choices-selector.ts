@@ -114,7 +114,7 @@ export default class BulkChoicesSelector {
         return;
       }
 
-      const isBulkSelectAll = checkbox.matches(`${CombinationMap.bulkSelectAll}, ${CombinationMap.bulkSelectAllInPage}`);
+      const isBulkSelectAll = checkbox.matches(CombinationMap.commonBulkAllSelector);
 
       // don't proceed if its not one of the expected checkboxes
       if (!isBulkSelectAll && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
