@@ -331,13 +331,18 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
+     * @param int|null $shopId
      *
      * @return JsonResponse
      */
-    public function getAttributeGroupsAction(int $productId): JsonResponse
+    public function getAttributeGroupsAction(int $productId, ?int $shopId): JsonResponse
     {
         /** @var AttributeGroup[] $attributeGroups */
-        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, true));
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            $productId,
+            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
+            true
+        ));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }
@@ -345,12 +350,17 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
+     * @param int|null $shopId
+     *
      * @return JsonResponse
      */
-    public function getAllAttributeGroupsAction(): JsonResponse
+    public function getAllAttributeGroupsAction(?int $shopId): JsonResponse
     {
         /** @var AttributeGroup[] $attributeGroups */
-        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(
+            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
+            true
+        ));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
     }

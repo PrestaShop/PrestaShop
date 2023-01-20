@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Query which provides attributes of a Product by group
@@ -42,6 +43,11 @@ class GetProductAttributeGroups
     private $productId;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @var bool
      */
     private $withAttributes;
@@ -52,10 +58,14 @@ class GetProductAttributeGroups
      *
      * @throws ProductConstraintException
      */
-    public function __construct(int $productId, bool $withAttributes)
-    {
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint,
+        bool $withAttributes
+    ) {
         $this->productId = new ProductId($productId);
         $this->withAttributes = $withAttributes;
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -64,6 +74,14 @@ class GetProductAttributeGroups
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**

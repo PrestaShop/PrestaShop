@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * AttributeGroupRepository.
@@ -42,8 +44,12 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
      *
      * @return array
      */
-    public function listOrderedAttributeGroups(bool $withAttributes, array $attributeIds = []): array
+    public function listOrderedAttributeGroups(bool $withAttributes, ShopConstraint $shopConstraint, array $attributeIds = []): array
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Shop Group constraint is not supported');
+        }
+
         $qb = $this
             ->createQueryBuilder('ag')
             ->addSelect('ag')
@@ -51,6 +57,15 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
             ->innerJoin('ag.attributeGroupLangs', 'agl')
             ->addOrderBy('ag.position', 'ASC')
         ;
+
+        // for single shop we add join condition with certain shop,
+        // else if its all shops we should be ok by retrieving results from general attribute_group table
+        if ($shopConstraint->getShopId()) {
+            $qb->innerJoin('ag.shops', 'ags')
+                ->where('ags.id = :shopId')
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        }
 
         if (!empty($attributeIds)) {
             $qb

@@ -135,6 +135,10 @@
         type: Number,
         required: true,
       },
+      shopId: {
+        type: Number,
+        required: true,
+      },
       eventEmitter: {
         type: Object,
         required: true,
@@ -177,7 +181,7 @@
        */
       async initAttributeGroups(): Promise<void> {
         try {
-          this.attributeGroups = await getAllAttributeGroups();
+          this.attributeGroups = await getAllAttributeGroups(this.shopId);
           window.prestaShopUiKit.init();
           this.preLoading = false;
           this.eventEmitter.emit(CombinationEvents.combinationGeneratorReady);
@@ -211,6 +215,7 @@
        * Used when the user clicks on the Generate button of the modal
        */
       async generateCombinations(): Promise<void> {
+        // @todo: handle single shop and all shops generation
         this.loading = true;
         const data: Record<string, any> = {
           attributes: {},

@@ -41,7 +41,10 @@ class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler im
      */
     public function handle(GetAttributeGroupList $query): array
     {
-        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups($query->withAttributes());
+        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups(
+            $query->withAttributes(),
+            $query->getShopConstraint()
+        );
 
         return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
     }

@@ -86,22 +86,28 @@ admin_products_combinations_bulk_delete:
     shopId: \d+
 
 admin_products_attribute_groups:
-  path: /{productId}/attribute-groups
+  path: /{productId}/attribute-groups/{shopId}
   methods: [ GET ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAttributeGroupsAction
     _legacy_controller: AdminProducts
+  requirements:
+    shopId: \d+
 
 admin_all_attribute_groups:
-  path: /all-attribute-groups
+  path: /all-attribute-groups/{shopId}
   methods: [ GET ]
   options:
     expose: true
   defaults:
+    shopId: null
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getAllAttributeGroupsAction
     _legacy_controller: AdminProducts
+  requirements:
+    shopId: \d+
 
 admin_products_combinations_generate:
   path: /generate-combinations/{productId}
