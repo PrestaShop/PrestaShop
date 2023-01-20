@@ -66,7 +66,6 @@ class SpecificPriceCombinationListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            //            FormEvents::PRE_SET_DATA => 'updateCombinationChoices',
             FormEvents::PRE_SUBMIT => 'updateCombinationChoices',
         ];
     }
