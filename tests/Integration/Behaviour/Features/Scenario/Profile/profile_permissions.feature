@@ -109,35 +109,35 @@ Feature: Manage profile permissions from BO
 
   Scenario: I can get profile module permissions for profiles
     Then profile super_admin should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment | view,configure,uninstall |
+      | ps_banner            | view,configure,uninstall |
+      | ps_emailsubscription | view,configure,uninstall |
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner            |  |
+      | ps_emailsubscription |  |
     Then profile translator should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner            |  |
+      | ps_emailsubscription |  |
     Then profile salesman should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner            |  |
+      | ps_emailsubscription |  |
 
   Scenario: I can edit module permission for a profile
     When I enable view permission for module ps_banner for profile logistician
     And I enable configure permission for module ps_banner for profile logistician
     And I enable uninstall permission for module ps_banner for profile logistician
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment |                          |
+      | ps_banner            | view,configure,uninstall |
+      | ps_emailsubscription |                          |
     When I disable view permission for module ps_banner for profile logistician
     And I disable configure permission for module ps_banner for profile logistician
     And I disable uninstall permission for module ps_banner for profile logistician
     Then profile logistician should have the following permissions for modules:
-      | ps_banner      |                          |
-      | ps_wirepayment |                          |
+      | ps_banner            |  |
+      | ps_emailsubscription |  |
     # SuperAdmin role has all permissions hard coded even if you try to disable them
     When I disable view permission for module ps_banner for profile super_admin
     And I disable configure permission for module ps_banner for profile super_admin
     And I disable uninstall permission for module ps_banner for profile super_admin
     Then profile super_admin should have the following permissions for modules:
-      | ps_banner      | view,configure,uninstall |
-      | ps_wirepayment | view,configure,uninstall |
+      | ps_banner            | view,configure,uninstall |
+      | ps_emailsubscription | view,configure,uninstall |
