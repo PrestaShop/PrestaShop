@@ -111,11 +111,8 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT a.`id_address`)')
-        ;
-
-        return $qb;
+        return $this->getQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(DISTINCT a.`id_address`)');
     }
 
     /**
@@ -183,12 +180,7 @@ final class CustomerAddressQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('id_customer' === $filterName) {
                 $qb->andWhere('a.`id_customer` = :' . $filterName);
                 $qb->setParameter($filterName, $value);
-
-                continue;
             }
-
-            $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
-                ->setParameter($filterName, '%' . $value . '%');
         }
     }
 }
