@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -313,6 +315,15 @@ class CombinationCreator
         }
     }
 
+    /**
+     * @param ProductId $productId
+     * @param GroupedAttributeIds[] $groupedAttributeIdsList
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return void
+     *
+     * @throws CannotGenerateCombinationException
+     */
     private function assertAttributesExistenceInShops(
         ProductId $productId,
         array $groupedAttributeIdsList,
@@ -326,7 +337,16 @@ class CombinationCreator
         }
 
         $shopIds = $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint);
-        $this->attributeGroupRepository->assertExistsInEveryShop($attributeGroupIds, $shopIds);
-        $this->attributeRepository->assertExistsInEveryShop($attributeIds, $shopIds);
+
+        try {
+            $this->attributeGroupRepository->assertExistsInEveryShop($attributeGroupIds, $shopIds);
+            $this->attributeRepository->assertExistsInEveryShop($attributeIds, $shopIds);
+        } catch (ShopAssociationNotFound $e) {
+            throw new CannotGenerateCombinationException(
+                'Not all provided attributes exists in all shops',
+                CannotGenerateCombinationException::DUE_TO_DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS,
+                $e
+            );
+        }
     }
 }

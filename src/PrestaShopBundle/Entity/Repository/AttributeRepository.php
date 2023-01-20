@@ -111,22 +111,24 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('a');
         $results = $qb
             ->select('COUNT(a.id) AS attribute_count', 'attr_shop.id AS shop_id')
-            ->innerJoin('a.shops', 'attr_shop', Join::WITH, $qb->expr()->in('attr_shop.id', ':shopIds'))
+            ->innerJoin('a.shops', 'attr_shop', Join::WITH, $qb->expr()->in('attr_shop.id', $shopIdValues))
             ->where($qb->expr()->in('a.id', $attributeIdValues))
-            ->setParameter('shopIds', $shopIdValues)
             ->groupBy('attr_shop.id')
             ->getQuery()
             ->getArrayResult()
         ;
 
+        $foundInShops = [];
         $expectedAttributeCount = count($attributeIdValues);
-
         foreach ($results as $result) {
-            if ((int) $result['attribute_count'] === $expectedAttributeCount) {
-                continue;
+            if ((int) $result['attribute_count'] !== $expectedAttributeCount) {
+                throw new ShopAssociationNotFound('Provided attribute does not exist in every shop');
             }
+            $foundInShops[] = (int) $result['shop_id'];
+        }
 
-            throw new ShopAssociationNotFound('Provided attributes does not exist in every shop');
+        if (count(array_unique($foundInShops)) !== count($shopIdValues)) {
+            throw new ShopAssociationNotFound('Provided attribute does not exist in every shop');
         }
     }
 

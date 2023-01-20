@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteComb
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotGenerateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
@@ -754,6 +755,12 @@ class CombinationController extends FrameworkBundleAdminController
                 'The object cannot be loaded (or found)',
                 'Admin.Notifications.Error'
             ),
+            CannotGenerateCombinationException::class => [
+                CannotGenerateCombinationException::DUE_TO_DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS => $this->trans(
+                    'Attributes must be associated with every store to generate a combination for all stores',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 }
