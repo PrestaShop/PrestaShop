@@ -161,7 +161,7 @@ class AdminGroupsControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
+        if (Group::isFeatureActive() && empty($this->display)) {
             $this->page_header_toolbar_btn['new_group'] = [
                 'href' => self::$currentIndex . '&addgroup&token=' . $this->token,
                 'desc' => $this->trans('Add new group', [], 'Admin.Shopparameters.Feature'),
@@ -199,6 +199,10 @@ class AdminGroupsControllerCore extends AdminController
 
     public function postProcess(): void
     {
+        if (!Group::isFeatureActive()) {
+            return;
+        }
+
         $tableCustomerGroup = 'customer_group';
         if (!empty($_POST[$tableCustomerGroup . 'Box'])
             && is_array($_POST[$tableCustomerGroup . 'Box'])
@@ -224,6 +228,9 @@ class AdminGroupsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     */
     public function renderView()
     {
         $this->context = Context::getContext();
@@ -326,6 +333,12 @@ class AdminGroupsControllerCore extends AdminController
         return $value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>';
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($group = $this->loadObject(true))) {
@@ -680,5 +693,27 @@ class AdminGroupsControllerCore extends AdminController
         ]);
 
         return $tpl->fetch();
+    }
+
+    /**
+     * AdminController::initContent() override.
+     *
+     * @see AdminController::initContent()
+     */
+    public function initContent()
+    {
+        if (!Group::isFeatureActive()) {
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+            $url = '<a href="' . $adminPerformanceUrl . '">' . $this->trans('Performance', [], 'Admin.Global') . '</a>';
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', ['%url%' => $url], 'Admin.Catalog.Notification'));
+
+            $this->context->smarty->assign([
+                'content' => $this->content,
+            ]);
+
+            return;
+        }
+
+        parent::initContent();
     }
 }

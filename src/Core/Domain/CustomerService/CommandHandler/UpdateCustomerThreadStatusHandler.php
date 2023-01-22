@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerService\Exception\CustomerServiceE
 /**
  * @internal
  */
-final class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHandlerInterface
+class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadStatusHandlerInterface
 {
     /**
      * @var Connection
@@ -71,7 +71,7 @@ final class UpdateCustomerThreadStatusHandler implements UpdateCustomerThreadSta
         $statement->bindValue(':id_customer_thread', $command->getCustomerThreadId()->getValue());
 
         if (false === $statement->execute()) {
-            throw new CustomerServiceException('Failed to update customer thread status');
+            throw new CustomerServiceException('Failed to update customer thread status', CustomerServiceException::FAILED_TO_UPDATE_STATUS);
         }
     }
 }

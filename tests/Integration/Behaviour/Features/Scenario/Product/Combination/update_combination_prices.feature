@@ -22,11 +22,11 @@ Feature: Update product combination prices in Back Office (BO)
     And I identify tax rules group named "US-AL Rate (4%)" as "us-al-tax-rate"
     And I identify tax rules group named "US-KS Rate (5.3%)" as "us-ks-tax-rate"
 
-  Scenario: I update combination options:
+  Scenario: I update combination prices:
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
-    And I update product "product1" prices with following information:
+    And I update product "product1" with following values:
       | price              | 51.49           |
       | ecotax             | 17.78           |
       | tax rules group    | US-AL Rate (4%) |
@@ -54,7 +54,7 @@ Feature: Update product combination prices in Back Office (BO)
       | product tax rate                | 4.00  |
       | product price                   | 51.49 |
       | product ecotax                  | 17.78 |
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | eco tax              | 0.5 |
       | impact on price      | -5  |
       | impact on unit price | -1  |
@@ -87,7 +87,7 @@ Feature: Update product combination prices in Back Office (BO)
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset price
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | impact on price | 0 |
     Then combination "product1SWhite" should have following prices:
       | combination price detail        | value  |
@@ -102,12 +102,12 @@ Feature: Update product combination prices in Back Office (BO)
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset all
-    When I update combination "product1SWhite" prices with following details:
+    When I update combination "product1SWhite" with following values:
       | eco tax              | 0 |
       | impact on price      | 0 |
       | impact on unit price | 0 |
       | wholesale price      | 0 |
-    And I update product "product1" prices with following information:
+    And I update product "product1" with following values:
       | price              | 0 |
       | ecotax             | 0 |
       | tax rules group    |   |

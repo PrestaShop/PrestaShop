@@ -240,6 +240,7 @@
                 <div data-locale="{{ translationsFields.vars.label }}" class="translationsFields-{{ translationsFields.vars.id }} tab-pane translation-field {% if hideTabs == false and form|length > 1 %}panel panel-default{% endif %} {% if defaultLocale.id_lang == translationsFields.vars.name %}show active{% endif %} {% if not form.vars.valid %}field-error{% endif %} translation-label-{{ translationsFields.vars.label }}">
                     {{ form_errors(translationsFields) }}
                     {{ form_widget(translationsFields) }}
+                    {{- block('form_help') -}}
                 </div>
             {% endfor %}
         </div>
@@ -281,7 +282,7 @@
                 {{ form.vars.default_locale.iso_code }}
             </button>
 
-            <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+            <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
                 {% for locale in locales %}
                     <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
                 {% endfor %}
@@ -319,7 +320,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -695,7 +696,7 @@
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}

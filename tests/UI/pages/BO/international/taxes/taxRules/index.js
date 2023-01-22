@@ -29,39 +29,39 @@ class TaxRules extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='tax_rules_groupFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='tax_rules_groupFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtontax_rules_group';
     this.filterResetButton = `${this.filterRow} button[name='submitResettax_rules_group']`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
-    this.editRowLink = row => `${this.tableRow(row)} a.edit`;
-    this.tableBodyColumn = row => `${this.tableRow(row)} td`;
+    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
+    this.editRowLink = (row) => `${this.tableRow(row)} a.edit`;
+    this.tableBodyColumn = (row) => `${this.tableRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnActive = row => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnCheckIcon = row => `${this.tableColumnActive(row)} i.icon-check`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnActive = (row) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnCheckIcon = (row) => `${this.tableColumnActive(row)} i.icon-check`;
 
     // Bulk actions selectors
-    this.toggleDropDown = row => `${this.tableRow(row)} button[data-toggle='dropdown']`;
-    this.deleteRowLink = row => `${this.tableRow(row)} a.delete`;
+    this.toggleDropDown = (row) => `${this.tableRow(row)} button[data-toggle='dropdown']`;
+    this.deleteRowLink = (row) => `${this.tableRow(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
@@ -371,7 +371,7 @@ class TaxRules extends BOBasePage {
   async setStatus(page, row, valueWanted = true) {
     if (await this.getStatus(page, row) !== valueWanted) {
       await Promise.all([
-        page.$eval(`${this.tableColumnActive(row)} i`, el => el.click()),
+        page.$eval(`${this.tableColumnActive(row)} i`, (el) => el.click()),
         page.waitForNavigation({waitUntil: 'networkidle'}),
       ]);
       return true;

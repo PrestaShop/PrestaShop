@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Builds combination name by attributes information

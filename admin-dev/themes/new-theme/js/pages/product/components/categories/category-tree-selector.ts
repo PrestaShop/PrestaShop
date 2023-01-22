@@ -41,17 +41,17 @@ const ProductCategoryMap = ProductMap.categories;
 export default class CategoryTreeSelector {
   eventEmitter: EventEmitter;
 
-  selectedCategories: Array<Category>
+  selectedCategories: Array<Category>;
 
-  treeCategories: Array<TreeCategory>
+  treeCategories: Array<TreeCategory>;
 
-  typeaheadCategories: Array<TypeaheadCategory>;
+  typeaheadCategories: Array<Category>;
 
   defaultCategoryId: number;
 
-  modalContentContainer: HTMLElement|null
+  modalContentContainer: HTMLElement|null;
 
-  modal: ModalType|null
+  modal: ModalType|null;
 
   categoryTree: HTMLElement|null;
 
@@ -59,9 +59,9 @@ export default class CategoryTreeSelector {
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.treeCategories = [];
-    this.typeaheadCategories = [];
     this.selectedCategories = [];
+    this.typeaheadCategories = [];
+    this.treeCategories = [];
     this.defaultCategoryId = 0;
     this.modalContentContainer = null;
     this.modal = null;
@@ -71,7 +71,7 @@ export default class CategoryTreeSelector {
 
   public showModal(selectedCategories: Array<Category>, defaultCategoryId: number): void {
     if (!defaultCategoryId) {
-      console.error('Default category id is invalid');
+      console.error('Default category id is invalid.');
 
       return;
     }
@@ -88,23 +88,37 @@ export default class CategoryTreeSelector {
     });
 
     modal.render(modalContent.html());
-    this.initModal();
+
+    try {
+      this.initModal();
+    } catch (e: any) {
+      // catch and log fatal errors to avoid breaking other components
+      console.error('Category tree selector component stopped working due to fatal error.');
+      return;
+    }
+
     modal.show();
     this.modal = modal;
   }
 
   private async initModal(): Promise<void> {
-    this.modalContentContainer = document.querySelector(ProductCategoryMap.modalContentContainer) as HTMLElement;
-    this.categoryTree = this.modalContentContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
+    const modalContentContainer = document.querySelector<HTMLElement>(ProductCategoryMap.modalContentContainer);
+
+    if (!modalContentContainer) {
+      throw new Error(`Essential element ${ProductCategoryMap.modalContentContainer} was not found.`);
+    }
+
+    this.modalContentContainer = modalContentContainer;
+    this.categoryTree = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.categoryTree);
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
       ProductEventMap.categories.tagRemoved,
     );
-    this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
+    this.tagsRenderer.render(this.selectedCategories);
     this.treeCategories = await getCategories();
 
-    this.initTypeaheadData(this.treeCategories, '');
+    this.initTypeaheadData(this.treeCategories);
     this.initTypeahead();
     this.initTree();
     this.listenCancelChanges();
@@ -117,9 +131,9 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const applyBtn = this.modalContentContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
+    const applyBtn = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.applyCategoriesBtn);
 
-    applyBtn.addEventListener('click', () => {
+    applyBtn?.addEventListener('click', () => {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
         categories: this.selectedCategories,
       });
@@ -132,15 +146,15 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const cancelBtn = this.modalContentContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
-    cancelBtn.addEventListener('click', () => this.closeModal());
+    const cancelBtn = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.cancelCategoriesBtn);
+    cancelBtn?.addEventListener('click', () => this.closeModal());
   }
 
   private initTree(): void {
     const {categoryTree} = this;
 
     if (!(categoryTree instanceof HTMLElement)) {
-      console.error('Category tree is not valid HTMLElement');
+      console.error('Category tree is not valid HTMLElement.');
 
       return;
     }
@@ -154,25 +168,23 @@ export default class CategoryTreeSelector {
       if (checkbox instanceof HTMLInputElement) {
         const categoryId = Number(checkbox.value);
 
-        // disable main category checkbox
-        if (categoryId === this.defaultCategoryId) {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.disabled = true;
-        }
-
         if (this.selectedCategories.some((category) => category.id === categoryId)) {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = true;
         }
 
         checkbox.addEventListener('change', (e) => {
-          const currentTarget = e.currentTarget as HTMLInputElement;
+          const {currentTarget} = e;
 
-          // do not allow unchecking main category id
-          if (Number(currentTarget.value) === this.defaultCategoryId && !currentTarget.checked) {
-            currentTarget.checked = true;
+          if (!(currentTarget instanceof HTMLInputElement)) {
+            console.error('currentTarget expected to be HTMLInputElement.');
 
             return;
+          }
+
+          // do not allow unchecking last remaining category
+          if (this.selectedCategories.length === 1) {
+            currentTarget.checked = true;
           }
 
           this.updateSelectedCategories();
@@ -181,11 +193,11 @@ export default class CategoryTreeSelector {
     }, this);
     // Tree is initialized we can show it and hide loader
     if (this.modalContentContainer) {
-      const fieldset = this.modalContentContainer.querySelector(ProductCategoryMap.fieldset) as HTMLElement;
-      const loader = this.modalContentContainer.querySelector(ProductCategoryMap.loader) as HTMLElement;
+      const fieldset = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.fieldset);
+      const loader = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.loader);
 
-      fieldset.classList.remove('d-none');
-      loader.classList.add('d-none');
+      fieldset?.classList.remove('d-none');
+      loader?.classList.add('d-none');
     }
   }
 
@@ -193,35 +205,55 @@ export default class CategoryTreeSelector {
    * Used to recursively create items of the category tree
    */
   private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
-    const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
-    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
-
+    const categoryNode = this.generateTreeElement(treeCategory);
+    const childrenList = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.childrenList);
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
+
+    const checkboxInput = categoryNode.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
+
+    if (!checkboxInput) {
+      // checkbox input is mandatory. If there is none, it's something fatally wrong already.
+      throw new Error('Checkbox input not found in category tree. It is mandatory element for category tree to work.');
+    }
+
+    // check if this category is selected
+    const isSelected = this.selectedCategories.some((selectedCategory: Category) => selectedCategory.id === treeCategory.id);
+
     categoryNode.classList.toggle('more', hasChildren);
+
     if (hasChildren) {
-      const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
-      const checkboxInput = inputsContainer.querySelector(ProductCategoryMap.treeCheckboxInput) as HTMLInputElement;
+      const inputsContainer = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.treeElementInputs);
       checkboxInput.value = String(treeCategory.id);
 
-      inputsContainer.addEventListener('click', (event) => {
+      inputsContainer?.addEventListener('click', (event) => {
         // We don't want to mess with the inputs behaviour (no toggle when checkbox or radio is clicked)
         // So we only toggle when the div itself is clicked.
         if (event.target !== event.currentTarget) {
           return;
         }
 
-        const isExpanded = !childrenList.classList.contains('d-none');
+        const isExpanded = !childrenList?.classList.contains('d-none');
         categoryNode.classList.toggle('less', !isExpanded);
         categoryNode.classList.toggle('more', isExpanded);
-        childrenList.classList.toggle('d-none', isExpanded);
+        childrenList?.classList.toggle('d-none', isExpanded);
       });
 
       // Recursively build the children trees
+      let containsSelectedChild = false;
       treeCategory.children.forEach((childCategory) => {
         const childTree = this.generateCategoryTree(childCategory);
 
-        childrenList.append(childTree);
+        childrenList?.append(childTree);
+
+        // check if at least one child is selected in child categories tree. Do not perform the check if at least one is found already
+        if (!containsSelectedChild) {
+          containsSelectedChild = this.selectedCategories
+            .some((selectedCategory: Category) => selectedCategory.id === childCategory.id);
+        }
       });
+
+      // Expanding trees which contains at least one selected category or its parent category is selected
+      childrenList?.classList.toggle('d-none', !(isSelected || containsSelectedChild));
     }
 
     return categoryNode;
@@ -239,15 +271,34 @@ export default class CategoryTreeSelector {
     const categoryNode = frag.firstChild as HTMLElement;
 
     // Add category name text
-    const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput) as HTMLInputElement;
+    const checkboxInput = categoryNode.querySelector<HTMLInputElement>(ProductCategoryMap.checkboxInput);
+
+    if (!checkboxInput) {
+      console.error(`Element ${ProductCategoryMap.checkboxInput} was not found.`);
+
+      return categoryNode;
+    }
+
     checkboxInput.value = String(category.id);
 
     const nameElement = document.createTextNode(category.name);
     const element = category.active
       ? nameElement
-      : document.createElement('i').appendChild(nameElement).parentNode as HTMLElement;
+      : document.createElement('i').appendChild(nameElement).parentNode;
 
-    (checkboxInput.parentNode as HTMLElement).insertBefore(element, checkboxInput);
+    if (!(element instanceof HTMLElement || element instanceof Text)) {
+      console.error('Unexpected element type. Expected HTMLElement or Text.');
+
+      return categoryNode;
+    }
+
+    if (!(checkboxInput.parentNode instanceof HTMLElement)) {
+      console.error('Unexpected element type. Expected HTMLElement.');
+
+      return categoryNode;
+    }
+
+    (checkboxInput.parentNode).insertBefore(element, checkboxInput);
 
     return categoryNode;
   }
@@ -257,20 +308,19 @@ export default class CategoryTreeSelector {
    */
   private updateCategory(categoryId: number, check: boolean): void {
     const treeElement = this.categoryTree as HTMLElement;
-    const checkbox = treeElement.querySelector(ProductCategoryMap.inputByValue(categoryId)) as HTMLInputElement;
-    checkbox.checked = check;
-    this.openCategoryParents(checkbox);
-    this.updateSelectedCategories();
+    const checkbox = treeElement.querySelector<HTMLInputElement>(ProductCategoryMap.inputByValue(categoryId));
+
+    if (checkbox) {
+      checkbox.checked = check;
+      this.openCategoryParents(checkbox);
+      this.updateSelectedCategories();
+    } else {
+      console.error(`Checkbox ${ProductCategoryMap.inputByValue(categoryId)} was not found`);
+    }
   }
 
   private openCategoryParents(checkbox: HTMLInputElement): void {
-    // This is the element containing the checkbox
-    let parentItem = checkbox.closest(ProductCategoryMap.treeElement);
-
-    if (parentItem) {
-      // This is the first (potential) parent element
-      parentItem = (parentItem.parentNode as HTMLElement).closest(ProductCategoryMap.treeElement);
-    }
+    let parentItem = this.findParentTreeElement(checkbox);
 
     while (this.categoryTree && parentItem !== null && this.categoryTree.contains(parentItem)) {
       const childrenList = parentItem.querySelector(ProductCategoryMap.childrenList);
@@ -281,24 +331,37 @@ export default class CategoryTreeSelector {
         childrenList.classList.remove('d-none');
       }
 
-      parentItem = (parentItem.parentNode as HTMLElement).closest(ProductCategoryMap.treeElement);
+      parentItem = this.findParentTreeElement(parentItem);
     }
   }
 
-  private initTypeaheadData(
-    treeCategories: Array<TreeCategory>,
-    parentBreadcrumb: string,
-  ) {
+  private findParentTreeElement(element: HTMLElement): HTMLElement|null {
+    // This is the element containing the checkbox
+    let parentItem = element.closest(ProductCategoryMap.treeElement);
+
+    if (parentItem && parentItem.parentNode instanceof HTMLElement) {
+      // This is the first (potential) parent element
+      parentItem = parentItem.parentNode.closest(ProductCategoryMap.treeElement);
+    }
+
+    if (!(parentItem instanceof HTMLElement)) {
+      return null;
+    }
+
+    return parentItem;
+  }
+
+  private initTypeaheadData(treeCategories: Array<TreeCategory>) {
     treeCategories.forEach((treeCategory) => {
-      const typeaheadCategory: TypeaheadCategory = {
+      this.typeaheadCategories.push({
         id: treeCategory.id,
         name: treeCategory.name,
-        breadcrumb: parentBreadcrumb ? `${parentBreadcrumb} > ${treeCategory.name}` : treeCategory.name,
-      };
-      this.typeaheadCategories.push(typeaheadCategory);
+        displayName: treeCategory.displayName,
+      });
 
       if (treeCategory.children) {
-        this.initTypeaheadData(treeCategory.children, typeaheadCategory.breadcrumb);
+        // Unfold the category tree, so that every child and parent categories stays on same level
+        this.initTypeaheadData(treeCategory.children);
       }
     });
   }
@@ -306,14 +369,14 @@ export default class CategoryTreeSelector {
   private initTypeahead(): void {
     const source: Bloodhound = new Bloodhound({
       // @ts-ignore
-      datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
+      datumTokenizer: Tokenizers.obj.letters('displayName'),
       queryTokenizer: Bloodhound.tokenizers.nonword,
       local: this.typeaheadCategories,
     });
 
     const searchConfig: InputAutoCompleteSearchConfig = {
       source,
-      display: 'breadcrumb',
+      display: 'displayName',
       value: 'id',
       onSelect: (selectedItem: any, e: JQueryEventObject, searchInput: JQuery): boolean => {
         this.updateCategory(Number(selectedItem.id), true);
@@ -333,7 +396,8 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const checkedCheckboxes = this.categoryTree.querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
+    const checkedCheckboxes = <NodeListOf<HTMLInputElement>> this.categoryTree
+      .querySelectorAll(ProductCategoryMap.checkedCheckboxInputs);
 
     const categories: Array<Category> = [];
     checkedCheckboxes.forEach((checkbox) => {
@@ -344,11 +408,16 @@ export default class CategoryTreeSelector {
         categories.push({
           id: searchedCategory.id,
           name: searchedCategory.name,
+          displayName: searchedCategory.displayName,
         });
       }
+
+      // do not allow to uncheck the checkbox if it is the last one selected category
+      // eslint-disable-next-line no-param-reassign
+      checkbox.disabled = checkedCheckboxes.length === 1;
     });
 
-    this.tagsRenderer.render(categories, this.defaultCategoryId);
+    this.tagsRenderer.render(categories);
     this.selectedCategories = categories;
   }
 

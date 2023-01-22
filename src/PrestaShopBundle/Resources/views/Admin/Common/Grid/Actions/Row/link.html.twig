@@ -45,6 +45,20 @@
     data-original-title="{{ action.name }}"
   {% endif %}
   data-clickable-row="{{ action.options.clickable_row|default(false) }}"
+  {% if action.options.target is not empty %}target="{{ action.options.target }}"{% endif %}
+  {# Add all attributes which are not class #}
+  {%- for attrname, attrvalue in action.options.attr -%}
+    {% if attrname != 'class' %}
+      {{- " " -}}
+      {% if attrvalue is formview %}
+        {{- attrname }}="{{ form_row(attrvalue)|e('html_attr') }}"
+      {% elseif attrvalue is form %}
+      {{- attrname }}="{{ form_row(attrvalue.createView())|e('html_attr') }}"
+      {% else %}
+        {{- attrname }}="{{ attrvalue }}"
+      {% endif %}
+    {% endif %}
+  {%- endfor -%}
 >
   {% if action.icon is not empty %}
     <i class="material-icons">{{ action.icon }}</i>

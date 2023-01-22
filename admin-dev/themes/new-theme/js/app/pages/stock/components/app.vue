@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import PSPagination from '@app/widgets/ps-pagination.vue';
   import StockHeader from './header/stock-header.vue';
   import Search, {SearchInstanceType} from './header/search.vue';
@@ -80,7 +80,7 @@
 
   const FIRST_PAGE = 1;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'App',
     computed: {
       isReady(): boolean {
@@ -104,6 +104,9 @@
       filtersRef(): FiltersInstanceType {
         return this.searchRef?.filtersRef;
       },
+    },
+    beforeMount() {
+      this.$store.dispatch('getTranslations');
     },
     methods: {
       onPageChanged(pageIndex: number): void {

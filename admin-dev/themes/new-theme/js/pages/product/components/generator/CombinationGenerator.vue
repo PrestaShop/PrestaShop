@@ -43,6 +43,20 @@
       </template>
 
       <template #footer-confirmation>
+        <div class="md-checkbox md-checkbox-inline">
+          <label>
+            <input
+              v-model="applyToAllShops"
+              type="checkbox"
+              id="generate_combinations_all_shop"
+              name="generate_combinations_all_shop"
+              class="form-check-input"
+            >
+            <i class="md-checkbox-control"/>
+            {{ $t('label.apply-to-all-shops') }}
+          </label>
+        </div>
+
         <button
           type="button"
           class="btn btn-outline-secondary"
@@ -61,7 +75,7 @@
           <span v-if="!loading">
             {{
               $tc('generator.action', generatedCombinationsNb, {
-                '%combinationsNb%': generatedCombinationsNb,
+                'combinationsNb': generatedCombinationsNb,
               })
             }}
           </span>
@@ -82,7 +96,8 @@
   import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
+  import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {Attribute, AttributeGroup} from '@pages/product/types';
 
@@ -98,9 +113,10 @@
     preLoading: boolean,
     loading: boolean,
     hasGeneratedCombinations: boolean,
+    applyToAllShops: boolean,
   }
 
-  export default isSelected.extend({
+  export default defineComponent({
     name: 'CombinationGenerator',
     data(): CombinationGeneratorStates {
       return {
@@ -111,6 +127,7 @@
         preLoading: true,
         loading: false,
         hasGeneratedCombinations: false,
+        applyToAllShops: false,
       };
     },
     props: {
@@ -123,6 +140,7 @@
         required: true,
       },
     },
+    mixins: [isSelected],
     components: {
       Modal,
       AttributesSelector,
@@ -143,8 +161,7 @@
           if (combinationsNumber === 0) {
             combinationsNumber = 1;
           }
-          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId]
-            .attributes.length;
+          combinationsNumber *= this.selectedAttributeGroups[attributeGroupId].attributes.length;
         });
 
         return combinationsNumber;
@@ -197,6 +214,7 @@
         this.loading = true;
         const data: Record<string, any> = {
           attributes: {},
+          applyToAllShops: this.applyToAllShops ? 1 : 0,
         };
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
           data.attributes[attributeGroupId] = [];
@@ -211,13 +229,13 @@
           const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
-              '%combinationsNb%': response.combination_ids.length,
+              combinationsNb: response.combination_ids.length,
             }),
           });
           this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
-        } catch (error) {
-          if (error.responseJSON && error.responseJSON.error) {
+        } catch (error: any) {
+          if (error.responseJSON && error.responseJSON?.error) {
             $.growl.error({message: error.responseJSON.error});
           } else {
             $.growl.error({message: error});

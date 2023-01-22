@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
 use PrestaShop\PrestaShop\Core\Localization\Pack\Factory\LocalizationPackFactoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class LocalizationPackImporter is responsible for importing localization pack.

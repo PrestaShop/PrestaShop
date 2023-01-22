@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-  import Vue, {PropType, VueConstructor} from 'vue';
+  import {defineComponent, PropType} from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
@@ -128,23 +128,13 @@
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
-  import {Attribute, AttributeGroup} from '@pages/product/types';
+  import {Attribute, AttributeGroup, AttributesSelectorStates} from '@pages/product/types';
 
   const {$} = window;
 
   const CombinationsMap = ProductMap.combinations;
 
-  export interface AttributesSelectorStates {
-    dataSetConfig: AutoCompleteSearchConfig | {};
-    searchSource: Record<string, any>;
-    scrollbar: PerfectScrollbar | null;
-    hasGeneratedCombinations: boolean;
-    checkboxList: Array<Record<string, any>>;
-  }
-
-  export type AttributesSelectorType = VueConstructor<Vue & InstanceType<typeof isSelected>>
-
-  export default (<AttributesSelectorType>Vue).extend({
+  export default defineComponent({
     name: 'AttributesSelector',
     props: {
       attributeGroups: {

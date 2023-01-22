@@ -165,6 +165,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         $this->fields_form = [
@@ -330,7 +335,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                             'label' => $this->trans('No Tax', [], 'Admin.International.Help'),
                         ],
                     ],
-                    'hint' => $this->trans('(Total tax: 9%)', [], 'Admin.International.Help'),
                 ],
                 [
                     'type' => 'text',

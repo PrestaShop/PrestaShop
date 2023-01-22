@@ -64,7 +64,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Configuration::loadConfiguration();
         Context::getContext()->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         Context::getContext()->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-        Context::getContext()->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        Context::getContext()->currency = Currency::getDefaultCurrency();
         Context::getContext()->cart = new Cart();
         Context::getContext()->employee = new Employee(1);
         define('_PS_SMARTY_FAST_LOAD_', true);
@@ -138,6 +138,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function processGenerateSettingsFile()
     {
+        // Set the install lock file
+        file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
+
         $success = $this->model_install->generateSettingsFile(
             $this->session->database_server,
             $this->session->database_login,

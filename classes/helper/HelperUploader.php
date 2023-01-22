@@ -132,6 +132,11 @@ class HelperUploaderCore extends Uploader
         return $this;
     }
 
+    /**
+     * @param $value
+     *
+     * @return static
+     */
     public function setName($value)
     {
         $this->_name = (string) $value;

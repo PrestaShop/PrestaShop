@@ -52,9 +52,15 @@ export default class CombinationsService {
     });
   }
 
-  bulkDeleteCombinations(productId: number, combinationIds: number[], abortSignal: AbortSignal): Promise<Response> {
+  bulkDeleteCombinations(
+    productId: number,
+    combinationIds: number[],
+    allShops: boolean,
+    abortSignal: AbortSignal,
+  ): Promise<Response> {
     const formData = new FormData();
     formData.append('combinationIds', JSON.stringify(combinationIds));
+    formData.append('allShops', allShops ? '1' : '0');
 
     return fetch(
       this.router.generate('admin_products_combinations_bulk_delete', {productId}),

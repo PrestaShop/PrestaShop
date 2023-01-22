@@ -42,7 +42,7 @@ class StringModifierTest extends TestCase
         $this->stringModifier = new StringModifier();
     }
 
-    public function testItTransformsCamelCaseToSplitWords()
+    public function testItTransformsCamelCaseToSplitWords(): void
     {
         $data = [
             [
@@ -117,5 +117,40 @@ class StringModifierTest extends TestCase
         yield ['test', 4];
         yield ['testable', 20];
         yield ['good bye cruel world 10.99', 128];
+    }
+
+    /**
+     * @dataProvider str2UrlProvider
+     */
+    public function testStr2url(string $input, string $expected): void
+    {
+        self::assertSame($expected, $this->stringModifier->str2url($input));
+    }
+
+    public function str2UrlProvider(): Generator
+    {
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
+        yield ['!@#$%^&*()_+-={}[]|:;"<>,.?/', '-'];
+        yield ['Some !@#$%^&*()_+-={}[]|:;"<>,.?/ text', 'some-text'];
+        yield ['Some text 123 !@#$%^&*()_+-={}[]|:;"<>,.?/', 'some-text-123-'];
+        yield ['Some text 123 with unicode characters: áéíóú', 'some-text-123-with-unicode-characters-aeiou'];
+    }
+
+    /**
+     * @dataProvider getTestReplaceAccentedCharactersData
+     */
+    public function testReplaceAccentedCharacters(string $input, string $expected): void
+    {
+        self::assertSame($expected, $this->stringModifier->replaceAccentedChars($input));
+    }
+
+    public function getTestReplaceAccentedCharactersData(): Generator
+    {
+        yield 'empty string' => ['', ''];
+        yield 'Test a variations' => ['aaâæaa', 'aaaaeaa'];
+        yield 'Test e variations' => ['éèê', 'eee'];
     }
 }

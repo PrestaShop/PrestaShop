@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\OrderPreferences;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -34,7 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class generates "General" form
@@ -54,9 +54,15 @@ class GeneralType extends TranslatorAwareType
      */
     private $tosCmsChoices;
 
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        ConfigurationInterface $configuration,
         $defaultCurrencyIsoCode,
         array $tosCmsChoices
     ) {
@@ -64,13 +70,13 @@ class GeneralType extends TranslatorAwareType
 
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->tosCmsChoices = $tosCmsChoices;
+        $this->configuration = $configuration;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var Configuration $configuration */
-        $configuration = $this->getConfiguration();
-        $isMultishippingEnabled = $configuration->getBoolean('PS_ALLOW_MULTISHIPPING');
+        $configuration = $this->configuration;
+        $isMultishippingEnabled = (bool) $configuration->get('PS_ALLOW_MULTISHIPPING');
         $currencyIsoCode = $this->defaultCurrencyIsoCode;
 
         $builder
@@ -140,6 +146,12 @@ class GeneralType extends TranslatorAwareType
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
                 ],
+            ])
+            ->add('enable_backorder_status', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Set backorder status', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('The order status will be set to "On backorder" for new orders containing products that are out of stock.', 'Admin.Shopparameters.Help'),
+                'multistore_configuration_key' => 'PS_ENABLE_BACKORDER_STATUS',
             ]);
     }
 

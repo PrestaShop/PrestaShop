@@ -59,7 +59,7 @@ use Product;
 use ProductAttribute;
 use Shop;
 use StockAvailable;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 /**

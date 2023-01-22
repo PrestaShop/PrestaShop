@@ -1,8 +1,14 @@
 name: UI tests
 on: [ push, pull_request ]
+permissions:
+  contents: read   #   to fetch code (actions/checkout)
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
-
   sanity:
+    permissions:
+      contents: read   #   to fetch code (actions/checkout)
     runs-on: ubuntu-latest
     name: Sanity
     strategy:
@@ -11,84 +17,34 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          access_token: ${{ github.token }}
+      - uses: actions/checkout@v3
 
-      - uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup environment
+        uses: ./.github/actions/setup-prestashop-env
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
-
-      - name: Setup Apache
-        run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
-
-      - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7'
-          mysql database: 'prestashop'
-          mysql root password: 'password'
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
+          mysql-version: '5.7'
+          mysql-database: 'prestashop'
+          mysql-root-password: 'password'
           node-version: '16'
-
-      - name: Setup NPM
-        run: npm install -g npm@7
-
-      - name: PrestaShop Configuration
-        run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache node Directory
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('admin-dev/**/package-lock.json', 'tests/**/package-lock.json', 'themes/**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
-      - name: Cache Composer Directory
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Composer install and build assets
-        run: make
-
-      - run: |
-          sudo chown www-data:www-data -R ${{ github.workspace }} && \
-          sudo mkdir -p /var/lib/php/sessions && \
-          sudo chown www-data:www-data -R /var/lib/php/sessions && \
-          sudo service apache2 restart
+          npm-version: '7'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
-      - name: Run tests
-        run: npm install && npm run test:sanity:fast-fail
-        env:
-          URL_FO: http://localhost/
-          DB_NAME: prestashop
-          DB_PASSWD: password
-          HEADLESS: true
-          TAKE_SCREENSHOT_AFTER_FAIL: true
+      - name: Use .env.ci
+        run: mv .env.ci .env
         working-directory: ./tests/UI
 
-      - uses: actions/upload-artifact@v2
+      - name: Run tests
+        run: npm install && npm run test:sanity:fast-fail
+        working-directory: ./tests/UI
+
+      - uses: actions/upload-artifact@v3
         if: ${{ always() }}
         with:
           name: screenshots-${{ matrix.php }}

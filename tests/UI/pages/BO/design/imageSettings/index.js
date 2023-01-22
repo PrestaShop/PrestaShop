@@ -31,15 +31,15 @@ class ImageSettings extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='image_typeFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='image_typeFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonimage_type';
     this.filterResetButton = 'button[name=\'submitResetimage_type\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
     this.tableBodySpecificColumn = (row, columnName) => `${this.tableBodyColumn(row)}.column-${columnName}`;
@@ -48,18 +48,18 @@ class ImageSettings extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Row actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.tableColumnActionsToggleButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = row => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = row => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
-    this.deleteModalButtonYes = '#popup_ok';
+    this.deleteModalButtonYes = '.btn-confirm-delete-images-type';
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -72,7 +72,7 @@ class ImageSettings extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
@@ -139,7 +139,7 @@ class ImageSettings extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 

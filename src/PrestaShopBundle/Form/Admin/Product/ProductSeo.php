@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This form class is responsible to generate the product SEO form.
@@ -159,12 +159,16 @@ class ProductSeo extends CommonAbstractType
                 FormType\ChoiceType::class,
                 [
                     'choices' => [
+                        $this->translator->trans('Default behavior from configuration', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_DEFAULT,
+                        $this->translator->trans('No redirection (200), display product', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_SUCCESS_DISPLAYED,
+                        $this->translator->trans('No redirection (404), display product', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND_DISPLAYED,
+                        $this->translator->trans('No redirection (410), display product', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE_DISPLAYED,
+                        $this->translator->trans('No redirection (404), display error page', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
+                        $this->translator->trans('No redirection (410), display error page', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
                         $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_PERMANENT,
                         $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_TEMPORARY,
                         $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_PERMANENT,
                         $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
-                        $this->translator->trans('No redirection (410)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
-                        $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
                     ],
                     'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
                         if (array_key_exists($index, $remoteUrls)) {

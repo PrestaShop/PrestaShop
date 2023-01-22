@@ -39,6 +39,10 @@ class ConfigurationKPICore extends Configuration
         ConfigurationKPI::$definition_backup = Configuration::$definition;
         Configuration::$definition['table'] = 'configuration_kpi';
         Configuration::$definition['primary'] = 'id_configuration_kpi';
+
+        if (empty(static::$_cache[Configuration::$definition['table']])) {
+            parent::loadConfiguration();
+        }
     }
 
     /**

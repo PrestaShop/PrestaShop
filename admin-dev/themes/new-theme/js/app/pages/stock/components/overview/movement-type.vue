@@ -41,10 +41,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSButton from '@app/widgets/ps-button.vue';
+  import {defineComponent} from 'vue';
+  import TranslationMixin from '@app/pages/stock/mixins/translate';
 
-  export default Vue.extend({
+  export default defineComponent({
     computed: {
       disabled(): boolean {
         return !this.$store.state.hasQty;
@@ -55,6 +56,7 @@
         };
       },
     },
+    mixins: [TranslationMixin],
     methods: {
       sendQty(): void {
         this.$store.state.hasQty = false;

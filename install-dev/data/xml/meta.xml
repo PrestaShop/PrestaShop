@@ -56,6 +56,10 @@
 			<page>authentication</page>
 			<configurable>1</configurable>
 		</meta>
+		<meta id="registration">
+			<page>registration</page>
+			<configurable>1</configurable>
+		</meta>
 		<meta id="cart">
 			<page>cart</page>
 			<configurable>1</configurable>

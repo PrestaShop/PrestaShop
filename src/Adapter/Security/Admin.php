@@ -27,11 +27,13 @@
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Controller\Api\OAuth2\AccessTokenController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
@@ -59,24 +61,41 @@ class Admin
      */
     private $userProvider;
 
-    public function __construct(LegacyContext $context, TokenStorageInterface $securityTokenStorage, UserProviderInterface $userProvider)
-    {
+    /**
+     * @var Security
+     */
+    private $security;
+
+    public function __construct(
+        LegacyContext $context,
+        TokenStorageInterface $securityTokenStorage,
+        UserProviderInterface $userProvider,
+        Security $security
+    ) {
         $this->context = $context;
         $this->legacyContext = $context->getContext();
         $this->securityTokenStorage = $securityTokenStorage;
         $this->userProvider = $userProvider;
+        $this->security = $security;
     }
 
     /**
      * Check if employee is logged in
      * If not logged in, redirect to admin home page.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      *
      * @return bool or redirect
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
+        if (
+            $this->security->getUser() !== null
+            || $event->getRequest()->get('_controller') === AccessTokenController::class
+        ) {
+            return true;
+        }
+
         //if employee loggdin in legacy context, authenticate him into sf2 security context
         if (isset($this->legacyContext->employee) && $this->legacyContext->employee->isLoggedBack()) {
             $user = $this->userProvider->loadUserByUsername($this->legacyContext->employee->email);

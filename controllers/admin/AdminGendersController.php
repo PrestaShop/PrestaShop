@@ -116,6 +116,11 @@ class AdminGendersControllerCore extends AdminController
         parent::initPageHeaderToolbar();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         $this->fields_form = [

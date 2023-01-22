@@ -59,7 +59,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $contextAdapter = $this->get('prestashop.adapter.legacy.context');
         $locales = $contextAdapter->getLanguages();
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $shopContextAdapter = $this->get('prestashop.adapter.shop.context');
         $shops = $shopContextAdapter->getShops();
         $countries = $this->get('prestashop.adapter.data_provider.country')->getCountries($locales[0]['id_lang']);
@@ -102,7 +102,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $response = new JsonResponse();
         $idProduct = isset($request->get('form')['id_product']) ? $request->get('form')['id_product'] : null;
 
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $request->get('form')['step2']['specific_price']);
 
         if (!empty($errors)) {
@@ -129,7 +129,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function getUpdateFormAction($idSpecificPrice)
     {
         /** @var AdminProductWrapper $adminProductWrapper */
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
 
         try {
             $price = $adminProductWrapper->getSpecificPriceDataById($idSpecificPrice);
@@ -186,7 +186,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $formValues = $formData['modal'];
 
         /** @var AdminProductWrapper $adminProductWrapper */
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $errors = $adminProductWrapper->processProductSpecificPrice($idProduct, $formValues, $idSpecificPrice);
 
         if (!empty($errors)) {
@@ -211,7 +211,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
 
-        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $adminProductWrapper = $this->get(AdminProductWrapper::class);
         $res = $adminProductWrapper->deleteSpecificPrice((int) $idSpecificPrice);
 
         if ($res['status'] == 'error') {

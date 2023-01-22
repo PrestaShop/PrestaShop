@@ -25,7 +25,7 @@
 
 import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
 import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
-import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
+import {Supplier} from '@pages/product/components/suppliers/supplier-types';
 import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductMap from '@pages/product/product-map';
@@ -48,6 +48,7 @@ export default class ProductOptionsManager {
   private init(): void {
     this.initShowPriceToggler();
     this.initSuppliers();
+    this.initProductVisibilityList();
   }
 
   private initShowPriceToggler(): void {
@@ -79,6 +80,28 @@ export default class ProductOptionsManager {
     });
   }
 
+  private initProductVisibilityList(): void {
+    const defaultSelectedInput = document.querySelector<HTMLInputElement>(`${ProductMap.options.visibilityRadio}:checked`);
+    const descriptionField = document.querySelector<HTMLDivElement>(ProductMap.options.visibilityDescriptionField);
+
+    if (descriptionField === null || defaultSelectedInput === null) {
+      return;
+    }
+
+    descriptionField.innerHTML = `${defaultSelectedInput.dataset.description}`;
+
+    const inputs = document.querySelectorAll<HTMLInputElement>(ProductMap.options.visibilityRadio) ?? [];
+    inputs.forEach((input: HTMLInputElement) => {
+      input.addEventListener('change', () => {
+        const selectedChoiceDescription = input.dataset.description as string;
+
+        if (input.checked) {
+          descriptionField.innerHTML = selectedChoiceDescription;
+        }
+      });
+    });
+  }
+
   private initSuppliers(): void {
     let productSuppliers: ProductSuppliersCollection;
 
@@ -87,14 +110,8 @@ export default class ProductOptionsManager {
         ProductMap.suppliers.productSuppliers,
         this.productFormModel.getProduct().suppliers?.defaultSupplierId || 0,
         this.productFormModel.getProduct().price.wholesalePrice,
-        (defaultProductSupplier: ProductSupplier) => {
-          this.productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
-        },
       );
 
-      this.productFormModel.watch('price.wholesalePrice', (event) => {
-        productSuppliers.updateWholesalePrice(event.value);
-      });
       this.productFormModel.watch('suppliers.defaultSupplierId', (event) => {
         productSuppliers.setDefaultSupplierId(event.value);
       });

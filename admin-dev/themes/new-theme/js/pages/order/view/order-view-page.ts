@@ -315,7 +315,7 @@ export default class OrderViewPage {
   }
 
   getActivePage(): HTMLElement {
-    return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0);
+    return $(OrderViewPageMap.productsTablePagination).find('.active span').get(0)!;
   }
 
   refreshProductsList(orderId: number): void {

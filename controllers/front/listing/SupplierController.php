@@ -115,6 +115,9 @@ class SupplierControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * @return ProductSearchQuery
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -126,6 +129,9 @@ class SupplierControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return SupplierProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new SupplierProductSearchProvider(
@@ -240,5 +246,13 @@ class SupplierControllerCore extends ProductListingFrontController
         $page['body_classes']['supplier-' . $this->supplier->name] = true;
 
         return $page;
+    }
+
+    /**
+     * @return Supplier
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
     }
 }

@@ -44,11 +44,11 @@ class CombinationCommandsBuilderTest extends AbstractCombinationCommandBuilderTe
     public function testBuildCommands(array $formData, array $commandBuilders, array $expectedCommands)
     {
         $builder = new CombinationCommandsBuilder($commandBuilders);
-        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData);
+        $builtCommands = $builder->buildCommands($this->getCombinationId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    public function getExpectedCommands(): iterable
     {
         $collection = [];
         yield [

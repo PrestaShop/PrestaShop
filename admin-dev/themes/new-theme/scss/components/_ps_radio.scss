@@ -3,7 +3,7 @@
     position: absolute;
     left: -9999px;
 
-    & + label {
+    + label {
       position: relative;
       display: inline-block;
       padding-left: 28px;

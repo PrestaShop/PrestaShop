@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProv
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class ModifyTranslationsType is responsible for building 'Modify translations' form

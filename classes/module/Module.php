@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\Autoload\PrestashopAutoload;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -2690,18 +2691,16 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @param int $id_hook Hook ID
      *
-     * @return int position
+     * @return int position or 0 if hook not found
      */
     public function getPosition($id_hook)
     {
-        $result = Db::getInstance()->getRow('
+        return (int) Db::getInstance()->getValue('
             SELECT `position`
             FROM `' . _DB_PREFIX_ . 'hook_module`
             WHERE `id_hook` = ' . (int) $id_hook . '
             AND `id_module` = ' . (int) $this->id . '
             AND `id_shop` = ' . (int) Context::getContext()->shop->id);
-
-        return $result['position'];
     }
 
     /**
@@ -2997,7 +2996,7 @@ abstract class ModuleCore implements ModuleInterface
             file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
 
             // Re-generate the class index
-            Tools::generateIndex();
+            PrestashopAutoload::getInstance()->generateIndex();
         }
 
         return true;
@@ -3244,7 +3243,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Re-generate the class index
-        Tools::generateIndex();
+        PrestashopAutoload::getInstance()->generateIndex();
 
         return true;
     }
@@ -3285,7 +3284,7 @@ abstract class ModuleCore implements ModuleInterface
 
             // Get Parent directory
             $splDir = $splDir->getPathInfo();
-        } while ($splDir->getPathname() !== $directoryOverride);
+        } while ($splDir->getRealPath() !== $directoryOverride);
     }
 
     private function getWidgetHooks()

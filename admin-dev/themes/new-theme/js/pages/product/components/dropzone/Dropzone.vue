@@ -86,8 +86,8 @@
       v-if="isModalShown"
       :confirmation="true"
       :modal-title="
-        $tc('modal.title', this.selectedFiles.length, {
-          '%filesNb%': this.selectedFiles.length,
+        $tc('modal.title', selectedFiles.length, {
+          'filesNb': selectedFiles.length,
         })
       "
       :confirm-label="$t('modal.accept')"
@@ -140,7 +140,6 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import Router from '@components/router';
   import {
     getProductImages,
@@ -151,7 +150,8 @@
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
+  import {defineComponent} from 'vue';
   import DropzoneWindow from './DropzoneWindow.vue';
   import DropzonePhotoSwipe from './DropzonePhotoSwipe.vue';
 
@@ -176,14 +176,14 @@
     selectedFiles: Array<PSDropzoneFile>,
     translations: Array<PSDropzoneFile>,
     loading: boolean,
-    selectedLocale: string | null | Record<string, any>,
+    selectedLocale?: Record<string, any>,
     buttonLoading: boolean,
     isModalShown: boolean,
     galleryOpened: boolean,
     sortableContainer: JQuery | null;
   }
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Dropzone',
     data(): DropzoneStates {
       return {
@@ -203,7 +203,7 @@
         selectedFiles: [],
         translations: [],
         loading: true,
-        selectedLocale: null,
+        selectedLocale: undefined,
         buttonLoading: false,
         isModalShown: false,
         galleryOpened: false,
@@ -236,6 +236,7 @@
     computed: {},
     mounted() {
       this.watchLocaleChanges();
+      this.watchResetDropzone();
       this.initProductImages();
     },
     methods: {
@@ -255,6 +256,14 @@
                 this.selectedLocale = locale;
               }
             });
+          },
+        );
+      },
+      watchResetDropzone(): void {
+        window.prestashop.instance.eventEmitter.on(
+          DropzoneEvents.resetDropzone,
+          () => {
+            this.resetDropzone();
           },
         );
       },
@@ -337,7 +346,7 @@
                 file.previewElement.classList.toggle('selected');
               }
             } else {
-              this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
+              this.selectedFiles = this.selectedFiles.filter((e) => e.image_id !== file.image_id);
               file.previewElement.classList.toggle('selected');
             }
           });
@@ -400,7 +409,7 @@
               if (file.is_cover) {
                 isCoverImageRemoved = true;
               }
-            } catch (error) {
+            } catch (error: any) {
               errorMessage = error.responseJSON
                 ? error.responseJSON.error
                 : error;
@@ -415,7 +424,7 @@
         } else {
           $.growl({
             message: this.$t('delete.success', {
-              '%filesNb%': nbFiles,
+              filesNb: nbFiles,
             }),
           });
         }
@@ -499,7 +508,7 @@
           }
           $.growl({message: this.$t('window.settingsUpdated')});
           this.buttonLoading = false;
-        } catch (error) {
+        } catch (error: any) {
           $.growl.error({message: error.error});
           this.buttonLoading = false;
         }
@@ -529,7 +538,7 @@
             $.growl({message: this.$t('window.imageReplaced')});
             this.buttonLoading = false;
           }
-        } catch (error) {
+        } catch (error: any) {
           $.growl.error({message: error.responseJSON.error});
           this.buttonLoading = false;
         }
@@ -542,7 +551,7 @@
             this.formName,
             this.token,
           );
-        } catch (error) {
+        } catch (error: any) {
           this.sortableContainer?.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
         }
@@ -706,17 +715,13 @@
 }
 
 .product-page #product-images-container {
+  border-radius: 4px;
   @include media-breakpoint-down(xs) {
     flex-wrap: wrap;
   }
 
   #product-images-dropzone.dropzone {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
     border-radius: 4px;
-    flex-wrap: wrap;
-
     @include media-breakpoint-down(xs) {
       flex-wrap: wrap;
       justify-content: space-around;

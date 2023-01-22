@@ -86,7 +86,7 @@
                       product_weight="0.000000" tax_computation_method="0" tax_name="" tax_rate="0.000"
                       ecotax="0.000000" ecotax_tax_rate="0.000" discount_quantity_applied="0" download_nb="0"
                       download_deadline="0000-00-00 00:00:00" total_price_tax_incl="158.000000"
-                      total_price_tax_excl="79.000000" unit_price_tax_incl="79.000000" unit_price_tax_excl="79.000000"
+                      total_price_tax_excl="158.000000" unit_price_tax_incl="79.000000" unit_price_tax_excl="79.000000"
                       total_shipping_price_tax_incl="0.000000" total_shipping_price_tax_excl="0.000000"
                       purchase_supplier_price="0.000000" original_product_price="79.000000">
             <product_name>The adventure begins Framed poster - Size : 80x120cm</product_name>

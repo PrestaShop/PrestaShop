@@ -106,7 +106,7 @@ class PreferencesController extends FrameworkBundleAdminController
     private function renderForm(Request $request, FormInterface $form): Response
     {
         /** @var Tools $toolsAdapter */
-        $toolsAdapter = $this->get('prestashop.adapter.tools');
+        $toolsAdapter = $this->get(Tools::class);
 
         // SSL URI is used for the merchant to check if he has SSL enabled
         $sslUri = 'https://' . $toolsAdapter->getShopDomainSsl() . $request->getRequestUri();

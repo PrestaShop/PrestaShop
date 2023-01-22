@@ -77,6 +77,11 @@ class EditableCombinationForListing
     private $imageUrl;
 
     /**
+     * @var DecimalNumber
+     */
+    private $ecoTax;
+
+    /**
      * @param int $combinationId
      * @param string $combinationName
      * @param string $reference
@@ -85,6 +90,7 @@ class EditableCombinationForListing
      * @param DecimalNumber $impactOnPrice
      * @param int $quantity
      * @param string $imageUrl
+     * @param DecimalNumber $ecoTax
      */
     public function __construct(
         int $combinationId,
@@ -94,7 +100,8 @@ class EditableCombinationForListing
         bool $default,
         DecimalNumber $impactOnPrice,
         int $quantity,
-        string $imageUrl
+        string $imageUrl,
+        DecimalNumber $ecoTax
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
@@ -104,6 +111,7 @@ class EditableCombinationForListing
         $this->impactOnPrice = $impactOnPrice;
         $this->quantity = $quantity;
         $this->imageUrl = $imageUrl;
+        $this->ecoTax = $ecoTax;
     }
 
     /**
@@ -168,5 +176,13 @@ class EditableCombinationForListing
     public function getImageUrl(): string
     {
         return $this->imageUrl;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getEcoTax(): DecimalNumber
+    {
+        return $this->ecoTax;
     }
 }

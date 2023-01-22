@@ -106,7 +106,8 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     {
         $packedItems = $this->productRepository->getPackedProducts(
             $query->getPackId(),
-            $query->getLanguageId()
+            $query->getLanguageId(),
+            $query->getShopConstraint()
         );
         $packedProducts = [];
         $combinationIds = [];

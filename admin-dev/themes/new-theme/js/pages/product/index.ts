@@ -23,8 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CreateProductModal from '@pages/product/components/create-product-modal';
 import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
+import ProductMap from '@pages/product/product-map';
+import selectShopForEdition from '@pages/product/components/select-shop-modal';
+import initGridShopPreviews from '@pages/product/components/grid-shop-previews';
 
 const {$} = window;
 
@@ -41,9 +43,31 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
-
-  new CreateProductModal();
   grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
+
+  grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension((button: HTMLElement) => {
+    if (button.classList.contains(ProductMap.shops.editProductClass)) {
+      const shopIds: string[] = button.closest('tr')?.querySelector<HTMLElement>(ProductMap.shops.shopListCell)
+        ?.dataset?.shopIds?.split(',') ?? [];
+      selectShopForEdition(button, shopIds);
+    } else {
+      document.location.href = <string> button.getAttribute('href');
+    }
+  }));
+
+  document.querySelectorAll<HTMLElement>(`.${ProductMap.shops.editProductClass}`).forEach((link: HTMLElement) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (link.classList.contains(ProductMap.shops.editProductClass)) {
+        const shopIds: string[] = link.closest('tr')?.querySelector<HTMLElement>(ProductMap.shops.shopListCell)
+          ?.dataset?.shopIds?.split(',') ?? [];
+        selectShopForEdition(link, shopIds);
+      } else {
+        document.location.href = <string> link.getAttribute('href');
+      }
+    });
+  });
+  initGridShopPreviews();
 
   new CategoryTreeFilter();
 });

@@ -164,47 +164,62 @@ class ImageRetriever
 
         $urls = [];
         $image_types = ImageType::getImagesTypes($type, true);
-
+        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
         $ext = 'jpg';
 
-        $mainImagePath = implode(DIRECTORY_SEPARATOR, [
+        // Get path of original uploaded image we will use to get thumbnails
+        $originalImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
             $id_image . '.' . $ext,
         ]);
-        $generateHighDpiImages = (bool) Configuration::get('PS_HIGHT_DPI');
 
         foreach ($image_types as $image_type) {
-            $resizedImagePath = implode(DIRECTORY_SEPARATOR, [
+            // Final path thumbnail in our size
+            $thumbnailPath = implode(DIRECTORY_SEPARATOR, [
                 $imageFolderPath,
                 $id_image . '-' . $image_type['name'] . '.' . $ext,
             ]);
 
-            if (!file_exists($resizedImagePath)) {
+            // Check if the thumbnail exists, if not, create it automatically on the fly
+            if (!file_exists($thumbnailPath)) {
                 ImageManager::resize(
-                    $mainImagePath,
-                    $resizedImagePath,
+                    $originalImagePath,
+                    $thumbnailPath,
                     (int) $image_type['width'],
                     (int) $image_type['height']
                 );
             }
 
+            /*
+            * If High-DPI images are enabled, we will also generate a thumbnail in
+            * double the size, so it can be used in src-sets.
+            */
             if ($generateHighDpiImages) {
-                $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
+                $thumbnailPathHighDpi = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
                     $id_image . '-' . $image_type['name'] . '2x.' . $ext,
                 ]);
-                if (!file_exists($resizedImagePathHighDpi)) {
+                if (!file_exists($thumbnailPathHighDpi)) {
                     ImageManager::resize(
-                        $mainImagePath,
-                        $resizedImagePathHighDpi,
+                        $originalImagePath,
+                        $thumbnailPathHighDpi,
                         (int) $image_type['width'] * 2,
                         (int) $image_type['height'] * 2
                     );
                 }
             }
 
+            // Thumbnail done, now let's generate it's seo-friendly URL and add it to our output
+            // Primary (fake) image name is object rewrite, fallbacks are name and ID
+            if (!empty($object->link_rewrite)) {
+                $rewrite = $object->link_rewrite;
+            } elseif (!empty($object->name)) {
+                $rewrite = $object->name;
+            } else {
+                $rewrite = $id_image;
+            }
             $url = $this->link->$getImageURL(
-                isset($object->link_rewrite) ? $object->link_rewrite : $object->name,
+                $rewrite,
                 $id_image,
                 $image_type['name']
             );
@@ -216,12 +231,13 @@ class ImageRetriever
             ];
         }
 
+        // Sort thumbnails by size
         uasort($urls, function (array $a, array $b) {
             return $a['width'] * $a['height'] > $b['width'] * $b['height'] ? 1 : -1;
         });
 
+        // Resolve some basic sizes - the smallest, middle and largest
         $keys = array_keys($urls);
-
         $small = $urls[$keys[0]];
         $large = end($urls);
         $medium = $urls[$keys[ceil((count($keys) - 1) / 2)]];
@@ -231,7 +247,7 @@ class ImageRetriever
             'small' => $small,
             'medium' => $medium,
             'large' => $large,
-            'legend' => isset($object->meta_title) ? $object->meta_title : $object->name,
+            'legend' => !empty($object->meta_title) ? $object->meta_title : $object->name,
             'id_image' => $id_image,
         ];
     }
@@ -243,8 +259,8 @@ class ImageRetriever
      */
     public function getCustomizationImage($imageHash)
     {
-        $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
-        $small_image_url = $large_image_url . '_small';
+        $large_image_url = $this->link->getPageLink('upload', null, null, ['file' => $imageHash]);
+        $small_image_url = $this->link->getPageLink('upload', null, null, ['file' => $imageHash . '_small']);
 
         $small = [
             'url' => $small_image_url,

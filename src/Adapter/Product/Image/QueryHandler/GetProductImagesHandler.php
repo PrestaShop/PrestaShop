@@ -30,11 +30,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\QueryHandler;
 
 use Image;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryHandler\GetProductImagesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Handles @see GetProductImages query
@@ -42,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 final class GetProductImagesHandler implements GetProductImagesHandlerInterface
 {
     /**
-     * @var ProductImageRepository
+     * @var ProductImageMultiShopRepository
      */
     private $productImageRepository;
 
@@ -52,11 +53,11 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
     private $productImageUrlFactory;
 
     /**
-     * @param ProductImageRepository $productImageRepository
+     * @param ProductImageMultiShopRepository $productImageRepository
      * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
-        ProductImageRepository $productImageRepository,
+        ProductImageMultiShopRepository $productImageRepository,
         ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->productImageRepository = $productImageRepository;
@@ -68,32 +69,41 @@ final class GetProductImagesHandler implements GetProductImagesHandlerInterface
      */
     public function handle(GetProductImages $query): array
     {
-        $images = $this->productImageRepository->getImages($query->getProductId());
-
-        return $this->formatImages($images);
-    }
-
-    /**
-     * @param Image[] $images
-     *
-     * @return ProductImage[]
-     */
-    private function formatImages(array $images): array
-    {
+        //todo throw exception if not single shop
+        $images = $this->productImageRepository->getImages($query->getProductId(), $query->getShopConstraint());
         $productImages = [];
-
         foreach ($images as $image) {
-            $imageId = new ImageId((int) $image->id);
-            $productImages[] = new ProductImage(
-                (int) $image->id,
-                (bool) $image->cover,
-                (int) $image->position,
-                $image->legend,
-                $this->productImageUrlFactory->getPath($imageId),
-                $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
+            $productImages[] = $this->formatImage(
+                $image,
+                $this->productImageRepository->getAssociatedShopIds(new ImageId($image->id))
             );
         }
 
         return $productImages;
+    }
+
+    /**
+     * @param Image $image
+     *
+     * @return ProductImage
+     */
+    private function formatImage(Image $image, array $shopIds): ProductImage
+    {
+        $imageId = new ImageId((int) $image->id);
+
+        return new ProductImage(
+            (int) $image->id,
+            (bool) $image->cover,
+            (int) $image->position,
+            $image->legend,
+            $this->productImageUrlFactory->getPath($imageId),
+            $this->productImageUrlFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT),
+            array_map(
+                static function (ShopId $shopId): int {
+                    return $shopId->getValue();
+                },
+                $shopIds
+            )
+        );
     }
 }

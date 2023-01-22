@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Core\Util\String;
 
 /**
  * Defines reusable methods for strings modifications.
+ *
+ * @method str2url(string $string) will be added in 9.0
+ * @method replaceAccentedChars(string $string) will be added in 9.0
  */
 interface StringModifierInterface
 {

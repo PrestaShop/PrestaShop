@@ -68,7 +68,7 @@ Feature: Add product to pack from Back Office (BO)
     And I add product "product2" with following information:
       | name[en-US] | shady sunglasses |
       | type        | standard         |
-    And I update product "product2" details with following values:
+    And I update product "product2" with following values:
       | reference | ref1              |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
@@ -172,9 +172,9 @@ Feature: Add product to pack from Back Office (BO)
       | productSkirt1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
       | productSkirt1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | productSkirt1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-    And I update product "productSkirt1" details with following values:
+    And I update product "productSkirt1" with following values:
       | reference | productSkirtRef |
-    And I update combination "productSkirt1SWhite" details with following values:
+    And I update combination "productSkirt1SWhite" with following values:
       | reference | productSkirtSWhiteRef |
     And I add new image "skirtWhiteS" named "app_icon.png" to product "productSkirt1"
     And I add new image "skirtWhiteM" named "logo.jpg" to product "productSkirt1"

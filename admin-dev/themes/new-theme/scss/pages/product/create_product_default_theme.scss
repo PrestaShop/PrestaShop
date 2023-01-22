@@ -1,0 +1,48 @@
+#modal-create-product {
+  //modal loader
+  @import "~bootstrap/scss/mixins/border-radius";
+  @import "../../config/settings";
+  @import "~prestakit/scss/spinners";
+  @import "../../components/modal";
+  @import "create_product_modal";
+
+  .d-none {
+    /* stylelint-disable declaration-no-important */
+    display: none !important;
+    /* stylelint-enable declaration-no-important */
+  }
+
+  .modal-dialog {
+    top: 50%;
+    width: 90%;
+    max-width: 810px;
+    transform: translateY(-50%);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: none;
+  }
+
+  .modal-header .close {
+    float: right;
+    margin: -1rem 0 0 auto;
+  }
+
+  button.close {
+    padding: 0;
+    margin: initial;
+    font-size: 2rem;
+    background-color: transparent;
+    border: 0;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .loader {
+    position: absolute;
+  }
+}

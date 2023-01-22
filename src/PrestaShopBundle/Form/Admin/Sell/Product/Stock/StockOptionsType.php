@@ -34,8 +34,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StockOptionsType extends TranslatorAwareType
 {
@@ -94,6 +94,7 @@ class StockOptionsType extends TranslatorAwareType
                 'default_empty_data' => 0,
                 'empty_view_data' => null,
                 'modify_all_shops' => true,
+                // @todo: need to trigger opening allShopscheckbox on "disabling_switch" change too.
                 'disabling_switch' => true,
                 'attr' => [
                     'class' => 'small-input',

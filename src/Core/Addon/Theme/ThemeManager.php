@@ -43,13 +43,15 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShopBundle\Service\TranslationService;
 use PrestaShopBundle\Translation\Provider\TranslationFinder;
 use PrestaShopLogger;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Shop;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 
 class ThemeManager implements AddonManagerInterface
@@ -115,6 +117,11 @@ class ThemeManager implements AddonManagerInterface
     private $translationFinder;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param Shop $shop
      * @param ConfigurationInterface $configuration
      * @param ThemeValidator $themeValidator
@@ -136,7 +143,8 @@ class ThemeManager implements AddonManagerInterface
         Finder $finder,
         HookConfigurator $hookConfigurator,
         ThemeRepository $themeRepository,
-        ImageTypeRepository $imageTypeRepository
+        ImageTypeRepository $imageTypeRepository,
+        LoggerInterface $logger = null
     ) {
         $this->translationFinder = new TranslationFinder();
         $this->shop = $shop;
@@ -149,6 +157,7 @@ class ThemeManager implements AddonManagerInterface
         $this->hookConfigurator = $hookConfigurator;
         $this->themeRepository = $themeRepository;
         $this->imageTypeRepository = $imageTypeRepository;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -239,20 +248,25 @@ class ThemeManager implements AddonManagerInterface
 
         $this->disable($this->shop->theme_name);
 
-        $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
-            ->doApplyConfiguration($theme->get('global_settings.configuration', []))
-            ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
-            ->doEnableModules($theme->getModulesToEnable())
-            ->doResetModules($theme->get('global_settings.modules.to_reset', []))
-            ->doApplyImageTypes($theme->get('global_settings.image_types', []))
-            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []));
+        try {
+            $this->doCreateCustomHooks($theme->get('global_settings.hooks.custom_hooks', []))
+                ->doApplyConfiguration($theme->get('global_settings.configuration', []))
+                ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
+                ->doEnableModules($theme->getModulesToEnable())
+                ->doResetModules($theme->get('global_settings.modules.to_reset', []))
+                ->doApplyImageTypes($theme->get('global_settings.image_types', []))
+                ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []));
 
-        $theme->onEnable();
+            $theme->onEnable();
 
-        $this->shop->theme_name = $theme->getName();
-        $this->shop->update();
+            $this->shop->theme_name = $theme->getName();
+            $this->shop->update();
 
-        $this->saveTheme($theme);
+            $this->saveTheme($theme);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage());
+            throw $e;
+        }
 
         return true;
     }
@@ -454,6 +468,7 @@ class ThemeManager implements AddonManagerInterface
         $themeConfigurationFile = $sandboxPath . '/config/theme.yml';
 
         if (!file_exists($themeConfigurationFile)) {
+            $this->logger->error(sprintf('Configuration file not found %s', $themeConfigurationFile));
             throw new ThemeConstraintException('Missing theme configuration file which should be in located in /config/theme.yml', ThemeConstraintException::MISSING_CONFIGURATION_FILE);
         }
 
@@ -464,7 +479,9 @@ class ThemeManager implements AddonManagerInterface
         try {
             $theme = new Theme($theme_data);
         } catch (ErrorException $exception) {
-            throw new ThemeConstraintException(sprintf('Theme data %s is not valid', var_export($theme_data, true)), ThemeConstraintException::INVALID_DATA, $exception);
+            $errorMessage = sprintf('Theme data %s is not valid', var_export($theme_data, true));
+            $this->logger->error($errorMessage);
+            throw new ThemeConstraintException($errorMessage, ThemeConstraintException::INVALID_DATA, $exception);
         }
 
         if (!$this->themeValidator->isValid($theme)) {
@@ -472,7 +489,9 @@ class ThemeManager implements AddonManagerInterface
 
             $this->themeValidator->getErrors($theme->getName());
 
-            throw new ThemeConstraintException(sprintf('Theme configuration file is not valid - %s', var_export($this->themeValidator->getErrors($theme->getName()), true)), ThemeConstraintException::INVALID_CONFIGURATION);
+            $errorMessage = sprintf('Theme configuration file is not valid - %s', var_export($this->themeValidator->getErrors($theme->getName()), true));
+            $this->logger->error($errorMessage);
+            throw new ThemeConstraintException($errorMessage, ThemeConstraintException::INVALID_CONFIGURATION);
         }
 
         $module_root_dir = $this->appConfiguration->get('_PS_MODULE_DIR_');
@@ -494,7 +513,9 @@ class ThemeManager implements AddonManagerInterface
 
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $theme->getName();
         if ($this->filesystem->exists($themePath)) {
-            throw new ThemeAlreadyExistsException($theme->getName(), $this->translator->trans('There is already a theme named ' . $theme->getName() . ' in your themes/ folder. Remove it if you want to continue.', [], 'Admin.Design.Notification'));
+            $errorMessage = $this->translator->trans('There is already a theme named ' . $theme->getName() . ' in your themes/ folder. Remove it if you want to continue.', [], 'Admin.Design.Notification');
+            $this->logger->error($errorMessage);
+            throw new ThemeAlreadyExistsException($theme->getName(), $errorMessage);
         }
 
         $this->filesystem->mkdir($themePath);

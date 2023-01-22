@@ -1,4 +1,5 @@
-const {Statuses} = require('@data/demo/orderStatuses');
+import OrderStatuses from '@data/demo/orderStatuses';
+
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 module.exports = {
@@ -12,7 +13,7 @@ module.exports = {
         customer: 'J. DOE',
         totalPaid: 61.80,
         paymentMethod: PaymentMethods.checkPayment.name,
-        status: Statuses.canceled.status,
+        status: OrderStatuses.canceled.name,
       },
     secondOrder:
       {
@@ -23,7 +24,7 @@ module.exports = {
         customer: 'J. DOE',
         totalPaid: 69.90,
         paymentMethod: PaymentMethods.checkPayment.name,
-        status: Statuses.awaitingCheckPayment.status,
+        status: OrderStatuses.awaitingCheckPayment.name,
       },
     thirdOrder:
       {
@@ -34,7 +35,7 @@ module.exports = {
         customer: 'J. DOE',
         totalPaid: 14.90,
         paymentMethod: PaymentMethods.checkPayment.name,
-        status: Statuses.paymentError.status,
+        status: OrderStatuses.paymentError.name,
       },
     fourthOrder:
       {
@@ -45,7 +46,7 @@ module.exports = {
         customer: 'J. DOE',
         totalPaid: 14.90,
         paymentMethod: PaymentMethods.checkPayment.name,
-        status: Statuses.awaitingCheckPayment.status,
+        status: OrderStatuses.awaitingCheckPayment.name,
       },
     fifthOrder:
       {
@@ -56,7 +57,7 @@ module.exports = {
         customer: 'J. DOE',
         totalPaid: 20.90,
         paymentMethod: PaymentMethods.wirePayment.name,
-        status: Statuses.awaitingCheckPayment.status,
+        status: OrderStatuses.awaitingCheckPayment.name,
       },
   },
 };

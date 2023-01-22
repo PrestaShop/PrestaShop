@@ -14,12 +14,13 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\GroupFeature'
     arguments: [ '@prestashop.adapter.legacy.configuration' ]
 
-  prestashop.adapter.multistore_feature:
+  PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature:
     class: 'PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.feature.multistore:
-    class: 'PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
+    alias: PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature
+
+  prestashop.adapter.multistore_feature:
+    alias: prestashop.adapter.feature.multistore

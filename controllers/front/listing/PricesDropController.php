@@ -47,6 +47,9 @@ class PricesDropControllerCore extends ProductListingFrontController
         $this->doProductSearch('catalog/listing/prices-drop', ['entity' => 'prices-drop']);
     }
 
+    /**
+     * @return ProductSearchQuery
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -57,6 +60,9 @@ class PricesDropControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return PricesDropProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new PricesDropProductSearchProvider(

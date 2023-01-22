@@ -61,7 +61,7 @@ export default class InvoiceNoteManager {
       const $btn = $(event.currentTarget);
       const paymentAmount = $btn.data('payment-amount');
 
-      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0).scrollIntoView({behavior: 'smooth'});
+      $(OrderViewPageMap.viewOrderPaymentsBlock).get(0)?.scrollIntoView({behavior: 'smooth'});
       $(OrderViewPageMap.orderPaymentFormAmountInput).val(paymentAmount);
     });
   }

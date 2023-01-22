@@ -92,8 +92,7 @@ class PositionsController extends FrameworkBundleAdminController
         $hooks = $hookProvider->getHooks();
         foreach ($hooks as $key => $hook) {
             $hooks[$key]['modules'] = $hookProvider->getModulesFromHook(
-                $hook['id_hook'],
-                $this->selectedModule
+                $hook['id_hook']
             );
             // No module found, no need to continue
             if (!is_array($hooks[$key]['modules'])) {
@@ -131,6 +130,7 @@ class PositionsController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [
                 'save' => [
+                    'class' => 'btn-primary transplant-module-button',
                     'href' => $saveUrl,
                     'desc' => $this->trans('Transplant a module', 'Admin.Design.Feature'),
                 ],

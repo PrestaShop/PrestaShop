@@ -47,6 +47,9 @@ class NewProductsControllerCore extends ProductListingFrontController
         $this->doProductSearch('catalog/listing/new-products', ['entity' => 'new-products']);
     }
 
+    /**
+     * @return ProductSearchQuery
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -57,6 +60,9 @@ class NewProductsControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return NewProductsProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new NewProductsProductSearchProvider(

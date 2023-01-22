@@ -44,7 +44,10 @@ class BulkCombinationType extends TranslatorAwareType
     {
         $builder
             ->add('stock', BulkCombinationStockType::class)
-            ->add('price', BulkCombinationPriceType::class)
+            ->add('price', BulkCombinationPriceType::class, [
+                'product_id' => $options['product_id'],
+                'country_id' => $options['country_id'],
+            ])
             ->add('references', BulkCombinationReferencesType::class)
             ->add('images', BulkCombinationImagesType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
@@ -70,6 +73,7 @@ class BulkCombinationType extends TranslatorAwareType
             ])
             ->setRequired([
                 'product_id',
+                'country_id',
             ])
             ->setAllowedTypes('product_id', 'int')
         ;

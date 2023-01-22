@@ -190,7 +190,7 @@
     .main-menu {
       margin-top: 0.625rem;
 
-      & > li:first-child {
+      > li:first-child {
         padding: 1rem 0;
       }
     }
@@ -364,7 +364,7 @@
 
     > .link {
       display: flex;
-      align-items: end;
+      align-items: center;
       height: initial;
       padding: 0.5rem 0.3125rem 0.5rem 0.938rem;
       overflow: hidden;
@@ -395,7 +395,7 @@
     &.ul-open,
     &.link-active,
     &.link-hover {
-      & > .link {
+      > .link {
         color: $sidebar-primary-link-color;
         background: $sidebar-active-background-color;
         @include transition(background 300ms ease);
@@ -421,7 +421,7 @@
         padding-left: 2.5rem;
       }
 
-      & > li {
+      > li {
         @include media-breakpoint-down(md) {
           a.link {
             padding-top: 0.5rem;
@@ -508,7 +508,7 @@
     font-size: 1rem;
   }
 
-  & > .title {
+  > .title {
     color: $sidebar-title-color;
 
     @at-root .sidebar-closed & {

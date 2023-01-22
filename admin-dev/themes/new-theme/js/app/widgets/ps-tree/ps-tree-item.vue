@@ -39,11 +39,11 @@
         <span
           v-if="translations"
           class="sr-only"
-        >{{ this.model.open ? translations.reduce : translations.expand }}</span>
+        >{{ model.open ? translations.reduce : translations.expand }}</span>
       </button>
       <PSCheckbox
         :ref="model.name"
-        :id="id"
+        :id="id.toString()"
         :model="model"
         @checked="onCheck"
         v-if="hasCheckbox"
@@ -59,7 +59,7 @@
       <span
         class="tree-extra-label-mini d-xl-none"
         v-if="displayExtraLabel"
-      >{{ this.model.extraLabel }}</span>
+      >{{ model.extraLabel }}</span>
     </div>
     <ul
       v-show="open"
@@ -89,11 +89,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'PSTreeItem',
     props: {
       model: {
@@ -178,7 +178,7 @@
         if (this.isFolder) {
           this.open = !this.open;
         } else {
-          EventBus.$emit('lastTreeItemClick', {
+          EventEmitter.emit('lastTreeItemClick', {
             item: this.model,
           });
         }
@@ -188,17 +188,20 @@
       },
     },
     mounted() {
-      EventBus.$on('toggleCheckbox', (tag: any) => {
+      EventEmitter.on('toggleCheckbox', (tag: any) => {
         const checkbox = this.$refs[tag];
 
         if (checkbox) {
           (<VCheckbox>checkbox).$data.checked = !(<VCheckbox>checkbox).$data.checked;
         }
-      }).$on('expand', () => {
+      });
+      EventEmitter.on('expand', () => {
         this.open = true;
-      }).$on('reduce', () => {
+      });
+      EventEmitter.on('reduce', () => {
         this.open = false;
-      }).$on('setCurrentElement', (el: HTMLElement) => {
+      });
+      EventEmitter.on('setCurrentElement', (el: HTMLElement) => {
         this.setCurrentElement(el);
       });
       this.setCurrentElement(this.currentItem);

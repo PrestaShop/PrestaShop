@@ -36,6 +36,9 @@
     'data-token': csrf_token(update_form_name)
   }) %}
 
+  {% if form.shop_images is defined %}
+    {{ form_row(form.shop_images) }}
+  {% endif %}
   <div {{ block('widget_attributes') }}>
   </div>
 {% endblock %}
@@ -76,7 +79,7 @@
 
 
 {% block product_type_row %}
-  <div class="product-type-selector">
+  <div class="product-type-selector form-group">
     <div class="product-type-choices">
       {% for choice in form.vars.choices %}
         <button type="button" class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">

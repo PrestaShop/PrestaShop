@@ -26,6 +26,7 @@
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
 {% endblock %}
 
@@ -38,8 +39,8 @@
     <div class="mt-5">
       <div class="card">
         <div class="card-body text-center">
-          <img class="img-responsive" 
-               src="{{ asset('themes/new-theme/img/error/500.svg') }}" 
+          <img class="img-responsive"
+               src="{{ asset('themes/new-theme/img/error/500.svg') }}"
                alt="{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}">
 
           <div class="mt-3">

@@ -24,7 +24,7 @@
  *#}
 {% block product_footer %}
   <div class="product-footer justify-content-md-center">
-    <div class="col-lg-3">
+    <div class="col-md-5 col-xl-4">
       <a
         href="{{ path('admin_product_unit_action', {action: 'delete', id: productId}) }}"
         class="tooltip-link btn btn-lg delete"
@@ -65,7 +65,7 @@
         />
       {% endif %}
     </div>
-    <div class="col-sm-5 col-lg-9 text-right">
+    <div class="col-sm-5 col-md-7 col-xl-8 text-right">
       <input
         id="submit"
         type="submit"

@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder;
 
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -64,10 +66,9 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
         }
 
         $productId = $this->getProductId();
-        $filterId = ProductCombinationFilters::generateFilterId($productId);
         $filterParameters['filters']['product_id'] = $productId;
 
-        return new ProductCombinationFilters($filterParameters, $filterId);
+        return new ProductCombinationFilters($this->buildShopConstraint(), $filterParameters);
     }
 
     /**
@@ -78,7 +79,21 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
      */
     private function getProductId(): int
     {
-        return (int) $this->request->attributes->get('productId');
+        return $this->request->attributes->getInt('productId');
+    }
+
+    /**
+     * Build ShopConstraint from request. These filters only supports single shop constraint.
+     *
+     * @return ShopConstraint
+     */
+    private function buildShopConstraint(): ShopConstraint
+    {
+        if (!$this->request->query->has('shopId')) {
+            throw new InvalidArgumentException('Missing "shopId" in request for combinations list filters');
+        }
+
+        return ShopConstraint::shop($this->request->query->getInt('shopId'));
     }
 
     /**

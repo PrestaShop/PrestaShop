@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Requirement;
 
 use ConfigurationTest;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Check system requirements of a PrestaShop website.

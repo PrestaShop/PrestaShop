@@ -1827,13 +1827,19 @@ class OrderCore extends ObjectModel
 
     /**
      * Generate a unique reference for orders generated with the same cart id
-     * This references, is useful for check payment.
+     * This reference is the primary order identifier for public use.
+     *
+     * Modules can return their own reference.
      *
      * @return string
      */
     public static function generateReference()
     {
-        return strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
+        $reference = Hook::exec('actionGenerateDocumentReference', [
+            'type' => 'order',
+        ]);
+
+        return !empty($reference) ? $reference : strtoupper(Tools::passwdGen(9, 'NO_NUMERIC'));
     }
 
     public function orderContainProduct($id_product)
@@ -1957,7 +1963,7 @@ class OrderCore extends ObjectModel
         if ($order_payment->id_currency == $this->id_currency) {
             $this->total_paid_real += $order_payment->amount;
         } else {
-            $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+            $default_currency = Currency::getDefaultCurrencyId();
             if ($order_payment->id_currency === $default_currency) {
                 $this->total_paid_real += Tools::ps_round(
                     Tools::convertPrice((float) $order_payment->amount, $this->id_currency, false),

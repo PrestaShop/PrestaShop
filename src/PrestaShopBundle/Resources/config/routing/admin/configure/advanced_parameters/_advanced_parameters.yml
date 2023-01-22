@@ -34,6 +34,10 @@ _webservice:
   resource: "webservice.yml"
   prefix: /webservice-keys/
 
+_authorization_server:
+  resource: "authorization_server.yml"
+  prefix: /authorization-server/
+
 _backup:
   resource: "backup.yml"
   prefix: /backups

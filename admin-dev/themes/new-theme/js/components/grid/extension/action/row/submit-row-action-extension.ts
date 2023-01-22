@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {Grid} from '@PSTypes/grid';
+import {Grid} from '@js/types/grid';
 import GridMap from '@components/grid/grid-map';
 
 import {ConfirmModal} from '@components/modal';
@@ -78,7 +78,7 @@ export default class SubmitRowActionExtension {
     if (!isGetOrPostMethod) {
       $form.append(
         $('<input>', {
-          type: '_hidden',
+          type: 'hidden',
           name: '_method',
           value: method,
         }),

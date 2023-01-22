@@ -29,7 +29,7 @@
         <p
           class="dropzone-window-number"
           v-html="
-            $t('window.selectedFiles', { '%filesNb%': selectedFiles.length })
+            $t('window.selectedFiles', { 'filesNb': selectedFiles.length })
           "
         />
       </div>
@@ -126,7 +126,7 @@
           {{ selectedLocale.iso_code }}
         </button>
         <div
-          class="dropdown-menu locale-dropdown-menu"
+          class="dropdown-menu dropdown-menu-right locale-dropdown-menu"
           aria-labelledby="form_invoice_prefix"
         >
           <span
@@ -177,11 +177,11 @@
 <script lang="ts">
   import {PSDropzoneFile} from '@pages/product/components/dropzone/Dropzone.vue';
   import ProductMap from '@pages/product/product-map';
-  import Vue, {PropType} from 'vue';
+  import {PropType, defineComponent} from 'vue';
 
   const DropzoneMap = ProductMap.dropzone;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'DropzoneWindow',
     props: {
       selectedFiles: {
@@ -193,7 +193,7 @@
         default: () => [],
       },
       locales: {
-        type: Array as PropType<Array<string>>,
+        type: Array as PropType<Array<Record<string, any>>>,
         required: true,
       },
       selectedLocale: {
@@ -220,8 +220,8 @@
       selectedFiles(value: Array<PSDropzoneFile>): void {
         if (value.length > 1) {
           this.captionValue = {};
-          this.locales.forEach((locale: string) => {
-            this.captionValue[locale] = '';
+          this.locales.forEach((locale) => {
+            this.captionValue[locale.id_lang] = '';
           });
         } else if (this.selectedFile) {
           this.captionValue = this.selectedFile.legends;

@@ -32,6 +32,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
     /** @var string */
     public $php_self = 'manufacturer';
 
+    /** @var Manufacturer */
     protected $manufacturer;
     protected $label;
 
@@ -112,6 +113,11 @@ class ManufacturerControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * @return ProductSearchQuery
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -123,6 +129,9 @@ class ManufacturerControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return ManufacturerProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new ManufacturerProductSearchProvider(
@@ -234,5 +243,13 @@ class ManufacturerControllerCore extends ProductListingFrontController
         $page['body_classes']['manufacturer-' . $this->manufacturer->name] = true;
 
         return $page;
+    }
+
+    /**
+     * @return Manufacturer
+     */
+    public function getManufacturer()
+    {
+        return $this->manufacturer;
     }
 }

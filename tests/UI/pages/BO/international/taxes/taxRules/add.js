@@ -24,7 +24,7 @@ class AddTaxRules extends BOBasePage {
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
     this.nameInput = `${this.taxRuleGroupForm} #name`;
-    this.statusInput = id => `${this.taxRuleGroupForm} input#active_${id}`;
+    this.statusInput = (id) => `${this.taxRuleGroupForm} input#active_${id}`;
     this.saveTaxButton = `${this.taxRuleGroupForm} #tax_rules_group_form_submit_btn`;
 
     // New tax rule form
@@ -64,7 +64,7 @@ class AddTaxRules extends BOBasePage {
   async createEditTaxRules(page, taxRuleData) {
     await this.selectByVisibleText(page, this.countrySelect, taxRuleData.country);
     await this.selectByVisibleText(page, this.behaviourSelect, taxRuleData.behaviour);
-    await this.selectByVisibleText(page, this.taxSelect, taxRuleData.tax);
+    await this.selectByVisibleText(page, this.taxSelect, taxRuleData.name);
     await this.setValue(page, this.descriptionInput, taxRuleData.description);
     // Save Tax rules
     await this.clickAndWaitForNavigation(page, this.saveAndStayButton);

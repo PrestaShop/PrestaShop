@@ -20,7 +20,7 @@ Feature: Update product SEO options from Back Office (BO)
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
       | type        | standard    |
-    And I update product "product1" SEO information with following values:
+    And I update product "product1" with following values:
       | meta_title[en-US]       | magic staff meta title       |
       | meta_description[en-US] | magic staff meta description |
       | link_rewrite[en-US]     | magic-staff                  |
@@ -42,7 +42,7 @@ Feature: Update product SEO options from Back Office (BO)
     And product product1 is not associated to shop shop4
 
   Scenario: I update product SEO options for specific shop
-    When I update product "product1" SEO information for shop "shop2" with following values:
+    When I update product "product1" for shop "shop2" with following values:
       | meta_title[en-US]       | cool magic staff meta title       |
       | meta_description[en-US] | cool magic staff meta description |
       | link_rewrite[en-US]     | cool-magic-staff                  |
@@ -74,7 +74,7 @@ Feature: Update product SEO options from Back Office (BO)
     And product product1 is not associated to shop shop4
 
   Scenario: I update product SEO options for all associated shop
-    When I update product "product1" SEO information for all shops with following values:
+    When I update product "product1" for all shops with following values:
       | meta_title[en-US]       | cool magic staff meta title       |
       | meta_description[en-US] | cool magic staff meta description |
       | link_rewrite[en-US]     | cool-magic-staff                  |
@@ -95,13 +95,13 @@ Feature: Update product SEO options from Back Office (BO)
     And product product1 is not associated to shop shop4
 
   Scenario: I update product SEO options for single shop and right after for all shops
-    When I update product "product1" SEO information for shop "shop2" with following values:
+    When I update product "product1" for shop "shop2" with following values:
       | meta_title[en-US]       | cool magic staff meta title       |
       | meta_description[en-US] | cool magic staff meta description |
       | link_rewrite[en-US]     | cool-magic-staff                  |
       | redirect_type           | 301-category                      |
       | redirect_target         |                                   |
-    And I update product "product1" SEO information for all shops with following values:
+    And I update product "product1" for all shops with following values:
       | meta_title[en-US] | weird magic staff meta title |
     Then product "product1" localized "meta_title" for shops "shop1,shop2" should be:
       | locale | value                        |
@@ -126,13 +126,13 @@ Feature: Update product SEO options from Back Office (BO)
     And product product1 is not associated to shop shop4
 
   Scenario: I update product SEO options for all shops and right after for single shops
-    When I update product "product1" SEO information for all shops with following values:
+    When I update product "product1" for all shops with following values:
       | meta_title[en-US]       | cool magic staff meta title       |
       | meta_description[en-US] | cool magic staff meta description |
       | link_rewrite[en-US]     | cool-magic-staff                  |
       | redirect_type           | 301-category                      |
       | redirect_target         |                                   |
-    And I update product "product1" SEO information for shop "shop2" with following values:
+    And I update product "product1" for shop "shop2" with following values:
       | meta_title[en-US] | weird magic staff meta title |
     Then product "product1" localized "meta_title" for shops "shop1" should be:
       | locale | value                       |

@@ -1636,9 +1636,10 @@ CREATE TABLE `PREFIX_product` (
   `text_fields` tinyint(4) NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
-    '404', '410', '301-product', '302-product',
-    '301-category', '302-category'
-  ) NOT NULL DEFAULT '404',
+    '', '404', '410', '301-product', '302-product',
+    '301-category', '302-category', '200-displayed', 
+    '404-displayed', '410-displayed', 'default'
+  ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1696,8 +1697,9 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `redirect_type` ENUM(
     '', '404', '410', '301-product', '302-product',
-    '301-category', '302-category'
-  ) NOT NULL DEFAULT '',
+    '301-category', '302-category', '200-displayed', 
+    '404-displayed', '410-displayed', 'default'
+  ) NOT NULL DEFAULT 'default',
   `id_type_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
   `available_date` date DEFAULT NULL,
@@ -1751,6 +1753,15 @@ CREATE TABLE `PREFIX_product_attribute` (
   KEY `id_product_id_product_attribute` (
     `id_product_attribute`, `id_product`
   )
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
+/* Localized combination information */
+CREATE TABLE `PREFIX_product_attribute_lang` (
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `available_now` varchar(255) DEFAULT NULL,
+  `available_later` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_product_attribute`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
 /* shop specific attribute info */

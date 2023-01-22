@@ -38,6 +38,8 @@ $component-name: header-multishop;
     top: 50%;
     right: 1rem;
     z-index: 1002;
+    display: flex;
+    gap: 10px;
     transform: translateY(-50%);
 
     @include media-breakpoint-down(sm) {
@@ -153,6 +155,13 @@ $component-name: header-multishop;
       @include media-breakpoint-down(sm) {
         display: none;
       }
+    }
+  }
+
+  .product-shops-action {
+    svg {
+      width: 18px;
+      margin-left: 10px;
     }
   }
 }

@@ -778,7 +778,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function getCategoriesTreeAction(Request $request): JsonResponse
     {
         $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getContextShopId()));
 
         return $this->json($this->formatCategoriesTreeForPresentation($categoriesTree, $langId));
     }
@@ -799,12 +799,12 @@ class CategoryController extends FrameworkBundleAdminController
         foreach ($categoriesTree as $categoryForTree) {
             $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
-            $names = $categoryForTree->getLocalizedNames();
             $active = $categoryForTree->getActive();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
                 'active' => $active,
-                'name' => $names[$langId] ?? reset($names),
+                'name' => $categoryForTree->getName(),
+                'displayName' => $categoryForTree->getDisplayName(),
                 'children' => $children,
             ];
         }

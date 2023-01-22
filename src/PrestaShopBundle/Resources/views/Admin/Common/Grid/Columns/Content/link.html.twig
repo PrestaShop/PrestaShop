@@ -39,6 +39,8 @@
   {% endif %}
 {% endif %}
 
+{% set class = (class ~ ' ' ~ column.options.attr.class|default(''))|trim %}
+
 {% block link %}
 <a
   class="{{ class }} text-nowrap"
@@ -46,6 +48,19 @@
   {% if column.options.target is defined %}
     target="{{ column.options.target }}"
   {% endif %}
+  {# Add all attributes which are not class #}
+  {%- for attrname, attrvalue in column.options.attr -%}
+    {% if attrname != 'class' %}
+      {{- " " -}}
+      {% if attrvalue is formview %}
+        {{- attrname }}="{{ form_row(attrvalue)|e('html_attr') }}"
+      {% elseif attrvalue is form %}
+      {{- attrname }}="{{ form_row(attrvalue.createView())|e('html_attr') }}"
+      {% else %}
+        {{- attrname }}="{{ attrvalue }}"
+      {% endif %}
+    {% endif %}
+  {%- endfor -%}
 >
   {% if column.options.icon is defined and column.options.icon is not empty %}
     <i class="material-icons">{{ column.options.icon }}</i>

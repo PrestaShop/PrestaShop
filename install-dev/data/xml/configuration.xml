@@ -194,9 +194,6 @@
   <configuration id="PS_THEME_V11" name="PS_THEME_V11">
     <value>0</value>
   </configuration>
-  <configuration id="PRESTASTORE_LIVE" name="PRESTASTORE_LIVE">
-    <value>1</value>
-  </configuration>
   <configuration id="PS_TIN_ACTIVE" name="PS_TIN_ACTIVE">
     <value>0</value>
   </configuration>
@@ -712,6 +709,9 @@ Country</value>
   <configuration id="PS_MAIL_METHOD" name="PS_MAIL_METHOD">
     <value>1</value>
   </configuration>
+  <configuration id="PS_MAIL_SUBJECT_PREFIX" name="PS_MAIL_SUBJECT_PREFIX">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_SHOP_ACTIVITY" name="PS_SHOP_ACTIVITY">
     <value>Animaux</value>
   </configuration>
@@ -885,6 +885,12 @@ Country</value>
     </configuration>
     <configuration id="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE" name="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE">
       <value>3</value>
+    </configuration>
+    <configuration id="PS_ENABLE_BACKORDER_STATUS" name="PS_ENABLE_BACKORDER_STATUS">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_PRODUCT_REDIRECTION_DEFAULT" name="PS_PRODUCT_REDIRECTION_DEFAULT">
+      <value>404</value>
     </configuration>
   </entities>
 </entity_configuration>

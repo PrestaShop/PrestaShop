@@ -38,12 +38,12 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceImpactType extends TranslatorAwareType
 {
@@ -70,7 +70,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $builder
             ->add('reduction', PriceReductionType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'label_subtitle' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
+                'label_subtitle' => $this->trans('For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new Reduction([

@@ -43,8 +43,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -169,6 +169,7 @@ class SpecificPriceType extends TranslatorAwareType
             'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h4',
             'required' => false,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/FormTheme/specific_price.html.twig',
         ]);
     }
 }

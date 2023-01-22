@@ -1,5 +1,6 @@
 imports:
   - { resource: config.yml }
+  - { resource: security_prod.yml }
 
 # framework:
 #  validation:
@@ -20,7 +21,8 @@ monolog:
       action_level: error
       handler: nested
     nested:
-      type: stream
+      type: rotating_file
+      max_files: '%env(PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: debug
     console:

@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\FileUploadException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\AddProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ProductImageFormDataHandler implements FormDataHandlerInterface
@@ -43,12 +44,26 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
     private $bus;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $bus
      */
     public function __construct(
-        CommandBusInterface $bus
+        CommandBusInterface $bus,
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->bus = $bus;
+        $this->defaultShopId = $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -63,7 +78,8 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
 
         $command = new AddProductImageCommand(
             (int) ($data['product_id'] ?? 0),
-            $uploadedFile->getPathname()
+            $uploadedFile->getPathname(),
+            $this->getShopConstraint()
         );
 
         /** @var ImageId $imageId */
@@ -77,7 +93,7 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $command = new UpdateProductImageCommand((int) $id);
+        $command = new UpdateProductImageCommand((int) $id, $this->getShopConstraint());
 
         if (isset($data['is_cover'])) {
             $command->setIsCover($data['is_cover']);
@@ -97,5 +113,10 @@ class ProductImageFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->bus->handle($command);
+    }
+
+    private function getShopConstraint(): ShopConstraint
+    {
+        return null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
     }
 }

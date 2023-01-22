@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Search\Builder;
 
 use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\ShopFilters;
 
 /**
  * This builder instantiate a filters object of the specified type using
@@ -65,13 +66,32 @@ final class ClassFiltersBuilder extends AbstractFiltersBuilder
         /** @var array $defaultParameters */
         $defaultParameters = call_user_func([$this->filtersClass, 'getDefaults']);
         if (null !== $filters) {
-            /** @var Filters $typedFilters */
-            $typedFilters = new $this->filtersClass($filters->all(), $filters->getFilterId());
+            $typedFilters = $this->constructFilters($filters->all(), $filters->getFilterId());
             $typedFilters->add($defaultParameters);
         } else {
-            $typedFilters = new $this->filtersClass($defaultParameters, $this->filterId);
+            $typedFilters = $this->constructFilters($defaultParameters, $this->filterId);
         }
 
         return $typedFilters;
+    }
+
+    /**
+     * This method is able to construct the Filters object, it relies on the fact that the constructors
+     * always use the same parameters in the same order:
+     *  - for Filters: array $filters, string $filterId
+     *  - for ShopFilters: ShopConstraint $shopConstraint, array $filters, string $filterId
+     *
+     * @param array $filters
+     * @param string $filterId
+     *
+     * @return Filters
+     */
+    private function constructFilters(array $filters, string $filterId): Filters
+    {
+        if (is_subclass_of($this->filtersClass, ShopFilters::class)) {
+            return new $this->filtersClass($this->shopConstraint, $filters, $filterId);
+        }
+
+        return new $this->filtersClass($filters, $filterId);
     }
 }

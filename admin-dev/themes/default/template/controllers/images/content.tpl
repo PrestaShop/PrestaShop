@@ -56,7 +56,7 @@
 
 {if isset($display_regenerate)}
 
-	<form class="form-horizontal" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post">
+	<form id="display_regenerate_form" class="form-horizontal" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post">
 		<div class="panel">
 			<h3>
                 <i class="icon-picture"></i>
@@ -123,10 +123,34 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<button type="submit" name="submitRegenerate{$table}" class="btn btn-default pull-right" onclick="return confirm('{l s='Are you sure?' d='Admin.Notifications.Warning'}');">
+        <input type="hidden" name="submitRegenerate{$table}" value="" />
+				<button
+          type="submit"
+          value=""
+          class="btn btn-default pull-right"
+        >
 					<i class="process-icon-cogs"></i> {l s='Regenerate thumbnails' d='Admin.Design.Feature'}
 				</button>
 			</div>
 		</div>
 	</form>
+
+  <script type="text/javascript">
+    $(function() {
+      $('#display_regenerate_form button[type="submit"]').on('click', function() {
+        $('#modalRegenerateThumbnails').modal('show');
+        return false;
+      });
+      $('.btn-regenerate-thumbnails').on('click', function () {
+        $('#display_regenerate_form').trigger('submit');
+      });
+      $('.btn-confirm-delete-images-type').on('click', function () {
+        document.location = $(this).attr('data-confirm-url') + '&delete_linked_images=' + $('#delete_linked_images').is(":checked");
+      });
+
+      $('#modalConfirmDeleteType ').on('hidden.bs.modal', function () {
+        $('.modal-checkbox input', this).prop('checked', false)
+      });
+    });
+  </script>
 {/if}

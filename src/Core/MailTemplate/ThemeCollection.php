@@ -48,6 +48,7 @@ class ThemeCollection extends AbstractTypedCollection implements ThemeCollection
      */
     public function getByName($themeName)
     {
+        /* @phpstan-ignore-next-line $theme can't be null as we are in a typed collection */
         return $this->filter(function (ThemeInterface $theme) use ($themeName) {
             return $themeName === $theme->getName();
         })->first();

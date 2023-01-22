@@ -21,8 +21,7 @@ services:
     arguments:
       - '@prestashop.adapter.data_provider.country'
 
-  prestashop.adapter.country.repository.country_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'
+  PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository: ~
 
   prestashop.adapter.country.command_handler.add_country_handler:
     public: true

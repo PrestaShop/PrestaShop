@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import PaginatedCatalogPriceRulesService from '@pages/product/services/paginated-catalog-price-rules-service';
+import CatalogPriceRuleRenderer from '@pages/product/components/catalog-price-rule/catalog-price-rule-renderer';
 import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -37,6 +39,7 @@ import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ClickEvent = JQuery.ClickEvent;
 
 const SpecificPriceMap = ProductMap.specificPrice;
+const CatalogPriceRulesMap = ProductMap.catalogPriceRule;
 const PriorityMap = SpecificPriceMap.priority;
 
 export default class SpecificPricesManager {
@@ -56,6 +59,7 @@ export default class SpecificPricesManager {
     this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
     this.initComponents();
     this.initListeners();
@@ -76,12 +80,58 @@ export default class SpecificPricesManager {
     );
 
     this.initSpecificPriceModals();
-
+    this.initCatalogPriceRules();
     // Enable/disable the priority selectors depending on the priority type selected (global or custom)
     new FormFieldToggler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
       targetSelector: PriorityMap.priorityListWrapper,
+    });
+  }
+
+  private initCatalogPriceRules() {
+    const priceRuleRenderer = new CatalogPriceRuleRenderer();
+    const catalogPriceRulePaginator = new DynamicPaginator(
+      CatalogPriceRulesMap.paginationContainer,
+      new PaginatedCatalogPriceRulesService(this.productId),
+      priceRuleRenderer,
+      1,
+    );
+
+    const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
+    const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
+
+    if (showCatalogPriceRulesButton === null) {
+      console.error(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`);
+      return;
+    }
+    if (catalogPriceRulesContainer === null) {
+      console.error(`Error: ${CatalogPriceRulesMap.blockContainer} element not found`);
+      return;
+    }
+
+    const showLabel = showCatalogPriceRulesButton.dataset.showLabel ?? 'Show catalog price rules';
+    const hideLabel = showCatalogPriceRulesButton.dataset.hideLabel ?? 'Hide catalog price rules';
+
+    /** This should be the form container for the whole form element, so we can hide the whole block */
+    const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
+
+    if (formContainer === null) {
+      console.error(`Error: ${CatalogPriceRulesMap.blockContainer} parent element not found`);
+      return;
+    }
+
+    showCatalogPriceRulesButton.addEventListener('click', () => {
+      formContainer.classList.toggle('d-none');
+      const listShown = formContainer.classList.contains('d-none');
+
+      if (!listShown) {
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility_off</i> ${hideLabel}`;
+        /** Rendering everytime in case catalog price rule was deleted while somebody was in product edit page */
+        catalogPriceRulePaginator.paginate(1);
+      } else {
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility</i> ${showLabel}`;
+      }
     });
   }
 

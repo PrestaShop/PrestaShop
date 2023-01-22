@@ -39,6 +39,11 @@ class ValidateCoreTest extends TestCase
         $this->assertEquals($expected, Validate::isIp2Long($input));
     }
 
+    /**
+     * @deprecated since PrestaShop 8.1 and will be removed in Prestashop 9.0
+     *
+     * @return void
+     */
     public function testIsAnything()
     {
         $this->assertTrue(Validate::isAnything());

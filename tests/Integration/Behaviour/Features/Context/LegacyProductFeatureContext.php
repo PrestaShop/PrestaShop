@@ -266,7 +266,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
         $this->addProduct($product);
 
         // Shared Storage
-        SharedStorage::getStorage()->set($productName, $this->getProductWithName($productName)->id);
+        SharedStorage::getStorage()->set($productName, (int) $this->getProductWithName($productName)->id);
 
         // Fix issue pack cache is set when adding products.
         Pack::resetStaticCache();
@@ -999,6 +999,7 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
 
         $productForm = $formBuilder->getFormFor($productId, [], [
             'product_id' => $productId,
+            'shop_id' => (int) Configuration::get('PS_SHOP_DEFAULT'),
             'method' => Request::METHOD_POST,
         ]);
     }

@@ -22,15 +22,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
+import {defineComponent} from 'vue';
 
 interface ProductDescProps {
   product: Record<string, any>;
+  thumbnail?: string;
+  hasCombination?: boolean;
 }
 
-export default Vue.extend<any, any, any, ProductDescProps>({
+export default defineComponent<ProductDescProps>({
   computed: {
-    thumbnail(): string | null {
+    thumbnail(): string | undefined {
       if (this.product.combination_thumbnail !== 'N/A') {
         return `${this.product.combination_thumbnail}`;
       }
@@ -39,7 +41,7 @@ export default Vue.extend<any, any, any, ProductDescProps>({
         return `${this.product.product_thumbnail}`;
       }
 
-      return null;
+      return undefined;
     },
 
     combinationName(): string {

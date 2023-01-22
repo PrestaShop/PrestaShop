@@ -179,7 +179,7 @@ class CartTest extends TestCase
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
         $product->price = $price;
-        $product->link_rewrite = Tools::link_rewrite($name);
+        $product->link_rewrite = Tools::str2url($name);
         self::assertTrue($product->save());
 
         return $product;
@@ -202,7 +202,7 @@ class CartTest extends TestCase
     private static function makeCart(): Cart
     {
         $cart = new Cart(null, (int) Configuration::get('PS_LANG_DEFAULT'));
-        $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $cart->id_currency = Currency::getDefaultCurrencyId();
         $cart->id_address_invoice = self::$id_address;
         self::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
@@ -311,7 +311,7 @@ class CartTest extends TestCase
         parent::setUp();
 
         // Context needs a currency but doesn't set it by itself, use default one.
-        Context::getContext()->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        Context::getContext()->currency = Currency::getDefaultCurrency();
 
         Group::clearCachedValues();
         self::setRoundingType('line');

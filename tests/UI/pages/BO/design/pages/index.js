@@ -22,14 +22,14 @@ class Pages extends BOBasePage {
     this.addNewPageLink = '#page-header-desc-configuration-add_cms_page[title=\'Add new page\']';
 
     // Common Selectors
-    this.gridPanel = table => `#${table}_grid_panel`;
-    this.gridTitle = table => `${this.gridPanel(table)} h3.card-header-title`;
-    this.gridTable = table => `#${table}_grid_table`;
-    this.gridHeaderTitle = table => `${this.gridPanel(table)} h3.card-header-title`;
-    this.listForm = table => `#${table}_grid`;
+    this.gridPanel = (table) => `#${table}_grid_panel`;
+    this.gridTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
+    this.gridTable = (table) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
+    this.listForm = (table) => `#${table}_grid`;
 
     // Sort Selectors
-    this.tableHead = table => `${this.listForm(table)} thead`;
+    this.tableHead = (table) => `${this.listForm(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)}`
       + ` div.ps-sortable-column[data-sort-col-name='${column}']`;
 
@@ -40,18 +40,18 @@ class Pages extends BOBasePage {
     this.listTableStatusColumnToggleInput = (table, row) => `${this.listTableStatusColumn(table, row)} input`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = table => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
-    this.bulkActionsToggleButton = table => `${this.listForm(table)} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = table => `#${table}_grid_bulk_action_delete_selection`;
-    this.bulkActionsEnableButton = table => `#${table}_grid_bulk_action_enable_selection`;
-    this.bulkActionsDisableButton = table => `#${table}_grid_bulk_action_disable_selection`;
-    this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
-    this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
+    this.selectAllRowsLabel = (table) => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = (table) => `${this.listForm(table)} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = (table) => `#${table}_grid_bulk_action_delete_selection`;
+    this.bulkActionsEnableButton = (table) => `#${table}_grid_bulk_action_enable_selection`;
+    this.bulkActionsDisableButton = (table) => `#${table}_grid_bulk_action_disable_selection`;
+    this.confirmDeleteModal = (table) => `#${table}-grid-confirm-modal`;
+    this.confirmDeleteButton = (table) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
 
     // Filters
     this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
+    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Actions buttons in Row
     this.listTableToggleDropDown = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
@@ -64,19 +64,19 @@ class Pages extends BOBasePage {
 
     // Categories selectors
     this.backToListButton = '#cms_page_category_grid_panel a.back-to-list-link';
-    this.categoriesListTableViewLink = row => `${this.listTableColumn('cms_page_category', row, 'actions')}`
+    this.categoriesListTableViewLink = (row) => `${this.listTableColumn('cms_page_category', row, 'actions')}`
       + ' a.grid-view-row-link';
 
     this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
     this.categoriesPaginationLabel = `${this.listForm('cms_page_category')} .col-form-label`;
-    this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} #pagination_next_url`;
-    this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [aria-label='Previous']`;
+    this.categoriesPaginationNextLink = `${this.listForm('cms_page_category')} [data-role=next-page-link]`;
+    this.categoriesPaginationPreviousLink = `${this.listForm('cms_page_category')} [data-role='previous-page-link']`;
 
     // Pages selectors
     this.pagesPaginationLimitSelect = '#paginator_select_page_limit';
     this.pagesPaginationLabel = `${this.listForm('cms_page')} .col-form-label`;
-    this.pagesPaginationNextLink = `${this.listForm('cms_page')} #pagination_next_url`;
-    this.pagesPaginationPreviousLink = `${this.listForm('cms_page')} [aria-label='Previous']`;
+    this.pagesPaginationNextLink = `${this.listForm('cms_page')} [data-role=next-page-link]`;
+    this.pagesPaginationPreviousLink = `${this.listForm('cms_page')} [data-role='previous-page-link']`;
   }
 
   /*
@@ -89,7 +89,7 @@ class Pages extends BOBasePage {
    * Reset input filters
    * @param page {Page} Browser tab
    * @param tableName {string} Table name to reset and get number of lines
-   * @return {Promise<void>}
+   * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page, tableName) {
     const resetButton = this.filterResetButton(tableName);
@@ -115,7 +115,7 @@ class Pages extends BOBasePage {
         await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
         break;
       case 'select':
-        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value ? 'Yes' : 'No');
+        await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
         break;
       default:
       // Do nothing
@@ -159,7 +159,7 @@ class Pages extends BOBasePage {
 
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
@@ -236,7 +236,7 @@ class Pages extends BOBasePage {
   async bulkSetStatus(page, tableName, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 

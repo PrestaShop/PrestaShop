@@ -536,14 +536,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
         foreach ($orders as $order) {
             // Add flat fees for this order
             $flat_fees = Configuration::get('CONF_ORDER_FIXED') + (
-                $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
+                $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_FIXED_FOREIGN')
                 );
 
             // Add variable fees for this order
             $var_fees = $order['total_paid_tax_incl'] * (
-                $order['id_currency'] == Configuration::get('PS_CURRENCY_DEFAULT')
+                $order['id_currency'] == Currency::getDefaultCurrencyId()
                     ? Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR')
                     : Configuration::get('CONF_' . strtoupper($order['module']) . '_VAR_FOREIGN')
                 ) / 100;
@@ -575,7 +575,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return die(json_encode(['error' => 'You do not have the right permission']));
         }
 
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = Currency::getDefaultCurrency();
         $tooltip = null;
         $value = false;
         switch (Tools::getValue('kpi')) {

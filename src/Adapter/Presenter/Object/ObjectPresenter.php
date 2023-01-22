@@ -30,7 +30,6 @@ use Exception;
 use Hook;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use Product;
 
 class ObjectPresenter implements PresenterInterface
 {
@@ -54,18 +53,7 @@ class ObjectPresenter implements PresenterInterface
             $presentedObject[$fieldName] = $object->{$fieldName};
         }
 
-        if ($object instanceof Product) {
-            $presentedObject['ecotax_tax_inc'] = $object->getEcotax(null, true, true);
-        }
-
         $presentedObject['id'] = $object->id;
-
-        $mustRemove = ['deleted', 'active'];
-        foreach ($mustRemove as $fieldName) {
-            if (isset($presentedObject[$fieldName])) {
-                unset($presentedObject[$fieldName]);
-            }
-        }
 
         $this->filterHtmlContent($object::$definition['table'], $presentedObject, $object->getHtmlFields());
 

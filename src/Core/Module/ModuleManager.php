@@ -65,6 +65,9 @@ class ModuleManager implements ModuleManagerInterface
     /** @var Filesystem */
     private $filesystem;
 
+    /** @var bool */
+    private $systemClearCache = true;
+
     public function __construct(
         ModuleRepository $moduleRepository,
         ModuleDataProvider $moduleDataProvider,
@@ -94,16 +97,16 @@ class ModuleManager implements ModuleManagerInterface
             ));
         }
 
+        if ($this->isInstalled($name)) {
+            return $this->upgrade($name, $source);
+        }
+
         if ($source !== null) {
             $handler = $this->sourceFactory->getHandler($source);
             $handler->handle($source);
         }
 
-        if ($this->isInstalled($name)) {
-            return $this->upgrade($name);
-        }
-
-        $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name]);
+        $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
         $installed = $module->onInstall();
@@ -158,7 +161,7 @@ class ModuleManager implements ModuleManagerInterface
         return $uninstalled;
     }
 
-    public function upgrade(string $name): bool
+    public function upgrade(string $name, $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans(
@@ -170,7 +173,12 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->assertIsInstalled($name);
 
-        $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name]);
+        if ($source !== null) {
+            $handler = $this->sourceFactory->getHandler($source);
+            $handler->handle($source);
+        }
+
+        $this->hookManager->exec('actionBeforeUpgradeModule', ['moduleName' => $name, 'source' => $source]);
 
         $module = $this->moduleRepository->getModule($name);
         $upgraded = $this->upgradeMigration($name) && $module->onUpgrade($module->get('version'));
@@ -369,6 +377,11 @@ class ModuleManager implements ModuleManagerInterface
 
     private function dispatch(string $event, ModuleInterface $module): void
     {
-        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module, $this->systemClearCache), $event);
+    }
+
+    public function disableSystemClearCache(): void
+    {
+        $this->systemClearCache = false;
     }
 }

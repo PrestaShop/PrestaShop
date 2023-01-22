@@ -65,7 +65,12 @@ final class GenerateProductCombinationsHandler implements GenerateProductCombina
      */
     public function handle(GenerateProductCombinationsCommand $command): array
     {
-        $combinationIds = $this->combinationCreator->createCombinations($command->getProductId(), $command->getGroupedAttributeIdsList());
+        $combinationIds = $this->combinationCreator->createCombinations(
+            $command->getProductId(),
+            $command->getGroupedAttributeIdsList(),
+            $command->getShopConstraint()
+        );
+
         $this->productSupplierUpdater->updateMissingProductSuppliers($command->getProductId());
 
         return $combinationIds;

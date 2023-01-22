@@ -35,16 +35,16 @@ class Invoice extends BOBasePage {
 
     // Invoice options form
     this.invoiceOptionsForm = '#form-invoices-options';
-    this.invoiceOptionsStatusToggleInput = toggle => `#form_enable_invoices_${toggle}`;
-    this.taxBreakdownStatusToggleInput = toggle => `#form_enable_tax_breakdown_${toggle}`;
-    this.invoiceOptionStatusToggleInput = toggle => `#form_enable_product_images_${toggle}`;
+    this.invoiceOptionsStatusToggleInput = (toggle) => `#form_enable_invoices_${toggle}`;
+    this.taxBreakdownStatusToggleInput = (toggle) => `#form_enable_tax_breakdown_${toggle}`;
+    this.invoiceOptionStatusToggleInput = (toggle) => `#form_enable_product_images_${toggle}`;
     this.invoiceNumberInput = '#form_invoice_number';
     this.legalFreeTextInput = '#form_legal_free_text_1';
     this.footerTextInput = '#form_footer_text_1';
     this.saveInvoiceOptionsButton = `${this.invoiceOptionsForm} #save-invoices-options-button`;
     this.invoicePrefixInput = '#form_invoice_prefix_1';
-    this.invoiceAddCurrentYearToggleInput = toggle => `#form_add_current_year_${toggle}`;
-    this.optionYearPositionRadioButton = id => `#form_year_position_${id} + i`;
+    this.invoiceAddCurrentYearToggleInput = (toggle) => `#form_add_current_year_${toggle}`;
+    this.optionYearPositionRadioButton = (id) => `#form_year_position_${id} + i`;
   }
 
   /*
@@ -102,7 +102,7 @@ class Invoice extends BOBasePage {
     const statusElements = await page.$$(this.statusOrderStateSpan);
 
     for (let i = 0; i < statusElements.length; i++) {
-      if (await page.evaluate(element => element.textContent, statusElements[i]) === statusName) {
+      if (await page.evaluate((element) => element.textContent, statusElements[i]) === statusName) {
         await statusElements[i].click();
         break;
       }
@@ -112,7 +112,7 @@ class Invoice extends BOBasePage {
   /**
    * Generate PDF by status
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<string|null>}
    */
   generatePDFByStatusAndDownload(page) {
     return this.clickAndWaitForDownload(page, this.generatePdfByStatusButton);
@@ -171,11 +171,12 @@ class Invoice extends BOBasePage {
   /**
    * Set invoiceNumber, LegalFreeText, footerText
    * @param page {Page} Browser tab
-   * @param data {object} Values to set on invoice option inputs
+   * @param data {InvoiceData} Values to set on invoice option inputs
    * @returns {Promise<void>}
    */
   async setInputOptions(page, data) {
     await this.setValue(page, this.invoiceNumberInput, data.invoiceNumber);
+    await this.setValue(page, this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(page, this.footerTextInput, data.footerText);
   }
 

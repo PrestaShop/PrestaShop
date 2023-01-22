@@ -22,18 +22,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import {createApp, App} from 'vue';
+import {createI18n} from 'vue-i18n';
+import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import Dropzone from './Dropzone.vue';
 
-Vue.use(VueI18n);
-
-export default function initDropzone(imagesContainerSelector: string): Vue {
+export default function initDropzone(imagesContainerSelector: string): App {
   const container = <HTMLElement>document.querySelector(imagesContainerSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);
-  const i18n = new VueI18n({
+  const i18n = createI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
     messages: {en: translations},
@@ -42,16 +40,17 @@ export default function initDropzone(imagesContainerSelector: string): Vue {
   const productId = Number(container.dataset.productId);
   const locales = JSON.parse(<string>container.dataset.locales);
 
-  return new Vue({
+  const vueApp = createApp(Dropzone, {
     el: imagesContainerSelector,
     template: '<dropzone :productId=productId :locales=locales :token=token :formName=formName />',
-    components: {Dropzone},
     i18n,
-    data: {
-      locales,
-      productId,
-      token: container.dataset.token,
-      formName: container.dataset.formName,
-    },
-  });
+    locales,
+    productId,
+    token: container.dataset.token,
+    formName: container.dataset.formName,
+  }).use(i18n);
+
+  vueApp.mount(imagesContainerSelector);
+
+  return vueApp;
 }

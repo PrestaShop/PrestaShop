@@ -46,13 +46,13 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
+  import {defineComponent} from 'vue';
 
   const TYPE_ALL: string = 'all';
 
-  export default Vue.extend({
+  export default defineComponent({
     mixins: [
       ColSize,
     ],

@@ -103,7 +103,7 @@ try {
         Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
     }
 
-    $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+    $context->currency = Currency::getDefaultCurrency();
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';

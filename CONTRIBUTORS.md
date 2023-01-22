@@ -8,6 +8,7 @@ GitHub contributors:
 - 23b
 - Abdelaziz JRIBI
 - Abdullah
+- Abramo Franchetti
 - Adam
 - Adib Aroui
 - Adonis Karavokyros
@@ -131,6 +132,7 @@ GitHub contributors:
 - cgordenne
 - cgordenne_wepika
 - Chafik
+- Chedly Farhani
 - Chen.Zhidong
 - Chris
 - Chris Gurk
@@ -347,6 +349,7 @@ GitHub contributors:
 - idnovate
 - Igor Stępień
 - indesign47
+- Ines Sallemi
 - Inetbiz
 - ironwo0d
 - Ish Gupta
@@ -361,6 +364,7 @@ GitHub contributors:
 - Jan Sýkora
 - janisVincent
 - Jaume
+- Javier García
 - Javsmile
 - JBWModules
 - JEAN
@@ -447,6 +451,7 @@ GitHub contributors:
 - ldecoker
 - Léa Mendes Da Silva
 - Leandro F. L
+- leemyongpakvn
 - Léo Cunéaz
 - Lesley Paone
 - Lionel Massin
@@ -530,6 +535,7 @@ GitHub contributors:
 - Maxime - Vaisonet
 - Maxime Aknin
 - Maxime Biloé
+- Maxime Flasquin
 - Maxime Morel-Bailly
 - Maxime Vasse
 - mchelh
@@ -614,6 +620,7 @@ GitHub contributors:
 - Pan P
 - Pan Ploenes
 - Panagiotis Tigas
+- panariga
 - panesarsandeep
 - Pascal Cescon
 - Patanock
@@ -732,14 +739,17 @@ GitHub contributors:
 - Sacha Froment
 - sadlyblue
 - sagaradonis
-- sallemiines
+- Salim Benouamer
 - Sam Berry
+- sallemiines
+- Sam
 - Sam Sanchez
 - Samir Shah
 - Samuel
 - Samuel Marchal
 - Samy Rabih
 - Sandu Velea
+- Sarah Dib
 - Sarah Lorenzini
 - Šarūnas Jonušas
 - Sauli Maijala
@@ -756,6 +766,7 @@ GitHub contributors:
 - Sébastien Rufer
 - Sébastien Sterckx
 - SebSept
+- sefirosweb
 - seleda
 - Serge Rivière
 - Sergey P
@@ -892,6 +903,7 @@ GitHub contributors:
 - Xesau
 - xitromedia
 - xKnut
+- Yani Makouf
 - yanngarras
 - Yannick A
 - Yannick Armand

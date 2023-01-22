@@ -107,6 +107,11 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderView()
     {
         $this->initWizard();
@@ -978,7 +983,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             Shop::setContext($this->type_context, $this->old_context->shop->id_shop_group);
         }
 
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = Currency::getDefaultCurrency();
 
         Shop::setContext(Shop::CONTEXT_ALL);
 

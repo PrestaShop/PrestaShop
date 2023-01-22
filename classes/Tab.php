@@ -207,6 +207,11 @@ class TabCore extends ObjectModel
         self::$_getIdFromClassName = null;
     }
 
+    public static function resetTabCache()
+    {
+        self::$_cache_tabs = [];
+    }
+
     /**
      * Get tab id.
      *

@@ -27,7 +27,9 @@
 namespace Tests\Unit\PrestaShopBundle\Routing\Linter;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Routing\Linter\Exception\ControllerNotFoundException;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
+use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
@@ -64,6 +66,26 @@ class NamingConventionLinterTest extends TestCase
         $this->namingConventionLinter->lint($routeName, $route);
     }
 
+    /**
+     * @dataProvider getRoutesThatDoNotFollowSymfonyConventions
+     */
+    public function testLinterThrowsExceptionWhenControllerDoesNotFollowSymfonyConventions($routeName, Route $route)
+    {
+        $this->expectException(SymfonyControllerConventionException::class);
+
+        $this->namingConventionLinter->lint($routeName, $route);
+    }
+
+    /**
+     * @dataProvider getRoutesThatUseControllerNotFound
+     */
+    public function testLinterThrowsExceptionWhenControllerIsNotFound($routeName, Route $route)
+    {
+        $this->expectException(ControllerNotFoundException::class);
+
+        $this->namingConventionLinter->lint($routeName, $route);
+    }
+
     public function getRoutesThatFollowNamingConventions()
     {
         yield [
@@ -94,6 +116,26 @@ class NamingConventionLinterTest extends TestCase
             'admin_tests_do_something',
             new Route('/', [
                 '_controller' => sprintf('%s::%s', TestController::class, 'doSomethingComplexAction'),
+            ]),
+        ];
+    }
+
+    public function getRoutesThatDoNotFollowSymfonyConventions(): iterable
+    {
+        yield [
+            'admin_tests_do_something',
+            new Route('/', [
+                '_controller' => sprintf('%s:%s', TestController::class, 'doSomethingComplexAction'),
+            ]),
+        ];
+    }
+
+    public function getRoutesThatUseControllerNotFound(): iterable
+    {
+        yield [
+            'admin_tests_do_something',
+            new Route('/', [
+                '_controller' => sprintf('%s::%s', TestController::class, 'methodNotFound'),
             ]),
         ];
     }

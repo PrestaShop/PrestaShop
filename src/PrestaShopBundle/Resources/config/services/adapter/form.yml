@@ -63,17 +63,22 @@ services:
   prestashop.adapter.form.choice_provider.employee_name_by_id:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\EmployeeNameByIdChoiceProvider'
 
+  prestashop.adapter.form.choice_provider.order_return_state:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\OrderReturnStateChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+
   prestashop.adapter.form.choice_provider.features_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeaturesChoiceProvider'
     arguments:
-      - '@prestashop.adapter.feature.repository.feature_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureRepository'
       - '@prestashop.adapter.legacy.context'
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
 
   prestashop.adapter.form.choice_provider.feature_values_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
     arguments:
-      - '@prestashop.adapter.feature.repository.feature_value_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Feature\Repository\FeatureValueRepository'
       - '@prestashop.adapter.legacy.context'
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
 
@@ -84,12 +89,15 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ProductDefaultCategoryChoiceProvider'
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
+      - '@PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
   prestashop.adapter.form.choice_provider.combination_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationIdChoiceProvider'
     arguments:
-      - "@prestashop.adapter.product.combination.repository.combination_repository"
-      - '@prestashop.adapter.attribute.repository.attribute_repository'
-      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
+      - '@PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface'
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

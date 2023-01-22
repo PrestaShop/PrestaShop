@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryTagsCollectionType extends CollectionType
 {

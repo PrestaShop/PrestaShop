@@ -171,9 +171,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getModulePath(string $moduleName): ?string
     {
         $path = $this->modulePath . '/' . $moduleName;
-        $filePath = $path . '/' . $moduleName . '.php';
+        $filePath = $this->modulePath . '/' . $moduleName . '/' . $moduleName . '.php';
 
-        if (!is_dir($path) || !is_file($filePath)) {
+        if (!is_file($filePath)) {
             return null;
         }
 
@@ -258,7 +258,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         return [
             'filemtime' => $filemtime,
-            'is_present' => $this->moduleDataProvider->isOnDisk($moduleName),
+            'is_present' => $filemtime > 0,
             'is_valid' => $isValid,
             'version' => $isValid ? ModuleLegacy::getInstanceByName($moduleName)->version : null,
             'path' => $path,
@@ -282,7 +282,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->modulesFromHook === null) {
             $modulesFromHook = $this->hookManager->exec('actionListModules', [], null, true);
             $modulesFromHook = array_values($modulesFromHook ?? []);
-            $this->modulesFromHook = empty($modulesFromHook) ? $modulesFromHook : array_merge(...$modulesFromHook);
+            $this->modulesFromHook = empty(reset($modulesFromHook)) ? [] : array_merge(...$modulesFromHook);
         }
 
         return $this->modulesFromHook;

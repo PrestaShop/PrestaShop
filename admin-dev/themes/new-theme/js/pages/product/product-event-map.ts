@@ -34,6 +34,7 @@ export default {
     error: 'error',
     success: 'success',
     languageSelected: 'languageSelected',
+    resetDropzone: 'resetDropzone',
     photoswipe: {
       destroy: 'destroy',
       closeGallery: 'closeGallery',
@@ -55,6 +56,7 @@ export default {
     combinationDeleted: 'combinationDeleted',
     combinationSwitchDeltaQuantity: 'combinationSwitchDeltaQuantity',
     combinationSwitchFixedQuantity: 'combinationSwitchFixedQuantity',
+    clearAllCombinationFilters: 'clearAllCombinationFilters',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
@@ -64,4 +66,5 @@ export default {
   specificPrice: {
     listUpdated: 'specificPricesListUpdated',
   },
+  cancelProductShops: 'cancelProductShops',
 };

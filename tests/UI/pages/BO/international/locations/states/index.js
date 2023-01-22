@@ -29,31 +29,31 @@ class States extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='stateFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='stateFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtonstate';
     this.filterResetButton = 'button[name=\'submitResetstate\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnIsoCode = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnZone = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnCountry = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnStatusLink = row => `${this.tableBodyColumn(row)}:nth-child(7) a`;
-    this.tableColumnStatusEnableLink = row => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = row => `${this.tableColumnStatusLink(row)}.action-disabled`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnIsoCode = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnZone = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnCountry = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnStatusLink = (row) => `${this.tableBodyColumn(row)}:nth-child(7) a`;
+    this.tableColumnStatusEnableLink = (row) => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = (row) => `${this.tableColumnStatusLink(row)}.action-disabled`;
 
     // Column actions selectors
-    this.tableColumnActions = row => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.columnActionsEditLink = row => `${this.tableColumnActions(row)} a.edit`;
-    this.columnActionsDropdownButton = row => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.columnActionsDeleteLink = row => `${this.tableColumnActions(row)} a.delete`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.columnActionsEditLink = (row) => `${this.tableColumnActions(row)} a.edit`;
+    this.columnActionsDropdownButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.columnActionsDeleteLink = (row) => `${this.tableColumnActions(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
@@ -69,14 +69,14 @@ class States extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
   }
@@ -142,7 +142,7 @@ class States extends BOBasePage {
         break;
 
       case 'select':
-        if (typeof value === 'boolean') {
+        if (typeof value === 'string' && (value === '1' || value === '0')) {
           filterValue = value ? 'Yes' : 'No';
         }
 
@@ -220,7 +220,6 @@ class States extends BOBasePage {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
   }
-
 
   /**
    * Go to edit state page

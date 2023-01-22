@@ -24,6 +24,15 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerCommand' }
 
+  prestashop.adapter.manufacturer.command_handler.delete_manufacturer_logo_image_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\DeleteManufacturerLogoImageHandler'
+    arguments:
+      - !php/const _PS_MANU_IMG_DIR_
+      - !php/const _PS_TMP_IMG_DIR_
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Manufacturer\Command\DeleteManufacturerLogoImageCommand'
+
   prestashop.adapter.manufacturer.command_handler.bulk_delete_manufacturer_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\CommandHandler\BulkDeleteManufacturerHandler'
     tags:
@@ -55,5 +64,4 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Manufacturer\Query\GetManufacturerForViewing
 
-  prestashop.adapter.manufacturer.repository.manufacturer_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'
+  PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository: ~

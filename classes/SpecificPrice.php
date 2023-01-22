@@ -1,7 +1,4 @@
 <?php
-
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -26,6 +23,9 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePrio
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
+
 class SpecificPriceCore extends ObjectModel
 {
     public const ORDER_DEFAULT_FROM_QUANTITY = 1;

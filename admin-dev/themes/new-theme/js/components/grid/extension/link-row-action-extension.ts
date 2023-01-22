@@ -23,15 +23,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {Grid} from '@PSTypes/grid';
+import {Grid} from '@js/types/grid';
 import GridMap from '@components/grid/grid-map';
+import {isUndefined} from '@PSTypes/typeguard';
 
 const {$} = window;
+
+type OnClickCallbackFunction = (button: HTMLElement) => void;
 
 /**
  * Class LinkRowActionExtension handles link row actions
  */
 export default class LinkRowActionExtension {
+  private readonly onClick?: OnClickCallbackFunction | undefined;
+
+  constructor(onClick:OnClickCallbackFunction | undefined = undefined) {
+    this.onClick = onClick;
+  }
+
   /**
    * Extend grid
    *
@@ -63,6 +72,8 @@ export default class LinkRowActionExtension {
    * @param {Grid} grid
    */
   initRowLinks(grid: Grid): void {
+    const onClickCallback = this.onClick;
+
     $('tr', grid.getContainer()).each(function initEachRow() {
       const $parentRow = $(this);
 
@@ -94,7 +105,11 @@ export default class LinkRowActionExtension {
                 !confirmMessage.length
                 || (window.confirm(confirmMessage) && $rowAction.attr('href'))
               ) {
-                document.location.href = <string>$rowAction.attr('href');
+                if (!isUndefined(onClickCallback) && !isUndefined($rowAction.get(0))) {
+                  onClickCallback($rowAction.get(0) as HTMLElement);
+                } else {
+                  document.location.href = <string>$rowAction.attr('href');
+                }
               }
             }
           });

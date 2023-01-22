@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -64,38 +65,34 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
 
     /**
      * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
      *
-     * @return array
+     * @return int
      */
-    public function getTaxRulesGroupDetails(TaxRulesGroupId $taxRulesGroupId): array
+    public function getTaxRulesGroupDefaultStateId(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): int
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
-            ->select('trg.id_tax_rules_group, trg.name, trg.active, trg.deleted, tr.id_country, t.rate')
+            ->select('tr.id_state')
             ->from($this->dbPrefix . 'tax_rules_group', 'trg')
             ->innerJoin('trg', $this->dbPrefix . 'tax_rule', 'tr', 'tr.id_tax_rules_group = trg.id_tax_rules_group')
             ->innerJoin('tr', $this->dbPrefix . 'tax', 't', 't.id_tax = tr.id_tax')
             ->andWhere('trg.id_tax_rules_group = :taxRulesGroupId')
-            ->setParameter('taxRulesGroupId', $taxRulesGroupId->getValue())
+            ->andWhere('tr.id_country = :countryId')
+            ->andWhere('trg.deleted = 0')
+            ->setParameters([
+                'taxRulesGroupId' => $taxRulesGroupId->getValue(),
+                'countryId' => $countryId->getValue(),
+            ])
         ;
 
         $rawData = $qb->execute()->fetchAll();
         if (empty($rawData)) {
-            return [];
+            return 0;
         }
         $firstRow = reset($rawData);
-        $taxRulesGroup = [
-            'id_tax_rules_group' => (int) $firstRow['id_tax_rules_group'],
-            'name' => $firstRow['name'],
-            'active' => (bool) $firstRow['active'],
-            'deleted' => (bool) $firstRow['deleted'],
-            'rates' => [],
-        ];
-        foreach ($rawData as $taxData) {
-            $taxRulesGroup['rates'][(int) $taxData['id_country']] = (float) $taxData['rate'];
-        }
 
-        return $taxRulesGroup;
+        return (int) $firstRow['id_state'];
     }
 
     /**

@@ -27,12 +27,13 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class returning the content of the form in the maintenance page.
@@ -56,8 +57,14 @@ class PreferencesType extends TranslatorAwareType
     private $isAllShopContext;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param ConfigurationInterface $configuration
      * @param bool $isMultistoreUsed
      * @param bool $isSingleShopContext
      * @param bool $isAllShopContext
@@ -65,6 +72,7 @@ class PreferencesType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        ConfigurationInterface $configuration,
         $isMultistoreUsed,
         $isSingleShopContext,
         $isAllShopContext
@@ -74,6 +82,7 @@ class PreferencesType extends TranslatorAwareType
         $this->isMultistoreUsed = $isMultistoreUsed;
         $this->isSingleShopContext = $isSingleShopContext;
         $this->isAllShopContext = $isAllShopContext;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -86,8 +95,8 @@ class PreferencesType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $configuration = $this->getConfiguration();
-        $isSslEnabled = $configuration->getBoolean('PS_SSL_ENABLED');
+        $configuration = $this->configuration;
+        $isSslEnabled = (bool) $configuration->get('PS_SSL_ENABLED');
 
         if ($this->isSecure) {
             $builder->add('enable_ssl', SwitchType::class, [

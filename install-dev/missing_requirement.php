@@ -105,17 +105,11 @@
           PrestaShop installation requires the <b>Zip PHP extension</b> to be enabled.
       </li>
     <?php endif; ?>
-    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_): ?>
-      <li>
-          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> or newer.
-          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to update your server's PHP version.</i>
-      </li>
-    <?php endif; ?>
-    <?php if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_): ?>
-      <li>
-          Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_ ?> or lower.
-          <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to downgrade your server's PHP version.</i>
-      </li>
+    <?php if ((!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) || (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_)): ?>
+        <li>
+            Your server is running PHP <?php echo PHP_VERSION ?>, but PrestaShop requires a PHP version between PHP <?php echo _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> and PHP <?php echo _PS_INSTALL_MAXIMUM_PHP_VERSION_ ?>.
+            <i>To install PrestaShop <?php echo _PS_INSTALL_VERSION_ ?> you need to change your server's PHP version.</i>
+        </li>
     <?php endif; ?>
         <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
       <li>

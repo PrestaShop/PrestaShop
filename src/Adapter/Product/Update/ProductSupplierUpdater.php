@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Product;
@@ -54,7 +55,7 @@ use ProductSupplier;
 class ProductSupplierUpdater
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -79,24 +80,24 @@ class ProductSupplierUpdater
     private $defaultCurrencyId;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param CombinationRepository $combinationRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
      * @param int $defaultCurrencyId
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         CombinationRepository $combinationRepository,
         SupplierRepository $supplierRepository,
         ProductSupplierRepository $productSupplierRepository,
         int $defaultCurrencyId
     ) {
-        $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->combinationRepository = $combinationRepository;
         $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -131,7 +132,10 @@ class ProductSupplierUpdater
         // We should always create an association not related to a combination
         $combinationIds = [new NoCombinationId()];
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
-            $combinationIds = array_merge($combinationIds, $this->combinationRepository->getCombinationIds($productId));
+            $combinationIds = array_merge($combinationIds, $this->combinationRepository->getCombinationIds(
+                $productId,
+                ShopConstraint::allShops()
+            ));
         }
 
         // Now we search for each associated supplier if some associations are missing
@@ -208,7 +212,7 @@ class ProductSupplierUpdater
         ProductId $productId,
         array $productSuppliers
     ): array {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
 
         if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
             $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
@@ -239,7 +243,7 @@ class ProductSupplierUpdater
      */
     public function removeAllForProduct(ProductId $productId): void
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getProductByDefaultShop($productId);
 
         $productSupplierIds = $this->getProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
@@ -262,7 +266,7 @@ class ProductSupplierUpdater
                 // When no combinations exist yet we use the default ProductSupplier as a fallback
                 $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
             }
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, false);
+            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
 
             // Then each combination must be updated based on its data for default supplier (which may be different for each one)
             $associations = $this->productSupplierRepository->getAssociationsForSupplier($productId, $defaultSupplierId);
@@ -275,7 +279,7 @@ class ProductSupplierUpdater
         } else {
             // For products without combinations only one association is possible
             $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, true);
+            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
         }
     }
 
@@ -289,7 +293,7 @@ class ProductSupplierUpdater
             if (!empty($suppliers)) {
                 $this->associateSuppliers($productId, $suppliers);
             } else {
-                $this->resetDefaultSupplier($this->productRepository->get($productId));
+                $this->resetDefaultSupplier($this->productRepository->getProductByDefaultShop($productId));
             }
         }
     }
@@ -334,11 +338,9 @@ class ProductSupplierUpdater
             // So if $combinationId is a CombinationId we are updating a combination which also needs its default data to be updated
             if ($combinationId instanceof CombinationId) {
                 $this->updateDefaultSupplierDataForCombination($updatedDefaultSupplier);
-                // Product default data is updated but not its wholesale price
-                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier, false);
+                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier);
             } elseif ($combinationId instanceof NoCombinationId) {
-                // Product default data is updated (including wholesale price) only when product itself is updated
-                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier, true);
+                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier);
             }
         }
 
@@ -352,13 +354,17 @@ class ProductSupplierUpdater
      */
     private function updateDefaultSupplierDataForCombination(ProductSupplier $defaultCombinationSupplier): void
     {
-        $combination = $this->combinationRepository->get(new CombinationId((int) $defaultCombinationSupplier->id_product_attribute));
+        $shopConstraint = ShopConstraint::allShops();
+        $combination = $this->combinationRepository->getByShopConstraint(
+            new CombinationId((int) $defaultCombinationSupplier->id_product_attribute),
+            $shopConstraint
+        );
         $combination->supplier_reference = $defaultCombinationSupplier->product_supplier_reference;
-        $combination->wholesale_price = (float) $defaultCombinationSupplier->product_supplier_price_te;
 
         $this->combinationRepository->partialUpdate(
             $combination,
-            ['supplier_reference', 'wholesale_price', 'id_supplier'],
+            ['supplier_reference'],
+            $shopConstraint,
             CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_SUPPLIER_DATA
         );
     }
@@ -369,18 +375,16 @@ class ProductSupplierUpdater
      *
      * @param ProductSupplier $defaultProductSupplier
      */
-    private function updateDefaultSupplierDataForProduct(ProductSupplier $defaultProductSupplier, bool $updateWholeSalePrice): void
+    private function updateDefaultSupplierDataForProduct(ProductSupplier $defaultProductSupplier): void
     {
-        $product = $this->productRepository->get(new ProductId((int) $defaultProductSupplier->id_product));
+        $product = $this->productRepository->getProductByDefaultShop(new ProductId((int) $defaultProductSupplier->id_product));
         $product->supplier_reference = $defaultProductSupplier->product_supplier_reference;
         $product->id_supplier = (int) $defaultProductSupplier->id_supplier;
-        if ($updateWholeSalePrice) {
-            $product->wholesale_price = (float) (string) $defaultProductSupplier->product_supplier_price_te;
-        }
 
         $this->productRepository->partialUpdate(
             $product,
-            ['supplier_reference', 'wholesale_price', 'id_supplier'],
+            ['supplier_reference', 'id_supplier'],
+            ShopConstraint::allShops(),
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }
@@ -395,7 +399,10 @@ class ProductSupplierUpdater
      */
     private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId): ?ProductSupplier
     {
-        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
+        $defaultCombinationId = $this->combinationRepository->findDefaultCombinationIdForShop(
+            $productId,
+            $this->productRepository->getProductDefaultShopId($productId)
+        );
         if (!$defaultCombinationId) {
             return null;
         }
@@ -437,6 +444,7 @@ class ProductSupplierUpdater
         $this->productRepository->partialUpdate(
             $product,
             ['supplier_reference', 'id_supplier'],
+            ShopConstraint::allShops(),
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }

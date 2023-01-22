@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\CMS\CMSDataProvider;
 use PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration;
 use PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms

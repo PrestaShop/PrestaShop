@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -43,19 +44,40 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      * @param string $productReference
      * @param TableNode $table
      */
-    public function generateCombinations(string $productReference, TableNode $table): void
+    public function generateCombinationsForDefaultShop(string $productReference, TableNode $table): void
     {
-        $tableData = $table->getRowsHash();
-        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
+        $this->generateCombinations($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        try {
-            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $groupedAttributeIds
-            ));
-        } catch (InvalidProductTypeException $e) {
-            $this->setLastException($e);
-        }
+    /**
+     * @When I generate combinations in shop ":shopReference" for product :productReference using following attributes:
+     *
+     * @param string $shopReference
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinationsForShop(string $shopReference, string $productReference, TableNode $table): void
+    {
+        $this->generateCombinations(
+            $productReference,
+            $table,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When I generate combinations for product ":productReference" in all shops using following attributes:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinationsForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->generateCombinations(
+            $productReference,
+            $table,
+            ShopConstraint::allShops()
+        );
     }
 
     /**
@@ -66,7 +88,7 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertCombinationName(string $combinationReference, string $combinationName): void
     {
-        $combinationForEditing = $this->getCombinationForEditing($combinationReference);
+        $combinationForEditing = $this->getCombinationForEditing($combinationReference, $this->getDefaultShopId());
 
         Assert::assertSame(
             $combinationName,
@@ -85,17 +107,50 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      * @param string $productReference
      * @param string $combinationReference
      */
-    public function assertDefaultCombination(string $productReference, string $combinationReference): void
+    public function assertDefaultCombinationForDefaultShop(string $productReference, string $combinationReference): void
     {
+        $this->assertDefaultCombination($productReference, $combinationReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference default combination for shop :shopReference should be :combinationReference
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param string $combinationReference
+     */
+    public function assertDefaultCombinationForShop(
+        string $productReference,
+        string $shopReference,
+        string $combinationReference
+    ): void {
+        $this->assertDefaultCombination(
+            $productReference,
+            $combinationReference,
+            $this->getSharedStorage()->get($shopReference)
+        );
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $combinationReference
+     * @param int $shopId
+     */
+    private function assertDefaultCombination(
+        string $productReference,
+        string $combinationReference,
+        int $shopId
+    ) {
         $combinationId = $this->getSharedStorage()->get($combinationReference);
 
         $this->assertCachedDefaultCombinationId(
             $productReference,
-            $combinationId
+            $combinationId,
+            $shopId
         );
 
         Assert::assertTrue(
-            $this->getCombinationForEditing($combinationReference)->isDefault(),
+            $this->getCombinationForEditing($combinationReference, $shopId)->isDefault(),
             sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
         );
     }
@@ -108,20 +163,39 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      */
     public function assertProductHasNoCachedDefaultCombination(string $productReference): void
     {
-        $this->assertCachedDefaultCombinationId($productReference, 0);
+        $this->assertCachedDefaultCombinationId($productReference, 0, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Given product :productReference should not have a default combination for shop ":shopReference"
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCachedDefaultCombinationForShop(string $productReference, string $shopReference): void
+    {
+        $this->assertCachedDefaultCombinationId(
+            $productReference,
+            0,
+            $this->getSharedStorage()->get($shopReference)
+        );
     }
 
     /**
      * @param string $productReference
      * @param int $combinationId
      */
-    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId): void
+    private function assertCachedDefaultCombinationId(string $productReference, int $combinationId, int $shopId): void
     {
-        $product = new Product($this->getSharedStorage()->get($productReference));
+        $product = new Product(
+            $this->getSharedStorage()->get($productReference),
+            false,
+            null,
+            $shopId
+        );
 
         Assert::assertEquals(
-            (int) $product->cache_default_attribute,
             $combinationId,
+            (int) $product->cache_default_attribute,
             'Unexpected cached product default combination'
         );
     }
@@ -144,5 +218,26 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         }
 
         return $groupedAttributeIds;
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function generateCombinations(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $tableData = $table->getRowsHash();
+        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
+
+        try {
+            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $groupedAttributeIds,
+                $shopConstraint
+            ));
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
     }
 }

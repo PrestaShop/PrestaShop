@@ -19,11 +19,11 @@ class AddCurrency extends LocalizationBasePage {
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
     this.alternativeCurrencyCheckBox = '#currency_unofficial';
-    this.currencyNameInput = id => `#currency_names_${id}`;
+    this.currencyNameInput = (id) => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.precisionInput = '#currency_precision';
-    this.statusToggleInput = toggle => `#currency_active_${toggle}`;
+    this.statusToggleInput = (toggle) => `#currency_active_${toggle}`;
     this.saveButton = '#save-button';
 
     // currency modal
@@ -52,7 +52,7 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !displayed; i++) {
       /* eslint-env browser */
       displayed = await page.evaluate(
-        selector => window.getComputedStyle(document.querySelector(selector))
+        (selector) => window.getComputedStyle(document.querySelector(selector))
           .getPropertyValue('display') === 'none',
         this.currencyLoadingModal,
       );
@@ -65,7 +65,7 @@ class AddCurrency extends LocalizationBasePage {
     for (let i = 0; i < 50 && !inputHasValue; i++) {
       /* eslint-env browser */
       inputHasValue = await page.evaluate(
-        selector => document.querySelector(selector).value !== '',
+        (selector) => document.querySelector(selector).value !== '',
         this.currencyNameInput(1),
       );
 
@@ -99,7 +99,7 @@ class AddCurrency extends LocalizationBasePage {
   /**
    * Update exchange rate
    * @param page {Page} Browser tab
-   * @param value {string} Value to set on exchange rate input
+   * @param value {number} Value to set on exchange rate input
    * @returns {Promise<string>}
    */
   async updateExchangeRate(page, value) {

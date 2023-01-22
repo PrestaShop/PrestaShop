@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -34,7 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class generates "General" form
@@ -159,6 +160,26 @@ class GeneralType extends TranslatorAwareType
                     'If a customer meets multiple conditions, specific prices will be applied in this order of priority, unless a different order has been set for a particular product.',
                     'Admin.Shopparameters.Help'
                 ),
+                'required' => false,
+            ])
+            ->add('disabled_products_behavior', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Default behavior for disabled products',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'You can specify the default behavior for all disabled products. The product page can display a "Discontinued" message or an error page. You can also specify which HTTP response is sent to users. This can be set specifically for each product.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'choices' => [
+                    'Display error page with 404 response' => RedirectType::TYPE_NOT_FOUND,
+                    'Display error page with 410 response' => RedirectType::TYPE_GONE,
+                    'Display product as discontinued with 200 response' => RedirectType::TYPE_SUCCESS_DISPLAYED,
+                    'Display product as discontinued with 404 response' => RedirectType::TYPE_NOT_FOUND_DISPLAYED,
+                    'Display product as discontinued with 410 response' => RedirectType::TYPE_GONE_DISPLAYED,
+                ],
+                'choice_translation_domain' => 'Admin.Global',
+                'placeholder' => false,
                 'required' => false,
             ])
         ;

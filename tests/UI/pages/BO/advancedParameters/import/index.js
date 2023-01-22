@@ -20,7 +20,7 @@ class Import extends BOBasePage {
 
     // Selectors
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} p.alert-text.js-import-file`;
-    this.downloadSampleFileLink = type => `#download-sample-${type}-file-link`;
+    this.downloadSampleFileLink = (type) => `#download-sample-${type}-file-link`;
     this.fileInputField = '#file';
     this.nextStepButton = 'button[name=submitImportFile]';
     this.importButton = '#import';
@@ -33,7 +33,7 @@ class Import extends BOBasePage {
     this.progressImportBarInfo = '#import_progressbar_done';
     this.importDetailsFinished = '#import_details_finished';
     this.importProgressModalCloseButton = '#import_close_button';
-    this.forceAllIDNumber = toggle => `#forceIDs_${toggle}`;
+    this.forceAllIDNumber = (toggle) => `#forceIDs_${toggle}`;
   }
 
   /*

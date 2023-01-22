@@ -24,6 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Combination\CombinationSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+
 /**
  * Class CombinationCore.
  */
@@ -34,7 +37,11 @@ class CombinationCore extends ObjectModel
 
     public $reference;
 
-    /** @var string */
+    /**
+     * @deprecated since 8.1.0
+     *
+     * @var string
+     */
     public $supplier_reference;
 
     public $ean13;
@@ -68,12 +75,19 @@ class CombinationCore extends ObjectModel
 
     public $available_date = '0000-00-00';
 
+    /** @var string|array Text when in stock or array of text by id_lang */
+    public $available_now;
+
+    /** @var string|array Text when not in stock but available to order or array of text by id_lang */
+    public $available_later;
+
     /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
         'table' => 'product_attribute',
         'primary' => 'id_product_attribute',
+        'multilang' => true,
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
             'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
@@ -94,6 +108,10 @@ class CombinationCore extends ObjectModel
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'default_on' => ['type' => self::TYPE_BOOL, 'allow_null' => true, 'shop' => true, 'validate' => 'isBool'],
             'available_date' => ['type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'],
+
+            /* Lang fields */
+            'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => CombinationSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH],
+            'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => CombinationSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH],
         ],
     ];
 
@@ -122,8 +140,16 @@ class CombinationCore extends ObjectModel
             return false;
         }
 
-        // Removes the product from StockAvailable, for the current shop
-        StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        $shopIdsList = $this->getShopIdsList();
+
+        // Removes the product from StockAvailable for the related shops
+        if (!empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
+                StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id, $shopId);
+            }
+        } else {
+            StockAvailable::removeProductFromStockAvailable((int) $this->id_product, (int) $this->id);
+        }
 
         if ($specificPrices = SpecificPrice::getByProductId((int) $this->id_product, (int) $this->id)) {
             foreach ($specificPrices as $specificPrice) {
@@ -157,6 +183,10 @@ class CombinationCore extends ObjectModel
      */
     public function deleteFromSupplier($idProduct)
     {
+        if ($this->hasMultishopEntries()) {
+            return true;
+        }
+
         return Db::getInstance()->delete('product_supplier', 'id_product = ' . (int) $idProduct
             . ' AND id_product_attribute = ' . (int) $this->id);
     }
@@ -168,6 +198,10 @@ class CombinationCore extends ObjectModel
      */
     protected function deleteFromPack(): bool
     {
+        if ($this->hasMultishopEntries()) {
+            return true;
+        }
+
         return Db::getInstance()->delete('pack', 'id_product_item = ' . (int) $this->id_product
             . ' AND id_product_attribute_item = ' . (int) $this->id);
     }
@@ -196,10 +230,21 @@ class CombinationCore extends ObjectModel
         }
 
         $product = new Product((int) $this->id_product);
+        $shopIdsList = $this->getShopIdsList();
+
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, 1, null, (int) $this->id);
+            $outOfStock = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         } else {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), null, $this->id);
+            $outOfStock = StockAvailable::outOfStock((int) $this->id_product);
+        }
+
+        if (!empty($shopIdsList)) {
+            foreach ($shopIdsList as $shopId) {
+                StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $shopId, (int) $this->id);
+            }
+        } else {
+            // This creates stock_available for combination as a side effect
+            StockAvailable::setProductOutOfStock((int) $this->id_product, $outOfStock, $this->id_shop, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);
@@ -268,6 +313,12 @@ class CombinationCore extends ObjectModel
     {
         if ((int) $this->id === 0) {
             return false;
+        }
+
+        if ($this->hasMultishopEntries()) {
+            $shopIdList = $this->getShopIdsList();
+
+            return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id . ' AND id_shop IN (' . implode(',', $shopIdList) . ')');
         }
 
         return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);

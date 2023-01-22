@@ -41,7 +41,7 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([
-      page.$eval(this.saveButton, el => el.click()),
+      page.$eval(this.saveButton, (el) => el.click()),
       page.waitForNavigation({waitUntil: 'networkidle', timeout: 30000}),
     ]);
 

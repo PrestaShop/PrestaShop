@@ -28,15 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
-use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Responsible for updating product default combination
@@ -49,12 +45,20 @@ class DefaultCombinationUpdater
     private $combinationRepository;
 
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    /**
      * @param CombinationRepository $combinationRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
-        CombinationRepository $combinationRepository
+        CombinationRepository $combinationRepository,
+        ProductMultiShopRepository $productRepository
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -66,38 +70,19 @@ class DefaultCombinationUpdater
      * @see Product::updateDefaultAttribute()
      *
      * @param CombinationId $defaultCombinationId
-     *
-     * @throws CoreException
-     * @throws CannotAddCombinationException
-     * @throws CombinationNotFoundException
-     * @throws ProductConstraintException
+     * @param ShopConstraint $shopConstraint
      */
-    public function setDefaultCombination(CombinationId $defaultCombinationId): void
+    public function setDefaultCombination(CombinationId $defaultCombinationId, ShopConstraint $shopConstraint): void
     {
-        $newDefaultCombination = $this->combinationRepository->get($defaultCombinationId);
+        $newDefaultCombination = $this->combinationRepository->getByShopConstraint($defaultCombinationId, $shopConstraint);
         $productId = new ProductId((int) $newDefaultCombination->id_product);
-        $currentDefaultCombination = $this->combinationRepository->findDefaultCombination($productId);
 
-        if ($currentDefaultCombination) {
-            $this->updateCombinationDefaultProperty($currentDefaultCombination, false);
-        }
-
-        $this->updateCombinationDefaultProperty($newDefaultCombination, true);
-    }
-
-    /**
-     * @param Combination $combination
-     * @param bool $isDefault
-     *
-     * @throws CannotAddCombinationException
-     */
-    private function updateCombinationDefaultProperty(Combination $combination, bool $isDefault): void
-    {
-        $combination->default_on = $isDefault;
-        $this->combinationRepository->partialUpdate(
-            $combination,
-            ['default_on'],
-            CannotUpdateCombinationException::FAILED_UPDATE_DEFAULT_COMBINATION
+        $this->combinationRepository->setDefaultCombination(
+            $productId,
+            $defaultCombinationId,
+            $shopConstraint
         );
+
+        $this->productRepository->updateCachedDefaultCombination($productId, $shopConstraint);
     }
 }

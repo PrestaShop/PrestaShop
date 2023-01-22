@@ -100,7 +100,7 @@ class ModuleController extends ModuleAbstractController
 
     /**
      * @AdminSecurity(
-     *     "is_granted('read', 'ADMINMODULESSF_') && is_granted('create', 'ADMINMODULESSF_') && is_granted('update', 'ADMINMODULESSF_') && is_granted('delete', 'ADMINMODULESSF_')"
+     *     "is_granted('read', 'ADMINMODULESSF_') || is_granted('create', 'ADMINMODULESSF_') || is_granted('update', 'ADMINMODULESSF_') || is_granted('delete', 'ADMINMODULESSF_')"
      * )
      *
      * @param Request $module_name
@@ -209,9 +209,16 @@ class ModuleController extends ModuleAbstractController
 
         try {
             $args = [$module];
-            if ($action === 'uninstall') {
+            if ($action === ModuleAdapter::ACTION_UNINSTALL) {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
                 $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
+            }
+            $systemCacheClearEnabled = filter_var(
+                $request->request->get('actionParams', [])['cacheClearEnabled'] ?? true,
+                FILTER_VALIDATE_BOOLEAN
+            );
+            if (!$systemCacheClearEnabled) {
+                $moduleManager->disableSystemClearCache();
             }
             $response[$module]['status'] = call_user_func([$moduleManager, $action], ...$args);
         } catch (Exception $e) {

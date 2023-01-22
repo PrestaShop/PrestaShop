@@ -50,7 +50,7 @@ services:
       - "@doctrine.dbal.default_connection"
       - "@doctrine.orm.default_entity_manager"
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.image_manager"
+      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "@prestashop.adapter.stock_manager"
       - "%database_prefix%"
 
@@ -61,7 +61,7 @@ services:
       - "@doctrine.dbal.default_connection"
       - "@doctrine.orm.default_entity_manager"
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.image_manager"
+      - '@PrestaShop\PrestaShop\Adapter\ImageManager'
       - "%database_prefix%"
       - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
 
@@ -129,11 +129,14 @@ services:
       - "@doctrine.dbal.default_connection"
       - "%database_prefix%"
 
-  prestashop.core.admin.attribute_group.repository:
-    class: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
+  PrestaShopBundle\Entity\Repository\AttributeGroupRepository:
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\AttributeGroup
+
+  prestashop.core.admin.attribute_group.repository:
+    alias: PrestaShopBundle\Entity\Repository\AttributeGroupRepository
+    deprecated: ~
 
   prestashop.core.admin.feature_flag.repository:
     class: PrestaShopBundle\Entity\Repository\FeatureFlagRepository

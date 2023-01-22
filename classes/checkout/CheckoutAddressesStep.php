@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepCore extends AbstractCheckoutStep
 {
@@ -35,6 +35,11 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     private $show_invoice_address_form = false;
     private $form_has_continue_button = false;
 
+    /**
+     * @param Context $context
+     * @param TranslatorInterface $translator
+     * @param CustomerAddressForm $addressForm
+     */
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

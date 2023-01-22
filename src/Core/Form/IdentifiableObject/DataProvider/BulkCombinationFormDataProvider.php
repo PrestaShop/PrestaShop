@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+
 class BulkCombinationFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -46,8 +48,10 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
                 'minimal_quantity' => 0,
                 'stock_location' => '',
                 'low_stock_threshold' => 0,
-                'low_stock_alert' => '',
+                sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                 'available_date' => '',
+                'available_now_label' => [],
+                'available_later_label' => [],
             ],
             'price' => [
                 'wholesale_price' => 0,

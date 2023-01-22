@@ -113,6 +113,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     this.iframe.frameBorder = '0';
     this.iframe.scrolling = 'no';
     this.iframe.width = '100%';
+    this.iframe.setAttribute('name', `${params.id}-iframe`);
     if (!params.autoSize) {
       this.iframe.height = '100%';
     }
@@ -235,7 +236,7 @@ export class IframeModal extends Modal implements IframeModalType {
     }
   }
 
-  render(content: string, hideIframe: boolean = true): void {
+  render(content: string, hideIframe: boolean = true): this {
     this.modal.message.innerHTML = content;
     this.modal.message.classList.remove('d-none');
 
@@ -245,9 +246,11 @@ export class IframeModal extends Modal implements IframeModalType {
 
     this.autoResize();
     this.hideLoading();
+
+    return this;
   }
 
-  showLoading(): void {
+  showLoading(): this {
     const bodyHeight = this.getOuterHeight(this.modal.body);
     const bodyWidth = this.getOuterWidth(this.modal.body);
     this.modal.loader.style.height = `${bodyHeight}px`;
@@ -255,17 +258,23 @@ export class IframeModal extends Modal implements IframeModalType {
     this.modal.loader.classList.remove('d-none');
     this.modal.iframe.classList.remove('invisible');
     this.modal.iframe.classList.add('invisible');
+
+    return this;
   }
 
-  hideLoading(): void {
+  hideLoading(): this {
     this.modal.iframe.classList.remove('invisible');
     this.modal.iframe.classList.add('visible');
     this.modal.loader.classList.add('d-none');
+
+    return this;
   }
 
-  hide(): void {
+  hide(): this {
     super.hide();
     this.cleanResizeObserver();
+
+    return this;
   }
 
   hideIframe(): void {

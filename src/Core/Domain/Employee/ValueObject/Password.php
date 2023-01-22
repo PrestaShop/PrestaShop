@@ -35,6 +35,11 @@ use ZxcvbnPhp\Zxcvbn;
 class Password
 {
     /**
+     * @var int Minimum required password length for employee
+     */
+    public const MIN_LENGTH = 8;
+
+    /**
      * @var string
      */
     private $password;
@@ -81,6 +86,8 @@ class Password
 
     /**
      * @param string $password
+     *
+     * @throws EmployeeConstraintException
      */
     private function assertPasswordIsWithinAllowedLength(string $password): void
     {
@@ -100,6 +107,8 @@ class Password
 
     /**
      * @param string $password
+     *
+     * @throws EmployeeConstraintException
      */
     private function assertPasswordScoreIsAllowed(string $password): void
     {

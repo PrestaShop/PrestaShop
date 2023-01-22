@@ -35,9 +35,9 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuantityType extends TranslatorAwareType
 {
@@ -81,6 +81,7 @@ class QuantityType extends TranslatorAwareType
                     'required' => false,
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'label_tag_name' => 'h4',
+                    'modify_delta_for_all_shops' => true,
                 ])
                 ->add('stock_movements', EntitySearchInputType::class, [
                     'required' => false,
@@ -95,6 +96,9 @@ class QuantityType extends TranslatorAwareType
                     'external_link' => [
                         'text' => $this->trans('[1]View all stock movements[/1]', 'Admin.Catalog.Feature'),
                         'href' => $stockMovementsUrl,
+                    ],
+                    'attr' => [
+                        'class' => 'stock-movement-list',
                     ],
                 ])
             ;

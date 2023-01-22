@@ -5,7 +5,8 @@ admin_cart_rules_index:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::indexAction'
     _legacy_controller: AdminCartRules
-    #  _legacy_link: AdminCartRule
+    _legacy_link: AdminCartRules
+    _legacy_feature_flag: cart_rule
 
 admin_cart_rules_search:
   path: /search
@@ -31,7 +32,8 @@ admin_cart_rule_toggle_status:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::toggleStatusAction'
     _legacy_controller: AdminCartRules
-    # _legacy_link: AdminCartRules:statuscart_rule
+    _legacy_link: AdminCartRules:statuscart_rule
+    _legacy_feature_flag: cart_rule
     _legacy_parameters:
       id_cart_rule: cartRuleId
   requirements:
@@ -43,7 +45,8 @@ admin_cart_rules_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::deleteAction'
     _legacy_controller: AdminCartRules
-    #  _legacy_link: AdminCartRules:deletecart_rule
+    _legacy_link: AdminCartRules:deletecart_rule
+    _legacy_feature_flag: cart_rule
     _legacy_parameters:
       id_cart_rule: cartRuleId
   requirements:
@@ -55,7 +58,8 @@ admin_cart_rules_bulk_delete:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkDeleteAction'
     _legacy_controller: AdminCartRules
-#  _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+    _legacy_link: AdminCartRules:submitBulkdeletecart_rule
+    _legacy_feature_flag: cart_rule
 
 admin_cart_rules_bulk_enable_status:
   path: /bulk-enable
@@ -63,7 +67,8 @@ admin_cart_rules_bulk_enable_status:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkEnableAction'
     _legacy_controller: AdminCartRules
-#  _legacy_link: AdminCartRules:submitBulkenableSelectioncart_rule
+    _legacy_link: AdminCartRules:submitBulkenableSelectioncart_rule
+    _legacy_feature_flag: cart_rule
 
 admin_cart_rules_bulk_disable_status:
   path: /bulk-disable
@@ -71,4 +76,5 @@ admin_cart_rules_bulk_disable_status:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CartRuleController::bulkDisableAction'
     _legacy_controller: AdminCartRules
-#   _legacy_link: AdminCartRules:submitBulkdisableSelectioncart_rule
+    _legacy_link: AdminCartRules:submitBulkdisableSelectioncart_rule
+    _legacy_feature_flag: cart_rule

@@ -23,23 +23,23 @@ class Brands extends BOBasePage {
     this.newBrandAddressLink = '#page-header-desc-configuration-add_manufacturer_address';
 
     // Table Selectors
-    this.gridPanel = table => `#${table}_grid_panel`;
-    this.gridTable = table => `#${table}_grid_table`;
-    this.gridHeaderTitle = table => `${this.gridPanel(table)} h3.card-header-title`;
+    this.gridPanel = (table) => `#${table}_grid_panel`;
+    this.gridTable = (table) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = table => `${this.gridPanel(table)} tr.column-filters .grid_bulk_action_select_all`;
-    this.bulkActionsToggleButton = table => `${this.gridPanel(table)} button.js-bulk-actions-btn`;
-    this.confirmDeleteModal = table => `#${table}_grid_confirm_modal`;
+    this.selectAllRowsLabel = (table) => `${this.gridPanel(table)} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = (table) => `${this.gridPanel(table)} button.js-bulk-actions-btn`;
+    this.confirmDeleteModal = (table) => `#${table}_grid_confirm_modal`;
     this.confirmDeleteButton = 'button.btn-confirm-submit';
 
     // Filters
     this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
+    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Table rows and columns
-    this.tableBody = table => `${this.gridTable(table)} tbody`;
+    this.tableBody = (table) => `${this.gridTable(table)} tbody`;
     this.tableRow = (table, row) => `${this.tableBody(table)} tr:nth-child(${row})`;
     this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
 
@@ -50,42 +50,42 @@ class Brands extends BOBasePage {
     this.deleteRowLink = (table, row) => `${this.dropdownToggleMenu(table, row)} a.grid-delete-row-link`;
 
     // Sort Selectors
-    this.tableHead = table => `${this.gridTable(table)} thead`;
+    this.tableHead = (table) => `${this.gridTable(table)} thead`;
     this.sortColumnDiv = (table, column) => `${this.tableHead(table)
     } div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
 
     // Grid Actions
-    this.gridActionButton = table => `#${table}-grid-actions-button`;
-    this.gridActionDropDownMenu = table => `#${table}-grid-actions-dropdown-menu`;
-    this.gridActionExportLink = table => `#${table}-grid-action-export`;
+    this.gridActionButton = (table) => `#${table}-grid-actions-button`;
+    this.gridActionDropDownMenu = (table) => `#${table}-grid-actions-dropdown-menu`;
+    this.gridActionExportLink = (table) => `#${table}-grid-action-export`;
 
     // Delete modal
-    this.confirmDeleteModal = table => `#${table}-grid-confirm-modal`;
-    this.confirmDeleteButton = table => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
+    this.confirmDeleteModal = (table) => `#${table}-grid-confirm-modal`;
+    this.confirmDeleteButton = (table) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
 
     // Brands list Selectors
-    this.brandsTableColumnLogoImg = row => `${this.tableColumn('manufacturer', row, 'logo')} img`;
-    this.brandsTableColumnStatus = row => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
-    this.brandsTableColumnStatusToggleInput = row => `${this.brandsTableColumnStatus(row)} input`;
-    this.viewBrandLink = row => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
-    this.editBrandLink = row => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
+    this.brandsTableColumnLogoImg = (row) => `${this.tableColumn('manufacturer', row, 'logo')} img`;
+    this.brandsTableColumnStatus = (row) => `${this.tableColumn('manufacturer', row, 'active')} .ps-switch`;
+    this.brandsTableColumnStatusToggleInput = (row) => `${this.brandsTableColumnStatus(row)} input`;
+    this.viewBrandLink = (row) => `${this.actionsColumn('manufacturer', row)} a.grid-view-row-link`;
+    this.editBrandLink = (row) => `${this.dropdownToggleMenu('manufacturer', row)} a.grid-edit-row-link`;
     this.bulkActionsEnableButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_enable_selection`;
     this.bulkActionsDisableButton = `${this.gridPanel('manufacturer')
     } #manufacturer_grid_bulk_action_disable_selection`;
     this.deleteBrandsButton = `${this.gridPanel('manufacturer')} #manufacturer_grid_bulk_action_delete_selection`;
 
     // Brand Addresses Selectors
-    this.editBrandAddressLink = row => `${this.actionsColumn('manufacturer_address', row)
+    this.editBrandAddressLink = (row) => `${this.actionsColumn('manufacturer_address', row)
     } a.grid-edit-row-link`;
     this.deleteAddressesButton = `${this.gridPanel('manufacturer_address')
     } #manufacturer_address_grid_bulk_action_delete_selection`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
-    this.paginationLabel = table => `${this.gridPanel(table)} .col-form-label`;
-    this.paginationNextLink = table => `${this.gridPanel(table)} #pagination_next_url`;
-    this.paginationPreviousLink = table => `${this.gridPanel(table)} [aria-label='Previous']`;
+    this.paginationLabel = (table) => `${this.gridPanel(table)} .col-form-label`;
+    this.paginationNextLink = (table) => `${this.gridPanel(table)} [data-role=next-page-link]`;
+    this.paginationPreviousLink = (table) => `${this.gridPanel(table)} [data-role='previous-page-link']`;
   }
 
   /*
@@ -177,7 +177,7 @@ class Brands extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterBrandsEnabled(page, value) {
-    await this.filterTable(page, 'manufacturer', 'select', 'active', value ? 'Yes' : 'No');
+    await this.filterTable(page, 'manufacturer', 'select', 'active', value === '1' ? 'Yes' : 'No');
   }
 
   /**
@@ -339,7 +339,7 @@ class Brands extends BOBasePage {
   async bulkSetBrandsStatus(page, enable = true) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel('manufacturer'), el => el.click()),
+      page.$eval(this.selectAllRowsLabel('manufacturer'), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton('manufacturer')}:not([disabled])`, 40000),
     ]);
 
@@ -363,7 +363,7 @@ class Brands extends BOBasePage {
   async deleteWithBulkActions(page, tableName) {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), el => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 

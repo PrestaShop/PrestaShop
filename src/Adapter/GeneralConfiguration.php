@@ -60,7 +60,6 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
             'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
             'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
             'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
@@ -83,7 +82,6 @@ class GeneralConfiguration implements DataConfigurationInterface
                     'parameters' => [],
                 ];
             } else {
-                $this->configuration->set('PRESTASTORE_LIVE', (bool) $configuration['check_modules_update']);
                 $this->configuration->set('PS_COOKIE_CHECKIP', (bool) $configuration['check_ip_address']);
                 $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
                 $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
@@ -103,7 +101,6 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         $isValid = isset(
-                $configuration['check_modules_update'],
                 $configuration['check_ip_address'],
                 $configuration['front_cookie_lifetime'],
                 $configuration['back_cookie_lifetime']

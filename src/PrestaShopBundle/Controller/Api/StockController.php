@@ -199,7 +199,7 @@ class StockController extends ApiController
      *
      * @return void
      */
-    private function guardAgainstMissingDeltaParameter(Request $request)
+    private function guardAgainstMissingDeltaParameter(Request $request): void
     {
         $message = 'The "delta" parameter is required';
 
@@ -220,7 +220,7 @@ class StockController extends ApiController
      *
      * @return array
      */
-    private function guardAgainstInvalidRequestContent($content, $message)
+    private function guardAgainstInvalidRequestContent(string $content, string $message): array
     {
         $decodedContent = $this->guardAgainstInvalidJsonBody($content);
 
@@ -233,10 +233,8 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
-     *
-     * @return mixed
      */
-    private function guardAgainstInvalidBulkEditionRequest(Request $request)
+    private function guardAgainstInvalidBulkEditionRequest(Request $request): void
     {
         if (strlen($request->getContent()) == 0) {
             $message = 'The request body should contain a JSON-encoded array of product identifiers and deltas';
@@ -249,20 +247,26 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
-     *
-     * @return mixed
      */
-    private function guardAgainstMissingParametersInBulkEditionRequest(Request $request)
+    private function guardAgainstMissingParametersInBulkEditionRequest(Request $request): void
     {
         $decodedContent = $this->guardAgainstInvalidJsonBody($request->getContent());
 
-        $message = 'Each item of JSON-encoded array in the request body should contain ' .
+        $messageMissingParameters = 'Each item of JSON-encoded array in the request body should contain ' .
             'a product id ("product_id"), a quantity delta ("delta"). ' .
             'The item of index #%d is invalid.';
+        $messageEmptyData = $this->container->get('translator')->trans(
+            'Value cannot be 0.',
+            [],
+            'Admin.Notifications.Error'
+        );
 
-        array_walk($decodedContent, function ($item, $index) use ($message) {
-            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item) || $item['delta'] == 0) {
-                throw new BadRequestHttpException(sprintf($message, $index));
+        array_walk($decodedContent, function ($item, $index) use ($messageMissingParameters, $messageEmptyData) {
+            if (!array_key_exists('product_id', $item) || !array_key_exists('delta', $item)) {
+                throw new BadRequestHttpException(sprintf($messageMissingParameters, $index));
+            }
+            if ($item['delta'] == 0) {
+                throw new BadRequestHttpException(sprintf($messageEmptyData, $index));
             }
         });
     }

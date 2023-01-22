@@ -32,6 +32,9 @@ services:
   prestashop.adapter.debug_mode:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
+  prestashop.adapter.debug_profiling:
+    class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugProfiling'
+
   prestashop.adapter.database:
     class: 'PrestaShop\PrestaShop\Adapter\Database'
 
@@ -61,9 +64,13 @@ services:
   # Legacy Hooks registrator
   prestashop.adapter.legacy.hook.subscriber:
     class: PrestaShop\PrestaShop\Adapter\LegacyHookSubscriber
+    tags:
+      - { name: core.legacy.hook.subscriber }
 
   prestashop.adapter.legacy.block.helper.subscriber:
     class: PrestaShop\PrestaShop\Adapter\Admin\LegacyBlockHelperSubscriber
+    tags:
+      - { name: core.legacy.hook.subscriber }
 
   prestashop.adapter.stock_manager:
     class: PrestaShop\PrestaShop\Adapter\StockManager
@@ -77,9 +84,15 @@ services:
   prestashop.adapter.shop.context:
     class: PrestaShop\PrestaShop\Adapter\Shop\Context
 
+  PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface: '@prestashop.adapter.shop.context'
+  PrestaShop\PrestaShop\Core\Shop\ShopConstraintContextInterface: '@prestashop.adapter.shop.context'
+
+  PrestaShop\PrestaShop\Adapter\ImageManager:
+    arguments: [ '@PrestaShop\PrestaShop\Adapter\LegacyContext' ]
+
   prestashop.adapter.image_manager:
-    class: PrestaShop\PrestaShop\Adapter\ImageManager
-    arguments: [ "@prestashop.adapter.legacy.context" ]
+    alias: PrestaShop\PrestaShop\Adapter\ImageManager
+    deprecated: ~
 
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
@@ -87,9 +100,9 @@ services:
   prestashop.adapter.admin.model.product:
     class: PrestaShopBundle\Model\Product\AdminModelAdapter
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.adapter.admin.wrapper.product"
-      - "@prestashop.adapter.tools"
+      - '@PrestaShop\PrestaShop\Adapter\LegacyContext'
+      - '@PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
       - "@prestashop.adapter.data_provider.product"
       - "@prestashop.adapter.data_provider.supplier"
       - "@prestashop.adapter.data_provider.warehouse"
@@ -98,25 +111,25 @@ services:
       - "@prestashop.adapter.shop.context"
       - "@prestashop.adapter.data_provider.tax"
       - "@router"
-      - "@prestashop.utils.float_parser"
+      - '@PrestaShopBundle\Utils\FloatParser'
 
   prestashop.adapter.translation_route_finder:
     class: PrestaShop\PrestaShop\Adapter\Translations\TranslationRouteFinder
     arguments:
       - '@prestashop.service.translation'
-      - '@=service("prestashop.adapter.legacy.context").getContext().link'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().link'
       - '@prestashop.core.admin.module.repository'
 
   prestashop.adapter.shop.shop_url:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\ShopUrlDataProvider'
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().shop.id'
 
   prestashop.adapter.file.htaccess_file_generator:
     class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
     arguments:
       - '@prestashop.core.cache.clearer.cache_clearer_chain'
-      - '@prestashop.adapter.tools'
+      - '@PrestaShop\PrestaShop\Adapter\Tools'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
 
   prestashop.adapter.file.robots_text_file_generator:

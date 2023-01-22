@@ -75,10 +75,17 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider
 
   prestashop.adapter.data_provider.tab:
+    alias: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
+    deprecated: ~
+    public: true
+
+  PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider:
     class: PrestaShop\PrestaShop\Adapter\Tab\TabDataProvider
+    public: false
+    autowire: true
     arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id_profile'
-      - '@=service("prestashop.adapter.legacy.configuration").getInt("_PS_ADMIN_PROFILE_")'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.data_provider.profile:
     class: PrestaShop\PrestaShop\Adapter\Profile\ProfileDataProvider

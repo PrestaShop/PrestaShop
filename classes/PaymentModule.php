@@ -576,6 +576,7 @@ abstract class PaymentModuleCore extends Module
 
             // Switch to back order if needed
             if (Configuration::get('PS_STOCK_MANAGEMENT') &&
+                    Configuration::get('PS_ENABLE_BACKORDER_STATUS') &&
                     ($order_detail->getStockState() ||
                     $order_detail->product_quantity_in_stock < 0)) {
                 $history = new OrderHistory();
@@ -827,7 +828,7 @@ abstract class PaymentModuleCore extends Module
             if ($currency == -1) {
                 $id_currency = (int) $current_id_currency;
             } elseif ($currency == -2) {
-                $id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+                $id_currency = Currency::getDefaultCurrencyId();
             } else {
                 $id_currency = $currency;
             }

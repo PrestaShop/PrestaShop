@@ -15,6 +15,7 @@ class CreditSlips extends BOBasePage {
     super();
 
     this.pageTitle = 'Credit Slips •';
+    this.pageTitleFR = 'Avoirs •';
     this.errorMessageWhenGenerateFileByDate = 'No order slips were found for this period.';
     this.successfulUpdateMessage = 'Update successful';
 
@@ -25,10 +26,23 @@ class CreditSlips extends BOBasePage {
     this.creditSlipGridTable = '#credit_slip_grid_table';
     this.filterResetButton = `${this.creditSlipGridTable} .grid-reset-button`;
     this.filterSearchButton = `${this.creditSlipGridTable} .grid-search-button`;
-    this.creditSlipsFilterColumnInput = filterBy => `#credit_slip_${filterBy}`;
-    this.creditSlipsTableRow = row => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
+
+    // Sort Credit Slip Selectors
+    this.tableHead = `${this.creditSlipGridTable} thead`;
+    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+
+    // Pagination selectors
+    this.paginationBlock = '.pagination-block';
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.creditSlipGridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.creditSlipGridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.creditSlipGridPanel} .pagination .previous a.page-link`;
+
+    this.creditSlipsFilterColumnInput = (filterBy) => `#credit_slip_${filterBy}`;
+    this.creditSlipsTableRow = (row) => `${this.creditSlipGridTable} tbody tr:nth-child(${row})`;
     this.creditSlipsTableColumn = (row, column) => `${this.creditSlipsTableRow(row)} td.column-${column}`;
-    this.creditSlipDownloadButton = id => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
+    this.creditSlipDownloadButton = (id) => `${this.creditSlipGridTable} tr:nth-child(${id}) td.link-type.column-pdf`;
 
     // By date form
     this.generateByDateForm = '#form-generate-credit-slips-by-date';
@@ -201,6 +215,93 @@ class CreditSlips extends BOBasePage {
   async saveCreditSlipOptions(page) {
     await this.clickAndWaitForNavigation(page, this.saveCreditSlipOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @returns {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /**
+   * Get column content in all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column name on table
+   * @returns {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    let rowContent;
+    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable = [];
+
+    for (let i = 1; i <= rowsNumber; i++) {
+      rowContent = await this.getTextColumnFromTableCreditSlips(page, i, column);
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\Filler\SeoFiller;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -38,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Product;
 
 /**
+ * @deprecated should be removed when unified UpdateProductCommand is fully done
+ * @see SeoFiller instead
+ *
  * Fills Product object model SEO information fields according to domain specifics
  */
 class ProductSeoPropertiesFiller

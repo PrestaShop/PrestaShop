@@ -24,6 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+
 /**
  * Class QuickAccessCore.
  */
@@ -37,6 +40,16 @@ class QuickAccessCore extends ObjectModel
 
     /** @var bool New windows or not */
     public $new_window;
+
+    /**
+     * link to new product creation form
+     */
+    private const NEW_PRODUCT_LINK = 'index.php/sell/catalog/products/new';
+
+    /**
+     * link to new product creation form for product v2
+     */
+    private const NEW_PRODUCT_V2_LINK = 'index.php/sell/catalog/products-v2/create';
 
     /**
      * @see ObjectModel::$definition
@@ -81,13 +94,14 @@ class QuickAccessCore extends ObjectModel
             return false;
         }
 
+        $context = Context::getContext();
         foreach ($quickAccess as $index => $quick) {
             // first, clean url to have a real quickLink
-            $quick['link'] = Context::getContext()->link->getQuickLink($quick['link']);
+            $quick['link'] = $context->link->getQuickLink($quick['link']);
             $tokenString = $idEmployee;
 
             if ('../' === $quick['link'] && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $url = Context::getContext()->shop->getBaseURL();
+                $url = $context->shop->getBaseURL();
                 if (!$url) {
                     unset($quickAccess[$index]);
 
@@ -104,7 +118,14 @@ class QuickAccessCore extends ObjectModel
 
                     $tokenString = $admin_tab[1] . (int) Tab::getIdFromClassName($admin_tab[1]) . $idEmployee;
                 }
-                $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
+                $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . $quick['link'];
+                if ($quick['link'] === self::NEW_PRODUCT_LINK || $quick['link'] === self::NEW_PRODUCT_V2_LINK) {
+                    //if new product page feature is enabled we create new product v2 modal popup
+                    if (self::productPageV2Enabled()) {
+                        $quickAccess[$index]['link'] = $context->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . self::NEW_PRODUCT_V2_LINK;
+                        $quickAccess[$index]['class'] = 'new-product-button';
+                    }
+                }
             }
 
             if (false === strpos($quickAccess[$index]['link'], 'token')) {
@@ -134,5 +155,19 @@ class QuickAccessCore extends ObjectModel
         $this->new_window = !(int) $this->new_window;
 
         return $this->update(false);
+    }
+
+    /**
+     * @return bool
+     */
+    private static function productPageV2Enabled(): bool
+    {
+        $multistoreFeature = SymfonyContainer::getInstance()->get('prestashop.adapter.multistore_feature');
+
+        return SymfonyContainer::getInstance()->get('prestashop.core.admin.feature_flag.repository')->isEnabled(
+            $multistoreFeature->isActive()
+                ? FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP
+                : FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2
+        );
     }
 }

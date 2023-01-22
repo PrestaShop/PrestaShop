@@ -42,7 +42,7 @@ final class ShopNameByIdChoiceProvider implements FormChoiceProviderInterface
         $shopsById = [];
 
         foreach (Shop::getShops() as $shop) {
-            $shopsById[$shop['name']] = $shop['id_shop'];
+            $shopsById[$shop['name']] = (int) $shop['id_shop'];
         }
 
         return $shopsById;

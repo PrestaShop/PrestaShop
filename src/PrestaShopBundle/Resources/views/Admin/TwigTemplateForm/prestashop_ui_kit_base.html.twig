@@ -49,6 +49,7 @@
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/multishop.html.twig' %}
 
 {# overrides from bootstrap_4_layout #}
 
@@ -86,6 +87,12 @@
   </div>
   {{ block('form_help') }}
 {% endblock ip_address_text_widget %}
+
+{%- block password_widget -%}
+  {%- set type = type|default('password') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock password_widget -%}
 
 {# Rows #}
 
@@ -459,7 +466,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -497,7 +504,7 @@
           {{ form.vars.default_locale.iso_code }}
         </button>
 
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item"
                   data-locale="{{ locale.iso_code }}"
@@ -944,7 +951,7 @@
           >
             {{ form.vars.default_locale.iso_code }}
           </button>
-          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
+          <div class="dropdown-menu dropdown-menu-right locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
               <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
             {% endfor %}
@@ -1161,7 +1168,8 @@
 
 {% block form_help %}
   {% if help is not null %}
-    <small class="form-text">{{ help|raw }}</small>
+    {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' form-text')|trim}) -%}
+      <small id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
@@ -1284,20 +1292,33 @@
 {% block text_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <span class="label {{ preview_class }}">
+  <span class="label text-preview {{ preview_class }}">
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
       {{ prefix|raw }}
     {% endif %}
 
-    {# This just outputs the value #}
-    {{ value|e('html') }}
+    {% if  form.vars.allow_html %}
+      {# This outputs raw value #}
+      {{ value|raw }}
+    {% else %}
+      {# This just outputs the value #}
+      {{ value|e('html') }}
+    {% endif %}
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
       {{ suffix|raw }}
     {% endif %}
   </span>
+{% endblock %}
+
+{% block link_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <a href="{{ form.vars.value }}" class="{{ attr.class|default('') }}">
+    {{ form.vars.button_label }}
+  </a>
 {% endblock %}
 
 {% block image_preview_widget %}
@@ -1489,6 +1510,57 @@
         {% endfor %}
       </div>
     {% endfor %}
+  </div>
+{% endblock %}
+
+{% block avatar_url_row %}
+  {{ form_row(form, {'attr': attr}) }}
+
+  <div class="form-group row">
+    <label class="form-control-label"></label>
+    <div class="col-sm">
+      <img class="img-thumbnail clickable-avatar" src="{{ form.parent.vars.value.avatar_url }}" alt="">
+    </div>
+  </div>
+{% endblock %}
+
+{% block change_password_row %}
+  <div class="form-group row">
+    <label class="form-control-label">
+      {{ 'Password'|trans({}, 'Admin.Global') }}
+    </label>
+    <div class="col-sm">
+      {# "Change password" button #}
+      {{ form_row(form.children.change_password_button) }}
+
+      <div class="card card-body js-change-password-block d-none">
+        {# Current password input #}
+        {{ form_row(form.children.old_password) }}
+
+        {# New password first input #}
+        {# New password second input (confirmation) #}
+        {{ form_row(form.children.new_password) }}
+
+        <div class="form-group row">
+          <label class="form-control-label"></label>
+          <div class="col-sm">
+            {{ form_widget(form.children.generated_password) }}
+          </div>
+          <div class="col-sm">
+            {{ form_widget(form.children.generate_password_button) }}
+          </div>
+        </div>
+        {{ form_row(form.children.cancel_button) }}
+
+        {# Password strength feedback messages - used in JS #}
+        <div class="js-password-strength-feedback d-none">
+          <span class="strength-low">{{ 'Invalid'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-medium">{{ 'Okay'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-high">{{ 'Good'|trans({}, 'Admin.Advparameters.Help') }}</span>
+          <span class="strength-extreme">{{ 'Fabulous'|trans({}, 'Admin.Advparameters.Help') }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 {% endblock %}
 

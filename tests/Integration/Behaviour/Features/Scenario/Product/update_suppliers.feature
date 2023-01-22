@@ -15,7 +15,7 @@ Feature: Update product suppliers from Back Office (BO)
     And there is a currency named "currency3" with iso code "EUR" and exchange rate of 0.63
 
   Scenario: Update standard product suppliers
-    And I add new supplier supplier1 with following properties:
+    And I add new supplier supplier1 with the following properties:
       | name                    | my supplier 1      |
       | address                 | Donelaicio st. 1   |
       | city                    | Kaunas             |
@@ -26,7 +26,7 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier2 with following properties:
+    And I add new supplier supplier2 with the following properties:
       | name                    | my supplier 2      |
       | address                 | Donelaicio st. 2   |
       | city                    | Kaunas             |
@@ -37,7 +37,7 @@ Feature: Update product suppliers from Back Office (BO)
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,2              |
       | shops                   | [shop1]            |
-    And I add new supplier supplier3 with following properties:
+    And I add new supplier supplier3 with the following properties:
       | name                    | my supplier 3    |
       | address                 | Donelaicio st. 3 |
       | city                    | Kaunas           |
@@ -165,138 +165,6 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
 
-  Scenario: Standard product wholesale price should depend on default supplier price
-    Given I add product "product3" with following information:
-      | name[en-US] | magic staff |
-      | type        | standard    |
-    And product product3 type should be standard
-    And product product3 should not have any suppliers assigned
-    And product product3 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 0     |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-    When I associate suppliers to product "product3"
-      | supplier  | product_supplier  |
-      | supplier1 | product3supplier1 |
-      | supplier2 | product3supplier2 |
-    And I update product product3 suppliers:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product3supplier1 | supplier1 | my first supplier for product3  | USD      | 10                 |
-      | product3supplier2 | supplier2 | my second supplier for product3 | USD      | 20                 |
-    Then product product3 should have the following suppliers assigned:
-      | supplier1 |
-      | supplier2 |
-    And product product3 should have following suppliers:
-      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
-      | product3supplier1 | supplier1 | my first supplier for product3 | USD      | 10                 |
-      | product3supplier2 | supplier2 | my second supplier for product3 | USD      | 20                 |
-    And product product3 should have following supplier values:
-      | default supplier           | supplier1                      |
-      | default supplier reference | my first supplier for product3 |
-    # Product wholesale is updated with value of default supplier
-    And product product3 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 10    |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-    # Changing the default supplier should also update the wholesale price
-    When I set product product3 default supplier to supplier2
-    Then product product3 should have following supplier values:
-      | default supplier           | supplier2                       |
-      | default supplier reference | my second supplier for product3 |
-    And product product3 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 20    |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-    # The wholesale value is not removed even if default supplier has been removed
-    When I remove all associated product "product3" suppliers
-    Then product product3 should not have any suppliers assigned
-    And product product3 should not have a default supplier
-    And product product3 default supplier reference should be empty
-    And product product3 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 20    |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-
-  Scenario: Updating standard product wholesale price should update default supplier price
-    Given I add product "product4" with following information:
-      | name[en-US] | magic staff |
-      | type        | standard    |
-    And product product4 type should be standard
-    And product product4 should not have any suppliers assigned
-    And product product4 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 0     |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-    When I associate suppliers to product "product4"
-      | supplier  | product_supplier  |
-      | supplier1 | product4supplier1 |
-      | supplier2 | product4supplier2 |
-    And I update product product4 suppliers:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 10                 |
-      | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 11                 |
-    Then product product4 should have the following suppliers assigned:
-      | supplier1 |
-      | supplier2 |
-    And product product4 should have following suppliers:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 10                 |
-      | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 11                 |
-    And product product4 should have following supplier values:
-      | default supplier           | supplier1                      |
-      | default supplier reference | my first supplier for product4 |
-    # Product wholesale price has been updated as the default supplier was updated
-    And product product4 should have following prices information:
-      | price            | 0     |
-      | ecotax           | 0     |
-      | tax rules group  |       |
-      | on_sale          | false |
-      | wholesale_price  | 10    |
-      | unit_price       | 0     |
-      | unit_price_ratio | 0     |
-      | unity            |       |
-    When I update product "product4" prices with following information:
-      | wholesale_price  | 20    |
-    # Updating the product wholesale price impacts the default supplier price
-    Then product product4 should have following suppliers:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 20                 |
-      | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 11                 |
-    When I set product product4 default supplier to supplier2
-    And product product4 should have following supplier values:
-      | default supplier           | supplier2                       |
-    When I update product "product4" prices with following information:
-      | wholesale_price  | 30    |
-    Then product product4 should have following suppliers:
-      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
-      | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 20                 |
-      | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 30                 |
-
     Scenario: Associate suppliers without data
       Given I add product "product5" with following information:
         | name[en-US] | magic staff |
@@ -360,7 +228,7 @@ Feature: Update product suppliers from Back Office (BO)
         | default supplier           | supplier1                      |
         | default supplier reference | my first supplier for product5 |
       # Wholesale price should have been updated as well matching the new default supplier
-      When I update product "product5" prices with following information:
+      When I update product "product5" with following values:
         | wholesale_price  | 10    |
       # Finally, I can remove all suppliers ith one command
       When I remove all associated product product5 suppliers
@@ -405,7 +273,7 @@ Feature: Update product suppliers from Back Office (BO)
       | product6supplier2 | supplier2 | my second supplier for product6 | EUR      | 11                 |
 
     Scenario: I delete a supplier the default suppliers are updated for affected products
-      Given I add new supplier supplier3 with following properties:
+      Given I add new supplier supplier3 with the following properties:
         | name                    | my supplier 3        |
         | address                 | Donelaicio st. 3     |
         | city                    | Kaunas               |
@@ -416,7 +284,7 @@ Feature: Update product suppliers from Back Office (BO)
         | meta description[en-US] |                      |
         | meta keywords[en-US]    | sup,3                |
         | shops                   | [shop1]              |
-      And I add new supplier supplier4 with following properties:
+      And I add new supplier supplier4 with the following properties:
         | name                    | my supplier 4       |
         | address                 | Donelaicio st. 4    |
         | city                    | Kaunas              |
@@ -484,7 +352,7 @@ Feature: Update product suppliers from Back Office (BO)
         | default supplier reference | |
 
     Scenario: I disable a supplier associated to a product
-      Given I add new supplier supplier5 with following properties:
+      Given I add new supplier supplier5 with the following properties:
         | name                    | my supplier 5       |
         | address                 | Donelaicio st. 5    |
         | city                    | Kaunas              |

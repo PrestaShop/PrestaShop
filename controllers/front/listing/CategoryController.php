@@ -148,7 +148,7 @@ class CategoryControllerCore extends ProductListingFrontController
     public function getLayout()
     {
         if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
-            return 'layouts/layout-full-width.tpl';
+            return $this->context->shop->theme->getLayoutRelativePathForPage('error');
         }
 
         return parent::getLayout();
@@ -163,6 +163,11 @@ class CategoryControllerCore extends ProductListingFrontController
         return $data;
     }
 
+    /**
+     * @return ProductSearchQuery
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -174,6 +179,9 @@ class CategoryControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return CategoryProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new CategoryProductSearchProvider(
@@ -248,6 +256,9 @@ class CategoryControllerCore extends ProductListingFrontController
         return $breadcrumb;
     }
 
+    /**
+     * @return Category
+     */
     public function getCategory()
     {
         return $this->category;

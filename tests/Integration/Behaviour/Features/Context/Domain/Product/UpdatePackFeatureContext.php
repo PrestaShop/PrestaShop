@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 
 class UpdatePackFeatureContext extends AbstractProductFeatureContext
@@ -89,17 +90,22 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $packReference
      */
-    public function assertPackEmpty(string $packReference): void
+    public function assertPackEmptyForDefaultShop(string $packReference): void
     {
-        $packId = $this->getSharedStorage()->get($packReference);
+        $this->assertPackEmpty($packReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        $packedProducts = $this->getQueryBus()->handle(
-            new GetPackedProducts(
-                $packId,
-                $this->getDefaultLangId()
-            )
-        );
-        Assert::assertEmpty($packedProducts);
+    /**
+     * @When pack :packReference should be empty for shop(s) :shopReferences
+     *
+     * @param string $packReference
+     * @param string $shopReferences
+     */
+    public function assertPackEmptyForShops(string $packReference, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->assertPackEmpty($packReference, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+        }
     }
 
     /**
@@ -108,7 +114,62 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
      * @param string $packReference
      * @param TableNode $table
      */
-    public function assertPackContents(string $packReference, TableNode $table): void
+    public function assertPackContentsForDefaultShop(string $packReference, TableNode $table): void
+    {
+        $this->assertPackContents($packReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @Then pack :packReference should contain products with following details for shop(s) :shopReferences:
+     *
+     * @param string $packReference
+     * @param TableNode $table
+     * @param string $shopReferences
+     */
+    public function assertPackContentsForShops(string $packReference, TableNode $table, string $shopReferences): void
+    {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->assertPackContents($packReference, $table, ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)));
+        }
+    }
+
+    /**
+     * @Then I should get error that product for packing quantity is invalid
+     */
+    public function assertPackProductQuantityError(): void
+    {
+        $this->assertLastErrorIs(
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::INVALID_QUANTITY
+        );
+    }
+
+    /**
+     * @Then I should get error that I cannot add pack into a pack
+     */
+    public function assertAddingPackToPackError(): void
+    {
+        $this->assertLastErrorIs(
+            ProductPackConstraintException::class,
+            ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
+        );
+    }
+
+    /**
+     * @param array<string, string> $dataRow
+     *
+     * @return int
+     */
+    private function getExpectedCombinationId(array $dataRow): int
+    {
+        if (isset($dataRow['combination']) && '' !== $dataRow['combination']) {
+            return $this->getSharedStorage()->get($dataRow['combination']);
+        }
+
+        return CombinationId::NO_COMBINATION;
+    }
+
+    private function assertPackContents(string $packReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $table->getColumnsHash();
         $packId = $this->getSharedStorage()->get($packReference);
@@ -116,9 +177,19 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         $packedProducts = $this->getQueryBus()->handle(
             new GetPackedProducts(
                 $packId,
-                $this->getDefaultLangId()
+                $this->getDefaultLangId(),
+                $shopConstraint
             )
         );
+        if (count($data) !== count($packedProducts)) {
+            throw new RuntimeException(sprintf(
+                'Incorrect number of product for shop %d expected %d but got %d instead',
+                $shopConstraint->getShopId()->getValue(),
+                count($data),
+                count($packedProducts)
+            ));
+        }
+
         $notExistingProducts = [];
 
         foreach ($data as $expectedPackedProduct) {
@@ -190,52 +261,32 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
 
         if (!empty($notExistingProducts)) {
             throw new RuntimeException(sprintf(
-                'Failed to find following packed products: %s',
+                'Failed to find following packed products for shop %d: %s',
+                $shopConstraint->getShopId()->getValue(),
                 var_export($notExistingProducts, true)
             ));
         }
 
         if (!empty($packedProducts)) {
             throw new RuntimeException(sprintf(
-                'Following packed products were not expected: %s',
+                'Following packed products were not expected for shop %d: %s',
+                $shopConstraint->getShopId()->getValue(),
                 var_export($packedProducts, true)
             ));
         }
     }
 
-    /**
-     * @Then I should get error that product for packing quantity is invalid
-     */
-    public function assertPackProductQuantityError()
+    private function assertPackEmpty(string $packReference, ShopConstraint $shopConstraint): void
     {
-        $this->assertLastErrorIs(
-            ProductPackConstraintException::class,
-            ProductPackConstraintException::INVALID_QUANTITY
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        $packedProducts = $this->getQueryBus()->handle(
+            new GetPackedProducts(
+                $packId,
+                $this->getDefaultLangId(),
+                $shopConstraint
+            )
         );
-    }
-
-    /**
-     * @Then I should get error that I cannot add pack into a pack
-     */
-    public function assertAddingPackToPackError()
-    {
-        $this->assertLastErrorIs(
-            ProductPackConstraintException::class,
-            ProductPackConstraintException::CANNOT_ADD_PACK_INTO_PACK
-        );
-    }
-
-    /**
-     * @param array<string, string> $dataRow
-     *
-     * @return int
-     */
-    private function getExpectedCombinationId(array $dataRow): int
-    {
-        if (isset($dataRow['combination']) && '' !== $dataRow['combination']) {
-            return $this->getSharedStorage()->get($dataRow['combination']);
-        }
-
-        return CombinationId::NO_COMBINATION;
+        Assert::assertEmpty($packedProducts);
     }
 }

@@ -26,11 +26,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
+  {{ parent() }}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form justify-content-md-center product-form', 'novalidate': 'novalidate'}}) }}
     {% block product_creation_form %}
       {{ form_row(productForm) }}
     {% endblock %}

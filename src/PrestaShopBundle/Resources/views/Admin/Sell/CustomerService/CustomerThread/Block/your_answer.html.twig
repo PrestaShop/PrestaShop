@@ -26,7 +26,7 @@
 {{ form_start(replyToCustomerThreadForm, {
   'action': path('admin_customer_threads_reply', {'customerThreadId': customerThreadView.customerThreadId.value})
 }) }}
-  <div class="card">
+  <div class="card" data-role="employee-answer">
     <h3 class="card-header">
       {{ 'Your answer to'|trans({}, 'Admin.Orderscustomers.Feature') }}
 

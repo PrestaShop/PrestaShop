@@ -19,10 +19,10 @@ class ViewSQLQuery extends BOBasePage {
     // Selectors
     this.sqlQueryResultTitle = '#card-title';
     this.resultsTable = '#grid-table';
-    this.tableColumnName = column => `${this.resultsTable} th:nth-child(${column})`;
+    this.tableColumnName = (column) => `${this.resultsTable} th:nth-child(${column})`;
     this.tableBody = `${this.resultsTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
-    this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
+    this.tableRow = (row) => `${this.tableRows}:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.grid-${column}-value`;
   }
 

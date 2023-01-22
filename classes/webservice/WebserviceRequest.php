@@ -28,6 +28,7 @@ class WebserviceRequestCore
     public const HTTP_GET = 1;
     public const HTTP_POST = 2;
     public const HTTP_PUT = 4;
+    public const HTTP_PATCH = 8;
 
     protected $_available_languages = null;
     /**
@@ -408,7 +409,7 @@ class WebserviceRequestCore
             $id_shop = (int) Context::getContext()->shop->id;
             $id_country = (int) (isset($value['country']) ? $value['country'] : (Configuration::get('PS_COUNTRY_DEFAULT')));
             $id_state = (int) (isset($value['state']) ? $value['state'] : 0);
-            $id_currency = (int) (isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
+            $id_currency = (int) (isset($value['currency']) ? $value['currency'] : Currency::getDefaultCurrencyId());
             $id_group = (int) (isset($value['group']) ? $value['group'] : (int) Configuration::get('PS_CUSTOMER_GROUP'));
             $quantity = (int) (isset($value['quantity']) ? $value['quantity'] : 1);
             $use_tax = (bool) (isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
@@ -1127,9 +1128,8 @@ class WebserviceRequestCore
         $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+                (!in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
+                if ((!isset($field['i18n']) || (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;

@@ -271,11 +271,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_MODULE) && !isset($GLOBALS[$name_var])) {
             $GLOBALS[$name_var] = [];
         } elseif (isset($_MODULE)) {
-            if (is_array($GLOBALS[$name_var]) && is_array($_MODULE)) {
-                $GLOBALS[$name_var] = array_merge($GLOBALS[$name_var], $_MODULE);
-            } else {
-                $GLOBALS[$name_var] = $_MODULE;
-            }
+            $GLOBALS[$name_var] = $_MODULE;
         }
     }
 
@@ -374,7 +370,7 @@ class AdminTranslationsControllerCore extends AdminController
             // translations array is ordered by key (easy merge)
             ksort($to_insert);
             $tab = $translation_informations['var'];
-            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = array();\n");
+            fwrite($fd, "<?php\n\nglobal \$" . $tab . ";\n\$" . $tab . " = [];\n");
             foreach ($to_insert as $key => $value) {
                 fwrite($fd, '$' . $tab . '[\'' . pSQL($key, true) . '\'] = \'' . pSQL($value, true) . '\';' . "\n");
             }
@@ -2313,11 +2309,6 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 $class_name = substr($file, 0, -4);
-
-                if (!class_exists($class_name, false) && !class_exists($class_name . 'Core', false)) {
-                    PrestaShopAutoload::getInstance()->load($class_name);
-                }
-
                 if (!is_subclass_of($class_name . 'Core', 'ObjectModel')) {
                     continue;
                 }

@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/tests/UI"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+    open-pull-requests-limit: 10
+    target-branch: develop
+    reviewers:
+      - "PrestaShop/qa-automation"
+    labels:
+      - "dependencies"
+      - "develop"
+      - "E2E Tests"
+      - "TE"

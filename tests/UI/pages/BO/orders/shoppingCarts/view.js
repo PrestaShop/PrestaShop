@@ -27,13 +27,15 @@ class ViewShoppingCarts extends BOBasePage {
     // Order Information Block
     this.orderInformationBlock = '#main-div div[data-role="order-information"]';
     this.orderInformationBlockBody = `${this.orderInformationBlock} .card-body`;
+    this.orderInformationButtonCreateOrder = `${this.orderInformationBlockBody} #create-order-from-cart`;
+    this.orderInformationLinkOrder = `${this.orderInformationBlockBody} h2 a`;
 
     // Cart Summary Block
     this.cartSummaryBlock = '#main-div div[data-role="cart-summary"]';
     this.cartSummaryBlockBody = `${this.cartSummaryBlock} .card-body`;
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
-    this.cartSummaryTableRow = row => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
+    this.cartSummaryTableRow = (row) => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
     this.cartSummaryTableColumn = (row, column) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
   }
 
@@ -132,6 +134,33 @@ class ViewShoppingCarts extends BOBasePage {
     }
 
     return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Check if the button "Create an order from this cart." exists
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async hasButtonCreateOrderFromCart(page) {
+    return this.elementVisible(page, this.orderInformationButtonCreateOrder, 1000);
+  }
+
+  /**
+   * Click on the "Create an order from this cart." button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async createOrderFromThisCart(page) {
+    await this.clickAndWaitForNavigation(page, this.orderInformationButtonCreateOrder);
+  }
+
+  /**
+   * Click on the Order link
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToOrderPage(page) {
+    await this.clickAndWaitForNavigation(page, this.orderInformationLinkOrder);
   }
 }
 

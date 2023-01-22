@@ -55,6 +55,7 @@ class CombinationHeaderType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'combination-default-row',
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+
 /**
  * @property Cart $object
  */
@@ -219,6 +221,13 @@ class AdminCartsControllerCore extends AdminController
         return $helper->generate();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
+     */
     public function renderView()
     {
         if (!($cart = $this->loadObject(true))) {
@@ -348,7 +357,7 @@ class AdminCartsControllerCore extends AdminController
                 $this->context->cart->id_lang = (($id_lang = (int) Tools::getValue('id_lang')) ? $id_lang : Configuration::get('PS_LANG_DEFAULT'));
             }
             if (!$this->context->cart->id_currency) {
-                $this->context->cart->id_currency = (($id_currency = (int) Tools::getValue('id_currency')) ? $id_currency : Configuration::get('PS_CURRENCY_DEFAULT'));
+                $this->context->cart->id_currency = (($id_currency = (int) Tools::getValue('id_currency')) ? $id_currency : Currency::getDefaultCurrencyId());
             }
 
             $addresses = $customer->getAddresses((int) $this->context->cart->id_lang);
@@ -971,10 +980,9 @@ class AdminCartsControllerCore extends AdminController
         } else {
             $helper->list_skip_actions['delete'] = (array) $skip_list;
         }
+        $helper->force_show_bulk_actions = true;
 
-        $list = $helper->generateList($this->_list, $this->fields_list);
-
-        return $list;
+        return $helper->generateList($this->_list, $this->fields_list);
     }
 
     /**

@@ -14,15 +14,16 @@ class ViewCustomer extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitle = 'Customer Service > View •';
+    this.pageTitle = 'View • PrestaShop';
 
     // Selectors
-    this.threadBadge = 'span.badge';
-    this.statusButton = id => `button[name='setstatus'][value='${id}']`;
-    this.messageDiv = '#content div.message-item-initial';
-    this.yourAnswerFormTitle = '#reply-form-title';
-    this.yourAnswerFormTextarea = '#reply_message';
-    this.ordersAndMessagesBlock = '#orders-and-messages-block';
+    this.threadBadge = '#main-div div[data-role="messages-thread"] .card-header strong';
+    this.messagesThredDiv = '#main-div div[data-role="messages-thread"]';
+    this.attachmentLink = `${this.messagesThredDiv} a[href*='/upload']`;
+    this.statusButton = (statusName) => `${this.messagesThredDiv} form input[value='${statusName}'] + button`;
+    this.yourAnswerFormTitle = '#main-div div[data-role="employee-answer"] h3.card-header';
+    this.yourAnswerFormTextarea = '#reply_to_customer_thread_reply_message';
+    this.ordersAndMessagesBlock = '#main-div div[data-role="messages_timeline"]';
   }
 
   /*
@@ -45,7 +46,16 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   getCustomerMessage(page) {
-    return this.getTextContent(page, this.messageDiv);
+    return this.getTextContent(page, this.messagesThredDiv);
+  }
+
+  /**
+   * Get attached href
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getAttachedFileHref(page) {
+    return this.getAttributeContent(page, this.attachmentLink, 'href');
   }
 
   // Your answer form
@@ -84,34 +94,35 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setStatus(page, status) {
-    let statusID = 0;
+    let statusName;
+
     switch (status) {
       case 'Re-open':
-        statusID = 1;
+        statusName = 'open';
         break;
 
       case 'Handled':
-        statusID = 2;
+        statusName = 'closed';
         break;
 
       case 'Pending 1':
-        statusID = 3;
+        statusName = 'pending1';
         break;
 
       case 'Pending 2':
-        statusID = 4;
+        statusName = 'pending2';
         break;
 
       default:
         throw new Error(`Status ${status} was not found`);
     }
 
-    await this.waitForSelectorAndClick(page, this.statusButton(statusID));
+    await this.waitForSelectorAndClick(page, this.statusButton(statusName));
 
     if (status === 'Re-open') {
-      return this.getTextContent(page, this.statusButton(2));
+      return this.getTextContent(page, this.statusButton('closed'));
     }
-    return this.getTextContent(page, this.statusButton(1));
+    return this.getTextContent(page, this.statusButton('open'));
   }
 }
 

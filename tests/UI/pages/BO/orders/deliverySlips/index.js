@@ -29,7 +29,7 @@ class DeliverySlips extends BOBasePage {
     this.deliverySlipForm = '#form-delivery-slips-options';
     this.deliveryPrefixInput = '#form_prefix_1';
     this.deliveryNumberInput = '#form_number';
-    this.deliveryProductImageStatusToggleInput = toggle => `#form_enable_product_image_${toggle}`;
+    this.deliveryProductImageStatusToggleInput = (toggle) => `#form_enable_product_image_${toggle}`;
     this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} #save-delivery-slip-options-button`;
   }
 

@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -73,12 +75,16 @@ class CategoryRepository extends AbstractObjectModelRepository
      */
     public function get(CategoryId $categoryId): Category
     {
-        /** @var Category $category */
-        $category = $this->getObjectModel(
-            $categoryId->getValue(),
-            Category::class,
-            CategoryNotFoundException::class
-        );
+        try {
+            /** @var Category $category */
+            $category = $this->getObjectModel(
+                $categoryId->getValue(),
+                Category::class,
+                CategoryException::class
+            );
+        } catch (CategoryException $e) {
+            throw new CategoryNotFoundException($categoryId, $e->getMessage());
+        }
 
         return $category;
     }
@@ -141,16 +147,55 @@ class CategoryRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Provides ids of categories which are not unique per shop and language.
+     *
+     * @param ShopId $shopId
+     * @param LanguageId $languageId
+     *
+     * @return CategoryId[]
+     */
+    public function getDuplicateNameIds(ShopId $shopId, LanguageId $languageId): array
+    {
+        $duplicateNames = $this->getDuplicateNames($shopId, $languageId);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('c.id_category')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'category_lang',
+                'cl',
+                'c.id_category = cl.id_category'
+            )
+            ->where('id_lang = :langId')
+            ->andWhere('id_shop = :shopId')
+            ->andWhere('c.level_depth >= 1')
+            ->andWhere($qb->expr()->in('cl.name', ':duplicateNames'))
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('duplicateNames', $duplicateNames, Connection::PARAM_STR_ARRAY)
+        ;
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        $categoryIds = [];
+        foreach ($results as $result) {
+            $categoryIds[] = new CategoryId((int) $result['id_category']);
+        }
+
+        return $categoryIds;
+    }
+
+    /**
      * @param CategoryId $categoryId
      * @param LanguageId $languageId
-     * @param string $separator
      *
-     * @return string
+     * @return string[]
      */
-    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
+    public function getBreadcrumbParts(CategoryId $categoryId, LanguageId $languageId): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        $categoryQb = $this->connection->createQueryBuilder();
+        $categoryQb
             ->select('cl.name, c.nleft, c.nright')
             ->from($this->dbPrefix . 'category', 'c')
             ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
@@ -160,12 +205,12 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
+        $category = $categoryQb->execute()->fetchAssociative();
+
+        if (empty($category)) {
             throw new CategoryNotFoundException($categoryId, 'Cannot find breadcrumb because category does not exist');
         }
 
-        $category = $result[0];
         $categoryName = $category['name'];
 
         $qb = $this->connection->createQueryBuilder();
@@ -184,13 +229,102 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        $parentNames = [];
-        foreach ($result as $category) {
-            $parentNames[] = $category['name'];
+        $results = $qb->execute()->fetchAllAssociative();
+
+        if ($results) {
+            $parentNames = array_column($results, 'name');
         }
+
         $parentNames[] = $categoryName;
 
-        return implode($separator, $parentNames);
+        return $parentNames;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param LanguageId $languageId
+     * @param string $separator
+     *
+     * @return string
+     */
+    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
+    {
+        return implode($separator, $this->getBreadcrumbParts($categoryId, $languageId));
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId $shopId
+     *
+     * @return CategoryId[]
+     */
+    public function getProductCategoryIds(ProductId $productId, ShopId $shopId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('cp.id_category')
+            ->from($this->dbPrefix . 'category_product', 'cp')
+            ->innerJoin(
+                'cp',
+                $this->dbPrefix . 'category_shop',
+                'cs',
+                'cp.id_category = cs.id_category'
+            )
+            ->where('cp.id_product = :productId')
+            ->andWhere('cs.id_shop = :shopId')
+            ->setParameters([
+                'productId' => $productId->getValue(),
+                'shopId' => $shopId->getValue(),
+            ])
+        ;
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        $categoryIds = [];
+        foreach ($results as $result) {
+            $categoryIds[] = new CategoryId((int) $result['id_category']);
+        }
+
+        return $categoryIds;
+    }
+
+    /**
+     * Provides category names which are not unique per shop and language.
+     *
+     * e.g. if certain shop contains following categories in english language:
+     *      Clothes -> Men, Bags -> Men, Clothes -> Woman, Bags -> Women,
+     *      then method should return ["Men", "Women"]
+     *
+     * @param ShopId $shopId
+     * @param LanguageId $languageId
+     *
+     * @return string[]
+     */
+    protected function getDuplicateNames(ShopId $shopId, LanguageId $languageId): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('cl.name')
+            ->from($this->dbPrefix . 'category', 'c')
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'category_lang', 'cl',
+                'c.id_category = cl.id_category'
+            )
+            ->where('id_lang = :langId')
+            ->andWhere('id_shop = :shopId')
+            ->andWhere('c.level_depth >= 1')
+            ->having('COUNT(cl.name) > 1')
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->groupBy('cl.name')
+        ;
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        $names = [];
+        foreach ($results as $result) {
+            $names[] = $result['name'];
+        }
+
+        return $names;
     }
 }

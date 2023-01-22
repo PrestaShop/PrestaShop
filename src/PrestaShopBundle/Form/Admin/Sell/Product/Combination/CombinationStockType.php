@@ -28,12 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Combination\CombinationSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class CombinationStockType extends TranslatorAwareType
 {
@@ -53,6 +58,48 @@ class CombinationStockType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
+                'modify_all_shops' => true,
+            ])
+            ->add('available_now_label', TranslatableType::class, [
+                'type' => TextType::class,
+                'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                        new Length([
+                            'max' => CombinationSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => CombinationSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH]
+                            ),
+                        ]),
+                    ],
+                ],
+                'modify_all_shops' => true,
+            ])
+            ->add('available_later_label', TranslatableType::class, [
+                'type' => TextType::class,
+                'label' => $this->trans(
+                    'Label when out of stock (and backorders allowed)',
+                    'Admin.Catalog.Feature'
+                ),
+                'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                        new Length([
+                            'max' => CombinationSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH,
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters.',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => CombinationSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH]
+                            ),
+                        ]),
+                    ],
+                ],
+                'modify_all_shops' => true,
             ])
         ;
     }

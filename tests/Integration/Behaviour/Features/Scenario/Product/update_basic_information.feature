@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-basic-information
 @restore-products-before-feature
+@restore-languages-after-feature
 @update-basic-information
 Feature: Update product basic information from Back Office (BO)
   As a BO user
@@ -13,7 +14,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "name" should be:
       | locale | value     |
       | en-US  | funny mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | name[en-US]              | photo of funny mug |
       | description[en-US]       | nice mug           |
       | description_short[en-US] | Just a nice mug    |
@@ -32,7 +33,7 @@ Feature: Update product basic information from Back Office (BO)
     Given product "product1" localized "name" is:
       | locale | value              |
       | en-US  | photo of funny mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | name[en-US] | #hashtagmug |
     Then I should get error that product name is invalid
     And product "product1" localized "name" should be:
@@ -49,7 +50,7 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" is:
       | locale | value           |
       | en-US  | Just a nice mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | is_virtual | false |
     Then product "product1" type should be standard
     And product "product1" localized "name" should be:
@@ -69,13 +70,13 @@ Feature: Update product basic information from Back Office (BO)
     And product "product1" localized "description_short" is:
       | locale | value           |
       | en-US  | Just a nice mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | description[en-US] | <script> |
     Then I should get error that product description is invalid
     And product "product1" localized "description" should be:
       | locale | value    |
       | en-US  | nice mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | description_short[en-US] | <div onmousedown=hack()> |
     Then I should get error that product "description_short" is invalid
     And product "product1" localized "description_short" should be:
@@ -86,7 +87,7 @@ Feature: Update product basic information from Back Office (BO)
     Given product "product1" localized "description" is:
       | locale | value    |
       | en-US  | nice mug |
-    When I update product "product1" basic information with following values:
+    When I update product "product1" with following values:
       | description[en-US] | it's mug & it's nice |
     Then product "product1" localized "description" should be:
       | locale | value                |
@@ -100,8 +101,15 @@ Feature: Update product basic information from Back Office (BO)
       | locale | value |
       | en-US  |       |
       | fr-FR  |       |
-    When I update product "empty_product" basic information with following values:
+    When I update product "empty_product" with following values:
       | name[en-US] | english name |
+    Then product "empty_product" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | english name |
+    When I update product "empty_product" with following values:
+      | name[en-US] | english name |
+      | name[fr-FR] |              |
     Then product "empty_product" localized "name" should be:
       | locale | value        |
       | en-US  | english name |
@@ -119,7 +127,7 @@ Feature: Update product basic information from Back Office (BO)
       | locale | value |
       | en-US  |       |
       | fr-FR  |       |
-    When I update product "empty_product2" basic information with following values:
+    When I update product "empty_product2" with following values:
       | name[en-US] | english name |
       | name[fr-FR] | french name  |
     Then product "empty_product2" localized "name" should be:
@@ -130,7 +138,7 @@ Feature: Update product basic information from Back Office (BO)
       | locale | value        |
       | en-US  | english-name |
       | fr-FR  | french-name  |
-    When I update product "empty_product2" basic information with following values:
+    When I update product "empty_product2" with following values:
       | name[en-US] | english name v2 |
       | name[fr-FR] | french name v2  |
     Then product "empty_product2" localized "name" should be:

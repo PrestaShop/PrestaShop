@@ -3,7 +3,12 @@ services:
     public: true
 
   prestashop.core.command_bus:
-    class: 'PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter'
+    alias: PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface
+
+  PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface:
+    class: PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter
+    autowire: true
+    public: false
     arguments:
       - '@tactician.commandbus.default'
 

@@ -6,7 +6,7 @@
 @import "~prestakit/scss/application";
 @import "~dropzone/dist/min/dropzone.min.css";
 @import "~magnific-popup/dist/magnific-popup.css";
-@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "bourbon";
 @import "~perfect-scrollbar/css/perfect-scrollbar.css";
 @import "~eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "~bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css";
@@ -55,6 +55,7 @@
 @import "components/modulescards";
 @import "components/multishop-modal";
 @import "components/multistore-dropdown";
+@import "components/multishop-selector";
 @import "components/navigation_tab";
 @import "components/notifications";
 @import "components/password";
@@ -95,7 +96,7 @@
 // Other
 @import "components/tinymce";
 
-@import "components/layout/right-sidebar.scss";
+@import "components/layout/right-sidebar";
 @import "../css/module/drop.css";
 
 // Main Layout

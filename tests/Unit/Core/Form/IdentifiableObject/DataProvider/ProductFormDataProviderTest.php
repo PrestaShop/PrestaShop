@@ -63,8 +63,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -413,7 +412,7 @@ class ProductFormDataProviderTest extends TestCase
             'minimal_quantity' => 7,
             'location' => 'top shelf',
             'low_stock_threshold' => 5,
-            'low_stock_alert' => true,
+            'disabling_switch_low_stock_threshold' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
             'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
@@ -421,18 +420,54 @@ class ProductFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movements' => [
                 [
-                    'id_stock_mvt' => 10,
-                    'delta_quantity' => +42,
-                    'employee_firstname' => 'Paul',
-                    'employee_lastname' => 'Atreide',
-                    'date_add' => '2021-05-24 15:24:32',
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2022-01-13 18:20:58',
+                    'to_date' => '2021-05-24 15:24:32',
+                    'stock_movement_ids' => [321, 322, 323, 324, 325],
+                    'stock_ids' => [42],
+                    'order_ids' => [311, 312, 313, 314, 315],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -19,
                 ],
                 [
-                    'id_stock_mvt' => 11,
-                    'delta_quantity' => -15,
-                    'employee_firstname' => 'Frodo',
-                    'employee_lastname' => 'Baggins',
+                    'type' => StockMovement::EDITION_TYPE,
+                    'date_add' => '2021-05-24 15:24:32',
+                    'stock_movement_id' => 320,
+                    'stock_id' => 42,
+                    'order_id' => 310,
+                    'employee_id' => 12,
+                    'employee_name' => 'Paul Atreide',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2021-05-24 15:24:32',
+                    'to_date' => '2021-05-22 16:35:48',
+                    'stock_movement_ids' => [221, 222, 223, 224, 225],
+                    'stock_ids' => [42],
+                    'order_ids' => [211, 212, 213, 214, 215],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -23,
+                ],
+                [
+                    'type' => StockMovement::EDITION_TYPE,
                     'date_add' => '2021-05-22 16:35:48',
+                    'stock_movement_id' => 220,
+                    'stock_id' => 42,
+                    'order_id' => 210,
+                    'employee_id' => 11,
+                    'employee_name' => 'Frodo Baggins',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2021-05-22 16:35:48',
+                    'to_date' => '2021-01-24 15:24:32',
+                    'stock_movement_ids' => [121, 122, 123, 124, 125],
+                    'stock_ids' => [42],
+                    'order_ids' => [111, 112, 113, 114, 115],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -17,
                 ],
             ],
         ];
@@ -440,23 +475,42 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options']['disabling_switch_low_stock_threshold'] = true;
         $expectedOutputData['stock']['pack_stock_type'] = PackStockType::STOCK_TYPE_PACK_ONLY;
         $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
-
         $expectedOutputData['stock']['quantities']['stock_movements'] = [
             [
-                'date_add' => '2021-05-24 15:24:32',
-                'employee' => 'Paul Atreide',
-                'delta_quantity' => 42,
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -19,
             ],
             [
-                'date_add' => '2021-05-22 16:35:48',
-                'employee' => 'Frodo Baggins',
-                'delta_quantity' => -15,
+                'type' => 'edition',
+                'date' => '2021-05-24 15:24:32',
+                'employee_name' => 'Paul Atreide',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -23,
+            ],
+            [
+                'type' => 'edition',
+                'date' => '2021-05-22 16:35:48',
+                'employee_name' => 'Frodo Baggins',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -17,
             ],
         ];
 
@@ -478,8 +532,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'categories' => [
-                ['id' => 42, 'localized_names' => [self::CONTEXT_LANG_ID => 'test1', 2 => 'test2']],
-                ['id' => 51, 'localized_names' => [self::CONTEXT_LANG_ID => 'test22', 3 => 'test3']],
+                ['id' => 42, 'name' => 'test1', 'display_name' => 'test > test1', 'removable' => true],
+                ['id' => 51, 'name' => 'test22', 'display_name' => 'test > test22', 'removable' => false],
             ],
             'default_category' => 51,
         ];
@@ -488,11 +542,15 @@ class ProductFormDataProviderTest extends TestCase
             [
                 'id' => 42,
                 'name' => 'test1',
+                'display_name' => 'test > test1',
+                'removable' => true,
             ],
         ];
         $expectedOutputData['description']['categories']['product_categories'][] = [
             'id' => 51,
             'name' => 'test22',
+            'display_name' => 'test > test22',
+            'removable' => false,
         ];
 
         $expectedOutputData['description']['categories']['default_category_id'] = 51;
@@ -712,16 +770,16 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['options']['visibility']['online_only'] = true;
         $expectedOutputData['options']['visibility']['show_price'] = false;
 
-        $expectedOutputData['specifications']['references']['isbn'] = 'isbn_2';
-        $expectedOutputData['specifications']['references']['upc'] = 'upc_2';
-        $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
-        $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
-        $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+        $expectedOutputData['details']['references']['isbn'] = 'isbn_2';
+        $expectedOutputData['details']['references']['upc'] = 'upc_2';
+        $expectedOutputData['details']['references']['ean_13'] = 'ean13_2';
+        $expectedOutputData['details']['references']['mpn'] = 'mpn_2';
+        $expectedOutputData['details']['references']['reference'] = 'reference_2';
 
-        $expectedOutputData['specifications']['condition'] = ProductCondition::USED;
-        $expectedOutputData['specifications']['show_condition'] = true;
+        $expectedOutputData['details']['condition'] = ProductCondition::USED;
+        $expectedOutputData['details']['show_condition'] = true;
 
-        $expectedOutputData['specifications']['attachments']['attached_files'] = [
+        $expectedOutputData['details']['attachments']['attached_files'] = [
             [
                 'attachment_id' => 1,
                 'name' => 'english name',
@@ -888,8 +946,8 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['specifications']['features']['feature_values'] = [];
-        $expectedOutputData['specifications']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_values'] = [];
+        $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 51,
         ];
@@ -898,7 +956,7 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
-        $expectedOutputData['specifications']['features']['feature_values'][] = [
+        $expectedOutputData['details']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
             'custom_value' => $localizedValues,
@@ -960,7 +1018,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
         ];
 
-        $expectedOutputData['specifications']['customizations']['customization_fields'] = [
+        $expectedOutputData['details']['customizations']['customization_fields'] = [
             [
                 'id' => 1,
                 'name' => $localizedNames,
@@ -1189,29 +1247,40 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return EmployeeStockMovement[]
+     * @return StockMovement[]
      */
-    private function createProductStockMovements(array $productData): array
+    private function createStockMovementHistories(array $productData): array
     {
-        if (!isset($productData['stock_movements'])) {
-            return [];
-        }
-
-        $stockMovements = [];
-        foreach ($productData['stock_movements'] as $stockMovement) {
-            $stockMovements[] = new EmployeeStockMovement(
-                $stockMovement['id_stock_mvt'],
-                42,
-                11,
-                $stockMovement['delta_quantity'],
-                42,
-                $stockMovement['employee_firstname'],
-                $stockMovement['employee_lastname'],
-                new DateTime($stockMovement['date_add'])
-            );
-        }
-
-        return $stockMovements;
+        return array_map(
+            static function (array $historyData): StockMovement {
+                if (StockMovement::EDITION_TYPE === $historyData['type']) {
+                    return StockMovement::createEditionMovement(
+                        $historyData['date_add'],
+                        $historyData['stock_movement_id'],
+                        $historyData['stock_id'],
+                        $historyData['order_id'],
+                        $historyData['employee_id'],
+                        $historyData['employee_name'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                if (StockMovement::ORDERS_TYPE === $historyData['type']) {
+                    return StockMovement::createOrdersMovement(
+                        $historyData['from_date'],
+                        $historyData['to_date'],
+                        $historyData['stock_movement_ids'],
+                        $historyData['stock_ids'],
+                        $historyData['order_ids'],
+                        $historyData['employee_ids'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                throw new RuntimeException(
+                    sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
+                );
+            },
+            $productData['stock_movements'] ?? []
+        );
     }
 
     /**
@@ -1248,7 +1317,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
-            $product['low_stock_alert'] ?? false,
+            $product['disabling_switch_low_stock_threshold'] ?? false,
             $product['available_now'] ?? [],
             $product['available_later'] ?? [],
             $product['location'] ?? 'location',
@@ -1359,7 +1428,7 @@ class ProductFormDataProviderTest extends TestCase
         $categoriesInfo = [];
         if (isset($product['categories'])) {
             foreach ($product['categories'] as $category) {
-                $categoriesInfo[] = new CategoryInformation($category['id'], $category['localized_names']);
+                $categoriesInfo[] = new CategoryInformation($category['id'], $category['name'], $category['display_name']);
             }
         }
 
@@ -1438,7 +1507,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->isInstanceOf(GetProductSupplierOptions::class),
             $this->isInstanceOf(GetProductFeatureValues::class),
             $this->isInstanceOf(GetProductCustomizationFields::class),
-            $this->isInstanceOf(GetEmployeesStockMovements::class),
+            $this->isInstanceOf(GetProductStockMovements::class),
             $this->isInstanceOf(GetRelatedProducts::class),
             $this->isInstanceOf(GetPackedProducts::class)
         );
@@ -1448,23 +1517,25 @@ class ProductFormDataProviderTest extends TestCase
      * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]|RelatedProduct[]
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]|RelatedProduct[]|PackedProductDetails[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
-        $queryResultMap = [
-            GetProductForEditing::class => $this->createProductForEditing($productData),
-            GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
-            GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
-            GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
-            GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
-            GetRelatedProducts::class => $this->createRelatedProducts($productData),
-            GetPackedProducts::class => $this->createPackedProductsDetails($productData),
-        ];
-
-        $queryClass = get_class($query);
-        if (array_key_exists($queryClass, $queryResultMap)) {
-            return $queryResultMap[$queryClass];
+        switch ($queryClass = get_class($query)) {
+            case GetProductForEditing::class:
+                return $this->createProductForEditing($productData);
+            case GetProductSupplierOptions::class:
+                return $this->createProductSupplierOptions($productData);
+            case GetProductFeatureValues::class:
+                return $this->createProductFeatureValueOptions($productData);
+            case GetProductCustomizationFields::class:
+                return $this->createProductCustomizationFields($productData);
+            case GetProductStockMovements::class:
+                return $this->createStockMovementHistories($productData);
+            case GetRelatedProducts::class:
+                return $this->createRelatedProducts($productData);
+            case GetPackedProducts::class:
+                return $this->createPackedProductsDetails($productData);
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
@@ -1494,7 +1565,7 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
-            'specifications' => [
+            'details' => [
                 'references' => [
                     'mpn' => 'mpn',
                     'upc' => 'upc',
@@ -1520,7 +1591,7 @@ class ProductFormDataProviderTest extends TestCase
                 'options' => [
                     'stock_location' => 'location',
                     'low_stock_threshold' => 0,
-                    'low_stock_alert' => false,
+                    'disabling_switch_low_stock_threshold' => false,
                 ],
                 'virtual_product_file' => [
                     'has_file' => false,

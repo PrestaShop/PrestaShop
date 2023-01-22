@@ -41,10 +41,10 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationPriceImpactType extends TranslatorAwareType
 {
@@ -130,6 +130,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -224,6 +225,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('unit_price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -253,6 +255,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'column_breaker' => true,
+                'modify_all_shops' => true,
             ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
@@ -265,6 +268,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('product_price_tax_excluded', HiddenType::class, [
                 'attr' => [

@@ -272,15 +272,18 @@ class TagCore extends ObjectModel
         }
 
         $in = $associated ? 'IN' : 'NOT IN';
+        // select not only active products when we are getting list of already associated products
+        // to avoid confusion when product is disabled, but still has the tag assigned
+        $onlyActive = $associated ? '' : 'AND product_shop.active = 1';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT pl.name, pl.id_product
         FROM `' . _DB_PREFIX_ . 'product` p
         LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON p.id_product = pl.id_product' . Shop::addSqlRestrictionOnLang('pl') . '
         ' . Shop::addSqlAssociation('product', 'p') . '
-        WHERE pl.id_lang = ' . (int) $idLang . '
-        AND product_shop.active = 1
-        ' . ($this->id ? ('AND p.id_product ' . $in . ' (SELECT pt.id_product FROM `' . _DB_PREFIX_ . 'product_tag` pt WHERE pt.id_tag = ' . (int) $this->id . ')') : '') . '
+        WHERE pl.id_lang = ' . (int) $idLang .
+        ' ' . $onlyActive . ' ' .
+        ($this->id ? ('AND p.id_product ' . $in . ' (SELECT pt.id_product FROM `' . _DB_PREFIX_ . 'product_tag` pt WHERE pt.id_tag = ' . (int) $this->id . ')') : '') . '
         ORDER BY pl.name');
     }
 
@@ -359,8 +362,8 @@ class TagCore extends ObjectModel
             WHERE id_product=' . (int) $idProduct
         ;
         if ($langId) {
-            $removeWhere .= ' AND id_lang =' . (int) $langId;
-            $selectTagsToRemove .= ' AND id_lang =' . (int) $langId;
+            $removeWhere .= ' AND id_lang =' . $langId;
+            $selectTagsToRemove .= ' AND id_lang =' . $langId;
         }
 
         $tagsRemoved = Db::getInstance()->executeS($selectTagsToRemove);

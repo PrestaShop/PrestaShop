@@ -318,7 +318,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
      */
     private function getSpecificPricesQueryBuilder(ProductId $productId, LanguageId $langId, array $filters): QueryBuilder
     {
-        //@todo: filters are not handled.
+        //@todo: filters are not fully handled.
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'specific_price', 'sp')
             ->leftJoin(
@@ -360,6 +360,12 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             ->setParameter('productId', $productId->getValue())
             ->setParameter('langId', $langId->getValue())
         ;
+
+        if (!empty($filters['shopIds'])) {
+            $qb->andWhere($qb->expr()->in('sp.id_shop', ':shopIds'))
+                ->setParameter('shopIds', $filters['shopIds'], Connection::PARAM_INT_ARRAY)
+            ;
+        }
 
         return $qb;
     }

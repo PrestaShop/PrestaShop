@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.order_return.query_handler.get_order_return_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler\GetOrderReturnForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing'
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+      - '@PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'
+      - '@prestashop.adapter.order.repository.order_repository'
+
+  prestashop.adapter.order_return.command_handler.update_order_return_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\CommandHandler\UpdateOrderReturnStateHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturn\Command\UpdateOrderReturnStateCommand'
+    arguments:
+      - '@prestashop.adapter.order_return.repository.order_return_repository'
+      - '@prestashop.adapter.order_return_state.repository.order_return_state_repository'
+
+  prestashop.adapter.order_return.repository.order_return_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository'
+    arguments:
+      [ '@prestashop.adapter.order_return.validator.order_return_validator' ]
+
+  prestashop.adapter.order_return.validator.order_return_validator:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator'

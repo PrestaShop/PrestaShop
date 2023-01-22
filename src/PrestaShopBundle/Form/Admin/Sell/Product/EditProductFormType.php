@@ -30,11 +30,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Details\DetailsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\NavigationTabType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -45,7 +45,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This is the parent product form type
@@ -85,6 +85,7 @@ class EditProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = $options['product_id'];
+
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
@@ -92,7 +93,7 @@ class EditProductFormType extends TranslatorAwareType
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('specifications', SpecificationsType::class)
+            ->add('details', DetailsType::class)
             ->add('combinations', CombinationsType::class, [
                 'product_id' => $productId,
             ])
@@ -102,7 +103,9 @@ class EditProductFormType extends TranslatorAwareType
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
-            ->add('pricing', PricingType::class)
+            ->add('pricing', PricingType::class, [
+                'tax_rules_group_id' => $options['tax_rules_group_id'],
+            ])
             ->add('seo', SEOType::class, [
                 'product_id' => $productId,
             ])
@@ -131,6 +134,7 @@ class EditProductFormType extends TranslatorAwareType
         $formVars = [
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
+            'shop_id' => $options['shop_id'],
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -155,9 +159,12 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->setRequired([
                 'product_id',
+                'shop_id',
                 'product_type',
+                'tax_rules_group_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])

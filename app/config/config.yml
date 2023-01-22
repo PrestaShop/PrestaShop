@@ -1,6 +1,5 @@
 imports:
   - { resource: set_parameters.php }
-  - { resource: security.yml }
   - { resource: services.yml }
   - { resource: addons/*.yml }
   - { resource: doctrine.yml }
@@ -15,6 +14,7 @@ parameters:
   prestashop_views: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views"
   admin_page: "%prestashop_views%/Admin"
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
+  env(PS_LOG_MAX_FILES): 30
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
@@ -34,7 +34,7 @@ services:
 
 framework:
   assets:
-    version: !php/const \AppKernel::VERSION
+    version: !php/const PrestaShop\PrestaShop\Core\Version::VERSION
 
   # esi: ~
   secret: "%secret%"
@@ -63,7 +63,8 @@ framework:
 monolog:
   handlers:
     main:
-      type: stream
+      type: rotating_file
+      max_files: '%env(PS_LOG_MAX_FILES)%'
       path: '%env(PS_LOG_OUTPUT)%'
       level: notice
     legacy:
@@ -103,6 +104,11 @@ swiftmailer:
   password: "%mailer_password%"
   spool: { type: memory }
 
-sensio_framework_extra:
-  router:
-    annotations: false
+api_platform:
+  title: PrestaShop API
+  version: 1.0.0
+  mapping:
+    paths:
+      - '%kernel.project_dir%/app/config/api_platform'
+
+  metadata_backward_compatibility_layer: false

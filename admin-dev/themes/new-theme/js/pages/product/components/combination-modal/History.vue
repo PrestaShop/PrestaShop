@@ -30,7 +30,7 @@
     <div class="card-header">
       {{
         $t("modal.history.editedCombination", {
-          "%editedNb%": combinationsList.length,
+          "editedNb": combinationsList.length,
         })
       }}
     </div>
@@ -64,6 +64,7 @@
       class="card-footer"
       v-if="areCombinationsNotEmpty"
     >
+      <p>{{ selectedCombinationId }}</p>
       <pagination
         :pagination-length="14"
         :datas="combinationsList"
@@ -76,24 +77,22 @@
 <script lang="ts">
   import ProductEventMap from '@pages/product/product-event-map';
   import {Combination} from '@pages/product/components/combination-modal/CombinationModal.vue';
-  import Pagination from '@vue/components/Pagination.vue';
-  import Vue from 'vue';
+  import Pagination from '@PSVue/components/Pagination.vue';
+  import {defineComponent, PropType} from 'vue';
 
   interface HistoryStates {
     paginatedDatas: Array<Record<string, any>>;
     currentPage: number;
-    currentCombination: Record<string, any> | null
   }
 
   const CombinationsEventMap = ProductEventMap.combinations;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'CombinationHistory',
     data(): HistoryStates {
       return {
         paginatedDatas: [],
         currentPage: 1,
-        currentCombination: null,
       };
     },
     components: {
@@ -101,10 +100,10 @@
     },
     props: {
       combinationsList: {
-        type: Array,
+        type: Array as PropType<Array<Record<string, any>>>,
         default: () => [],
       },
-      selectedCombination: {
+      selectedCombinationId: {
         type: Number,
         required: true,
       },
@@ -117,11 +116,6 @@
       areCombinationsNotEmpty(): boolean {
         return this.combinationsList.length > 0;
       },
-    },
-    mounted() {
-      this.$parent.$on(CombinationsEventMap.selectCombination, (id: number) => {
-        this.currentCombination = {id};
-      });
     },
     methods: {
       /**
@@ -153,7 +147,7 @@
        * Used to avoid having too much logic in the markup
        */
       isSelected(idCombination: number): null | string {
-        return this.currentCombination?.id === idCombination
+        return this.selectedCombinationId === idCombination
           || this.combinationsList.length === 1
           ? 'selected'
           : null;

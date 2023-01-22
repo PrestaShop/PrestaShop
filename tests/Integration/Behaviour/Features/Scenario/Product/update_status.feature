@@ -29,9 +29,22 @@ Feature: Update product status from BO (Back Office)
     When I disable product "product1"
     Then product "product1" should be disabled
     And product "product1" should not be indexed
+    # same scenario using UpdateProductCommand
+    When I add product "product100" with following information:
+      | name[en-US] | doesnt matter |
+      | type        | standard      |
+    And product product100 type should be standard
+    And product "product100" should be disabled
+    And product "product100" should not be indexed
+    When I enable product "product100"
+    Then product "product100" should be enabled
+    And product "product100" should be indexed
+    When I disable product "product100"
+    Then product "product100" should be disabled
+    And product "product100" should not be indexed
 
   Scenario: I update virtual product status
-    And I add product "product2" with following information:
+    Given I add product "product2" with following information:
       | name[en-US] | Values list poster nr. 2 (virtual) |
       | type        | virtual                            |
     And product product2 type should be virtual
@@ -42,16 +55,28 @@ Feature: Update product status from BO (Back Office)
     When I disable product "product2"
     Then product "product2" should be disabled
     And product "product2" should not be indexed
+    # same scenario using UpdateProductCommand
+    Given I add product "product200" with following information:
+      | name[en-US] | doesnt matter |
+      | type        | virtual       |
+    And product product200 type should be virtual
+    And product "product200" should be disabled
+    When I enable product "product200"
+    Then product "product200" should be enabled
+    And product "product200" should be indexed
+    When I disable product "product200"
+    Then product "product200" should be disabled
+    And product "product200" should not be indexed
 
   Scenario: I update combination product status
-    And I add product "product3" with following information:
+    Given I add product "product3" with following information:
       | name[en-US] | T-Shirt with listed values |
       | type        | combinations               |
     When I generate combinations for product product3 using following attributes:
-      | Size  | [S,M]              |
+      | Size  | [S,M]         |
       | Color | [White,Black] |
     Then product "product3" should have following combinations:
-      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
       | product3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
@@ -64,12 +89,38 @@ Feature: Update product status from BO (Back Office)
     When I disable product "product3"
     Then product "product3" should be disabled
     And product "product3" should not be indexed
+    # same scenario using UpdateProductCommand
+    Given I add product "product300" with following information:
+      | name[en-US] | T-Shirt with listed values |
+      | type        | combinations               |
+    When I generate combinations for product product300 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product300" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product300SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product300SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product300MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product300MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And product product300 type should be combinations
+    And product "product300" should be disabled
+    When I enable product "product300"
+    Then product "product300" should be enabled
+    And product "product300" should be indexed
+    When I disable product "product300"
+    Then product "product300" should be disabled
+    And product "product300" should not be indexed
 
   Scenario: I disable product which is already disabled
     Given product "product1" should be disabled
     When I disable product "product1"
     Then product "product1" should be disabled
     And product "product1" should not be indexed
+    # same scenario using UpdateProductCommand
+    Given product "product100" should be disabled
+    When I disable product "product100"
+    Then product "product100" should be disabled
+    And product "product100" should not be indexed
 
   Scenario: I enable product which is already enabled
     Given product "product1" should be disabled
@@ -79,25 +130,54 @@ Feature: Update product status from BO (Back Office)
     When I enable product "product1"
     Then product "product1" should be enabled
     And product "product1" should be indexed
+    # same scenario using UpdateProductCommand
+    Given product "product100" should be disabled
+    When I enable product "product100"
+    Then product "product100" should be enabled
+    And product "product100" should be indexed
+    When I enable product "product100"
+    Then product "product100" should be enabled
+    And product "product100" should be indexed
 
   Scenario: I can not publish a product without a name
-    When I add product "product4" with following information:
-      | type        | standard       |
-    Then product "product4" should be disabled
+    Given I add product "product4" with following information:
+      | type | standard |
+    And product "product4" should be disabled
     And product "product4" type should be standard
     And product "product4" localized "name" should be:
       | locale | value |
       | en-US  |       |
     And product "product4" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I enable product "product4"
     Then I should get an error that product online data are invalid
     And product "product4" should be disabled
-    When I update product "product4" basic information with following values:
+    When I update product "product4" with following values:
       | name[en-US] | photo of funny mug |
     Then product "product4" localized "name" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     When I enable product "product4"
     And product "product4" should be enabled
+    # same scenario using UpdateProductCommand
+    Given I add product "product400" with following information:
+      | type | standard |
+    And product "product400" should be disabled
+    And product "product400" type should be standard
+    And product "product400" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+    And product "product400" should be assigned to following categories:
+      | id reference | name | is default |
+      | home         | Home | true       |
+    When I enable product "product400"
+    Then I should get an error that product online data are invalid
+    And product "product400" should be disabled
+    When I update product "product400" with following values:
+      | name[en-US] | photo of funny mug |
+    Then product "product400" localized "name" should be:
+      | locale | value              |
+      | en-US  | photo of funny mug |
+    When I enable product "product400"
+    And product "product400" should be enabled

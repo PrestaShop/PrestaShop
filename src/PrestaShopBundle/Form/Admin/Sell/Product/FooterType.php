@@ -36,7 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FooterType extends TranslatorAwareType
 {
@@ -56,23 +56,31 @@ class FooterType extends TranslatorAwareType
     protected $productPreviewUrlProvider;
 
     /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ProductProvider $productUrlProvider
      * @param ProductPreviewProvider $productPreviewUrlProvider
      * @param RouterInterface $router
+     * @param int|null $contextShopId
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ProductProvider $productUrlProvider,
         ProductPreviewProvider $productPreviewUrlProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        ?int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->productUrlProvider = $productUrlProvider;
         $this->productPreviewUrlProvider = $productPreviewUrlProvider;
         $this->router = $router;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -133,7 +141,7 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'attr' => [
                     'class' => 'btn-outline-secondary new-product-button',
-                    'href' => $this->router->generate('admin_products_v2_create'),
+                    'href' => $this->router->generate('admin_products_v2_create', ['shopId' => $this->contextShopId]),
                 ],
             ])
             ->add('cancel', IconButtonType::class, [

@@ -22,8 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-
 let binded = [];
 
 function handler(e) {
@@ -72,20 +70,20 @@ function removeListener(node, callback) {
   }
 }
 
-Vue.directive('click-outside', {
-  bind(el, binding) {
+export default {
+  created(el, binding) {
     removeListener(el, binding.value);
     if (typeof binding.value === 'function') {
       addListener(el, binding.value);
     }
   },
-  update(el, binding) {
+  updated(el, binding) {
     if (binding.value !== binding.oldValue) {
       removeListener(el, binding.oldValue);
       addListener(el, binding.value);
     }
   },
-  unbind(el, binding) {
+  unmounted(el, binding) {
     removeListener(el, binding.value);
   },
-});
+};

@@ -42,10 +42,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AbstractCategoryType.
@@ -65,7 +65,7 @@ abstract class AbstractCategoryType extends TranslatorAwareType
     /**
      * @var ConfigurationInterface
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @param TranslatorInterface $translator

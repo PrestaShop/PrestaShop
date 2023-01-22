@@ -34,6 +34,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 class CannotUpdateCombinationException extends CombinationException
 {
     /**
+     * When generic product update fails
+     */
+    public const FAILED_UPDATE_COMBINATION = 1;
+
+    /**
      * When fails to update options of single combination
      */
     public const FAILED_UPDATE_DETAILS = 10;

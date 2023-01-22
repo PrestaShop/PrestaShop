@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Import\EntityField\Provider;
 
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityField;
 use PrestaShop\PrestaShop\Core\Import\EntityField\EntityFieldCollection;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class SupplierFieldsProvider defines a supplier fields provider.
@@ -58,7 +58,6 @@ final class SupplierFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('active', $this->trans('Active (0/1)', 'Admin.Advparameters.Feature')),
             new EntityField('name', $this->trans('Name', 'Admin.Global'), '', true),
             new EntityField('description', $this->trans('Description', 'Admin.Global')),
-            new EntityField('short_description', $this->trans('Short description', 'Admin.Catalog.Feature')),
             new EntityField('meta_title', $this->trans('Meta title', 'Admin.Global')),
             new EntityField('meta_keywords', $this->trans('Meta keywords', 'Admin.Global')),
             new EntityField('meta_description', $this->trans('Meta description', 'Admin.Global')),

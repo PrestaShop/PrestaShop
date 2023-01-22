@@ -16,7 +16,7 @@ services:
       - '@prestashop.adapter.data_provider.module'
       - '@prestashop.adapter.admin.data_provider.module'
       - '@doctrine.cache.provider'
-      - '@prestashop.adapter.hook.manager'
+      - '@PrestaShop\PrestaShop\Adapter\HookManager'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
 
   prestashop.core.admin.module.repository.eventsubscriber:
@@ -47,4 +47,4 @@ services:
       - '@prestashop.module.factory.sourcehandler'
       - '@translator'
       - '@event_dispatcher'
-      - '@prestashop.adapter.hook.manager'
+      - '@PrestaShop\PrestaShop\Adapter\HookManager'

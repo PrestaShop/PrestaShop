@@ -27,7 +27,7 @@ class ShoppingCarts extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = filterBy => `${this.filterRow} [name='cartFilter_${filterBy}']`;
+    this.filterColumn = (filterBy) => `${this.filterRow} [name='cartFilter_${filterBy}']`;
     this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
     this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
     this.filterSearchButton = '#submitFilterButtoncart';
@@ -36,16 +36,19 @@ class ShoppingCarts extends BOBasePage {
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(1)`;
-    this.tableColumnOrderId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnOnline = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnOrderId = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnCustomer = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnTotal = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnCarrier = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnDate = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnOnline = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a.btn-default`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -58,14 +61,14 @@ class ShoppingCarts extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = number => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = column => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Filter methods */
@@ -119,7 +122,7 @@ class ShoppingCarts extends BOBasePage {
       case 'select':
         await Promise.all([
           page.waitForNavigation({waitUntil: 'networkidle'}),
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
         ]);
         break;
 
@@ -165,6 +168,10 @@ class ShoppingCarts extends BOBasePage {
 
       case 'c!lastname':
         columnSelector = this.tableColumnCustomer(row);
+        break;
+
+      case 'total':
+        columnSelector = this.tableColumnTotal(row);
         break;
 
       case 'ca!name':
@@ -292,27 +299,27 @@ class ShoppingCarts extends BOBasePage {
 
     switch (sortBy) {
       case 'id_cart':
-        columnSelector = this.sortColumnDiv(1);
-        break;
-
-      case 'status':
         columnSelector = this.sortColumnDiv(2);
         break;
 
-      case 'c!lastname':
+      case 'status':
         columnSelector = this.sortColumnDiv(3);
         break;
 
-      case 'ca!name':
-        columnSelector = this.sortColumnDiv(5);
+      case 'c!lastname':
+        columnSelector = this.sortColumnDiv(4);
         break;
 
-      case 'date':
+      case 'ca!name':
         columnSelector = this.sortColumnDiv(6);
         break;
 
-      case 'id_guest':
+      case 'date':
         columnSelector = this.sortColumnDiv(7);
+        break;
+
+      case 'id_guest':
+        columnSelector = this.sortColumnDiv(8);
         break;
 
       default:
@@ -321,6 +328,16 @@ class ShoppingCarts extends BOBasePage {
 
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
+  }
+
+  /**
+   * Go to view page
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @return {Promise<void>}
+   */
+  async goToViewPage(page, row) {
+    await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 }
 

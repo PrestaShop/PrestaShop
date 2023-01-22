@@ -67,9 +67,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): iterable
     {
-        yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
-        yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', true];
-        yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
+        // Since data is empty all product types remove this field see testSuppliers for more details
+        yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', false];
+        yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', false];
+        yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', false];
         yield 'product_supplier in combination context' => [ProductType::TYPE_COMBINATIONS, 'options.product_suppliers', false];
 
         yield 'stock in standard context' => [ProductType::TYPE_STANDARD, 'stock', true];
@@ -250,6 +251,38 @@ class ProductTypeListenerTest extends FormListenerTestCase
             ],
             true,
         ];
+    }
+
+    /**
+     * @dataProvider getExpectedSuppliers
+     *
+     * @param string $formType
+     * @param array $suppliers
+     * @param bool $suppliersExpected
+     * @param bool $productSuppliersExpected
+     */
+    public function testSuppliers(string $formType, array $suppliers, bool $suppliersExpected, bool $productSuppliersExpected): void
+    {
+        $form = $this->createForm(TestProductFormType::class, ['suppliers' => $suppliers]);
+
+        $this->assertFormTypeExistsInForm($form, 'options.suppliers', true);
+        $this->assertFormTypeExistsInForm($form, 'options.product_suppliers', true);
+        $this->adaptProductFormBasedOnProductType($form, $formType);
+        $this->assertFormTypeExistsInForm($form, 'options.suppliers', $suppliersExpected);
+        $this->assertFormTypeExistsInForm($form, 'options.product_suppliers', $productSuppliersExpected);
+    }
+
+    public function getExpectedSuppliers(): iterable
+    {
+        yield 'standard type with suppliers' => [ProductType::TYPE_STANDARD, [42, 69], true, true];
+        yield 'virtual type with suppliers' => [ProductType::TYPE_VIRTUAL, [42, 69], true, true];
+        yield 'pack type with suppliers' => [ProductType::TYPE_PACK, [42, 69], true, true];
+        yield 'combinations type with suppliers' => [ProductType::TYPE_COMBINATIONS, [42, 69], true, false];
+
+        yield 'standard type without suppliers' => [ProductType::TYPE_STANDARD, [], false, false];
+        yield 'virtual type without suppliers' => [ProductType::TYPE_VIRTUAL, [], false, false];
+        yield 'pack type without suppliers' => [ProductType::TYPE_PACK, [], false, false];
+        yield 'combination type without suppliers' => [ProductType::TYPE_COMBINATIONS, [], false, false];
     }
 
     /**

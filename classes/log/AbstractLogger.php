@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-abstract class AbstractLoggerCore
+abstract class AbstractLoggerCore implements PrestaShopLoggerInterface
 {
     public $level;
     protected $level_value = [
@@ -32,11 +32,6 @@ abstract class AbstractLoggerCore
         2 => 'WARNING',
         3 => 'ERROR',
     ];
-
-    public const DEBUG = 0;
-    public const INFO = 1;
-    public const WARNING = 2;
-    public const ERROR = 3;
 
     public function __construct($level = self::INFO)
     {

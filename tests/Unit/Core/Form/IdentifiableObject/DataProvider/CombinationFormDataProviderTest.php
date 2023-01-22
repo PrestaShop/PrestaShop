@@ -33,6 +33,7 @@ use Generator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
@@ -40,11 +41,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 use RuntimeException;
 
 class CombinationFormDataProviderTest extends TestCase
@@ -55,11 +60,12 @@ class CombinationFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
     private const COVER_URL = 'http://localhost/cover.jpg';
+    private const SHOP_ID = 1;
 
     public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new CombinationFormDataProvider($queryBusMock);
+        $provider = $this->createFormDataProvider($queryBusMock);
 
         $this->assertEquals([], $provider->getDefaultData());
     }
@@ -73,9 +79,11 @@ class CombinationFormDataProviderTest extends TestCase
     public function testGetData(array $combinationData, array $expectedData): void
     {
         $queryBusMock = $this->createQueryBusMock($combinationData);
-        $provider = new CombinationFormDataProvider($queryBusMock);
+        $formDataProvider = $this->createFormDataProvider(
+            $queryBusMock
+        );
 
-        $formData = $provider->getData(self::COMBINATION_ID);
+        $formData = $formDataProvider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedData, $formData);
     }
@@ -113,21 +121,114 @@ class CombinationFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+
         $expectedOutputData = $this->getDefaultOutputData();
         $combinationData = [
             'quantity' => 42,
             'minimal_quantity' => 7,
             'low_stock_threshold' => 5,
-            'low_stock_alert' => true,
+            sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
+            'stock_movements' => [
+                [
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2022-01-13 18:20:58',
+                    'to_date' => '2021-05-24 15:24:32',
+                    'stock_movement_ids' => [321, 322, 323, 324, 325],
+                    'stock_ids' => [42],
+                    'order_ids' => [311, 312, 313, 314, 315],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -19,
+                ],
+                [
+                    'type' => StockMovement::EDITION_TYPE,
+                    'date_add' => '2021-05-24 15:24:32',
+                    'stock_movement_id' => 320,
+                    'stock_id' => 42,
+                    'order_id' => 310,
+                    'employee_id' => 12,
+                    'employee_name' => 'Paul Atreide',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2021-05-24 15:24:32',
+                    'to_date' => '2021-05-22 16:35:48',
+                    'stock_movement_ids' => [221, 222, 223, 224, 225],
+                    'stock_ids' => [42],
+                    'order_ids' => [211, 212, 213, 214, 215],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -23,
+                ],
+                [
+                    'type' => StockMovement::EDITION_TYPE,
+                    'date_add' => '2021-05-22 16:35:48',
+                    'stock_movement_id' => 220,
+                    'stock_id' => 42,
+                    'order_id' => 210,
+                    'employee_id' => 11,
+                    'employee_name' => 'Frodo Baggins',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovement::ORDERS_TYPE,
+                    'from_date' => '2021-05-22 16:35:48',
+                    'to_date' => '2021-01-24 15:24:32',
+                    'stock_movement_ids' => [121, 122, 123, 124, 125],
+                    'stock_ids' => [42],
+                    'order_ids' => [111, 112, 113, 114, 115],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -17,
+                ],
+            ],
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
         ];
         $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
-        $expectedOutputData['stock']['options']['low_stock_alert'] = true;
+        $expectedOutputData['stock']['options'][sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX)] = true;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
+        $expectedOutputData['stock']['quantities']['stock_movements'] = [
+            [
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -19,
+            ],
+            [
+                'type' => 'edition',
+                'date' => '2021-05-24 15:24:32',
+                'employee_name' => 'Paul Atreide',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -23,
+            ],
+            [
+                'type' => 'edition',
+                'date' => '2021-05-22 16:35:48',
+                'employee_name' => 'Frodo Baggins',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'orders',
+                'date' => null,
+                'employee_name' => null,
+                'delta_quantity' => -17,
+            ],
+        ];
+        $expectedOutputData['stock']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['available_later_label'] = $localizedValues;
 
         $datasets[] = [
             $combinationData,
@@ -347,7 +448,8 @@ class CombinationFormDataProviderTest extends TestCase
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetCombinationForEditing::class),
                 $this->isInstanceOf(GetAssociatedSuppliers::class),
-                $this->isInstanceOf(GetCombinationSuppliers::class)
+                $this->isInstanceOf(GetCombinationSuppliers::class),
+                $this->isInstanceOf(GetCombinationStockMovements::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -361,18 +463,19 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovement[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
-        $queryClass = get_class($query);
-        switch ($queryClass) {
+        switch ($queryClass = get_class($query)) {
             case GetCombinationForEditing::class:
                 return $this->createCombinationForEditing($combinationData);
             case GetAssociatedSuppliers::class:
                 return $this->createAssociatedSuppliers($combinationData);
             case GetCombinationSuppliers::class:
                 return $this->createCombinationSupplierInfos($combinationData);
+            case GetCombinationStockMovements::class:
+                return $this->createStockMovementHistories($combinationData);
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
@@ -430,9 +533,11 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['quantity'] ?? self::DEFAULT_QUANTITY,
             $combination['minimal_quantity'] ?? 0,
             $combination['low_stock_threshold'] ?? 0,
-            $combination['low_stock_alert'] ?? false,
+            $combination[sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX)] ?? false,
             $combination['location'] ?? 'location',
-            $combination['available_date'] ?? null
+            $combination['available_date'] ?? null,
+            $combination['available_now'] ?? [],
+            $combination['available_later'] ?? []
         );
     }
 
@@ -495,6 +600,45 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @param array $combinationData
+     *
+     * @return StockMovement[]
+     */
+    private function createStockMovementHistories(array $combinationData): array
+    {
+        return array_map(
+            static function (array $historyData): StockMovement {
+                if (StockMovement::EDITION_TYPE === $historyData['type']) {
+                    return StockMovement::createEditionMovement(
+                        $historyData['date_add'],
+                        $historyData['stock_movement_id'],
+                        $historyData['stock_id'],
+                        $historyData['order_id'],
+                        $historyData['employee_id'],
+                        $historyData['employee_name'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                if (StockMovement::ORDERS_TYPE === $historyData['type']) {
+                    return StockMovement::createOrdersMovement(
+                        $historyData['from_date'],
+                        $historyData['to_date'],
+                        $historyData['stock_movement_ids'],
+                        $historyData['stock_ids'],
+                        $historyData['order_ids'],
+                        $historyData['employee_ids'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                throw new RuntimeException(
+                    sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
+                );
+            },
+            $combinationData['stock_movements'] ?? []
+        );
+    }
+
+    /**
      * @return array
      */
     private function getDefaultOutputData(): array
@@ -513,14 +657,17 @@ class CombinationFormDataProviderTest extends TestCase
                         'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
                     'stock_location' => 'location',
                     'low_stock_threshold' => 0,
-                    'low_stock_alert' => false,
+                    sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
                 ],
                 'available_date' => '',
+                'available_now_label' => [],
+                'available_later_label' => [],
             ],
             'price_impact' => [
                 'price_tax_excluded' => 51.00,
@@ -546,5 +693,31 @@ class CombinationFormDataProviderTest extends TestCase
             'product_suppliers' => [],
             'images' => [],
         ];
+    }
+
+    private function createFormDataProvider(
+        CommandBusInterface $queryBusMock
+    ): CombinationFormDataProvider {
+        return new CombinationFormDataProvider(
+            $queryBusMock,
+            $this->mockShopContext()
+        );
+    }
+
+    /**
+     * @return Context
+     */
+    private function mockShopContext(): Context
+    {
+        $shopContext = $this->getMockBuilder(Context::class)
+            ->onlyMethods(['getShopConstraint'])
+            ->getMock()
+        ;
+        $shopContext
+            ->method('getShopConstraint')
+            ->willReturn(ShopConstraint::shop(self::SHOP_ID))
+        ;
+
+        return $shopContext;
     }
 }

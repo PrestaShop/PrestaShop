@@ -125,8 +125,6 @@ class AdminSearchConfControllerCore extends AdminController
             'search' => [
                 'title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
-                'info' => '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
-                    . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
                     'PS_SEARCH_START' => [
                         'title' => $this->trans('Search within word', [], 'Admin.Shopparameters.Feature'),
@@ -389,6 +387,8 @@ class AdminSearchConfControllerCore extends AdminController
 
     /**
      * Function used to render the options for this controller.
+     *
+     * @return string|void
      */
     public function renderOptions()
     {
@@ -462,9 +462,23 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         if (!count($this->errors)) {
-            foreach ($aliases as $alias) {
+            // Search existing aliases
+            $alias = new Alias();
+            $alias->search = trim($search);
+            $existingAliases = explode(',', $alias->getAliases());
+
+            // New alias
+            $newAliases = array_diff($aliases, $existingAliases);
+            foreach ($newAliases as $alias) {
                 $obj = new Alias(null, trim($alias), trim($search));
                 $obj->save();
+            }
+
+            // Removed alias
+            $removedAliases = array_diff($existingAliases, $aliases);
+            foreach ($removedAliases as $alias) {
+                $obj = new Alias(null, trim($alias), trim($search));
+                $obj->delete();
             }
         }
 
