@@ -80,6 +80,7 @@ class FrontControllerCore extends Controller
     /**
      * If set to true, user can be logged in as guest when checking if logged in.
      *
+     * @deprecated Since 8.0 and will be removed in the next major.
      * @see $auth
      *
      * @var bool
@@ -307,7 +308,7 @@ class FrontControllerCore extends Controller
             $this->context->cookie->id_cart = (int) $id_cart;
         }
 
-        if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
+        if ($this->auth && !$this->context->customer->isLogged()) {
             Tools::redirect('index.php?controller=authentication' . ($this->authRedirection ? '&back=' . $this->authRedirection : ''));
         }
 
@@ -1570,7 +1571,7 @@ class FrontControllerCore extends Controller
         );
 
         $cust['id'] = $this->context->customer->id;
-        $cust['is_logged'] = $this->context->customer->isLogged(true);
+        $cust['is_logged'] = $this->context->customer->isLogged();
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
         unset($cust['id_gender']);
