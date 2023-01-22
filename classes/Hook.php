@@ -1054,7 +1054,7 @@ class HookCore extends ObjectModel
             if ($use_groups) {
                 if ($customer instanceof Customer && $customer->isLogged()) {
                     $groups = $customer->getGroups();
-                } elseif ($customer instanceof Customer && $customer->isLogged(true)) {
+                } elseif ($customer instanceof Customer && $customer->isGuest()) {
                     $groups = [(int) Configuration::get('PS_GUEST_GROUP')];
                 } else {
                     $groups = [(int) Configuration::get('PS_UNIDENTIFIED_GROUP')];
