@@ -44,6 +44,7 @@ import FiltersSubmitButtonEnablerExtension
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
+import CustomerFormMap from '@pages/customer/customer-form-map';
 
 const {$} = window;
 
@@ -86,6 +87,9 @@ $(() => {
   // Scroll to the block
   scrollToBlock();
 
+  // Required fields : Display alert for optin checkbox
+  $(CustomerFormMap.requiredFieldsFormCheckboxOptin).on('click', () => handleRequiredFieldsFormCheckboxOptin());
+
   function scrollToBlock(): void {
     const documentURL = new URL(document.URL);
     const documentHash = documentURL.hash.slice(1);
@@ -122,5 +126,12 @@ $(() => {
 
     // Scroll to the block
     window.scroll(0, positionTop);
+  }
+
+  function handleRequiredFieldsFormCheckboxOptin(): void {
+    $(CustomerFormMap.requiredFieldsFormAlertOptin).toggleClass(
+      'd-none',
+      !$(CustomerFormMap.requiredFieldsFormCheckboxOptin).is(':checked'),
+    );
   }
 });
