@@ -27,12 +27,25 @@ export default class LinkWidgetData {
    * @param valueToCreate {HookCreator} Could be used to force the value of some members
    */
   constructor(valueToCreate: LinkWidgetCreator = {}) {
+    /** @type {string} */
     this.name = valueToCreate.name || faker.word.noun();
+
+    /** @type {string} */
     this.frName = valueToCreate.frName || this.name;
+
+    /** @type {HookData} */
     this.hook = valueToCreate.hook || faker.helpers.arrayElement([Hooks.displayFooter]);
+
+    /** @type {string[]} */
     this.contentPages = valueToCreate.contentPages || [];
+
+    /** @type {string[]} */
     this.productsPages = valueToCreate.productsPages || [];
+
+    /** @type {string[]} */
     this.staticPages = valueToCreate.staticPages || [];
+
+    /** @type {LinkWidgetPage[]} */
     this.customPages = valueToCreate.customPages || [];
   }
 }
