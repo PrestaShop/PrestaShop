@@ -25,9 +25,6 @@
  */
 declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * This class is used only because some parts of the Back Office require a Controller
  * to function (like the NullDispatcher).

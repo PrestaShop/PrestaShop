@@ -26,7 +26,7 @@
 
 use PrestaShop\PrestaShop\Core\Symfony\Symfony;
 use PrestaShopBundle\Translation\TranslatorComponent;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
@@ -151,7 +151,7 @@ abstract class ControllerCore
     /**
      * Dependency container.
      *
-     * @var \Psr\Container\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container = null;
 

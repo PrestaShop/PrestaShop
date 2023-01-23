@@ -32,6 +32,6 @@ require dirname(__FILE__) . '/config/config.inc.php';
 $kernel = new AppKernel(_PS_ENV_, true);
 $kernel->boot();
 
-Symfony::setInstance($kernel);
+Symfony::setKernelInstance($kernel);
 
 Dispatcher::getInstance(Request::createFromGlobals())->dispatch();

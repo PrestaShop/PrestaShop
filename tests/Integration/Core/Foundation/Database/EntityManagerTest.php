@@ -26,32 +26,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Core\Foundation\Entity;
+namespace Tests\Integration\Core\Foundation\Database;
 
 use CMSRole;
-use Db;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CMS\CMSRoleRepository;
-use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager;
-use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use Product;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class EntityManagerTest extends TestCase
+class EntityManagerTest extends KernelTestCase
 {
-    /**
-     * @var Container
-     */
-    private $container;
     private $entityManager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $containerBuilder = new ContainerBuilder();
-        $this->container = $containerBuilder->build();
-        $this->entityManager = $this->container->make(EntityManager::class);
+        $this->entityManager = static::createKernel()->getContainer()->get(EntityManager::class);
     }
 
     public function testExplicitlyDefinedRepositoryIsFoundByEntitymanager(): void

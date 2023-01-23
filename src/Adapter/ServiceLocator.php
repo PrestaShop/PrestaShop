@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
+use PrestaShop\PrestaShop\Core\Symfony\Symfony;
 
 /**
  * @internal
@@ -63,10 +64,6 @@ class ServiceLocator
      */
     public static function get($serviceName)
     {
-        if (null === self::$service_container) {
-            throw new CoreException('Service container is not set.');
-        }
-
-        return self::$service_container->make($serviceName);
+        return Symfony::getContainer()->get($serviceName);
     }
 }

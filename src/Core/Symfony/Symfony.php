@@ -2,7 +2,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Symfony;
 
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class Symfony
@@ -22,7 +22,7 @@ class Symfony
         return self::$kernel->getContainer()->get($fqcn);
     }
 
-    public static function setInstance(KernelInterface $kernel): void
+    public static function setKernelInstance(KernelInterface $kernel): void
     {
         self::$kernel = $kernel;
     }

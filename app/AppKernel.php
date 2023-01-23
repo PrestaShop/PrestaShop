@@ -85,7 +85,7 @@ class AppKernel extends Kernel
     public function boot()
     {
         parent::boot();
-        $this->cleanKernelReferences();
+//        $this->cleanKernelReferences();
     }
 
     /**
