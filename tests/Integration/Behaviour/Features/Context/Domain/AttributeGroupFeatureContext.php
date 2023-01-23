@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -43,10 +44,13 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $tableNode
      */
-    public function assertAllAttributeGroups(TableNode $tableNode): void
+    public function assertAllAttributeGroupsForDefaultShop(TableNode $tableNode): void
     {
         $attributeGroupsData = $this->localizeByColumns($tableNode);
-        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(false));
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(
+            ShopConstraint::shop($this->getDefaultShopId()),
+            false
+        ));
 
         $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
     }
@@ -56,11 +60,15 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param TableNode $tableNode
      */
-    public function assertProductAttributeGroups(string $productReference, TableNode $tableNode): void
+    public function assertProductAttributeGroupsForDefaultShop(string $productReference, TableNode $tableNode): void
     {
         $attributeGroupsData = $this->localizeByColumns($tableNode);
         $productId = (int) $this->getSharedStorage()->get($productReference);
-        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups($productId, false));
+        $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
+            $productId,
+            ShopConstraint::shop($this->getDefaultShopId()),
+            false
+        ));
 
         $this->assertAttributeGroups($attributeGroupsData, $attributeGroups);
     }
@@ -102,10 +110,11 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $productReference
      */
-    public function assertNoProductAttributes(string $productReference): void
+    public function assertNoProductAttributesForDefaultShop(string $productReference): void
     {
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
             (int) $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->getDefaultShopId()),
             false
         ));
 
@@ -118,10 +127,13 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      * @param TableNode $tableNode
      * @param string $attributeGroupReference
      */
-    public function assertAttributeInAllGroups(TableNode $tableNode, string $attributeGroupReference): void
+    public function assertAttributeInAllGroupsForDefaultShop(TableNode $tableNode, string $attributeGroupReference): void
     {
         $attributesData = $this->localizeByColumns($tableNode);
-        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(true));
+        $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(
+            ShopConstraint::shop($this->getDefaultShopId()),
+            true
+        ));
 
         $this->assertAttributesInGroup($attributesData, $attributeGroups, $attributeGroupReference);
     }
@@ -133,11 +145,12 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      * @param string $productReference
      * @param string $attributeGroupReference
      */
-    public function assertAttributeInProductGroups(TableNode $tableNode, string $productReference, string $attributeGroupReference): void
+    public function assertAttributeInProductGroupsForDefaultShop(TableNode $tableNode, string $productReference, string $attributeGroupReference): void
     {
         $attributesData = $this->localizeByColumns($tableNode);
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
             (int) $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->getDefaultShopId()),
             true
         ));
 
