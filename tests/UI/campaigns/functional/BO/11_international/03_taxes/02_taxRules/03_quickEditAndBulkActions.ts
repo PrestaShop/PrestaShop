@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
+import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data

@@ -14,7 +14,7 @@ import boProductsPage from '@pages/BO/catalog/products/index';
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
+import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import ordersPage from '@pages/BO/orders';
 import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
