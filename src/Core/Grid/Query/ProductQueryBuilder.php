@@ -326,7 +326,13 @@ class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         } elseif ($filteredShopGroupId) {
             // Group shop context, we add a condition on the left join that the id_shop must be part of the group shop AND be associated with the product
             // And we only select the MIN because we only need the first id_shop which will be used as the default display thus we don't need to use a group by on id_product
-            $groupSubQuery = 'SELECT MIN(s2.id_shop) FROM ' . $this->dbPrefix . 'shop s2 INNER JOIN ' . $this->dbPrefix . 'product_shop ps2 ON ps2.id_shop = s2.id_shop AND ps2.id_product = ps.id_product WHERE s2.id_shop_group = :filteredShopGroupId';
+            $groupSubQuery = '
+                SELECT MIN(s2.id_shop)
+                FROM ' . $this->dbPrefix . 'shop s2
+                INNER JOIN ' . $this->dbPrefix . 'product_shop ps2
+                ON ps2.id_shop = s2.id_shop
+                WHERE s2.id_shop_group = :filteredShopGroupId
+                AND ps2.id_product = ps.id_product';
 
             return $sql . ' AND ' . $tableAlias . '.`id_shop` IN (' . $groupSubQuery . ')';
         }
