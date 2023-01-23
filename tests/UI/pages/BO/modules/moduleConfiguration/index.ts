@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Module configuration page, contains selectors and functions for the page.
@@ -7,7 +8,9 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @class
  * @extends BOBasePage
  */
-class ModuleConfiguration extends BOBasePage {
+export default class ModuleConfiguration extends BOBasePage {
+  private readonly pageHeadSubtitle: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on module configuration page
@@ -25,9 +28,9 @@ class ModuleConfiguration extends BOBasePage {
    * Get module name from page title
    * @return {Promise<string>}
    */
-  getPageSubtitle(page) {
+  getPageSubtitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageHeadSubtitle);
   }
 }
 
-module.exports = new ModuleConfiguration();
+module.exports = ModuleConfiguration;

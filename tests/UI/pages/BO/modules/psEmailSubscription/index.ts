@@ -1,12 +1,25 @@
-require('module-alias/register');
-const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
+import ModuleConfiguration from '@pages/BO/modules/moduleConfiguration';
+
+import type {Page} from 'playwright';
 
 /**
  * Module configuration page for module : ps_email_subscription, contains selectors and functions for the page
  * @class
  * @extends ModuleConfiguration
  */
-class PsEmailSubscription extends ModuleConfiguration.constructor {
+class PsEmailSubscription extends ModuleConfiguration {
+  private readonly newsletterTable: string;
+
+  private readonly newsletterTableBody: string;
+
+  private readonly newsletterTableRows: string;
+
+  private readonly newsletterTableRow: (row: number) => string;
+
+  private readonly newsletterTableEmptyColumn: string;
+
+  private readonly newsletterTableEmailColumn: (row: number) => string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on ps email subscription page
@@ -18,9 +31,9 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
     this.newsletterTable = '#table-merged';
     this.newsletterTableBody = `${this.newsletterTable} tbody`;
     this.newsletterTableRows = `${this.newsletterTableBody} tr`;
-    this.newsletterTableRow = (row) => `${this.newsletterTableRows}:nth-child(${row})`;
+    this.newsletterTableRow = (row: number) => `${this.newsletterTableRows}:nth-child(${row})`;
     this.newsletterTableEmptyColumn = `${this.newsletterTableRows} td.list-empty`;
-    this.newsletterTableEmailColumn = (row) => `${this.newsletterTableRow(row)} td:nth-child(5)`;
+    this.newsletterTableEmailColumn = (row: number) => `${this.newsletterTableRow(row)} td:nth-child(5)`;
   }
 
   /* Methods */
@@ -30,7 +43,7 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfNewsletterRegistration(page) {
+  async getNumberOfNewsletterRegistration(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.newsletterTableEmptyColumn, 1000)) {
       return 0;
     }
@@ -43,9 +56,9 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
    * @param page {Page} Browser tab
    * @return {Promise<Array<string>>}
    */
-  async getListOfNewsletterRegistrationEmails(page) {
-    const emails = [];
-    const numberOfEmails = await this.getNumberOfNewsletterRegistration(page);
+  async getListOfNewsletterRegistrationEmails(page: Page): Promise<string[]> {
+    const emails: string[] = [];
+    const numberOfEmails: number = await this.getNumberOfNewsletterRegistration(page);
 
     // Get email from each row
     for (let row = 1; row <= numberOfEmails; row++) {
@@ -56,4 +69,4 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
   }
 }
 
-module.exports = new PsEmailSubscription();
+export default new PsEmailSubscription();
