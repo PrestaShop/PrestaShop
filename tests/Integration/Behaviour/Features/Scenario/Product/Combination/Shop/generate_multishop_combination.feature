@@ -25,6 +25,14 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
     And I enable multishop feature
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And I associate attribute group "Size" with shops "shop1,shop2"
+    And I associate attribute group "Color" with shops "shop1,shop2"
+    And I associate attribute "S" with shops "shop1,shop2"
+    And I associate attribute "M" with shops "shop1,shop2"
+    And I associate attribute "L" with shops "shop1,shop2"
+    And I associate attribute "White" with shops "shop1,shop2"
+    And I associate attribute "Black" with shops "shop1,shop2"
+    And I associate attribute "Blue" with shops "shop1,shop2"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
@@ -287,3 +295,55 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | Color | [White,Black] |
     And all combinations of product "product1" for shops "shop2" should have the stock policy to "not_available"
     And all combinations of product "product1" for shops "shop1" should have the stock policy to "not_available"
+
+  Scenario: I cannot generate combinations for all shops when not all selected attributes are present in all shops
+    Given I add product "product2" to shop "shop3" with following information:
+      | name[en-US] | universal T-shirt2 |
+      | type        | combinations       |
+    And I associate attribute group "Size" with shops "shop3,shop4"
+    And I associate attribute "S" with shops "shop3"
+    But attribute "S" is not associated to shops "shop4"
+    And I associate attribute "M" with shops "shop3,shop4"
+    And I copy product "product2" from shop "shop3" to shop "shop4"
+    And product "product2" should have no combinations for shops "shop3,shop4"
+    # Generate when attribute is missing in another shop
+    When I generate combinations for product "product2" in all shops using following attributes:
+      | Size | [S,M] |
+    Then I should get error that it is not allowed to generate combinations when not all attributes are present in all shops
+    And I associate attribute "S" with shops "shop3,shop4"
+    When I generate combinations for product "product2" in all shops using following attributes:
+      | Size | [S,M] |
+    Then product "product2" should have the following combinations for shops "shop3,shop4":
+      | id reference | combination name | reference | attributes | impact on price | quantity | is default |
+      | product2S    | Size - S         |           | [Size:S]   | 0               | 0        | true       |
+      | product2M    | Size - M         |           | [Size:M]   | 0               | 0        | false      |
+    And I associate attribute group "Color" with shops "shop4"
+    But attribute group "Color" is not associated to shops "shop3"
+    # generate when attribute group is missing in another shop
+    When I generate combinations for product "product2" in all shops using following attributes:
+      | Size  | [S,M]   |
+      | Color | [White] |
+    Then I should get error that it is not allowed to generate combinations when not all attributes are present in all shops
+    When I associate attribute "L" with shops "shop3,shop4"
+    # make sure that missing attribute ("White") doesn't break generation when it is not selected for generation
+    And I generate combinations for product "product2" in all shops using following attributes:
+      | Size | [L] |
+    Then product "product2" should have the following combinations for shops "shop3,shop4":
+      | id reference | combination name | reference | attributes | impact on price | quantity | is default |
+      | product2S    | Size - S         |           | [Size:S]   | 0               | 0        | true       |
+      | product2M    | Size - M         |           | [Size:M]   | 0               | 0        | false      |
+      | product2L    | Size - L         |           | [Size:L]   | 0               | 0        | false      |
+    When I associate attribute group "Color" with shops "shop3,shop4"
+    And I associate attribute "White" with shops "shop3,shop4"
+    # generate when attribute groups and attributes are assocaited to all shops
+    And I generate combinations for product "product2" in all shops using following attributes:
+      | Size  | [S,M,L] |
+      | Color | [White] |
+    Then product "product2" should have the following combinations for shops "shop3,shop4":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product2S      | Size - S                |           | [Size:S]             | 0               | 0        | true       |
+      | product2M      | Size - M                |           | [Size:M]             | 0               | 0        | false      |
+      | product2L      | Size - L                |           | [Size:L]             | 0               | 0        | false      |
+      | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product2LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | false      |
