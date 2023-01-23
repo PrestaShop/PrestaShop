@@ -741,13 +741,27 @@ class AdminImagesControllerCore extends AdminController
                     $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
 
-                foreach ($imageConfiguredFormats as $imageFormat) {
-                    if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat)) {
-                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat, (int) $image_type['width'], (int) $image_type['height'])) {
+                if ($this->isMultipleImageFormatFeatureEnabled) {
+                    foreach ($imageConfiguredFormats as $imageFormat) {
+                        if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat)) {
+                            if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat, (int) $image_type['width'], (int) $image_type['height'])) {
+                                $errors = true;
+                            }
+                            if ($generate_high_dpi_images && !ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat, (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                                $errors = true;
+                            }
+                        }
+                    }
+                } else {
+                    if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
+                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
                             $errors = true;
                         }
-                        if ($generate_high_dpi_images && !ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat, (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
-                            $errors = true;
+
+                        if ($generate_high_dpi_images) {
+                            if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                                $errors = true;
+                            }
                         }
                     }
                 }

@@ -30,7 +30,9 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -55,10 +57,16 @@ class LogoUploader
      */
     private $imageFormatConfiguration;
 
-    public function __construct(Shop $shop, ImageFormatConfigurationInterface $imageFormatConfiguration)
+    /**
+     * @var bool
+     */
+    private $isMultipleImageFeatureEnabled;
+
+    public function __construct(Shop $shop, ImageFormatConfigurationInterface $imageFormatConfiguration, FeatureFlagRepository $featureFlagRepository)
     {
         $this->shop = $shop;
         $this->imageFormatConfiguration = $imageFormatConfiguration;
+        $this->isMultipleImageFeatureEnabled = $featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
     }
 
     public function updateHeader()
@@ -135,6 +143,8 @@ class LogoUploader
                     if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
+                } elseif (!$this->isMultipleImageFeatureEnabled && !ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                    throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 } else {
                     foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
                         $logoName = $this->getLogoName($logoPrefix, '.' . $imageFormat);
