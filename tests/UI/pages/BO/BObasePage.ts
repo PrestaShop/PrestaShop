@@ -19,7 +19,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly accessDeniedMessage: string;
 
-  private readonly pageNotFoundMessage: string;
+  public readonly pageNotFoundMessage: string;
 
   private readonly userProfileIconNonMigratedPages: string;
 
@@ -215,7 +215,7 @@ export default class BOBasePage extends CommonPage {
 
   protected alertSuccessBlockParagraph: string;
 
-  private readonly alertDangerBlockParagraph: string;
+  protected alertDangerBlockParagraph: string;
 
   private readonly alertInfoBlockParagraph: string;
 
