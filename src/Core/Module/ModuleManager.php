@@ -110,7 +110,11 @@ class ModuleManager implements ModuleManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         $installed = $module->onInstall();
-        $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        if ($installed) {
+            // Only trigger install event if install has succeeded otherwise it could automatically add tabs linked to a
+            // module not installed (@see ModuleTabManagementSubscriber) or other unwanted automatic actions.
+            $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+        }
 
         return $installed;
     }
