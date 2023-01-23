@@ -117,7 +117,7 @@ class AuthorizationServerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should get error that authorized application with this name already exist
+     * @Then I should get error that authorized application with this name already exists
      */
     public function assertAuthorizedApplicationAlreadyExistError(): void
     {
