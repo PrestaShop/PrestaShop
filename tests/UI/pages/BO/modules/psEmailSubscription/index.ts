@@ -1,4 +1,4 @@
-import ModuleConfiguration from '@pages/BO/modules/moduleConfiguration';
+import {ModuleConfiguration} from '@pages/BO/modules/moduleConfiguration';
 
 import type {Page} from 'playwright';
 

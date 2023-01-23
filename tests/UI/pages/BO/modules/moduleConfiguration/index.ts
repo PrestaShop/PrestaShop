@@ -8,7 +8,7 @@ import type {Page} from 'playwright';
  * @class
  * @extends BOBasePage
  */
-export default class ModuleConfiguration extends BOBasePage {
+class ModuleConfiguration extends BOBasePage {
   private readonly pageHeadSubtitle: string;
 
   /**
@@ -33,4 +33,5 @@ export default class ModuleConfiguration extends BOBasePage {
   }
 }
 
-module.exports = ModuleConfiguration;
+const moduleConfigurationPage = new ModuleConfiguration();
+export {moduleConfigurationPage, ModuleConfiguration};
