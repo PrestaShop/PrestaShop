@@ -24,6 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 /**
  * @deprecated deprecated since version 8.1, will be dropped in 9.0
  */
@@ -88,10 +92,20 @@ class QqUploadedFileFormCore
         } elseif (!ImageManager::resize($tmpName, $new_path . '.' . $image->image_format)) {
             return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying the image.', [], 'Admin.Notifications.Error')];
         } elseif ($method == 'auto') {
+            $container = SymfonyContainer::getInstance();
+            $isMultipleImageFormatFeatureEnabled = $container->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
             $imagesTypes = ImageType::getImagesTypes('products');
             foreach ($imagesTypes as $imageType) {
                 if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                     return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
+                }
+                if ($isMultipleImageFormatFeatureEnabled) {
+                    $imageFormatList = $container->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration')->getGenerationFormats();
+                    foreach ($imageFormatList as $imageFormat) {
+                        if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, $imageType['width'], $imageType['height'], $imageFormat)) {
+                            return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
+                        }
+                    }
                 }
             }
         }
