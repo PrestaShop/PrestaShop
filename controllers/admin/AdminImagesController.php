@@ -732,6 +732,7 @@ class AdminImagesControllerCore extends AdminController
     {
         $errors = false;
         $generate_high_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
+        $imageConfiguredFormats = $this->imageFormatConfiguration->getGenerationFormats();
 
         foreach ($type as $image_type) {
             foreach ($languages as $language) {
@@ -739,13 +740,13 @@ class AdminImagesControllerCore extends AdminController
                 if (!file_exists($file)) {
                     $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
-                if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
-                    if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
-                        $errors = true;
-                    }
 
-                    if ($generate_high_dpi_images) {
-                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.jpg', (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
+                foreach ($imageConfiguredFormats as $imageFormat) {
+                    if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat)) {
+                        if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.' . $imageFormat, (int) $image_type['width'], (int) $image_type['height'])) {
+                            $errors = true;
+                        }
+                        if ($generate_high_dpi_images && !ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '2x.' . $imageFormat, (int) $image_type['width'] * 2, (int) $image_type['height'] * 2)) {
                             $errors = true;
                         }
                     }
