@@ -13,7 +13,7 @@ export default class BOBasePage extends CommonPage {
 
   public successfulUpdateMessage: string;
 
-  public readonly successfulDeleteMessage: string;
+  public successfulDeleteMessage: string;
 
   public readonly successfulMultiDeleteMessage: string;
 
