@@ -30,6 +30,7 @@ use Configuration;
 use Context;
 use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfigurationInterface;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -49,9 +50,15 @@ class LogoUploader
      */
     private $errors = [];
 
-    public function __construct(Shop $shop)
+    /**
+     * @var ImageFormatConfigurationInterface
+     */
+    private $imageFormatConfiguration;
+
+    public function __construct(Shop $shop, ImageFormatConfigurationInterface $imageFormatConfiguration)
     {
         $this->shop = $shop;
+        $this->imageFormatConfiguration = $imageFormatConfiguration;
     }
 
     public function updateHeader()
@@ -128,8 +135,13 @@ class LogoUploader
                     if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
                         throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                     }
-                } elseif (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
-                    throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                } else {
+                    foreach ($this->imageFormatConfiguration->getGenerationFormats() as $imageFormat) {
+                        $logoName = $this->getLogoName($logoPrefix, '.' . $imageFormat);
+                        if (!ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName, null, null, $imageFormat, true)) {
+                            throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                        }
+                    }
                 }
             }
 
