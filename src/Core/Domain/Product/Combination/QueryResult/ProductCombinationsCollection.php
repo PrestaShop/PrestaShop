@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
 
-class ProductCombinationsResult
+class ProductCombinationsCollection
 {
     /**
      * @var ProductCombination[]

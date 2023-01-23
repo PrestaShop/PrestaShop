@@ -26,12 +26,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context;
 
 use Language;
 use PHPUnit\Framework\Assert;
 use ProductAttribute;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
 {

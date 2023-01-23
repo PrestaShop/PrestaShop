@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -179,8 +179,8 @@ class CombinationController extends FrameworkBundleAdminController
         $searchPhrase = $request->query->get('q', '');
         $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
 
-        /** @var ProductCombinationsResult $results */
-        $results = $this->getQueryBus()->handle(new SearchProductCombinations(
+        /** @var ProductCombinationsCollection $productCombinationsCollection */
+        $productCombinationsCollection = $this->getQueryBus()->handle(new SearchProductCombinations(
             $productId,
             $languageId ?: $this->getContextLangId(),
             $shopConstraint,
@@ -188,7 +188,7 @@ class CombinationController extends FrameworkBundleAdminController
             $request->query->getInt('limit', SearchProductCombinations::DEFAULT_RESULTS_LIMIT)
         ));
 
-        return $this->json(['combinations' => $results->getProductCombinations()]);
+        return $this->json(['combinations' => $productCombinationsCollection->getProductCombinations()]);
     }
 
     /**

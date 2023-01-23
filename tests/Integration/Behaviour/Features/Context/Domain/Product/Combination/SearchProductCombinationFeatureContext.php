@@ -32,7 +32,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombination;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureContext
@@ -45,11 +45,11 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      * @param string $langIso
      * @param string $shopReference
      * @param int $limit
-     * @param ProductCombinationsResult $expectedResults
-     *
-     * @see transformProductCombinationsResult for $expectedResults type transformation
+     * @param ProductCombinationsCollection $expectedResults
      *
      * @return void
+     *
+     *@see transformProductCombinationsResult for $expectedResults type transformation
      */
     public function searchProductCombinationsForShop(
         string $productReference,
@@ -57,7 +57,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
         string $langIso,
         string $shopReference,
         int $limit,
-        ProductCombinationsResult $expectedResults
+        ProductCombinationsCollection $expectedResults
     ): void {
         $this->searchProductCombinations(
             $productReference,
@@ -76,18 +76,18 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      * @param string $searchPhrase
      * @param string $langIso
      * @param int $limit
-     * @param ProductCombinationsResult $expectedResults
-     *
-     * @see transformProductCombinationsResult for $expectedResults type transformation
+     * @param ProductCombinationsCollection $expectedResults
      *
      * @return void
+     *
+     *@see transformProductCombinationsResult for $expectedResults type transformation
      */
     public function searchProductCombinationsForAllShops(
         string $productReference,
         string $searchPhrase,
         string $langIso,
         int $limit,
-        ProductCombinationsResult $expectedResults
+        ProductCombinationsCollection $expectedResults
     ): void {
         $this->searchProductCombinations(
             $productReference,
@@ -102,9 +102,9 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
     /**
      * @Transform table:id reference,combination name
      *
-     * @return ProductCombinationsResult
+     * @return ProductCombinationsCollection
      */
-    public function transformProductCombinationsResult(TableNode $tableNode): ProductCombinationsResult
+    public function transformProductCombinationsResult(TableNode $tableNode): ProductCombinationsCollection
     {
         $rows = $tableNode->getHash();
 
@@ -116,7 +116,7 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
             );
         }
 
-        return new ProductCombinationsResult($productCombinations);
+        return new ProductCombinationsCollection($productCombinations);
     }
 
     /**
@@ -125,11 +125,11 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
      * @param string $langIso
      * @param ShopConstraint $shopConstraint
      * @param int $limit
-     * @param ProductCombinationsResult $expectedResults
-     *
-     * @see transformProductCombinationsResult for $expectedResults type transformation
+     * @param ProductCombinationsCollection $expectedResults
      *
      * @return void
+     *
+     *@see transformProductCombinationsResult for $expectedResults type transformation
      */
     private function searchProductCombinations(
         string $productReference,
@@ -137,9 +137,9 @@ class SearchProductCombinationFeatureContext extends AbstractCombinationFeatureC
         string $langIso,
         ShopConstraint $shopConstraint,
         int $limit,
-        ProductCombinationsResult $expectedResults
+        ProductCombinationsCollection $expectedResults
     ): void {
-        /** @var ProductCombinationsResult $productCombinationsResults */
+        /** @var ProductCombinationsCollection $productCombinationsResults */
         $productCombinationsResults = $this->getQueryBus()->handle(new SearchProductCombinations(
             $this->getSharedStorage()->get($productReference),
             (int) Language::getIdByIso($langIso),

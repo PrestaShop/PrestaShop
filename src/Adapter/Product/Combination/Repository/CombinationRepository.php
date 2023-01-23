@@ -738,7 +738,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         ?int $limit
     ): array {
         if ($shopConstraint->getShopGroupId()) {
-            throw new CombinationException('Group shop constraint not supported');
+            throw new InvalidShopConstraintException('Group shop constraint is not supported');
         }
 
         $attributeIds = $this->searchAttributes($languageId, $shopConstraint, $searchPhrase);
@@ -799,7 +799,7 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     private function searchAttributes(LanguageId $languageId, ShopConstraint $shopConstraint, string $searchPhrase): array
     {
         if ($shopConstraint->getShopGroupId()) {
-            throw new CombinationException('Shop group constraint is not supported');
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
         }
 
         $qb = $this->connection->createQueryBuilder();

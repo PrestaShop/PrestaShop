@@ -257,7 +257,8 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureContext
         meta:
@@ -335,8 +336,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
         # This is a special suite only for product stock movement, it avoids adding other contexts (Order, Cart, ...) in the product suite which
@@ -357,8 +359,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\EmailConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CartFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
@@ -406,8 +409,9 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ShopFeatureContext
         search_engine:
             paths:
@@ -443,7 +447,8 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttachmentFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CarrierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext

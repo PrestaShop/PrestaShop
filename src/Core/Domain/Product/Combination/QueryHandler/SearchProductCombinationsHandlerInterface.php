@@ -27,14 +27,14 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsResult;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsCollection;
 
 interface SearchProductCombinationsHandlerInterface
 {
     /**
      * @param SearchProductCombinations $query
      *
-     * @return ProductCombinationsResult
+     * @return ProductCombinationsCollection
      */
-    public function handle(SearchProductCombinations $query): ProductCombinationsResult;
+    public function handle(SearchProductCombinations $query): ProductCombinationsCollection;
 }
