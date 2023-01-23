@@ -458,7 +458,7 @@ class CartControllerCore extends FrontController
         if (!$this->id_product_attribute) {
             if ($qty_to_check < $product->minimal_quantity) {
                 $this->errors[] = $this->translateProductNameWithAttributes(
-                    'The minimum purchase order quantity for the product [1]%product%[/1] is [1]%quantity%[/1].',
+                    'Select a minimum quantity of [1]%quantity%[/1] for the product [1]%product%[/1].',
                     $product->name,
                     null,
                     $product->minimal_quantity
@@ -470,7 +470,7 @@ class CartControllerCore extends FrontController
             $combination = new Combination($this->id_product_attribute);
             if ($qty_to_check < $combination->minimal_quantity) {
                 $this->errors[] = $this->translateProductNameWithAttributes(
-                    'The minimum purchase order quantity for the product [1]%product%[/1] is [1]%quantity%[/1].',
+                    'Select a minimum quantity of [1]%quantity%[/1] for the product [1]%product%[/1].',
                     $product->name,
                     $productAttributes,
                     $combination->minimal_quantity
@@ -649,7 +649,7 @@ class CartControllerCore extends FrontController
             if ((int) $product['quantity_available'] > 1 || (int) $product['quantity_available'] == 0) {
                 $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
             } elseif ((int) $product['quantity_available'] == 1) {
-                $sentence = 'There's only [1]%quantity%[/1] item of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
+                $sentence = 'There\'s only [1]%quantity%[/1] item of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
             } else {
                 $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Adjust the quantity in your cart to proceed with your order.';
             }
@@ -680,7 +680,7 @@ class CartControllerCore extends FrontController
             if ($product['minimal_quantity'] > $product['cart_quantity']) {
                 // display minimal quantity warning error message
                 $this->errors[] = $this->translateProductNameWithAttributes(
-                    'The minimum order quantity for the product [1]%product%[/1] is [1]%quantity%[/1].',
+                    'Select a minimum quantity of [1]%quantity%[/1] for the product [1]%product%[/1].',
                     $product['name'],
                     $product['attributes'],
                     $product['minimal_quantity']
