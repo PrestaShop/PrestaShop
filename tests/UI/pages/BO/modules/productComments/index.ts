@@ -1,12 +1,35 @@
-require('module-alias/register');
-const ModuleConfiguration = require('@pages/BO/modules/moduleConfiguration');
+import ModuleConfiguration from '@pages/BO/modules/moduleConfiguration';
+
+import type {Page} from 'playwright';
 
 /**
  * Module configuration page for module : Product comments, contains selectors and functions for the page
  * @class
  * @extends ModuleConfiguration
  */
-class ProductComments extends ModuleConfiguration.constructor {
+class ProductComments extends ModuleConfiguration {
+  private readonly reviewsTable: (table: string) => string;
+
+  private readonly reviewsTableBody: (table: string) => string;
+
+  private readonly reviewsTableRows: (table: string) => string;
+
+  private readonly reviewsTableRow: (table: string, row: number) => string;
+
+  private readonly reviewsTableColumn: (table: string, row: number, column: string) => string;
+
+  private readonly reviewsTableEmptyRows: (table: string) => string;
+
+  private readonly deleteReviewButton: (table: string, row: number) => string;
+
+  private readonly toggleDropdownButton: (table: string, row: number) => string;
+
+  private readonly approveWaitingReviewButton: (table: string, row: number) => string;
+
+  private readonly confirmNotAbusiveReviewButton: (table: string, row: number) => string;
+
+  private readonly confirmReviewDeletionButton: string;
+
   /**
    * @constructs
    * Setting selectors to use on product comments module configuration  page
@@ -16,20 +39,20 @@ class ProductComments extends ModuleConfiguration.constructor {
 
     // Selectors
     // Table Selectors
-    this.reviewsTable = (table) => `#table-${table}-productcomments-list`;
-    this.reviewsTableBody = (table) => `${this.reviewsTable(table)} tbody`;
-    this.reviewsTableRows = (table) => `${this.reviewsTableBody(table)} tr`;
-    this.reviewsTableRow = (table, row) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
-    this.reviewsTableColumn = (table, row, column) => `${this.reviewsTableRow(table, row)}`
+    this.reviewsTable = (table: string) => `#table-${table}-productcomments-list`;
+    this.reviewsTableBody = (table: string) => `${this.reviewsTable(table)} tbody`;
+    this.reviewsTableRows = (table: string) => `${this.reviewsTableBody(table)} tr`;
+    this.reviewsTableRow = (table: string, row: number) => `${this.reviewsTableRows(table)}:nth-child(${row})`;
+    this.reviewsTableColumn = (table: string, row: number, column: string) => `${this.reviewsTableRow(table, row)}`
       + ` td.product-comment-${column}`;
-    this.reviewsTableEmptyRows = (table) => `${this.reviewsTableRows(table)} td.list-empty`;
+    this.reviewsTableEmptyRows = (table: string) => `${this.reviewsTableRows(table)} td.list-empty`;
     // Buttons Selectors
-    this.deleteReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
-    this.toggleDropdownButton = (table, row) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
+    this.deleteReviewButton = (table: string, row: number) => `${this.reviewsTableRow(table, row)} .btn-group [title='Delete']`;
+    this.toggleDropdownButton = (table: string, row: number) => `${this.reviewsTableRow(table, row)} button.dropdown-toggle`;
     // "Waiting for approval" buttons selectors
-    this.approveWaitingReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} a.btn-success`;
+    this.approveWaitingReviewButton = (table: string, row: number) => `${this.reviewsTableRow(table, row)} a.btn-success`;
     // "Reported reviews" buttons selectors
-    this.confirmNotAbusiveReviewButton = (table, row) => `${this.reviewsTableRow(table, row)} .dropdown-toggle a`;
+    this.confirmNotAbusiveReviewButton = (table: string, row: number) => `${this.reviewsTableRow(table, row)} .dropdown-toggle a`;
     // Delete review confirmation modal selectors
     this.confirmReviewDeletionButton = '#popup_ok';
   }
@@ -42,7 +65,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param table {String} The review table (3 options available: 'waiting-approval', 'reported', 'approved')
    * @returns {Promise<number>}
    */
-  async getTableReviewCount(page, table) {
+  async getTableReviewCount(page: Page, table: string): Promise<number> {
     if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
       return 0;
     }
@@ -56,7 +79,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getWaitingApprovalReviewCount(page) {
+  getWaitingApprovalReviewCount(page: Page): Promise<number> {
     return this.getTableReviewCount(page, 'waiting-approval');
   }
 
@@ -65,7 +88,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getReportedReviewCount(page) {
+  getReportedReviewCount(page: Page): Promise<number> {
     return this.getTableReviewCount(page, 'reported');
   }
 
@@ -74,7 +97,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getApprovedReviewCount(page) {
+  getApprovedReviewCount(page: Page): Promise<number> {
     return this.getTableReviewCount(page, 'approved');
   }
 
@@ -85,7 +108,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param row {number} The review row
    * @returns {Promise<void>}
    */
-  async openProductReviewDropdown(page, table, row = 1) {
+  async openProductReviewDropdown(page: Page, table: string, row: number = 1): Promise<void> {
     await this.waitForVisibleSelector(page, this.toggleDropdownButton(table, row));
     await page.click(this.toggleDropdownButton(table, row));
   }
@@ -98,7 +121,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
    * product: string, date: string}>}
    */
-  async getReviewDataFromTable(page, table, row = 1) {
+  async getReviewDataFromTable(page: Page, table: string, row: number = 1) {
     return {
       id: await this.getTextContent(page, this.reviewsTableColumn(table, row, 'id')),
       title: await this.getTextContent(page, this.reviewsTableColumn(table, row, 'title')),
@@ -116,7 +139,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
    * product: string, date: string}>}
    */
-  getReviewDataFromWaitingApprovalTable(page) {
+  getReviewDataFromWaitingApprovalTable(page: Page) {
     return this.getReviewDataFromTable(page, 'waiting-approval');
   }
 
@@ -126,7 +149,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
    * product: string, date: string}>}
    */
-  getReviewDataFromReportedReviewTable(page) {
+  getReviewDataFromReportedReviewTable(page: Page) {
     return this.getReviewDataFromTable(page, 'reported');
   }
 
@@ -136,7 +159,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<{id: string, title: string, content: string, rating: string, author: string,
    * product: string, date: string}>}
    */
-  getReviewDataFromApprovedReviewTable(page) {
+  getReviewDataFromApprovedReviewTable(page: Page) {
     return this.getReviewDataFromTable(page, 'approved');
   }
 
@@ -146,7 +169,7 @@ class ProductComments extends ModuleConfiguration.constructor {
   * @param row {number} The review row
   * @returns {Promise<void>}
   */
-  async approveReview(page, row = 1) {
+  async approveReview(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.approveWaitingReviewButton('waiting-approval', row));
   }
 
@@ -157,7 +180,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param row {number} The review row
    * @returns {Promise<void>}
    */
-  async deleteReview(page, table, row = 1) {
+  async deleteReview(page: Page, table: string, row: number = 1): Promise<void> {
     await page.click(this.deleteReviewButton(table, row));
     await this.clickAndWaitForNavigation(page, this.confirmReviewDeletionButton);
   }
@@ -168,7 +191,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param row {number} The review row
    * @returns {Promise<void>}
    */
-  async deleteWaitingApprovalReview(page, row = 1) {
+  async deleteWaitingApprovalReview(page: Page, row: number = 1): Promise<void> {
     // Need to open dropdown before delete
     await this.openProductReviewDropdown(page, 'waiting-approval', row);
     await this.deleteReview(page, 'waiting-approval', row);
@@ -180,7 +203,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param row {number} The review row
    * @returns {Promise<void>}
    */
-  async deleteReportedReview(page, row = 1) {
+  async deleteReportedReview(page: Page, row: number = 1): Promise<void> {
     await this.deleteReview(page, 'reported', row);
   }
 
@@ -190,21 +213,22 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @param row {number} The review row
    * @returns {Promise<void>}
    */
-  async deleteApprovedReview(page, row = 1) {
+  async deleteApprovedReview(page: Page, row: number = 1): Promise<void> {
     await this.deleteReview(page, 'approved', row);
   }
 
   /**
   * Confirm a review in the "reported review" table
   * @param page {Page} Browser tab
+  * @param table {string} The review table
   * @param row {number} The review row
   * @returns {Promise<void>}
   */
-  async confirmNotAbusiveReview(page, row = 1) {
+  async confirmNotAbusiveReview(page: Page, table: string, row: number = 1): Promise<void> {
     await this.openProductReviewDropdown(page, 'reported', row);
-    await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(row));
-    await page.click(this.confirmNotAbusiveReviewButton(row));
+    await this.waitForVisibleSelector(page, this.confirmNotAbusiveReviewButton(table, row));
+    await page.click(this.confirmNotAbusiveReviewButton(table, row));
   }
 }
 
-module.exports = new ProductComments();
+export default new ProductComments();
