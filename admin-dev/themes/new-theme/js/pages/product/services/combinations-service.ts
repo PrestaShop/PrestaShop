@@ -43,11 +43,15 @@ export default class CombinationsService {
     this.orderWay = null;
   }
 
-  deleteCombination(combinationId: number): JQuery.jqXHR<any> {
+  deleteCombination(combinationId: number, shopId: number|null): JQuery.jqXHR<any> {
+    const routeParams:Record<string, unknown> = {combinationId};
+
+    if (shopId !== null) {
+      routeParams.shopId = shopId;
+    }
+
     return $.ajax({
-      url: this.router.generate('admin_products_combinations_delete_combination', {
-        combinationId,
-      }),
+      url: this.router.generate('admin_products_combinations_delete_combination', routeParams),
       type: 'DELETE',
     });
   }
@@ -55,16 +59,19 @@ export default class CombinationsService {
   bulkDeleteCombinations(
     productId: number,
     combinationIds: number[],
-    allShops: boolean,
+    shopId: number|null,
     abortSignal: AbortSignal,
   ): Promise<Response> {
     const formData = new FormData();
+    const routeParams:Record<string, unknown> = {productId};
     formData.append('combinationIds', JSON.stringify(combinationIds));
-    formData.append('allShops', allShops ? '1' : '0');
+
+    if (shopId !== null) {
+      routeParams.shopId = shopId;
+    }
 
     return fetch(
-      this.router.generate('admin_products_combinations_bulk_delete', {productId}),
-      {
+      this.router.generate('admin_products_combinations_bulk_delete', routeParams), {
         method: 'POST',
         body: formData,
         signal: abortSignal,

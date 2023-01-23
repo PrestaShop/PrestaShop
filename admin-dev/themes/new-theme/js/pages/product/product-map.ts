@@ -123,6 +123,7 @@ export default {
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
+    deleteCombinationAllShopsSelector: '.delete-combination-all-shops',
     combinationName: 'form .combination-name-row .text-preview',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',

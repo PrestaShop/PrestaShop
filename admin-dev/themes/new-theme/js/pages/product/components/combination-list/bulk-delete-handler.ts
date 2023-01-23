@@ -126,13 +126,18 @@ export default class BulkDeleteHandler {
 
       const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
       let data: Record<string, any>;
+      let shopId = null;
+
+      if (bulkDeleteBtn.id !== CombinationMap.bulkDeleteBtnAllShopsId) {
+        shopId = <number> <unknown> bulkDeleteBtn.dataset.shopId;
+      }
 
       try {
         // eslint-disable-next-line no-await-in-loop
         const response: Response = await this.combinationsService.bulkDeleteCombinations(
           this.productId,
           chunkIds,
-          bulkDeleteBtn.id === CombinationMap.bulkDeleteBtnAllShopsId,
+          shopId,
           abortController.signal,
         );
 
