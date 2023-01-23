@@ -187,8 +187,6 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
 
     /**
      * @Then I should get error that it is not allowed to generate combinations when not all attributes are present in all shops
-     *
-     * @param string $fieldName
      */
     public function assertCannotGenerateCombinationError(): void
     {
