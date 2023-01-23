@@ -1,5 +1,8 @@
-require('module-alias/register');
-const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
+import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
+
+import type LanguageData from '@data/faker/language';
+
+import type {Page} from 'playwright';
 
 /**
  * Add language page, contains functions that can be used on the page
@@ -7,6 +10,30 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
  * @extends LocalizationBasePage
  */
 class AddLanguage extends LocalizationBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageEditTitle: string;
+
+  private readonly nameInput: string;
+
+  private readonly isoCodeInput: string;
+
+  private readonly languageCodeInput: string;
+
+  private readonly dateFormatInput: string;
+
+  private readonly fullDataFormatInput: string;
+
+  private readonly flagInput: string;
+
+  private readonly noPictureInput: string;
+
+  private readonly isRtlToggleInput: (toggle: number) => string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add language page
@@ -25,8 +52,8 @@ class AddLanguage extends LocalizationBasePage {
     this.fullDataFormatInput = '#language_full_date_format';
     this.flagInput = '#language_flag_image';
     this.noPictureInput = '#language_no_picture_image';
-    this.isRtlToggleInput = (toggle) => `#language_is_rtl_${toggle}`;
-    this.statusToggleInput = (toggle) => `#language_is_active_${toggle}`;
+    this.isRtlToggleInput = (toggle: number) => `#language_is_rtl_${toggle}`;
+    this.statusToggleInput = (toggle: number) => `#language_is_active_${toggle}`;
     this.saveButton = '#save-button';
   }
 
@@ -38,7 +65,7 @@ class AddLanguage extends LocalizationBasePage {
    * @param languageData {LanguageData} Data to set on add/edit language form
    * @return {Promise<string>}
    */
-  async createEditLanguage(page, languageData) {
+  async createEditLanguage(page: Page, languageData: LanguageData): Promise<string> {
     // Set input text
     await this.setValue(page, this.nameInput, languageData.name);
     await this.setValue(page, this.isoCodeInput, languageData.isoCode);
@@ -61,4 +88,4 @@ class AddLanguage extends LocalizationBasePage {
   }
 }
 
-module.exports = new AddLanguage();
+export default new AddLanguage();
