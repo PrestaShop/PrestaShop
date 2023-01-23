@@ -200,6 +200,7 @@ themes/default-bootstrap/modules/*/mails/*
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!var/class_stub.php.php
 !/var/modules
 /var/modules/*
 !/var/modules/.gitkeep
