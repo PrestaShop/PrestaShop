@@ -1,6 +1,3 @@
-
-
-
 <?php
 abstract class AbstractAssetManager extends AbstractAssetManagerCore {};
 abstract class AbstractCheckoutStep extends AbstractCheckoutStepCore {};
