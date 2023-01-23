@@ -93,4 +93,15 @@ class FeatureFlagCore extends ObjectModel
             ],
         ],
     ];
+
+    public static function isEnabled(string $name): bool
+    {
+        $query = sprintf(
+            "SELECT state FROM %sfeature_flag WHERE name = '%s'",
+            _DB_PREFIX_,
+            pSQL($name)
+        );
+
+        return (bool) Db::getInstance()->getValue($query);
+    }
 }

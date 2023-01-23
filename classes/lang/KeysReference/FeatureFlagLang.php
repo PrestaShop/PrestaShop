@@ -54,3 +54,6 @@ trans('Enable / Disable the migrated cart rules page.', 'Admin.Advparameters.Hel
 // Cart rules feature flag
 trans('Catalog price rules', 'Admin.Advparameters.Feature');
 trans('Enable / Disable the migrated catalog price rules page.', 'Admin.Advparameters.Help');
+
+// Multiple image formats feature flags
+trans('Enable / Disable having more than one image format (jpg, webp, avif, png...)', 'Admin.Advparameters.Feature');

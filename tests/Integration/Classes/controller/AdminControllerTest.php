@@ -38,12 +38,14 @@ use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
+use PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Shop;
 use Smarty;
@@ -288,6 +290,12 @@ class AdminControllerTest extends TestCase
                 if ($param === 'security.csrf.token_manager') {
                     return $this->getMockedCsrfTokenManager();
                 }
+                if ($param === 'PrestaShop\PrestaShop\Core\Image\AvifExtensionChecker') {
+                    return $this->getMockedAvifExtensionChecker();
+                }
+                if ($param === 'prestashop.core.admin.feature_flag.repository') {
+                    return $this->getMockedFeatureFlagRepository();
+                }
             });
 
         return $mockContainerBuilder;
@@ -355,6 +363,27 @@ class AdminControllerTest extends TestCase
         $mockMultistoreController->method('header')->withAnyParameters()->willReturn($mockResponse);
 
         return $mockMultistoreController;
+    }
+
+    private function getMockedAvifExtensionChecker(): AvifExtensionChecker
+    {
+        $mockAvifExtensionChecker = $this->getMockBuilder(AvifExtensionChecker::class)
+            ->getMock();
+
+        $mockAvifExtensionChecker->method('isAvailable')->willReturn(true);
+
+        return $mockAvifExtensionChecker;
+    }
+
+    private function getMockedFeatureFlagRepository(): FeatureFlagRepository
+    {
+        $mockFeatureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mockFeatureFlagRepository->method('isEnabled')->willReturn(false);
+
+        return $mockFeatureFlagRepository;
     }
 
     private function getMockNumberSpecification(): NumberSpecification

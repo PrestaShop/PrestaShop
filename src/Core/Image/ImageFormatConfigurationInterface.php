@@ -24,19 +24,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Image;
 
-namespace PrestaShop\PrestaShop\Core\FeatureFlag;
-
-class FeatureFlagSettings
+/**
+ * Interface ImageFormatConfigurationInterface.
+ */
+interface ImageFormatConfigurationInterface
 {
-    public const STABILITY_STABLE = 'stable';
-    public const STABILITY_BETA = 'beta';
+    /**
+     * Get a list of configured image generation formats
+     *
+     * @return array
+     */
+    public function getGenerationFormats(): array;
 
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+    /**
+     * Add a generation format to the list
+     *
+     * @param string $format ex: "jpg" or "png"
+     *
+     * @return void
+     */
+    public function addGenerationFormat(string $format): void;
 
-    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
+    /**
+     * Set several generation formats at once
+     *
+     * @param array $formatList ex: ['jpg', 'webp']
+     *
+     * @return void
+     */
+    public function setListOfGenerationFormats(array $formatList): void;
 
-    public const FEATURE_FLAG_AUTHORIZATION_SERVER = 'authorization_server';
-    public const FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT = 'multiple_image_format';
+    /**
+     * Check if a given format is configured
+     *
+     * @param string $format ex: "jpg" or "png"
+     *
+     * @return bool
+     */
+    public function isGenerationFormatSet(string $format): bool;
 }
