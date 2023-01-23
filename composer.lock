@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1cef2a84fa37f88d65400af5ea0ea01",
+    "content-hash": "431863b6b17b54ce7ca55a056373fab0",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2907,12 +2907,12 @@
             "version": "dev-3.4.6-patch",
             "source": {
                 "type": "git",
-                "url": "https://github.com/atomiix/jwt.git",
+                "url": "https://github.com/PrestaShop/jwt.git",
                 "reference": "da86a58c07f37a2fb59e648725910cc82d2a4975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atomiix/jwt/zipball/da86a58c07f37a2fb59e648725910cc82d2a4975",
+                "url": "https://api.github.com/repos/PrestaShop/jwt/zipball/da86a58c07f37a2fb59e648725910cc82d2a4975",
                 "reference": "da86a58c07f37a2fb59e648725910cc82d2a4975",
                 "shasum": ""
             },
@@ -2972,7 +2972,7 @@
                 "JWT"
             ],
             "support": {
-                "source": "https://github.com/atomiix/jwt/tree/3.4.6-patch"
+                "source": "https://github.com/PrestaShop/jwt/tree/3.4.6-patch"
             },
             "time": "2022-10-07T13:56:08+00:00"
         },
