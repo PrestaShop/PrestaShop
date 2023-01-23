@@ -20,13 +20,13 @@ import ordersPage from '@pages/BO/orders';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 
 // Import data
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CartRuleData from '@data/faker/cartRule';
 import CustomerData from '@data/faker/customer';
+import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import Products from '@data/demo/products';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -74,13 +74,17 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
-  const orderData: Order = {
+  const orderData: OrderData = new OrderData({
     customer: customerData,
-    productId: 4,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_5,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const productOutOfStockAllowed: ProductData = new ProductData({
     name: `Out of stock allowed ${prefixNewProduct}`,
     reference: 'd12345',

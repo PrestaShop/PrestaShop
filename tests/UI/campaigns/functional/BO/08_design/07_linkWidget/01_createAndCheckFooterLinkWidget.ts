@@ -14,8 +14,9 @@ import addLinkWidgetPage from '@pages/BO/design/linkWidgets/add';
 import foHomePage from '@pages/FO/home';
 
 // Import data
-import {LinkWidgets} from '@data/demo/linkWidgets';
-import {hooks} from '@data/demo/hooks';
+import LinkWidgets from '@data/demo/linkWidgets';
+import Hooks from '@data/demo/hooks';
+import {LinkWidgetPage} from '@data/types/linkWidget';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -63,7 +64,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
   it('should get link widget number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'getLinkWidgetNumber', baseContext);
 
-    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+    numberOfLinkWidgetInFooter = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
     await expect(numberOfLinkWidgetInFooter).to.be.above(0);
   });
 
@@ -83,7 +84,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
       const textResult = await addLinkWidgetPage.addLinkWidget(page, LinkWidgets.demo_1);
       await expect(textResult).to.equal(linkWidgetsPage.successfulCreationMessage);
 
-      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, hooks.displayFooter.name);
+      const numberOfLinkWidget = await linkWidgetsPage.getNumberOfElementInGrid(page, Hooks.displayFooter.name);
       await expect(numberOfLinkWidget).to.equal(numberOfLinkWidgetInFooter + 1);
     });
   });
@@ -112,7 +113,7 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.contentPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.productsPages),
         expect(linksTextContent).to.include.members(LinkWidgets.demo_1.staticPages),
-        expect(linksTextContent).to.include.members(LinkWidgets.demo_1.customPages.map((el) => el.name)),
+        expect(linksTextContent).to.include.members(LinkWidgets.demo_1.customPages.map((el: LinkWidgetPage) => el.name)),
       ]);
     });
 
@@ -133,14 +134,14 @@ describe('BO - Design - Link Widget : Create footer link widget and check it in 
 
       const textResult = await linkWidgetsPage.deleteLinkWidget(
         page,
-        hooks.displayFooter.name,
+        Hooks.displayFooter.name,
         numberOfLinkWidgetInFooter + 1,
       );
       await expect(textResult).to.equal(linkWidgetsPage.successfulDeleteMessage);
 
       const numberOfLinkWidgetAfterDelete = await linkWidgetsPage.getNumberOfElementInGrid(
         page,
-        hooks.displayFooter.name,
+        Hooks.displayFooter.name,
       );
       await expect(numberOfLinkWidgetAfterDelete).to.equal(numberOfLinkWidgetInFooter);
     });

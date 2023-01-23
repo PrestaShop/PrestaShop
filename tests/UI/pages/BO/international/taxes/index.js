@@ -294,8 +294,7 @@ class Taxes extends BOBasePage {
   /**
    * Update Tax Options
    * @param page {Page} Browser tab
-   * @param taxOptionData {{enabled: boolean, displayInShoppingCart: boolean, basedOn: string,
-   * useEcoTax: boolean, ecoTax: ?string}} Data to set on new/edit tax option
+   * @param taxOptionData {TaxOptionData} Data to set on new/edit tax option
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
@@ -308,7 +307,7 @@ class Taxes extends BOBasePage {
 
     await this.setChecked(page, this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
 
-    if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
+    if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== null) {
       await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
 

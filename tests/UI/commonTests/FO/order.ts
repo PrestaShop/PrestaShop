@@ -12,7 +12,7 @@ import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 import checkoutPage from '@pages/FO/checkout';
 
 // Import data
-import {Order} from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -22,10 +22,10 @@ let page: Page;
 
 /**
  * Function to create simple order by customer in FO
- * @param orderData {Order} Data to set when creating the order
+ * @param orderData {OrderData} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByCustomerTest(orderData: Order, baseContext: string = 'commonTests-createOrderByCustomerTest'): void {
+function createOrderByCustomerTest(orderData: OrderData, baseContext: string = 'commonTests-createOrderByCustomerTest'): void {
   describe('PRE-TEST: Create order by customer on FO', async () => {
     // before and after functions
     before(async function () {
@@ -73,12 +73,12 @@ function createOrderByCustomerTest(orderData: Order, baseContext: string = 'comm
       // Go to home page
       await foLoginPage.goToHomePage(page);
       // Go to the first product page
-      await homePage.goToProductPage(page, orderData.productId);
+      await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.productQuantity);
+      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
+      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should go to delivery step', async function () {
@@ -104,7 +104,7 @@ function createOrderByCustomerTest(orderData: Order, baseContext: string = 'comm
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -115,14 +115,14 @@ function createOrderByCustomerTest(orderData: Order, baseContext: string = 'comm
 
 /**
  * Function to create order with specific product by customer in FO
- * @param orderData {Order} Data to set when creating the order
+ * @param orderData {OrderData} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
 function createOrderSpecificProductTest(
-  orderData: Order,
+  orderData: OrderData,
   baseContext: string = 'commonTests-createOrderSpecificProductTest',
 ): void {
-  describe(`PRE-TEST: Create order contain '${orderData.product.name}' by default customer in FO`, async () => {
+  describe(`PRE-TEST: Create order contain '${orderData.products[0].product.name}' by default customer in FO`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -162,10 +162,10 @@ function createOrderSpecificProductTest(
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it(`should search for the product ${orderData.product.name}`, async function () {
+    it(`should search for the product ${orderData.products[0].product.name}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchForProduct', baseContext);
 
-      await homePage.searchProduct(page, orderData.product.name);
+      await homePage.searchProduct(page, orderData.products[0].product.name);
 
       const pageTitle = await searchResultsPage.getPageTitle(page);
       await expect(pageTitle).to.equal(searchResultsPage.pageTitle);
@@ -176,10 +176,10 @@ function createOrderSpecificProductTest(
 
       await searchResultsPage.goToProductPage(page, 1);
       // Add the product to the cart
-      await productPage.addProductToTheCart(page, orderData.productQuantity);
+      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
+      await expect(notificationsNumber).to.be.equal(orderData.products[0].quantity);
     });
 
     it('should go to delivery step', async function () {
@@ -205,7 +205,7 @@ function createOrderSpecificProductTest(
       await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
 
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
@@ -216,10 +216,10 @@ function createOrderSpecificProductTest(
 
 /**
  * Function to create simple order by guest in FO
- * @param orderData {Order} Data to set when creating the order
+ * @param orderData {OrderData} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByGuestTest(orderData: Order, baseContext: string = 'commonTests-createOrderByGuestTest'): void {
+function createOrderByGuestTest(orderData: OrderData, baseContext: string = 'commonTests-createOrderByGuestTest'): void {
   describe('PRE-TEST: Create order by guest in FO', async () => {
     // before and after functions
     before(async function () {
@@ -247,9 +247,9 @@ function createOrderByGuestTest(orderData: Order, baseContext: string = 'commonT
 
       await homePage.goToHomePage(page);
       // Go to the fourth product page
-      await homePage.goToProductPage(page, orderData.productId);
+      await homePage.goToProductPage(page, orderData.products[0].product.id);
       // Add the created product to the cart
-      await productPage.addProductToTheCart(page, orderData.productQuantity);
+      await productPage.addProductToTheCart(page, orderData.products[0].quantity);
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
@@ -268,7 +268,7 @@ function createOrderByGuestTest(orderData: Order, baseContext: string = 'commonT
     it('should fill address form and go to delivery step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
 
-      const isStepAddressComplete = await checkoutPage.setAddress(page, orderData.address);
+      const isStepAddressComplete = await checkoutPage.setAddress(page, orderData.deliveryAddress);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
     });
 
@@ -280,7 +280,7 @@ function createOrderByGuestTest(orderData: Order, baseContext: string = 'commonT
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
 
       // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod);
+      await checkoutPage.choosePaymentAndOrder(page, orderData.paymentMethod.moduleName);
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
 
       // Check the confirmation message

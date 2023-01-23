@@ -27,8 +27,8 @@ import {enableNewProductPageTest, disableNewProductPageTest} from '@commonTests/
 
 // Import data
 import OrderStatuses from '@data/demo/orderStatuses';
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import ProductData from '@data/faker/product';
 
 const baseContext: string = 'productV2_functional_CRUDVirtualProduct';

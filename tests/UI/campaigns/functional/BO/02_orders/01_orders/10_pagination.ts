@@ -12,9 +12,10 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -42,12 +43,16 @@ describe('BO - Orders : Pagination of orders table', async () => {
   let sortedTable: number[] = [];
   let numberOfOrdersAfterFilter: number;
 
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create 6 orders in FO
   const orderNumber: number = 6;

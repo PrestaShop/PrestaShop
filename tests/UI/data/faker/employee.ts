@@ -1,5 +1,5 @@
 import Languages from '@data/demo/languages';
-import {Pages} from '@data/demo/pages';
+import Pages from '@data/demo/pages';
 import Profiles from '@data/demo/profiles';
 import LanguageData from '@data/faker/language';
 import ProfileData from '@data/faker/profile';
@@ -58,7 +58,7 @@ export default class EmployeeData {
     this.password = employeeToCreate.password || 'prestashop_demo';
 
     /** @type {string} Default page where employee should access after login */
-    this.defaultPage = employeeToCreate.defaultPage || faker.helpers.arrayElement(Pages);
+    this.defaultPage = employeeToCreate.defaultPage || faker.helpers.arrayElement(Pages.Pages);
 
     /** @type {string} Default BO language for the employee */
     this.language = employeeToCreate.language

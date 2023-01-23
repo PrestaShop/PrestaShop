@@ -17,11 +17,11 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
+import OrderData from '@data/faker/order';
 import ProductData from '@data/faker/product';
-import type Order from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -69,12 +69,16 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     quantity: 20,
   });
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    product: firstProduct,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: firstProduct,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const carrierDataToSelect = {
     trackingNumber: '',
     carrier: Carriers.myCarrier.name,

@@ -31,7 +31,7 @@ import productPage from '@pages/FO/product';
 import AddressData from '@data/faker/address';
 import MessageData from '@data/faker/message';
 import CustomerData from '@data/faker/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 
 import {expect} from 'chai';

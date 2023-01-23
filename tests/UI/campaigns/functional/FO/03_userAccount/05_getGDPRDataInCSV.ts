@@ -26,7 +26,7 @@ import shoppingCartsPage from '@pages/BO/orders/shoppingCarts';
 import productPage from '@pages/FO/product';
 
 // Import data
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import MessageData from '@data/faker/message';

@@ -16,9 +16,10 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,12 +52,16 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   let totalOrder: number = 0;
 
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const numberOfCartRules: number = 0;
   // Discount data invalid value
   const discountDataInvalidValue = {

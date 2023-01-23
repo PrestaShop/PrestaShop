@@ -16,10 +16,11 @@ import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -39,12 +40,16 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
   const futureDate: string = date.getDateFormat('yyyy-mm-dd', 'future');
   const creditSlipDocumentName: string = 'Credit slip';
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 5,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 5,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);

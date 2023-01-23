@@ -17,7 +17,7 @@ import foHomePage from '@pages/FO/home';
 import siteMapPage from '@pages/FO/siteMap';
 
 // Import data
-import {Categories} from '@data/demo/categories';
+import Categories from '@data/demo/categories';
 import CategoryData from '@data/faker/category';
 
 import {expect} from 'chai';

@@ -19,7 +19,7 @@ import foCheckoutPage from '@pages/FO/checkout';
 import orderConfirmationPage from '@pages/FO/checkout/orderConfirmation';
 
 // Import data
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import AddressData from '@data/faker/address';
 import CustomerData from '@data/faker/customer';

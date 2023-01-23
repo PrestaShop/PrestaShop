@@ -17,7 +17,7 @@ import foLoginPage from '@pages/FO/login';
 import productPage from '@pages/FO/product';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

@@ -27,12 +27,12 @@ import productPage from '@pages/FO/product';
 import searchResultsPage from '@pages/FO/searchResults';
 
 // Import data
-import {Currencies} from '@data/demo/currencies';
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Currencies from '@data/demo/currencies';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
-import Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -83,13 +83,17 @@ describe(
         + `WHERE reference = '${orderRef}'`,
     };
     // Init data for the order
-    const orderToMake: Order = {
-      product: Products.demo_3,
-      productQuantity: 4,
-      percentDiscountValue: 20.678,
-      giftDiscountValue: giftCartRule.freeGiftProduct.price,
-      atiPrice: 117.178,
-    };
+    const orderToMake: OrderData = new OrderData({
+      products: [
+        {
+          product: Products.demo_3,
+          quantity: 4,
+        },
+      ],
+      discountPercentValue: 20.678,
+      discountGiftValue: giftCartRule.freeGiftProduct?.price,
+      totalPrice: 117.178,
+    });
 
     // before and after functions
     before(async function () {
@@ -244,10 +248,10 @@ describe(
         // Go to home page
         await foLoginPage.goToHomePage(page);
         // Go to product page after searching its name
-        await homePage.searchProduct(page, orderToMake.product.name);
+        await homePage.searchProduct(page, orderToMake.products[0].product.name);
         await searchResultsPage.goToProductPage(page, 1);
         // Add the created product to the cart
-        await productPage.addProductToTheCart(page, orderToMake.productQuantity);
+        await productPage.addProductToTheCart(page, orderToMake.products[0].quantity);
 
         // Check cart page
         const pageTitle = await cartPage.getPageTitle(page);
@@ -261,7 +265,7 @@ describe(
         const firstSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(firstSubtotalDiscountValue, 'First discount was not applied')
-          .to.equal(-(orderToMake.percentDiscountValue));
+          .to.equal(-(orderToMake.discountPercentValue));
       });
 
       it('should add free gift discount and check that the discount was added', async function () {
@@ -271,7 +275,7 @@ describe(
         const finalSubtotalDiscountValue = await cartPage.getSubtotalDiscountValue(page);
 
         await expect(finalSubtotalDiscountValue, 'Second discount was not applied')
-          .to.equal(-(orderToMake.percentDiscountValue + orderToMake.giftDiscountValue));
+          .to.equal(-(orderToMake.discountPercentValue + orderToMake.discountGiftValue));
       });
 
       it('should check order total price', async function () {
@@ -279,7 +283,7 @@ describe(
 
         const totalPrice = await cartPage.getATIPrice(page);
         await expect(totalPrice, 'Order total price is incorrect')
-          .to.equal(orderToMake.atiPrice);
+          .to.equal(orderToMake.totalPrice);
       });
 
       it('should confirm the order', async function () {
@@ -337,7 +341,7 @@ describe(
 
         // Check total price
         const totalPriceInOrdersPage = await ordersPage.getOrderATIPrice(page, 1);
-        await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.atiPrice);
+        await expect(totalPriceInOrdersPage, 'Order total price is incorrect').to.equal(orderToMake.totalPrice);
       });
     });
 
@@ -401,7 +405,7 @@ describe(
           // Get total discount from first column of the first row
           const discountInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_discounts');
           await expect(parseFloat(discountInDatabase), 'Discount price is incorrect in database')
-            .to.equal(orderToMake.percentDiscountValue + orderToMake.giftDiscountValue);
+            .to.equal(orderToMake.discountPercentValue + orderToMake.discountGiftValue);
         });
         it('should check last order total price', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkToTalPriceInDatabase', baseContext);
@@ -409,7 +413,7 @@ describe(
           // Get total discount from second column of the first row
           const totalPriceInDatabase = await viewSqlQueryPage.getTextColumn(page, 1, 'total_paid_tax_incl');
           await expect(parseFloat(totalPriceInDatabase), 'Total price is incorrect in database')
-            .to.equal(orderToMake.atiPrice);
+            .to.equal(orderToMake.totalPrice);
         });
       });
     });

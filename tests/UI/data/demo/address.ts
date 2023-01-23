@@ -12,6 +12,7 @@ export default {
   }),
   second: new AddressData({
     id: 2,
+    name: 'Mon adresse',
     firstName: 'John',
     lastName: 'DOE',
     company: 'My Company',

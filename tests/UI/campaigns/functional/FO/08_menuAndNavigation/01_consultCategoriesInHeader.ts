@@ -6,10 +6,11 @@ import testContext from '@utils/testContext';
 import homePage from '@pages/FO/home';
 
 // Import data
-import {Categories} from '@data/demo/categories';
+import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
+import CategoryData from '@data/faker/category';
 
 const baseContext: string = 'functional_FO_menuAndNavigation_consultCategoriesInHeader';
 
@@ -41,7 +42,7 @@ describe('FO - Menu and Navigation : Check categories and subcategories links in
     await expect(isHomePage).to.be.true;
   });
 
-  [Categories.clothes, Categories.accessories, Categories.art].forEach((test) => {
+  [Categories.clothes, Categories.accessories, Categories.art].forEach((test: CategoryData) => {
     it(`should check category '${test.name}' link`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `check${test.name}Link`, baseContext);
 

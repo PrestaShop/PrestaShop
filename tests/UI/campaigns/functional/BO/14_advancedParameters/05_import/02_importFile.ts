@@ -162,7 +162,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
   });
 
   // Post-condition: Delete imported categories
-  describe('POSt-TEST: Delete imported categories', async () => {
+  describe('POST-TEST: Delete imported categories', async () => {
     it('should filter list by Name \'category\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterCategoriesTable', baseContext);
 

@@ -17,7 +17,7 @@ import homePage from '@pages/FO/home';
 import foLoginPage from '@pages/FO/login';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import MessageData from '@data/faker/message';
 
 import {expect} from 'chai';

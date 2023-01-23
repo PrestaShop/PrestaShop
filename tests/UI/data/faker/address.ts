@@ -16,6 +16,8 @@ const statesNames: string[] = Object.values(States).map((state: StateData) => st
 export default class AddressData {
   public readonly id: number;
 
+  public readonly name: string;
+
   public readonly firstName: string;
 
   public readonly lastName: string;
@@ -53,6 +55,9 @@ export default class AddressData {
   constructor(addressToCreate: AddressCreator = {}) {
     /** @type {string} Tax identification number of the customer */
     this.id = addressToCreate.id || 0;
+
+    /** @type {string} Address Name */
+    this.name = addressToCreate.name || faker.word.noun();
 
     /** @type {string} Customer firstname */
     this.firstName = addressToCreate.firstName || faker.name.firstName();

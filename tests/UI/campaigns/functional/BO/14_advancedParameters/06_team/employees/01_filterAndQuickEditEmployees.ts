@@ -70,14 +70,33 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
 
   // 1 : Create employee and Filter with all inputs and selects in grid table in BO
   describe('Create employee then filter the table', async () => {
-    const tests = [
+    it('should go to add new employee page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
+
+      await employeesPage.goToAddNewEmployeePage(page);
+
+      const pageTitle = await addEmployeePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
+    });
+
+    it('should create employee', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
+
+      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
+      await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
+
+      const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
+      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
+    });
+
+    [
       {
         args:
           {
             testIdentifier: 'filterId',
             filterType: 'input',
             filterBy: 'id_employee',
-            filterValue: 1,
+            filterValue: '1',
           },
       },
       {
@@ -113,30 +132,10 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
             testIdentifier: 'filterActive',
             filterType: 'select',
             filterBy: 'active',
-            filterValue: createEmployeeData.active,
+            filterValue: createEmployeeData.active ? '1' : '0',
           },
       },
-    ];
-    it('should go to add new employee page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewEmployeePage', baseContext);
-
-      await employeesPage.goToAddNewEmployeePage(page);
-
-      const pageTitle = await addEmployeePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
-    });
-
-    it('should create employee', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createEmployee', baseContext);
-
-      const textResult = await addEmployeePage.createEditEmployee(page, createEmployeeData);
-      await expect(textResult).to.equal(employeesPage.successfulCreationMessage);
-
-      const numberOfEmployeesAfterCreation = await employeesPage.getNumberOfElementInGrid(page);
-      await expect(numberOfEmployeesAfterCreation).to.be.equal(numberOfEmployees + 1);
-    });
-
-    tests.forEach((test) => {
+    ].forEach((test) => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
@@ -153,7 +152,7 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
         for (let i = 1; i <= numberOfEmployeesAfterFilter; i++) {
           if (test.args.filterBy === 'active') {
             const employeeStatus = await employeesPage.getStatus(page, i);
-            await expect(employeeStatus).to.equal(test.args.filterValue);
+            await expect(employeeStatus).to.equal(test.args.filterValue === '1');
           } else {
             const textColumn = await employeesPage.getTextColumnFromTable(page, i, test.args.filterBy);
             await expect(textColumn).to.contains(test.args.filterValue);
@@ -185,12 +184,10 @@ describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', as
         }
       });
 
-      const statuses = [
+      [
         {args: {status: 'disable', enable: false}},
         {args: {status: 'enable', enable: true}},
-      ];
-
-      statuses.forEach((employeeStatus) => {
+      ].forEach((employeeStatus) => {
         it(`should ${employeeStatus.args.status} the employee`, async function () {
           await testContext.addContextItem(
             this,

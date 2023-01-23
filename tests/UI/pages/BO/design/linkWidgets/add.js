@@ -171,8 +171,7 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Add linkWidget
    * @param page {Page} Browser tab
-   * @param linkWidgetData {{name: string, frName: string, hook: string, contentPages: Array<string>,
-   * productsPages: Array<string>, staticPages: Array<string>, customPages: Array<{name:string, url: string}>}}
+   * @param linkWidgetData {LinkWidgetData}}
    * Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
@@ -183,7 +182,7 @@ class AddLinkBlock extends BOBasePage {
     await this.changeLanguage(page, 'fr');
     await this.setValue(page, this.nameInput(2), linkWidgetData.frName);
     // Choose hook
-    await this.selectByVisibleText(page, this.hookSelect, linkWidgetData.hook);
+    await this.selectByVisibleText(page, this.hookSelect, linkWidgetData.hook.name);
     // select content pages
     await this.selectContentPages(page, linkWidgetData.contentPages);
     // select product pages

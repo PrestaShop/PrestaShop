@@ -19,7 +19,7 @@ import foAddressesPage from '@pages/FO/myAccount/addresses';
 import foNewAddressesPage from '@pages/FO/myAccount/addAddress';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import CountryData from '@data/faker/country';
 
 import {expect} from 'chai';

@@ -13,11 +13,12 @@ import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
 import OrderStatuses from '@data/demo/orderStatuses';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
 import DeliverySlipOptionsData from '@data/faker/deliverySlipOptions';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -38,12 +39,16 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
   let page: Page;
   let fileName: string;
 
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 5,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 5,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const deliverySlipData: DeliverySlipOptionsData = new DeliverySlipOptionsData();
 
   // Pre-condition: Create order in FO

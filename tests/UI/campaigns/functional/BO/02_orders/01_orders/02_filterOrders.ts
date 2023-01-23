@@ -11,7 +11,8 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import {Orders} from '@data/demo/orders';
+import Orders from '@data/demo/orders';
+
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 
@@ -60,7 +61,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
     numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
     await expect(numberOfOrders).to.be.above(0);
-  }); ;
+  });
 
   [
     {
@@ -78,7 +79,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByReference',
           filterType: 'input',
           filterBy: 'reference',
-          filterValue: Orders.fourthOrder.ref,
+          filterValue: Orders.fourthOrder.reference,
         },
     },
     {
@@ -87,7 +88,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByNewClient',
           filterType: 'select',
           filterBy: 'new',
-          filterValue: Orders.firstOrder.newClient,
+          filterValue: Orders.firstOrder.newClient ? 'Yes' : 'No',
         },
     },
     {
@@ -105,7 +106,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByCustomer',
           filterType: 'input',
           filterBy: 'customer',
-          filterValue: Orders.firstOrder.customer,
+          filterValue: `${Orders.firstOrder.customer.firstName[0]}. ${Orders.firstOrder.customer.lastName.toUpperCase()}`,
         },
     },
     {
@@ -123,7 +124,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterByPayment',
           filterType: 'input',
           filterBy: 'payment',
-          filterValue: Orders.firstOrder.paymentMethod,
+          filterValue: Orders.firstOrder.paymentMethod.name,
         },
     },
     {
@@ -132,7 +133,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
           identifier: 'filterOsName',
           filterType: 'select',
           filterBy: 'osname',
-          filterValue: Orders.thirdOrder.status,
+          filterValue: Orders.thirdOrder.status?.name,
         },
     },
   ].forEach((test) => {

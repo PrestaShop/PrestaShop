@@ -11,10 +11,11 @@ import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
 
 // Import data
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
-import type Order from '@data/types/order';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -32,12 +33,16 @@ describe('BO - Orders : Bulk update orders status', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create 2 orders in FO
   const orderNumber = 2;

@@ -16,7 +16,7 @@ import myAccountPage from '@pages/FO/myAccount';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

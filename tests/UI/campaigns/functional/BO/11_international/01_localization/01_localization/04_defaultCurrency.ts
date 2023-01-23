@@ -15,7 +15,7 @@ import languagesPage from '@pages/BO/international/languages';
 import foHomePage from '@pages/FO/home';
 
 // Import Data
-import {Currencies} from '@data/demo/currencies';
+import Currencies from '@data/demo/currencies';
 import Languages from '@data/demo/languages';
 
 import {expect} from 'chai';
@@ -74,7 +74,7 @@ describe('BO - International - Localization : Update default currency', async ()
     });
   });
 
-  const tests = [
+  const currenciesToTest = [
     {
       args: {
         defaultCurrency: `${Currencies.chileanPeso.name} (${Currencies.chileanPeso.isoCode})`,
@@ -89,7 +89,7 @@ describe('BO - International - Localization : Update default currency', async ()
     },
   ];
 
-  tests.forEach((test, index) => {
+  currenciesToTest.forEach((test, index) => {
     describe(`Choose default currency '${test.args.defaultCurrency}' and check it in FO`, async () => {
       before(async function () {
         browserContext = await helper.createBrowserContext(this.browser);
@@ -150,7 +150,7 @@ describe('BO - International - Localization : Update default currency', async ()
         await expect(pageTitle).to.contains(localizationPage.pageTitle);
       });
 
-      if (index === (tests.length - 1)) {
+      if (index === (currenciesToTest.length - 1)) {
         describe('Delete currency added by importing localization pack', async () => {
           it('should go to currencies page', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage', baseContext);

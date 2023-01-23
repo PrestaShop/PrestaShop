@@ -21,7 +21,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import CartRuleData from '@data/faker/cartRule';
 

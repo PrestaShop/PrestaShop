@@ -1,5 +1,5 @@
 import Countries from '@data/demo/countries';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {faker} from '@faker-js/faker';
 

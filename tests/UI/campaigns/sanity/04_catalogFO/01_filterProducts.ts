@@ -6,7 +6,7 @@ import helper from '@utils/helpers';
 import homePage from '@pages/FO/home';
 
 // Import data
-import {Categories} from '@data/demo/categories';
+import Categories from '@data/demo/categories';
 
 import {expect} from 'chai';
 import {BrowserContext, Page} from 'playwright';

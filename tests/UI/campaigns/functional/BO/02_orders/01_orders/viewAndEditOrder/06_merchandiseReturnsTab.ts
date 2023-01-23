@@ -23,11 +23,12 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import orderHistoryPage from '@pages/FO/myAccount/orderHistory';
 
 // Import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import OrderReturnStatuses from '@data/demo/orderReturnStatuses';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import type Order from '@data/types/order';
+import PaymentMethods from '@data/demo/paymentMethods';
+import Products from '@data/demo/products';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -59,12 +60,16 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   const merchandiseReturnsNumber: string = '#RE00000';
   const today: string = date.getDateFormat('mm/dd/yyyy');
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);

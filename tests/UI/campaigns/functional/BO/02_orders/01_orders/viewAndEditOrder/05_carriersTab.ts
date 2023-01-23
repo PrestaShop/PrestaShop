@@ -14,10 +14,10 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import Customers from '@data/demo/customers';
+import PaymentMethods from '@data/demo/paymentMethods';
 import Products from '@data/demo/products';
-import type Order from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -45,12 +45,16 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     shippingCost: '€8.40',
   };
   // New order by customer data
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // Pre-condition - Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);

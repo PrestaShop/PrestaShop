@@ -19,7 +19,7 @@ import foProductPage from '@pages/FO/product';
 
 // Import data
 import Carriers from '@data/demo/carriers';
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
