@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model;
 
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShopBundle\Entity\AuthorizedApplication;
 
@@ -50,12 +51,16 @@ interface AuthorizedApplicationRepositoryInterface
     /**
      * @param ApplicationId $applicationId
      *
+     * @throws ApplicationNotFoundException
+     *
      * @return AuthorizedApplication|null
      */
     public function getById(ApplicationId $applicationId): ?AuthorizedApplication;
 
     /**
      * @param string $name
+     *
+     * @throws ApplicationNotFoundException
      *
      * @return AuthorizedApplication|null
      */

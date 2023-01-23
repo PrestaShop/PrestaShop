@@ -62,10 +62,6 @@ class EditApplicationHandler implements EditApplicationHandlerInterface
         /** @var ?AuthorizedApplication $application */
         $application = $this->applicationRepository->getById($command->getApplicationId());
 
-        if ($application === null) {
-            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $command->getApplicationId()->getValue()));
-        }
-
         $application->setName($command->getName());
         $application->setDescription($command->getDescription());
 
@@ -81,12 +77,16 @@ class EditApplicationHandler implements EditApplicationHandlerInterface
      *
      * @throws DuplicateApplicationNameException
      */
-    public function assertApplicationWithGivenNameDoesNotExist(AuthorizedApplication $currentApplication): void
+    private function assertApplicationWithGivenNameDoesNotExist(AuthorizedApplication $currentApplication): void
     {
-        $name = $currentApplication->getName();
-        $application = $this->applicationRepository->getByName($name);
-        if ($application !== null && $application->getId() !== $currentApplication->getId()) {
-            throw new DuplicateApplicationNameException($name, sprintf('Application with name "%s" already exists', $name));
+        try {
+            $name = $currentApplication->getName();
+            $application = $this->applicationRepository->getByName($name);
+            if ($application->getId() !== $currentApplication->getId()) {
+                throw new DuplicateApplicationNameException($name, sprintf('Application with name "%s" already exists', $name));
+            }
+        } catch (ApplicationNotFoundException $exception) {
+            //Any application with same name is found so it's ok
         }
     }
 }

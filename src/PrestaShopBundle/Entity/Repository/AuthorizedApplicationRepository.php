@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
 use PrestaShopBundle\Entity\AuthorizedApplication;
@@ -57,7 +58,12 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
      */
     public function getById(ApplicationId $applicationId): ?AuthorizedApplication
     {
-        return $this->find($applicationId->getValue());
+        $application = $this->find($applicationId->getValue());
+        if ($application === null) {
+            throw new ApplicationNotFoundException(sprintf('Application with id "%d" was not found.', $applicationId->getValue()));
+        }
+
+        return $application;
     }
 
     /**
@@ -65,6 +71,11 @@ class AuthorizedApplicationRepository extends EntityRepository implements Author
      */
     public function getByName(string $name): ?AuthorizedApplication
     {
-        return $this->findOneBy(['name' => $name]);
+        $application = $this->findOneBy(['name' => $name]);
+        if ($application === null) {
+            throw new ApplicationNotFoundException(sprintf('Application with name "%d" was not found.', $name));
+        }
+
+        return $application;
     }
 }

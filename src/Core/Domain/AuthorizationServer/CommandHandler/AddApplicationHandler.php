@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Command\AddApplicationCommand;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\ApplicationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Exception\DuplicateApplicationNameException;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\Model\AuthorizedApplicationRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Domain\AuthorizationServer\ValueObject\ApplicationId;
@@ -61,7 +62,11 @@ class AddApplicationHandler implements AddApplicationHandlerInterface
         $application->setName($command->getName());
         $application->setDescription($command->getDescription());
 
-        $this->assertApplicationWithGivenNameDoesNotExist($application->getName());
+        $applicationName = $application->getName();
+
+        if ($this->doesApplicationExists($applicationName)) {
+            throw new DuplicateApplicationNameException($applicationName, sprintf('Application with name "%s" already exists', $applicationName));
+        }
 
         $this->applicationRepository->create($application);
 
@@ -69,17 +74,20 @@ class AddApplicationHandler implements AddApplicationHandlerInterface
     }
 
     /**
+     * Check if application with given name already exist
+     *
      * @param $name string
      *
-     * @return void
-     *
-     * @throws DuplicateApplicationNameException
+     * @return bool
      */
-    public function assertApplicationWithGivenNameDoesNotExist(string $name): void
+    private function doesApplicationExists(string $name): bool
     {
-        $applications = $this->applicationRepository->getByName($name);
-        if ($applications !== null) {
-            throw new DuplicateApplicationNameException($name, sprintf('Application with name "%s" already exists', $name));
+        try {
+            $this->applicationRepository->getByName($name);
+
+            return true;
+        } catch (ApplicationNotFoundException $exception) {
+            return false;
         }
     }
 }
