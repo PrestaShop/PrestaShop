@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
@@ -2074,14 +2073,6 @@ class FrontControllerCore extends Controller
         } else {
             return $matches[0];
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function buildContainer()
-    {
-        return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
     }
 
     /**

@@ -25,7 +25,7 @@
  */
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -781,14 +781,8 @@ class ToolsCore
             return $locale;
         }
 
-        $containerFinder = new ContainerFinder($context);
-        $container = $containerFinder->getContainer();
-        if (null === $context->container) {
-            $context->container = $container;
-        }
-
         /** @var LocaleRepository $localeRepository */
-        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $localeRepository = SymfonyContainer::getInstance()->get(self::SERVICE_LOCALE_REPOSITORY);
         $locale = $localeRepository->getLocale(
             $context->language->getLocale()
         );

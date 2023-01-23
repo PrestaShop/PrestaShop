@@ -25,17 +25,16 @@
  */
 
 use PrestaShop\Autoload\PrestashopAutoload;
-use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem as SfFileSystem;
@@ -1666,10 +1665,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     private static function getModuleRepository(): ModuleRepository
     {
-        $finder = new ContainerFinder(Context::getContext());
-        $sfContainer = $finder->getContainer();
-
-        return $sfContainer->get('prestashop.adapter.module.repository.module_repository');
+        return SymfonyContainer::getInstance()->get('prestashop.adapter.module.repository.module_repository');
     }
 
     /**
@@ -3433,35 +3429,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function get($serviceName)
     {
-        try {
-            $container = $this->getContainer();
-        } catch (ContainerNotFoundException $e) {
-            return false;
-        }
-
-        return $container->get($serviceName);
-    }
-
-    /**
-     * Returns the container depending on the environment:
-     *  - Legacy: light container with few services specifically defined for legacy front/admin controllers
-     *  - Symfony: symfony container with all the migrated services (CQRS, ...)
-     *
-     * If you need to detect which kind of container you are using you can check if it is an instance of LegacyContainerInterface,
-     * which means it's a legacy/light container.
-     *
-     * @return ContainerInterface
-     *
-     * @throws ContainerNotFoundException
-     */
-    public function getContainer(): ContainerInterface
-    {
-        if (null === $this->container) {
-            $finder = new ContainerFinder($this->context);
-            $this->container = $finder->getContainer();
-        }
-
-        return $this->container;
+        return SymfonyContainer::getInstance()->get($serviceName);
     }
 
     /**
@@ -3530,7 +3498,7 @@ abstract class ModuleCore implements ModuleInterface
             return;
         }
 
-        $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+        SymfonyContainer::getInstance()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
     }
 
     public static function resetStaticCache()

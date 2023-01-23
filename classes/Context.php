@@ -499,13 +499,7 @@ class ContextCore
         $theme = $this->shop !== null ? $this->shop->theme : null;
 
         if ($this instanceof Context) {
-            try {
-                $containerFinder = new ContainerFinder($this);
-                $container = $containerFinder->getContainer();
-                $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
-            } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
-                $translatorLoader = null;
-            }
+            $translatorLoader = SymfonyContainer::getInstance()->get('prestashop.translation.translator_language_loader');
 
             if (null === $translatorLoader) {
                 // If a container is still not found, instantiate manually the translator loader

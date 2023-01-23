@@ -24,10 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Symfony\Symfony;
 use Symfony\Component\HttpFoundation\Request;
 
 require dirname(__FILE__) . '/config/config.inc.php';
 
 $kernel = new AppKernel(_PS_ENV_, true);
 $kernel->boot();
+
+Symfony::setInstance($kernel);
+
 Dispatcher::getInstance(Request::createFromGlobals())->dispatch();

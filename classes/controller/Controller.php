@@ -24,8 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Symfony\Symfony;
 use PrestaShopBundle\Translation\TranslatorComponent;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Psr\Container\ContainerInterface;
 
 /**
  * @TODO Move undeclared variables and methods to this (base) class: $errors, $layout, checkLiveEditAccess, etc.
@@ -150,9 +151,9 @@ abstract class ControllerCore
     /**
      * Dependency container.
      *
-     * @var ContainerBuilder
+     * @var \Psr\Container\ContainerInterface
      */
-    protected $container;
+    protected $container = null;
 
     /**
      * Check if the controller is available for the current user/visitor.
@@ -200,8 +201,8 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
-        if (null === $this->getContainer()) {
-            $this->container = $this->buildContainer();
+        if (null === $this->container) {
+            $this->container = Symfony::getContainer();
         }
 
         $localeRepo = $this->get(self::SERVICE_LOCALE_REPOSITORY);
@@ -796,13 +797,6 @@ abstract class ControllerCore
     }
 
     /**
-     * Construct the dependency container.
-     *
-     * @return ContainerBuilder
-     */
-    abstract protected function buildContainer();
-
-    /**
      * Gets a service from the service container.
      *
      * @param string $serviceId Service identifier
@@ -833,9 +827,9 @@ abstract class ControllerCore
     /**
      * Gets the dependency container.
      *
-     * @return ContainerBuilder|null
+     * @return ContainerInterface
      */
-    public function getContainer()
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }

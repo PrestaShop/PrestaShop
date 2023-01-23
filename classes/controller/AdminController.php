@@ -4718,14 +4718,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @return ContainerInterface
-     */
-    protected function buildContainer()
-    {
-        return SymfonyContainer::getInstance();
-    }
-
-    /**
      * Return the type of authorization on module page.
      *
      * @return int
