@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type ZoneData from '@data/faker/zone';
+
+import type {Page} from 'playwright';
 
 /**
  * Add zone page, contains functions that can be used on the page
@@ -7,6 +10,16 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddZone extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly statusToggle: (toggle: number) => string;
+
+  private readonly saveZoneButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add zone page
@@ -19,7 +32,7 @@ class AddZone extends BOBasePage {
 
     // Selectors
     this.nameInput = '#zone_name';
-    this.statusToggle = (toggle) => `#zone_enabled_${toggle}`;
+    this.statusToggle = (toggle: number) => `#zone_enabled_${toggle}`;
     this.saveZoneButton = '#save-button';
   }
 
@@ -32,7 +45,7 @@ class AddZone extends BOBasePage {
    * @param zoneData {ZoneData} Data to set on new/edit zone page
    * @returns {Promise<string>}
    */
-  async createEditZone(page, zoneData) {
+  async createEditZone(page: Page, zoneData: ZoneData): Promise<string> {
     await this.setValue(page, this.nameInput, zoneData.name);
     await this.setChecked(page, this.statusToggle(zoneData.status ? 1 : 0));
 
@@ -44,4 +57,4 @@ class AddZone extends BOBasePage {
   }
 }
 
-module.exports = new AddZone();
+export default new AddZone();
