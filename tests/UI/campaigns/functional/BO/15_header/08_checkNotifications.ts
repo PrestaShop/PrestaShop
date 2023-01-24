@@ -19,10 +19,10 @@ import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 import viewCustomerPage from '@pages/BO/customers/view';
 
 // import data
-import Customers from '@data/demo/customer';
+import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
-import {Order} from '@data/types/order';
-import {PaymentMethods} from '@data/demo/paymentMethods';
+import OrderData from '@data/faker/order';
+import PaymentMethods from '@data/demo/paymentMethods';
 import CustomerData from '@data/faker/customer';
 import AddressData from '@data/faker/address';
 
@@ -30,7 +30,7 @@ import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
 import {faker} from '@faker-js/faker';
 
-const baseContext: string = 'functional_BO_header_notifications';
+const baseContext: string = 'functional_BO_header_checkNotifications';
 
 /*
 Pre-condition:
@@ -52,25 +52,33 @@ describe('BO - Header : Check notifications', async () => {
   let browserContext: BrowserContext;
   let page: Page;
 
-  const orderByCustomerData: Order = {
+  const orderByCustomerData: OrderData = new OrderData({
     customer: Customers.johnDoe,
-    productId: 1,
-    productQuantity: 1,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
+  });
   const messageSend: string = faker.lorem.sentence().substring(0, 35).trim();
   const messageOption: string = `${Products.demo_1.name} (Size: ${Products.demo_1.attributes[0].values[0]} `
     + `- Color: ${Products.demo_1.attributes[1].values[0]})`;
   const customerData: CustomerData = new CustomerData({password: ''});
   const addressData: AddressData = new AddressData({country: 'France'});
   // New order by guest data
-  const orderByGuestData: Order = {
+  const orderByGuestData: OrderData = new OrderData({
     customer: customerData,
-    productId: 4,
-    productQuantity: 1,
-    address: addressData,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
-  };
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    deliveryAddress: addressData,
+    paymentMethod: PaymentMethods.wirePayment,
+  });
 
   // PRE-condition : Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest`);
@@ -208,7 +216,7 @@ describe('BO - Header : Check notifications', async () => {
   // PRE_condition: Create order by guest
   createOrderByGuestTest(orderByGuestData, baseContext);
 
-  describe('Check customers and orders notifications in BO', async function () {
+  describe('Check customers and orders notifications in BO', async () => {
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink3', baseContext);
 
