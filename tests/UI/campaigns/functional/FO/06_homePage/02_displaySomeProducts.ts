@@ -6,8 +6,8 @@ import testContext from '@utils/testContext';
 import categoryPageFO from '@pages/FO/category';
 import homePage from '@pages/FO/home';
 import pricesDropPage from '@pages/FO/home/pricesDrop';
-import newProductsPage from '@pages/FO/home/newProducts';
-import bestSellersPage from '@pages/FO/home/bestSellers';
+import newProductsPage from '@pages/FO/newProducts';
+import bestSellersPage from '@pages/FO/bestSales';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
