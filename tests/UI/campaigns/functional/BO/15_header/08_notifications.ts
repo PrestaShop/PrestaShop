@@ -32,6 +32,22 @@ import {faker} from '@faker-js/faker';
 
 const baseContext: string = 'functional_BO_header_notifications';
 
+/*
+Pre-condition:
+- Create order by customer
+Scenario:
+- Check notifications number in BO
+- Open the notification
+- Refresh the page and check that there is 0 notification
+- Send message from the Order details page
+- Check notification message in BO
+- Click on the notification and check the message page
+Pre-condition:
+- Create order by guest in FO
+Scenario:
+- Go to BO and check notifications in Customers and orders tab
+- Click on each notification and check order and customer page
+ */
 describe('BO - Header : Check notifications', async () => {
   let browserContext: BrowserContext;
   let page: Page;
