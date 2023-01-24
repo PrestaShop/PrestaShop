@@ -16,6 +16,8 @@ class ShopParamsMaintenance extends BOBasePage {
 
   private readonly shopStatusToggleInput: (toggle: number) => string;
 
+  private readonly allowAdminsToggleInput: (toggle: number) => string;
+
   private readonly maintenanceTextInputEN: string;
 
   private readonly customMaintenanceFrTab: string;
@@ -41,6 +43,7 @@ class ShopParamsMaintenance extends BOBasePage {
     // Selectors
     this.generalForm = '#form-maintenance';
     this.shopStatusToggleInput = (toggle: number) => `#form_enable_shop_${toggle}`;
+    this.allowAdminsToggleInput = (toggle: number) => `#form_maintenance_allow_admins_${toggle}`;
     this.maintenanceTextInputEN = '#form_maintenance_text_1_ifr';
     this.customMaintenanceFrTab = `${this.generalForm} a[data-locale='fr']`;
     this.maintenanceTextInputFR = '#form_maintenance_text_2_ifr';
@@ -60,6 +63,19 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async changeShopStatus(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.shopStatusToggleInput(toEnable ? 1 : 0));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Enable/Disable store for logged-in employees
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to enable/disable the shop
+   * @return {Promise<string>}
+   */
+  async changeStoreForLoggedInEmployees(page: Page, toEnable: boolean = true): Promise<string> {
+    await this.setChecked(page, this.allowAdminsToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

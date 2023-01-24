@@ -74,6 +74,35 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
+  it('should enable store for logged-in employees', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
+
+    const result = await maintenancePage.changeStoreForLoggedInEmployees(page, true);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
+  });
+
+  it('should verify that the shop is enabled', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'verifyEnabledShop', baseContext);
+
+    page = await maintenancePage.viewMyShop(page);
+
+    const pageContent = await homePage.getTextContent(page, homePage.content);
+    await expect(pageContent).to.not.equal(maintenancePage.maintenanceText);
+
+    const result = await homePage.isHomePage(page);
+    await expect(result).to.be.true;
+  });
+
+  it('should disable store for logged-in employees', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'disableShop', baseContext);
+
+    // Go back to BO
+    page = await homePage.closePage(browserContext, page, 0);
+
+    const result = await maintenancePage.changeStoreForLoggedInEmployees(page, false);
+    await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
+  });
+
   it('should verify the existence of the maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyMaintenanceText', baseContext);
 
