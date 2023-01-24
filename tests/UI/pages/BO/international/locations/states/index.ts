@@ -220,15 +220,20 @@ class States extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterStates(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
+    let textValue: string = value;
+
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
       case 'select':
+        if (filterBy === 'a!active') {
+          textValue = value === '1' ? 'Yes' : 'No';
+        }
         await Promise.all([
-          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), textValue),
           page.waitForNavigation({waitUntil: 'networkidle'}),
         ]);
 
