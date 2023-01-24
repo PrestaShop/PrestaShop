@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type CountryData from '@data/faker/country';
+
+import type {Page} from 'playwright';
 
 /**
  * Add country page, contains functions that can be used on the page
@@ -7,6 +10,34 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddCountry extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly isoCodeInput: string;
+
+  private readonly callPrefixInput: string;
+
+  private readonly defaultCurrencySelect: string;
+
+  private readonly zoneSelect: string;
+
+  private readonly needZipCodeLabel: (toggle: string) => string;
+
+  private readonly zipCodeFormatInput: string;
+
+  private readonly activeLabel: (toggle: string) => string;
+
+  private readonly containsStatesLabel: (toggle: string) => string;
+
+  private readonly needIdentificationNumberLabel: (toggle: string) => string;
+
+  private readonly displayTaxLabel: (toggle: string) => string;
+
+  private readonly saveCountryButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add country page
@@ -23,12 +54,12 @@ class AddCountry extends BOBasePage {
     this.callPrefixInput = '#call_prefix';
     this.defaultCurrencySelect = '#id_currency';
     this.zoneSelect = '#id_zone';
-    this.needZipCodeLabel = (toggle) => `#need_zip_code_${toggle}`;
+    this.needZipCodeLabel = (toggle: string) => `#need_zip_code_${toggle}`;
     this.zipCodeFormatInput = '#zip_code_format';
-    this.activeLabel = (toggle) => `#active_${toggle}`;
-    this.containsStatesLabel = (toggle) => `#contains_states_${toggle}`;
-    this.needIdentificationNumberLabel = (toggle) => `#need_identification_number_${toggle}`;
-    this.displayTaxLabel = (toggle) => `#display_tax_label_${toggle}`;
+    this.activeLabel = (toggle: string) => `#active_${toggle}`;
+    this.containsStatesLabel = (toggle: string) => `#contains_states_${toggle}`;
+    this.needIdentificationNumberLabel = (toggle: string) => `#need_identification_number_${toggle}`;
+    this.displayTaxLabel = (toggle: string) => `#display_tax_label_${toggle}`;
     this.saveCountryButton = '#country_form_submit_btn';
   }
 
@@ -41,7 +72,7 @@ class AddCountry extends BOBasePage {
    * @param countryData {CountryData} Data to set on new country form
    * @returns {Promise<string>}
    */
-  async createEditCountry(page, countryData) {
+  async createEditCountry(page: Page, countryData: CountryData): Promise<string> {
     await this.setValue(page, this.nameInput, countryData.name);
     await this.setValue(page, this.isoCodeInput, countryData.isoCode);
     await this.setValue(page, this.callPrefixInput, countryData.callPrefix.toString());
@@ -63,4 +94,4 @@ class AddCountry extends BOBasePage {
   }
 }
 
-module.exports = new AddCountry();
+export default new AddCountry();
