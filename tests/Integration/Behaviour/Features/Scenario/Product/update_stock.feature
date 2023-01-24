@@ -4,7 +4,7 @@
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @update-stock
-@update-stock-classic
+@update-stock-cl./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stockassic
 Feature: Update product stock from Back Office (BO)
   As a BO user
   I need to be able to update product stock from BO
@@ -169,7 +169,6 @@ Feature: Update product stock from Back Office (BO)
     When I update product "product1" with following values:
       | minimal_quantity              | 12           |
       | low_stock_threshold           | 42           |
-      | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |

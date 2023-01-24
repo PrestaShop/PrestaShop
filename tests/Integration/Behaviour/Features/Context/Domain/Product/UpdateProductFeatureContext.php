@@ -400,9 +400,6 @@ class UpdateProductFeatureContext extends AbstractProductFeatureContext
         if (isset($data['low_stock_threshold'])) {
             $command->setLowStockThreshold((int) $data['low_stock_threshold']);
         }
-        if (isset($data['low_stock_alert'])) {
-            $command->setLowStockAlert(PrimitiveUtils::castStringBooleanIntoBoolean($data['low_stock_alert']));
-        }
         if (isset($data['available_now_labels'])) {
             $command->setLocalizedAvailableNowLabels($data['available_now_labels']);
         }

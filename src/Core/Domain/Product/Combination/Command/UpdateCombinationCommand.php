@@ -32,6 +32,7 @@ use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
@@ -114,14 +115,9 @@ class UpdateCombinationCommand
     private $minimalQuantity;
 
     /**
-     * @var int|null
+     * @var LowStockThreshold|null
      */
     private $lowStockThreshold;
-
-    /**
-     * @var bool|null
-     */
-    private $lowStockAlertEnabled;
 
     /**
      * @var DateTimeInterface|null
@@ -405,9 +401,9 @@ class UpdateCombinationCommand
     }
 
     /**
-     * @return int|null
+     * @return LowStockThreshold|null
      */
-    public function getLowStockThreshold(): ?int
+    public function getLowStockThreshold(): ?LowStockThreshold
     {
         return $this->lowStockThreshold;
     }
@@ -419,27 +415,7 @@ class UpdateCombinationCommand
      */
     public function setLowStockThreshold(int $lowStockThreshold): self
     {
-        $this->lowStockThreshold = $lowStockThreshold;
-
-        return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
-    }
-
-    /**
-     * @param bool $enabled
-     *
-     * @return $this
-     */
-    public function setLowStockAlert(bool $enabled): self
-    {
-        $this->lowStockAlertEnabled = $enabled;
+        $this->lowStockThreshold = new LowStockThreshold($lowStockThreshold);
 
         return $this;
     }
@@ -462,14 +438,6 @@ class UpdateCombinationCommand
         $this->availableDate = $availableDate;
 
         return $this;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function getLowStockAlertEnabled(): ?bool
-    {
-        return $this->lowStockAlertEnabled;
     }
 
     /**

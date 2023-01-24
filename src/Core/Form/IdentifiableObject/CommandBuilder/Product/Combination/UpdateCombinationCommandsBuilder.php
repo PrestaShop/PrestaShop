@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 
 /**
  * This command builder builds the unified UpdateCombinationCommand which includes many sub scopes of the combination
@@ -68,7 +69,7 @@ class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBu
         $this
             ->configurePriceImpact($config)
             ->configureDetails($config)
-            ->configureStock($config)
+            ->configureStock($config, $formData)
         ;
 
         $commandBuilder = new CommandBuilder($config);
@@ -104,16 +105,29 @@ class UpdateCombinationCommandsBuilder implements MultiShopCombinationCommandsBu
         return $this;
     }
 
-    private function configureStock(CommandBuilderConfig $config): self
+    private function configureStock(CommandBuilderConfig $config, array $formData): self
     {
         $config
             ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
             ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
             ->addMultiShopField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
             ->addField('[stock][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
             ->addField('[stock][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
+
+        $lowStockThresholdSwitchKey = sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX);
+
+        if (
+            // if low stock threshold switch is falsy, then we must set lowStockThreshold to its disabled value
+            // which will end up being 0 after falsy bool to int conversion
+            isset($formData['stock']['options'][$lowStockThresholdSwitchKey]) &&
+            !$formData['stock']['options'][$lowStockThresholdSwitchKey]
+        ) {
+            $config->addMultiShopField(sprintf('[stock][options][%s]', $lowStockThresholdSwitchKey), 'setLowStockThreshold', DataField::TYPE_INT);
+        } else {
+            // else we simply set the low stock threshold value from the form
+            $config->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT);
+        }
 
         return $this;
     }

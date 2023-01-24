@@ -29,7 +29,6 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | pack_stock_type               | pack_only    |
       | minimal_quantity              | 12           |
       | low_stock_threshold           | 42           |
-      | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
@@ -66,8 +65,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     When I update product "product1" for shop shop2 with following values:
       | pack_stock_type               | products_only |
       | minimal_quantity              | 24            |
-      | low_stock_threshold           | 51            |
-      | low_stock_alert               | false         |
+      | low_stock_threshold           | 0             |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
@@ -81,7 +79,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | quantity            | 111           |
       | minimal_quantity    | 24            |
       | location            | upa           |
-      | low_stock_threshold | 51            |
+      | low_stock_threshold | 0             |
       | low_stock_alert     | false         |
       | available_date      | 1969-09-16    |
     And product "product1" localized "available_now_labels" for shops "shop2" should be:
@@ -125,8 +123,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     When I update product "product1" for all shops with following values:
       | pack_stock_type               | products_only |
       | minimal_quantity              | 24            |
-      | low_stock_threshold           | 51            |
-      | low_stock_alert               | false         |
+      | low_stock_threshold           | 0             |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
@@ -138,7 +135,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | out_of_stock_type   | not_available |
       | minimal_quantity    | 24            |
       | location            | upa           |
-      | low_stock_threshold | 51            |
+      | low_stock_threshold | 0             |
       | low_stock_alert     | false         |
       | available_date      | 1969-09-16    |
       | quantity            | 42            |
@@ -158,20 +155,19 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | pack_stock_type               | products_only |
       | minimal_quantity              | 24            |
       | low_stock_threshold           | 51            |
-      | low_stock_alert               | false         |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
     And I update product "product1" stock for shop shop2 with following information:
-      | out_of_stock_type             | not_available |
-      | location                      | upa           |
+      | out_of_stock_type | not_available |
+      | location          | upa           |
     And I update product "product1" for all shops with following values:
       | pack_stock_type             | default  |
       | minimal_quantity            | 51       |
       | available_now_labels[en-US] | it is on |
     And I update product "product1" stock for all shops with following information:
-      | out_of_stock_type           | default  |
-      | location                    | surprise |
+      | out_of_stock_type | default  |
+      | location          | surprise |
     Then product "product1" should have following stock information for shops "shop2":
       | pack_stock_type     | default    |
       | out_of_stock_type   | default    |
@@ -179,7 +175,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | minimal_quantity    | 51         |
       | location            | surprise   |
       | low_stock_threshold | 51         |
-      | low_stock_alert     | false      |
+      | low_stock_alert     | true       |
       | available_date      | 1969-09-16 |
     And product "product1" localized "available_later_labels" for shops "shop2" should be:
       | locale | value       |
@@ -211,15 +207,14 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | minimal_quantity            | 51       |
       | available_now_labels[en-US] | it is on |
     And I update product "product1" stock for all shops with following information:
-      | out_of_stock_type           | default  |
-      | location                    | surprise |
+      | out_of_stock_type | default  |
+      | location          | surprise |
     And I update product "product1" for shop shop2 with following values:
       | pack_stock_type               | products_only |
       | out_of_stock_type             | not_available |
-      | low_stock_alert               | false         |
       | available_later_labels[en-US] | too slow...   |
     And I update product "product1" stock for shop shop2 with following information:
-      | out_of_stock_type             | not_available |
+      | out_of_stock_type | not_available |
     Then product "product1" should have following stock information for shops "shop2":
       | pack_stock_type     | products_only |
       | out_of_stock_type   | not_available |
@@ -227,7 +222,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | minimal_quantity    | 51            |
       | location            | surprise      |
       | low_stock_threshold | 42            |
-      | low_stock_alert     | false         |
+      | low_stock_alert     | true          |
       | available_date      | 1969-07-16    |
     And product "product1" localized "available_later_labels" for shops "shop2" should be:
       | locale | value       |
@@ -452,8 +447,8 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | Puff Daddy | 42             |
     # Edit shop3 also impacts shop4
     When I update product "product1" stock for shop shop4 with following information:
-      | delta_quantity    | 18            |
-      | out_of_stock_type | available     |
+      | delta_quantity    | 18        |
+      | out_of_stock_type | available |
     Then product "product1" should have following stock information for shops "shop1,shop2":
       | out_of_stock_type | available |
       | quantity          | 42        |

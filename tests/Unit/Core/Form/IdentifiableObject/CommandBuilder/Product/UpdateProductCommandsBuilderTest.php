@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\LowStockThreshold;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\UpdateProductCommandsBuilder;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
 
 class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -643,6 +645,50 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE);
+
+        yield 'low stock threshold is set correctly when only disabling switch value is submitted' => [
+            [
+                'stock' => [
+                    'options' => [
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setLowStockThreshold(LowStockThreshold::DISABLED_VALUE);
+
+        yield 'low stock threshold is overriden by disabling switch value when it is falsy' => [
+            [
+                'stock' => [
+                    'options' => [
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => false,
+                        'low_stock_threshold' => 4,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setLowStockThreshold(4);
+
+        yield 'low stock threshold is correctly set when disabling switch is truthy' => [
+            [
+                'stock' => [
+                    'options' => [
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
+                        'low_stock_threshold' => 4,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
     }
 
     public function getExpectedCommandsForCombinationsTypeProduct(): iterable
@@ -1027,7 +1073,6 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 2 => 'Isparduota',
             ])
             ->setActive(true)
-            ->setLowStockAlert(true)
             ->setLowStockThreshold(10)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
             ->setAvailableDate(new DateTime('2022-10-11'))
@@ -1120,7 +1165,7 @@ class UpdateProductCommandsBuilderTest extends AbstractProductCommandBuilderTest
                         ],
                     ],
                     'options' => [
-                        'disabling_switch_low_stock_threshold' => true,
+                        sprintf('%slow_stock_threshold', DisablingSwitchExtension::FIELD_PREFIX) => true,
                         'low_stock_threshold' => 10,
                     ],
                     'pack_stock_type' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,

@@ -95,7 +95,6 @@ class StockInformationFillerTest extends ProductFillerTestCase
         $command = $this->getEmptyCommand()
             ->setLocalizedAvailableNowLabels($localizedAvailableNow)
             ->setLocalizedAvailableLaterLabels($localizedAvailableLater)
-            ->setLowStockAlert(true)
             ->setLowStockThreshold(42)
             ->setMinimalQuantity(10)
             ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
@@ -116,8 +115,8 @@ class StockInformationFillerTest extends ProductFillerTestCase
             [
                 'available_later' => [1, 2],
                 'available_now' => [1, 2],
-                'low_stock_alert',
                 'low_stock_threshold',
+                'low_stock_alert',
                 'minimal_quantity',
                 'pack_stock_type',
                 'available_date',

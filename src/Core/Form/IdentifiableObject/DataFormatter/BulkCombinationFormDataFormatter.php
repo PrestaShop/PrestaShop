@@ -58,11 +58,8 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[stock][fixed_quantity]' => '[stock][quantities][fixed_quantity]',
             '[stock][minimal_quantity]' => '[stock][quantities][minimal_quantity]',
             '[stock][stock_location]' => '[stock][options][stock_location]',
-            '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
-            sprintf(
-                '[stock][%slow_stock_threshold]',
-                DisablingSwitchExtension::FIELD_PREFIX
-            ) => sprintf(
+            '[stock][low_stock_threshold][threshold_value]' => '[stock][options][low_stock_threshold]',
+            '[stock][low_stock_threshold][low_stock_alert]' => sprintf(
                 '[stock][options][%slow_stock_threshold]',
                 DisablingSwitchExtension::FIELD_PREFIX
             ),

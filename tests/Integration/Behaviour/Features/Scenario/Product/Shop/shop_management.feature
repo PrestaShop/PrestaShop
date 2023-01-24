@@ -261,7 +261,6 @@ Feature: Copy product from shop to shop.
       | pack_stock_type               | pack_only    |
       | minimal_quantity              | 12           |
       | low_stock_threshold           | 42           |
-      | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
@@ -317,8 +316,7 @@ Feature: Copy product from shop to shop.
     When I update product "productWithStock" for shop shop1 with following values:
       | pack_stock_type               | products_only |
       | minimal_quantity              | 24            |
-      | low_stock_threshold           | 51            |
-      | low_stock_alert               | false         |
+      | low_stock_threshold           | 0             |
       | available_now_labels[en-US]   | hurry up      |
       | available_later_labels[en-US] | too slow...   |
       | available_date                | 1969-09-16    |
@@ -333,7 +331,7 @@ Feature: Copy product from shop to shop.
       | quantity            | 111           |
       | minimal_quantity    | 24            |
       | location            | upa           |
-      | low_stock_threshold | 51            |
+      | low_stock_threshold | 0             |
       | low_stock_alert     | false         |
       | available_date      | 1969-09-16    |
     And product "productWithStock" localized "available_now_labels" for shops "shop1" should be:
@@ -371,7 +369,7 @@ Feature: Copy product from shop to shop.
       | quantity            | 111           |
       | minimal_quantity    | 24            |
       | location            | upa           |
-      | low_stock_threshold | 51            |
+      | low_stock_threshold | 0             |
       | low_stock_alert     | false         |
       | available_date      | 1969-09-16    |
     And product "productWithStock" localized "available_now_labels" for shops "shop1,shop2" should be:
@@ -444,7 +442,6 @@ Feature: Copy product from shop to shop.
       | pack_stock_type               | pack_only    |
       | minimal_quantity              | 12           |
       | low_stock_threshold           | 42           |
-      | low_stock_alert               | true         |
       | available_now_labels[en-US]   | get it now   |
       | available_later_labels[en-US] | too late bro |
       | available_date                | 1969-07-16   |
