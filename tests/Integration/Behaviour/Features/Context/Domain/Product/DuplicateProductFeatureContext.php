@@ -44,10 +44,28 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param string $newProductReference
      */
-    public function duplicate(string $productReference, string $newProductReference): void
+    public function duplicateForDefaultShop(string $productReference, string $newProductReference): void
     {
         $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
-            $this->getSharedStorage()->get($productReference)
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->getDefaultShopId())
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
+     * @When I duplicate product :productReference to a :newProductReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     * @param string $shopReference
+     */
+    public function duplicateForShop(string $productReference, string $newProductReference, string $shopReference): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->referenceToId($shopReference))
         ));
 
         $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
@@ -66,7 +84,7 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds));
+            $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds, ShopConstraint::shop($this->getDefaultShopId())));
         } catch (ProductException $e) {
             $this->setLastException($e);
 

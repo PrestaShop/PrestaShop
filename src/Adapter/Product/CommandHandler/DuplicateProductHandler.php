@@ -57,6 +57,6 @@ final class DuplicateProductHandler implements DuplicateProductHandlerInterface
      */
     public function handle(DuplicateProductCommand $command): ProductId
     {
-        return $this->productDuplicator->duplicate($command->getProductId());
+        return $this->productDuplicator->duplicate($command->getProductId(), $command->getShopConstraint());
     }
 }

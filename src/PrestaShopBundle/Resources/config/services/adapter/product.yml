@@ -409,10 +409,8 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
-      - '@prestashop.adapter.shop.context'
       - '@translator'
       - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
 

@@ -63,10 +63,29 @@ class DetailsAssertionFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param ProductDetails $expectedDetails
      */
-    public function assertDetails(string $productReference, ProductDetails $expectedDetails): void
+    public function assertDetailsForDefaultShop(string $productReference, ProductDetails $expectedDetails): void
+    {
+        $this->assertDetails($productReference, $expectedDetails, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have following details for shop(s) :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param ProductDetails $expectedDetails
+     */
+    public function assertDetailsForShops(string $productReference, string $shopReferences, ProductDetails $expectedDetails): void
+    {
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertDetails($productReference, $expectedDetails, $shopId);
+        }
+    }
+
+    private function assertDetails(string $productReference, ProductDetails $expectedDetails, int $shopId): void
     {
         $properties = ['ean13', 'isbn', 'mpn', 'reference', 'upc'];
-        $actualDetails = $this->getProductForEditing($productReference)->getDetails();
+        $actualDetails = $this->getProductForEditing($productReference, $shopId)->getDetails();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($properties as $propertyName) {

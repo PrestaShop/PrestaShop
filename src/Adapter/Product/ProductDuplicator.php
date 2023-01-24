@@ -33,22 +33,18 @@ use GroupReduction;
 use Image;
 use Language;
 use Pack;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
-use Search;
 use Shop;
-use ShopGroup;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -60,7 +56,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ProductDuplicator
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -68,16 +64,6 @@ class ProductDuplicator
      * @var HookDispatcherInterface
      */
     private $hookDispatcher;
-
-    /**
-     * @var bool
-     */
-    private $isSearchIndexationOn;
-
-    /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
 
     /**
      * @var TranslatorInterface
@@ -90,31 +76,26 @@ class ProductDuplicator
     private $stringModifier;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param HookDispatcherInterface $hookDispatcher
-     * @param bool $isSearchIndexationOn
-     * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param TranslatorInterface $translator
      * @param StringModifierInterface $stringModifier
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
-        bool $isSearchIndexationOn,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
         TranslatorInterface $translator,
         StringModifierInterface $stringModifier
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
-        $this->isSearchIndexationOn = $isSearchIndexationOn;
-        $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
         $this->stringModifier = $stringModifier;
     }
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @return ProductId new product id
      *
@@ -122,16 +103,16 @@ class ProductDuplicator
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function duplicate(ProductId $productId): ProductId
+    public function duplicate(ProductId $productId, ShopConstraint $shopConstraint): ProductId
     {
         //@todo: add database transaction. After/if PR #21740 gets merged
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         $oldProductId = $productId->getValue();
         $this->hookDispatcher->dispatchWithParameters(
             'actionAdminDuplicateBefore',
             ['id_product' => $oldProductId]
         );
-        $newProduct = $this->duplicateProduct($product);
+        $newProduct = $this->duplicateProduct($product, $shopConstraint);
         $newProductId = (int) $newProduct->id;
 
         $this->duplicateRelations($oldProductId, $newProductId);
@@ -145,8 +126,6 @@ class ProductDuplicator
             ['id_product_old' => $oldProductId, 'id_product' => $newProductId, 'product' => $newProduct]
         );
 
-        $this->updateSearchIndexation($newProduct, $oldProductId);
-
         $this->hookDispatcher->dispatchWithParameters(
             'actionAdminDuplicateAfter',
             ['id_product' => $oldProductId, 'id_product_new' => $newProductId]
@@ -158,54 +137,20 @@ class ProductDuplicator
     }
 
     /**
-     * @todo this function should actualy use the ProductIndexationUpdater service
-     *
-     * @param Product $newProduct
-     * @param int $oldProductId
-     *
-     * @throws CannotUpdateProductException
-     */
-    private function updateSearchIndexation(Product $newProduct, int $oldProductId): void
-    {
-        $productIsVisibleInSearch = in_array(
-            $newProduct->visibility,
-            [ProductVisibility::VISIBLE_EVERYWHERE, ProductVisibility::VISIBLE_IN_SEARCH]
-        );
-
-        if (!$this->isSearchIndexationOn || !$productIsVisibleInSearch) {
-            return;
-        }
-
-        try {
-            if (!Search::indexation(false, $newProduct->id)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Cannot update search indexation when duplicating product %d', $oldProductId),
-                    CannotUpdateProductException::FAILED_UPDATE_SEARCH_INDEXATION
-                );
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when duplicating product %d. Failed to update search indexation', $oldProductId),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
      * @param Product $product
+     * @param ShopConstraint $shopConstraint
      *
      * @return Product the new product
      */
-    private function duplicateProduct(Product $product): Product
+    private function duplicateProduct(Product $product, ShopConstraint $shopConstraint): Product
     {
+        // Force a copy name to tell the two products apart
         $product->name = $this->getNewProductName($product->name);
-        $this->setPriceByShops($product);
-
+        // The duplicated product is disabled and not indexed by default
         $product->indexed = false;
         $product->active = false;
 
-        return $this->productRepository->duplicate($product);
+        return $this->productRepository->duplicate($product, $shopConstraint);
     }
 
     /**
@@ -226,49 +171,6 @@ class ProductDuplicator
         }
 
         return $newProductLocalizedNames;
-    }
-
-    /**
-     * @param Product $product
-     */
-    private function setPriceByShops(Product $product): void
-    {
-        if (!empty($product->price) || !$this->multistoreContextChecker->isGroupShopContext()) {
-            return;
-        }
-
-        foreach ($this->getContextShops() as $shop) {
-            $priceByShop = $this->productRepository->getPriceByShop(
-                new ProductId((int) $product->id),
-                new ShopId((int) $shop['id_shop'])
-            );
-
-            if (!$priceByShop) {
-                continue;
-            }
-
-            $product->price = (float) (string) $priceByShop;
-        }
-    }
-
-    /**
-     * @return array<int, array<string, string>>
-     *
-     * @throws CoreException
-     */
-    private function getContextShops(): array
-    {
-        try {
-            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                'Error occurred when trying to get context shop groups',
-                0,
-                $e
-            );
-        }
-
-        return $shops;
     }
 
     /**

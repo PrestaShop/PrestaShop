@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -560,6 +561,38 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         $defaultShopId = $this->getProductDefaultShopId($productId);
 
         return $this->getProductByShopId($productId, $defaultShopId);
+    }
+
+    /**
+     * Duplicates product entity, it only copies the product fields NOT its relations.
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     * @throws CannotDuplicateProductException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     */
+    public function duplicate(Product $product, ShopConstraint $shopConstraint): Product
+    {
+        if ($shopConstraint->getShopId()) {
+            $shopIds = [$shopConstraint->getShopId()];
+        } elseif ($shopConstraint->getShopGroupId()) {
+            $shopIds = $this->getAssociatedShopIdsFromGroup(new ProductId((int) $product->id), $shopConstraint->getShopGroupId());
+        } else {
+            $shopIds = $this->getAssociatedShopIds(new ProductId((int) $product->id));
+        }
+
+        $duplicatedProduct = clone $product;
+        unset($duplicatedProduct->id, $duplicatedProduct->id_product);
+
+        $this->productValidator->validateCreation($duplicatedProduct);
+        $this->productValidator->validate($duplicatedProduct);
+        $this->addObjectModelToShops($duplicatedProduct, $shopIds, CannotDuplicateProductException::class);
+
+        return $duplicatedProduct;
     }
 
     private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product

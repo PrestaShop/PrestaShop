@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -110,33 +109,6 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->productValidator = $productValidator;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
-    }
-
-    /**
-     * @todo: Not sure this should be in the repository as it gives a false feeling the the repository can duplicate a
-     *        product on its own, but you actually need to use the ProductDuplicator service to do it right, this method
-     *        should be removed and the duplicator service should rely on repository to add/update but it is the one that
-     *        must perform the required modifications on the object instance
-     * Duplicates product entity without relations
-     *
-     * @param Product $product
-     *
-     * @return Product
-     *
-     * @throws CoreException
-     * @throws CannotDuplicateProductException
-     * @throws ProductConstraintException
-     * @throws ProductException
-     */
-    public function duplicate(Product $product): Product
-    {
-        unset($product->id, $product->id_product);
-
-        $this->productValidator->validateCreation($product);
-        $this->productValidator->validate($product);
-        $this->addObjectModel($product, CannotDuplicateProductException::class);
-
-        return $product;
     }
 
     /**
