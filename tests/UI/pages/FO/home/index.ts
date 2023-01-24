@@ -408,7 +408,7 @@ class Home extends FOBasePage {
    * @param page {Page} Browser tab
    */
   async isCustomTextBlockVisible(page: Page): Promise<boolean> {
-    return this.elementVisible(page, this.customTextBlock);
+    return this.elementVisible(page, this.customTextBlock, 1000);
   }
 
   // Quick view methods
