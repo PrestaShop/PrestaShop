@@ -16,13 +16,12 @@ import addProductPage from '@pages/BO/catalog/products/add';
 import type {BrowserContext, Page} from 'playwright';
 import {expect} from 'chai';
 
-const baseContext: string = 'functional_BO_advancedParameters_newAndExperimentalFeatures_filterSortAndPagination';
+const baseContext: string = 'functional_BO_advancedParameters_newAndExperimentalFeatures_enableDisableExperimentalProductV2';
 
 /*
 - Enable/Disable new product page
 - Go to products page > new product and check it
  */
-
 describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disable new product page', async () => {
   let browserContext: BrowserContext;
   let page: Page;
@@ -52,14 +51,14 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       );
       await featureFlagPage.closeSfToolBar(page);
 
-      const pageTitle: string = await featureFlagPage.getPageTitle(page);
+      const pageTitle = await featureFlagPage.getPageTitle(page);
       await expect(pageTitle).to.contains(featureFlagPage.pageTitle);
     });
 
     it('should enable New product page - Single store', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableNewProductPage', baseContext);
 
-      const successMessage: string = await featureFlagPage.setNewProductPage(page, true);
+      const successMessage = await featureFlagPage.setNewProductPage(page, true);
       await expect(successMessage).to.be.contain(featureFlagPage.successfulUpdateMessage);
     });
 
@@ -73,14 +72,14 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       );
       await productsPageV2.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPageV2.getPageTitle(page);
+      const pageTitle = await productsPageV2.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPageV2.pageTitle);
     });
 
     it('should click on \'New product\' button and check new product modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNewProductButton', baseContext);
 
-      const isModalVisible: boolean = await productsPageV2.clickOnNewProductButton(page);
+      const isModalVisible = await productsPageV2.clickOnNewProductButton(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -90,7 +89,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       await productsPageV2.selectProductType(page, 'standard');
       await productsPageV2.clickOnAddNewProduct(page);
 
-      const pageTitle: string = await createProductsPageV2.getPageTitle(page);
+      const pageTitle = await createProductsPageV2.getPageTitle(page);
       await expect(pageTitle).to.contains(createProductsPageV2.pageTitle);
     });
   });
@@ -127,7 +126,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
       );
       await productsPageV1.closeSfToolBar(page);
 
-      const pageTitle: string = await productsPageV1.getPageTitle(page);
+      const pageTitle = await productsPageV1.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPageV1.pageTitle);
     });
 
@@ -136,7 +135,7 @@ describe('BO - Advanced Parameters - New & Experimental Features : Enable/Disabl
 
       await productsPageV1.goToAddProductPage(page);
 
-      const createProductTitle: string = await addProductPage.getPageTitle(page);
+      const createProductTitle = await addProductPage.getPageTitle(page);
       await expect(createProductTitle).to.contains(addProductPage.pageTitle);
     });
   });
