@@ -2262,6 +2262,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'maintenance_allow_admins' => (bool) Configuration::get('PS_MAINTENANCE_ALLOW_ADMINS'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,

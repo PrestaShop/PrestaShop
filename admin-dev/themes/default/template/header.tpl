@@ -238,18 +238,36 @@
       {/if}
 
       {if isset($maintenance_mode) && $maintenance_mode == true}
-      <div class="component hide-mobile-sm">
-        <a class="shop-state label-tooltip" id="maintenance-mode"
-           href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
-           data-toggle="tooltip"
-           data-placement="bottom"
-           data-html="true"
-           title="<p class=&quot;text-left text-nowrap&quot;><strong>{l|escape s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
-        >
-          <i class="material-icons">build</i>
-          <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
-        </a>
-      </div>
+        {capture name="title"}
+          <p class="text-left text-nowrap">
+            <strong>{l s='Your store is in maintenance mode.' d='Admin.Navigation.Notification'}</strong>
+          </p>
+          <p class="text-left">
+              {l s='Your visitors and customers cannot access your store while in maintenance mode.' d='Admin.Navigation.Notification'}
+          </p>
+          <p class="text-left">
+            {l s='To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' d='Admin.Navigation.Notification'}
+          </p>
+          {if isset($maintenance_allow_admins) && $maintenance_allow_admins}
+            <p class="text-left">
+                {l s='Admins can access the store front office without storing their IP.' d='Admin.Navigation.Notification'}
+            </p>
+          {/if}
+        {/capture}
+        <div class="component hide-mobile-sm">
+          <a class="shop-state label-tooltip" id="maintenance-mode"
+             href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             data-toggle="tooltip"
+             data-placement="bottom"
+             data-html="true"
+             title="{$smarty.capture.title|htmlspecialchars}"
+          >
+            <i class="material-icons"
+               style="{if isset($maintenance_allow_admins)}color: #72c279;{/if}"
+            >build</i>
+            <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
+          </a>
+        </div>
       {/if}
 
       {* Shop name *}

@@ -80,6 +80,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $this->initPageHeaderToolbar($controllerConfiguration);
 
         $controllerConfiguration->templateVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
+        $controllerConfiguration->templateVars['maintenance_allow_admins'] = !(bool) $this->configuration->get('PS_MAINTENANCE_ALLOW_ADMINS');
         $controllerConfiguration->templateVars['debug_mode'] = $this->isDebugMode;
         $controllerConfiguration->templateVars['lite_display'] = $controllerConfiguration->liteDisplay;
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
