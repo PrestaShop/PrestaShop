@@ -1,10 +1,6 @@
 name: Behaviour tests
 on:
   push:
-    # Do not run after merging a pull request
-    branches-ignore:
-      - 'develop'
-      - '**.x'
   pull_request:
     # Do not run when only tests are updated
     paths-ignore:
