@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

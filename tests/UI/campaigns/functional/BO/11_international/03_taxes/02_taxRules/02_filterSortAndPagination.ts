@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import taxesPage from '@pages/BO/international/taxes';
-import taxRulesPage from '@pages/BO/international/taxes/taxRules/index';
+import taxRulesPage from '@pages/BO/international/taxes/taxRules';
 import addTaxRulesPage from '@pages/BO/international/taxes/taxRules/add';
 
 // Import data
@@ -179,8 +179,8 @@ describe('BO - International - Tax rules : Filter, sort and pagination', async (
         const sortedTable = await taxRulesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

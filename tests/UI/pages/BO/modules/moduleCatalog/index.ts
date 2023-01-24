@@ -1,5 +1,4 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Module catalog page, contains selectors and functions for the page, Page should not exist for V8 and above
@@ -19,4 +18,4 @@ class ModuleCatalog extends BOBasePage {
   }
 }
 
-module.exports = new ModuleCatalog();
+export default new ModuleCatalog();

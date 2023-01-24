@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import TaxData from '@data/faker/tax';
+
+import {Page} from 'playwright';
 
 /**
  * Add tax page, contains functions that can be used on the page
@@ -7,6 +10,26 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddTax extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly successfulUpdateStatusMessage: string;
+
+  private readonly nameEnInput: string;
+
+  private readonly nameFrInput: string;
+
+  private readonly inputLangDropdownButton: string;
+
+  private readonly inputLangChoiceSpan: (lang: string) => string;
+
+  private readonly rateInput: string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly saveTaxButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add tax page
@@ -22,9 +45,9 @@ class AddTax extends BOBasePage {
     this.nameEnInput = '#tax_name_1';
     this.nameFrInput = '#tax_name_2';
     this.inputLangDropdownButton = 'button#tax_name_dropdown';
-    this.inputLangChoiceSpan = (lang) => `div.dropdown-menu span[data-locale='${lang}']`;
+    this.inputLangChoiceSpan = (lang: string) => `div.dropdown-menu span[data-locale='${lang}']`;
     this.rateInput = '#tax_rate';
-    this.statusToggleInput = (toggle) => `#tax_is_enabled_${toggle}`;
+    this.statusToggleInput = (toggle: number) => `#tax_is_enabled_${toggle}`;
     this.saveTaxButton = '#save-button';
   }
 
@@ -38,7 +61,7 @@ class AddTax extends BOBasePage {
    * @param lang {string} Value of language to change
    * @return {Promise<void>}
    */
-  async changeInputLanguage(page, lang) {
+  async changeInputLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
       page.click(this.inputLangDropdownButton),
       this.waitForVisibleSelector(page, `${this.inputLangDropdownButton}[aria-expanded='true']`),
@@ -55,7 +78,7 @@ class AddTax extends BOBasePage {
    * @param taxData {TaxData} Data to set on new/edit tax page
    * @returns {Promise<string>}
    */
-  async createEditTax(page, taxData) {
+  async createEditTax(page: Page, taxData: TaxData): Promise<string> {
     await this.changeInputLanguage(page, 'en');
     await this.setValue(page, this.nameEnInput, taxData.name);
     await this.changeInputLanguage(page, 'fr');
@@ -69,4 +92,4 @@ class AddTax extends BOBasePage {
   }
 }
 
-module.exports = new AddTax();
+export default new AddTax();

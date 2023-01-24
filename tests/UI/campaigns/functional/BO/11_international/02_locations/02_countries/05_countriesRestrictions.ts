@@ -120,7 +120,6 @@ describe('BO - International - Countries : Restrict country selections in front 
 
       // Click on view my shop
       page = await countriesPage.viewMyShop(page);
-
       // Change FO language
       await homePage.changeLanguage(page, 'en');
 

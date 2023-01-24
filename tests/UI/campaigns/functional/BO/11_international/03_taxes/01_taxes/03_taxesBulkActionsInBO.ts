@@ -73,6 +73,7 @@ describe('BO - International - Taxes : Bulk actions', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewTaxPage${index + 1}`, baseContext);
 
         await taxesPage.goToAddNewTaxPage(page);
+
         const pageTitle = await addTaxPage.getPageTitle(page);
         await expect(pageTitle).to.contains(addTaxPage.pageTitleCreate);
       });

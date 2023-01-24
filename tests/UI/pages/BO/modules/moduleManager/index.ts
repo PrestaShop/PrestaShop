@@ -1,7 +1,8 @@
 import BOBasePage from '@pages/BO/BObasePage';
 
-import type {Page} from 'playwright';
 import ModuleData from '@data/faker/module';
+
+import type {Page} from 'playwright';
 
 /**
  * Module manager page, contains selectors and functions for the page

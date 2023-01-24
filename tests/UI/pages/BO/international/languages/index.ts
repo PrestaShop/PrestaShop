@@ -1,5 +1,6 @@
-require('module-alias/register');
-const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
+import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Languages page, contains functions that can be used on the page
@@ -7,6 +8,76 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
  * @extends LocalizationBasePage
  */
 class Languages extends LocalizationBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  public readonly unSuccessfulUpdateDefaultLanguageStatusMessage: string;
+
+  private readonly addNewLanguageLink: string;
+
+  private readonly gridPanel: string;
+
+  private readonly gridTable: string;
+
+  private readonly gridHeaderTitle: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableEmptyRow: string;
+
+  private readonly tableColumn: (row: number, column: string) => string;
+
+  private readonly actionsColumn: (row: number) => string;
+
+  private readonly editRowLink: (row: number) => string;
+
+  private readonly dropdownToggleButton: (row: number) => string;
+
+  private readonly dropdownToggleMenu: (row: number) => string;
+
+  private readonly deleteRowLink: (row: number) => string;
+
+  private readonly statusColumn: (row: number) => string;
+
+  private readonly statusColumnToggleInput: (row: number) => string;
+
+  private readonly selectAllRowsLabel: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsEnableButton: string;
+
+  private readonly bulkActionsDisableButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on languages page
@@ -27,24 +98,24 @@ class Languages extends LocalizationBasePage {
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
 
     // Filters
-    this.filterColumn = (filterBy) => `${this.gridTable} #language_${filterBy}`;
+    this.filterColumn = (filterBy: string) => `${this.gridTable} #language_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
 
     // Column actions selectors
-    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
-    this.editRowLink = (row) => `${this.actionsColumn(row)} a.grid-edit-row-link`;
-    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
-    this.statusColumn = (row) => `${this.tableColumn(row, 'active')} .ps-switch`;
-    this.statusColumnToggleInput = (row) => `${this.statusColumn(row)} input`;
+    this.actionsColumn = (row: number) => `${this.tableRow(row)} td.column-actions`;
+    this.editRowLink = (row: number) => `${this.actionsColumn(row)} a.grid-edit-row-link`;
+    this.dropdownToggleButton = (row: number) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row: number) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row: number) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.statusColumn = (row: number) => `${this.tableColumn(row, 'active')} .ps-switch`;
+    this.statusColumnToggleInput = (row: number) => `${this.statusColumn(row)} input`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox i`;
@@ -57,8 +128,8 @@ class Languages extends LocalizationBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -73,7 +144,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewLanguage(page) {
+  async goToAddNewLanguage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewLanguageLink);
   }
 
@@ -83,7 +154,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -94,7 +165,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
@@ -103,7 +174,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
 
     return this.getNumberOfElementInGrid(page);
@@ -118,7 +189,7 @@ class Languages extends LocalizationBasePage {
    * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -141,7 +212,7 @@ class Languages extends LocalizationBasePage {
    * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, column) {
+  async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.tableColumn(row, column));
   }
 
@@ -151,9 +222,9 @@ class Languages extends LocalizationBasePage {
    * @param column {string} Column to get all rows
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
@@ -169,7 +240,7 @@ class Languages extends LocalizationBasePage {
    * @param row {number} Row to edit on table
    * @return {Promise<void>}
    */
-  async goToEditLanguage(page, row = 1) {
+  async goToEditLanguage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
@@ -179,7 +250,7 @@ class Languages extends LocalizationBasePage {
    * @param row {number} Row to delete on table
    * @returns {Promise<string>}
    */
-  async deleteLanguage(page, row = 1) {
+  async deleteLanguage(page: Page, row: number = 1): Promise<string> {
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(
@@ -204,7 +275,7 @@ class Languages extends LocalizationBasePage {
    * @param row {number} Row to get status
    * @return {Promise<boolean>}
    */
-  async getStatus(page, row) {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -223,7 +294,7 @@ class Languages extends LocalizationBasePage {
    * @param valueWanted {boolean} True if we need to enable status
    * @return {Promise<boolean>}, true if click has been performed
    */
-  async setStatus(page, row, valueWanted = true) {
+  async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.statusColumn(row));
 
@@ -240,10 +311,10 @@ class Languages extends LocalizationBasePage {
    * @param toEnable {boolean} True if we need to enable status, false if not
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, toEnable = true) {
+  async bulkSetStatus(page: Page, toEnable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -262,10 +333,10 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page) {
+  async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -288,7 +359,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteLanguages(page) {
+  async confirmDeleteLanguages(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -300,7 +371,7 @@ class Languages extends LocalizationBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
@@ -319,7 +390,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -329,7 +400,7 @@ class Languages extends LocalizationBasePage {
    * @param number {number} Number of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -343,7 +414,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationNextLink);
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
@@ -355,7 +426,7 @@ class Languages extends LocalizationBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.scrollTo(page, this.paginationPreviousLink);
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
@@ -363,4 +434,4 @@ class Languages extends LocalizationBasePage {
   }
 }
 
-module.exports = new Languages();
+export default new Languages();

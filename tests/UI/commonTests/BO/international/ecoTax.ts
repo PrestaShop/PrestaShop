@@ -39,7 +39,6 @@ function enableEcoTaxTest(baseContext: string = 'commonTests-enableEcoTaxTest'):
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
-
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);
@@ -79,7 +78,6 @@ function disableEcoTaxTest(baseContext: string = 'commonTests-disableEcoTaxTest'
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
-
       await taxesPage.closeSfToolBar(page);
 
       const pageTitle = await taxesPage.getPageTitle(page);

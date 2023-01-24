@@ -1,5 +1,8 @@
-require('module-alias/register');
-const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
+import LocalizationBasePage from '@pages/BO/international/localization/localizationBasePage';
+
+import type CurrencyData from '@data/faker/currency';
+
+import type {Page} from 'playwright';
 
 /**
  * Add currency page, contains functions that can be used on the page
@@ -7,6 +10,26 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
  * @extends LocalizationBasePage
  */
 class AddCurrency extends LocalizationBasePage {
+  public readonly pageTitle: string;
+
+  private readonly currencySelect: string;
+
+  private readonly alternativeCurrencyCheckBox: string;
+
+  private readonly currencyNameInput: (id: number) => string;
+
+  private readonly isoCodeInput: string;
+
+  private readonly exchangeRateInput: string;
+
+  private readonly precisionInput: string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly saveButton: string;
+
+  private readonly currencyLoadingModal: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -19,11 +42,11 @@ class AddCurrency extends LocalizationBasePage {
     // Selectors
     this.currencySelect = '#currency_selected_iso_code';
     this.alternativeCurrencyCheckBox = '#currency_unofficial';
-    this.currencyNameInput = (id) => `#currency_names_${id}`;
+    this.currencyNameInput = (id: number) => `#currency_names_${id}`;
     this.isoCodeInput = '#currency_iso_code';
     this.exchangeRateInput = '#currency_exchange_rate';
     this.precisionInput = '#currency_precision';
-    this.statusToggleInput = (toggle) => `#currency_active_${toggle}`;
+    this.statusToggleInput = (toggle: number) => `#currency_active_${toggle}`;
     this.saveButton = '#save-button';
 
     // currency modal
@@ -40,7 +63,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param currencyData {CurrencyData} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
-  async addOfficialCurrency(page, currencyData) {
+  async addOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
     // Select currency
     await page.selectOption(this.currencySelect, currencyData.isoCode);
     await this.waitForVisibleSelector(page, `${this.currencyLoadingModal}.show`);
@@ -83,7 +106,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param currencyData {CurrencyData} Data to set on add currency form
    * @returns {Promise<string>}
    */
-  async createUnOfficialCurrency(page, currencyData) {
+  async createUnOfficialCurrency(page: Page, currencyData: CurrencyData): Promise<string> {
     await this.setCheckedWithIcon(page, this.alternativeCurrencyCheckBox);
     await this.setValue(page, this.currencyNameInput(1), currencyData.name);
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
@@ -100,7 +123,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param value {number} Value to set on exchange rate input
    * @returns {Promise<string>}
    */
-  async updateExchangeRate(page, value) {
+  async updateExchangeRate(page: Page, value: number): Promise<string> {
     await this.setValue(page, this.exchangeRateInput, value.toString());
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
@@ -113,7 +136,7 @@ class AddCurrency extends LocalizationBasePage {
    * @param value {number} Value to set on exchange rate input
    * @return {Promise<string>}
    */
-  async setCurrencyPrecision(page, value = 2) {
+  async setCurrencyPrecision(page: Page, value: number = 2): Promise<string> {
     await this.setValue(page, this.precisionInput, value.toString());
 
     // Save new value
@@ -123,4 +146,4 @@ class AddCurrency extends LocalizationBasePage {
   }
 }
 
-module.exports = new AddCurrency();
+export default new AddCurrency();

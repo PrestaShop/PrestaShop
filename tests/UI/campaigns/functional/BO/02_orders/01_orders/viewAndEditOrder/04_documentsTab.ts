@@ -10,7 +10,7 @@ import {createOrderByCustomerTest} from '@commonTests/FO/order';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPagePaymentBlock from '@pages/BO/orders/view/paymentBlock';
 import orderPageProductsBlock from '@pages/BO/orders/view/productsBlock';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';

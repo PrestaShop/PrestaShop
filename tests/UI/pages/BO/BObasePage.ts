@@ -13,13 +13,13 @@ export default class BOBasePage extends CommonPage {
 
   public successfulUpdateMessage: string;
 
-  public readonly successfulDeleteMessage: string;
+  public successfulDeleteMessage: string;
 
   public readonly successfulMultiDeleteMessage: string;
 
   private readonly accessDeniedMessage: string;
 
-  private readonly pageNotFoundMessage: string;
+  public readonly pageNotFoundMessage: string;
 
   private readonly userProfileIconNonMigratedPages: string;
 
@@ -89,7 +89,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly filesLink: string;
 
-  private readonly discountsLink: string;
+  public readonly discountsLink: string;
 
   private readonly stocksLink: string;
 
@@ -97,7 +97,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly customersLink: string;
 
-  private readonly addressesLink: string;
+  public readonly addressesLink: string;
 
   private readonly outstandingLink: string;
 
@@ -141,9 +141,9 @@ export default class BOBasePage extends CommonPage {
 
   private readonly preferencesLink: string;
 
-  private readonly internationalParentLink: string;
+  public readonly internationalParentLink: string;
 
-  private readonly taxesLink: string;
+  public readonly taxesLink: string;
 
   private readonly localizationLink: string;
 
@@ -215,7 +215,7 @@ export default class BOBasePage extends CommonPage {
 
   protected alertSuccessBlockParagraph: string;
 
-  private readonly alertDangerBlockParagraph: string;
+  protected alertDangerBlockParagraph: string;
 
   private readonly alertInfoBlockParagraph: string;
 

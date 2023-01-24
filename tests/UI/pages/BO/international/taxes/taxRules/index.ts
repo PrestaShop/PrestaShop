@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Tax rules page, contains functions that can be used on the page
@@ -7,6 +8,82 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class TaxRules extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly addNewTaxRulesGroupLink: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly editRowLink: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnActive: (row: number) => string;
+
+  private readonly tableColumnCheckIcon: (row: number) => string;
+
+  private readonly toggleDropDown: (row: number) => string;
+
+  private readonly deleteRowLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly bulkEnableLink: string;
+
+  private readonly bulkDisableLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on tax rules page
@@ -29,39 +106,39 @@ class TaxRules extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='tax_rules_groupFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='tax_rules_groupFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtontax_rules_group';
     this.filterResetButton = `${this.filterRow} button[name='submitResettax_rules_group']`;
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
-    this.editRowLink = (row) => `${this.tableRow(row)} a.edit`;
-    this.tableBodyColumn = (row) => `${this.tableRow(row)} td`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
+    this.editRowLink = (row: number) => `${this.tableRow(row)} a.edit`;
+    this.tableBodyColumn = (row: number) => `${this.tableRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnActive = (row) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
-    this.tableColumnCheckIcon = (row) => `${this.tableColumnActive(row)} i.icon-check`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnName = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnActive = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4) a`;
+    this.tableColumnCheckIcon = (row: number) => `${this.tableColumnActive(row)} i.icon-check`;
 
     // Bulk actions selectors
-    this.toggleDropDown = (row) => `${this.tableRow(row)} button[data-toggle='dropdown']`;
-    this.deleteRowLink = (row) => `${this.tableRow(row)} a.delete`;
+    this.toggleDropDown = (row: number) => `${this.tableRow(row)} button[data-toggle='dropdown']`;
+    this.deleteRowLink = (row: number) => `${this.tableRow(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
@@ -84,7 +161,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewTaxRulesGroupPage(page) {
+  async goToAddNewTaxRulesGroupPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewTaxRulesGroupLink);
   }
 
@@ -94,7 +171,7 @@ class TaxRules extends BOBasePage {
    * @param row {number} Row on table to edit
    * @returns {Promise<void>}
    */
-  async goToEditTaxRulePage(page, row = 1) {
+  async goToEditTaxRulePage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
@@ -103,7 +180,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -115,7 +192,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -124,9 +201,9 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param columnName {string} Column name to get text column from table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getTextColumnFromTable(page, row, columnName) {
+  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string|null> {
     let columnSelector;
 
     switch (columnName) {
@@ -158,7 +235,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
 
     return this.getNumberOfElementInGrid(page);
@@ -172,7 +249,7 @@ class TaxRules extends BOBasePage {
    * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -193,7 +270,7 @@ class TaxRules extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteTaxRule(page, row = 1) {
+  async deleteTaxRule(page: Page, row: number = 1): Promise<string> {
     // Click on dropDown
     await page.click(this.toggleDropDown(row));
     // Click on delete
@@ -212,9 +289,9 @@ class TaxRules extends BOBasePage {
    * @param columnName {string} Column name to get all rows column content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
-    const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<(string|null)[]> {
+    const rowsNumber: number = await this.getNumberOfElementInGrid(page);
+    const allRowsContentTable: (string|null)[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, columnName);
@@ -231,7 +308,7 @@ class TaxRules extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     let columnSelector;
 
     switch (sortBy) {
@@ -257,7 +334,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -267,7 +344,7 @@ class TaxRules extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
 
@@ -279,7 +356,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -290,7 +367,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -302,7 +379,7 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await page.click(this.bulkActionMenuButton);
 
     await Promise.all([
@@ -316,8 +393,8 @@ class TaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async bulkDeleteTaxRules(page) {
-    this.dialogListener(page, true);
+  async bulkDeleteTaxRules(page: Page): Promise<string> {
+    await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -334,9 +411,9 @@ class TaxRules extends BOBasePage {
    * Enable / disable tax rules by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to bulk enable status, false if not
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
-  async bulkSetStatus(page, enable = true) {
+  async bulkSetStatus(page: Page, enable: boolean = true): Promise<void> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -355,7 +432,7 @@ class TaxRules extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  async getStatus(page, row) {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.tableColumnActive(row), 2000);
 
     return this.elementVisible(page, this.tableColumnCheckIcon(row), 100);
@@ -368,10 +445,10 @@ class TaxRules extends BOBasePage {
    * @param valueWanted {boolean} True if we need to enable status, false if not
    * @return {Promise<boolean>}, return true if action is done, false otherwise
    */
-  async setStatus(page, row, valueWanted = true) {
+  async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
       await Promise.all([
-        page.$eval(`${this.tableColumnActive(row)} i`, (el) => el.click()),
+        page.$eval(`${this.tableColumnActive(row)} i`, (el: HTMLElement) => el.click()),
         page.waitForNavigation({waitUntil: 'networkidle'}),
       ]);
       return true;
@@ -380,4 +457,4 @@ class TaxRules extends BOBasePage {
   }
 }
 
-module.exports = new TaxRules();
+export default new TaxRules();

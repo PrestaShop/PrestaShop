@@ -13,7 +13,7 @@ import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO
 
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
-import loginPage from '@pages/BO/login/index';
+import loginPage from '@pages/BO/login';
 import ordersPage from '@pages/BO/orders';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 

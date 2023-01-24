@@ -1,5 +1,9 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type TaxRuleData from '@data/faker/taxRule';
+import type TaxRulesGroupData from '@data/faker/taxRulesGroup';
+
+import type {Page} from 'playwright';
 
 /**
  * Add tax rules page, contains functions that can be used on the page
@@ -7,6 +11,32 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddTaxRules extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly addNewTaxRuleButton: string;
+
+  private readonly taxRuleGroupForm: string;
+
+  private readonly nameInput: string;
+
+  private readonly statusInput: (id: string) => string;
+
+  private readonly saveTaxButton: string;
+
+  private readonly taxRuleForm: string;
+
+  private readonly countrySelect: string;
+
+  private readonly behaviourSelect: string;
+
+  private readonly taxSelect: string;
+
+  private readonly descriptionInput: string;
+
+  private readonly saveAndStayButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add tax rules page
@@ -24,7 +54,7 @@ class AddTaxRules extends BOBasePage {
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
     this.nameInput = `${this.taxRuleGroupForm} #name`;
-    this.statusInput = (id) => `${this.taxRuleGroupForm} input#active_${id}`;
+    this.statusInput = (id: string) => `${this.taxRuleGroupForm} input#active_${id}`;
     this.saveTaxButton = `${this.taxRuleGroupForm} #tax_rules_group_form_submit_btn`;
 
     // New tax rule form
@@ -46,7 +76,7 @@ class AddTaxRules extends BOBasePage {
    * @param taxRuleGroupData {TaxRulesGroupData} Data to set on tax rule group data
    * @returns {Promise<string>}
    */
-  async createEditTaxRulesGroup(page, taxRuleGroupData) {
+  async createEditTaxRulesGroup(page: Page, taxRuleGroupData: TaxRulesGroupData): Promise<string> {
     await this.setValue(page, this.nameInput, taxRuleGroupData.name);
     await this.setChecked(page, this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
@@ -61,7 +91,7 @@ class AddTaxRules extends BOBasePage {
    * @param taxRuleData {TaxRuleData} Data to set on new/edit tax rule data
    * @returns {Promise<string>}
    */
-  async createEditTaxRules(page, taxRuleData) {
+  async createEditTaxRules(page: Page, taxRuleData: TaxRuleData): Promise<string> {
     await this.selectByVisibleText(page, this.countrySelect, taxRuleData.country);
     await this.selectByVisibleText(page, this.behaviourSelect, taxRuleData.behaviour);
     await this.selectByVisibleText(page, this.taxSelect, taxRuleData.name);
@@ -77,8 +107,8 @@ class AddTaxRules extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async clickOnAddNewTaxRule(page) {
+  async clickOnAddNewTaxRule(page: Page): Promise<void> {
     await page.click(this.addNewTaxRuleButton);
   }
 }
-module.exports = new AddTaxRules();
+export default new AddTaxRules();

@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Delivery slips page, contains functions that can be used on delivery slips page
@@ -7,6 +8,28 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class DeliverySlips extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly errorMessageWhenGenerateFileByDate: string;
+
+  private readonly generateByDateForm: string;
+
+  private readonly dateFromInput: string;
+
+  private readonly dateToInput: string;
+
+  private readonly generatePdfByDateButton: string;
+
+  private readonly deliverySlipForm: string;
+
+  private readonly deliveryPrefixInput: string;
+
+  private readonly deliveryNumberInput: string;
+
+  private readonly deliveryProductImageStatusToggleInput: (toggle: number) => string;
+
+  private readonly saveDeliverySlipOptionsButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on delivery slips page
@@ -29,7 +52,7 @@ class DeliverySlips extends BOBasePage {
     this.deliverySlipForm = '#form-delivery-slips-options';
     this.deliveryPrefixInput = '#form_prefix_1';
     this.deliveryNumberInput = '#form_number';
-    this.deliveryProductImageStatusToggleInput = (toggle) => `#form_enable_product_image_${toggle}`;
+    this.deliveryProductImageStatusToggleInput = (toggle: number) => `#form_enable_product_image_${toggle}`;
     this.saveDeliverySlipOptionsButton = `${this.deliverySlipForm} #save-delivery-slip-options-button`;
   }
 
@@ -44,7 +67,7 @@ class DeliverySlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<string>}
    */
-  async generatePDFByDateAndDownload(page, dateFrom = '', dateTo = '') {
+  async generatePDFByDateAndDownload(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string|null> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
 
     return this.clickAndWaitForDownload(page, this.generatePdfByDateButton);
@@ -57,7 +80,7 @@ class DeliverySlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<string>}
    */
-  async generatePDFByDateAndFail(page, dateFrom = '', dateTo = '') {
+  async generatePDFByDateAndFail(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<string> {
     await this.setValuesForGeneratingPDFByDate(page, dateFrom, dateTo);
     await page.click(this.generatePdfByDateButton);
     return this.getAlertDangerBlockParagraphContent(page);
@@ -70,7 +93,7 @@ class DeliverySlips extends BOBasePage {
    * @param dateTo {string} Value to set on date to input
    * @returns {Promise<void>}
    */
-  async setValuesForGeneratingPDFByDate(page, dateFrom = '', dateTo = '') {
+  async setValuesForGeneratingPDFByDate(page: Page, dateFrom: string = '', dateTo: string = ''): Promise<void> {
     if (dateFrom) {
       await this.setValue(page, this.dateFromInput, dateFrom);
     }
@@ -85,7 +108,7 @@ class DeliverySlips extends BOBasePage {
    * @param prefix {string} Prefix value to set
    * @returns {Promise<void>}
    */
-  async changePrefix(page, prefix) {
+  async changePrefix(page: Page, prefix: string): Promise<void> {
     await this.setValue(page, this.deliveryPrefixInput, prefix);
   }
 
@@ -94,7 +117,7 @@ class DeliverySlips extends BOBasePage {
    * @param number {number} Number value to change
    * @returns {Promise<void>}
    */
-  async changeNumber(page, number) {
+  async changeNumber(page: Page, number: number): Promise<void> {
     await this.setValue(page, this.deliveryNumberInput, number);
   }
 
@@ -104,7 +127,7 @@ class DeliverySlips extends BOBasePage {
    * @param enable {boolean} True if we need to enable product image
    * @returns {Promise<void>}
    */
-  async setEnableProductImage(page, enable = true) {
+  async setEnableProductImage(page: Page, enable: boolean = true): Promise<void> {
     await this.setChecked(page, this.deliveryProductImageStatusToggleInput(enable ? 1 : 0));
   }
 
@@ -112,9 +135,9 @@ class DeliverySlips extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async saveDeliverySlipOptions(page) {
+  async saveDeliverySlipOptions(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.saveDeliverySlipOptionsButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
-module.exports = new DeliverySlips();
+export default new DeliverySlips();

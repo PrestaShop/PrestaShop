@@ -11,7 +11,7 @@ import currenciesPage from '@pages/BO/international/currencies';
 import addCurrencyPage from '@pages/BO/international/currencies/add';
 import localizationPage from '@pages/BO/international/localization';
 
-// Impprt data
+// Import data
 import type CurrencyData from '@data/faker/currency';
 
 import {expect} from 'chai';
@@ -113,7 +113,6 @@ function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
         dashboardPage.internationalParentLink,
         dashboardPage.localizationLink,
       );
-
       await localizationPage.closeSfToolBar(page);
 
       const pageTitle = await localizationPage.getPageTitle(page);
@@ -124,6 +123,7 @@ function deleteCurrencyTest(currencyData: CurrencyData, baseContext: string = 'c
       await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage2', baseContext);
 
       await localizationPage.goToSubTabCurrencies(page);
+
       const pageTitle = await currenciesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(currenciesPage.pageTitle);
     });

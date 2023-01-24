@@ -10,7 +10,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import ordersPage from '@pages/BO/orders';
-import invoicesPage from '@pages/BO/orders/invoices/index';
+import invoicesPage from '@pages/BO/orders/invoices';
 import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
 // Import FO pages
 import cartPage from '@pages/FO/cart';
@@ -73,7 +73,6 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
             dashboardPage.ordersParentLink,
             dashboardPage.invoicesLink,
           );
-
           await invoicesPage.closeSfToolBar(page);
 
           const pageTitle = await invoicesPage.getPageTitle(page);

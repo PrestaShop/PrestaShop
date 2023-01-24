@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * View shopping page, contains functions that can be used on view shopping cart page
@@ -7,6 +8,36 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ViewShoppingCarts extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly cartSubtitle: string;
+
+  private readonly cartTotal: string;
+
+  private readonly customerInformationBlock: string;
+
+  private readonly customerInformationCartBody: string;
+
+  private readonly orderInformationBlock: string;
+
+  private readonly orderInformationBlockBody: string;
+
+  private readonly orderInformationButtonCreateOrder: string;
+
+  private readonly orderInformationLinkOrder: string;
+
+  private readonly cartSummaryBlock: string;
+
+  private readonly cartSummaryBlockBody: string;
+
+  private readonly cartSummaryTable: string;
+
+  private readonly cartSummaryTableBody: string;
+
+  private readonly cartSummaryTableRow: (row: number) => string;
+
+  private readonly cartSummaryTableColumn: (row: number, column: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on view shopping cart page
@@ -35,8 +66,8 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryBlockBody = `${this.cartSummaryBlock} .card-body`;
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
-    this.cartSummaryTableRow = (row) => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
-    this.cartSummaryTableColumn = (row, column) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
+    this.cartSummaryTableRow = (row: number) => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
+    this.cartSummaryTableColumn = (row:number, column: number) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
   }
 
   /*
@@ -47,7 +78,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCartId(page) {
+  async getCartId(page: Page): Promise<string> {
     return this.getTextContent(page, this.cartSubtitle);
   }
 
@@ -56,7 +87,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getCartTotal(page) {
+  async getCartTotal(page: Page): Promise<number> {
     return this.getPriceFromText(page, this.cartTotal);
   }
 
@@ -65,7 +96,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getCustomerInformation(page) {
+  async getCustomerInformation(page: Page): Promise<string> {
     return this.getTextContent(page, this.customerInformationCartBody);
   }
 
@@ -74,7 +105,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getOrderInformation(page) {
+  async getOrderInformation(page: Page): Promise<string> {
     return this.getTextContent(page, this.orderInformationBlockBody);
   }
 
@@ -83,9 +114,9 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column on table
    * @param row {number} Row on table
-   * @returns {Promise<string|number>}
+   * @returns {Promise<string|null>}
    */
-  async getTextColumn(page, columnName, row = 1) {
+  async getTextColumn(page: Page, columnName: string, row: number = 1): Promise<string|null> {
     let columnSelector;
 
     switch (columnName) {
@@ -141,7 +172,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async hasButtonCreateOrderFromCart(page) {
+  async hasButtonCreateOrderFromCart(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.orderInformationButtonCreateOrder, 1000);
   }
 
@@ -150,7 +181,7 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async createOrderFromThisCart(page) {
+  async createOrderFromThisCart(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.orderInformationButtonCreateOrder);
   }
 
@@ -159,9 +190,9 @@ class ViewShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToOrderPage(page) {
+  async goToOrderPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.orderInformationLinkOrder);
   }
 }
 
-module.exports = new ViewShoppingCarts();
+export default new ViewShoppingCarts();

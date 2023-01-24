@@ -1,12 +1,19 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Localization base page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
-module.exports = class LocalizationBasePage extends BOBasePage {
+export default class LocalizationBasePage extends BOBasePage {
+  private readonly localizationNavItemLink: string;
+
+  private readonly languagesNavItemLink: string;
+
+  private readonly currenciesNavItemLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on localization page
@@ -25,7 +32,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabLanguages(page) {
+  async goToSubTabLanguages(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.languagesNavItemLink);
   }
 
@@ -34,7 +41,7 @@ module.exports = class LocalizationBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabCurrencies(page) {
+  async goToSubTabCurrencies(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.currenciesNavItemLink);
   }
 };

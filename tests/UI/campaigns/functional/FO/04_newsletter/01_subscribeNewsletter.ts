@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import moduleManagerPage from '@pages/BO/modules/moduleManager';
-import moduleConfigurationPage from '@pages/BO/modules/moduleConfiguration';
+import {moduleConfigurationPage} from '@pages/BO/modules/moduleConfiguration';
 import psEmailSubscriptionPage from '@pages/BO/modules/psEmailSubscription';
 // Import FO pages
 import foHomePage from '@pages/FO/home';

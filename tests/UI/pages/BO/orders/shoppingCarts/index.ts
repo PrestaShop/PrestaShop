@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Shopping carts page, contains functions that can be used on shopping carts page
@@ -7,6 +8,82 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class ShoppingCarts extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterDateFromColumn: string;
+
+  private readonly filterDateToColumn: string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnOrderId: (row: number) => string;
+
+  private readonly tableColumnCustomer: (row: number) => string;
+
+  private readonly tableColumnTotal: (row: number) => string;
+
+  private readonly tableColumnCarrier: (row: number) => string;
+
+  private readonly tableColumnDate: (row: number) => string;
+
+  private readonly tableColumnOnline: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsViewLink: (row: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on shopping carts page
@@ -27,7 +104,7 @@ class ShoppingCarts extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='cartFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='cartFilter_${filterBy}']`;
     this.filterDateFromColumn = `${this.filterRow} #local_cartFilter_a__date_add_0`;
     this.filterDateToColumn = `${this.filterRow} #local_cartFilter_a__date_add_1`;
     this.filterSearchButton = '#submitFilterButtoncart';
@@ -36,19 +113,19 @@ class ShoppingCarts extends BOBasePage {
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = (row) => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnOrderId = (row) => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnCustomer = (row) => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnTotal = (row) => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnCarrier = (row) => `${this.tableBodyColumn(row)}:nth-child(6)`;
-    this.tableColumnDate = (row) => `${this.tableBodyColumn(row)}:nth-child(7)`;
-    this.tableColumnOnline = (row) => `${this.tableBodyColumn(row)}:nth-child(8)`;
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)}:nth-child(9)`;
-    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a.btn-default`;
+    this.tableColumnId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(2)`;
+    this.tableColumnOrderId = (row: number) => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnCustomer = (row: number) => `${this.tableBodyColumn(row)}:nth-child(4)`;
+    this.tableColumnTotal = (row: number) => `${this.tableBodyColumn(row)}:nth-child(5)`;
+    this.tableColumnCarrier = (row: number) => `${this.tableBodyColumn(row)}:nth-child(6)`;
+    this.tableColumnDate = (row: number) => `${this.tableBodyColumn(row)}:nth-child(7)`;
+    this.tableColumnOnline = (row: number) => `${this.tableBodyColumn(row)}:nth-child(8)`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)}:nth-child(9)`;
+    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a.btn-default`;
 
     // Bulk actions selectors
     this.bulkActionBlock = 'div.bulk-actions';
@@ -61,14 +138,14 @@ class ShoppingCarts extends BOBasePage {
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /* Filter methods */
@@ -78,7 +155,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -87,7 +164,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -99,7 +176,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -112,10 +189,10 @@ class ShoppingCarts extends BOBasePage {
    * @param value {string} Value to filter
    * @returns {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
@@ -138,7 +215,7 @@ class ShoppingCarts extends BOBasePage {
    * @param dateTo {string} Value to set on filter date to input
    * @returns {Promise<void>}
    */
-  async filterByDate(page, dateFrom, dateTo) {
+  async filterByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.filterDateFromColumn, dateFrom);
     await page.type(this.filterDateToColumn, dateTo);
     // click on search
@@ -154,7 +231,7 @@ class ShoppingCarts extends BOBasePage {
    * @param columnName {string} Column name of the value to return
    * @returns {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -199,9 +276,9 @@ class ShoppingCarts extends BOBasePage {
    * @param columnName {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
@@ -217,9 +294,9 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async bulkDeleteShoppingCarts(page) {
+  async bulkDeleteShoppingCarts(page: Page): Promise<string> {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await Promise.all([
@@ -250,7 +327,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -260,7 +337,7 @@ class ShoppingCarts extends BOBasePage {
    * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.waitForSelectorAndClick(page, this.paginationItems(number));
     return this.getPaginationLabel(page);
@@ -271,7 +348,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
     return this.getPaginationLabel(page);
   }
@@ -281,7 +358,7 @@ class ShoppingCarts extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
     return this.getPaginationLabel(page);
   }
@@ -294,8 +371,8 @@ class ShoppingCarts extends BOBasePage {
    * @param sortDirection {string} Sort direction by asc or desc
    * @returns {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
-    let columnSelector;
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
+    let columnSelector: string;
 
     switch (sortBy) {
       case 'id_cart':
@@ -336,9 +413,9 @@ class ShoppingCarts extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToViewPage(page, row) {
+  async goToViewPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 }
 
-module.exports = new ShoppingCarts();
+export default new ShoppingCarts();
