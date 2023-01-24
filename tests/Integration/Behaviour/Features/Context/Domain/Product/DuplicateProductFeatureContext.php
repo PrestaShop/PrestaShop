@@ -88,6 +88,23 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @When I duplicate product :productReference to a :newProductReference for shop group :shopGroupReference
+     *
+     * @param string $productReference
+     * @param string $newProductReference
+     * @param string $shopGroupReference
+     */
+    public function duplicateForShopGroup(string $productReference, string $newProductReference, string $shopGroupReference): void
+    {
+        $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shopGroup($this->referenceToId($shopGroupReference))
+        ));
+
+        $this->getSharedStorage()->set($newProductReference, $newProductId->getValue());
+    }
+
+    /**
      * @When I bulk duplicate following products:
      *
      * @param TableNode $productsList

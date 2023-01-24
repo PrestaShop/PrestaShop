@@ -432,3 +432,159 @@ Feature: Copy product from shop to shop.
     And product productWithFieldsOnAllShops is not associated to shop shop4
     # The default shop is the same as the initial one
     And default shop for product productWithFieldsOnAllShops is shop2
+
+  Scenario: I duplicate a product for a shop group all its associated data is copied (based on created product in previous scenario)
+    When I duplicate product productWithFields to a productWithFieldsDefaultGroup for shop group default_shop_group
+    # Shop1 and shop2 have the same values
+    Then product "productWithFieldsDefaultGroup" should be disabled for shops "shop1,shop2"
+    And product "productWithFieldsDefaultGroup" type should be standard for shops "shop1,shop2"
+    And product "productWithFieldsDefaultGroup" localized "name" for shops "shop1,shop2" should be:
+      | locale | value                       |
+      | en-US  | copy of smart sunglasses    |
+      | fr-FR  | copie de lunettes de soleil |
+    And product "productWithFieldsDefaultGroup" localized "description" for shops "shop1,shop2" should be:
+      | locale | value           |
+      | en-US  | nice sunglasses |
+      | fr-FR  | belles lunettes |
+    And product "productWithFieldsDefaultGroup" localized "description_short" for shops "shop1,shop2" should be:
+      | locale | value                      |
+      | en-US  | Simple & nice sunglasses   |
+      | fr-FR  | lunettes simples et belles |
+    And product "productWithFieldsDefaultGroup" should have following options for shops "shop1,shop2":
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | false        |
+      | manufacturer        | studioDesign |
+    And product "productWithFieldsDefaultGroup" should have following details for shops "shop1,shop2":
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
+    And product productWithFieldsDefaultGroup should have following prices information for shops "shop1,shop2":
+      | price                   | 100.00          |
+      | ecotax                  | 0               |
+      | tax rules group         | US-AL Rate (4%) |
+      | on_sale                 | true            |
+      | wholesale_price         | 70              |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 520             |
+      | unit_price_ratio        | 0.2             |
+      | unity                   | bag of ten      |
+    And product "productWithFieldsDefaultGroup" localized "meta_title" for shops "shop1,shop2" should be:
+      | locale | value                 |
+      | en-US  | SUNGLASSES meta title |
+    And product "productWithFieldsDefaultGroup" localized "meta_description" for shops "shop1,shop2" should be:
+      | locale | value        |
+      | en-US  | Its so smart |
+      | fr-FR  | lel joke     |
+    And product "productWithFieldsDefaultGroup" localized "link_rewrite" for shops "shop1,shop2" should be:
+      | locale | value              |
+      | en-US  | smart-sunglasses   |
+      | fr-FR  | lunettes-de-soleil |
+    And product productWithFieldsDefaultGroup should have following seo options for shops "shop1,shop2":
+      | redirect_type   | 301-product           |
+      | redirect_target | productForRedirection |
+    And product "productWithFieldsDefaultGroup" should have following shipping information for shops "shop1,shop2":
+      | width                                   | 10.5                 |
+      | height                                  | 6                    |
+      | depth                                   | 7                    |
+      | weight                                  | 0.5                  |
+      | additional_shipping_cost                | 12                   |
+      | delivery time notes type                | specific             |
+      | delivery time in stock notes[en-US]     | product in stock     |
+      | delivery time in stock notes[fr-FR]     | en stock             |
+      | delivery time out of stock notes[en-US] | product out of stock |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock  |
+      | carriers                                | []                   |
+    And productWithFields and productWithFieldsDefaultGroup have different values
+    And product productWithFieldsDefaultGroup is associated to shop shop1
+    And product productWithFieldsDefaultGroup is associated to shop shop2
+    And product productWithFieldsDefaultGroup is not associated to shop shop3
+    And product productWithFieldsDefaultGroup is not associated to shop shop4
+    # The default shop is the same as the initial one because it is part of the group
+    And default shop for product productWithFieldsDefaultGroup is shop2
+    #
+    # Now copy to other group
+    #
+    When I duplicate product productWithFields to a productWithFieldsSecondGroup for shop group test_second_shop_group
+    Then product "productWithFieldsSecondGroup" should be disabled for shops "shop3"
+    And product "productWithFieldsSecondGroup" type should be standard for shop shop3
+    And product "productWithFieldsSecondGroup" localized "name" for shops "shop3" should be:
+      | locale | value                        |
+      | en-US  | copy of smart sunglasses3    |
+      | fr-FR  | copie de lunettes de soleil3 |
+    And product "productWithFieldsSecondGroup" localized "description" for shops "shop3" should be:
+      | locale | value            |
+      | en-US  | nice sunglasses3 |
+      | fr-FR  | belles lunettes3 |
+    And product "productWithFieldsSecondGroup" localized "description_short" for shops "shop3" should be:
+      | locale | value                       |
+      | en-US  | Simple & nice sunglasses3   |
+      | fr-FR  | lunettes simples et belles3 |
+    And product "productWithFieldsSecondGroup" should have following options for shops shop3:
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | false        |
+      | manufacturer        | studioDesign |
+    And product "productWithFieldsSecondGroup" should have following details for shops shop3:
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
+    And product productWithFieldsSecondGroup should have following prices information for shops shop3:
+      | price                   | 103.00        |
+      | ecotax                  | 3.0           |
+      | tax rules group         | US Tax group  |
+      | on_sale                 | false         |
+      | wholesale_price         | 73            |
+      | unit_price              | 1030          |
+      | unit_price_tax_included | 1091.80       |
+      # 103 / 1030
+      | unit_price_ratio        | 0.1           |
+      | unity                   | bag of twenty |
+    And product "productWithFieldsSecondGroup" localized "meta_title" for shops shop3 should be:
+      | locale | value                  |
+      | en-US  | SUNGLASSES meta title3 |
+    And product "productWithFieldsSecondGroup" localized "meta_description" for shops shop3 should be:
+      | locale | value         |
+      | en-US  | Its so smart3 |
+      | fr-FR  | lel joke3     |
+    And product "productWithFieldsSecondGroup" localized "link_rewrite" for shops shop3 should be:
+      | locale | value               |
+      | en-US  | smart-sunglasses3   |
+      | fr-FR  | lunettes-de-soleil3 |
+    And product productWithFieldsSecondGroup should have following seo options for shops shop3:
+      | redirect_type   | 302-product            |
+      | redirect_target | productForRedirection2 |
+    And product "productWithFieldsSecondGroup" should have following shipping information for shops "shop3":
+      | width                                   | 10.5                  |
+      | height                                  | 6                     |
+      | depth                                   | 7                     |
+      | weight                                  | 0.5                   |
+      | additional_shipping_cost                | 12                    |
+      | delivery time notes type                | specific              |
+      | delivery time in stock notes[en-US]     | product in stock3     |
+      | delivery time in stock notes[fr-FR]     | en stock3             |
+      | delivery time out of stock notes[en-US] | product out of stock3 |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock3  |
+      | carriers                                | []                    |
+    And productWithFields and productWithFieldsSecondGroup have different values
+    And productWithFieldsCopy and productWithFieldsSecondGroup have different values
+    And product productWithFieldsSecondGroup is associated to shop shop3
+    And product productWithFieldsSecondGroup is not associated to shop shop1
+    And product productWithFieldsSecondGroup is not associated to shop shop2
+    And product productWithFieldsSecondGroup is not associated to shop shop4
+    # The default shop is shop3 as it's the first associated one in the second group
+    And default shop for product productWithFieldsSecondGroup is shop3
