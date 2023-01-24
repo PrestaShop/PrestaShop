@@ -67,21 +67,21 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
       );
       await attributesPage.closeSfToolBar(page);
 
-    const pageTitle = await attributesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(attributesPage.pageTitle);
-  });
+      const pageTitle = await attributesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+    });
 
     it('should go to Features page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFeaturesPage', baseContext);
 
       await attributesPage.goToFeaturesPage(page);
 
-    const pageTitle = await featuresPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(featuresPage.pageTitle);
+      const pageTitle = await featuresPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(featuresPage.pageTitle);
 
-    numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfFeatures).to.be.above(0);
-  });
+      numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfFeatures).to.be.above(0);
+    });
 
     it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
