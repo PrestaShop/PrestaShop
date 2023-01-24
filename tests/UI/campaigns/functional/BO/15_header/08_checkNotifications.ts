@@ -101,15 +101,18 @@ describe('BO - Header : Check notifications', async () => {
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber', baseContext);
 
-      const number: number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await dashboardPage.getAllNotificationsNumber(page);
       await expect(number).to.be.at.least(0);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink', baseContext);
 
-      const isNotificationsVisible: boolean = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
       await expect(isNotificationsVisible).to.be.true;
+
+      await dashboardPage.clickOnNotificationsTab(page, 'customers');
+      await dashboardPage.clickOnNotificationsTab(page, 'messages');
     });
 
     it('should refresh the page and check the notifications number', async function () {
@@ -117,7 +120,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.reloadPage(page);
 
-      const number: number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await dashboardPage.getAllNotificationsNumber(page);
       await expect(number).to.equal(0);
     });
 
@@ -127,7 +130,7 @@ describe('BO - Header : Check notifications', async () => {
       page = await ordersPage.viewMyShop(page);
       await homePage.changeLanguage(page, 'en');
 
-      const isHomePage: boolean = await homePage.isHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
@@ -136,7 +139,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await homePage.goToLoginPage(page);
 
-      const pageTitle: string = await foLoginPage.getPageTitle(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
@@ -145,7 +148,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await foLoginPage.customerLogin(page, Customers.johnDoe);
 
-      const isCustomerConnected: boolean = await foLoginPage.isCustomerConnected(page);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
@@ -155,7 +158,7 @@ describe('BO - Header : Check notifications', async () => {
       await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
 
-      const pageHeaderTitle: string = await foOrderHistoryPage.getPageTitle(page);
+      const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
     });
 
@@ -164,7 +167,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await foOrderHistoryPage.goToDetailsPage(page);
 
-      const successMessageText: string = await orderDetails.addAMessage(page, messageOption, messageSend);
+      const successMessageText = await orderDetails.addAMessage(page, messageOption, messageSend);
       await expect(successMessageText).to.equal(orderDetails.successMessageText);
     });
 
@@ -176,21 +179,21 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.reloadPage(page);
 
-      const pageTitle: string = await dashboardPage.getPageTitle(page);
+      const pageTitle = await dashboardPage.getPageTitle(page);
       await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber2', baseContext);
 
-      const number: number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await dashboardPage.getAllNotificationsNumber(page);
       await expect(number).to.equal(1);
     });
 
     it('should click on notifications icon', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNotificationsLink2', baseContext);
 
-      const isNotificationsVisible: number = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
       await expect(isNotificationsVisible).to.be.true;
     });
 
@@ -199,7 +202,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotificationsTab(page, 'messages');
 
-      const notificationsNumber: number = await dashboardPage.getNotificationsNumberInTab(page, 'customer_messages');
+      const notificationsNumber = await dashboardPage.getNotificationsNumberInTab(page, 'customer_messages');
       await expect(notificationsNumber).to.equal(1);
     });
 
@@ -208,7 +211,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotification(page, 'messages');
 
-      const pageTitle: string = await viewOrderMessagePage.getPageTitle(page);
+      const pageTitle = await viewOrderMessagePage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderMessagePage.pageTitleView);
     });
   });
@@ -222,14 +225,14 @@ describe('BO - Header : Check notifications', async () => {
 
       await viewOrderMessagePage.goToDashboardPage(page);
 
-      const isNotificationsVisible: boolean = await dashboardPage.clickOnNotificationsLink(page);
+      const isNotificationsVisible = await dashboardPage.clickOnNotificationsLink(page);
       await expect(isNotificationsVisible).to.be.true;
     });
 
     it('should check notifications number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsNumber3', baseContext);
 
-      const number: number = await dashboardPage.getAllNotificationsNumber(page);
+      const number = await dashboardPage.getAllNotificationsNumber(page);
       await expect(number).to.equal(2);
     });
 
@@ -238,7 +241,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotification(page, 'orders');
 
-      const pageTitle: string = await orderPageTabListBlock.getPageTitle(page);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
@@ -249,7 +252,7 @@ describe('BO - Header : Check notifications', async () => {
       await dashboardPage.clickOnNotificationsLink(page);
       await dashboardPage.clickOnNotificationsTab(page, 'customers');
 
-      const notificationsNumber: number = await dashboardPage.getNotificationsNumberInTab(page, 'customers');
+      const notificationsNumber = await dashboardPage.getNotificationsNumberInTab(page, 'customers');
       await expect(notificationsNumber).to.equal(1);
     });
 
@@ -258,7 +261,7 @@ describe('BO - Header : Check notifications', async () => {
 
       await dashboardPage.clickOnNotification(page, 'customers');
 
-      const pageTitle: string = await viewCustomerPage.getPageTitle(page);
+      const pageTitle = await viewCustomerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewCustomerPage.pageTitle);
     });
   });
