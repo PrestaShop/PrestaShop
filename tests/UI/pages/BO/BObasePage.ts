@@ -57,6 +57,16 @@ export default class BOBasePage extends CommonPage {
 
   private readonly notificationsLink: string;
 
+  private readonly notificationsDropDownMenu: string;
+
+  private readonly totalNotificationsValue: string;
+
+  private readonly notificationsTab: (tabName: string) => string;
+
+  private readonly notificationsNumberInTab: (tabName: string) => string;
+
+  private readonly notificationRowInTab: (tabName: string, row: number) => string;
+
   private readonly desktopNavbar: string;
 
   private readonly navbarCollapseButton: string;
@@ -277,6 +287,11 @@ export default class BOBasePage extends CommonPage {
     this.helpButton = '#product_form_open_help';
     this.menuMobileButton = '.js-mobile-menu';
     this.notificationsLink = '#notification';
+    this.notificationsDropDownMenu = '#notification div.dropdown-menu-right.notifs_dropdown';
+    this.totalNotificationsValue = '#total_notif_value';
+    this.notificationsTab = (tabName: string) => `#${tabName}-tab`;
+    this.notificationsNumberInTab = (tabName: string) => `#${tabName}_notif_value`;
+    this.notificationRowInTab = (tabName: string, row: number) => `#${tabName}-notifications div a:nth-child(${row})`;
 
     // left navbar
     this.desktopNavbar = '.nav-bar:not(.mobile-nav)';
@@ -557,6 +572,14 @@ export default class BOBasePage extends CommonPage {
   Methods
    */
   /**
+   * Go to dashboard page
+   * @param page {Page} Browser tab
+   */
+  async goToDashboardPage(page: Page): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.dashboardLink);
+  }
+
+  /**
    * Click on link from Quick access dropdown toggle
    * @param page {Page} Browser tab
    * @param linkId {number} Page ID
@@ -739,13 +762,49 @@ export default class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    */
   async clickOnNotificationsLink(page: Page): Promise<boolean> {
-
     await this.waitForSelectorAndClick(page, this.notificationsLink);
-    return this.elementVisible(page, '#notification div.dropdown-menu-right.notifs_dropdown', 1000);
+
+    return this.elementVisible(page, this.notificationsDropDownMenu, 1000);
   }
 
   /**
-   * Returns to the dashboard then logout
+   * Get all notifications number
+   * @param page {Page} Browser tab
+   */
+  getAllNotificationsNumber(page: Page): Promise<number> {
+    return this.getNumberFromText(page, this.totalNotificationsValue, 2000);
+  }
+
+  /**
+   * Click on notifications tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   */
+  async clickOnNotificationsTab(page: Page, tabName: string): Promise<void> {
+    await this.waitForSelectorAndClick(page, this.notificationsTab(tabName));
+  }
+
+  /**
+   * Get notifications number in tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   */
+  getNotificationsNumberInTab(page: Page, tabName: string): Promise<number> {
+    return this.getNumberFromText(page, this.notificationsNumberInTab(tabName), 2000);
+  }
+
+  /**
+   * Click on notification on tab
+   * @param page {Page} Browser tab
+   * @param tabName {string} Messages, customers or orders tab
+   * @param row {number} row in notification tab
+   */
+  async clickOnNotification(page: Page, tabName: string, row: number = 1): Promise<void> {
+    await this.clickAndWaitForNavigation(page, this.notificationRowInTab(tabName, row));
+  }
+
+  /**
+   * Go to my profile page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
