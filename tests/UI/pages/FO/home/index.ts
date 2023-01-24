@@ -45,7 +45,7 @@ class Home extends FOBasePage {
 
   public readonly allProductLink: string;
 
-  public readonly allProductsBlockLink: (blockId: number) => string;
+  private readonly allProductsBlockLink: (blockId: number) => string;
 
   public readonly totalProducts: string;
 
