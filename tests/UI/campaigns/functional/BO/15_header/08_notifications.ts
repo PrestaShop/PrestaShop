@@ -1,35 +1,34 @@
 // Import utils
 import helper from '@utils/helpers';
+import testContext from '@utils/testContext';
 
 // import common tests
 import {createOrderByCustomerTest, createOrderByGuestTest} from '@commonTests/FO/order';
 import loginCommon from '@commonTests/BO/loginBO';
 
-// Import test context
-import testContext from '@utils/testContext';
-
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
+import ordersPage from '@pages/BO/orders';
+import homePage from '@pages/FO/home';
+import foLoginPage from '@pages/FO/login';
+import foMyAccountPage from '@pages/FO/myAccount';
+import foOrderHistoryPage from '@pages/FO/myAccount/orderHistory';
+import orderDetails from '@pages/FO/myAccount/orderDetails';
+import viewOrderMessagePage from '@pages/BO/customerService/orderMessages/add';
+import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
+import viewCustomerPage from '@pages/BO/customers/view';
+
+// import data
+import Customers from '@data/demo/customer';
+import Products from '@data/demo/products';
+import {Order} from '@data/types/order';
+import {PaymentMethods} from '@data/demo/paymentMethods';
+import CustomerData from '@data/faker/customer';
+import AddressData from '@data/faker/address';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
-import ordersPage from "@pages/BO/orders";
-import homePage from "@pages/FO/home";
-import foLoginPage from "@pages/FO/login";
-import Customers from "@data/demo/customer";
-import foHomePage from "@pages/FO/home";
-import foMyAccountPage from "@pages/FO/myAccount";
-import foOrderHistoryPage from "@pages/FO/myAccount/orderHistory";
-import orderDetails from "@pages/FO/myAccount/orderDetails";
-import {faker} from "@faker-js/faker";
-import Products from "@data/demo/products";
-import Order from "@data/types/order";
-import {PaymentMethods} from "@data/demo/paymentMethods";
-import viewOrderMessagePage from "@pages/BO/customerService/orderMessages/add";
-import CustomerData from "@data/faker/customer";
-import AddressData from "@data/faker/address";
-import orderPageTabListBlock from '@pages/BO/orders/view/tabListBlock';
-import viewCustomerPage from '@pages/BO/customers/view';
+import {faker} from '@faker-js/faker';
 
 const baseContext: string = 'functional_BO_header_notifications';
 
@@ -129,7 +128,7 @@ describe('BO - Header : Check notifications', async () => {
     it('should go to order history page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
+      await homePage.goToMyAccountPage(page);
       await foMyAccountPage.goToHistoryAndDetailsPage(page);
 
       const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
