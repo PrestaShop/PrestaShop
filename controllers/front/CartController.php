@@ -646,14 +646,26 @@ class CartControllerCore extends FrontController
         }
 
         if ($product['active']) {
-            if ((int) $product['quantity_available'] > 1 || (int) $product['quantity_available'] == 0) {
-                $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
-            } elseif ((int) $product['quantity_available'] == 1) {
-                $sentence = 'There\'s only [1]%quantity%[/1] item of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
-            } else {
-                $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Adjust the quantity in your cart to proceed with your order.';
+            // get the configuration about showing quantities
+            $display_quantities = Configuration::get('PS_DISPLAY_QTIES');
+
+            // Set a default sentence, it will be used if the display quantities option is disabled and as a fallback is some checks doesn't match
+            $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Adjust the quantity in your cart to proceed with your order.';
+
+            // Check if the display quantities option is enabled, and check quantities to provide singular or plural form as well
+            if ($display_quantities) {
+                if ((int) $product['quantity_available'] > 1) {
+                    $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
+                } elseif ((int) $product['quantity_available'] == 1) {
+                    $sentence = 'There\'s only [1]%quantity%[/1] item of the product [1]%product%[/1] left in stock. Adjust the quantity in your cart to proceed with your order.';
+                }
+            }
+            // Check if there are not more quantities in stock
+            if ((int) $product['quantity_available'] == 0) {
+                $sentence = 'There are no quantity left in stock for the product [1]%product%[/1]. Remove it from your cart to proceed with your order.';
             }
 
+            // Return the translated sentence
             return $this->translateProductNameWithAttributes(
                 $sentence,
                 $product['name'],
