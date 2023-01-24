@@ -1,15 +1,14 @@
 // Import utils
 import helper from '@utils/helpers';
 import testContext from '@utils/testContext';
-import {Statuses} from '@data/demo/orderStatuses';
 import date from '@utils/date';
 
 // Import common tests
-import {createOrderByCustomerTest} from '@commonTests/FO/createOrder';
+import {createOrderByCustomerTest} from '@commonTests/FO/order';
 import {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
-} from '@commonTests/BO/customerService/enableDisableMerchandiseReturns';
+} from '@commonTests/BO/customerService/merchandiseReturns';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
@@ -24,9 +23,11 @@ import orderDetailsPage from '@pages/FO/myAccount/orderDetails';
 import foMerchandiseReturnsPage from '@pages/FO/myAccount/merchandiseReturns';
 
 // Import data
-import {DefaultCustomer} from '@data/demo/customer';
-import {PaymentMethods} from '@data/demo/paymentMethods';
-import {Order, MerchandiseReturns} from '@data/types/order';
+import Customers from '@data/demo/customers';
+import Products from '@data/demo/products';
+import PaymentMethods from '@data/demo/paymentMethods';
+import OrderStatuses from '@data/demo/orderStatuses';
+import {OrderCreator, MerchandiseReturns} from '@data/types/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -51,11 +52,15 @@ describe('FO - Account - Order details : Request merchandise return', async () =
   let page: Page;
   let orderReference: string;
 
-  const orderData: Order = {
-    customer: DefaultCustomer,
-    productId: 1,
-    productQuantity: 2,
-    paymentMethod: PaymentMethods.wirePayment.moduleName,
+  const orderData: OrderCreator = {
+    customer: Customers.johnDoe,
+    products: [
+      {
+        product: Products.demo_1,
+        quantity: 1,
+      },
+    ],
+    paymentMethod: PaymentMethods.wirePayment,
   };
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
@@ -103,11 +108,11 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
-    it(`should change the order status to '${Statuses.delivered.status}' and check it`, async function () {
+    it(`should change the order status to '${OrderStatuses.delivered.name}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatus', baseContext);
 
-      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.delivered.status);
-      await expect(result).to.equal(Statuses.delivered.status);
+      const result: string = await orderPageTabListBlock.modifyOrderStatus(page, OrderStatuses.delivered.name);
+      await expect(result).to.equal(OrderStatuses.delivered.name);
     });
 
     it('should get the order reference', async function () {
@@ -140,7 +145,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
     it('should sign in FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
+      await foLoginPage.customerLogin(page, Customers.johnDoe);
 
       const isCustomerConnected: boolean = await foMyAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;

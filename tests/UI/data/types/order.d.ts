@@ -41,12 +41,6 @@ type OrderHistory = {
   invoice: string
 }
 
-export {
-  OrderCreator,
-  OrderDeliveryOption,
-  OrderHistory,
-  OrderProduct,
-};
 type MerchandiseReturns = {
   orderReference: string
   fileName: string
@@ -54,4 +48,10 @@ type MerchandiseReturns = {
   dateIssued: string
 }
 
-export {Order, OrderHistory, MerchandiseReturns};
+export {
+  OrderCreator,
+  OrderDeliveryOption,
+  OrderHistory,
+  MerchandiseReturns,
+  OrderProduct,
+};
