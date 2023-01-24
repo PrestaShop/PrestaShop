@@ -10,7 +10,7 @@
 Feature: Copy product from shop to shop.
   As a BO user I want to be able to duplicate products for specific shop, group shop and all shops
 
-  Background:
+  Scenario: This are pre-requisite steps but it is only done once, that is why we don't use Background here
     Given I enable multishop feature
     And language "english" with locale "en-US" exists
     And language "french" with locale "fr-FR" exists
@@ -34,9 +34,8 @@ Feature: Copy product from shop to shop.
     Given manufacturer studioDesign named "Studio Design" exists
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
-
-  Scenario: I duplicate a product all its direct fields are correctly copied
-    Given I add new tax "us-tax-state-1" with following properties:
+    # Prepare a few data
+    And I add new tax "us-tax-state-1" with following properties:
       | name       | US Tax (6%) |
       | rate       | 6           |
       | is_enabled | true        |
@@ -44,10 +43,6 @@ Feature: Copy product from shop to shop.
       | name    | US Tax group |
       | country | US           |
       | state   | AK           |
-    When I add product "productWithFields" to shop shop2 with following information:
-      | name[en-US] | smart sunglasses   |
-      | name[fr-FR] | lunettes de soleil |
-      | type        | standard           |
     And I add product "productForRedirection" with following information:
       | name[en-US] | dumb sunglasses   |
       | name[fr-FR] | lunettes de nuage |
@@ -56,6 +51,12 @@ Feature: Copy product from shop to shop.
       | name[en-US] | moonglasses      |
       | name[fr-FR] | lunettes de lune |
       | type        | standard         |
+
+  Scenario: I duplicate a product all its direct fields are correctly copied
+    When I add product "productWithFields" to shop shop2 with following information:
+      | name[en-US] | smart sunglasses   |
+      | name[fr-FR] | lunettes de soleil |
+      | type        | standard           |
     And I update product "productWithFields" for shop shop2 with following values:
       | description[en-US]                      | nice sunglasses            |
       | description[fr-FR]                      | belles lunettes            |
@@ -211,7 +212,6 @@ Feature: Copy product from shop to shop.
     # Duplicate for shop 3
     #
     When I duplicate product productWithFields to a productWithFieldsCopy3 for shop shop3
-    # Even if the initial product was active the copy is disabled by default
     Then product "productWithFieldsCopy3" should be disabled for shops "shop3"
     And product "productWithFieldsCopy3" type should be standard for shop shop3
     And product "productWithFieldsCopy3" localized "name" for shops "shop3" should be:
@@ -286,3 +286,149 @@ Feature: Copy product from shop to shop.
     And product productWithFieldsCopy3 is not associated to shop shop2
     And product productWithFieldsCopy3 is not associated to shop shop4
     And default shop for product productWithFieldsCopy3 is shop3
+
+  Scenario: I duplicate a product for all shops all its associated data is copied (based on created product in previous scenario)
+    When I duplicate product productWithFields to a productWithFieldsOnAllShops for all shops
+    # Shop1 and shop2 have the same values
+    Then product "productWithFieldsOnAllShops" should be disabled for shops "shop1,shop2"
+    And product "productWithFieldsOnAllShops" type should be standard for shops "shop1,shop2"
+    And product "productWithFieldsOnAllShops" localized "name" for shops "shop1,shop2" should be:
+      | locale | value                       |
+      | en-US  | copy of smart sunglasses    |
+      | fr-FR  | copie de lunettes de soleil |
+    And product "productWithFieldsOnAllShops" localized "description" for shops "shop1,shop2" should be:
+      | locale | value           |
+      | en-US  | nice sunglasses |
+      | fr-FR  | belles lunettes |
+    And product "productWithFieldsOnAllShops" localized "description_short" for shops "shop1,shop2" should be:
+      | locale | value                      |
+      | en-US  | Simple & nice sunglasses   |
+      | fr-FR  | lunettes simples et belles |
+    And product "productWithFieldsOnAllShops" should have following options for shops "shop1,shop2":
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | false        |
+      | manufacturer        | studioDesign |
+    And product "productWithFieldsOnAllShops" should have following details for shops "shop1,shop2":
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
+    And product productWithFieldsOnAllShops should have following prices information for shops "shop1,shop2":
+      | price                   | 100.00          |
+      | ecotax                  | 0               |
+      | tax rules group         | US-AL Rate (4%) |
+      | on_sale                 | true            |
+      | wholesale_price         | 70              |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 520             |
+      | unit_price_ratio        | 0.2             |
+      | unity                   | bag of ten      |
+    And product "productWithFieldsOnAllShops" localized "meta_title" for shops "shop1,shop2" should be:
+      | locale | value                 |
+      | en-US  | SUNGLASSES meta title |
+    And product "productWithFieldsOnAllShops" localized "meta_description" for shops "shop1,shop2" should be:
+      | locale | value        |
+      | en-US  | Its so smart |
+      | fr-FR  | lel joke     |
+    And product "productWithFieldsOnAllShops" localized "link_rewrite" for shops "shop1,shop2" should be:
+      | locale | value              |
+      | en-US  | smart-sunglasses   |
+      | fr-FR  | lunettes-de-soleil |
+    And product productWithFieldsOnAllShops should have following seo options for shops "shop1,shop2":
+      | redirect_type   | 301-product           |
+      | redirect_target | productForRedirection |
+    And product "productWithFieldsOnAllShops" should have following shipping information for shops "shop1,shop2":
+      | width                                   | 10.5                 |
+      | height                                  | 6                    |
+      | depth                                   | 7                    |
+      | weight                                  | 0.5                  |
+      | additional_shipping_cost                | 12                   |
+      | delivery time notes type                | specific             |
+      | delivery time in stock notes[en-US]     | product in stock     |
+      | delivery time in stock notes[fr-FR]     | en stock             |
+      | delivery time out of stock notes[en-US] | product out of stock |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock  |
+      | carriers                                | []                   |
+    # Values for shop3 are customized
+    Then product "productWithFieldsOnAllShops" should be disabled for shops "shop3"
+    And product "productWithFieldsOnAllShops" type should be standard for shop shop3
+    And product "productWithFieldsOnAllShops" localized "name" for shops "shop3" should be:
+      | locale | value                        |
+      | en-US  | copy of smart sunglasses3    |
+      | fr-FR  | copie de lunettes de soleil3 |
+    And product "productWithFieldsOnAllShops" localized "description" for shops "shop3" should be:
+      | locale | value            |
+      | en-US  | nice sunglasses3 |
+      | fr-FR  | belles lunettes3 |
+    And product "productWithFieldsOnAllShops" localized "description_short" for shops "shop3" should be:
+      | locale | value                       |
+      | en-US  | Simple & nice sunglasses3   |
+      | fr-FR  | lunettes simples et belles3 |
+    And product "productWithFieldsOnAllShops" should have following options for shops shop3:
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | false        |
+      | manufacturer        | studioDesign |
+    And product "productWithFieldsOnAllShops" should have following details for shops shop3:
+      | product detail | value             |
+      | isbn           | 978-3-16-148410-0 |
+      | upc            | 72527273070       |
+      | ean13          | 978020137962      |
+      | mpn            | mpn1              |
+      | reference      | ref1              |
+    And product productWithFieldsOnAllShops should have following prices information for shops shop3:
+      | price                   | 103.00        |
+      | ecotax                  | 3.0           |
+      | tax rules group         | US Tax group  |
+      | on_sale                 | false         |
+      | wholesale_price         | 73            |
+      | unit_price              | 1030          |
+      | unit_price_tax_included | 1091.80       |
+      # 103 / 1030
+      | unit_price_ratio        | 0.1           |
+      | unity                   | bag of twenty |
+    And product "productWithFieldsOnAllShops" localized "meta_title" for shops shop3 should be:
+      | locale | value                  |
+      | en-US  | SUNGLASSES meta title3 |
+    And product "productWithFieldsOnAllShops" localized "meta_description" for shops shop3 should be:
+      | locale | value         |
+      | en-US  | Its so smart3 |
+      | fr-FR  | lel joke3     |
+    And product "productWithFieldsOnAllShops" localized "link_rewrite" for shops shop3 should be:
+      | locale | value               |
+      | en-US  | smart-sunglasses3   |
+      | fr-FR  | lunettes-de-soleil3 |
+    And product productWithFieldsOnAllShops should have following seo options for shops shop3:
+      | redirect_type   | 302-product            |
+      | redirect_target | productForRedirection2 |
+    And product "productWithFieldsOnAllShops" should have following shipping information for shops "shop3":
+      | width                                   | 10.5                  |
+      | height                                  | 6                     |
+      | depth                                   | 7                     |
+      | weight                                  | 0.5                   |
+      | additional_shipping_cost                | 12                    |
+      | delivery time notes type                | specific              |
+      | delivery time in stock notes[en-US]     | product in stock3     |
+      | delivery time in stock notes[fr-FR]     | en stock3             |
+      | delivery time out of stock notes[en-US] | product out of stock3 |
+      | delivery time out of stock notes[fr-FR] | En rupture de stock3  |
+      | carriers                                | []                    |
+    And productWithFields and productWithFieldsOnAllShops have different values
+    And productWithFieldsCopy and productWithFieldsOnAllShops have different values
+    And product productWithFieldsOnAllShops is associated to shop shop1
+    And product productWithFieldsOnAllShops is associated to shop shop2
+    And product productWithFieldsOnAllShops is associated to shop shop3
+    And product productWithFieldsOnAllShops is not associated to shop shop4
+    # The default shop is the same as the initial one
+    And default shop for product productWithFieldsOnAllShops is shop2

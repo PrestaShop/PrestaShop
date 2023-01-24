@@ -106,18 +106,17 @@ class ProductDuplicator
     public function duplicate(ProductId $productId, ShopConstraint $shopConstraint): ProductId
     {
         //@todo: add database transaction. After/if PR #21740 gets merged
-        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         $oldProductId = $productId->getValue();
         $this->hookDispatcher->dispatchWithParameters(
             'actionAdminDuplicateBefore',
             ['id_product' => $oldProductId]
         );
-        $newProduct = $this->duplicateProduct($product, $shopConstraint);
+        $newProduct = $this->duplicateProduct($productId, $shopConstraint);
         $newProductId = (int) $newProduct->id;
 
         $this->duplicateRelations($oldProductId, $newProductId);
 
-        if ($product->hasAttributes()) {
+        if ($newProduct->hasAttributes()) {
             $this->updateDefaultAttribute($newProductId, $oldProductId);
         }
 
@@ -137,20 +136,59 @@ class ProductDuplicator
     }
 
     /**
-     * @param Product $product
+     * @param ProductId $sourceProductId
      * @param ShopConstraint $shopConstraint
      *
      * @return Product the new product
      */
-    private function duplicateProduct(Product $product, ShopConstraint $shopConstraint): Product
+    private function duplicateProduct(ProductId $sourceProductId, ShopConstraint $shopConstraint): Product
     {
-        // Force a copy name to tell the two products apart
-        $product->name = $this->getNewProductName($product->name);
-        // The duplicated product is disabled and not indexed by default
-        $product->indexed = false;
-        $product->active = false;
+        $sourceDefaultShopId = $this->productRepository->getProductDefaultShopId($sourceProductId);
+        if ($shopConstraint->getShopId()) {
+            $shopIds = [$shopConstraint->getShopId()];
+            $targetDefaultShopId = $shopConstraint->getShopId();
+        } elseif ($shopConstraint->getShopGroupId()) {
+            $shopIds = $this->productRepository->getAssociatedShopIdsFromGroup($sourceProductId, $shopConstraint->getShopGroupId());
+            // If source default shop is in the group use it as new default, if not use the first shop from group
+            $targetDefaultShopId = null;
+            foreach ($shopIds as $groupShopId) {
+                if ($groupShopId->getValue() === $sourceDefaultShopId->getValue()) {
+                    $targetDefaultShopId = $sourceDefaultShopId;
+                }
+            }
+            if ($targetDefaultShopId === null) {
+                $targetDefaultShopId = reset($shopIds);
+            }
+        } else {
+            $shopIds = $this->productRepository->getAssociatedShopIds($sourceProductId);
+            $targetDefaultShopId = $sourceDefaultShopId;
+        }
 
-        return $this->productRepository->duplicate($product, $shopConstraint);
+        // First add the product to its default shop
+        $sourceProduct = $this->productRepository->get($sourceProductId, $targetDefaultShopId);
+        $duplicatedProduct = $this->productRepository->addProductToShop($sourceProduct, $targetDefaultShopId);
+
+        // Then associate it to other shops and copy its values
+        $newProductId = new ProductId((int) $duplicatedProduct->id);
+        foreach ($shopIds as $shopId) {
+            $shopProduct = $this->productRepository->get($sourceProductId, $shopId);
+            // The duplicated product is disabled and not indexed by default
+            $shopProduct->indexed = false;
+            $shopProduct->active = false;
+            // Force a copy name to tell the two products apart (for each shop since name can be different on each shop)
+            $shopProduct->name = $this->getNewProductName($shopProduct->name);
+            // Force ID to update the new product
+            $shopProduct->id = $shopProduct->id_product = $newProductId->getValue();
+            // Force the desired default shop so that it doesn't switch back to the source one
+            $shopProduct->id_shop_default = $targetDefaultShopId->getValue();
+            $this->productRepository->update(
+                $shopProduct,
+                ShopConstraint::shop($shopId->getValue()),
+                CannotUpdateProductException::FAILED_DUPLICATION
+            );
+        }
+
+        return $duplicatedProduct;
     }
 
     /**

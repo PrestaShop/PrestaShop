@@ -564,7 +564,8 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * Duplicates product entity, it only copies the product fields NOT its relations.
+     * Add product to a specific shop (forces creation by unsetting the initial ID if present),
+     * the provided product instance is not modified.
      *
      * @param Product $product
      *
@@ -575,24 +576,17 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      * @throws ProductConstraintException
      * @throws ProductException
      */
-    public function duplicate(Product $product, ShopConstraint $shopConstraint): Product
+    public function addProductToShop(Product $product, ShopId $shopId): Product
     {
-        if ($shopConstraint->getShopId()) {
-            $shopIds = [$shopConstraint->getShopId()];
-        } elseif ($shopConstraint->getShopGroupId()) {
-            $shopIds = $this->getAssociatedShopIdsFromGroup(new ProductId((int) $product->id), $shopConstraint->getShopGroupId());
-        } else {
-            $shopIds = $this->getAssociatedShopIds(new ProductId((int) $product->id));
-        }
+        // Force unsetting the IDs (just in case) so that a new product row is created
+        $newProduct = clone $product;
+        unset($newProduct->id, $newProduct->id_product);
 
-        $duplicatedProduct = clone $product;
-        unset($duplicatedProduct->id, $duplicatedProduct->id_product);
+        $this->productValidator->validateCreation($newProduct);
+        $this->productValidator->validate($newProduct);
+        $this->addObjectModelToShops($newProduct, [$shopId], CannotDuplicateProductException::class);
 
-        $this->productValidator->validateCreation($duplicatedProduct);
-        $this->productValidator->validate($duplicatedProduct);
-        $this->addObjectModelToShops($duplicatedProduct, $shopIds, CannotDuplicateProductException::class);
-
-        return $duplicatedProduct;
+        return $newProduct;
     }
 
     private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product
