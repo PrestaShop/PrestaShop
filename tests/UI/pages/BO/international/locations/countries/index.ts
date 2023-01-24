@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Countries page, contains functions that can be used on the page
@@ -7,6 +8,90 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Countries extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly settingsUpdateMessage: string;
+
+  private readonly addNewCountryButton: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableColumn: (row: number, column: number) => string;
+
+  private readonly tableColumnId: (row: number) => string;
+
+  private readonly tableColumnName: (row: number) => string;
+
+  private readonly tableColumnIsoCode: (row: number) => string;
+
+  private readonly tableColumnCallPrefix: (row: number) => string;
+
+  private readonly tableColumnZone: (row: number) => string;
+
+  private readonly tableColumnStatusLink: (row: number) => string;
+
+  private readonly tableColumnStatusEnableLink: (row: number) => string;
+
+  private readonly tableColumnStatusDisableLink: (row: number) => string;
+
+  private readonly editRowLink: (row: number) => string;
+
+  private readonly bulkActionBlock: string;
+
+  private readonly bulkActionMenuButton: string;
+
+  private readonly bulkActionDropdownMenu: string;
+
+  private readonly selectAllLink: string;
+
+  private readonly bulkEnableLink: string;
+
+  private readonly bulkDisableLink: string;
+
+  private readonly bulkDeleteLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: number) => string;
+
+  private readonly sortColumnSpanButton: (column: number) => string;
+
+  private readonly paginationActiveLabel: string;
+
+  private readonly paginationDiv: string;
+
+  private readonly paginationDropdownButton: string;
+
+  private readonly paginationItems: (number: number) => string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly countryForm: string;
+
+  private readonly enableRestrictCountriesToggleLabel: (toggle: string) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on countries page
@@ -29,27 +114,27 @@ class Countries extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='countryFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='countryFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncountry';
     this.filterResetButton = 'button[name=\'submitResetcountry\']';
 
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableColumn = (row: number, column: number) => `${this.tableRow(row)} td:nth-child(${column})`;
 
     // Columns selectors
-    this.tableColumnId = (row) => this.tableColumn(row, 2);
-    this.tableColumnName = (row) => this.tableColumn(row, 3);
-    this.tableColumnIsoCode = (row) => this.tableColumn(row, 4);
-    this.tableColumnCallPrefix = (row) => this.tableColumn(row, 5);
-    this.tableColumnZone = (row) => this.tableColumn(row, 6);
-    this.tableColumnStatusLink = (row) => `${this.tableColumn(row, 7)} a`;
-    this.tableColumnStatusEnableLink = (row) => `${this.tableColumnStatusLink(row)}.action-enabled`;
-    this.tableColumnStatusDisableLink = (row) => `${this.tableColumn(row)}.action-disabled`;
+    this.tableColumnId = (row: number) => this.tableColumn(row, 2);
+    this.tableColumnName = (row: number) => this.tableColumn(row, 3);
+    this.tableColumnIsoCode = (row: number) => this.tableColumn(row, 4);
+    this.tableColumnCallPrefix = (row: number) => this.tableColumn(row, 5);
+    this.tableColumnZone = (row: number) => this.tableColumn(row, 6);
+    this.tableColumnStatusLink = (row: number) => `${this.tableColumn(row, 7)} a`;
+    this.tableColumnStatusEnableLink = (row: number) => `${this.tableColumnStatusLink(row)}.action-enabled`;
+    this.tableColumnStatusDisableLink = (row: number) => `${this.tableColumnStatusLink(row)}.action-disabled`;
 
     // Actions selectors
-    this.editRowLink = (row) => `${this.tableRow(row)} a.edit`;
+    this.editRowLink = (row: number) => `${this.tableRow(row)} a.edit`;
 
     // Bulk Actions
     this.bulkActionBlock = 'div.bulk-actions';
@@ -62,20 +147,20 @@ class Countries extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} th:nth-child(${column})`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: number) => `${this.tableHead} th:nth-child(${column})`;
+    this.sortColumnSpanButton = (column: number) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationActiveLabel = `${this.gridForm} ul.pagination.pull-right li.active a`;
     this.paginationDiv = `${this.gridForm} .pagination`;
     this.paginationDropdownButton = `${this.paginationDiv} .dropdown-toggle`;
-    this.paginationItems = (number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
+    this.paginationItems = (number: number) => `${this.gridForm} .dropdown-menu a[data-items='${number}']`;
     this.paginationPreviousLink = `${this.gridForm} .icon-angle-left`;
     this.paginationNextLink = `${this.gridForm} .icon-angle-right`;
 
     // Country options selectors
     this.countryForm = '#country_form';
-    this.enableRestrictCountriesToggleLabel = (toggle) => `${this.countryForm} `
+    this.enableRestrictCountriesToggleLabel = (toggle: string) => `${this.countryForm} `
       + `#PS_RESTRICT_DELIVERED_COUNTRIES_${toggle}`;
     this.saveButton = `${this.countryForm} button[name='submitOptionscountry']`;
   }
@@ -88,7 +173,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewCountryPage(page) {
+  async goToAddNewCountryPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewCountryButton);
   }
 
@@ -97,7 +182,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -109,7 +194,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  getNumberOfElementInGrid(page) {
+  getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTableNumberOfTitlesSpan);
   }
 
@@ -118,7 +203,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -129,7 +214,7 @@ class Countries extends BOBasePage {
    * @param row {number} Row on table to edit
    * @returns {Promise<void>}
    */
-  async goToEditCountryPage(page, row = 1) {
+  async goToEditCountryPage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.editRowLink(row));
   }
 
@@ -140,7 +225,7 @@ class Countries extends BOBasePage {
    * @param columnName {string} Column name to get text content
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, columnName) {
+  async getTextColumnFromTable(page: Page, row: number, columnName: string): Promise<string> {
     let columnSelector;
 
     switch (columnName) {
@@ -179,22 +264,16 @@ class Countries extends BOBasePage {
    * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
-    let filterValue = value;
-
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), filterValue.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value.toString());
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
       case 'select':
-        if (typeof value === 'string' && (value === '1' || value === '0')) {
-          filterValue = value ? 'Yes' : 'No';
-        }
-
         await Promise.all([
-          this.selectByVisibleText(page, this.filterColumn(filterBy), filterValue),
+          this.selectByVisibleText(page, this.filterColumn(filterBy), value === '1' ? 'Yes' : 'No'),
           page.waitForNavigation({waitUntil: 'networkidle'}),
         ]);
 
@@ -211,7 +290,7 @@ class Countries extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  getCountryStatus(page, row) {
+  getCountryStatus(page: Page, row: number): Promise<boolean> {
     return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
   }
 
@@ -222,7 +301,7 @@ class Countries extends BOBasePage {
    * @param wantedStatus {boolean} True if we need to enable status, false if not
    * @return {Promise<void>}
    */
-  async setCountryStatus(page, row, wantedStatus) {
+  async setCountryStatus(page: Page, row: number, wantedStatus: boolean): Promise<void> {
     if (wantedStatus !== await this.getCountryStatus(page, row)) {
       await this.clickAndWaitForNavigation(page, this.tableColumnStatusLink(row));
     }
@@ -234,9 +313,9 @@ class Countries extends BOBasePage {
    * @param columnName {string} Column name to get all content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, columnName) {
+  async getAllRowsColumnContent(page: Page, columnName: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       let rowContent = await this.getTextColumnFromTable(page, i, columnName);
@@ -258,7 +337,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async bulkSelectRows(page) {
+  async bulkSelectRows(page: Page): Promise<void> {
     await page.click(this.bulkActionMenuButton);
 
     await Promise.all([
@@ -272,8 +351,8 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteCountriesByBulkActions(page) {
-    this.dialogListener(page, true);
+  async deleteCountriesByBulkActions(page: Page): Promise<string> {
+    await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -291,7 +370,7 @@ class Countries extends BOBasePage {
    * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<void>}
    */
-  async bulkSetStatus(page, wantedStatus) {
+  async bulkSetStatus(page: Page, wantedStatus: boolean): Promise<void> {
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -316,7 +395,7 @@ class Countries extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     let columnSelector;
 
     switch (sortBy) {
@@ -354,7 +433,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationActiveLabel);
   }
 
@@ -364,7 +443,7 @@ class Countries extends BOBasePage {
    * @param number {number} Pagination number limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.clickAndWaitForNavigation(page, this.paginationItems(number));
 
@@ -376,7 +455,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -387,7 +466,7 @@ class Countries extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -400,7 +479,7 @@ class Countries extends BOBasePage {
    * @param toEnable {boolean} True if we need to enable, false to disable
    * @returns {Promise<string>}
    */
-  async setCountriesRestrictions(page, toEnable = true) {
+  async setCountriesRestrictions(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
@@ -408,4 +487,4 @@ class Countries extends BOBasePage {
   }
 }
 
-module.exports = new Countries();
+export default new Countries();

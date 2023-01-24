@@ -206,6 +206,7 @@ describe('BO - International - Countries : CRUD country', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCountryPage', baseContext);
 
       await countriesPage.goToEditCountryPage(page, 1);
+
       const pageTitle = await addCountryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addCountryPage.pageTitleEdit);
     });
