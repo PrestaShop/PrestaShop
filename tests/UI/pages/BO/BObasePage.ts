@@ -97,7 +97,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly customersLink: string;
 
-  private readonly addressesLink: string;
+  public readonly addressesLink: string;
 
   private readonly outstandingLink: string;
 
