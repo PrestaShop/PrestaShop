@@ -26,6 +26,7 @@
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
  * @deprecated deprecated since version 8.1, will be dropped in 9.0
@@ -99,7 +100,7 @@ class QqUploadedFileFormCore
                     return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];
                 }
                 if ($isMultipleImageFormatFeatureEnabled) {
-                    $imageFormatList = $container->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration')->getGenerationFormats();
+                    $imageFormatList = $container->get(ImageFormatConfiguration::class)->getGenerationFormats();
                     foreach ($imageFormatList as $imageFormat) {
                         if (!ImageManager::resize($tmpName, $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat, $imageType['width'], $imageType['height'], $imageFormat)) {
                             return ['error' => Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', [stripslashes($imageType['name'])], 'Admin.Notifications.Error')];

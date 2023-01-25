@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration;
 
 /**
  * @property Product|null $object
@@ -2878,7 +2879,7 @@ class AdminProductsControllerCore extends AdminController
 
                     $sfContainer = SymfonyContainer::getInstance();
                     $isMultipleImageFormatFeatureEnabled = $sfContainer->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_MULTIPLE_IMAGE_FORMAT);
-                    $imageFormatsList = $sfContainer->get('PrestaShop\PrestaShop\Core\Image\ImageFormatConfiguration')->getGenerationFormats();
+                    $imageFormatsList = $sfContainer->get(ImageFormatConfiguration::class)->getGenerationFormats();
                     foreach ($imagesTypes as $imageType) {
                         if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
                             $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
