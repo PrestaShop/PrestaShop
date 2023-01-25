@@ -2,25 +2,56 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
 {
+    /**
+     * @var int
+     */
+    private $languageId;
 
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
+    private $searchCriteriaApplicator;
+
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+     * @param int $languageId
+     *
+     */
+    public function __construct(Connection $connection, $dbPrefix, DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator, int $languageId)
     {
-        $builder = $this->getCustomerGroupsQueryBuilder();
+        parent::__construct($connection, $dbPrefix);
+
+        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
+        $this->languageId = $languageId;
+    }
+
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    {
+        $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
 
         $builder
-            ->select('g.*')
+            ->select('g.id_group, gl.name, g.reduction, g.price_display_method, g.show_prices')
         ;
+
+        $this->searchCriteriaApplicator
+            ->applySorting($searchCriteria, $builder)
+            ->applyPagination($searchCriteria, $builder);
 
         return $builder;
     }
 
-    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $builder = $this->getCustomerGroupsQueryBuilder();
+        $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
 
         $builder
             ->select('COUNT(g.id_group)')
@@ -29,17 +60,40 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         return $builder;
     }
 
-    private function getCustomerGroupsQueryBuilder()
+    private function getCustomerGroupsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
 
         $builder = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'group', 'g')
-            //->innerJoin('g', $this->dbPrefix . 'gender_lang', 'gl', 'g.id_gender = gl.id_gender')
-            //->andWhere('gl.`id_lang`= :language')
-            //->setParameter('language', $this->languageId)
+            ->innerJoin('g', $this->dbPrefix . 'group_lang', 'gl', 'g.id_group = gl.id_group')
+            ->andWhere('gl.`id_lang`= :language')
+            ->setParameter('language', $this->languageId)
         ;
+
+        $this->applyFilters($builder, $searchCriteria);
 
         return $builder;
     }
 
+    /**
+     * @param QueryBuilder $builder
+     * @param SearchCriteriaInterface $searchCriteria
+     */
+    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
+    {
+        $allowedFiltersMap = [
+            'id_group' => 'g.id_group',
+            'name' => 'gl.name',
+        ];
+
+        foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
+                continue;
+            }
+
+            $builder
+                ->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+                ->setParameter($filterName, '%' . $filterValue . '%');
+        }
+    }
 }

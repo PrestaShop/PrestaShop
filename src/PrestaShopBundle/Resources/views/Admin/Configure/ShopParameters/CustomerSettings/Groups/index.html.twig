@@ -36,7 +36,7 @@
 {% set enableSidebar = true %}
 
 {% block content %}
-  {% block titles_list_panel %}
+  {% block groups_list_panel %}
     {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGroupsGrid} %}
   {% endblock %}
 {% endblock %}
@@ -44,6 +44,6 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/title.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/customer_groups.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
