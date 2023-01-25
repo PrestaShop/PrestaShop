@@ -34,10 +34,13 @@ use Doctrine\DBAL\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -607,6 +610,34 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return array<int, CombinationAttributeInformation[]>
+     *
+     * @throws CombinationException
+     */
+    public function searchProductCombinations(
+        ProductId $productId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        string $searchPhrase,
+        ?int $limit = null
+    ): array {
+        $combinationIds = $this->searchCombinationIdsByAttributes(
+            $productId,
+            $languageId,
+            $shopConstraint,
+            $searchPhrase,
+            $limit
+        );
+
+        return $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $languageId);
+    }
+
+    /**
      * Sets default_on property to a provided combination in product_attribute table
      *
      * @param ProductId $productId
@@ -689,5 +720,130 @@ class CombinationRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return [$shopConstraint->getShopId()];
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return CombinationId[]
+     */
+    private function searchCombinationIdsByAttributes(
+        ProductId $productId,
+        LanguageId $languageId,
+        ShopConstraint $shopConstraint,
+        string $searchPhrase,
+        ?int $limit
+    ): array {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Group shop constraint is not supported');
+        }
+
+        $attributeIds = $this->searchAttributes($languageId, $shopConstraint, $searchPhrase);
+
+        if (empty($attributeIds)) {
+            return [];
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pac.id_product_attribute, pac.id_attribute')
+            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
+        ;
+
+        if ($shopConstraint->forAllShops()) {
+            $qb->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute',
+                'pa',
+                'pac.id_product_attribute = pa.id_product_attribute'
+            );
+        } else {
+            $qb->innerJoin(
+                'pac',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pa',
+                'pac.id_product_attribute = pa.id_product_attribute AND pa.id_shop = :shopId'
+            )->setParameter('shopId', $shopConstraint->getShopId()->getValue());
+        }
+
+        $qb
+            ->where('pa.id_product = :productId')
+            ->andWhere($qb->expr()->in('pac.id_attribute', ':attributes'))
+            ->setParameter('attributes', $attributeIds, Connection::PARAM_INT_ARRAY)
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        $results = $qb->execute()->fetchAll();
+        if (!$results) {
+            return [];
+        }
+
+        return array_map(static function (array $result): CombinationId {
+            return new CombinationId((int) $result['id_product_attribute']);
+        }, $results);
+    }
+
+    /**
+     * @param LanguageId $languageId
+     * @param ShopConstraint $shopConstraint
+     * @param string $searchPhrase
+     *
+     * @return int[]
+     */
+    private function searchAttributes(LanguageId $languageId, ShopConstraint $shopConstraint, string $searchPhrase): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Shop group constraint is not supported');
+        }
+
+        $qb = $this->connection->createQueryBuilder();
+
+        $qb->select('a.id_attribute')
+            ->from($this->dbPrefix . 'attribute', 'a')
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_lang',
+                'al',
+                'a.id_attribute = al.id_attribute AND al.id_lang = :languageId'
+            )
+            ->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'a.id_attribute_group = agl.id_attribute_group and agl.id_lang = :languageId'
+            )
+            ->where('al.name LIKE :searchPhrase')
+            ->orWhere('agl.name LIKE :searchPhrase')
+            ->orWhere('agl.public_name LIKE :searchPhrase')
+            ->setParameter('searchPhrase', '%' . $searchPhrase . '%')
+            ->setParameter('languageId', $languageId->getValue())
+        ;
+
+        if ($shopConstraint->getShopId()) {
+            // this makes sure we are searching only in certain shop, so it doesn't return irrelevant attribute ids
+            $qb->innerJoin(
+                'a',
+                $this->dbPrefix . 'attribute_shop',
+                'attrShop',
+                'a.id_attribute = attrShop.id_attribute AND attrShop.id_shop = :shopId'
+            )
+                ->innerJoin(
+                    'agl',
+                    $this->dbPrefix . 'attribute_group_shop', 'ags',
+                    'agl.id_attribute_group = ags.id_attribute_group AND ags.id_shop = :shopId'
+                )
+                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+            ;
+        }
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        return array_map('intval', array_column($results, 'id_attribute'));
     }
 }

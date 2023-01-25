@@ -42,8 +42,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationN
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchProductCombinations;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\ProductCombinationsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
@@ -156,6 +158,37 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $productId
+     * @param int|null $shopId
+     * @param int|null $languageId
+     *
+     * @return JsonResponse
+     */
+    public function searchProductCombinationsAction(
+        Request $request,
+        int $productId,
+        ?int $shopId,
+        ?int $languageId
+    ): JsonResponse {
+        $searchPhrase = $request->query->get('q', '');
+        $shopConstraint = $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops();
+
+        /** @var ProductCombinationsCollection $productCombinationsCollection */
+        $productCombinationsCollection = $this->getQueryBus()->handle(new SearchProductCombinations(
+            $productId,
+            $languageId ?: $this->getContextLangId(),
+            $shopConstraint,
+            $searchPhrase,
+            $request->query->getInt('limit', SearchProductCombinations::DEFAULT_RESULTS_LIMIT)
+        ));
+
+        return $this->json(['combinations' => $productCombinationsCollection->getProductCombinations()]);
     }
 
     /**

@@ -27,6 +27,8 @@ import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 import SpecificPriceEventMap from '@pages/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+import CombinationSelector from '@pages/specific-price/form/combination-selector';
+import Router from '@components/router';
 
 const {$} = window;
 
@@ -106,4 +108,6 @@ $(() => {
   eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {
     $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
+
+  new CombinationSelector(new Router(), Number($(SpecificPriceMap.productIdInput).val()));
 });

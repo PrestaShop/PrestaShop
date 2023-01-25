@@ -16,6 +16,7 @@ services:
   PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGeneratorInterface: '@PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator'
 
   PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder:
+    public: false
     arguments:
       - '@translator'
       # separator between attributes (ex : size: M, color: blue), to be replaced by a configuration parameter (env or php const)

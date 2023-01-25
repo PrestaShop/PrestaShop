@@ -26,12 +26,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain;
+namespace Tests\Integration\Behaviour\Features\Context;
 
 use Language;
 use PHPUnit\Framework\Assert;
 use ProductAttribute;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 class AttributeFeatureContext extends AbstractDomainFeatureContext
 {
@@ -63,5 +64,57 @@ class AttributeFeatureContext extends AbstractDomainFeatureContext
 
         Assert::assertNotNull($foundAttributeId, sprintf('Attribute named "%s" was not found', $name));
         $this->getSharedStorage()->set($attributeReference, $foundAttributeId);
+    }
+
+    /**
+     * @Given I associate attribute ":attributeReference" with shops ":shopReferences"
+     *
+     * @param string $attributeReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function associateAttributeWithShops(string $attributeReference, string $shopReferences): void
+    {
+        $attributeId = $this->getSharedStorage()->get($attributeReference);
+        $attribute = new ProductAttribute($attributeId);
+
+        if ($attributeId !== (int) $attribute->id) {
+            throw new RuntimeException(
+                sprintf(
+                    'Failed to load Attribute with id %d. Referenced as "%s"',
+                    $attributeId,
+                    $attributeReference
+                )
+            );
+        }
+        $attribute->associateTo($this->referencesToIds($shopReferences));
+    }
+
+    /**
+     * @Given attribute ":attributeReference" is not associated to shops ":shopReferences"
+     *
+     * @param string $attributeReference
+     * @param string $shopReferences
+     *
+     * @return void
+     */
+    public function assertAttributeIsNotAssociatedToShops(string $attributeReference, string $shopReferences): void
+    {
+        $attributeId = $this->getSharedStorage()->get($attributeReference);
+        $attribute = new ProductAttribute($attributeId);
+        $shopIds = $this->referencesToIds($shopReferences);
+
+        foreach ($shopIds as $shopId) {
+            if (in_array($shopId, $attribute->id_shop_list)) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Attribute with id "%d" is associated with shop "%d"',
+                        $attributeId,
+                        $shopId
+                    )
+                );
+            }
+        }
     }
 }
