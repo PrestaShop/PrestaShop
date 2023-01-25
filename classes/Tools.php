@@ -199,21 +199,6 @@ class ToolsCore
     }
 
     /**
-     * Redirect URLs already containing PS_BASE_URI.
-     *
-     * Warning: uses exit
-     *
-     * @param string $url Desired URL
-     *
-     * @deprecated since PrestaShop 8.0.0
-     */
-    public static function redirectLink($url)
-    {
-        Tools::displayAsDeprecated('Use Tools::redirect() instead');
-        static::redirect($url);
-    }
-
-    /**
      * Redirect user to another page (using header Location)
      *
      * Warning: uses exit
