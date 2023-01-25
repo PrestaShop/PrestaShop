@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {ElementHandle, Page} from 'playwright';
 
 /**
  * Email theme page, contains functions that can be used on the page
@@ -7,6 +8,24 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class EmailTheme extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly emailThemeConfigurationSuccessfulMessage: string;
+
+  private readonly defaultEmailThemeSelect: string;
+
+  private readonly configurationFormSaveButton: string;
+
+  private readonly emailThemeTable: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRows: string;
+
+  private readonly columnName: string;
+
+  private readonly columnActionPreviewLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on email theme page
@@ -37,7 +56,7 @@ class EmailTheme extends BOBasePage {
    * @param emailTheme {string} Value of email theme to select
    * @return {Promise<string>}
    */
-  async selectDefaultEmailTheme(page, emailTheme) {
+  async selectDefaultEmailTheme(page: Page, emailTheme: string): Promise<string> {
     await this.selectByVisibleText(page, this.defaultEmailThemeSelect, emailTheme);
     await this.clickAndWaitForNavigation(page, this.configurationFormSaveButton);
 
@@ -51,16 +70,16 @@ class EmailTheme extends BOBasePage {
    * @param name {string} Value of theme to choose
    * @return {Promise<void>}
    */
-  async previewEmailTheme(page, name) {
-    const tableRows = await page.$$(this.tableRows);
+  async previewEmailTheme(page: Page, name: string): Promise<void> {
+    const tableRows: ElementHandle<HTMLElement|SVGElement>[] = await page.$$(this.tableRows);
     let found = false;
 
     for (let i = 0; i < tableRows.length; i++) {
-      const textColumnName = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
+      const textColumnName: string|null = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
 
-      if (textColumnName.includes(name)) {
+      if (textColumnName && textColumnName.includes(name)) {
         await Promise.all([
-          tableRows[i].$eval(this.columnActionPreviewLink, (el) => el.click()),
+          tableRows[i].$eval(this.columnActionPreviewLink, (el: HTMLElement) => el.click()),
           page.waitForNavigation(),
         ]);
         found = true;
@@ -73,4 +92,4 @@ class EmailTheme extends BOBasePage {
   }
 }
 
-module.exports = new EmailTheme();
+export default new EmailTheme();
