@@ -114,6 +114,7 @@ class PackTab extends BOBasePage {
   /*
  Methods
   */
+
   // Methods to search product
   /**
    * Search product to add to the pack
@@ -228,7 +229,7 @@ class PackTab extends BOBasePage {
     const keys: string[] = Object.keys(packData);
 
     for (let i = 0; i < keys.length; i += 1) {
-      await this.addProductToPack(page, keys[i], packData[keys[i]]);
+      await this.addProductToPack(page, packData[keys[i]].reference, packData[keys[i]].quantity);
     }
   }
 

@@ -1,0 +1,104 @@
+# This workflow aim to run all UI tests on active branches
+# and upload the report on Google cloud platform storage
+name: Nightly tests and report
+
+on:
+  push:
+    branches:
+      - deleteCommentedTests
+
+env:
+  GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}  # GCP project id
+  GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}  # GCP service key
+  NODE_VERSION: '14'  # Node version on this workflow (For all jobs)
+  API_NIGHTLY_IMPORT_HOOK: 'https://api-nightly.prestashop.com/hook/reports/import'  # Nightly hook to import report
+  NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}  # Nightly token to validate the import
+  TESTS_DIR: 'tests/UI'  # Where UI tests are
+
+jobs:
+
+  # First job: Run tests in parallel
+  test:
+    name: My tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        CAMPAIGN:
+          - 'functional:BO:login'
+          - 'functional:BO:orders:01'
+          - 'functional:BO:orders:02'
+          - 'functional:BO:orders:03-05'
+          - 'functional:BO:catalog:01-04'
+          - 'functional:BO:catalog:05-08'
+          - 'functional:productV2'
+          - 'functional:BO:customer'
+          - 'functional:BO:customer-service'
+          - 'functional:BO:modules'
+          - 'functional:BO:design'
+          - 'functional:BO:shipping'
+          - 'functional:BO:payment'
+          - 'functional:BO:international:01-02'
+          - 'functional:BO:international:03-04'
+          - 'functional:BO:shop-parameters:01-04'
+          - 'functional:BO:shop-parameters:05-07'
+          - 'functional:BO:advanced-parameters:01-06'
+          - 'functional:BO:advanced-parameters:07-10'
+          - 'functional:BO:header'
+          - 'functional:FO'
+          - 'regression'
+          - 'sanity'
+          - 'sanity:productV2'
+
+    env:
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'  # Command to execute from the matrix
+      PS_LANGUAGE: 'en'
+      PS_INSTALL_AUTO: 1
+      PS_DEV_MODE: 0
+      DB_SERVER: 'mysql'
+      DB_NAME: 'prestashop'
+      DB_PREFIX: 'tst_'
+      DB_USER: 'root'
+      DB_PASSWD: 'prestashop'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: deleteCommentedTests
+
+      # Use docker to create shop
+      - name: Build and run shop with docker
+        timeout-minutes: 15
+        run: |
+          USER_ID=$(id -u) GROUP_ID=$(id -g) \
+          docker-compose -f docker-compose.yml up -d --build
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ env.TESTS_DIR }}
+        run: npm install
+
+      - name: Run tests
+        continue-on-error: true
+        working-directory: ${{ env.TESTS_DIR }}
+        env:
+          URL_FO: 'http://localhost:8001/'
+          SMTP_SERVER: '172.17.0.1'
+          TAKE_SCREENSHOT_AFTER_FAIL: true
+        run: npm run ${{ env.TEST_CAMPAIGN }}
+
+      # Rename and upload report as artifact
+      - name: Create screenshot folder name
+        run: echo "SCREENSHOT_NAME="$( echo -e '${{ env.TEST_CAMPAIGN }}' | tr  ':' '-'  )"" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v2
+        name: Upload report
+        with:
+          name: ${{ env.SCREENSHOT_NAME }}
+          path: '${{ env.TESTS_DIR }}/screenshots'

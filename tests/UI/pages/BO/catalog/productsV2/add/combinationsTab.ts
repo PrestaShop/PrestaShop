@@ -12,15 +12,15 @@ import type {Page} from 'playwright';
  * @extends BOBasePage
  */
 class CombinationsTab extends BOBasePage {
-  private readonly generateCombinationsMessage: (number: number) => string;
+  public readonly generateCombinationsMessage: (number: number) => string;
 
-  private readonly successfulGenerateCombinationsMessage: (number: number) => string;
+  public readonly successfulGenerateCombinationsMessage: (number: number) => string;
 
-  private readonly editCombinationsModalTitle: (number: number) => string;
+  public readonly editCombinationsModalTitle: (number: number) => string;
 
-  private readonly editCombinationsModalMessage: (number: number) => string;
+  public readonly editCombinationsModalMessage: (number: number) => string;
 
-  private readonly successfulUpdateMessage: string;
+  public readonly successfulUpdateMessage: string;
 
   private readonly combinationsTabLink: string;
 
@@ -105,6 +105,8 @@ class CombinationsTab extends BOBasePage {
   private readonly combinationListTableRow: (row: number) => string;
 
   private readonly combinationListTableColumn: (row: number, column: string) => string;
+
+  private readonly combinationListTableActionsDropDown: (row: number) => string;
 
   private readonly combinationListTableActionsColumn: (row: number, action: string) => string;
 
@@ -240,6 +242,7 @@ class CombinationsTab extends BOBasePage {
     this.combinationsListTable = '#combination_list';
     this.combinationListTableRow = (row) => `#combination-list-row-${row - 1}`;
     this.combinationListTableColumn = (row, column) => `td input#combination_list_${row - 1}_${column}`;
+    this.combinationListTableActionsDropDown = (row: number) => `#combination_list_${row - 1}_actions div a`;
     this.combinationListTableActionsColumn = (row, action) => `td button#combination_list_${row - 1}_actions_${action}`;
     this.combinationListTableSelectAllButton = '#bulk-all-selection-dropdown-button';
     this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
@@ -343,7 +346,7 @@ class CombinationsTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string|null>}
    */
-  async generateCombinations(page: Page): Promise<string|null> {
+  async generateCombinations(page: Page): Promise<string | null> {
     await this.waitForSelectorAndClick(page, this.generateCombinationsButtonOnModal);
 
     return this.getGrowlMessageContent(page);
@@ -381,7 +384,7 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row in table
    * @returns {Promise<string|null>}
    */
-  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string|null> {
+  async editCombination(page: Page, combinationData: object, row: number = 1): Promise<string | null> {
     await this.closeGrowlMessage(page);
     await this.setValue(page, `${this.combinationListTableColumn(row, 'reference')}`, combinationData.reference);
     await this.setValue(
@@ -408,6 +411,7 @@ class CombinationsTab extends BOBasePage {
    * @returns {Promise<string|null|boolean>}
    */
   async clickOnDeleteIcon(page: Page, action: string, row: number = 1): Promise<string | null | boolean> {
+    await this.waitForSelectorAndClick(page, this.combinationListTableActionsDropDown(row));
     await this.waitForSelectorAndClick(page, `${this.combinationListTableActionsColumn(row, 'delete')}`);
 
     if (action === 'cancel') {
@@ -508,9 +512,9 @@ class CombinationsTab extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string|null>}
    */
-  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string|null> {
+  async getTextColumn(page: Page, column: string, row: number = 1): Promise<string | null> {
     const selector: string = this.combinationListTableColumn(row, column);
-    let text: string|null = '';
+    let text: string | null = '';
 
     switch (column) {
       case 'combination_id':
@@ -546,8 +550,8 @@ class CombinationsTab extends BOBasePage {
    * @param column {string} Column name to get all rows text content
    * @return {Promise<(string|null)[]>}
    */
-  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string|null)[]> {
-    const allRowsContentTable: (string|null)[] = [];
+  async getAllRowsColumnContent(page: Page, numberOfCombinations: number, column: string): Promise<(string | null)[]> {
+    const allRowsContentTable: (string | null)[] = [];
 
     for (let i = 1; i <= numberOfCombinations; i++) {
       const rowContent = await this.getTextColumn(page, column, i);

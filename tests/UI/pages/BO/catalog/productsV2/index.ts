@@ -19,11 +19,11 @@ class Products extends BOBasePage {
 
   private readonly standardProductDescription: string;
 
-  private readonly productWithCombinationsDescription: string;
+  public readonly productWithCombinationsDescription: string;
 
   private readonly virtualProductDescription: string;
 
-  private readonly packOfProductsDescription: string;
+  public readonly packOfProductsDescription: string;
 
   private readonly newProductButton: string;
 

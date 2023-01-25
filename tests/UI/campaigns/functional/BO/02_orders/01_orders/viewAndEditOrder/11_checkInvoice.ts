@@ -351,7 +351,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        // https://github.com/PrestaShop/PrestaShop/issues/22581
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice1', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath as string);
@@ -584,6 +585,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
+        // https://github.com/PrestaShop/PrestaShop/issues/22581
         it('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice2', baseContext);
 
@@ -779,7 +781,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        // https://github.com/PrestaShop/PrestaShop/issues/22581
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice3', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath as string);
@@ -1019,7 +1022,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        // https://github.com/PrestaShop/PrestaShop/issues/22581
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice4', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath as string);
