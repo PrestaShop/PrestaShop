@@ -60,14 +60,16 @@ class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandle
      */
     public function handle(GetProductAttributeGroups $query): array
     {
-        $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId());
+        $shopConstraint = $query->getShopConstraint();
+        $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId(), $shopConstraint);
+
         if (empty($attributeIds)) {
             return [];
         }
 
         $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups(
             $query->withAttributes(),
-            $query->getShopConstraint(),
+            $shopConstraint,
             $attributeIds
         );
 

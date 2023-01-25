@@ -344,7 +344,7 @@ class CombinationCreator
         } catch (ShopAssociationNotFound $e) {
             throw new CannotGenerateCombinationException(
                 'Not all provided attributes exists in all shops',
-                CannotGenerateCombinationException::DUE_TO_DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS,
+                CannotGenerateCombinationException::DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS,
                 $e
             );
         }

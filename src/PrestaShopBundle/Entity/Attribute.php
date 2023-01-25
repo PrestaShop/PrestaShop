@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -69,6 +70,8 @@ class Attribute
     private $position;
 
     /**
+     * @var Collection
+     *
      * @ORM\ManyToMany(targetEntity="PrestaShopBundle\Entity\Shop", cascade={"persist"})
      * @ORM\JoinTable(
      *      joinColumns={@ORM\JoinColumn(name="id_attribute", referencedColumnName="id_attribute")},
@@ -78,6 +81,8 @@ class Attribute
     private $shops;
 
     /**
+     * @var Collection
+     *
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\AttributeLang", mappedBy="attribute")
      */
     private $attributeLangs;
@@ -152,7 +157,7 @@ class Attribute
     /**
      * Set attributeGroup.
      *
-     * @param \PrestaShopBundle\Entity\AttributeGroup $attributeGroup
+     * @param AttributeGroup $attributeGroup
      *
      * @return Attribute
      */
@@ -166,7 +171,7 @@ class Attribute
     /**
      * Get attributeGroup.
      *
-     * @return \PrestaShopBundle\Entity\AttributeGroup
+     * @return AttributeGroup
      */
     public function getAttributeGroup()
     {
@@ -176,7 +181,7 @@ class Attribute
     /**
      * Add shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      *
      * @return Attribute
      */
@@ -190,7 +195,7 @@ class Attribute
     /**
      * Remove shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      */
     public function removeShop(Shop $shop)
     {
@@ -200,7 +205,7 @@ class Attribute
     /**
      * Get shops.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection<Shop>
      */
     public function getShops()
     {
@@ -221,6 +226,9 @@ class Attribute
         $this->attributeLangs->removeElement($attributeLang);
     }
 
+    /**
+     * @return Collection<AttributeLang>
+     */
     public function getAttributeLangs()
     {
         return $this->attributeLangs;

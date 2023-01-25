@@ -29,5 +29,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
 class CannotGenerateCombinationException extends CombinationException
 {
-    public const DUE_TO_DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS = 1;
+    public const DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS = 1;
 }

@@ -30,10 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShopBundle\Entity\Attribute as AttributeEntity;
 use PrestaShopBundle\Entity\AttributeGroup as AttributeGroupEntity;
-use PrestaShopBundle\Entity\AttributeGroupLang;
-use PrestaShopBundle\Entity\AttributeLang;
 use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 
 abstract class AbstractAttributeGroupQueryHandler
@@ -53,7 +50,7 @@ abstract class AbstractAttributeGroupQueryHandler
     }
 
     /**
-     * @param array $attributeGroupEntities
+     * @param AttributeGroupEntity[] $attributeGroupEntities
      * @param bool $withAttributes
      *
      * @return AttributeGroup[]
@@ -61,10 +58,8 @@ abstract class AbstractAttributeGroupQueryHandler
     protected function formatAttributeGroups(array $attributeGroupEntities, bool $withAttributes): array
     {
         $attributeGroups = [];
-        /** @var AttributeGroupEntity $attributeGroupEntity */
         foreach ($attributeGroupEntities as $attributeGroupEntity) {
             $localizedNames = $localizedPublicNames = [];
-            /** @var AttributeGroupLang $attributeGroupLang */
             foreach ($attributeGroupEntity->getAttributeGroupLangs() as $attributeGroupLang) {
                 $localizedNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getName();
                 $localizedPublicNames[$attributeGroupLang->getLang()->getId()] = $attributeGroupLang->getPublicName();
@@ -73,10 +68,8 @@ abstract class AbstractAttributeGroupQueryHandler
             $attributes = null;
             if ($withAttributes) {
                 $attributes = [];
-                /** @var AttributeEntity $attributeEntity */
                 foreach ($attributeGroupEntity->getAttributes() as $attributeEntity) {
                     $localizedAttributeNames = [];
-                    /** @var AttributeLang $attributeLang */
                     foreach ($attributeEntity->getAttributeLangs() as $attributeLang) {
                         $localizedAttributeNames[$attributeLang->getLang()->getId()] = $attributeLang->getName();
                     }

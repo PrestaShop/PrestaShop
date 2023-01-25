@@ -192,7 +192,7 @@ class CombinationAssertionFeatureContext extends AbstractCombinationFeatureConte
     {
         $this->assertLastErrorIs(
             CannotGenerateCombinationException::class,
-            CannotGenerateCombinationException::DUE_TO_DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS
+            CannotGenerateCombinationException::DIFFERENT_ATTRIBUTES_BETWEEN_SHOPS
         );
     }
 

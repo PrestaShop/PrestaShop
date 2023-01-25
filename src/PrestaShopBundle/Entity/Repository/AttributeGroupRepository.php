@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintExcept
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShopBundle\Entity\AttributeGroup;
 
 /**
  * AttributeGroupRepository.
@@ -44,8 +45,9 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param bool $withAttributes
      * @param int[] $attributeIds
+     * @param ShopConstraint $shopConstraint
      *
-     * @return array
+     * @return AttributeGroup[]
      */
     public function listOrderedAttributeGroups(bool $withAttributes, ShopConstraint $shopConstraint, array $attributeIds = []): array
     {
@@ -58,33 +60,26 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('ag')
             ->addSelect('agl')
             ->innerJoin('ag.attributeGroupLangs', 'agl')
+            ->leftJoin('ag.attributes', 'a')
             ->addOrderBy('ag.position', 'ASC')
         ;
 
+        $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
+
         // for single shop we add join condition with certain shop,
-        // else if its all shops we should be ok by retrieving results from general attribute_group table
-        if ($shopConstraint->getShopId()) {
+        // else if it is all shops we should be ok by retrieving results from general attribute_group table
+        if ($shopIdValue) {
             $qb->innerJoin('ag.shops', 'ags')
-                ->where('ags.id = :shopId')
-                ->setParameter('shopId', $shopConstraint->getShopId()->getValue())
+                ->andWhere('ags.id = :shopId')
+                ->leftJoin('a.shops', 'attr_shop', Join::WITH, 'attr_shop.id = :shopId AND attr_shop.id = ags.id')
+                ->setParameter('shopId', $shopIdValue)
             ;
         }
 
         if (!empty($attributeIds)) {
             $qb
-                ->innerJoin('ag.attributes', 'a', Join::WITH, 'a.id IN (:attributeIds)')
+                ->andWhere($qb->expr()->in('a.id', ':attributeIds'))
                 ->setParameter('attributeIds', $attributeIds)
-            ;
-        } else {
-            $qb->innerJoin('ag.attributes', 'a');
-        }
-
-        if ($withAttributes) {
-            $qb
-                ->innerJoin('a.attributeLangs', 'al')
-                ->addSelect('a')
-                ->addSelect('al')
-                ->addOrderBy('a.position', 'ASC')
             ;
         }
 
@@ -112,25 +107,22 @@ class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 
         $qb = $this->createQueryBuilder('ag');
         $results = $qb
-            ->select('COUNT(ag.id) AS attribute_group_count', 'ags.id AS shop_id')
+            ->select('ags.id AS shop_id', 'ag.id AS attribute_group_id')
             ->innerJoin('ag.shops', 'ags', Join::WITH, $qb->expr()->in('ags.id', $shopIdValues))
             ->andWhere($qb->expr()->in('ag.id', $attributeGroupIdValues))
-            ->groupBy('ags.id')
             ->getQuery()
             ->getArrayResult()
         ;
 
-        $foundInShops = [];
-        $expectedAttributeGroupCount = count($attributeGroupIdValues);
+        $attributeGroupShops = [];
         foreach ($results as $result) {
-            if ((int) $result['attribute_group_count'] !== $expectedAttributeGroupCount) {
-                throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
-            }
-            $foundInShops[] = (int) $result['shop_id'];
+            $attributeGroupShops[$result['attribute_group_id']][] = $result['shop_id'];
         }
 
-        if (count(array_unique($foundInShops)) !== count($shopIdValues)) {
-            throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
+        foreach ($attributeGroupIdValues as $attributeGroupIdValue) {
+            if ($attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
+                throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
+            }
         }
     }
 }

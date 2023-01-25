@@ -28,8 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
+use ProductAttribute as AttributeObjectModel;
+use AttributeGroup as AttributeGroupObjectModel;
 
 /**
  * Handles the query GetAttributeGroupList using Doctrine repository
@@ -37,15 +43,70 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetAtt
 class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler implements GetAttributeGroupListHandlerInterface
 {
     /**
+     * @var AttributeRepository
+     */
+    private $attributeRepository;
+
+    public function __construct(
+        AttributeGroupRepository $attributeGroupRepository,
+        AttributeRepository $attributeRepository
+    ) {
+        parent::__construct($attributeGroupRepository);
+        $this->attributeRepository = $attributeRepository;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function handle(GetAttributeGroupList $query): array
     {
-        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups(
-            $query->withAttributes(),
-            $query->getShopConstraint()
-        );
+        $shopConstraint = $query->getShopConstraint();
+        $attributeGroups = $this->attributeRepository->getAttributeGroups($shopConstraint);
 
-        return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
+        return $this->formatResults(
+            $attributeGroups,
+            $this->attributeRepository->getGroupAttributes($shopConstraint, array_keys($attributeGroups))
+        );
+    }
+
+    /**
+     * @param array<int, AttributeGroupObjectModel> $attributeGroups
+     * @param array<int, array<int, AttributeObjectModel>> $attributes
+     *
+     * @return AttributeGroup[]
+     */
+    private function formatResults(
+        array $attributeGroups,
+        array $attributes
+    ): array {
+        $attributeGroupsResult = [];
+
+        foreach ($attributeGroups as $attributeGroupId => $attributeGroup) {
+            if (!isset($attributes[$attributeGroupId])) {
+                $attributesResult = [];
+            } else {
+                $attributesResult = [];
+                foreach ($attributes[$attributeGroupId] as $attributeId => $attribute) {
+                    $attributesResult[] = new Attribute(
+                        $attributeId,
+                        $attribute->position,
+                        $attribute->color,
+                        $attribute->name
+                    );
+                }
+            }
+
+            $attributeGroupsResult[] = new AttributeGroup(
+                $attributeGroupId,
+                $attributeGroup->name,
+                $attributeGroup->public_name,
+                $attributeGroup->group_type,
+                $attributeGroup->is_color_group,
+                $attributeGroup->position,
+                $attributesResult
+            );
+        }
+
+        return $attributeGroupsResult;
     }
 }
