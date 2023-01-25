@@ -2811,19 +2811,6 @@ FileETag none
         return $tab;
     }
 
-    public static function generateIndex()
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.1. Use PrestaShop\Autoload\PrestashopAutoload instead.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        \PrestaShop\Autoload\PrestashopAutoload::getInstance()->generateIndex();
-    }
-
     /**
      * @return string php file to be run
      */
