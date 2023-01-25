@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Theme & Logo base page, contains functions that can be used on the page
@@ -7,7 +8,25 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @type {themeAndLogoBasePage}
  * @extends BOBasePage
  */
-module.exports = class themeAndLogoBasePage extends BOBasePage {
+export default class themeAndLogoBasePage extends BOBasePage {
+  private readonly advancedCustomizationNavItemLink: string;
+
+  private readonly themeShopCard: string;
+
+  private readonly cardInactiveTheme: string;
+
+  private readonly useThemeButton: string;
+
+  private readonly useThemeModalDialog: string;
+
+  private readonly useThemeModalDialogYesButton: string;
+
+  private readonly deleteThemeButton: string;
+
+  private readonly deleteThemeModalDialog: string;
+
+  private readonly deleteThemeModalDialogYesButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on theme & logo page
@@ -31,7 +50,7 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToSubTabAdvancedCustomization(page) {
+  async goToSubTabAdvancedCustomization(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.advancedCustomizationNavItemLink);
   }
 
@@ -40,7 +59,7 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<String>}
    */
-  async useTheme(page) {
+  async useTheme(page: Page): Promise<string> {
     await this.scrollTo(page, this.themeShopCard);
     await page.hover(this.cardInactiveTheme);
     await this.waitForSelectorAndClick(page, this.useThemeButton);
@@ -54,7 +73,7 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<String>}
    */
-  async deleteTheme(page) {
+  async deleteTheme(page: Page): Promise<string> {
     await this.scrollTo(page, this.themeShopCard);
     await page.hover(this.cardInactiveTheme);
     await this.waitForSelectorAndClick(page, this.deleteThemeButton);

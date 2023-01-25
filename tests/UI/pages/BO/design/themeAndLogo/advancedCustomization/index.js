@@ -1,5 +1,6 @@
+import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
+
 require('module-alias/register');
-const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage');
 
 /**
  * Advanced customization page, contains functions that can be used on the page
