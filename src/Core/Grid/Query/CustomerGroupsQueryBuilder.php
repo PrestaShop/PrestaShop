@@ -18,7 +18,6 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private $searchCriteriaApplicator;
 
-
     /**
      * @param Connection $connection
      * @param string $dbPrefix
@@ -34,6 +33,11 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         $this->languageId = $languageId;
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return QueryBuilder
+     */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
@@ -49,17 +53,21 @@ class CustomerGroupsQueryBuilder extends AbstractDoctrineQueryBuilder
         return $builder;
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return QueryBuilder
+     */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $builder = $this->getCustomerGroupsQueryBuilder($searchCriteria);
-
-        $builder
-            ->select('COUNT(g.id_group)')
-        ;
-
-        return $builder;
+        return $this->getCustomerGroupsQueryBuilder($searchCriteria)->select('COUNT(g.id_group)');
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return QueryBuilder
+     */
     private function getCustomerGroupsQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
 

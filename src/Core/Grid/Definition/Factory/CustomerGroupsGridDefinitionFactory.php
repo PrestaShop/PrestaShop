@@ -2,7 +2,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -10,21 +13,31 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     public const GRID_ID = 'customer_groups';
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getId()
     {
         return self::GRID_ID;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getName()
     {
         return $this->trans('Customer Groups', [], 'Admin.Navigation.Menu');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getColumns()
     {
 
@@ -70,6 +83,24 @@ class CustomerGroupsGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'show_prices',
                     ])
             )
+            ->add(
+                (new ActionColumn('actions'))
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_customer_groups_edit',
+                                        'route_param_name' => 'groupId',
+                                        'route_param_field' => 'id_group',
+                                        'clickable_row' => true,
+                                    ])
+                            )
+                    ])
+            );
         ;
     }
 
