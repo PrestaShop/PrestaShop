@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type CMSPageData from '@data/faker/CMSpage';
+
+import type {Page} from 'playwright';
 
 /**
  * Add page page, contains functions that can be used on the page
@@ -7,6 +10,28 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddPage extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  private readonly titleInput: string;
+
+  private readonly metaTitleInput: string;
+
+  private readonly metaDescriptionInput: string;
+
+  private readonly metaKeywordsInput: string;
+
+  private readonly pageContentIframe: string;
+
+  private readonly indexationToggleInput: (toggle: number) => string;
+
+  private readonly displayedToggleInput: (toggle: number) => string;
+
+  private readonly savePageButton: string;
+
+  private readonly saveAndPreviewPageButton: string;
+
+  private readonly cancelButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add page page
@@ -22,8 +47,8 @@ class AddPage extends BOBasePage {
     this.metaDescriptionInput = '#cms_page_meta_description_1';
     this.metaKeywordsInput = '#cms_page_meta_keyword_1-tokenfield';
     this.pageContentIframe = '#cms_page_content_1_ifr';
-    this.indexationToggleInput = (toggle) => `#cms_page_is_indexed_for_search_${toggle}`;
-    this.displayedToggleInput = (toggle) => `#cms_page_is_displayed_${toggle}`;
+    this.indexationToggleInput = (toggle: number) => `#cms_page_is_indexed_for_search_${toggle}`;
+    this.displayedToggleInput = (toggle: number) => `#cms_page_is_displayed_${toggle}`;
     this.savePageButton = '#save-button';
     this.saveAndPreviewPageButton = '#save-and-preview-button';
     this.cancelButton = '#cancel-link';
@@ -37,9 +62,9 @@ class AddPage extends BOBasePage {
    * Fill form for add/edit page category
    * @param page {Page} Browser tab
    * @param pageData {CMSPageData} Data to set on new/edit page form
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
-  async createEditPage(page, pageData) {
+  async createEditPage(page: Page, pageData: CMSPageData): Promise<string> {
     // Fill form
     await this.setValue(page, this.titleInput, pageData.title);
     await this.setValue(page, this.metaTitleInput, pageData.metaTitle);
@@ -61,7 +86,7 @@ class AddPage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<Page>}
    */
-  async previewPage(page) {
+  async previewPage(page: Page): Promise<Page> {
     return this.openLinkWithTargetBlank(page, this.saveAndPreviewPageButton);
   }
 
@@ -70,8 +95,8 @@ class AddPage extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async cancelPage(page) {
+  async cancelPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.cancelButton);
   }
 }
-module.exports = new AddPage();
+export default new AddPage();
