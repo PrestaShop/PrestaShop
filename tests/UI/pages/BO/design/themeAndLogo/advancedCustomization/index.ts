@@ -1,5 +1,5 @@
 import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
-import {Page} from "playwright";
+import {Page} from 'playwright';
 
 /**
  * Advanced customization page, contains functions that can be used on the page

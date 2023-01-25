@@ -72,16 +72,18 @@ class EmailTheme extends BOBasePage {
    */
   async previewEmailTheme(page: Page, name: string): Promise<void> {
     const tableRows: ElementHandle<HTMLElement|SVGElement>[] = await page.$$(this.tableRows);
-    let found = false;
+    let found: boolean = false;
 
     for (let i = 0; i < tableRows.length; i++) {
       const textColumnName: string|null = await tableRows[i].$eval(this.columnName, (columnName) => columnName.textContent);
 
       if (textColumnName && textColumnName.includes(name)) {
+        /* eslint-disable no-loop-func */
         await Promise.all([
           tableRows[i].$eval(this.columnActionPreviewLink, (el: HTMLElement) => el.click()),
           page.waitForNavigation(),
         ]);
+        /* eslint-enable no-loop-func */
         found = true;
         break;
       }

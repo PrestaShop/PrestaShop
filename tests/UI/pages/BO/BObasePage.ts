@@ -85,25 +85,25 @@ export default class BOBasePage extends CommonPage {
 
   public readonly deliverySlipslink: string;
 
-  private readonly shoppingCartsLink: string;
+  public readonly shoppingCartsLink: string;
 
   public readonly catalogParentLink: string;
 
   public readonly productsLink: string;
 
-  private readonly categoriesLink: string;
+  public readonly categoriesLink: string;
 
-  private readonly monitoringLink: string;
+  public readonly monitoringLink: string;
 
-  private readonly attributesAndFeaturesLink: string;
+  public readonly attributesAndFeaturesLink: string;
 
   public readonly brandsAndSuppliersLink: string;
 
-  private readonly filesLink: string;
+  public readonly filesLink: string;
 
   public readonly discountsLink: string;
 
-  private readonly stocksLink: string;
+  public readonly stocksLink: string;
 
   public readonly customersParentLink: string;
 
@@ -111,73 +111,73 @@ export default class BOBasePage extends CommonPage {
 
   public readonly addressesLink: string;
 
-  private readonly outstandingLink: string;
+  public readonly outstandingLink: string;
 
-  private readonly customerServiceParentLink: string;
+  public readonly customerServiceParentLink: string;
 
-  private readonly customerServiceLink: string;
+  public readonly customerServiceLink: string;
 
-  private readonly orderMessagesLink: string;
+  public readonly orderMessagesLink: string;
 
-  private readonly merchandiseReturnsLink: string;
+  public readonly merchandiseReturnsLink: string;
 
-  private readonly modulesParentLink: string;
+  public readonly modulesParentLink: string;
 
   private readonly moduleCatalogueLink: string;
 
-  private readonly moduleManagerLink: string;
+  public readonly moduleManagerLink: string;
 
-  private readonly designParentLink: string;
+  public readonly designParentLink: string;
 
-  private readonly themeAndLogoParentLink: string;
+  public readonly themeAndLogoParentLink: string;
 
-  private readonly emailThemeLink: string;
+  public readonly emailThemeLink: string;
 
-  private readonly pagesLink: string;
+  public readonly pagesLink: string;
 
   private readonly positionsLink: string;
 
-  private readonly imageSettingsLink: string;
+  public readonly imageSettingsLink: string;
 
-  private readonly linkWidgetLink: string;
+  public readonly linkWidgetLink: string;
 
-  private readonly shippingLink: string;
+  public readonly shippingLink: string;
 
-  private readonly carriersLink: string;
+  public readonly carriersLink: string;
 
-  private readonly shippingPreferencesLink: string;
+  public readonly shippingPreferencesLink: string;
 
-  private readonly paymentParentLink: string;
+  public readonly paymentParentLink: string;
 
   private readonly paymentMethodsLink: string;
 
-  private readonly preferencesLink: string;
+  public readonly preferencesLink: string;
 
   public readonly internationalParentLink: string;
 
   public readonly taxesLink: string;
 
-  private readonly localizationLink: string;
+  public readonly localizationLink: string;
 
-  private readonly locationsLink: string;
+  public readonly locationsLink: string;
 
-  private readonly translationsLink: string;
+  public readonly translationsLink: string;
 
   public readonly shopParametersParentLink: string;
 
-  private readonly shopParametersGeneralLink: string;
+  public readonly shopParametersGeneralLink: string;
 
-  private readonly orderSettingsLink: string;
+  public readonly orderSettingsLink: string;
 
-  private readonly productSettingsLink: string;
+  public readonly productSettingsLink: string;
 
   public readonly customerSettingsLink: string;
 
   public readonly contactLink: string;
 
-  private readonly trafficAndSeoLink: string;
+  public readonly trafficAndSeoLink: string;
 
-  private readonly searchLink: string;
+  public readonly searchLink: string;
 
   public readonly advancedParametersLink: string;
 
@@ -189,15 +189,15 @@ export default class BOBasePage extends CommonPage {
 
   public readonly emailLink: string;
 
-  private readonly importLink: string;
+  public readonly importLink: string;
 
-  private readonly teamLink: string;
+  public readonly teamLink: string;
 
   public readonly databaseLink: string;
 
-  private readonly webserviceLink: string;
+  public readonly webserviceLink: string;
 
-  private readonly logsLink: string;
+  public readonly logsLink: string;
 
   private readonly featureFlagLink: string;
 
@@ -207,7 +207,7 @@ export default class BOBasePage extends CommonPage {
 
   private readonly menuTabLink: string;
 
-  private readonly menuTree: { parent: string; children: string[] }[];
+  public readonly menuTree: { parent: string; children: string[] }[];
 
   private readonly growlDiv: string;
 

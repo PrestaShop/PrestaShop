@@ -107,7 +107,9 @@ class AddLinkBlock extends BOBasePage {
         // Do nothing
       }
       if (selector !== '') {
+        /* eslint-disable no-loop-func */
         await page.$eval(selector, (el: HTMLElement) => el.click());
+        /* eslint-enable no-loop-func */
       }
     }
     /* eslint-enable no-restricted-syntax */
@@ -138,7 +140,9 @@ class AddLinkBlock extends BOBasePage {
         // Do nothing
       }
       if (selector !== '') {
+        /* eslint-disable no-loop-func */
         await page.$eval(selector, (el: HTMLElement) => el.click());
+        /* eslint-enable no-loop-func */
       }
     }
     /* eslint-enable no-restricted-syntax */
@@ -175,7 +179,9 @@ class AddLinkBlock extends BOBasePage {
         // Do nothing
       }
       if (selector !== '') {
+        /* eslint-disable no-loop-func */
         await page.$eval(selector, (el: HTMLElement) => el.click());
+        /* eslint-enable no-loop-func */
       }
     }
     /* eslint-enable no-restricted-syntax */

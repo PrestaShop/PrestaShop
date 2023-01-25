@@ -1,5 +1,4 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
 
 /**
  * Dashboard page, contains selectors and functions for the page
@@ -7,6 +6,8 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Dashboard extends BOBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on dashboard page
@@ -18,4 +19,4 @@ class Dashboard extends BOBasePage {
   }
 }
 
-module.exports = new Dashboard();
+export default new Dashboard();

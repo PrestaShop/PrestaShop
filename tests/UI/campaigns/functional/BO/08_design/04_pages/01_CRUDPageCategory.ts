@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 // Import BO pages
-import dashboardPage from '@pages/BO/dashboard/index';
+import dashboardPage from '@pages/BO/dashboard';
 import addPagePage from '@pages/BO/design/pages/add';
 import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
