@@ -174,10 +174,8 @@ describe('BO - International - Tax rules : Bulk actions', async () => {
       it(`should ${test.args.action} tax rules with bulk actions and check Result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `bulk${test.args.action}`, baseContext);
 
-        /* Successful message is not visible, skipping it */
-        await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
-        // const textResult = await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
-        // await expect(textResult).to.be.equal(taxRulesPage.successfulUpdateStatusMessage);
+        const textResult = await taxRulesPage.bulkSetStatus(page, test.args.enabledValue);
+        await expect(textResult).to.contains(taxRulesPage.successfulUpdateStatusMessage);
 
         const numberOfElementInGrid = await taxRulesPage.getNumberOfElementInGrid(page);
 

@@ -50,7 +50,7 @@ export default {
     const page = await pdf.getPage(pageNo);
     const tokenizedText = await page.getTextContent();
 
-    return tokenizedText.items.map((token: TextItem|TextMarkedContent): string => ('str' in token ? token.str : ''));
+    return tokenizedText.items.map((token: TextItem | TextMarkedContent): string => ('str' in token ? token.str : ''));
   },
 
   /**
@@ -127,7 +127,7 @@ export default {
    * @return {Promise<void>}
    */
   async createFile(path: string, filename: string, content: string): Promise<void> {
-    await fs.writeFile(`${path}/${filename}`, content, (err: Error|null) => {
+    await fs.writeFile(`${path}/${filename}`, content, (err: Error | null) => {
       if (err) {
         throw err;
       }
@@ -162,6 +162,7 @@ export default {
       fileText = fileText.replace(/\?time=\d+/g, '');
       text = text.replace(/\?time=\d+/g, '');
     }
+
     return fileText.includes(text);
   },
 
@@ -173,7 +174,7 @@ export default {
    * @param quality {number} Quality chosen for the image
    * @return {Promise<void>}
    */
-  async generateImage(imageName: string, width: number = 200, height: number = 200, quality:number = 1): Promise<void> {
+  async generateImage(imageName: string, width: number = 200, height: number = 200, quality: number = 1): Promise<void> {
     await imgGen.generateImage(width, height, quality, (err: Error, image: object) => {
       if ('data' in image) {
         fs.writeFileSync(imageName, image.data);

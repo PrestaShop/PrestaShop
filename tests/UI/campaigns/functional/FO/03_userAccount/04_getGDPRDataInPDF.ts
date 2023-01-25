@@ -2,6 +2,7 @@
 import date from '@utils/date';
 import files from '@utils/files';
 import helper from '@utils/helpers';
+import basicHelper from '@utils/basicHelper';
 import testContext from '@utils/testContext';
 
 // Import commonTests
@@ -66,7 +67,11 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   let ipAddress: string;
   let connectionOrigin: string;
 
-  const customerData: CustomerData = new CustomerData({firstName: 'Marc', lastName: 'Beier', email: 'presta@prestashop.com'});
+  const customerData: CustomerData = new CustomerData({
+    firstName: 'Marc',
+    lastName: 'Beier',
+    email: 'presta@prestashop.com'
+  });
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const dateNow: Date = new Date();
   const addressData: AddressData = new AddressData({
@@ -222,11 +227,11 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
     });
 
     describe('Check GDPR data in PDF', async () => {
-      it.skip('should check the logo in PDF File', async function () {
+      it('should check the logo in PDF File', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductImage', baseContext);
 
         const imageNumber = await files.getImageNumberInPDF(filePath);
-        await expect(imageNumber).to.be.equal(1);
+        await expect(imageNumber).to.be.equal(2);
       });
 
       it('should check the date and the customer name', async function () {
@@ -242,22 +247,13 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
       it('should check general info', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkGeneralInfo', baseContext);
 
-        // To replace isVisible after release of the module psgdpr
-        // const age = await basicHelper.age(customerData.birthDate);
+        const age = await basicHelper.age(customerData.birthDate);
 
-        /* const isVisible = await files.isTextInPDF(filePath, 'General info,,  , ,  Gender, ,  '
-        + `${customerData.socialTitle},  Name, ,  ${customerData.firstName} ${customerData.lastName},`
-        +`  Birth date, , ,${customerData.birthDate.toISOString().slice(0, 10)},  Age, ,  ${age},  Email, ,  `
-          + `${customerData.email},  Language, ,  English (English),  , ,  Creation account date, ,  `
-          + `${registrationDate},  Last visit, ,  ${lastVisitDate},  Siret,  Ape,  Company,  Website`); */
-
-        let isVisible = await files.isTextInPDF(filePath, `General info,,Gender, ,${customerData.socialTitle},Name,`
-          + ` ,${customerData.firstName} ${customerData.lastName},Birth date, ,`
-          + `${customerData.birthDate.toISOString().slice(0, 10)},Age,`);
-        await expect(isVisible, 'General info is not correct!').to.be.true;
-
-        isVisible = await files.isTextInPDF(filePath, `Email,${customerData.email},Language, ,English (English),`
-          + `Creation account date, ,${registrationDate},Last visit, ,${lastVisitDate},Siret,Ape,Company,Website`);
+        const isVisible = await files.isTextInPDF(filePath, 'General info,,Gender, ,'
+          + `${customerData.socialTitle},Name, ,${customerData.firstName} ${customerData.lastName},`
+          + `Birth date, ,${customerData.birthDate.toISOString().slice(0, 10)},Age, ,${age},Email,`
+          + `${customerData.email},Language, ,English (English),Creation account date, ,`
+          + `${registrationDate},Last visit, ,${lastVisitDate},Siret,Ape,Company,Website`);
         await expect(isVisible, 'General info is not correct!').to.be.true;
       });
 
