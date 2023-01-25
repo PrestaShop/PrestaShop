@@ -1338,30 +1338,6 @@ class ToolsCore
     }
 
     /**
-     * Return the friendly url from the provided string.
-     *
-     * @deprecated since 8.1
-     *
-     * @param string $str
-     * @param bool $utf8_decode (deprecated)
-     *
-     * @return string
-     */
-    public static function link_rewrite($str, $utf8_decode = null)
-    {
-        @trigger_error(
-            'This function is deprecated, use Tools::str2url($str) instead.',
-            E_USER_DEPRECATED
-        );
-
-        if ($utf8_decode !== null) {
-            Tools::displayParameterAsDeprecated('utf8_decode');
-        }
-
-        return Tools::str2url($str);
-    }
-
-    /**
      * Return a friendly url made from the provided string
      * If the mbstring library is available, the output is the same as the js function of the same name.
      *
