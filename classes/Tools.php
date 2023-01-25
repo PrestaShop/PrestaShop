@@ -2185,13 +2185,6 @@ class ToolsCore
         return false;
     }
 
-    public static function replaceByAbsoluteURL($matches)
-    {
-        Tools::displayAsDeprecated('Use Media::replaceByAbsoluteURL($matches) instead');
-
-        return Media::replaceByAbsoluteURL($matches);
-    }
-
     protected static $_cache_nb_media_servers = null;
 
     /**
