@@ -1,5 +1,9 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type LinkWidgetData from '@data/faker/linkWidget';
+import type {LinkWidgetPage} from '@data/types/linkWidget';
+
+import type {Page} from 'playwright';
 
 /**
  * New link block page, contains functions that can be used on the page
@@ -7,6 +11,30 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddLinkBlock extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly changeNamelangButton: string;
+
+  private readonly changeNameLangSpan: (lang: string) => string;
+
+  private readonly nameInput: (id: number) => string;
+
+  private readonly hookSelect: string;
+
+  private readonly cmsPagesCheckbox: (id: number) => string;
+
+  private readonly productsPagesCheckbox: (id: number) => string;
+
+  private readonly staticContentCheckbox: (id: number) => string;
+
+  private readonly customTitleInput: (position: number, id: number) => string;
+
+  private readonly customUrlInput: (position: number, id: number) => string;
+
+  private readonly addCustomBlockButton: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on new link block page
@@ -18,14 +46,14 @@ class AddLinkBlock extends BOBasePage {
 
     // Selectors
     this.changeNamelangButton = '#form_link_block_block_name';
-    this.changeNameLangSpan = (lang) => `div.dropdown-menu span[data-locale='${lang}']`;
-    this.nameInput = (id) => `#form_link_block_block_name_${id}`;
+    this.changeNameLangSpan = (lang: string) => `div.dropdown-menu span[data-locale='${lang}']`;
+    this.nameInput = (id: number) => `#form_link_block_block_name_${id}`;
     this.hookSelect = '#form_link_block_id_hook';
-    this.cmsPagesCheckbox = (id) => `#form_link_block_cms_${id} + i`;
-    this.productsPagesCheckbox = (id) => `#form_link_block_product_${id} + i`;
-    this.staticContentCheckbox = (id) => `#form_link_block_static_${id} + i`;
-    this.customTitleInput = (position, id) => `#form_link_block_custom_${position}_${id}_title`;
-    this.customUrlInput = (position, id) => `#form_link_block_custom_${position}_${id}_url`;
+    this.cmsPagesCheckbox = (id: number) => `#form_link_block_cms_${id} + i`;
+    this.productsPagesCheckbox = (id: number) => `#form_link_block_product_${id} + i`;
+    this.staticContentCheckbox = (id: number) => `#form_link_block_static_${id} + i`;
+    this.customTitleInput = (position: number, id: number) => `#form_link_block_custom_${position}_${id}_title`;
+    this.customUrlInput = (position: number, id: number) => `#form_link_block_custom_${position}_${id}_url`;
     this.addCustomBlockButton = 'button[data-collection-id=\'form_link_block_custom\']';
     this.saveButton = '.card-footer button';
   }
@@ -37,7 +65,7 @@ class AddLinkBlock extends BOBasePage {
    * @param lang {string} Value of language to select
    * @return {Promise<void>}
    */
-  async changeLanguage(page, lang) {
+  async changeLanguage(page: Page, lang: string): Promise<void> {
     await Promise.all([
       page.click(this.changeNamelangButton),
       this.waitForVisibleSelector(page, `${this.changeNamelangButton}[aria-expanded='false']`),
@@ -54,10 +82,10 @@ class AddLinkBlock extends BOBasePage {
    * @param contentPages {Array<string>} List of content pages
    * @return {Promise<void>}
    */
-  async selectContentPages(page, contentPages) {
+  async selectContentPages(page: Page, contentPages: string[]): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const contentPage of contentPages) {
-      let selector;
+      let selector: string = '';
 
       switch (contentPage) {
         case 'Delivery':
@@ -78,7 +106,9 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, (el) => el.click());
+      if (selector !== '') {
+        await page.$eval(selector, (el: HTMLElement) => el.click());
+      }
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -89,10 +119,10 @@ class AddLinkBlock extends BOBasePage {
    * @param productPages {Array<string>} List of product pages
    * @return {Promise<void>}
    */
-  async selectProductPages(page, productPages) {
+  async selectProductPages(page: Page, productPages: string[]): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const productPage of productPages) {
-      let selector;
+      let selector: string = '';
 
       switch (productPage) {
         case 'Prices drop':
@@ -107,7 +137,9 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, (el) => el.click());
+      if (selector !== '') {
+        await page.$eval(selector, (el: HTMLElement) => el.click());
+      }
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -118,10 +150,10 @@ class AddLinkBlock extends BOBasePage {
    * @param staticPages {Array<string>} List of statistic pages
    * @return {Promise<void>}
    */
-  async selectStaticPages(page, staticPages) {
+  async selectStaticPages(page: Page, staticPages: string[]): Promise<void> {
     /* eslint-disable no-restricted-syntax */
     for (const staticPage of staticPages) {
-      let selector;
+      let selector: string = '';
 
       switch (staticPage) {
         case 'Contact us':
@@ -142,7 +174,9 @@ class AddLinkBlock extends BOBasePage {
         default:
         // Do nothing
       }
-      await page.$eval(selector, (el) => el.click());
+      if (selector !== '') {
+        await page.$eval(selector, (el: HTMLElement) => el.click());
+      }
     }
     /* eslint-enable no-restricted-syntax */
   }
@@ -150,10 +184,10 @@ class AddLinkBlock extends BOBasePage {
   /**
    * Add custom pages
    * @param page {Page} Browser tab
-   * @param customPages {Array<{name: string, url: string}>} List of custom pages
+   * @param customPages {LinkWidgetPage[]} List of custom pages
    * @return {Promise<void>}
    */
-  async addCustomPages(page, customPages) {
+  async addCustomPages(page: Page, customPages: LinkWidgetPage[]): Promise<void> {
     for (let i = 1; i <= customPages.length; i++) {
       // Set english title and url
       await this.changeLanguage(page, 'en');
@@ -175,7 +209,7 @@ class AddLinkBlock extends BOBasePage {
    * Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
-  async addLinkWidget(page, linkWidgetData) {
+  async addLinkWidget(page: Page, linkWidgetData: LinkWidgetData): Promise<string> {
     // Set name in languages
     await this.changeLanguage(page, 'en');
     await this.setValue(page, this.nameInput(1), linkWidgetData.name);
@@ -198,4 +232,4 @@ class AddLinkBlock extends BOBasePage {
   }
 }
 
-module.exports = new AddLinkBlock();
+export default new AddLinkBlock();
