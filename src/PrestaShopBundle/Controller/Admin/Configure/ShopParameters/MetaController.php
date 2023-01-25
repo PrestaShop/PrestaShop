@@ -72,7 +72,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -263,7 +263,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -296,7 +296,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -324,7 +324,7 @@ class MetaController extends FrameworkBundleAdminController
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
     }
 
     /**
@@ -357,7 +357,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
+        return $this->doRenderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
     }
 
     /**
@@ -400,6 +400,8 @@ class MetaController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 8.1.0 and will be removed in next major version.
+     *
      * @param Request $request
      * @param MetaFilters $filters
      * @param FormInterface $setUpUrlsForm
@@ -410,6 +412,42 @@ class MetaController extends FrameworkBundleAdminController
      * @return Response
      */
     protected function renderForm(
+        Request $request,
+        MetaFilters $filters,
+        FormInterface $setUpUrlsForm,
+        FormInterface $shopUrlsForm,
+        FormInterface $seoOptionsForm,
+        ?FormInterface $urlSchemaForm = null
+    ): Response {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0 and will be removed in the next major version. Use doRenderForm() instead.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
+        return $this->doRenderForm(
+            $request,
+            $filters,
+            $setUpUrlsForm,
+            $shopUrlsForm,
+            $seoOptionsForm,
+            $urlSchemaForm
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param MetaFilters $filters
+     * @param FormInterface $setUpUrlsForm
+     * @param FormInterface $shopUrlsForm
+     * @param FormInterface $seoOptionsForm
+     * @param FormInterface|null $urlSchemaForm
+     *
+     * @return Response
+     */
+    private function doRenderForm(
         Request $request,
         MetaFilters $filters,
         FormInterface $setUpUrlsForm,
