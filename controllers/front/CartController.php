@@ -750,7 +750,7 @@ class CartControllerCore extends FrontController
         foreach ($productList as $product) {
             if ($product['minimal_quantity'] > $product['cart_quantity']) {
                 // display minimal quantity warning error message
-               $this->errors[] = $this->trans(
+                $this->errors[] = $this->trans(
                     'Select a minimum quantity of [1]%quantity%[/1] for the product [1]%product%[/1].',
                     [
                         '%product%' => $product['name'] . (isset($product['attributes']) && !empty($product['attributes']) ? ' (' . $product['attributes'] . ')' : ''),
