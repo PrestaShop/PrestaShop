@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard/index';
 import addPagePage from '@pages/BO/design/pages/add';
-import pagesPage from '@pages/BO/design/pages/index';
+import pagesPage from '@pages/BO/design/pages';
 import addPageCategoryPage from '@pages/BO/design/pages/pageCategory/add';
 // Import FO pages
 import cmsPage from '@pages/FO/cms';
@@ -176,12 +176,14 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCategoryToCreateNewPage', baseContext);
 
       await pagesPage.viewCategory(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
 
     it('should get the pages number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfPages', baseContext);
+
       numberOfPages = await pagesPage.getNumberOfElementInGrid(page, pagesTableName);
       await expect(numberOfPages).to.equal(0);
     });
@@ -190,6 +192,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewPage', baseContext);
 
       await pagesPage.goToAddNewPage(page);
+
       const pageTitle = await addPagePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addPagePage.pageTitleCreate);
     });
@@ -214,6 +217,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedPageForPreview', baseContext);
 
       await pagesPage.goToEditPage(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -246,6 +250,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'cancelCreatedPageEdition', baseContext);
 
       await addPagePage.cancelPage(page);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -266,6 +271,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditCategory', baseContext);
 
       await pagesPage.goToEditCategoryPage(page, 1);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });
@@ -281,6 +287,7 @@ describe('BO - Design - Pages : CRUD category and page', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToCategoriesAfterUpdate', baseContext);
 
       await pagesPage.backToList(page);
+
       const pageTitle = await pagesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(pagesPage.pageTitle);
     });

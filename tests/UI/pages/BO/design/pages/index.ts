@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Pages page, contains functions that can be used on the page
@@ -7,6 +8,84 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Pages extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly addNewPageCategoryLink: string;
+
+  private readonly addNewPageLink: string;
+
+  private readonly gridPanel: (table: string) => string;
+
+  private readonly gridTitle: (table: string) => string;
+
+  private readonly gridTable: (table: string) => string;
+
+  private readonly gridHeaderTitle: (table: string) => string;
+
+  private readonly listForm: (table: string) => string;
+
+  private readonly tableHead: (table: string) => string;
+
+  private readonly sortColumnDiv: (table: string, column: string) => string;
+
+  private readonly sortColumnSpanButton: (table: string, column: string) => string;
+
+  private readonly listTableRow: (table: string, row: number) => string;
+
+  private readonly listTableColumn: (table: string, row: number, column: string) => string;
+
+  private readonly listTableStatusColumn: (table: string, row: number) => string;
+
+  private readonly listTableStatusColumnToggleInput: (table: string, row: number) => string;
+
+  private readonly selectAllRowsLabel: (table: string) => string;
+
+  private readonly bulkActionsToggleButton: (table: string) => string;
+
+  private readonly bulkActionsDeleteButton: (table: string) => string;
+
+  private readonly bulkActionsEnableButton: (table: string) => string;
+
+  private readonly bulkActionsDisableButton: (table: string) => string;
+
+  private readonly confirmDeleteModal: (table: string) => string;
+
+  private readonly confirmDeleteButton: (table: string) => string;
+
+  private readonly filterColumn: (table: string, filterBy: string) => string;
+
+  private readonly filterSearchButton: (table: string) => string;
+
+  private readonly filterResetButton: (table: string) => string;
+
+  private readonly listTableToggleDropDown: (table: string, row: number) => string;
+
+  private readonly listTableEditLink: (table: string, row: number) => string;
+
+  private readonly deleteRowLink: (table: string, row: number) => string;
+
+  private readonly backToListButton: string;
+
+  private readonly categoriesListTableViewLink: (row: number) => string;
+
+  private readonly categoriesPaginationLimitSelect: string;
+
+  private readonly categoriesPaginationLabel: string;
+
+  private readonly categoriesPaginationNextLink: string;
+
+  private readonly categoriesPaginationPreviousLink: string;
+
+  private readonly pagesPaginationLimitSelect: string;
+
+  private readonly pagesPaginationLabel: string;
+
+  private readonly pagesPaginationNextLink: string;
+
+  private readonly pagesPaginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on pages page
@@ -22,49 +101,49 @@ class Pages extends BOBasePage {
     this.addNewPageLink = '#page-header-desc-configuration-add_cms_page[title=\'Add new page\']';
 
     // Common Selectors
-    this.gridPanel = (table) => `#${table}_grid_panel`;
-    this.gridTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
-    this.gridTable = (table) => `#${table}_grid_table`;
-    this.gridHeaderTitle = (table) => `${this.gridPanel(table)} h3.card-header-title`;
-    this.listForm = (table) => `#${table}_grid`;
+    this.gridPanel = (table: string) => `#${table}_grid_panel`;
+    this.gridTitle = (table: string) => `${this.gridPanel(table)} h3.card-header-title`;
+    this.gridTable = (table: string) => `#${table}_grid_table`;
+    this.gridHeaderTitle = (table: string) => `${this.gridPanel(table)} h3.card-header-title`;
+    this.listForm = (table: string) => `#${table}_grid`;
 
     // Sort Selectors
-    this.tableHead = (table) => `${this.listForm(table)} thead`;
-    this.sortColumnDiv = (table, column) => `${this.tableHead(table)}`
+    this.tableHead = (table: string) => `${this.listForm(table)} thead`;
+    this.sortColumnDiv = (table: string, column: string) => `${this.tableHead(table)}`
       + ` div.ps-sortable-column[data-sort-col-name='${column}']`;
 
-    this.sortColumnSpanButton = (table, column) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
-    this.listTableRow = (table, row) => `${this.listForm(table)} tbody tr:nth-child(${row})`;
-    this.listTableColumn = (table, row, column) => `${this.listTableRow(table, row)} td.column-${column}`;
-    this.listTableStatusColumn = (table, row) => `${this.listTableColumn(table, row, 'active')} .ps-switch`;
-    this.listTableStatusColumnToggleInput = (table, row) => `${this.listTableStatusColumn(table, row)} input`;
+    this.sortColumnSpanButton = (table: string, column: string) => `${this.sortColumnDiv(table, column)} span.ps-sort`;
+    this.listTableRow = (table: string, row: number) => `${this.listForm(table)} tbody tr:nth-child(${row})`;
+    this.listTableColumn = (table: string, row: number, column: string) => `${this.listTableRow(table, row)} td.column-${column}`;
+    this.listTableStatusColumn = (table: string, row: number) => `${this.listTableColumn(table, row, 'active')} .ps-switch`;
+    this.listTableStatusColumnToggleInput = (table: string, row: number) => `${this.listTableStatusColumn(table, row)} input`;
 
     // Bulk Actions
-    this.selectAllRowsLabel = (table) => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
-    this.bulkActionsToggleButton = (table) => `${this.listForm(table)} button.js-bulk-actions-btn`;
-    this.bulkActionsDeleteButton = (table) => `#${table}_grid_bulk_action_delete_selection`;
-    this.bulkActionsEnableButton = (table) => `#${table}_grid_bulk_action_enable_selection`;
-    this.bulkActionsDisableButton = (table) => `#${table}_grid_bulk_action_disable_selection`;
-    this.confirmDeleteModal = (table) => `#${table}-grid-confirm-modal`;
-    this.confirmDeleteButton = (table) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
+    this.selectAllRowsLabel = (table: string) => `${this.listForm(table)} tr.column-filters .grid_bulk_action_select_all`;
+    this.bulkActionsToggleButton = (table: string) => `${this.listForm(table)} button.js-bulk-actions-btn`;
+    this.bulkActionsDeleteButton = (table: string) => `#${table}_grid_bulk_action_delete_selection`;
+    this.bulkActionsEnableButton = (table: string) => `#${table}_grid_bulk_action_enable_selection`;
+    this.bulkActionsDisableButton = (table: string) => `#${table}_grid_bulk_action_disable_selection`;
+    this.confirmDeleteModal = (table: string) => `#${table}-grid-confirm-modal`;
+    this.confirmDeleteButton = (table: string) => `${this.confirmDeleteModal(table)} button.btn-confirm-submit`;
 
     // Filters
-    this.filterColumn = (table, filterBy) => `${this.gridTable(table)} #${table}_${filterBy}`;
-    this.filterSearchButton = (table) => `${this.gridTable(table)} .grid-search-button`;
-    this.filterResetButton = (table) => `${this.gridTable(table)} .grid-reset-button`;
+    this.filterColumn = (table: string, filterBy: string) => `${this.gridTable(table)} #${table}_${filterBy}`;
+    this.filterSearchButton = (table: string) => `${this.gridTable(table)} .grid-search-button`;
+    this.filterResetButton = (table: string) => `${this.gridTable(table)} .grid-reset-button`;
 
     // Actions buttons in Row
-    this.listTableToggleDropDown = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
+    this.listTableToggleDropDown = (table: string, row: number) => `${this.listTableColumn(table, row, 'actions')}`
       + ' a[data-toggle=\'dropdown\']';
 
-    this.listTableEditLink = (table, row) => `${this.listTableColumn(table, row, 'actions')}`
+    this.listTableEditLink = (table: string, row: number) => `${this.listTableColumn(table, row, 'actions')}`
       + ' a.grid-edit-row-link';
 
-    this.deleteRowLink = (table, row) => `${this.listTableColumn(table, row, 'actions')} a.grid-delete-row-link`;
+    this.deleteRowLink = (table: string, row: number) => `${this.listTableColumn(table, row, 'actions')} a.grid-delete-row-link`;
 
     // Categories selectors
     this.backToListButton = '#cms_page_category_grid_panel a.back-to-list-link';
-    this.categoriesListTableViewLink = (row) => `${this.listTableColumn('cms_page_category', row, 'actions')}`
+    this.categoriesListTableViewLink = (row: number) => `${this.listTableColumn('cms_page_category', row, 'actions')}`
       + ' a.grid-view-row-link';
 
     this.categoriesPaginationLimitSelect = '#paginator_select_page_limit';
@@ -91,7 +170,7 @@ class Pages extends BOBasePage {
    * @param tableName {string} Table name to reset and get number of lines
    * @return {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page, tableName) {
+  async resetAndGetNumberOfLines(page: Page, tableName: string): Promise<number> {
     const resetButton = this.filterResetButton(tableName);
 
     if (await this.elementVisible(page, resetButton, 2000)) {
@@ -109,10 +188,10 @@ class Pages extends BOBasePage {
    * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
-  async filterTable(page, tableName, filterType, filterBy, value = '') {
+  async filterTable(page: Page, tableName: string, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(tableName, filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(tableName, filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(tableName, filterBy), value === '1' ? 'Yes' : 'No');
@@ -131,7 +210,7 @@ class Pages extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteRowInTable(page, tableName, row) {
+  async deleteRowInTable(page: Page, tableName: string, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.listTableToggleDropDown(tableName, row)),
@@ -153,13 +232,13 @@ class Pages extends BOBasePage {
    * @param tableName {string} Table name to delete rows with bulk actions
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page, tableName) {
+  async deleteWithBulkActions(page: Page, tableName: string): Promise<string> {
     // Add listener to dialog to accept deletion
-    this.dialogListener(page);
+    await this.dialogListener(page);
 
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
@@ -185,7 +264,7 @@ class Pages extends BOBasePage {
    * @param tableName {string} Table name to confirm delete
    * @return {Promise<void>}
    */
-  async confirmDeleteFromTable(page, tableName) {
+  async confirmDeleteFromTable(page: Page, tableName: string): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton(tableName));
   }
 
@@ -196,7 +275,7 @@ class Pages extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
-  async getStatus(page, tableName, row) {
+  async getStatus(page: Page, tableName: string, row: number): Promise<boolean> {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -216,7 +295,7 @@ class Pages extends BOBasePage {
    * @param valueWanted {boolean} Value wanted in column
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, tableName, row, valueWanted = true) {
+  async setStatus(page: Page, tableName: string, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, tableName, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.listTableStatusColumn(tableName, row));
 
@@ -233,10 +312,10 @@ class Pages extends BOBasePage {
    * @param enable {boolean} True if we need to bulk enable, false if not
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, tableName, enable = true) {
+  async bulkSetStatus(page: Page, tableName: string, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel(tableName), (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel(tableName), (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton(tableName)}:not([disabled])`),
     ]);
 
@@ -263,7 +342,7 @@ class Pages extends BOBasePage {
    * @param column{string} Column name to get text from it
    * @return {Promise<string>}
    */
-  async getTextColumnFromTable(page, tableName, row, column) {
+  async getTextColumnFromTable(page: Page, tableName: string, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.listTableColumn(tableName, row, column));
   }
 
@@ -274,7 +353,7 @@ class Pages extends BOBasePage {
    * @param column {string} Column name to get text from it
    * @return {Promise<string>}
    */
-  getTextColumnFromTableCmsPage(page, row, column) {
+  getTextColumnFromTableCmsPage(page: Page, row: number, column: string): Promise<string> {
     return this.getTextColumnFromTable(page, 'cms_page', row, column);
   }
 
@@ -285,7 +364,7 @@ class Pages extends BOBasePage {
    * @param column {string} Column name to get text from it
    * @return {Promise<string>}
    */
-  getTextColumnFromTableCmsPageCategory(page, row, column) {
+  getTextColumnFromTableCmsPageCategory(page: Page, row: number, column: string): Promise<string> {
     return this.getTextColumnFromTable(page, 'cms_page_category', row, column);
   }
 
@@ -296,18 +375,19 @@ class Pages extends BOBasePage {
    * @param column {string} Column name to get all rows column content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, tableName, column) {
+  async getAllRowsColumnContent(page: Page, tableName: string, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page, tableName);
-    const allRowsContentTable = [];
-    let rowContent;
+    const allRowsContentTable: string[] = [];
+    let rowContent: string;
 
     for (let i = 1; i <= rowsNumber; i++) {
       if (tableName === 'cms_page_category') {
         rowContent = await this.getTextColumnFromTableCmsPageCategory(page, i, column);
+        allRowsContentTable.push(rowContent);
       } else if (tableName === 'cms_page') {
         rowContent = await this.getTextColumnFromTableCmsPage(page, i, column);
+        allRowsContentTable.push(rowContent);
       }
-      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -319,7 +399,7 @@ class Pages extends BOBasePage {
    * @param column {string} Column name to get all rows column content
    * @return {Promise<Array<string>>}
    */
-  getAllRowsColumnContentTableCmsPageCategory(page, column) {
+  getAllRowsColumnContentTableCmsPageCategory(page: Page, column: string): Promise<string[]> {
     return this.getAllRowsColumnContent(page, 'cms_page_category', column);
   }
 
@@ -329,7 +409,7 @@ class Pages extends BOBasePage {
    * @param column {string} Column name to get all rows column content
    * @returns {Promise<Array<string>>}
    */
-  getAllRowsColumnContentTableCmsPage(page, column) {
+  getAllRowsColumnContentTableCmsPage(page: Page, column: string): Promise<string[]> {
     return this.getAllRowsColumnContent(page, 'cms_page', column);
   }
 
@@ -339,7 +419,7 @@ class Pages extends BOBasePage {
    * @param tableName {string} Table name to get number of elements
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page, tableName) {
+  async getNumberOfElementInGrid(page: Page, tableName: string): Promise<number> {
     return this.getNumberFromText(page, this.gridTitle(tableName));
   }
 
@@ -352,7 +432,7 @@ class Pages extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, tableName, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, tableName: string, sortBy: string, sortDirection : string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(tableName, sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
@@ -372,7 +452,7 @@ class Pages extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTableCmsPageCategory(page, sortBy, sortDirection = 'asc') {
+  async sortTableCmsPageCategory(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     return this.sortTable(page, 'cms_page_category', sortBy, sortDirection);
   }
 
@@ -383,7 +463,7 @@ class Pages extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTableCmsPage(page, sortBy, sortDirection = 'asc') {
+  async sortTableCmsPage(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     return this.sortTable(page, 'cms_page', sortBy, sortDirection);
   }
 
@@ -395,7 +475,7 @@ class Pages extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToEditCategoryPage(page, row) {
+  async goToEditCategoryPage(page: Page, row: number): Promise<void> {
     // Click on dropDown
     await Promise.all([
       page.click(this.listTableToggleDropDown('cms_page_category', row)),
@@ -413,7 +493,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewPageCategory(page) {
+  async goToAddNewPageCategory(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewPageCategoryLink);
   }
 
@@ -422,7 +502,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async backToList(page) {
+  async backToList(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.backToListButton);
   }
 
@@ -432,7 +512,7 @@ class Pages extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async viewCategory(page, row) {
+  async viewCategory(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.categoriesListTableViewLink(row));
   }
 
@@ -443,7 +523,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToAddNewPage(page) {
+  async goToAddNewPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewPageLink);
   }
 
@@ -453,7 +533,7 @@ class Pages extends BOBasePage {
    * @param row {number} Row on table
    * @return {Promise<void>}
    */
-  async goToEditPage(page, row) {
+  async goToEditPage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.listTableEditLink('cms_page', row));
   }
 
@@ -463,7 +543,7 @@ class Pages extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectCategoryPaginationLimit(page, number) {
+  async selectCategoryPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.categoriesPaginationLimitSelect, number);
 
     return this.getTextContent(page, this.categoriesPaginationLabel);
@@ -474,7 +554,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationCategoryNext(page) {
+  async paginationCategoryNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.categoriesPaginationNextLink);
 
     return this.getTextContent(page, this.categoriesPaginationLabel);
@@ -485,7 +565,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationCategoryPrevious(page) {
+  async paginationCategoryPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.categoriesPaginationPreviousLink);
 
     return this.getTextContent(page, this.categoriesPaginationLabel);
@@ -497,7 +577,7 @@ class Pages extends BOBasePage {
    * @param number {number} Value of pagination limit number
    * @returns {Promise<string>}
    */
-  async selectPagesPaginationLimit(page, number) {
+  async selectPagesPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.pagesPaginationLimitSelect, number);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
@@ -508,7 +588,7 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPagesNext(page) {
+  async paginationPagesNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationNextLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
@@ -519,11 +599,11 @@ class Pages extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPagesPrevious(page) {
+  async paginationPagesPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationPreviousLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
   }
 }
 
-module.exports = new Pages();
+export default new Pages();
