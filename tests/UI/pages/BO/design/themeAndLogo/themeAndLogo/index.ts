@@ -1,13 +1,13 @@
 import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
 
-require('module-alias/register');
-
 /**
  * Theme & logo page, contains functions that can be used on the page
  * @class
  * @extends themeAndLogoBasePage
  */
 class ThemeAndLogo extends themeAndLogoBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on theme & logo page
@@ -19,4 +19,4 @@ class ThemeAndLogo extends themeAndLogoBasePage {
   }
 }
 
-module.exports = new ThemeAndLogo();
+export default new ThemeAndLogo();
