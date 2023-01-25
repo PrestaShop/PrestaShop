@@ -167,9 +167,9 @@ class PreferencesController extends FrameworkBundleAdminController
      * @param FormInterface $carrierOptionsForm
      * @param Request $request
      *
-     * @return Response|null
+     * @return Response
      */
-    private function doRenderForm($handlingForm, $carrierOptionsForm, $request)
+    private function doRenderForm($handlingForm, $carrierOptionsForm, $request): Response
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
