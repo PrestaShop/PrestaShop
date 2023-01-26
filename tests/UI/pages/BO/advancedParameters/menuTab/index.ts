@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * MenuTab page, should not be displayed on BO
@@ -7,6 +8,10 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class MenuTab extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly pageH1Title: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on MenuTab page
@@ -29,9 +34,9 @@ class MenuTab extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getPageTitle(page) {
+  getPageTitle(page: Page): Promise<string> {
     return this.getTextContent(page, this.pageH1Title);
   }
 }
 
-module.exports = new MenuTab();
+export default new MenuTab();

@@ -17,7 +17,7 @@ export default class BOBasePage extends CommonPage {
 
   public readonly successfulMultiDeleteMessage: string;
 
-  private readonly accessDeniedMessage: string;
+  public readonly accessDeniedMessage: string;
 
   public readonly pageNotFoundMessage: string;
 
