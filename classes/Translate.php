@@ -322,28 +322,6 @@ class TranslateCore
     }
 
     /**
-     * Compatibility method that just calls postProcessTranslation.
-     *
-     * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty
-     */
-    public static function smartyPostProcessTranslation($string, $params)
-    {
-        return Translate::postProcessTranslation($string, $params);
-    }
-
-    /**
-     * Helper function to make calls to postProcessTranslation more readable.
-     *
-     * @deprecated 1.7.1.0
-     */
-    public static function ppTags($string, $tags)
-    {
-        Tools::displayAsDeprecated();
-
-        return Translate::postProcessTranslation($string, ['tags' => $tags]);
-    }
-
-    /**
      * @param string $string
      *
      * @return bool
