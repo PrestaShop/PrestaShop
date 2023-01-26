@@ -16,6 +16,7 @@ class AddOrderMessage extends BOBasePage {
 
     this.pageTitle = 'Add new';
     this.pageTitleEdit = 'Edit:';
+    this.pageTitleView = 'View';
 
     // Selectors
     this.nameLangButton = '#order_message_name_dropdown';
