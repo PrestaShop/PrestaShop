@@ -11,7 +11,11 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  js:
+  js-unit-tests:
     runs-on: ubuntu-latest
+    name: Run unit tests
+    strategy:
+      matrix:
+        js: [ '16' ]
     steps:
       - run: 'echo "No tests required"'

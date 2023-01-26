@@ -11,7 +11,32 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  lint:
+  stylelint:
+    name: SCSS Lint
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tests required"'
+
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tests required"'
+
+  yamllint_sf:
+    name: YAML Lint (Symfony Check)
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tests required"'
+
+  yamllint:
+    name: YAML Lint (YamlLint Check)
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tests required"'
+
+  twiglint:
+    name: Twig Lint
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
