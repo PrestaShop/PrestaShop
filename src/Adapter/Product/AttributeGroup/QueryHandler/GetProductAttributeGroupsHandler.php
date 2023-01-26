@@ -28,33 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
-use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
-use PrestaShopBundle\Entity\Repository\AttributeGroupRepository;
 
 /**
  * Handles the query GetProductAttributeGroups using adapter repository
  */
 class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
-    /**
-     * @var AttributeRepository
-     */
-    protected $attributeRepository;
-
-    /**
-     * @param AttributeGroupRepository $attributeGroupRepository
-     * @param AttributeRepository $attributeRepository
-     */
-    public function __construct(
-        AttributeGroupRepository $attributeGroupRepository,
-        AttributeRepository $attributeRepository
-    ) {
-        parent::__construct($attributeGroupRepository);
-        $this->attributeRepository = $attributeRepository;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -67,12 +48,15 @@ class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandle
             return [];
         }
 
-        $attributeGroupEntities = $this->attributeGroupRepository->listOrderedAttributeGroups(
-            $query->withAttributes(),
-            $shopConstraint,
-            $attributeIds
-        );
+        $attributeGroups = $this->attributeRepository->getAttributeGroups($shopConstraint);
 
-        return $this->formatAttributeGroups($attributeGroupEntities, $query->withAttributes());
+        return $this->formatAttributeGroupsList(
+            $attributeGroups,
+            $this->attributeRepository->getGroupedAttributes(
+                $shopConstraint,
+                $this->getAttributeGroupIds($shopConstraint),
+                $attributeIds
+            )
+        );
     }
 }

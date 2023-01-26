@@ -93,9 +93,9 @@ Feature: Attribute Group
       | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
       | Size        | Size               | false          | select     | 0        | size       |
     But the attribute group "size" should have no attributes for shops "shop2"
-#    And the attribute group "size" should have the following attributes for shops "shop2":
-#      | name[en-US] | color | position | reference |
-#      | S           |       | 0        | s         |
-#      | M           |       | 1        | m         |
-#      | L           |       | 2        | l         |
-#      | XL          |       | 3        | xl        |
+    When I associate attribute "s" with shops "shop1,shop2"
+    When I associate attribute "m" with shops "shop1,shop2"
+    Then the attribute group "size" should have the following attributes for shops "shop2":
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | s         |
+      | M           |       | 1        | m         |

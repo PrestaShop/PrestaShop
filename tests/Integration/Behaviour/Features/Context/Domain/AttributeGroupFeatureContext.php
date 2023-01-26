@@ -209,7 +209,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then the attribute group ":attributeGroupReference" should have no attributes for shops ":shopReferences"
      *
-     *
      * @param string $attributeGroupReference
      * @param string $shopReferences
      *
@@ -270,10 +269,6 @@ class AttributeGroupFeatureContext extends AbstractDomainFeatureContext
      */
     private function assertAttributesInGroups(array $expectedAttributesData, array $attributeGroups, string $attributeGroupReference): void
     {
-        if (empty($expectedAttributesData) && empty($attributeGroups)) {
-            // this for cases when we don't want to find anything
-            return;
-        }
         $attributeGroupId = $this->getSharedStorage()->get($attributeGroupReference);
         $checkAttributeGroup = null;
         /** @var AttributeGroup $attributeGroup */

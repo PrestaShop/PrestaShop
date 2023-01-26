@@ -23,7 +23,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandler:
     arguments:
-      - '@PrestaShopBundle\Entity\Repository\AttributeGroupRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
     tags:
       - name: 'tactician.handler'
@@ -31,7 +30,6 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler:
     arguments:
-      - '@PrestaShopBundle\Entity\Repository\AttributeGroupRepository'
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
     tags:
       - name: 'tactician.handler'

@@ -28,11 +28,8 @@ namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-use PrestaShopBundle\Entity\AttributeGroup;
 
 /**
  * AttributeGroupRepository.
@@ -42,50 +39,6 @@ use PrestaShopBundle\Entity\AttributeGroup;
  */
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
-    /**
-     * @param bool $withAttributes
-     * @param int[] $attributeIds
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return AttributeGroup[]
-     */
-    public function listOrderedAttributeGroups(bool $withAttributes, ShopConstraint $shopConstraint, array $attributeIds = []): array
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Shop Group constraint is not supported');
-        }
-
-        $qb = $this
-            ->createQueryBuilder('ag')
-            ->addSelect('ag')
-            ->addSelect('agl')
-            ->innerJoin('ag.attributeGroupLangs', 'agl')
-            ->leftJoin('ag.attributes', 'a')
-            ->addOrderBy('ag.position', 'ASC')
-        ;
-
-        $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-
-        // for single shop we add join condition with certain shop,
-        // else if it is all shops we should be ok by retrieving results from general attribute_group table
-        if ($shopIdValue) {
-            $qb->innerJoin('ag.shops', 'ags')
-                ->andWhere('ags.id = :shopId')
-                ->leftJoin('a.shops', 'attr_shop', Join::WITH, 'attr_shop.id = :shopId AND attr_shop.id = ags.id')
-                ->setParameter('shopId', $shopIdValue)
-            ;
-        }
-
-        if (!empty($attributeIds)) {
-            $qb
-                ->andWhere($qb->expr()->in('a.id', ':attributeIds'))
-                ->setParameter('attributeIds', $attributeIds)
-            ;
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
     /**
      * Asserts that attribute groups exists in all the provided shops.
      * If at least one of them is missing in any shop, it throws exception.

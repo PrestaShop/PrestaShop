@@ -34,6 +34,8 @@ use Doctrine\DBAL\FetchMode;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -111,20 +113,19 @@ class AttributeRepository extends AbstractObjectModelRepository
     {
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Shop Group constraint is not supported');
-
         }
         $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
         $groupsQb =
             $this->connection->createQueryBuilder()
-            ->select('ag.*, agl.*')
-            ->from($this->dbPrefix . 'attribute_group', 'ag')
-            ->innerJoin(
+                ->select('ag.*, agl.*')
+                ->from($this->dbPrefix . 'attribute_group', 'ag')
+                ->innerJoin(
                 'ag',
                 $this->dbPrefix . 'attribute_group_lang',
                 'agl',
                 'ag.id_attribute_group = agl.id_attribute_group'
             )
-            ->orderBy('ag.position', 'ASC')
+                ->orderBy('ag.position', 'ASC')
         ;
 
         if ($shopIdValue) {
@@ -172,18 +173,23 @@ class AttributeRepository extends AbstractObjectModelRepository
 
     /**
      * @param ShopConstraint $shopConstraint
-     * @param int[] $attributeGroupIds
+     * @param AttributeGroupId[] $attributeGroupIds
+     * @param AttributeId[] $attributeIds get only certain attributes (e.g. when need to get only certain combinations attributes)
      *
      * @return array<int, array<int, ProductAttribute>> arrays of product attributes indexed by product attribute groups
      */
-    public function getGroupAttributes(ShopConstraint $shopConstraint, array $attributeGroupIds): array
+    public function getGroupedAttributes(ShopConstraint $shopConstraint, array $attributeGroupIds, array $attributeIds = []): array
     {
         if (empty($attributeGroupIds)) {
             return [];
         }
 
-        $attributesQb = $this->connection->createQueryBuilder();
-        $attributesQb
+        $attributeGroupIdValues = array_map(static function (AttributeGroupId $attributeGroupId): int {
+            return $attributeGroupId->getValue();
+        }, $attributeGroupIds);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
             ->select('a.*, al.*')
             ->from($this->dbPrefix . 'attribute', 'a')
             ->innerJoin(
@@ -192,14 +198,24 @@ class AttributeRepository extends AbstractObjectModelRepository
                 'al',
                 'a.id_attribute = al.id_attribute'
             )
-            ->andWhere($attributesQb->expr()->in('a.id_attribute_group', ':attributeGroupIds'))
-            ->setParameter('attributeGroupIds', $attributeGroupIds, Connection::PARAM_INT_ARRAY)
+            ->andWhere($qb->expr()->in('a.id_attribute_group', ':attributeGroupIds'))
+            ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
         ;
+
+        if (!empty($attributeIds)) {
+            $attributeIdValues = array_map(static function (AttributeId $attributeId): int {
+                return $attributeId->getValue();
+            }, $attributeIds);
+
+            $qb->andWhere($qb->expr()->in('a.id_attribute', ':attributeIds'))
+                ->setParameter('attributeIds', $attributeIdValues, Connection::PARAM_INT_ARRAY)
+            ;
+        }
 
         $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
 
         if ($shopIdValue) {
-            $attributesQb
+            $qb
                 ->leftJoin(
                     'a',
                     $this->dbPrefix . 'attribute_shop',
@@ -211,7 +227,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $results = $attributesQb->execute()->fetchAllAssociative();
+        $results = $qb->execute()->fetchAllAssociative();
 
         if (!$results) {
             return [];
@@ -225,7 +241,7 @@ class AttributeRepository extends AbstractObjectModelRepository
             $langId = (int) $result['id_lang'];
 
             if (isset($attributes[$attributeGroupId][$attributeId])) {
-                $attribute = $attributes[$attributeId];
+                $attribute = $attributes[$attributeGroupId][$attributeId];
             } else {
                 $attribute = new ProductAttribute();
                 $attributes[$attributeGroupId][$attributeId] = $attribute;
@@ -244,7 +260,7 @@ class AttributeRepository extends AbstractObjectModelRepository
     /**
      * @param ProductId $productId
      *
-     * @return array<int>
+     * @return AttributeId[]
      */
     public function getProductAttributesIds(ProductId $productId, ShopConstraint $shopConstraint): array
     {
@@ -268,7 +284,11 @@ class AttributeRepository extends AbstractObjectModelRepository
             ->groupBy('pac.id_attribute')
         ;
 
-        return $qb->execute()->fetchAll(FetchMode::COLUMN);
+        $results = $qb->execute()->fetchAll(FetchMode::COLUMN);
+
+        return array_map(static function (string $id): AttributeId {
+            return new AttributeId((int) $id);
+        }, $results);
     }
 
     /**
