@@ -41,7 +41,6 @@ describe('BO - Advanced Parameters - Webservice : Help card in webservice page',
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);

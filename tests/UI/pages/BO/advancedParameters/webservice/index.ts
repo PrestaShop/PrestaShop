@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Webservice page, contains functions that can be used on the page
@@ -7,6 +8,72 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class WebService extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulUpdateStatusMessage: string;
+
+  private readonly addNewWebserviceLink: string;
+
+  private readonly webserviceGridPanel: string;
+
+  private readonly webserviceGridTitle: string;
+
+  private readonly webserviceListForm: string;
+
+  private readonly webserviceListTableRow: (row: number) => string;
+
+  private readonly webserviceListTableColumn: (row: number, column: string) => string;
+
+  private readonly webserviceListTableStatusColumn: (row: number) => string;
+
+  private readonly webserviceListTableStatusColumnToggleInput: (row: number) => string;
+
+  private readonly webserviceListTableColumnAction: (row: number) => string;
+
+  private readonly webserviceListTableToggleDropDown: (row: number) => string;
+
+  private readonly webserviceListTableDeleteLink: (row: number) => string;
+
+  private readonly webserviceListTableEditLink: (row: number) => string;
+
+  private readonly webserviceFilterInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly selectAllRowsDiv: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly bulkActionsEnableButton: string;
+
+  private readonly bulkActionsDisableButton: string;
+
+  private readonly deleteModal: string;
+
+  private readonly modalDeleteButton: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on webservice page
@@ -25,18 +92,18 @@ class WebService extends BOBasePage {
     this.webserviceGridPanel = '#webservice_key_grid_panel';
     this.webserviceGridTitle = `${this.webserviceGridPanel} h3.card-header-title`;
     this.webserviceListForm = '#webservice_key_grid';
-    this.webserviceListTableRow = (row) => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
-    this.webserviceListTableColumn = (row, column) => `${this.webserviceListTableRow(row)} td.column-${column}`;
-    this.webserviceListTableStatusColumn = (row) => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
-    this.webserviceListTableStatusColumnToggleInput = (row) => `${this.webserviceListTableStatusColumn(row)} input`;
-    this.webserviceListTableColumnAction = (row) => this.webserviceListTableColumn(row, 'actions');
-    this.webserviceListTableToggleDropDown = (row) => `${this.webserviceListTableColumnAction(row)
+    this.webserviceListTableRow = (row: number) => `${this.webserviceListForm} tbody tr:nth-child(${row})`;
+    this.webserviceListTableColumn = (row: number, column: string) => `${this.webserviceListTableRow(row)} td.column-${column}`;
+    this.webserviceListTableStatusColumn = (row: number) => `${this.webserviceListTableColumn(row, 'active')} .ps-switch`;
+    this.webserviceListTableStatusColumnToggleInput = (row: number) => `${this.webserviceListTableStatusColumn(row)} input`;
+    this.webserviceListTableColumnAction = (row: number) => this.webserviceListTableColumn(row, 'actions');
+    this.webserviceListTableToggleDropDown = (row: number) => `${this.webserviceListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.webserviceListTableDeleteLink = (row) => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.webserviceListTableEditLink = (row) => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.webserviceListTableDeleteLink = (row: number) => `${this.webserviceListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.webserviceListTableEditLink = (row: number) => `${this.webserviceListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.webserviceFilterInput = (filterBy) => `${this.webserviceListForm} #webservice_key_${filterBy}`;
+    this.webserviceFilterInput = (filterBy: string) => `${this.webserviceListForm} #webservice_key_${filterBy}`;
     this.filterSearchButton = `${this.webserviceListForm} .grid-search-button`;
     this.filterResetButton = `${this.webserviceListForm} .grid-reset-button`;
 
@@ -46,8 +113,8 @@ class WebService extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.webserviceListForm} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Bulk Actions
     this.selectAllRowsDiv = `${this.webserviceListForm} tr.column-filters .grid_bulk_action_select_all`;
@@ -78,7 +145,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewWebserviceKeyPage(page) {
+  async goToAddNewWebserviceKeyPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewWebserviceLink);
   }
 
@@ -87,7 +154,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.webserviceGridTitle);
   }
 
@@ -96,7 +163,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -110,7 +177,7 @@ class WebService extends BOBasePage {
    * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, column) {
+  async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.webserviceListTableColumn(row, column));
   }
 
@@ -120,7 +187,7 @@ class WebService extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditWebservicePage(page, row) {
+  async goToEditWebservicePage(page: Page, row: number): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.webserviceListTableEditLink(row));
   }
 
@@ -132,7 +199,7 @@ class WebService extends BOBasePage {
    * @param value {string|boolean} Value to put on filter
    * @returns {Promise<void>}
    */
-  async filterWebserviceTable(page, filterType, filterBy, value = '') {
+  async filterWebserviceTable(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.webserviceFilterInput(filterBy), value);
@@ -153,7 +220,7 @@ class WebService extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<boolean>}
    */
-  async getStatus(page, row) {
+  async getStatus(page: Page, row: number): Promise<boolean> {
     // Get value of the check input
     const inputValue = await this.getAttributeContent(
       page,
@@ -172,7 +239,7 @@ class WebService extends BOBasePage {
    * @param valueWanted {boolean} True if we want to enable status, false if not
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
-  async setStatus(page, row, valueWanted = true) {
+  async setStatus(page: Page, row: number, valueWanted: boolean = true): Promise<boolean> {
     if (await this.getStatus(page, row) !== valueWanted) {
       await this.clickAndWaitForNavigation(page, this.webserviceListTableStatusColumn(row));
       return true;
@@ -187,7 +254,7 @@ class WebService extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteWebserviceKey(page, row) {
+  async deleteWebserviceKey(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.webserviceListTableToggleDropDown(row)),
@@ -211,7 +278,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteWebService(page) {
+  async confirmDeleteWebService(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -220,7 +287,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getValidationMessage(page) {
+  getValidationMessage(page: Page): Promise<string> {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -229,10 +296,10 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page) {
+  async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -258,10 +325,10 @@ class WebService extends BOBasePage {
    * @param enable {boolean} True if we need to bulk enable status, false if not
    * @returns {Promise<string>}
    */
-  async bulkSetStatus(page, enable = true) {
+  async bulkSetStatus(page: Page, enable: boolean = true): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -283,11 +350,11 @@ class WebService extends BOBasePage {
    * @param column {string} Column to get text value
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
       allRowsContentTable.push(rowContent);
     }
@@ -302,11 +369,11 @@ class WebService extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -321,7 +388,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -331,7 +398,7 @@ class WebService extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -345,7 +412,7 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -356,11 +423,11 @@ class WebService extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new WebService();
+export default new WebService();
