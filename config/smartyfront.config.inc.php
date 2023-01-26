@@ -231,7 +231,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if ($params['mod']) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getModuleTranslation(
                 $params['mod'],
                 $params['s'],
@@ -242,7 +242,7 @@ function smartyTranslate($params, $smarty)
             $params
         );
     } elseif ($params['pdf']) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getPdfTranslation(
                 $params['s'],
                 $params['sprintf']
@@ -269,5 +269,5 @@ function smartyTranslate($params, $smarty)
         $msg = Translate::checkAndReplaceArgs($msg, $params['sprintf']);
     }
 
-    return Translate::smartyPostProcessTranslation($params['js'] ? $msg : Tools::safeOutput($msg), $params);
+    return Translate::postProcessTranslation($params['js'] ? $msg : Tools::safeOutput($msg), $params);
 }
