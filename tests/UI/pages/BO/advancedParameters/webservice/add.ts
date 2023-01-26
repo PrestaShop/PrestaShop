@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type WebserviceData from '@data/faker/webservice';
+
+import type {Page} from 'playwright';
 
 /**
  * Add webservice page, contains functions that can be used on the page
@@ -7,6 +10,20 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddWebserviceKey extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly webserviceKeyInput: string;
+
+  private readonly generateButton: string;
+
+  private readonly keyDescriptionTextarea: string;
+
+  private readonly statusToggleInput: (toggle: number) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add webservice page
@@ -21,7 +38,7 @@ class AddWebserviceKey extends BOBasePage {
     this.webserviceKeyInput = '#webservice_key_key';
     this.generateButton = 'button.js-generator-btn';
     this.keyDescriptionTextarea = '#webservice_key_description';
-    this.statusToggleInput = (toggle) => `#webservice_key_status_${toggle}`;
+    this.statusToggleInput = (toggle: number) => `#webservice_key_status_${toggle}`;
     this.saveButton = '#save-button';
   }
 
@@ -36,7 +53,7 @@ class AddWebserviceKey extends BOBasePage {
    * @param toGenerate
    * @returns {Promise<string>}
    */
-  async createEditWebservice(page, webserviceData, toGenerate = true) {
+  async createEditWebservice(page: Page, webserviceData: WebserviceData, toGenerate: boolean = true): Promise<string> {
     if (toGenerate) {
       await page.click(this.generateButton);
     } else {
@@ -53,4 +70,4 @@ class AddWebserviceKey extends BOBasePage {
   }
 }
 
-module.exports = new AddWebserviceKey();
+export default new AddWebserviceKey();
