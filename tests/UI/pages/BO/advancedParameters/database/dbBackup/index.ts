@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * DB Backup page, contains functions that can be used on the page
@@ -7,6 +8,56 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class DbBackup extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly successfulBackupCreationMessage: string;
+
+  private readonly sqlManagerSubTabLink: string;
+
+  private readonly newBackupButton: string;
+
+  private readonly downloadBackupButton: string;
+
+  private readonly gridPanel: string;
+
+  private readonly gridTable: string;
+
+  private readonly gridHeaderTitle: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableRow: (row: number) => string;
+
+  private readonly tableEmptyRow: string;
+
+  private readonly tableColumn: (row: number, column: string) => string;
+
+  private readonly actionsColumn: (row: number) => string;
+
+  private readonly dropdownToggleButton: (row: number) => string;
+
+  private readonly dropdownToggleMenu: (row: number) => string;
+
+  private readonly deleteRowLink: (row: number) => string;
+
+  private readonly selectAllRowsLabel: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on db backup page
@@ -32,15 +83,15 @@ class DbBackup extends BOBasePage {
     this.gridTable = '#backup_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} div.card-header h3`;
     this.tableBody = `${this.gridTable} tbody`;
-    this.tableRow = (row) => `${this.tableBody} tr:nth-child(${row})`;
+    this.tableRow = (row: number) => `${this.tableBody} tr:nth-child(${row})`;
     this.tableEmptyRow = `${this.tableBody} tr.empty_row`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumn = (row: number, column: string) => `${this.tableRow(row)} td.column-${column}`;
 
     // Actions buttons in Row
-    this.actionsColumn = (row) => `${this.tableRow(row)} td.column-actions`;
-    this.dropdownToggleButton = (row) => `${this.actionsColumn(row)} a.dropdown-toggle`;
-    this.dropdownToggleMenu = (row) => `${this.actionsColumn(row)} div.dropdown-menu`;
-    this.deleteRowLink = (row) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
+    this.actionsColumn = (row: number) => `${this.tableRow(row)} td.column-actions`;
+    this.dropdownToggleButton = (row: number) => `${this.actionsColumn(row)} a.dropdown-toggle`;
+    this.dropdownToggleMenu = (row: number) => `${this.actionsColumn(row)} div.dropdown-menu`;
+    this.deleteRowLink = (row: number) => `${this.dropdownToggleMenu(row)} a.grid-delete-row-link`;
 
     // Bulk Actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
@@ -62,7 +113,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToSqlManagerPage(page) {
+  async goToSqlManagerPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.sqlManagerSubTabLink);
   }
 
@@ -72,7 +123,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridHeaderTitle);
   }
 
@@ -81,7 +132,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async createDbDbBackup(page) {
+  async createDbDbBackup(page: Page): Promise<string> {
     await Promise.all([
       page.click(this.newBackupButton),
       this.waitForVisibleSelector(page, this.tableRow(1)),
@@ -94,9 +145,9 @@ class DbBackup extends BOBasePage {
   /**
    * Download backup
    * @param page {Page} Browser tab
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  downloadDbBackup(page) {
+  downloadDbBackup(page: Page): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
@@ -106,7 +157,7 @@ class DbBackup extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteBackup(page, row) {
+  async deleteBackup(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
       this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
@@ -126,7 +177,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteDbBackups(page) {
+  async confirmDeleteDbBackups(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -135,10 +186,10 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page) {
+  async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -164,7 +215,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -174,7 +225,7 @@ class DbBackup extends BOBasePage {
    * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -188,7 +239,7 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -199,11 +250,11 @@ class DbBackup extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
   }
 }
 
-module.exports = new DbBackup();
+export default new DbBackup();
