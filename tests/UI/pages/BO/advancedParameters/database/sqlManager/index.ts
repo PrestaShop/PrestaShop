@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Sql manager page, contains functions that can be used on the page
@@ -7,6 +8,68 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class SqlManager extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewSQLQueryButton: string;
+
+  private readonly dbBackupSubTabLink: string;
+
+  private readonly sqlQueryGridPanel: string;
+
+  private readonly sqlQueryGridTitle: string;
+
+  private readonly sqlQueryListForm: string;
+
+  private readonly sqlQueryListTableRow: (row: number) => string;
+
+  private readonly sqlQueryListTableColumn: (row: number, column: string) => string;
+
+  private readonly sqlQueryListTableColumnActions: (row: number) => string;
+
+  private readonly sqlQueryListTableToggleDropDown: (row: number) => string;
+
+  private readonly sqlQueryListTableViewLink: (row: number) => string;
+
+  private readonly sqlQueryListTableEditLink: (row: number) => string;
+
+  private readonly sqlQueryListTableDeleteLink: (row: number) => string;
+
+  private readonly sqlQueryListTableExportLink: (row: number) => string;
+
+  private readonly filterInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
+  private readonly selectAllRowsDiv: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly deleteModal: string;
+
+  private readonly modalDeleteButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on sql manager page
@@ -25,18 +88,18 @@ class SqlManager extends BOBasePage {
     this.sqlQueryGridPanel = '#sql_request_grid_panel';
     this.sqlQueryGridTitle = `${this.sqlQueryGridPanel} h3.card-header-title`;
     this.sqlQueryListForm = '#sql_request_grid';
-    this.sqlQueryListTableRow = (row) => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
-    this.sqlQueryListTableColumn = (row, column) => `${this.sqlQueryListTableRow(row)} td.column-${column}`;
-    this.sqlQueryListTableColumnActions = (row) => `${this.sqlQueryListTableRow(row)} td.column-actions`;
-    this.sqlQueryListTableToggleDropDown = (row) => `${this.sqlQueryListTableColumnActions(row)
+    this.sqlQueryListTableRow = (row: number) => `${this.sqlQueryListForm} tbody tr:nth-child(${row})`;
+    this.sqlQueryListTableColumn = (row: number, column: string) => `${this.sqlQueryListTableRow(row)} td.column-${column}`;
+    this.sqlQueryListTableColumnActions = (row: number) => `${this.sqlQueryListTableRow(row)} td.column-actions`;
+    this.sqlQueryListTableToggleDropDown = (row: number) => `${this.sqlQueryListTableColumnActions(row)
     } a[data-toggle='dropdown']`;
-    this.sqlQueryListTableViewLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
-    this.sqlQueryListTableEditLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
-    this.sqlQueryListTableDeleteLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
-    this.sqlQueryListTableExportLink = (row) => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
+    this.sqlQueryListTableViewLink = (row: number) => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
+    this.sqlQueryListTableEditLink = (row: number) => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
+    this.sqlQueryListTableDeleteLink = (row: number) => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
+    this.sqlQueryListTableExportLink = (row: number) => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
 
     // Filters
-    this.filterInput = (filterBy) => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
+    this.filterInput = (filterBy: string) => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
     this.filterSearchButton = `${this.sqlQueryListForm} .grid-search-button`;
     this.filterResetButton = `${this.sqlQueryListForm} .grid-reset-button`;
 
@@ -46,8 +109,8 @@ class SqlManager extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.sqlQueryListForm} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -71,7 +134,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async goToDbBackupPage(page) {
+  async goToDbBackupPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.dbBackupSubTabLink);
   }
 
@@ -80,7 +143,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToNewSQLQueryPage(page) {
+  async goToNewSQLQueryPage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewSQLQueryButton);
   }
 
@@ -89,7 +152,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -100,7 +163,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.sqlQueryGridTitle);
   }
 
@@ -109,7 +172,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
     return this.getNumberOfElementInGrid(page);
   }
@@ -121,7 +184,7 @@ class SqlManager extends BOBasePage {
    * @param value {string} Value to put on filter
    * @returns {Promise<void>}
    */
-  async filterSQLQuery(page, filterBy, value = '') {
+  async filterSQLQuery(page: Page, filterBy: string, value: string = ''): Promise<void> {
     await this.setValue(page, this.filterInput(filterBy), value);
     // click on search
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
@@ -134,7 +197,7 @@ class SqlManager extends BOBasePage {
    * @param column {string} Column to get text value
    * @returns {Promise<string>}
    */
-  getTextColumnFromTable(page, row, column) {
+  getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.sqlQueryListTableColumn(row, column));
   }
 
@@ -144,9 +207,9 @@ class SqlManager extends BOBasePage {
    * @param column {string} Column to get text value
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTable(page, i, column);
@@ -162,7 +225,7 @@ class SqlManager extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToViewSQLQueryPage(page, row = 1) {
+  async goToViewSQLQueryPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
       page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
@@ -179,7 +242,7 @@ class SqlManager extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditSQLQueryPage(page, row = 1) {
+  async goToEditSQLQueryPage(page: Page, row: number = 1): Promise<void> {
     await Promise.all([
       page.click(this.sqlQueryListTableToggleDropDown(row)),
       this.waitForVisibleSelector(
@@ -195,7 +258,7 @@ class SqlManager extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteSQLQuery(page, row = 1) {
+  async deleteSQLQuery(page: Page, row: number = 1): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.sqlQueryListTableToggleDropDown(row)),
@@ -219,9 +282,9 @@ class SqlManager extends BOBasePage {
    * Export sql result to csv
    * @param page {Page} Browser tab
    * @param row {number} Row of the sql result on table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  exportSqlResultDataToCsv(page, row = 1) {
+  exportSqlResultDataToCsv(page: Page, row: number = 1): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.sqlQueryListTableExportLink(row));
   }
 
@@ -230,7 +293,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteSQLQuery(page) {
+  async confirmDeleteSQLQuery(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -242,11 +305,11 @@ class SqlManager extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -261,7 +324,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -271,7 +334,7 @@ class SqlManager extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -285,7 +348,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -296,7 +359,7 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -307,10 +370,10 @@ class SqlManager extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteWithBulkActions(page) {
+  async deleteWithBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsDiv, (el) => el.click()),
+      page.$eval(this.selectAllRowsDiv, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
 
@@ -331,4 +394,4 @@ class SqlManager extends BOBasePage {
   }
 }
 
-module.exports = new SqlManager();
+export default new SqlManager();
