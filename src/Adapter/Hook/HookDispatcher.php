@@ -118,6 +118,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
 
             // Try to find the initial backtrace that was not called from the dispatcher services
+            $initialBackTrace = [];
             for ($i = 0; $i < count($backtrace); ++$i) {
                 $initialBackTrace = $backtrace[$i];
                 $isCodeFromDispatcher = (bool) strpos($initialBackTrace['file'], 'HookDispatcher');
@@ -126,7 +127,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
                 }
             }
 
-            $this->hookRegistry->selectHook($eventName, $event->getHookParameters(), $initialBackTrace['file'], $initialBackTrace['line']);
+            $this->hookRegistry->selectHook($eventName, $event->getHookParameters(), $initialBackTrace['file'] ?? 'unknown file', $initialBackTrace['line'] ?? 'unknown line');
             $this->hookRegistry->hookWasNotRegistered();
             $this->hookRegistry->collect();
         }

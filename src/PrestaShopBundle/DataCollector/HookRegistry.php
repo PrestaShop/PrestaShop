@@ -44,7 +44,7 @@ final class HookRegistry
     private $currentHook = null;
 
     /**
-     * @var array the list of hooks data
+     * @var array<string, array<string, array{args: array, name:string, location: string, modules: array}>> the list of hooks data
      */
     private $hooks;
 
@@ -132,7 +132,7 @@ final class HookRegistry
      */
     public function getCalledHooks()
     {
-        return $this->hooks['called'];
+        return $this->hooks[self::HOOK_CALLED];
     }
 
     /**
