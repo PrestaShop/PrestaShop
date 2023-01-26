@@ -82,7 +82,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
         dashboardPage.advancedParametersLink,
         dashboardPage.multistoreLink,
       );
-
       await multiStorePage.closeSfToolBar(page);
 
       const pageTitle = await multiStorePage.getPageTitle(page);
@@ -122,7 +121,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopGroupPage', baseContext);
 
       await multiStorePage.filterTable(page, 'a!name', createShopGroupData.name);
-
       await multiStorePage.gotoEditShopGroupPage(page, 1);
 
       const pageTitle = await addShopGroupPage.getPageTitle(page);
@@ -178,7 +176,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
         dashboardPage.advancedParametersLink,
         dashboardPage.multistoreLink,
       );
-
       await multiStorePage.closeSfToolBar(page);
 
       const pageTitle = await multiStorePage.getPageTitle(page);

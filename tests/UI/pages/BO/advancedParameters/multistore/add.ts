@@ -5,7 +5,7 @@ import type ShopGroupData from '@data/faker/shopGroup';
 import type {Page} from 'playwright';
 
 /**
- * Add shop page page, contains functions that can be used on the page
+ * Add shop group page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
