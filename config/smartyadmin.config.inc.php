@@ -114,7 +114,7 @@ function smartyTranslate($params, $smarty)
     }
 
     if ($isInPDF) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getPdfTranslation(
                 $params['s'],
                 $sprintf
@@ -125,7 +125,7 @@ function smartyTranslate($params, $smarty)
 
     // If the template is part of a module
     if ($isInModule) {
-        return Translate::smartyPostProcessTranslation(
+        return Translate::postProcessTranslation(
             Translate::getModuleTranslation(
                 $params['mod'],
                 $params['s'],
