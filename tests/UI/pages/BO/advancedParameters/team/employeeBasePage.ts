@@ -10,9 +10,9 @@ import type {Page} from 'playwright';
 export default class EmployeeBasePage extends BOBasePage {
   public readonly pageTitleEdit: string;
 
-  protected readonly firstNameInput: string;
+  public readonly firstNameInput: string;
 
-  protected readonly lastNameInput: string;
+  public readonly lastNameInput: string;
 
   protected readonly emailInput: string;
 

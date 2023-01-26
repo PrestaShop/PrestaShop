@@ -80,7 +80,6 @@ describe('BO - Header : My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await dashboardPage.goToMyProfile(page);
-
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);

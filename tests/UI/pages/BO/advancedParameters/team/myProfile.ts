@@ -1,5 +1,8 @@
-require('module-alias/register');
-const EmployeeBasePage = require('@pages/BO/advancedParameters/team/employeeBasePage');
+import EmployeeBasePage from '@pages/BO/advancedParameters/team/employeeBasePage';
+
+import type EmployeeData from '@data/faker/employee';
+
+import type {Page} from 'playwright';
 
 /**
  * Add employee page, contains functions that can be used on the page
@@ -7,6 +10,26 @@ const EmployeeBasePage = require('@pages/BO/advancedParameters/team/employeeBase
  * @extends EmployeeBasePage
  */
 class MyProfile extends EmployeeBasePage {
+  public readonly successfulUpdateMessageFR: string;
+
+  public readonly errorInvalidFirstNameMessage: string;
+
+  public readonly errorInvalidLastNameMessage: string;
+
+  public readonly errorInvalidFormatImageMessage: string;
+
+  private readonly passwordButton: string;
+
+  private readonly currentPasswordInput: string;
+
+  private readonly newPasswordInput: string;
+
+  private readonly confirmPasswordInput: string;
+
+  private readonly avatarFileInput: string;
+
+  public readonly enableGravatarInput: (toggle: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add employee page
@@ -26,7 +49,7 @@ class MyProfile extends EmployeeBasePage {
     this.newPasswordInput = '#employee_change_password_new_password_first';
     this.confirmPasswordInput = '#employee_change_password_new_password_second';
     this.avatarFileInput = '#employee_avatarUrl';
-    this.enableGravatarInput = (toggle) => `#employee_has_enabled_gravatar_${toggle}`;
+    this.enableGravatarInput = (toggle: number) => `#employee_has_enabled_gravatar_${toggle}`;
   }
 
   /*
@@ -40,7 +63,7 @@ class MyProfile extends EmployeeBasePage {
    * @param newEmployeeData {EmployeeData} Data to set on add/edit employee form
    * @returns {Promise<void>}
    */
-  async updateEditEmployee(page, currentPassword, newEmployeeData) {
+  async updateEditEmployee(page: Page, currentPassword: string, newEmployeeData: EmployeeData): Promise<void> {
     await this.setValue(page, this.firstNameInput, newEmployeeData.firstName);
     await this.setValue(page, this.lastNameInput, newEmployeeData.lastName);
     if (newEmployeeData.avatarFile) {
@@ -64,7 +87,7 @@ class MyProfile extends EmployeeBasePage {
    * @param input {string} ID of the input
    * @returns {Promise<string>}
    */
-  async getInputValue(page, input) {
+  async getInputValue(page: Page, input: string): Promise<string> {
     return page.inputValue(input);
   }
 
@@ -73,7 +96,7 @@ class MyProfile extends EmployeeBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertSuccess(page) {
+  async getAlertSuccess(page: Page): Promise<string> {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -82,9 +105,9 @@ class MyProfile extends EmployeeBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async getAlertError(page) {
+  async getAlertError(page: Page): Promise<string> {
     return this.getAlertDangerBlockParagraphContent(page);
   }
 }
 
-module.exports = new MyProfile();
+export default new MyProfile();

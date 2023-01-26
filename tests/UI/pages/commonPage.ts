@@ -433,7 +433,7 @@ export default class CommonPage {
    * @param filePath {Array<string>} Path of the file to add
    * @returns {Promise<void>}
    */
-  async uploadOnFileChooser(page: Page, selector: string, filePath: string): Promise<void> {
+  async uploadOnFileChooser(page: Page, selector: string, filePath: string[]): Promise<void> {
     // Set value when fileChooser is open
     page.once('filechooser', async (fileChooser: FileChooser) => {
       await fileChooser.setFiles(filePath);
