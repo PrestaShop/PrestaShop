@@ -11,6 +11,7 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  integration:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "No tests required"'
