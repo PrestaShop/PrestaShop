@@ -4,7 +4,6 @@
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @update-stock
-@update-stock-cl./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stockassic
 Feature: Update product stock from Back Office (BO)
   As a BO user
   I need to be able to update product stock from BO
