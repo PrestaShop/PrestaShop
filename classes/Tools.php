@@ -3600,30 +3600,6 @@ exit;
     }
 
     /**
-     * Delete unicode class from regular expression patterns.
-     *
-     * @deprecated Since 8.0.0 and will be removed in the next major.
-     *
-     * @param string $pattern
-     *
-     * @return string pattern
-     *
-     * @throws Exception
-     */
-    public static function cleanNonUnicodeSupport($pattern)
-    {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0.0. Its use is not required.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
-        return $pattern;
-    }
-
-    /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).
      *
@@ -3916,21 +3892,6 @@ exit;
             ++$position;
         }
         unset($row);
-    }
-
-    /**
-     * Replaces elements from passed arrays into the first array recursively.
-     *
-     * @param array $base the array in which elements are replaced
-     * @param array $replacements the array from which elements will be extracted
-     *
-     * @deprecated since version 8.0.0, to be removed.
-     */
-    public static function arrayReplaceRecursive($base, $replacements)
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
-
-        return array_replace_recursive($base, $replacements);
     }
 
     /**
