@@ -11,7 +11,7 @@ import generalPage from '@pages/BO/shopParameters/general';
 import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
-import shopPage from '@pages/BO/advancedParameters/multistore/shop/index';
+import shopPage from '@pages/BO/advancedParameters/multistore/shop';
 import shopURLPage from '@pages/BO/advancedParameters/multistore/url/index';
 
 // Import data
@@ -118,7 +118,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditShopPage', baseContext);
 
       await shopPage.filterTable(page, 'a!name', createShopData.name);
-
       await shopPage.gotoEditShopPage(page, 1);
 
       const pageTitle = await addShopPage.getPageTitle(page);
@@ -136,7 +135,6 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddURL', baseContext);
 
       await shopPage.filterTable(page, 'a!name', updateShopData.name);
-
       await shopPage.goToSetURL(page, 1);
 
       const pageTitle = await addShopUrlPage.getPageTitle(page);
