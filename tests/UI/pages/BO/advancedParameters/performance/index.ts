@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Performance page, contains functions that can be used on the page
@@ -7,6 +8,12 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Performance extends BOBasePage {
+  public readonly clearCacheSuccessMessage: string;
+
+  public readonly pageTitle: string;
+
+  private readonly clearCacheButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on Performance page
@@ -30,11 +37,11 @@ class Performance extends BOBasePage {
    * @param page{Page} Browser tab
    * @returns {Promise<string>}
    */
-  async clearCache(page) {
+  async clearCache(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.clearCacheButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
 }
 
-module.exports = new Performance();
+export default new Performance();
