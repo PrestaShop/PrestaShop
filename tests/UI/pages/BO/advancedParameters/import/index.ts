@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Import page, contains functions that can be used on the page
@@ -7,6 +8,40 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Import extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly importModalTitle: string;
+
+  public readonly importPanelTitle: string;
+
+  private readonly downloadSampleFileLink: (type: string) => string;
+
+  private readonly fileInputField: string;
+
+  private readonly nextStepButton: string;
+
+  private readonly importButton: string;
+
+  private readonly confirmationModalAlert: string;
+
+  private readonly importModalCloseButton: string;
+
+  private readonly fileTypeSelector: string;
+
+  private readonly importFileSecondStepPanelTitle: string;
+
+  private readonly importProgressModal: string;
+
+  private readonly progressValidateBarInfo: string;
+
+  private readonly progressImportBarInfo: string;
+
+  private readonly importDetailsFinished: string;
+
+  private readonly importProgressModalCloseButton: string;
+
+  private readonly forceAllIDNumber: (toggle: number) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on import page
@@ -20,7 +55,7 @@ class Import extends BOBasePage {
 
     // Selectors
     this.alertSuccessBlockParagraph = `${this.alertSuccessBlock} p.alert-text.js-import-file`;
-    this.downloadSampleFileLink = (type) => `#download-sample-${type}-file-link`;
+    this.downloadSampleFileLink = (type: string) => `#download-sample-${type}-file-link`;
     this.fileInputField = '#file';
     this.nextStepButton = 'button[name=submitImportFile]';
     this.importButton = '#import';
@@ -33,7 +68,7 @@ class Import extends BOBasePage {
     this.progressImportBarInfo = '#import_progressbar_done';
     this.importDetailsFinished = '#import_details_finished';
     this.importProgressModalCloseButton = '#import_close_button';
-    this.forceAllIDNumber = (toggle) => `#forceIDs_${toggle}`;
+    this.forceAllIDNumber = (toggle: number) => `#forceIDs_${toggle}`;
   }
 
   /*
@@ -43,9 +78,9 @@ class Import extends BOBasePage {
    * Click on simple file link to download it
    * @param page {Page} Browser tab
    * @param type {string} Type of the data to import
-   * @return {Promise<string>}
+   * @return {Promise<string|null>}
    */
-  downloadSampleFile(page, type) {
+  downloadSampleFile(page: Page, type: string): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.downloadSampleFileLink(type));
   }
 
@@ -56,7 +91,7 @@ class Import extends BOBasePage {
    * @param filePath {string} Value of file path to set on file input
    * @return {Promise<string>}
    */
-  async uploadFile(page, fileType, filePath) {
+  async uploadFile(page: Page, fileType: string, filePath: string): Promise<string> {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
     await page.setInputFiles(this.fileInputField, filePath);
 
@@ -68,7 +103,7 @@ class Import extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async isForceAllIDNumbersVisible(page) {
+  async isForceAllIDNumbersVisible(page: Page): Promise<boolean> {
     return this.elementVisible(page, this.forceAllIDNumber(1), 2000);
   }
 
@@ -78,7 +113,7 @@ class Import extends BOBasePage {
    * @param toEnable {boolean} True if we need to enable all id numbers
    * @returns {Promise<void>}
    */
-  async setForceAllIDNumbers(page, toEnable = true) {
+  async setForceAllIDNumbers(page: Page, toEnable: boolean = true): Promise<void> {
     await this.setChecked(page, this.forceAllIDNumber(toEnable ? 1 : 0));
   }
 
@@ -87,7 +122,7 @@ class Import extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async goToImportNextStep(page) {
+  async goToImportNextStep(page: Page): Promise<string> {
     await page.click(this.nextStepButton);
 
     return this.getTextContent(page, this.importFileSecondStepPanelTitle);
@@ -98,7 +133,7 @@ class Import extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  async startFileImport(page) {
+  async startFileImport(page: Page): Promise<string> {
     await page.click(this.importButton);
 
     return this.getTextContent(page, this.importProgressModal);
@@ -109,7 +144,7 @@ class Import extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getImportValidationMessage(page) {
+  async getImportValidationMessage(page: Page): Promise<string> {
     await this.waitForVisibleSelector(page, `${this.progressValidateBarInfo}[style="width: 100%;"]`);
     await this.waitForVisibleSelector(page, `${this.progressImportBarInfo}[style="width: 100%;"]`);
 
@@ -121,7 +156,7 @@ class Import extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  async closeImportModal(page) {
+  async closeImportModal(page: Page): Promise<boolean> {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
     await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
 
@@ -129,4 +164,4 @@ class Import extends BOBasePage {
   }
 }
 
-module.exports = new Import();
+export default new Import();

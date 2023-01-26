@@ -91,7 +91,6 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
         dashboardPage.advancedParametersLink,
         dashboardPage.importLink,
       );
-
       await importPage.closeSfToolBar(page);
 
       const pageTitle = await importPage.getPageTitle(page);
