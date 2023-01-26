@@ -12,7 +12,7 @@ import multiStorePage from '@pages/BO/advancedParameters/multistore';
 import addShopPage from '@pages/BO/advancedParameters/multistore/shop/add';
 import addShopUrlPage from '@pages/BO/advancedParameters/multistore/url/addURL';
 import shopPage from '@pages/BO/advancedParameters/multistore/shop';
-import shopURLPage from '@pages/BO/advancedParameters/multistore/url/index';
+import shopUrlPage from '@pages/BO/advancedParameters/multistore/url';
 
 // Import data
 import ShopData from '@data/faker/shop';
@@ -154,7 +154,7 @@ describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delet
     it('should delete the shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteShopURL', baseContext);
 
-      const textResult = await shopURLPage.deleteShopURL(page, 1);
+      const textResult = await shopUrlPage.deleteShopURL(page, 1);
       await expect(textResult).to.contains(shopPage.successfulDeleteMessage);
     });
   });
