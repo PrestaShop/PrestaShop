@@ -341,8 +341,7 @@ class CombinationController extends FrameworkBundleAdminController
         /** @var AttributeGroup[] $attributeGroups */
         $attributeGroups = $this->getQueryBus()->handle(new GetProductAttributeGroups(
             $productId,
-            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
-            true
+            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
         ));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));
@@ -359,8 +358,7 @@ class CombinationController extends FrameworkBundleAdminController
     {
         /** @var AttributeGroup[] $attributeGroups */
         $attributeGroups = $this->getQueryBus()->handle(new GetAttributeGroupList(
-            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops(),
-            true
+            $shopId ? ShopConstraint::shop($shopId) : ShopConstraint::allShops()
         ));
 
         return $this->json($this->formatAttributeGroupsForPresentation($attributeGroups));

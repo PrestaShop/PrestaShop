@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository;
 
 use AttributeGroup;
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
@@ -55,30 +56,40 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ShopConstraint $shopConstraint
+     * @param AttributeGroupId[] get only certain attribute groups (e.g. when need to get only certain combinations attributes groups)
      *
      * @return array<int, AttributeGroup> array key is the id of attribute group
      */
-    public function getAttributeGroups(ShopConstraint $shopConstraint): array
+    public function getAttributeGroups(ShopConstraint $shopConstraint, array $attributeGroupIds = []): array
     {
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Shop Group constraint is not supported');
         }
         $shopIdValue = $shopConstraint->getShopId() ? $shopConstraint->getShopId()->getValue() : null;
-        $groupsQb =
-            $this->connection->createQueryBuilder()
-                ->select('ag.*, agl.*')
-                ->from($this->dbPrefix . 'attribute_group', 'ag')
-                ->innerJoin(
-                    'ag',
-                    $this->dbPrefix . 'attribute_group_lang',
-                    'agl',
-                    'ag.id_attribute_group = agl.id_attribute_group'
-                )
-                ->orderBy('ag.position', 'ASC')
+        $qb = $this->connection->createQueryBuilder()
+            ->select('ag.*, agl.*')
+            ->from($this->dbPrefix . 'attribute_group', 'ag')
+            ->innerJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_group_lang',
+                'agl',
+                'ag.id_attribute_group = agl.id_attribute_group'
+            )
+            ->orderBy('ag.position', 'ASC')
         ;
 
+        if (!empty($attributeGroupIds)) {
+            $attributeGroupIdValues = array_map(static function (AttributeGroupId $attributeGroupId): int {
+                return $attributeGroupId->getValue();
+            }, $attributeGroupIds);
+
+            $qb->andWhere($qb->expr()->in('ag.id_attribute_group', ':attributeGroupIds'))
+                ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
+            ;
+        }
+
         if ($shopIdValue) {
-            $groupsQb
+            $qb
                 ->innerJoin(
                     'ag',
                     $this->dbPrefix . 'attribute_group_shop',
@@ -90,7 +101,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
             ;
         }
 
-        $results = $groupsQb->execute()->fetchAllAssociative();
+        $results = $qb->execute()->fetchAllAssociative();
 
         if (!$results) {
             return [];

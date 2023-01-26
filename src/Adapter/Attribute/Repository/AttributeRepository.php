@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
@@ -37,9 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObje
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use ProductAttribute;
 use RuntimeException;
@@ -186,40 +183,6 @@ class AttributeRepository extends AbstractObjectModelRepository
         }
 
         return $attributes;
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return AttributeId[]
-     */
-    public function getProductAttributesIds(ProductId $productId, ShopConstraint $shopConstraint): array
-    {
-        $shopIds = array_map(static function (ShopId $shopId): int {
-            return $shopId->getValue();
-        }, $this->productRepository->getShopIdsByConstraint($productId, $shopConstraint));
-
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pac.id_attribute')
-            ->from($this->dbPrefix . 'product_attribute_combination', 'pac')
-            ->innerJoin(
-                'pac',
-                $this->dbPrefix . 'product_attribute_shop',
-                'pas',
-                'pac.id_product_attribute = pas.id_product_attribute'
-            )
-            ->where('pas.id_product = :productId')
-            ->andWhere($qb->expr()->in('pas.id_shop', ':shopIds'))
-            ->setParameter('productId', $productId->getValue())
-            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
-            ->groupBy('pac.id_attribute')
-        ;
-
-        $results = $qb->execute()->fetchAll(FetchMode::COLUMN);
-
-        return array_map(static function (string $id): AttributeId {
-            return new AttributeId((int) $id);
-        }, $results);
     }
 
     /**

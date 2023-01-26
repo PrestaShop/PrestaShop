@@ -2,9 +2,9 @@
 @restore-all-tables-before-feature
 @list-multi-shop-attribute-group
 Feature: Attribute Group
-  PrestaShop allows BO users to list attribute groups
+  PrestaShop allows BO users to list attribute groups when multistore feature is enabled
   As a BO user
-  I should be able to list attribute groups
+  I should be able to list attribute groups in different shops
 
   Background:
     Given attribute group "size" named "Size" in en language exists
@@ -65,7 +65,19 @@ Feature: Attribute Group
       | Color       | Color              | true           | color      | 1        | color      |
       | Dimension   | Dimension          | false          | select     | 2        | dimension  |
       | Paper Type  | Paper Type         | false          | select     | 3        | paper_type |
+    And there is a list of following attribute groups for all shops:
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference  |
+      | Size        | Size               | false          | select     | 0        | size       |
+      | Color       | Color              | true           | color      | 1        | color      |
+      | Dimension   | Dimension          | false          | select     | 2        | dimension  |
+      | Paper Type  | Paper Type         | false          | select     | 3        | paper_type |
     And the attribute group "size" should have the following attributes for shops "shop1":
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | s         |
+      | M           |       | 1        | m         |
+      | L           |       | 2        | l         |
+      | XL          |       | 3        | xl        |
+    And the attribute group "size" should have the following attributes for all shops:
       | name[en-US] | color | position | reference |
       | S           |       | 0        | s         |
       | M           |       | 1        | m         |

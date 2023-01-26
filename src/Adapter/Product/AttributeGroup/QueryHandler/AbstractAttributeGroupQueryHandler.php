@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use ProductAttribute as AttributeObjectModel;
 
 abstract class AbstractAttributeGroupQueryHandler
@@ -54,18 +53,6 @@ abstract class AbstractAttributeGroupQueryHandler
     ) {
         $this->attributeRepository = $attributeRepository;
         $this->attributeGroupRepository = $attributeGroupRepository;
-    }
-
-    /**
-     * @param array<int, AttributeGroupObjectModel> $attributeGroups
-     *
-     * @return AttributeGroupId[]
-     */
-    protected function extractAttributeGroupIds(array $attributeGroups): array
-    {
-        return array_map(static function (int $id): AttributeGroupId {
-            return new AttributeGroupId($id);
-        }, array_keys($attributeGroups));
     }
 
     /**

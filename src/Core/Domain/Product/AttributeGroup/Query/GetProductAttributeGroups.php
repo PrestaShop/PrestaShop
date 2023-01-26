@@ -48,23 +48,15 @@ class GetProductAttributeGroups
     private $shopConstraint;
 
     /**
-     * @var bool
-     */
-    private $withAttributes;
-
-    /**
      * @param int $productId
-     * @param bool $withAttributes
      *
      * @throws ProductConstraintException
      */
     public function __construct(
         int $productId,
-        ShopConstraint $shopConstraint,
-        bool $withAttributes
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
-        $this->withAttributes = $withAttributes;
         $this->shopConstraint = $shopConstraint;
     }
 
@@ -82,13 +74,5 @@ class GetProductAttributeGroups
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
-    }
-
-    /**
-     * @return bool
-     */
-    public function withAttributes(): bool
-    {
-        return $this->withAttributes;
     }
 }

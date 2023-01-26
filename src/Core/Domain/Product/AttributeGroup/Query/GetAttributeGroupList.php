@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
- * Get list of Attribute groups in the shop (with or without their associated attributes)
+ * Get list of Attribute groups in the shop with their associated attributes
  */
 class GetAttributeGroupList
 {
@@ -41,20 +41,11 @@ class GetAttributeGroupList
     private $shopConstraint;
 
     /**
-     * @var bool
-     */
-    private $withAttributes;
-
-    /**
      * @param ShopConstraint $shopConstraint
-     * @param bool $withAttributes
      */
-    public function __construct(
-        ShopConstraint $shopConstraint,
-        bool $withAttributes
-    ) {
+    public function __construct(ShopConstraint $shopConstraint)
+    {
         $this->shopConstraint = $shopConstraint;
-        $this->withAttributes = $withAttributes;
     }
 
     /**
@@ -63,13 +54,5 @@ class GetAttributeGroupList
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
-    }
-
-    /**
-     * @return bool
-     */
-    public function withAttributes(): bool
-    {
-        return $this->withAttributes;
     }
 }

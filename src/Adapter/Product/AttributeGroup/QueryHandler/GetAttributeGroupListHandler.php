@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 
 /**
  * Handles the query GetAttributeGroupList using Doctrine repository
@@ -48,7 +49,9 @@ class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler im
             $attributeGroups,
             $this->attributeRepository->getGroupedAttributes(
                 $shopConstraint,
-                $this->extractAttributeGroupIds($attributeGroups)
+                array_map(static function (int $id): AttributeGroupId {
+                    return new AttributeGroupId($id);
+                }, array_keys($attributeGroups))
             )
         );
     }

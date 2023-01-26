@@ -333,6 +333,22 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | product2S    | Size - S         |           | [Size:S]   | 0               | 0        | true       |
       | product2M    | Size - M         |           | [Size:M]   | 0               | 0        | false      |
       | product2L    | Size - L         |           | [Size:L]   | 0               | 0        | false      |
+    And product "product2" should have the following list of attribute groups for shops "shop3,shop4":
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference |
+      | Size        | Size               | false          | select     | 0        | Size      |
+    And product "product2" should have the following list of attributes in attribute group "Size" for shops "shop3,shop4":
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+      | L           |       | 2        | L         |
+    And product "product2" should have the following list of attribute groups for all shops:
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference |
+      | Size        | Size               | false          | select     | 0        | Size      |
+    And product "product2" should have the following list of attributes in attribute group "Size" for all shops:
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+      | L           |       | 2        | L         |
     When I associate attribute group "Color" with shops "shop3,shop4"
     And I associate attribute "White" with shops "shop3,shop4"
     # generate when attribute groups and attributes are assocaited to all shops
@@ -347,3 +363,23 @@ Feature: Generate combination from Back Office (BO) when using multi-shop featur
       | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
       | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product2LWhite | Size - L, Color - White |           | [Size:L,Color:White] | 0               | 0        | false      |
+    And product "product2" should have the following list of attribute groups for all shops:
+      | name[en-US] | public_name[en-US] | is_color_group | group_type | position | reference |
+      | Size        | Size               | false          | select     | 0        | Size      |
+      | Color       | Color              | true           | color      | 1        | Color     |
+    And product "product2" should have the following list of attributes in attribute group "Color" for all shops:
+      | name[en-US] | color   | position | reference |
+      | White       | #ffffff | 3        | White     |
+    And product "product2" should have the following list of attributes in attribute group "Color" for all shops:
+      | name[en-US] | color   | position | reference |
+      | White       | #ffffff | 3        | White     |
+    And product "product2" should have the following list of attributes in attribute group "Size" for shops "shop4":
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+      | L           |       | 2        | L         |
+    And product "product2" should have the following list of attributes in attribute group "Size" for all shops:
+      | name[en-US] | color | position | reference |
+      | S           |       | 0        | S         |
+      | M           |       | 1        | M         |
+      | L           |       | 2        | L         |

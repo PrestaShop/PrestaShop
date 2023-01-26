@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandlerInterface;
 
@@ -37,24 +40,45 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryHandler\GetPro
 class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandler implements GetProductAttributeGroupsHandlerInterface
 {
     /**
+     * @var ProductMultiShopRepository
+     */
+    private $productRepository;
+
+    public function __construct(
+        AttributeRepository $attributeRepository,
+        AttributeGroupRepository $attributeGroupRepository,
+        ProductMultiShopRepository $productRepository
+    ) {
+        parent::__construct($attributeRepository, $attributeGroupRepository);
+        $this->productRepository = $productRepository;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function handle(GetProductAttributeGroups $query): array
     {
         $shopConstraint = $query->getShopConstraint();
-        $attributeIds = $this->attributeRepository->getProductAttributesIds($query->getProductId(), $shopConstraint);
+        $productId = $query->getProductId();
+        $attributeGroupIds = $this->productRepository->getProductAttributesGroupIds($productId, $shopConstraint);
+
+        if (empty($attributeGroupIds)) {
+            return [];
+        }
+
+        $attributeIds = $this->productRepository->getProductAttributesIds($productId, $shopConstraint);
 
         if (empty($attributeIds)) {
             return [];
         }
 
-        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
+        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint, $attributeGroupIds);
 
         return $this->formatAttributeGroupsList(
             $attributeGroups,
             $this->attributeRepository->getGroupedAttributes(
                 $shopConstraint,
-                $this->extractAttributeGroupIds($attributeGroups),
+                $attributeGroupIds,
                 $attributeIds
             )
         );

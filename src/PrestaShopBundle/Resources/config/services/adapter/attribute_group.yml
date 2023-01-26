@@ -33,6 +33,7 @@ services:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
       - '@PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'
