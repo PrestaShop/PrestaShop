@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShop\PrestaShop\Core\Security\Hashing;
+use PrestaShop\PrestaShop\Core\Security\OpenSsl\OpenSSL;
+use PrestaShop\PrestaShop\Core\Security\PasswordGenerator;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifier;
 use Symfony\Component\Filesystem\Filesystem;
@@ -41,10 +44,10 @@ class ToolsCore
     public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
-    public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
-    public const PASSWORDGEN_FLAG_NO_NUMERIC = 'NO_NUMERIC';
-    public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
-    public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
+    public const PASSWORDGEN_FLAG_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NUMERIC;
+    public const PASSWORDGEN_FLAG_NO_NUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_NO_NUMERIC;
+    public const PASSWORDGEN_FLAG_RANDOM = PasswordGenerator::PASSWORDGEN_FLAG_RANDOM;
+    public const PASSWORDGEN_FLAG_ALPHANUMERIC = PasswordGenerator::PASSWORDGEN_FLAG_ALPHANUMERIC;
 
     public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
 
@@ -96,43 +99,11 @@ class ToolsCore
      */
     public static function passwdGen($length = 8, $flag = self::PASSWORDGEN_FLAG_ALPHANUMERIC)
     {
-        $length = (int) $length;
-
-        if ($length <= 0) {
+        try {
+            return (new PasswordGenerator(new OpenSSL()))->generatePassword($length, $flag);
+        } catch (InvalidArgumentException $exception) {
             return false;
         }
-
-        switch ($flag) {
-            case static::PASSWORDGEN_FLAG_NUMERIC:
-                $str = '0123456789';
-
-                break;
-            case static::PASSWORDGEN_FLAG_NO_NUMERIC:
-                $str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-            case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = (int) ceil($length * 0.75);
-                $bytes = self::getBytes($num_bytes);
-
-                return substr(rtrim(base64_encode($bytes), '='), 0, $length);
-            case static::PASSWORDGEN_FLAG_ALPHANUMERIC:
-            default:
-                $str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-                break;
-        }
-
-        $bytes = Tools::getBytes($length);
-        $position = 0;
-        $result = '';
-
-        for ($i = 0; $i < $length; ++$i) {
-            $position = ($position + ord($bytes[$i])) % strlen($str);
-            $result .= $str[$position];
-        }
-
-        return $result;
     }
 
     /**
@@ -146,19 +117,11 @@ class ToolsCore
      */
     public static function getBytes($length)
     {
-        $length = (int) $length;
-
-        if ($length <= 0) {
+        try {
+            return (new OpenSSL())->getBytes($length);
+        } catch (\Exception $e) {
             return false;
         }
-
-        $bytes = openssl_random_pseudo_bytes($length, $cryptoStrong);
-
-        if ($cryptoStrong === true) {
-            return $bytes;
-        }
-
-        return false;
     }
 
     /**
@@ -1244,7 +1207,7 @@ class ToolsCore
      */
     public static function hash($passwd)
     {
-        return md5(_COOKIE_KEY_ . $passwd);
+        return (new Hashing())->hash($passwd, _COOKIE_KEY_);
     }
 
     /**
@@ -1272,7 +1235,7 @@ class ToolsCore
      */
     public static function hashIV($data)
     {
-        return md5(_COOKIE_IV_ . $data);
+        return (new Hashing())->hash($data, _COOKIE_IV_);
     }
 
     /**
