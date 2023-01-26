@@ -52,7 +52,6 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
-
     await logsPage.closeSfToolBar(page);
 
     const pageTitle = await logsPage.getPageTitle(page);
@@ -247,7 +246,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
-      for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
+      for (let row: number = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
         await expect(textColumn).to.contains(today);
       }
@@ -370,8 +369,8 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
         const sortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
