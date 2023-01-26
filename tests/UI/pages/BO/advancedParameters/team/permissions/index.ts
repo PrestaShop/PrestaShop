@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Permissions page, contains functions that can be used on the page
@@ -7,6 +8,12 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Permissions extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly profileSubTab: (profileName: string) => string;
+
+  private readonly profileAccess: (className: string, access: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on permissions page
@@ -20,8 +27,9 @@ class Permissions extends BOBasePage {
     this.growlMessageBlock = `${this.growlDiv} .growl-message`;
     this.growlCloseButton = `${this.growlDiv} .growl-close`;
     this.successfulUpdateMessage = 'Update successful';
-    this.profileSubTab = (profileName) => `a[id^="profile-"]:text("${profileName}")`;
-    this.profileAccess = (className, access) => `input[data-type="${access}"][data-classname="${className}"]:visible`;
+    this.profileSubTab = (profileName: string) => `a[id^="profile-"]:text("${profileName}")`;
+    this.profileAccess = (className: string, access: string) => `input[data-type="${access}"][data-classname="${
+      className}"]:visible`;
   }
 
   /*
@@ -33,7 +41,7 @@ class Permissions extends BOBasePage {
    * @param profileName {string} Name of the SubTab
    * @returns {Promise<boolean>}
    */
-  async goToProfileSubTab(page, profileName) {
+  async goToProfileSubTab(page: Page, profileName: string): Promise<boolean> {
     await page.click(this.profileSubTab(profileName));
     return this.elementVisible(page, `${this.profileSubTab(profileName)}.selected.active`, 1000);
   }
@@ -45,7 +53,7 @@ class Permissions extends BOBasePage {
    * @param access {string} Access name
    * @returns {Promise<boolean>}
    */
-  async setPermission(page, className, access) {
+  async setPermission(page: Page, className: string, access: string): Promise<boolean> {
     await this.closeGrowlMessage(page);
     if (await this.isChecked(page, this.profileAccess(className, access))) {
       return true;
@@ -58,4 +66,4 @@ class Permissions extends BOBasePage {
   }
 }
 
-module.exports = new Permissions();
+export default new Permissions();

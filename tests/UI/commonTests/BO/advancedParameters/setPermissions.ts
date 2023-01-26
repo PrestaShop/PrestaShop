@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import BO pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
-import permissionsPage from '@pages/BO/advancedParameters/team/permissions/index';
+import permissionsPage from '@pages/BO/advancedParameters/team/permissions';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';

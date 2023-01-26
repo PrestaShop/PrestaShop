@@ -209,13 +209,13 @@ export default class BOBasePage extends CommonPage {
 
   public readonly menuTree: { parent: string; children: string[] }[];
 
-  private readonly growlDiv: string;
+  protected readonly growlDiv: string;
 
   private readonly growlDefaultDiv: string;
 
   protected growlMessageBlock: string;
 
-  private readonly growlCloseButton: string;
+  protected growlCloseButton: string;
 
   protected alertBlock: string;
 
