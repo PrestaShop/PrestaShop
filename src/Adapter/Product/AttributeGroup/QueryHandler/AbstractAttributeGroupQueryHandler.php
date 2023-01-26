@@ -30,10 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler;
 
 use AttributeGroup as AttributeGroupObjectModel;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\AttributeGroup\Repository\AttributeGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use ProductAttribute as AttributeObjectModel;
 
 abstract class AbstractAttributeGroupQueryHandler
@@ -43,21 +43,26 @@ abstract class AbstractAttributeGroupQueryHandler
      */
     protected $attributeRepository;
 
+    /**
+     * @var AttributeGroupRepository
+     */
+    protected $attributeGroupRepository;
+
     public function __construct(
-        AttributeRepository $attributeRepository
+        AttributeRepository $attributeRepository,
+        AttributeGroupRepository $attributeGroupRepository
     ) {
         $this->attributeRepository = $attributeRepository;
+        $this->attributeGroupRepository = $attributeGroupRepository;
     }
 
     /**
-     * @param ShopConstraint $shopConstraint
+     * @param array<int, AttributeGroupObjectModel> $attributeGroups
      *
      * @return AttributeGroupId[]
      */
-    protected function getAttributeGroupIds(ShopConstraint $shopConstraint): array
+    protected function extractAttributeGroupIds(array $attributeGroups): array
     {
-        $attributeGroups = $this->attributeRepository->getAttributeGroups($shopConstraint);
-
         return array_map(static function (int $id): AttributeGroupId {
             return new AttributeGroupId($id);
         }, array_keys($attributeGroups));

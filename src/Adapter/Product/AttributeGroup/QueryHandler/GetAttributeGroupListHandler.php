@@ -42,13 +42,13 @@ class GetAttributeGroupListHandler extends AbstractAttributeGroupQueryHandler im
     public function handle(GetAttributeGroupList $query): array
     {
         $shopConstraint = $query->getShopConstraint();
-        $attributeGroups = $this->attributeRepository->getAttributeGroups($shopConstraint);
+        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
 
         return $this->formatAttributeGroupsList(
             $attributeGroups,
             $this->attributeRepository->getGroupedAttributes(
                 $shopConstraint,
-                $this->getAttributeGroupIds($shopConstraint)
+                $this->extractAttributeGroupIds($attributeGroups)
             )
         );
     }

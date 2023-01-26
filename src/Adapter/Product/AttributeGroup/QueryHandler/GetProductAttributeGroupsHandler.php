@@ -48,13 +48,13 @@ class GetProductAttributeGroupsHandler extends AbstractAttributeGroupQueryHandle
             return [];
         }
 
-        $attributeGroups = $this->attributeRepository->getAttributeGroups($shopConstraint);
+        $attributeGroups = $this->attributeGroupRepository->getAttributeGroups($shopConstraint);
 
         return $this->formatAttributeGroupsList(
             $attributeGroups,
             $this->attributeRepository->getGroupedAttributes(
                 $shopConstraint,
-                $this->getAttributeGroupIds($shopConstraint),
+                $this->extractAttributeGroupIds($attributeGroups),
                 $attributeIds
             )
         );
