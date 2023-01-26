@@ -236,7 +236,7 @@ class ImageRetriever
         }
 
         // add original image to the list of urls
-        $urls['original'] = $this->link->getImageLink($rewrite, (string) $id_image);
+        $urls['original'] = $this->link->$getImageURL($rewrite, (string) $id_image);
 
         // Sort thumbnails by size
         uasort($urls, function (array $a, array $b) {
