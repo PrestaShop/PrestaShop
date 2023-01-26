@@ -12,7 +12,7 @@ concurrency:
   group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
-  integration:
+  behaviour:
     permissions:
       contents: read   #   to clone the repos and get release assets (shivammathur/setup-php)
     name: Behaviour tests

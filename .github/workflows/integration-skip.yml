@@ -1,0 +1,16 @@
+# For UI tests as job is required
+name: Integration tests
+on:
+  push:
+  pull_request:
+    # Run when only tests are updated
+    paths:
+      - 'tests/UI/**'
+
+concurrency:
+  group: ${{ github.event_name }}-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "No tests required"'
