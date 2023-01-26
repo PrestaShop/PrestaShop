@@ -62,7 +62,7 @@ function setupSmtpConfigTest(baseContext: string = 'commonTests-configSMTP'): vo
         smtpServer,
         Customers.johnDoe.email,
         Customers.johnDoe.password,
-        smtpPort,
+        smtpPort.toString(),
       );
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
