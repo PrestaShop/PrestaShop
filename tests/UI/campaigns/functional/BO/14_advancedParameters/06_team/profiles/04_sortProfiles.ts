@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -84,25 +84,12 @@ describe('BO - Advanced Parameters - Team : Sort Profiles table', async () => {
 
       const sortedTable = await profilesPage.getAllRowsColumnContent(page, test.args.sortBy);
 
-      if (test.args.isFloat) {
-        const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-        const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+      const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
-        const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
-
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult);
-        } else {
-          await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
-        }
+      if (test.args.sortDirection === 'asc') {
+        await expect(sortedTable).to.deep.equal(expectedResult);
       } else {
-        const expectedResult = await basicHelper.sortArray(nonSortedTable);
-
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
-        } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
-        }
+        await expect(sortedTable).to.deep.equal(expectedResult.reverse());
       }
     });
   });

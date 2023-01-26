@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
 // Import data
@@ -105,7 +105,7 @@ describe('BO - Advanced Parameters - Team : Pagination and delete by bulk action
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await profilesPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await profilesPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 

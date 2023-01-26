@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
 import employeesPage from '@pages/BO/advancedParameters/team/index';
-import profilesPage from '@pages/BO/advancedParameters/team/profiles/index';
+import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
 // Import data
