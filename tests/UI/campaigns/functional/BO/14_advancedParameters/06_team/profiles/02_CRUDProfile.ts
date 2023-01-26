@@ -7,7 +7,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 import addProfilePage from '@pages/BO/advancedParameters/team/profiles/add';
 
@@ -51,7 +51,6 @@ describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete prof
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

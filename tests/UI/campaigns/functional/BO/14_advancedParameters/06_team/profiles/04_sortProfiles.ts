@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import profilesPage from '@pages/BO/advancedParameters/team/profiles';
 
 import {expect} from 'chai';
@@ -45,7 +45,6 @@ describe('BO - Advanced Parameters - Team : Sort Profiles table', async () => {
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await dashboardPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

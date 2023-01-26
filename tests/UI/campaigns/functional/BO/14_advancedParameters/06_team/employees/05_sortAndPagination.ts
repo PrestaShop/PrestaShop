@@ -8,7 +8,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import dashboardPage from '@pages/BO/dashboard';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 
 // Import data
@@ -54,7 +54,6 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

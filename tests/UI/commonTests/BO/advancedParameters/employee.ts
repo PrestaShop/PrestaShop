@@ -6,7 +6,7 @@ import testContext from '@utils/testContext';
 import loginCommon from '@commonTests/BO/loginBO';
 
 // Import BO pages
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
 import dashboardPage from '@pages/BO/dashboard';
 
