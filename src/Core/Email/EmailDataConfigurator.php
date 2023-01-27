@@ -98,7 +98,9 @@ final class EmailDataConfigurator implements DataConfigurationInterface
             $smtpPassword = (string) $config['smtp_config']['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword);
+                $encryptedPassword = openssl_encrypt($smtpPassword, "AES-128-CTR",
+                    "PrestaShopSMTP", 0, '3922847190294561');
+                $this->configuration->set('PS_MAIL_PASSWD', $encryptedPassword);
             }
         }
 

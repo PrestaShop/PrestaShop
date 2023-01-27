@@ -378,7 +378,7 @@ class MailCore extends ObjectModel
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
                 ))
                     ->setUsername($configuration['PS_MAIL_USER'])
-                    ->setPassword($configuration['PS_MAIL_PASSWD']);
+                    ->setPassword(self::decryptSMTPPass($configuration['PS_MAIL_PASSWD']));
             } else {
                 /**
                  * mail() support was removed from SwiftMailer for security reasons
@@ -757,7 +757,7 @@ class MailCore extends ObjectModel
                     $smtpEncryption
                 ))
                     ->setUsername($smtpLogin)
-                    ->setPassword($smtpPassword);
+                    ->setPassword(self::decryptSMTPPass($smtpPassword));
             } else {
                 /**
                  * mail() support was removed from SwiftMailer for security reasons
@@ -986,5 +986,13 @@ class MailCore extends ObjectModel
             ),
             $die
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static function decryptSMTPPass($encryptedPW)
+    {
+        return openssl_decrypt($encryptedPW,"AES-128-CTR", "PrestaShopSMTP", 0, '3922847190294561');
     }
 }
