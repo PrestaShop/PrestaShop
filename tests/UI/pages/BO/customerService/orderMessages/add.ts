@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type OrderMessageData from '@data/faker/orderMessage';
+
+import type {Page} from 'playwright';
 
 /**
  * Add order message page, contains selectors and functions for the page
@@ -7,6 +10,24 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddOrderMessage extends BOBasePage {
+  public readonly pageTitle: string;
+
+  public readonly pageTitleEdit: string;
+
+  public readonly pageTitleView: string;
+
+  private readonly nameLangButton: string;
+
+  private readonly langDropdownDiv: string;
+
+  private readonly nameLangSpan: (lang: string) => string;
+
+  private readonly nameInput: (id: number) => string;
+
+  private readonly messageTextarea: (id: number) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on add order message page
@@ -21,9 +42,9 @@ class AddOrderMessage extends BOBasePage {
     // Selectors
     this.nameLangButton = '#order_message_name_dropdown';
     this.langDropdownDiv = 'div.locale-dropdown-menu';
-    this.nameLangSpan = (lang) => `${this.langDropdownDiv} span[data-locale='${lang}']`;
-    this.nameInput = (id) => `#order_message_name_${id}`;
-    this.messageTextarea = (id) => `#order_message_message_${id}`;
+    this.nameLangSpan = (lang: string) => `${this.langDropdownDiv} span[data-locale='${lang}']`;
+    this.nameInput = (id: number) => `#order_message_name_${id}`;
+    this.messageTextarea = (id: number) => `#order_message_message_${id}`;
     this.saveButton = '#save-button';
   }
 
@@ -37,7 +58,7 @@ class AddOrderMessage extends BOBasePage {
    * @param lang {string} Language to set on form
    * @return {Promise<void>}
    */
-  async changeFormLang(page, lang = 'en') {
+  async changeFormLang(page: Page, lang: string = 'en'): Promise<void> {
     await Promise.all([
       page.click(this.nameLangButton),
       this.waitForVisibleSelector(page, `${this.nameLangButton}[aria-expanded='true']`),
@@ -54,7 +75,7 @@ class AddOrderMessage extends BOBasePage {
    * @param orderMessageData {OrderMessageData} Data to set order message form
    * @returns {Promise<string>}
    */
-  async addEditOrderMessage(page, orderMessageData) {
+  async addEditOrderMessage(page: Page, orderMessageData: OrderMessageData): Promise<string> {
     // Change lang to 'en' than set inputs value
     await this.changeFormLang(page, 'en');
     await this.setValue(page, this.nameInput(1), orderMessageData.name);
@@ -69,4 +90,4 @@ class AddOrderMessage extends BOBasePage {
   }
 }
 
-module.exports = new AddOrderMessage();
+export default new AddOrderMessage();
