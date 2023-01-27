@@ -27,11 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\Parameter;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * AttributeRepository.
@@ -87,46 +83,6 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $attributeGroups;
-    }
-
-    /**
-     * Asserts that attribute exists in all the provided shops.
-     * If at least one of them is missing in any shop, it throws exception.
-     *
-     * @param AttributeId[] $attributeIds
-     * @param ShopId[] $shopIds
-     *
-     * @throws ShopAssociationNotFound
-     */
-    public function assertExistsInEveryShop(array $attributeIds, array $shopIds): void
-    {
-        $attributeIdValues = array_map(static function (AttributeId $attributeId): int {
-            return $attributeId->getValue();
-        }, $attributeIds);
-
-        $shopIdValues = array_map(static function (ShopId $shopId): int {
-            return $shopId->getValue();
-        }, $shopIds);
-
-        $qb = $this->createQueryBuilder('a');
-        $results = $qb
-            ->select('a.id AS attribute_id', 'attr_shop.id AS shop_id')
-            ->innerJoin('a.shops', 'attr_shop', Join::WITH, $qb->expr()->in('attr_shop.id', $shopIdValues))
-            ->where($qb->expr()->in('a.id', $attributeIdValues))
-            ->getQuery()
-            ->getArrayResult()
-        ;
-
-        $attributeShops = [];
-        foreach ($results as $result) {
-            $attributeShops[$result['attribute_id']][] = $result['shop_id'];
-        }
-
-        foreach ($attributeIdValues as $attributeIdValue) {
-            if ($attributeShops[$attributeIdValue] !== $shopIdValues) {
-                throw new ShopAssociationNotFound('Provided attributes do not exist in every shop');
-            }
-        }
     }
 
     private function getAttributeRow($attribute)

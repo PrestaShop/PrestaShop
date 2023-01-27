@@ -31,7 +31,9 @@ use AttributeGroup;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 
 class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
@@ -129,5 +131,53 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return $attributeGroups;
+    }
+
+    /**
+     * Asserts that attribute groups exists in all the provided shops.
+     * If at least one of them is missing in any shop, it throws exception.
+     *
+     * @param AttributeGroupId[] $attributeGroupIds
+     * @param ShopId[] $shopIds
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function assertExistsInEveryShop(array $attributeGroupIds, array $shopIds): void
+    {
+        $attributeGroupIdValues = array_map(static function (AttributeGroupId $attributeGroupId): int {
+            return $attributeGroupId->getValue();
+        }, $attributeGroupIds);
+
+        $shopIdValues = array_map(static function (ShopId $shopId): int {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $qb = $this->connection->createQueryBuilder();
+        $results = $qb
+            ->select('ags.id_shop, ag.id_attribute_group')
+            ->from($this->dbPrefix . 'attribute_group', 'ag')
+            ->innerJoin(
+                'ag',
+                $this->dbPrefix . 'attribute_group_shop',
+                'ags',
+                'ag.id_attribute_group = ags.id_attribute_group AND ags.id_shop IN (:shopIds)'
+            )
+            ->andWhere($qb->expr()->in('ag.id_attribute_group', ':attributeGroupIds'))
+            ->setParameter('shopIds', $shopIdValues, Connection::PARAM_INT_ARRAY)
+            ->setParameter('attributeGroupIds', $attributeGroupIdValues, Connection::PARAM_INT_ARRAY)
+            ->execute()
+            ->fetchAllAssociative()
+        ;
+
+        $attributeGroupShops = [];
+        foreach ($results as $result) {
+            $attributeGroupShops[(int) $result['id_attribute_group']][] = (int) $result['id_shop'];
+        }
+
+        foreach ($attributeGroupIdValues as $attributeGroupIdValue) {
+            if ($attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
+                throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
+            }
+        }
     }
 }

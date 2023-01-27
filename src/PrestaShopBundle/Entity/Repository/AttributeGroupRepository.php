@@ -26,11 +26,6 @@
 
 namespace PrestaShopBundle\Entity\Repository;
 
-use Doctrine\ORM\Query\Expr\Join;
-use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\ValueObject\AttributeGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
-
 /**
  * AttributeGroupRepository.
  *
@@ -39,43 +34,4 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
  */
 class AttributeGroupRepository extends \Doctrine\ORM\EntityRepository
 {
-    /**
-     * Asserts that attribute groups exists in all the provided shops.
-     * If at least one of them is missing in any shop, it throws exception.
-     *
-     * @param AttributeGroupId[] $attributeGroupIds
-     * @param ShopId[] $shopIds
-     *
-     * @throws ShopAssociationNotFound
-     */
-    public function assertExistsInEveryShop(array $attributeGroupIds, array $shopIds): void
-    {
-        $attributeGroupIdValues = array_map(static function (AttributeGroupId $attributeGroupId): int {
-            return $attributeGroupId->getValue();
-        }, $attributeGroupIds);
-
-        $shopIdValues = array_map(static function (ShopId $shopId): int {
-            return $shopId->getValue();
-        }, $shopIds);
-
-        $qb = $this->createQueryBuilder('ag');
-        $results = $qb
-            ->select('ags.id AS shop_id', 'ag.id AS attribute_group_id')
-            ->innerJoin('ag.shops', 'ags', Join::WITH, $qb->expr()->in('ags.id', $shopIdValues))
-            ->andWhere($qb->expr()->in('ag.id', $attributeGroupIdValues))
-            ->getQuery()
-            ->getArrayResult()
-        ;
-
-        $attributeGroupShops = [];
-        foreach ($results as $result) {
-            $attributeGroupShops[$result['attribute_group_id']][] = $result['shop_id'];
-        }
-
-        foreach ($attributeGroupIdValues as $attributeGroupIdValue) {
-            if ($attributeGroupShops[$attributeGroupIdValue] !== $shopIdValues) {
-                throw new ShopAssociationNotFound('Provided attribute groups does not exist in every shop');
-            }
-        }
-    }
 }
