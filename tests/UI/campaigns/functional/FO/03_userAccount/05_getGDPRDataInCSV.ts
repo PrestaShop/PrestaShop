@@ -68,7 +68,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   const customerData: CustomerData = new CustomerData({
     firstName: 'Marc',
     lastName: 'Beier',
-    email: 'presta@prestashop.com'
+    email: 'presta@prestashop.com',
   });
   const date: Date = new Date();
   const addressData: AddressData = new AddressData({

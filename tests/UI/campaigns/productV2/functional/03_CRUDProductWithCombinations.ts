@@ -24,7 +24,6 @@ import foProductPage from '@pages/FO/product';
 // Import data
 import ProductData from '@data/faker/product';
 import Employees from '@data/demo/employees';
-import Products from "@data/demo/products";
 
 const baseContext: string = 'productV2_functional_CRUDProductWithCombinations';
 
@@ -555,7 +554,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
 
       const taxValue = await basicHelper.percentage(pricingData.price + secondCombinationData.impactOnPriceTExc, 20);
 
-      let result = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(newProductData.name),
         await expect(result.price).to.equal(pricingData.price + secondCombinationData.impactOnPriceTExc + taxValue),
@@ -639,7 +638,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
-      let result = await foProductPage.getProductInformation(page);
+      const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
         await expect(result.price).to.equal(editProductData.price + secondCombinationData.impactOnPriceTExc),

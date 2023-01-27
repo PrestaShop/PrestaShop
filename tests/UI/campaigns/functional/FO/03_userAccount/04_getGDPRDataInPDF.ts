@@ -70,7 +70,7 @@ describe('FO - Account : Get GDPR data in PDF', async () => {
   const customerData: CustomerData = new CustomerData({
     firstName: 'Marc',
     lastName: 'Beier',
-    email: 'presta@prestashop.com'
+    email: 'presta@prestashop.com',
   });
   const today: string = date.getDateFormat('mm/dd/yyyy');
   const dateNow: Date = new Date();

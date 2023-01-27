@@ -11,11 +11,11 @@ import BOBasePage from '@pages/BO/BObasePage';
 class Products extends BOBasePage {
   public readonly pageTitle: string;
 
-  private readonly alertDangerIDFilterValue: string;
+  public readonly alertDangerIDFilterValue: string;
 
-  private readonly alertDangerPriceFilterValue: string;
+  public readonly alertDangerPriceFilterValue: string;
 
-  private readonly alertDangerQuantityFilterValue: string;
+  public readonly alertDangerQuantityFilterValue: string;
 
   private readonly standardProductDescription: string;
 
