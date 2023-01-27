@@ -43,7 +43,6 @@ function enableMerchandiseReturns(baseContext: string = 'commonTests-enableMerch
         dashboardPage.customerServiceParentLink,
         dashboardPage.merchandiseReturnsLink,
       );
-
       await merchandiseReturnsPage.closeSfToolBar(page);
 
       const pageTitle = await merchandiseReturnsPage.getPageTitle(page);
