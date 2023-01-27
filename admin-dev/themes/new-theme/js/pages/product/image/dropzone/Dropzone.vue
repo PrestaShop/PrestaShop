@@ -484,7 +484,6 @@
         const selectedFile = this.selectedFiles[0];
 
         selectedFile.is_cover = isCover;
-
         selectedFile.legends = captionValue;
 
         try {
@@ -492,6 +491,9 @@
             selectedFile,
             this.token,
             this.formName,
+            //@todo: check if all shops checkobx is selected when its implemented and then check if its associated to current shop
+            // then use allShops constraint (null as shopId)
+            selectedFile.isAssociatedToCurrentShop ? this.shopId : null,
           );
 
           const savedImageElement = <HTMLElement> document.querySelector(
@@ -567,6 +569,7 @@
             newPosition,
             this.formName,
             this.token,
+            null
           );
         } catch (error: any) {
           this.sortableContainer?.sortable('cancel');
