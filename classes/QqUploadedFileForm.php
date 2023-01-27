@@ -23,8 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @deprecated deprecated since version 8.1, will be dropped in 9.0
+ */
 class QqUploadedFileFormCore
 {
+    public function __construct()
+    {
+        @trigger_error('This class is deprecated since 8.1 and will be dropped in 9.0.', E_USER_DEPRECATED);
+    }
+
     /**
      * Save the file to the specified path.
      *
