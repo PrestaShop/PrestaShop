@@ -179,17 +179,13 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\SetAssociatedProductCategoriesHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllAssociatedProductCategoriesHandler:
-    arguments:
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getInt("PS_HOME_CATEGORY")'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand
@@ -264,13 +260,10 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository:
+    autowire: true
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator'
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\LegacyContext").getContext().shop.id_category'
-      - '@PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater:
     arguments:
@@ -381,8 +374,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler:
     arguments:
@@ -436,15 +429,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
     arguments:

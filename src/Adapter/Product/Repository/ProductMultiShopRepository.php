@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use ObjectModel;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
@@ -85,11 +86,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     private $productValidator;
 
     /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
      * @var TaxRulesGroupRepository
      */
     private $taxRulesGroupRepository;
@@ -100,27 +96,32 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     private $manufacturerRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
-     * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
+     * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId,
         TaxRulesGroupRepository $taxRulesGroupRepository,
-        ManufacturerRepository $manufacturerRepository
+        ManufacturerRepository $manufacturerRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -257,9 +258,11 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         string $productType,
         ShopId $shopId
     ): Product {
+        $defaultCategoryId = $this->categoryRepository->getShopDefaultCategory($shopId);
+
         $product = new Product(null, false, null, $shopId->getValue());
         $product->active = false;
-        $product->id_category_default = $this->defaultCategoryId;
+        $product->id_category_default = $defaultCategoryId->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
         $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
         $product->product_type = $productType;
@@ -269,7 +272,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShops($product, [$shopId], CannotAddProductException::class);
-        $product->addToCategories([$product->id_category_default]);
+        $this->categoryRepository->addProductAssociations(
+            new ProductId((int) $product->id),
+            [$defaultCategoryId]
+        );
 
         return $product;
     }

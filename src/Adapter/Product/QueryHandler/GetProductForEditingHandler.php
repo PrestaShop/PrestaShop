@@ -275,7 +275,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $shopId = new ShopId($product->getShopId());
         $productId = new ProductId((int) $product->id);
 
-        $categoryIds = $this->categoryRepository->getProductCategoryIds($productId, $shopId);
+        $categoryIds = $this->categoryRepository->getProductCategoryIds($productId, ShopConstraint::shop($shopId->getValue()));
         $defaultCategoryId = (int) $product->id_category_default;
 
         $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
