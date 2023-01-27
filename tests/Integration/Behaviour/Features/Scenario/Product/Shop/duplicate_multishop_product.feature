@@ -3,6 +3,7 @@
 @clear-cache-before-feature
 @restore-shops-after-feature
 @restore-languages-after-feature
+@restore-taxes-after-feature
 @reset-img-after-feature
 @clear-cache-after-feature
 @product-multi-shop

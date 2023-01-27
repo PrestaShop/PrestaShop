@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices
 @restore-products-before-feature
+@restore-taxes-after-feature
 @update-product-prices
 @update-prices
 Feature: Update product price fields from Back Office (BO) when default country has states.
