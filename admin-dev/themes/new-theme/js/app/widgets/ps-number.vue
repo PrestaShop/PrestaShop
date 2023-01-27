@@ -92,11 +92,11 @@
       },
       increment() {
         const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
-        this.$emit('change', Number.isNaN(value) ? 1 : value + 1);
+        this.$emit('arrowClick', Number.isNaN(value) ? 1 : value + 1);
       },
       decrement(): void {
         const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
-        this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
+        this.$emit('arrowClick', Number.isNaN(value) ? -1 : value - 1);
       },
     },
   });

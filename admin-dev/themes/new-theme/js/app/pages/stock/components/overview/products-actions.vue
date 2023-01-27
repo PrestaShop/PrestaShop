@@ -45,6 +45,7 @@
           @focus="focusIn"
           @blur="focusOut($event)"
           @change="onChange"
+          @arrowClick="onArrowClick"
           @keyup="onKeyUp"
         />
       </div>
@@ -133,6 +134,9 @@
       },
       onChange(event: Event): void {
         this.$store.dispatch('updateBulkEditQty', (<HTMLInputElement>event.target).value);
+      },
+      onArrowClick(value: number) {
+        this.$store.dispatch('updateBulkEditQty', value);
       },
       onKeyUp(event: Event): void {
         this.isFocused = true;
