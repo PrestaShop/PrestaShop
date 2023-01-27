@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -561,32 +560,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         $defaultShopId = $this->getProductDefaultShopId($productId);
 
         return $this->getProductByShopId($productId, $defaultShopId);
-    }
-
-    /**
-     * Add product to a specific shop (forces creation by unsetting the initial ID if present),
-     * the provided product instance is not modified.
-     *
-     * @param Product $product
-     *
-     * @return Product
-     *
-     * @throws CoreException
-     * @throws CannotDuplicateProductException
-     * @throws ProductConstraintException
-     * @throws ProductException
-     */
-    public function addProductToShop(Product $product, ShopId $shopId): Product
-    {
-        // Force unsetting the IDs (just in case) so that a new product row is created
-        $newProduct = clone $product;
-        unset($newProduct->id, $newProduct->id_product);
-
-        $this->productValidator->validateCreation($newProduct);
-        $this->productValidator->validate($newProduct);
-        $this->addObjectModelToShops($newProduct, [$shopId], CannotDuplicateProductException::class);
-
-        return $newProduct;
     }
 
     private function getProductByShopGroup(ProductId $productId, ShopGroupId $shopGroupId): Product

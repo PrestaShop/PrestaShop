@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;

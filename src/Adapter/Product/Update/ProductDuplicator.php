@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Category;
 use GroupReduction;
@@ -39,8 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
 use PrestaShopException;
 use Product;
@@ -53,7 +55,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       might be interesting to refacto and merge them into one at some point
  * Duplicates product
  */
-class ProductDuplicator
+class ProductDuplicator extends AbstractMultiShopObjectModelRepository
 {
     /**
      * @var ProductMultiShopRepository
@@ -166,7 +168,7 @@ class ProductDuplicator
 
         // First add the product to its default shop
         $sourceProduct = $this->productRepository->get($sourceProductId, $targetDefaultShopId);
-        $duplicatedProduct = $this->productRepository->addProductToShop($sourceProduct, $targetDefaultShopId);
+        $duplicatedProduct = $this->duplicateObjectModelToShop($sourceProduct, $targetDefaultShopId);
 
         // Then associate it to other shops and copy its values
         $newProductId = new ProductId((int) $duplicatedProduct->id);
@@ -189,6 +191,28 @@ class ProductDuplicator
         }
 
         return $duplicatedProduct;
+    }
+
+    /**
+     * @template T
+     * @psalm-param T $sourceObjectModel
+     *
+     * @return T
+     */
+    private function duplicateObjectModelToShop($sourceObjectModel, ShopId $targetDefaultShopId)
+    {
+        $duplicatedObject = clone $sourceObjectModel;
+        unset($duplicatedObject->id);
+
+        $objectDefinition = $sourceObjectModel::$definition;
+        $idTable = 'id_' . $objectDefinition['table'];
+        if (property_exists($duplicatedObject, $idTable)) {
+            unset($duplicatedObject->$idTable);
+        }
+
+        $this->addObjectModelToShops($duplicatedObject, [$targetDefaultShopId], CannotDuplicateProductException::class);
+
+        return $duplicatedObject;
     }
 
     /**
@@ -231,7 +255,6 @@ class ProductDuplicator
         $this->duplicateSpecificPrices($oldProductId, $newProductId);
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
-        $this->duplicatePrices($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
@@ -402,23 +425,6 @@ class ProductDuplicator
             [Product::class, 'duplicateCustomizationFields'],
             [$oldProductId, $newProductId],
             CannotDuplicateProductException::FAILED_DUPLICATE_CUSTOMIZATION_FIELDS
-        );
-    }
-
-    /**
-     * @param int $oldProductId
-     * @param int $newProductId
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
-     */
-    private function duplicatePrices(int $oldProductId, int $newProductId): void
-    {
-        /* @see Product::duplicatePrices() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicatePrices'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_PRICES
         );
     }
 

@@ -297,7 +297,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
@@ -386,7 +386,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
@@ -407,7 +407,7 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
 
-  PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator:
+  PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
     arguments:
       - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
       - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
