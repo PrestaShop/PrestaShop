@@ -321,7 +321,7 @@ class CategoryRepository extends AbstractObjectModelRepository
         $maxPositions = $this->connection
             ->createQueryBuilder()
             ->from($this->dbPrefix . 'category_product', 'cp')
-            ->select('cp.id_category, MAX(cp.position)')
+            ->select('cp.id_category, MAX(cp.position) AS position')
             ->andWhere('cp.id_category IN (:categories)')
             ->setParameter('categories', $categoryIds, Connection::PARAM_INT_ARRAY)
             ->groupBy('cp.id_category')
@@ -334,7 +334,7 @@ class CategoryRepository extends AbstractObjectModelRepository
             $maxCategoryPosition = 1;
             foreach ($maxPositions as $maxPosition) {
                 if ((int) $maxPosition['id_category'] === $categoryId) {
-                    $maxCategoryPosition = (int) $maxPosition['id_category'] + 1;
+                    $maxCategoryPosition = (int) $maxPosition['position'] + 1;
                 }
             }
 
