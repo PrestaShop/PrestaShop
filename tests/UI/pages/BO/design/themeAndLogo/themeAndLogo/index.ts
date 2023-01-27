@@ -1,5 +1,4 @@
-require('module-alias/register');
-const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage');
+import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
 
 /**
  * Theme & logo page, contains functions that can be used on the page
@@ -7,6 +6,8 @@ const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo
  * @extends themeAndLogoBasePage
  */
 class ThemeAndLogo extends themeAndLogoBasePage {
+  public readonly pageTitle: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on theme & logo page
@@ -18,4 +19,4 @@ class ThemeAndLogo extends themeAndLogoBasePage {
   }
 }
 
-module.exports = new ThemeAndLogo();
+export default new ThemeAndLogo();

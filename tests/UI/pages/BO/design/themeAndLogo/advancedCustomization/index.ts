@@ -1,5 +1,5 @@
-require('module-alias/register');
-const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage');
+import themeAndLogoBasePage from '@pages/BO/design/themeAndLogo/themeAndLogo/themeAndLogoBasePage';
+import {Page} from 'playwright';
 
 /**
  * Advanced customization page, contains functions that can be used on the page
@@ -7,6 +7,26 @@ const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo
  * @extends themeAndLogoBasePage
  */
 class AdvancedCustomization extends themeAndLogoBasePage {
+  public readonly pageTitle: string;
+
+  public readonly downloadThemeButton: string;
+
+  public readonly uploadChildThemeModal: string;
+
+  public readonly uploadChildThemeButton: string;
+
+  public readonly modalDialogUploadChildTheme: string;
+
+  public readonly modalCloseButton: string;
+
+  public readonly childThemeImportDropZone: string;
+
+  public readonly modalDialogUploadChildThemeSelectLink: string;
+
+  public readonly successMsgUploadChildTheme: string;
+
+  public readonly howToUseParentsChildThemesLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on advanced customization page
@@ -30,9 +50,9 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   /**
    * Download theme
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async downloadTheme(page) {
+  async downloadTheme(page: Page): Promise<string|null> {
     return this.clickAndWaitForDownload(page, this.downloadThemeButton);
   }
 
@@ -41,7 +61,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async clickOnUploadChildThemeButton(page) {
+  async clickOnUploadChildThemeButton(page: Page): Promise<string> {
     await this.waitForSelectorAndClick(page, this.uploadChildThemeButton);
     await this.waitForVisibleSelector(page, this.modalDialogUploadChildTheme);
 
@@ -54,7 +74,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
    * @param filePath {string} Path of the file to add
    * @returns {Promise<string>}
    */
-  async uploadTheme(page, filePath) {
+  async uploadTheme(page: Page, filePath: string): Promise<string> {
     await Promise.all([
       this.waitForVisibleSelector(page, this.modalDialogUploadChildThemeSelectLink),
       this.uploadOnFileChooser(page, this.modalDialogUploadChildThemeSelectLink, filePath),
@@ -68,7 +88,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  async closeModal(page) {
+  async closeModal(page: Page): Promise<boolean> {
     await this.waitForSelectorAndClick(page, this.modalCloseButton);
     return this.elementNotVisible(page, this.modalDialogUploadChildTheme, 3000);
   }
@@ -76,9 +96,9 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   /**
    * Get the link How to use Parent's child theme
    * @param page {Page} Browser tab
-   * @returns {Promise<string>}
+   * @returns {Promise<string|null>}
    */
-  async getHowToUseParentsChildThemesLink(page) {
+  async getHowToUseParentsChildThemesLink(page: Page): Promise<string|null> {
     return this.getAttributeContent(page,
       this.howToUseParentsChildThemesLink,
       'href',
@@ -86,4 +106,4 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   }
 }
 
-module.exports = new AdvancedCustomization();
+export default new AdvancedCustomization();

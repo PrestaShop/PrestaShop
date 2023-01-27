@@ -12,7 +12,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 import Employees from '@data/demo/employees';
 
 // Import pages
-import dashboardPage from '@pages/BO/dashboard/index';
+import dashboardPage from '@pages/BO/dashboard';
 import logsPage from '@pages/BO/advancedParameters/logs';
 
 import type {BrowserContext, Page} from 'playwright';
