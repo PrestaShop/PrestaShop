@@ -28,16 +28,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use Category;
+use Combination;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use GroupReduction;
 use Image;
 use Language;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -89,13 +94,25 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private $dbPrefix;
 
+    /**
+     * @var CombinationRepository
+     */
+    private $combinationRepository;
+
+    /**
+     * @var ProductSupplierRepository
+     */
+    private $productSupplierRepository;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
         StringModifierInterface $stringModifier,
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        CombinationRepository $combinationRepository,
+        ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
@@ -103,6 +120,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->stringModifier = $stringModifier;
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->combinationRepository = $combinationRepository;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -151,7 +170,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @param ProductId $sourceProductId
      * @param ShopConstraint $shopConstraint
      *
-     * @return Product the new product
+     * @return Product
      */
     private function duplicateProduct(ProductId $sourceProductId, ShopConstraint $shopConstraint): Product
     {
@@ -257,8 +276,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private function duplicateRelations(int $oldProductId, int $newProductId): void
     {
         $this->duplicateCategories($oldProductId, $newProductId);
-        $this->duplicateSuppliers($oldProductId, $newProductId);
-        $combinationImages = $this->duplicateAttributes($oldProductId, $newProductId);
+        $combinationMatching = $this->duplicateCombinations($oldProductId, $newProductId);
+        $this->duplicateSuppliers($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateGroupReduction($oldProductId, $newProductId);
         $this->duplicateRelatedProducts($oldProductId, $newProductId);
         $this->duplicateFeatures($oldProductId, $newProductId);
@@ -268,7 +287,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateTags($oldProductId, $newProductId);
         $this->duplicateTaxes($oldProductId, $newProductId);
         $this->duplicateDownloads($oldProductId, $newProductId);
-        $this->duplicateImages($oldProductId, $newProductId, $combinationImages);
+        $this->duplicateImages($oldProductId, $newProductId, $combinationMatching);
         $this->duplicateCarriers($oldProductId, $newProductId);
         $this->duplicateAttachmentAssociation($oldProductId, $newProductId);
     }
@@ -276,18 +295,22 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
      */
     private function duplicateCategories(int $oldProductId, int $newProductId): void
     {
-        /* @see Category::duplicateProductCategories() */
-        $this->duplicateRelation(
-            [Category::class, 'duplicateProductCategories'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES
-        );
+        $oldRows = $this->getRows('category_product', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES);
+        $newRows = [];
+        foreach ($oldRows as $oldRow) {
+            $newRows[] = [
+                'id_product' => $newProductId,
+                'id_category' => $oldRow['id_category'],
+                'position' => '(SELECT tmp.max + 1 FROM (
+					SELECT MAX(cp.`position`) AS max
+					FROM `' . $this->dbPrefix . 'category_product` cp
+					WHERE cp.`id_category`=' . (int) $oldRow['id_category'] . ') AS tmp)',
+            ];
+        }
+        $this->bulkInsert('category_product', $newRows, CannotDuplicateProductException::FAILED_DUPLICATE_CATEGORIES);
     }
 
     /**
@@ -297,43 +320,78 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateSuppliers(int $oldProductId, int $newProductId): void
+    private function duplicateSuppliers(int $oldProductId, int $newProductId, array $combinationMatching): void
     {
-        /* @see Product::duplicateSuppliers() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateSuppliers'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_SUPPLIERS
-        );
-    }
-
-    /**
-     * @param int $oldProductId
-     * @param int $newProductId
-     *
-     * @return array<string, array<int, array<int, int>>> combination images
-     *                                                    [
-     *                                                    'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
-     *                                                    'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
-     *                                                    ]
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
-     */
-    private function duplicateAttributes(int $oldProductId, int $newProductId): array
-    {
-        /* @see Product::duplicateAttributes() */
-        $result = $this->duplicateRelation(
-            [Product::class, 'duplicateAttributes'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_ATTRIBUTES
-        );
-
-        if (!$result) {
-            return [];
+        $oldSuppliers = $this->getRows('product_supplier', ['id_product' => $oldProductId], CannotDuplicateProductException::FAILED_DUPLICATE_SUPPLIERS);
+        if (empty($oldSuppliers)) {
+            return;
         }
 
-        return $result;
+        foreach ($oldSuppliers as $oldSupplier) {
+            $newProductSupplier = $this->productSupplierRepository->get(new ProductSupplierId((int) $oldSupplier['id_product_supplier']));
+            $newProductSupplier->id_product = $newProductId;
+            $newProductSupplier->id_product_attribute = $combinationMatching[(int) $oldSupplier['id_product_attribute']] ?? 0;
+            $this->productSupplierRepository->add($newProductSupplier);
+        }
+    }
+
+    /**
+     * @param int $oldProductId
+     * @param int $newProductId
+     *
+     * @return array<int, int> Combination matching (key is the old ID, value is the new one)
+     *
+     * @throws CannotDuplicateProductException
+     * @throws CoreException
+     */
+    private function duplicateCombinations(int $oldProductId, int $newProductId): array
+    {
+        $oldCombinationsShop = $this->getRows(
+            'product_attribute_shop',
+            ['id_product' => $oldProductId],
+            CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS,
+            [
+                'id_product_attribute' => 'ASC',
+                'id_shop' => 'ASC',
+            ]
+        );
+
+        // First create new combinations which are copies of the old ones
+        $combinationMatching = [];
+        foreach ($oldCombinationsShop as $oldCombination) {
+            $oldCombinationId = (int) $oldCombination['id_product_attribute'];
+
+            if (!isset($combinationMatching[$oldCombinationId])) {
+                // New combination to create, associate it to the related shop
+                $shopId = new ShopId((int) $oldCombination['id_shop']);
+                $oldCombination = $this->combinationRepository->get(new CombinationId($oldCombinationId), $shopId);
+                $oldCombination->id_product = $newProductId;
+                $newCombination = $this->duplicateObjectModelToShop($oldCombination, $shopId);
+                $newCombinationId = (int) $newCombination->id;
+                $combinationMatching[$oldCombinationId] = $newCombinationId;
+
+                // Associate attributes to combination
+                $oldAttributes = $this->getRows(
+                    'product_attribute_combination',
+                    ['id_product_attribute' => $oldCombinationId],
+                    CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
+                );
+                $newAttributes = $this->replaceInRows($oldAttributes, ['id_product_attribute' => $newCombinationId]);
+                $this->bulkInsert('product_attribute_combination', $newAttributes, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
+            } else {
+                // Combination already created to another shop, now we focus on duplicating the data for every other shop
+                $newCombinationId = $combinationMatching[$oldCombinationId];
+                $oldCombinationShop = $this->getRows(
+                    'product_attribute_shop',
+                    ['id_product_attribute' => $oldCombinationId],
+                    CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS
+                );
+                $newCombinationShop = $this->replaceInRows($oldCombinationShop, ['id_product_attribute' => $newCombinationId, 'id_product' => $newProductId]);
+                $this->bulkInsert('product_attribute_shop', $newCombinationShop, CannotDuplicateProductException::FAILED_DUPLICATE_COMBINATIONS);
+            }
+        }
+
+        return $combinationMatching;
     }
 
     /**
@@ -444,12 +502,12 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private function duplicateTags(int $oldProductId, int $newProductId): void
     {
-        $oldTags = $this->getRows('product_tag', ['id_product' => $oldProductId]);
-        if (empty($oldTags)) {
-            return;
-        }
-        $newTags = $this->replaceInRows($oldTags, ['id_product' => $newProductId]);
-        $this->bulkInsert('product_tag', $newTags);
+        $this->duplicateProductTable(
+            'product_tag',
+            $oldProductId,
+            $newProductId,
+            CannotDuplicateProductException::FAILED_DUPLICATE_TAGS
+        );
     }
 
     /**
@@ -601,14 +659,40 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     }
 
     /**
+     * Fetch all rows related to a product on a specific table and duplicate it by replacing only the column id_product.
+     *
+     * @param string $table
+     * @param int $oldProductId
+     * @param int $newProductId
+     * @param int $errorCode
+     *
+     * @throws InvalidArgumentException
+     * @throws CannotDuplicateProductException
+     */
+    private function duplicateProductTable(string $table, int $oldProductId, int $newProductId, int $errorCode): void
+    {
+        $oldRows = $this->getRows($table, ['id_product' => $oldProductId], $errorCode);
+        if (empty($oldRows)) {
+            return;
+        }
+        $newRows = $this->replaceInRows($oldRows, ['id_product' => $newProductId]);
+        $this->bulkInsert($table, $newRows, $errorCode);
+    }
+
+    /**
      * Bulk insert some row values, all row must be formatted with the exact same keys and in the same order
      * so that the defined column match the values for each row.
      *
      * @param string $table
      * @param array $rowValues
+     * @param int $errorCode
      */
-    private function bulkInsert(string $table, array $rowValues): void
+    private function bulkInsert(string $table, array $rowValues, int $errorCode): void
     {
+        if (empty($rowValues)) {
+            return;
+        }
+
         $insertKeys = array_keys(reset($rowValues));
         $bulkInsertSql = 'INSERT IGNORE INTO ' . $this->dbPrefix . $table . ' (' . implode(',', $insertKeys) . ') VALUES ';
         foreach ($rowValues as $i => $rowValue) {
@@ -624,7 +708,14 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             }
         }
 
-        $this->connection->executeStatement($bulkInsertSql);
+        try {
+            $this->connection->executeStatement($bulkInsertSql);
+        } catch (Exception $e) {
+            throw new CannotDuplicateProductException(
+                sprintf('Cannot bulk insert into table %s failed', $table),
+                $errorCode
+            );
+        }
     }
 
     /**
@@ -650,10 +741,12 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      *
      * @param string $table
      * @param array $criteria
+     * @param int $errorCode
+     * @param array<int, array<string, string> $orderBy
      *
      * @return array
      */
-    private function getRows(string $table, array $criteria = []): array
+    private function getRows(string $table, array $criteria, int $errorCode, array $orderBy = []): array
     {
         $qb = $this->connection
             ->createQueryBuilder()
@@ -668,6 +761,19 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             ;
         }
 
-        return $qb->execute()->fetchAllAssociative();
+        foreach ($orderBy as $orderKey => $orderWay) {
+            $qb->addOrderBy($orderKey, $orderWay);
+        }
+
+        try {
+            $rows = $qb->execute()->fetchAllAssociative();
+        } catch (Exception $e) {
+            throw new CannotDuplicateProductException(
+                sprintf('Cannot select rows from table %s', $table),
+                $errorCode
+            );
+        }
+
+        return $rows;
     }
 }
