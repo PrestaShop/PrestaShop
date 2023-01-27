@@ -174,10 +174,10 @@ class CombinationsTab extends BOBasePage {
    */
   constructor() {
     super();
-    this.generateCombinationsMessage = (number) => `Generate ${number} combinations`;
-    this.successfulGenerateCombinationsMessage = (number) => `Successfully generated ${number} combinations.`;
-    this.editCombinationsModalTitle = (number) => `Edit ${number} combinations`;
-    this.editCombinationsModalMessage = (number) => `Editing ${number}/${number} combinations`;
+    this.generateCombinationsMessage = (number: number) => `Generate ${number} combinations`;
+    this.successfulGenerateCombinationsMessage = (number: number) => `Successfully generated ${number} combinations.`;
+    this.editCombinationsModalTitle = (number: number) => `Edit ${number} combinations`;
+    this.editCombinationsModalMessage = (number: number) => `Editing ${number}/${number} combinations`;
     this.successfulUpdateMessage = 'Update successful';
 
     // Selectors in combinations tab
@@ -200,30 +200,30 @@ class CombinationsTab extends BOBasePage {
     this.bulkEditModalTitle = `${this.bulkEditModal} .modal-header .modal-title`;
     // Edit stocks
     this.bulkEditModalStocksButton = '#bulk_combination_stock_accordion_header h2 button';
-    this.bulkEditModalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_delta_quantity_'
+    this.bulkEditModalQuantitySwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_delta_quantity_'
       + `${toEnable}`;
     this.bulkEditModalQuantityInput = '#bulk_combination_stock_delta_quantity_delta';
-    this.bulkEditModalMinimalQuantitySwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_minimal'
+    this.bulkEditModalMinimalQuantitySwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_minimal'
       + `_quantity_${toEnable}`;
     this.bulkEditModalMinimalQuantityInput = '#bulk_combination_stock_minimal_quantity';
-    this.bulkEditModalStockLocationSwitchButton = (toEnable) => '#bulk_combination_stock_disabling_switch_stock_'
+    this.bulkEditModalStockLocationSwitchButton = (toEnable: number) => '#bulk_combination_stock_disabling_switch_stock_'
       + `location_${toEnable}`;
     this.bulkEditModalStockLocationInput = '#bulk_combination_stock_stock_location';
     this.bulkEditModalSaveButton = '#bulk-combination-form-modal div.modal-footer button.btn-confirm-submit';
     // Edit retail price
     this.bulkEditModalRetailPriceButton = '#bulk_combination_price_accordion_header h2 button';
-    this.bulkEditModalCostPriceSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_wholesale_'
+    this.bulkEditModalCostPriceSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_wholesale_'
       + `price_${toEnable}`;
     this.bulkEditModalCostPriceInput = '#bulk_combination_price_wholesale_price';
-    this.bulkEditModalImpactOnPriceTIncSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_price_'
+    this.bulkEditModalImpactOnPriceTIncSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_price_'
       + `tax_excluded_${toEnable}`;
     this.bulkEditModalImpactOnPriceTIncInput = '#bulk_combination_price_price_tax_excluded';
-    this.bulkEditModalImpactOnWeightSwitchButton = (toEnable) => '#bulk_combination_price_disabling_switch_weight_'
+    this.bulkEditModalImpactOnWeightSwitchButton = (toEnable: number) => '#bulk_combination_price_disabling_switch_weight_'
       + `${toEnable}`;
     this.bulkEditModalImpactOnWeightInput = '#bulk_combination_price_weight';
     // Edit specific references
     this.bulkEditModalSpecificReferences = '#bulk_combination_references_accordion_header h2 button';
-    this.bulkEditModalReferenceSwitchButton = (toEnable) => '#bulk_combination_references_disabling_switch_'
+    this.bulkEditModalReferenceSwitchButton = (toEnable: number) => '#bulk_combination_references_disabling_switch_'
       + `reference_${toEnable}`;
     this.bulkEditModalReferenceInput = '#bulk_combination_references_reference';
     // Save progress modal
@@ -235,15 +235,15 @@ class CombinationsTab extends BOBasePage {
     // Filter by size selectors
     this.filterBySizeButton = '#form_invoice_prefix[data-role=filter-by-size]';
     this.filterBySizeDropDownMenu = '.combinations-filters-dropdown div.dropdown-menu';
-    this.filterBySizeCheckboxButton = (id) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
+    this.filterBySizeCheckboxButton = (id: number) => `div.combinations-filters div:nth-child(${id}) .md-checkbox-container`;
     this.clearFilterButton = 'div.combinations-filters button.combinations-filters-clear';
 
     // Selectors of combinations table
     this.combinationsListTable = '#combination_list';
-    this.combinationListTableRow = (row) => `#combination-list-row-${row - 1}`;
-    this.combinationListTableColumn = (row, column) => `td input#combination_list_${row - 1}_${column}`;
+    this.combinationListTableRow = (row: number) => `#combination-list-row-${row - 1}`;
+    this.combinationListTableColumn = (row: number, column: string) => `td input#combination_list_${row - 1}_${column}`;
     this.combinationListTableActionsDropDown = (row: number) => `#combination_list_${row - 1}_actions div a`;
-    this.combinationListTableActionsColumn = (row, action) => `td button#combination_list_${row - 1}_actions_${action}`;
+    this.combinationListTableActionsColumn = (row: number, action: string) => `td button#combination_list_${row - 1}_actions_${action}`;
     this.combinationListTableSelectAllButton = '#bulk-all-selection-dropdown-button';
     this.combinationListSelectAllDropDownMenu = '#bulk-all-selection-dropdown .dropdown-menu.show';
     this.combinationListBulkSelectAll = '#bulk-all-selection-dropdown label[for="bulk-select-all"]';
@@ -261,11 +261,11 @@ class CombinationsTab extends BOBasePage {
     this.editCombinationModalCancelButton = `${this.editCombinationModal} footer button.btn-close`;
     this.editCombinationCloseModal = `${this.editCombinationEditModal} div.modal-prevent-close div.modal.show`;
     this.editCombinationModalDiscardButton = `${this.editCombinationCloseModal} button.btn-primary`;
-    this.combinationStockMovementsDate = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
+    this.combinationStockMovementsDate = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}_`
       + 'date + span';
-    this.combinationStockMovementsEmployeeName = (row) => '#combination_form_stock_quantities_stock_movements_'
+    this.combinationStockMovementsEmployeeName = (row: number) => '#combination_form_stock_quantities_stock_movements_'
       + `${row - 1}_employee_name + span`;
-    this.combinationStockMovements = (row) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
+    this.combinationStockMovements = (row: number) => `#combination_form_stock_quantities_stock_movements_${row - 1}`
       + '_delta_quantity + span';
 
     // Delete combination modal
@@ -275,9 +275,9 @@ class CombinationsTab extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.combinationsListTable} thead`;
-    this.sortColumnDiv = (columnNumber) => `${this.tableHead} th:nth-child(${columnNumber}) `
+    this.sortColumnDiv = (columnNumber: number) => `${this.tableHead} th:nth-child(${columnNumber}) `
       + 'div.ps-sortable-column[data-sort-col-name]';
-    this.sortColumnSpanButton = (columnNumber) => `${this.sortColumnDiv(columnNumber)} span.ps-sort`;
+    this.sortColumnSpanButton = (columnNumber: number) => `${this.sortColumnDiv(columnNumber)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationBlock = '#combinations-pagination';

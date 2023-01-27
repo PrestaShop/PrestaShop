@@ -75,19 +75,21 @@ class PackTab extends BOBasePage {
     this.searchResult = '.tt-menu.tt-open';
     this.packSearchResult = `${this.searchResult} div.tt-dataset.tt-dataset-2`;
     this.searchResultSuggestion = `${this.packSearchResult} div.search-suggestion`;
-    this.searchResultSuggestionRow = (productInSearchList) => `${this.searchResultSuggestion}:nth-child(${productInSearchList})`;
+    this.searchResultSuggestionRow = (productInSearchList: number) => `${this.searchResultSuggestion}:nth-child(`
+      + `${productInSearchList})`;
 
     // List of products in pack selectors
     this.listOfProducts = '#product_stock_packed_products_list';
-    this.quantityInput = (productInList) => `#product_stock_packed_products_${productInList}_quantity`;
-    this.productRowInList = (productInList) => `${this.listOfProducts} li:nth-child(${productInList})`;
-    this.productInListLegend = (productInList) => `${this.productRowInList(productInList)} div.packed-product-legend`;
-    this.deleteProductInListIcon = (productInList) => `${this.productInListLegend(productInList)} span i.entity-item-delete`;
-    this.productInListImage = (productInList) => `${this.productRowInList(productInList)} div.packed-product-image img`;
-    this.productInListName = (productInList) => `#product_stock_packed_products_${productInList - 1}_name`;
-    this.productInListReference = (productInList) => `${this.productInListLegend(productInList)} span.reference-preview`;
-    this.productInListQuantity = (productInList) => `#product_stock_packed_products_${productInList - 1}_quantity`;
-    this.alertDangerProductInPack = (productInList) => `${this.productRowInList(productInList)} div.alert-danger p`;
+    this.quantityInput = (productInList: number) => `#product_stock_packed_products_${productInList}_quantity`;
+    this.productRowInList = (productInList: number) => `${this.listOfProducts} li:nth-child(${productInList})`;
+    this.productInListLegend = (productInList: number) => `${this.productRowInList(productInList)} div.packed-product-legend`;
+    this.deleteProductInListIcon = (productInList: number) => `${this.productInListLegend(productInList)} `
+      + 'span i.entity-item-delete';
+    this.productInListImage = (productInList: number) => `${this.productRowInList(productInList)} div.packed-product-image img`;
+    this.productInListName = (productInList: number) => `#product_stock_packed_products_${productInList - 1}_name`;
+    this.productInListReference = (productInList: number) => `${this.productInListLegend(productInList)} span.reference-preview`;
+    this.productInListQuantity = (productInList: number) => `#product_stock_packed_products_${productInList - 1}_quantity`;
+    this.alertDangerProductInPack = (productInList: number) => `${this.productRowInList(productInList)} div.alert-danger p`;
 
     // Modal delete product in pack selectors
     this.modalDeleteProduct = '#modal-confirm-remove-entity';
@@ -95,17 +97,17 @@ class PackTab extends BOBasePage {
     this.cancelDeleteButtonInModal = '#modal-confirm-remove-entity button.btn-outline-secondary';
 
     // Stock movement table selectors
-    this.dateTimeRowInTable = (movementRow) => `#product_stock_quantities_stock_movements_${movementRow}_date `
+    this.dateTimeRowInTable = (movementRow: number) => `#product_stock_quantities_stock_movements_${movementRow}_date `
       + '+ span';
-    this.employeeRowInTable = (movementRow) => `#product_stock_quantities_stock_movements_${movementRow}_`
+    this.employeeRowInTable = (movementRow: number) => `#product_stock_quantities_stock_movements_${movementRow}_`
       + 'employee_name + span';
-    this.quantityRowInTable = (movementRow) => `#product_stock_quantities_stock_movements_${movementRow}_`
+    this.quantityRowInTable = (movementRow: number) => `#product_stock_quantities_stock_movements_${movementRow}_`
       + 'delta_quantity + span';
 
     // Edit quantity selectors
     this.editQuantityInput = '#product_stock_quantities_delta_quantity_delta';
     this.minimalQuantityInput = '#product_stock_quantities_minimal_quantity';
-    this.packStockTypeRadioButton = (buttonRow) => `#product_stock_pack_stock_type_${buttonRow} +i`;
+    this.packStockTypeRadioButton = (buttonRow: number) => `#product_stock_pack_stock_type_${buttonRow} +i`;
 
     // Save button selector
     this.saveProductButton = '#product_footer_save';

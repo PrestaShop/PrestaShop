@@ -159,26 +159,6 @@ class Products extends BOBasePage {
 
   private readonly modalDialogConfirmButton: string;
 
-  private readonly modalBulkDeleteProducts: string;
-
-  private readonly modalBulkDeleteProductsBody: string;
-
-  private readonly modalBulkDeleteProductsFooter: string;
-
-  private readonly modalDialogBulkDeleteButton: string;
-
-  private readonly modalBulkDeleteProductsProgress: string;
-
-  private readonly modalBulkDeleteProductsProgressBody: string;
-
-  private readonly modalBulkDeleteProductsProgressSuccessMessage: string;
-
-  private readonly modalBulkDeleteProductsProgressFooter: string;
-
-  private readonly modalBulkDeleteProductsProgressBarDone: string;
-
-  private readonly modalBulkDeleteProductsCloseButton: string;
-
   private readonly paginationBlock: string;
 
   private readonly productsNumberLabel: string;
@@ -225,7 +205,7 @@ class Products extends BOBasePage {
     // Bulk actions selectors
     this.productBulkMenuButton = `${this.productGridPanel} button.js-bulk-actions-btn`;
     this.bulkActionsDropDownMenu = 'div.dropdown-menu.show';
-    this.bulkActionsSelectionLink = (action) => `#product_grid_bulk_action_${action}_ajax`;
+    this.bulkActionsSelectionLink = (action: string) => `#product_grid_bulk_action_${action}_ajax`;
 
     // Modal dialog
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
@@ -233,20 +213,20 @@ class Products extends BOBasePage {
     this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
     // Modal bulk actions products selectors
-    this.modalBulkActionsProducts = (action) => `#product-ajax-${action}_ajax-confirm-modal`;
-    this.modalBulkActionsProductsBody = (action) => `${this.modalBulkActionsProducts(action)} div.modal-body`;
-    this.modalBulkActionsProductsFooter = (action) => `${this.modalBulkActionsProducts(action)} div.modal-footer`;
-    this.modalDialogBulkActionButton = (action) => `${this.modalBulkActionsProductsFooter(action)} `
+    this.modalBulkActionsProducts = (action: string) => `#product-ajax-${action}_ajax-confirm-modal`;
+    this.modalBulkActionsProductsBody = (action: string) => `${this.modalBulkActionsProducts(action)} div.modal-body`;
+    this.modalBulkActionsProductsFooter = (action: string) => `${this.modalBulkActionsProducts(action)} div.modal-footer`;
+    this.modalDialogBulkActionButton = (action: string) => `${this.modalBulkActionsProductsFooter(action)} `
       + 'button.btn-confirm-submit';
-    this.modalBulkActionsProductsProgress = (action) => `#product-ajax-${action}_ajax-progress-modal`;
-    this.modalBulkActionsProductsProgressBody = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+    this.modalBulkActionsProductsProgress = (action: string) => `#product-ajax-${action}_ajax-progress-modal`;
+    this.modalBulkActionsProductsProgressBody = (action: string) => `${this.modalBulkActionsProductsProgress(action)} `
       + 'div.modal-body';
-    this.modalBulkActionsProgressSuccessMessage = (action) => `${this.modalBulkActionsProductsProgressBody(action)} `
+    this.modalBulkActionsProgressSuccessMessage = (action: string) => `${this.modalBulkActionsProductsProgressBody(action)} `
       + 'div.progress-message';
-    this.modalBulkActionsProductsProgressFooter = (action) => `${this.modalBulkActionsProductsProgress(action)} `
+    this.modalBulkActionsProductsProgressFooter = (action: string) => `${this.modalBulkActionsProductsProgress(action)} `
       + 'div.modal-footer';
     this.modalBulkActionsProductsProgressBarDone = '#modal_progressbar_done';
-    this.modalBulkActionsProductsCloseButton = (action) => `${this.modalBulkActionsProductsProgressFooter(action)} `
+    this.modalBulkActionsProductsCloseButton = (action: string) => `${this.modalBulkActionsProductsProgressFooter(action)} `
       + 'button.close-modal-button';
 
     // Products table selectors
@@ -272,23 +252,23 @@ class Products extends BOBasePage {
     // Products list
     this.productRow = `${this.productGridTable} tbody tr`;
     this.productEmptyRow = `${this.productRow}.empty_row`;
-    this.productsListTableRow = (row) => `${this.productRow}:nth-child(${row})`;
-    this.productsListTableColumnID = (row) => `${this.productsListTableRow(row)} td.column-id_product`;
-    this.productsListTableColumnName = (row) => `${this.productsListTableRow(row)} td.column-name a`;
-    this.productsListTableColumnReference = (row) => `${this.productsListTableRow(row)} td.column-reference`;
-    this.productsListTableColumnCategory = (row) => `${this.productsListTableRow(row)} td.column-category`;
-    this.productsListTableColumnPriceTExc = (row) => `${this.productsListTableRow(row)} `
+    this.productsListTableRow = (row: number) => `${this.productRow}:nth-child(${row})`;
+    this.productsListTableColumnID = (row: number) => `${this.productsListTableRow(row)} td.column-id_product`;
+    this.productsListTableColumnName = (row: number) => `${this.productsListTableRow(row)} td.column-name a`;
+    this.productsListTableColumnReference = (row: number) => `${this.productsListTableRow(row)} td.column-reference`;
+    this.productsListTableColumnCategory = (row: number) => `${this.productsListTableRow(row)} td.column-category`;
+    this.productsListTableColumnPriceTExc = (row: number) => `${this.productsListTableRow(row)} `
       + 'td.column-final_price_tax_excluded a';
-    this.productsListTableColumnPriceATI = (row) => `${this.productsListTableRow(row)} `
+    this.productsListTableColumnPriceATI = (row: number) => `${this.productsListTableRow(row)} `
       + 'td.column-price_tax_included';
-    this.productsListTableColumnQuantity = (row) => `${this.productsListTableRow(row)} td.column-quantity a`;
-    this.productsListTableColumnStatus = (row) => `${this.productsListTableRow(row)} td.column-active input`;
-    this.productsListTableColumnPosition = (row) => `${this.productsListTableRow(row)} td.column-position`;
-    this.productListTableDropDownList = (row) => `${this.productsListTableRow(row)} td.column-actions `
+    this.productsListTableColumnQuantity = (row: number) => `${this.productsListTableRow(row)} td.column-quantity a`;
+    this.productsListTableColumnStatus = (row: number) => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productsListTableColumnPosition = (row: number) => `${this.productsListTableRow(row)} td.column-position`;
+    this.productListTableDropDownList = (row: number) => `${this.productsListTableRow(row)} td.column-actions `
       + 'a.dropdown-toggle';
-    this.productListTableDeleteButton = (row) => `${this.productsListTableRow(row)}`
+    this.productListTableDeleteButton = (row: number) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-delete-row-link';
-    this.productListTableDuplicateButton = (row) => `${this.productsListTableRow(row)}`
+    this.productListTableDuplicateButton = (row: number) => `${this.productsListTableRow(row)}`
       + ' td.column-actions a.grid-duplicate-row-link';
 
     // Modal create product selectors
@@ -296,7 +276,7 @@ class Products extends BOBasePage {
     this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
     this.productTypeChoices = '#create_product div.product-type-choices';
     this.productTypeDescription = '#create_product div.product-type-description';
-    this.productType = (type) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
+    this.productType = (type: string) => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
 
     // Modal dialog
     this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
