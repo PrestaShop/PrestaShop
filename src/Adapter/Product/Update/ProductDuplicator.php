@@ -38,6 +38,7 @@ use Pack;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -104,6 +105,11 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      */
     private $productSupplierRepository;
 
+    /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
@@ -112,7 +118,8 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         Connection $connection,
         string $dbPrefix,
         CombinationRepository $combinationRepository,
-        ProductSupplierRepository $productSupplierRepository
+        ProductSupplierRepository $productSupplierRepository,
+        SpecificPriceRepository $specificPriceRepository
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
@@ -122,6 +129,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->dbPrefix = $dbPrefix;
         $this->combinationRepository = $combinationRepository;
         $this->productSupplierRepository = $productSupplierRepository;
+        $this->specificPriceRepository = $specificPriceRepository;
     }
 
     /**
@@ -281,7 +289,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
         $this->duplicateGroupReduction($oldProductId, $newProductId);
         $this->duplicateRelatedProducts($oldProductId, $newProductId);
         $this->duplicateFeatures($oldProductId, $newProductId);
-        $this->duplicateSpecificPrices($oldProductId, $newProductId);
+        $this->duplicateSpecificPrices($oldProductId, $newProductId, $combinationMatching);
         $this->duplicatePackedProducts($oldProductId, $newProductId);
         $this->duplicateCustomizationFields($oldProductId, $newProductId);
         $this->duplicateTags($oldProductId, $newProductId);
@@ -448,18 +456,20 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
+     * @param array $combinationMatching
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException
      */
-    private function duplicateSpecificPrices(int $oldProductId, int $newProductId): void
+    private function duplicateSpecificPrices(int $oldProductId, int $newProductId, array $combinationMatching): void
     {
-        /* @see Product::duplicateSpecificPrices() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateSpecificPrices'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_SPECIFIC_PRICES
-        );
+        $specificPriceIds = $this->specificPriceRepository->getProductSpecificPricesIds(new ProductId($oldProductId));
+        foreach ($specificPriceIds as $specificPriceId) {
+            $specificPrice = $this->specificPriceRepository->get($specificPriceId);
+            $specificPrice->id_product = $newProductId;
+            $specificPrice->id_product_attribute = $combinationMatching[(int) $specificPrice->id_product_attribute] ?? 0;
+            $this->specificPriceRepository->add($specificPrice);
+        }
     }
 
     /**
@@ -742,7 +752,7 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
      * @param string $table
      * @param array $criteria
      * @param int $errorCode
-     * @param array<int, array<string, string> $orderBy
+     * @param array<string, string> $orderBy
      *
      * @return array
      */
