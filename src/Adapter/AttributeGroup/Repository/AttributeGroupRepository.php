@@ -56,7 +56,7 @@ class AttributeGroupRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ShopConstraint $shopConstraint
-     * @param AttributeGroupId[] get only certain attribute groups (e.g. when need to get only certain combinations attributes groups)
+     * @param AttributeGroupId[] $attributeGroupIds get only certain attribute groups (e.g. when need to get only certain combinations attributes groups)
      *
      * @return array<int, AttributeGroup> array key is the id of attribute group
      */

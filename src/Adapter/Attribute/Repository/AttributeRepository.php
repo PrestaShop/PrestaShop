@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Attribute\Repository;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\ValueObject\AttributeId;
@@ -57,23 +56,15 @@ class AttributeRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
-     * @var ProductMultiShopRepository
-     */
-    private $productRepository;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix,
-        ProductMultiShopRepository $productRepository
+        string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->productRepository = $productRepository;
     }
 
     /**

@@ -16,4 +16,3 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
