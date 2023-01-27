@@ -177,6 +177,12 @@ class ModuleManager implements ModuleManagerInterface
 
         $this->assertIsInstalled($name);
 
+        define('IS_ENABLED', $this->isEnabled($name));
+
+        if (IS_ENABLED) {
+            $this->disable($name);
+        }
+
         if ($source !== null) {
             $handler = $this->sourceFactory->getHandler($source);
             $handler->handle($source);
@@ -186,6 +192,10 @@ class ModuleManager implements ModuleManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         $upgraded = $this->upgradeMigration($name) && $module->onUpgrade($module->get('version'));
+
+        if (IS_ENABLED) {
+            $this->enable($name);
+        }
 
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
