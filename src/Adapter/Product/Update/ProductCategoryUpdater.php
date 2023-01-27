@@ -79,7 +79,7 @@ class ProductCategoryUpdater
      */
     public function removeAllCategories(ProductId $productId, ShopConstraint $shopConstraint): void
     {
-        // Get curren categories based on the provided shop constraint
+        // Get current categories based on the provided shop constraint
         $this->deleteCategoriesAssociations($productId, [], $shopConstraint);
         $this->assignFallbackDefaultCategory($productId);
 

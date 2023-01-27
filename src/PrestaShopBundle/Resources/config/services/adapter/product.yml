@@ -374,9 +374,8 @@ services:
       - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater'
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater:
-    arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository'
+    autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler:
     arguments:
@@ -434,6 +433,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater:
     autowire: true
+    public: false
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductHandler:
     arguments:
