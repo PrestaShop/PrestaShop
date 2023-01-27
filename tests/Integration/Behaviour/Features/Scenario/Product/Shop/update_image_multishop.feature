@@ -94,10 +94,49 @@ Feature: Update product image from Back Office (BO)
   Scenario: I update image file for all shops
     When I update image "image2" with following information for all shops:
       | cover | true |
-    Then product "product1" should have following images for shop "shop1, shop2":
+    Then product "product1" should have following images for shops "shop1,shop2":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image1          | false    |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
       | image2          | true     |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
     Then product "product1" should have following images for shop "shop3":
       | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
       | image1          | true    |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+
+  Scenario: Update image position for different shops. Position should be updated for all shops regardless of which shop was being updated
+    Given product "product1" should have following images for shops "shop1,shop2":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+    And I add new image "image3" named "some_image.jpg" to product "product1" for shop "shop2"
+    And product "product1" should have following images for shops "shop1":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+    And product "product1" should have following images for shops "shop2":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+    When I update image "image1" with following information for shop "shop1":
+      | position | 2 |
+    And product "product1" should have following images for shops "shop1":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image2          | false    |               | 1        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 2        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+    And product "product1" should have following images for shops "shop2":
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image2          | false    |               | 1        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 2        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+    And product "product1" should have following images for all shops:
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image2          | false    |               | 1        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 2        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image3          | false    |               | 3        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+    When I update image "image3" with following information for shop "shop2":
+      | position | 1 |
+    And product "product1" should have following images for all shops:
+      | image reference | is cover | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image3          | false    |               | 1        | http://myshop.com/img/p/{image3}.jpg | http://myshop.com/img/p/{image3}-small_default.jpg |
+      | image2          | false    |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
+      | image1          | true     |               | 3        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |

@@ -156,7 +156,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $this->updateImageByShopConstraint(
             $imageReference,
-            ShopConstraint::shop((int) $this->getSharedStorage()->get(trim($shopReference))),
+            ShopConstraint::shop((int) $this->getSharedStorage()->get($shopReference)),
             $tableNode
         );
     }
@@ -177,18 +177,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      * @Then image :imageReference should have same file as :fileName
      */
     public function assertImageFile(string $imageReference, string $fileName): void
-    {
-        $this->assertImageFileByShopConstraint(
-            $imageReference,
-            $fileName
-        );
-    }
-
-    /**
-     * @param string $imageReference
-     * @param string $fileName
-     */
-    private function assertImageFileByShopConstraint(string $imageReference, string $fileName): void
     {
         $imageId = (int) $this->getSharedStorage()->get($imageReference);
 
@@ -399,15 +387,22 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductImagesForShops(string $productReference, TableNode $table, string $shopReferences): void
     {
-        $shopReferences = explode(',', $shopReferences);
-        $shopIds = [];
-        foreach ($shopReferences as $shopReference) {
-            $shopIds[] = $this->getSharedStorage()->get(trim($shopReference));
+        foreach ($this->referencesToIds($shopReferences) as $shopId) {
+            $this->assertProductImagesByShopConstraint($productReference, $table, ShopConstraint::shop($shopId));
         }
+    }
 
-        foreach ($shopIds as $shopId) {
-            $this->assertProductImagesByShopId($productReference, $table, $shopId);
-        }
+    /**
+     * @Given product ":productReference" should have following images for all shops:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     *
+     * @return void
+     */
+    public function assertProductImagesForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->assertProductImagesByShopConstraint($productReference, $table, ShopConstraint::allShops());
     }
 
     /**
@@ -574,19 +569,16 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     /**
      * @param string $productReference
      * @param TableNode $tableNode
-     * @param int $shopId
+     * @param ShopConstraint $shopConstraint
      *
      * @return void
      */
-    private function assertProductImagesByShopId(string $productReference, TableNode $tableNode, int $shopId): void
+    private function assertProductImagesByShopConstraint(string $productReference, TableNode $tableNode, ShopConstraint $shopConstraint): void
     {
-        $images = array_filter(
-            $this->getProductImages($productReference, ShopConstraint::shop($shopId)),
-            static function (ProductImage $productImage) use ($shopId): bool {
-                return in_array($shopId, $productImage->getShopIds(), true);
-            }
+        $this->assertProductImages(
+            $tableNode,
+            $this->getProductImages($productReference, $shopConstraint)
         );
-        $this->assertProductImages($tableNode, $images);
     }
 
     /**
@@ -612,17 +604,15 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             'Expected and actual images count does not match'
         );
 
-        $imagesById = [];
-        foreach ($images as $image) {
-            $imagesById[$image->getImageId()] = $image;
-        }
+        foreach ($dataRows as $index => $dataRow) {
+            $imageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);
+            $actualImage = $images[$index];
 
-        foreach ($dataRows as $dataRow) {
-            $rowImageId = (int) $this->getSharedStorage()->get($dataRow['image reference']);
-            if (!isset($imagesById[$rowImageId])) {
-                throw new RuntimeException(sprintf('Cannot find image %s in product images.', $dataRow['image reference']));
-            }
-            $actualImage = $imagesById[$rowImageId];
+            Assert::assertSame(
+                $imageId,
+                $actualImage->getImageId(),
+                sprintf('Unexpected image id in array index %d', $index)
+            );
 
             if (isset($dataRow['is cover'])) {
                 Assert::assertEquals(
