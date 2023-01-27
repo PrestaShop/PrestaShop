@@ -32,10 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\EditCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 
 /**
  * Handles creation of country and address format for it
@@ -54,11 +51,6 @@ class EditCountryHandler implements EditCountryHandlerInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CannotEditCountryException
-     * @throws CountryConstraintException
-     * @throws CountryNotFoundException
-     * @throws PrestaShopException
      */
     public function handle(EditCountryCommand $command): void
     {
@@ -68,10 +60,9 @@ class EditCountryHandler implements EditCountryHandlerInterface
     /**
      * @param EditCountryCommand $command
      *
+     * @return void
+     *
      * @throws CannotEditCountryException
-     * @throws CountryConstraintException
-     * @throws CountryNotFoundException
-     * @throws PrestaShopException
      */
     private function updateCountry(EditCountryCommand $command): void
     {
