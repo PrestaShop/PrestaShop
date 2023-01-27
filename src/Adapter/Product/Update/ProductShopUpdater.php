@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
@@ -95,6 +97,16 @@ class ProductShopUpdater
      */
     private $defaultCombinationUpdater;
 
+    /**
+     * @var ProductCategoryUpdater
+     */
+    private $productCategoryUpdater;
+
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
@@ -103,7 +115,9 @@ class ProductShopUpdater
         ProductStockUpdater $productStockUpdater,
         CombinationRepository $combinationMultiShopRepository,
         CombinationStockUpdater $combinationStockUpdater,
-        DefaultCombinationUpdater $defaultCombinationUpdater
+        DefaultCombinationUpdater $defaultCombinationUpdater,
+        ProductCategoryUpdater $productCategoryUpdater,
+        CategoryRepository $categoryRepository
     ) {
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
@@ -113,6 +127,8 @@ class ProductShopUpdater
         $this->combinationRepository = $combinationMultiShopRepository;
         $this->combinationStockUpdater = $combinationStockUpdater;
         $this->defaultCombinationUpdater = $defaultCombinationUpdater;
+        $this->productCategoryUpdater = $productCategoryUpdater;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -134,10 +150,22 @@ class ProductShopUpdater
         );
 
         // First copy combinations so that stock can be copied after
+        $this->copyCategories($productId, $sourceShopId, $targetShopId, $sourceProduct);
         $this->copyCombinations($productId, $sourceShopId, $targetShopId);
         $this->copyStockToShop($productId, $sourceShopId, $targetShopId, $sourceProduct->getProductType());
         $this->copyCarriersToShop($sourceProduct, $targetShopId);
         $this->copyImageAssociations($productId, $sourceShopId, $targetShopId);
+    }
+
+    private function copyCategories(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId, Product $sourceProduct): void
+    {
+        $productCategories = $this->categoryRepository->getProductCategoryIds($productId, ShopConstraint::shop($sourceShopId->getValue()));
+        $this->productCategoryUpdater->updateCategories(
+            $productId,
+            $productCategories,
+            new CategoryId((int) $sourceProduct->id_category_default),
+            ShopConstraint::shop($targetShopId->getValue())
+        );
     }
 
     private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId, string $productType): void

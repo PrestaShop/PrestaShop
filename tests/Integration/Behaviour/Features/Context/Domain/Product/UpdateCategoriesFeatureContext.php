@@ -103,13 +103,30 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function deleteAllProductCategoriesExceptDefault(string $productReference)
+    public function deleteAllProductCategoriesForDefaultShop(string $productReference)
     {
-        try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand($this->getSharedStorage()->get($productReference)));
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+        $this->deleteAllProductCategories($productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I delete all categories from product :productReference for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function deleteAllProductCategoriesForShop(string $productReference, string $shopReference)
+    {
+        $this->deleteAllProductCategories($productReference, ShopConstraint::shop($this->referenceToId($shopReference)));
+    }
+
+    /**
+     * @When I delete all categories from product :productReference for all shops
+     *
+     * @param string $productReference
+     */
+    public function deleteAllProductCategoriesForAllShops(string $productReference)
+    {
+        $this->deleteAllProductCategories($productReference, ShopConstraint::allShops());
     }
 
     /**
@@ -121,6 +138,18 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
             CannotUpdateProductException::class,
             CannotUpdateProductException::FAILED_UPDATE_CATEGORIES
         );
+    }
+
+    private function deleteAllProductCategories(string $productReference, ShopConstraint $shopConstraint)
+    {
+        try {
+            $this->getCommandBus()->handle(new RemoveAllAssociatedProductCategoriesCommand(
+                $this->getSharedStorage()->get($productReference),
+                $shopConstraint
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
     }
 
     private function assignToCategories(string $productReference, TableNode $table, ShopConstraint $shopConstraint)
@@ -164,11 +193,11 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
         Assert::assertCount(
             count($expectedCategories),
             $actualCategories,
-            'Expected and actual categories count doesn\'t match'
+            sprintf('Expected and actual categories count doesn\'t match for shop %d', $shopId)
         );
 
         $expectedDefaultCategoryId = null;
-        foreach ($actualCategories as $key => $categoryInformation) {
+        foreach ($actualCategories as $categoryInformation) {
             $actualId = $categoryInformation->getId();
             // We cannot anticipate categories ordering (and we don't really care) so we find related expected category by id
             $relativeExpectedCategories = array_filter(
@@ -176,6 +205,11 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
                 function (array $expectedCategory) use ($actualId) {
                     return $actualId === $this->getSharedStorage()->get($expectedCategory['id reference']);
                 });
+            Assert::assertNotEmpty($relativeExpectedCategories, sprintf(
+                'Did not expect to find category %s in the list for shop %d',
+                $categoryInformation->getName(),
+                $shopId
+            ));
             // Only one category should be provided in feature, but array filter returns array of found items, so we get first
             $expectedCategory = reset($relativeExpectedCategories);
 
