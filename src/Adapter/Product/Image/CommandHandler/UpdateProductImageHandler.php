@@ -86,6 +86,8 @@ class UpdateProductImageHandler implements UpdateProductImageHandlerInterface
             $this->imageValidator->assertIsValidImageType($command->getFilePath());
         }
 
+        //@todo: product image repository should be replaced to multishop rep?
+        // also the image seems not to be fully loaded as product id and image id are null
         $image = $this->productImageRepository->get($command->getImageId());
 
         if (null !== $command->getLocalizedLegends()) {

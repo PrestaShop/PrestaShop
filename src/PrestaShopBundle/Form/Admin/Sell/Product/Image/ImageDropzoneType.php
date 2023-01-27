@@ -150,8 +150,10 @@ class ImageDropzoneType extends TranslatorAwareType
         $resolver
             ->setRequired([
                 'product_id',
+                'shop_id',
             ])
             ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('shop_id', 'int')
             ->setAllowedTypes('update_form_type', ['string', 'null'])
             ->setAllowedTypes('translations', ['array'])
         ;
@@ -166,6 +168,7 @@ class ImageDropzoneType extends TranslatorAwareType
         $view->vars['locales'] = $this->locales;
         $view->vars['translations'] = $options['translations'];
         $view->vars['product_id'] = $options['product_id'];
+        $view->vars['shop_id'] = $options['shop_id'];
         $view->vars['update_form_name'] = StringUtil::fqcnToBlockPrefix($options['update_form_type']) ?: '';
     }
 }

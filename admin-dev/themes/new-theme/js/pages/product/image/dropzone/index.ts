@@ -38,6 +38,7 @@ export default function initDropzone(imagesContainerSelector: string): App {
   });
 
   const productId = Number(container.dataset.productId);
+  const shopId = Number(container.dataset.shopId);
   const locales = JSON.parse(<string>container.dataset.locales);
 
   const vueApp = createApp(Dropzone, {
@@ -46,6 +47,7 @@ export default function initDropzone(imagesContainerSelector: string): App {
     i18n,
     locales,
     productId,
+    shopId,
     token: container.dataset.token,
     formName: container.dataset.formName,
   }).use(i18n);

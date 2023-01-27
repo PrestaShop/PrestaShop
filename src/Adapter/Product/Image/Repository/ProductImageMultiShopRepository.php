@@ -98,14 +98,15 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException(sprintf('%s::getImages does not handle shop group constraint', self::class));
         } elseif ($shopConstraint->forAllShops()) {
-            $shopId = $this->productMultiShopRepository->getProductDefaultShopId($productId);
+//            $shopId = $this->productMultiShopRepository->getProductDefaultShopId($productId);
+            $shopId = null;
         } else {
             $shopId = $shopConstraint->getShopId();
         }
 
         return array_map(
             function (ImageId $imageId) use ($shopId): Image {
-                return $this->get($imageId, $shopId);
+                return $shopId ? $this->get($imageId, $shopId) : $this->getForAllShops($imageId);
             },
             $this->getImagesIds($productId, $shopConstraint)
         );
@@ -177,6 +178,19 @@ class ProductImageMultiShopRepository extends AbstractMultiShopObjectModelReposi
             Image::class,
             ProductImageNotFoundException::class,
             $shopId
+        );
+
+        return $image;
+    }
+
+    public function getForAllShops(ImageId $imageId): Image
+    {
+        /** @var Image $image */
+        $image = $this->fetchObjectModel(
+            $imageId->getValue(),
+            Image::class,
+            ProductImageNotFoundException::class,
+            null
         );
 
         return $image;

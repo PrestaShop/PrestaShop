@@ -160,6 +160,8 @@
     image_id: string;
     is_cover: boolean;
     legends: Record<string, string>;
+    shop_ids: number[];
+    isAssociatedToCurrentShop: boolean;
   }
   /* eslint-enable camelcase */
 
@@ -212,6 +214,10 @@
     },
     props: {
       productId: {
+        type: Number,
+        required: true,
+      },
+      shopId: {
         type: Number,
         required: true,
       },
@@ -332,7 +338,18 @@
         this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
           file.previewElement.dataset.id = file.image_id;
 
-          if (file.is_cover) {
+          // @todo: the file type is actually not PSDropzoneFile at all, the typescript here is absolute failure
+          // check if image is associated with current shop.
+          // If shop_ids is missing, it means the image is being uploaded,
+          // so it will be associated to the shop by default
+          file.isAssociatedToCurrentShop = !file.shop_ids || file.shop_ids.includes(this.shopId);
+
+          debugger;
+          if (!file.isAssociatedToCurrentShop) {
+            file.previewElement.classList.add('not-associated');
+            // @todo: add translated title from data attr
+            file.previewElement.title = 'Image is not associated to current shop';
+          } else if (file.is_cover) {
             file.previewElement.classList.add('is-cover');
           }
 
@@ -607,6 +624,12 @@
     .dz-preview {
       position: relative;
       cursor: pointer;
+
+      &.not-associated {
+        img {
+          filter: grayscale(0.8);
+        }
+      }
 
       .iscover {
         display: none;

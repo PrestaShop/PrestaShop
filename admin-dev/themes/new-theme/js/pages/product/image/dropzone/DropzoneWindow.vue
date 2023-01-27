@@ -79,7 +79,7 @@
 
     <div
       class="md-checkbox dropzone-window-checkbox"
-      v-if="selectedFile !== null"
+      v-if="selectedFile !== null && selectedFile.isAssociatedToCurrentShop"
       :data-toggle="showCoverTooltip"
       :data-original-title="$t('window.cantDisableCover')"
     >
