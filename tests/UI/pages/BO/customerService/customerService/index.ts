@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Customer service page, contains selectors and functions for the page
@@ -7,6 +8,64 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class CustomerService extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly gridForm: string;
+
+  private readonly gridTableHeaderTitle: string;
+
+  private readonly gridTableNumberOfTitlesSpan: string;
+
+  private readonly gridTable: string;
+
+  private readonly filterRow: string;
+
+  private readonly filterColumn: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableBody: string;
+
+  private readonly tableBodyRows: string;
+
+  private readonly tableBodyRow: (row: number) => string;
+
+  private readonly tableBodyColumn: (row: number) => string;
+
+  private readonly tableColumnActions: (row: number) => string;
+
+  private readonly tableColumnActionsViewLink: (row: number) => string;
+
+  private readonly tableColumnActionsToggleButton: (row: number) => string;
+
+  private readonly tableColumnActionsDropdownMenu: (row: number) => string;
+
+  private readonly tableColumnActionsDeleteLink: (row: number) => string;
+
+  private readonly deleteModalButtonYes: string;
+
+  private readonly tableColumn: (row: number, column: number) => string;
+
+  private readonly tableStatusIcon: (row: number, column: number) => string;
+
+  private readonly tableTextDangerStatusIcon: (row: number, column: number) => string;
+
+  private readonly tableTextSuccessStatusIcon: (row: number, column: number) => string;
+
+  private readonly tableTextWarningStatusIcon: (row: number, column: number) => string;
+
+  public readonly deleteMessageSuccessAlertText: string;
+
+  private readonly contactOptionForm: string;
+
+  private readonly allowFileUploadingToggleInput: (toggle: string) => string;
+
+  private readonly defaultMessageTextarea: string;
+
+  private readonly contactOptionSaveButton: string;
+
   /**
    * @constructs
    * Setting up titles and selectors to use on customer service page
@@ -27,39 +86,39 @@ class CustomerService extends BOBasePage {
 
     // Filter selectors
     this.filterRow = `${this.gridTable} tr.filter`;
-    this.filterColumn = (filterBy) => `${this.filterRow} [name='customer_threadFilter_${filterBy}']`;
+    this.filterColumn = (filterBy: string) => `${this.filterRow} [name='customer_threadFilter_${filterBy}']`;
     this.filterSearchButton = '#submitFilterButtoncustomer_thread';
     this.filterResetButton = 'button[name=\'submitResetcustomer_thread\']';
 
     // Table body selectors
     this.tableBody = `${this.gridTable} tbody`;
     this.tableBodyRows = `${this.tableBody} tr`;
-    this.tableBodyRow = (row) => `${this.tableBodyRows}:nth-child(${row})`;
-    this.tableBodyColumn = (row) => `${this.tableBodyRow(row)} td`;
+    this.tableBodyRow = (row: number) => `${this.tableBodyRows}:nth-child(${row})`;
+    this.tableBodyColumn = (row: number) => `${this.tableBodyRow(row)} td`;
 
     // Actions buttons in Row
-    this.tableColumnActions = (row) => `${this.tableBodyColumn(row)} .btn-group-action`;
-    this.tableColumnActionsViewLink = (row) => `${this.tableColumnActions(row)} a[title='View']`;
-    this.tableColumnActionsToggleButton = (row) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
-    this.tableColumnActionsDropdownMenu = (row) => `${this.tableColumnActions(row)} .dropdown-menu`;
-    this.tableColumnActionsDeleteLink = (row) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
+    this.tableColumnActions = (row: number) => `${this.tableBodyColumn(row)} .btn-group-action`;
+    this.tableColumnActionsViewLink = (row: number) => `${this.tableColumnActions(row)} a[title='View']`;
+    this.tableColumnActionsToggleButton = (row: number) => `${this.tableColumnActions(row)} button.dropdown-toggle`;
+    this.tableColumnActionsDropdownMenu = (row: number) => `${this.tableColumnActions(row)} .dropdown-menu`;
+    this.tableColumnActionsDeleteLink = (row: number) => `${this.tableColumnActionsDropdownMenu(row)} a.delete`;
 
     // Confirmation modal
     this.deleteModalButtonYes = '#popup_ok';
 
     // Columns selector
-    this.tableColumn = (row, column) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
-    this.tableStatusIcon = (row, column) => `${this.tableColumn(row, column)} i`;
-    this.tableTextDangerStatusIcon = (row, column) => `${this.tableStatusIcon(row, column)}.text-danger`;
-    this.tableTextSuccessStatusIcon = (row, column) => `${this.tableStatusIcon(row, column)}.text-success`;
-    this.tableTextWarningStatusIcon = (row, column) => `${this.tableStatusIcon(row, column)}.text-warning`;
+    this.tableColumn = (row: number, column: number) => `${this.tableBodyColumn(row)}:nth-child(${column})`;
+    this.tableStatusIcon = (row: number, column: number) => `${this.tableColumn(row, column)} i`;
+    this.tableTextDangerStatusIcon = (row: number, column: number) => `${this.tableStatusIcon(row, column)}.text-danger`;
+    this.tableTextSuccessStatusIcon = (row: number, column: number) => `${this.tableStatusIcon(row, column)}.text-success`;
+    this.tableTextWarningStatusIcon = (row: number, column: number) => `${this.tableStatusIcon(row, column)}.text-warning`;
 
     // Delete message success text
     this.deleteMessageSuccessAlertText = 'Successful deletion';
 
     // Contact options selectors
     this.contactOptionForm = '#customer_thread_fieldset_contact';
-    this.allowFileUploadingToggleInput = (toggle) => `#PS_CUSTOMER_SERVICE_FILE_UPLOAD_${toggle}`;
+    this.allowFileUploadingToggleInput = (toggle: string) => `#PS_CUSTOMER_SERVICE_FILE_UPLOAD_${toggle}`;
     this.defaultMessageTextarea = '#PS_CUSTOMER_SERVICE_SIGNATURE_1 textarea';
     this.contactOptionSaveButton = `${this.contactOptionForm} button[name='submitOptionscustomer_thread']`;
   }
@@ -72,7 +131,7 @@ class CustomerService extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -87,7 +146,7 @@ class CustomerService extends BOBasePage {
    * @param value {string} Value to set on the filter
    * @return {Promise<void>}
    */
-  async filterTable(page, filterType, filterBy, value) {
+  async filterTable(page: Page, filterType: string, filterBy: string, value: string): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value.toString());
@@ -113,13 +172,13 @@ class CustomerService extends BOBasePage {
    * @param columnName {string} Column to get text from
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let i = 0;
+  async getTextColumn(page: Page, row: number, columnName: string): Promise<string> {
+    let i: number = 0;
 
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
       i += 1;
     }
-    let columnSelector;
+    let columnSelector: string;
 
     switch (columnName) {
       case 'id_customer_thread':
@@ -176,14 +235,14 @@ class CustomerService extends BOBasePage {
    * @param status {string} Status to check
    * @returns {Promise<boolean>}
    */
-  async isStatusChanged(page, row, status) {
-    let statusColumn = 6;
+  async isStatusChanged(page: Page, row: number, status: string): Promise<boolean> {
+    let statusColumn: number = 6;
 
     if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 500)) {
       statusColumn += 1;
     }
 
-    let selector;
+    let selector: (row: number, column: number) => string;
 
     switch (status) {
       case 'Handled':
@@ -215,7 +274,7 @@ class CustomerService extends BOBasePage {
    * @param row {number} Row on table to click on
    * @returns {Promise<void>}
    */
-  async goToViewMessagePage(page, row = 1) {
+  async goToViewMessagePage(page: Page, row: number = 1): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.tableColumnActionsViewLink(row));
   }
 
@@ -225,7 +284,7 @@ class CustomerService extends BOBasePage {
    * @param row {number} Row on table to delete
    * @returns {Promise<string>}
    */
-  async deleteMessage(page, row) {
+  async deleteMessage(page: Page, row: number): Promise<string> {
     await Promise.all([
       page.click(this.tableColumnActionsToggleButton(row)),
       this.waitForVisibleSelector(page, this.tableColumnActionsDeleteLink(row)),
@@ -246,7 +305,7 @@ class CustomerService extends BOBasePage {
    * @param toEnable {boolean} True if we need to enable allow file uploading
    * @returns {Promise<string>}
    */
-  async allowFileUploading(page, toEnable = true) {
+  async allowFileUploading(page: Page, toEnable: boolean = true): Promise<string> {
     await this.setChecked(page, this.allowFileUploadingToggleInput(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
 
@@ -259,7 +318,7 @@ class CustomerService extends BOBasePage {
    * @param message {string} Value to set on message textarea
    * @returns {Promise<string>}
    */
-  async setDefaultMessage(page, message) {
+  async setDefaultMessage(page: Page, message: string): Promise<string> {
     await page.fill(this.defaultMessageTextarea, message);
     await this.clickAndWaitForNavigation(page, this.contactOptionSaveButton);
 
@@ -267,4 +326,4 @@ class CustomerService extends BOBasePage {
   }
 }
 
-module.exports = new CustomerService();
+export default new CustomerService();
