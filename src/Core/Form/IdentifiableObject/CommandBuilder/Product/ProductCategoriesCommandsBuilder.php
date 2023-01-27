@@ -31,16 +31,17 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Builder used to build SetAssociatedProductCategoriesCommand or RemoveAllAssociatedProductCategoriesCommand.
  */
-class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterface
+class ProductCategoriesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['description']['categories']['product_categories'])) {
             return [];
@@ -48,7 +49,7 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
 
         if (empty($formData['description']['categories']['product_categories'])) {
             return [
-                new RemoveAllAssociatedProductCategoriesCommand($productId->getValue()),
+                new RemoveAllAssociatedProductCategoriesCommand($productId->getValue(), $singleShopConstraint),
             ];
         }
 
@@ -69,7 +70,7 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
         // If no associated categories is defined remove them all
         if (empty($associatedCategoryIds)) {
             return [
-                new RemoveAllAssociatedProductCategoriesCommand($productId->getValue()),
+                new RemoveAllAssociatedProductCategoriesCommand($productId->getValue(), $singleShopConstraint),
             ];
         }
 
@@ -82,7 +83,8 @@ class ProductCategoriesCommandsBuilder implements ProductCommandsBuilderInterfac
             new SetAssociatedProductCategoriesCommand(
                 $productId->getValue(),
                 $defaultCategoryId,
-                $associatedCategoryIds
+                $associatedCategoryIds,
+                $singleShopConstraint
             ),
         ];
     }
