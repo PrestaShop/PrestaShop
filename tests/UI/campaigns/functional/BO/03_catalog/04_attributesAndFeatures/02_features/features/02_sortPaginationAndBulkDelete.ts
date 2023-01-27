@@ -161,7 +161,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
           const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
           const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
-          const expectedResult : number[] = await basicHelper.sortArrayNumber(nonSortedTableFloat);
+          const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTableFloat).to.deep.equal(expectedResult);
@@ -169,7 +169,7 @@ describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delet
             await expect(sortedTableFloat).to.deep.equal(expectedResult.reverse());
           }
         } else {
-          const expectedResult: string[] = await basicHelper.sortArray(nonSortedTable);
+          const expectedResult = await basicHelper.sortArray(nonSortedTable);
 
           if (test.args.sortDirection === 'up') {
             await expect(sortedTable).to.deep.equal(expectedResult);

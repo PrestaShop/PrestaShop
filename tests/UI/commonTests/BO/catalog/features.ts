@@ -53,7 +53,7 @@ function createFeatureTest(createFeatureData: FeatureData, baseContext: string =
       );
       await attributesPage.closeSfToolBar(page);
 
-      const pageTitle: string = await attributesPage.getPageTitle(page);
+      const pageTitle = await attributesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
@@ -62,7 +62,7 @@ function createFeatureTest(createFeatureData: FeatureData, baseContext: string =
 
       await attributesPage.goToFeaturesPage(page);
 
-      const pageTitle: string = await featuresPage.getPageTitle(page);
+      const pageTitle = await featuresPage.getPageTitle(page);
       await expect(pageTitle).to.contains(featuresPage.pageTitle);
 
       numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
@@ -74,14 +74,14 @@ function createFeatureTest(createFeatureData: FeatureData, baseContext: string =
 
       await featuresPage.goToAddFeaturePage(page);
 
-      const pageTitle: string = await addFeaturePage.getPageTitle(page);
+      const pageTitle = await addFeaturePage.getPageTitle(page);
       await expect(pageTitle).to.contains(addFeaturePage.createPageTitle);
     });
 
     it('should create feature', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewFeature', baseContext);
 
-      const textResult: string = await addFeaturePage.setFeature(page, createFeatureData);
+      const textResult = await addFeaturePage.setFeature(page, createFeatureData);
       await expect(textResult).to.contains(featuresPage.successfulCreationMessage);
     });
   });
@@ -118,7 +118,7 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
       );
       await attributesPage.closeSfToolBar(page);
 
-      const pageTitle: string = await attributesPage.getPageTitle(page);
+      const pageTitle = await attributesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
@@ -127,7 +127,7 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
 
       await attributesPage.goToFeaturesPage(page);
 
-      const pageTitle: string = await featuresPage.getPageTitle(page);
+      const pageTitle = await featuresPage.getPageTitle(page);
       await expect(pageTitle).to.contains(featuresPage.pageTitle);
 
       numberOfFeatures = await featuresPage.resetAndGetNumberOfLines(page);
@@ -139,7 +139,7 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
 
       await featuresPage.filterTable(page, 'b!name', featureName);
 
-      const numberOfFeaturesAfterFilter: number = await featuresPage.getNumberOfElementInGrid(page);
+      const numberOfFeaturesAfterFilter = await featuresPage.getNumberOfElementInGrid(page);
       await expect(numberOfFeaturesAfterFilter).to.be.equal(19);
     });
 
@@ -153,14 +153,14 @@ function bulkDeleteFeaturesTest(featureName: string, baseContext: string = 'comm
     it('should delete features by Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteFeatures', baseContext);
 
-      const deleteTextResult: string = await featuresPage.bulkDeleteFeatures(page);
+      const deleteTextResult = await featuresPage.bulkDeleteFeatures(page);
       await expect(deleteTextResult).to.be.contains(featuresPage.successfulMultiDeleteMessage);
     });
 
     it('should reset all filters', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
 
-      const numberOfFeaturesAfterDelete: number = await featuresPage.resetAndGetNumberOfLines(page);
+      const numberOfFeaturesAfterDelete = await featuresPage.resetAndGetNumberOfLines(page);
       await expect(numberOfFeaturesAfterDelete).to.equal(numberOfFeatures - numberOfFeaturesToDelete);
     });
   });
