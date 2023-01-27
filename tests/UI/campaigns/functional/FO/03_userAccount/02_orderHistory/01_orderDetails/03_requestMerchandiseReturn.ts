@@ -27,7 +27,7 @@ import Customers from '@data/demo/customers';
 import Products from '@data/demo/products';
 import PaymentMethods from '@data/demo/paymentMethods';
 import OrderStatuses from '@data/demo/orderStatuses';
-import {OrderCreator} from '@data/types/order';
+import OrderData from '@data/faker/order';
 
 import {expect} from 'chai';
 import type {BrowserContext, Page} from 'playwright';
@@ -52,7 +52,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
   let page: Page;
   let orderReference: string;
 
-  const orderData: OrderCreator = {
+  const orderData: OrderData = new OrderData({
     customer: Customers.johnDoe,
     products: [
       {
@@ -61,7 +61,7 @@ describe('FO - Account - Order details : Request merchandise return', async () =
       },
     ],
     paymentMethod: PaymentMethods.wirePayment,
-  };
+  });
   const today: string = date.getDateFormat('mm/dd/yyyy');
 
   // Pre-condition: Create order
