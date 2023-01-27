@@ -178,7 +178,7 @@ class CategoryCore extends ObjectModel
      */
     public static function getDescriptionClean($description)
     {
-        return Tools::getDescriptionClean($description);
+        return strip_tags(stripslashes($description));
     }
 
     /**
