@@ -297,7 +297,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
@@ -386,7 +386,7 @@ services:
 
   PrestaShop\PrestaShop\Adapter\Product\CommandHandler\DuplicateProductHandler:
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator'
+      - '@PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
@@ -407,14 +407,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
 
-  PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator:
+  PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
+    autowire: true
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository'
-      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - '@=service("PrestaShop\\PrestaShop\\Adapter\\Configuration").getBoolean("PS_SEARCH_INDEXATION")'
-      - '@prestashop.adapter.shop.context'
-      - '@translator'
-      - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater:
     arguments:

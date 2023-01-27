@@ -552,7 +552,10 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             /** @var ProductId $newProductId */
-            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
+            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand(
+                $productId,
+                ShopConstraint::allShops()
+            ));
             $this->addFlash(
                 'success',
                 $this->trans('Successful duplication', 'Admin.Notifications.Success')
@@ -788,7 +791,8 @@ class ProductController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(
                 new BulkDuplicateProductCommand(
-                    $this->getProductIdsFromRequest($request)
+                    $this->getProductIdsFromRequest($request),
+                    ShopConstraint::allShops()
                 )
             );
         } catch (Exception $e) {

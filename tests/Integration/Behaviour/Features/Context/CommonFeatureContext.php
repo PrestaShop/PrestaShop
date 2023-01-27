@@ -85,6 +85,7 @@ use OrderSlip;
 use OrderState;
 use Pack;
 use Page;
+use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Product;
 use ProductAttribute;
@@ -371,6 +372,47 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $tables = explode(',', $tableNames);
         DatabaseDump::restoreTables($tables);
+    }
+
+    /**
+     * @Then :firstReference and :secondReference have different values
+     *
+     * @param string $firstReference
+     * @param string $secondReference
+     */
+    public function assertDifferentValues(string $firstReference, string $secondReference): void
+    {
+        Assert::assertNotEquals(
+            SharedStorage::getStorage()->get($firstReference),
+            SharedStorage::getStorage()->get($secondReference),
+            sprintf(
+                '%s and %s are expected to be different but they have same value %s',
+                $firstReference,
+                $secondReference,
+                (string) SharedStorage::getStorage()->get($firstReference)
+            )
+        );
+    }
+
+    /**
+     * @Then :firstReference and :secondReference have same value
+     *
+     * @param string $firstReference
+     * @param string $secondReference
+     */
+    public function assertSameValue(string $firstReference, string $secondReference): void
+    {
+        Assert::assertEquals(
+            SharedStorage::getStorage()->get($firstReference),
+            SharedStorage::getStorage()->get($secondReference),
+            sprintf(
+                '%s and %s are expected to be equals but they have different values %s != %s',
+                $firstReference,
+                $secondReference,
+                (string) SharedStorage::getStorage()->get($firstReference),
+                (string) SharedStorage::getStorage()->get($secondReference)
+            )
+        );
     }
 
     /**

@@ -193,6 +193,24 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @return SpecificPriceId[]
+     */
+    public function getProductSpecificPricesIds(ProductId $productId): array
+    {
+        return array_map(static function (array $specificPrice): SpecificPriceId {
+            return new SpecificPriceId((int) $specificPrice['id_specific_price']);
+        }, $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . 'specific_price', 'sp')
+            ->select('sp.id_specific_price')
+            ->where('sp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()->fetchAllAssociative());
+    }
+
+    /**
+     * @param ProductId $productId
      * @param LanguageId $langId
      * @param array<string, mixed> $filters
      *

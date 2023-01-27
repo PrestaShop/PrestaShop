@@ -26,37 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+namespace Tests\Resources\Resetter;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DuplicateProductHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use Tests\Resources\DatabaseDump;
 
-/**
- * Handles @see DuplicateProductCommand
- */
-final class DuplicateProductHandler implements DuplicateProductHandlerInterface
+class TaxesResetter
 {
-    /**
-     * @var ProductDuplicator
-     */
-    private $productDuplicator;
-
-    /**
-     * @param ProductDuplicator $productDuplicator
-     */
-    public function __construct(
-        ProductDuplicator $productDuplicator
-    ) {
-        $this->productDuplicator = $productDuplicator;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(DuplicateProductCommand $command): ProductId
+    public static function resetTaxes(): void
     {
-        return $this->productDuplicator->duplicate($command->getProductId(), $command->getShopConstraint());
+        DatabaseDump::restoreMatchingTables('/.*tax.*/');
     }
 }
