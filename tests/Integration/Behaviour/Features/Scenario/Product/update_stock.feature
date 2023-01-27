@@ -283,9 +283,9 @@ Feature: Update product stock from Back Office (BO)
     Then I should get error that stock available quantity is invalid
     And product "product2" last stock movements should be:
       | employee   | delta_quantity |
-      | Puff Daddy | -4294967295             |
-      | Puff Daddy | 4294967295             |
-      | Puff Daddy | -2147483648             |
+      | Puff Daddy | -4294967295    |
+      | Puff Daddy | 4294967295     |
+      | Puff Daddy | -2147483648    |
 
   Scenario: I try to update product quantity with to big numbers
     Given I add product "product3" with following information:
