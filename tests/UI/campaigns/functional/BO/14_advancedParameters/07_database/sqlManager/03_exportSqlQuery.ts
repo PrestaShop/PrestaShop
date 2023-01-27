@@ -115,7 +115,6 @@ describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteSQLQuery', baseContext);
 
       await sqlManagerPage.resetFilter(page);
-
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');

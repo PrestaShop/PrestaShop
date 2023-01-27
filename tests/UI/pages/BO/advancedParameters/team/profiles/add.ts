@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type ProfileData from '@data/faker/profile';
+
+import type {Page} from 'playwright';
 
 /**
  * Add profile page, contains functions that can be used on the page
@@ -7,6 +10,14 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddProfile extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add profile page
@@ -32,11 +43,11 @@ class AddProfile extends BOBasePage {
    * @param profileData {ProfileData} Data to set on add/edit profile form
    * @return {Promise<string>}
    */
-  async createEditProfile(page, profileData) {
+  async createEditProfile(page: Page, profileData: ProfileData): Promise<string> {
     await this.setValue(page, this.nameInput, profileData.name);
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
-module.exports = new AddProfile();
+export default new AddProfile();

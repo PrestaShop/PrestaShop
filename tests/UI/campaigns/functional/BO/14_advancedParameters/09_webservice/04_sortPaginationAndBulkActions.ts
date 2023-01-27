@@ -54,7 +54,6 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);

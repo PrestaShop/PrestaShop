@@ -1,5 +1,5 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+import {Page} from 'playwright';
 
 /**
  * Logs page, contains functions that can be used on the page
@@ -7,6 +7,42 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Logs extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly gridPanel: string;
+
+  private readonly gridTitle: string;
+
+  private readonly listForm: string;
+
+  private readonly listTableRow: (row: number) => string;
+
+  private readonly listTableColumn: (row: number, column: string) => string;
+
+  private readonly gridActionButton: string;
+
+  private readonly eraseAllButton: string;
+
+  private readonly filterColumnInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
+  private readonly paginationLimitSelect: string;
+
+  private readonly paginationLabel: string;
+
+  private readonly paginationNextLink: string;
+
+  private readonly paginationPreviousLink: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on logs page
@@ -20,20 +56,20 @@ class Logs extends BOBasePage {
     this.gridPanel = '#logs_grid_panel';
     this.gridTitle = `${this.gridPanel} h3.card-header-title`;
     this.listForm = '#logs_grid';
-    this.listTableRow = (row) => `${this.listForm} tbody tr:nth-child(${row})`;
-    this.listTableColumn = (row, column) => `${this.listTableRow(row)} td.column-${column}`;
+    this.listTableRow = (row: number) => `${this.listForm} tbody tr:nth-child(${row})`;
+    this.listTableColumn = (row: number, column: string) => `${this.listTableRow(row)} td.column-${column}`;
     this.gridActionButton = '#logs-grid-actions-button';
     this.eraseAllButton = '#logs_grid_action_delete_all_email_logs';
 
     // Filters
-    this.filterColumnInput = (filterBy) => `${this.listForm} #logs_${filterBy}`;
+    this.filterColumnInput = (filterBy: string) => `${this.listForm} #logs_${filterBy}`;
     this.filterSearchButton = `${this.listForm} .grid-search-button`;
     this.filterResetButton = `${this.listForm} .grid-reset-button`;
 
     // Sort Selectors
     this.tableHead = `${this.listForm} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#paginator_select_page_limit';
@@ -50,7 +86,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetFilter(page) {
+  async resetFilter(page: Page): Promise<void> {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -61,7 +97,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.gridTitle);
   }
 
@@ -70,7 +106,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     await this.resetFilter(page);
 
     return this.getNumberOfElementInGrid(page);
@@ -84,7 +120,7 @@ class Logs extends BOBasePage {
    * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
-  async filterLogs(page, filterType, filterBy, value = '') {
+  async filterLogs(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumnInput(filterBy), value);
@@ -110,7 +146,7 @@ class Logs extends BOBasePage {
    * @param column {string} Column name to get text content
    * @returns {Promise<string>}
    */
-  async getTextColumn(page, row, column) {
+  async getTextColumn(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.listTableColumn(row, column));
   }
 
@@ -119,9 +155,9 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async eraseAllLogs(page) {
+  async eraseAllLogs(page: Page): Promise<string> {
     // Add listener to dialog to accept erase
-    this.dialogListener(page);
+    await this.dialogListener(page);
 
     await page.click(this.gridActionButton);
     await this.waitForSelectorAndClick(page, this.eraseAllButton);
@@ -135,12 +171,12 @@ class Logs extends BOBasePage {
    * @param column {string} Column name to get all rows content
    * @return {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
     for (let i = 1; i <= rowsNumber; i++) {
-      let rowContent = await this.getTextColumn(page, i, column);
+      let rowContent: string = await this.getTextColumn(page, i, column);
 
       if (column === 'employee' && rowContent === 'N/A') {
         rowContent = '';
@@ -160,11 +196,11 @@ class Logs extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection) {
+  async sortTable(page: Page, sortBy: string, sortDirection: string): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
@@ -180,7 +216,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
-  getPaginationLabel(page) {
+  getPaginationLabel(page: Page): Promise<string> {
     return this.getTextContent(page, this.paginationLabel);
   }
 
@@ -190,7 +226,7 @@ class Logs extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await Promise.all([
       this.selectByVisibleText(page, this.paginationLimitSelect, number),
       page.waitForNavigation({waitUntil: 'networkidle'}),
@@ -204,7 +240,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
 
     return this.getPaginationLabel(page);
@@ -215,7 +251,7 @@ class Logs extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
@@ -228,7 +264,7 @@ class Logs extends BOBasePage {
    * @param dateTo {string} Value of date to to set on filter input
    * @returns {Promise<void>}
    */
-  async filterLogsByDate(page, dateFrom, dateTo) {
+  async filterLogsByDate(page: Page, dateFrom: string, dateTo: string): Promise<void> {
     await page.type(this.filterColumnInput('date_add_from'), dateFrom);
     await page.type(this.filterColumnInput('date_add_to'), dateTo);
     // click on search
@@ -236,4 +272,4 @@ class Logs extends BOBasePage {
   }
 }
 
-module.exports = new Logs();
+export default new Logs();

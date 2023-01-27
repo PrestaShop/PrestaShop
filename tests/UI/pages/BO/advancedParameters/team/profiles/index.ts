@@ -1,5 +1,6 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type {Page} from 'playwright';
 
 /**
  * Profiles page, contains functions that can be used on the page
@@ -7,6 +8,58 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class Profiles extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly addNewProfileLink: string;
+
+  private readonly profileGridPanel: string;
+
+  private readonly profileGridTitle: string;
+
+  private readonly profilesListForm: string;
+
+  private readonly profilesListTableRow: (row: number) => string;
+
+  private readonly profilesListTableColumn: (row: number, column: string) => string;
+
+  private readonly profilesListTableColumnAction: (row: number) => string;
+
+  private readonly profilesListTableToggleDropDown: (row: number) => string;
+
+  private readonly profilesListTableDeleteLink: (row: number) => string;
+
+  private readonly profilesListTableEditLink: (row: number) => string;
+
+  private readonly profileFilterInput: (filterBy: string) => string;
+
+  private readonly filterSearchButton: string;
+
+  private readonly filterResetButton: string;
+
+  private readonly selectAllRowsLabel: string;
+
+  private readonly bulkActionsToggleButton: string;
+
+  private readonly bulkActionsDeleteButton: string;
+
+  private readonly confirmDeleteModal: string;
+
+  private readonly confirmDeleteButton: string;
+
+  private readonly pagesPaginationLimitSelect: string;
+
+  private readonly pagesPaginationLabel: string;
+
+  private readonly pagesPaginationNextLink: string;
+
+  private readonly pagesPaginationPreviousLink: string;
+
+  private readonly tableHead: string;
+
+  private readonly sortColumnDiv: (column: string) => string;
+
+  private readonly sortColumnSpanButton: (column: string) => string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on profiles page
@@ -24,16 +77,16 @@ class Profiles extends BOBasePage {
     this.profileGridPanel = '#profile_grid_panel';
     this.profileGridTitle = `${this.profileGridPanel} h3.card-header-title`;
     this.profilesListForm = '#profile_grid';
-    this.profilesListTableRow = (row) => `${this.profilesListForm} tbody tr:nth-child(${row})`;
-    this.profilesListTableColumn = (row, column) => `${this.profilesListTableRow(row)} td.column-${column}`;
-    this.profilesListTableColumnAction = (row) => this.profilesListTableColumn(row, 'actions');
-    this.profilesListTableToggleDropDown = (row) => `${this.profilesListTableColumnAction(row)
+    this.profilesListTableRow = (row: number) => `${this.profilesListForm} tbody tr:nth-child(${row})`;
+    this.profilesListTableColumn = (row: number, column: string) => `${this.profilesListTableRow(row)} td.column-${column}`;
+    this.profilesListTableColumnAction = (row: number) => this.profilesListTableColumn(row, 'actions');
+    this.profilesListTableToggleDropDown = (row: number) => `${this.profilesListTableColumnAction(row)
     } a[data-toggle='dropdown']`;
-    this.profilesListTableDeleteLink = (row) => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
-    this.profilesListTableEditLink = (row) => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
+    this.profilesListTableDeleteLink = (row: number) => `${this.profilesListTableColumnAction(row)} a.grid-delete-row-link`;
+    this.profilesListTableEditLink = (row: number) => `${this.profilesListTableColumnAction(row)} a.grid-edit-row-link`;
 
     // Filters
-    this.profileFilterInput = (filterBy) => `${this.profilesListForm} #profile_${filterBy}`;
+    this.profileFilterInput = (filterBy: string) => `${this.profilesListForm} #profile_${filterBy}`;
     this.filterSearchButton = `${this.profilesListForm} .grid-search-button`;
     this.filterResetButton = `${this.profilesListForm} .grid-reset-button`;
 
@@ -54,8 +107,8 @@ class Profiles extends BOBasePage {
 
     // Sort Selectors
     this.tableHead = `${this.profileGridPanel} thead`;
-    this.sortColumnDiv = (column) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
-    this.sortColumnSpanButton = (column) => `${this.sortColumnDiv(column)} span.ps-sort`;
+    this.sortColumnDiv = (column: string) => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = (column: string) => `${this.sortColumnDiv(column)} span.ps-sort`;
   }
 
   /*
@@ -67,7 +120,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async goToAddNewProfilePage(page) {
+  async goToAddNewProfilePage(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.addNewProfileLink);
   }
 
@@ -78,7 +131,7 @@ class Profiles extends BOBasePage {
    * @param column {string} Column name to get text content
    * @returns {Promise<string>}
    */
-  async getTextColumnFromTable(page, row, column) {
+  async getTextColumnFromTable(page: Page, row: number, column: string): Promise<string> {
     return this.getTextContent(page, this.profilesListTableColumn(row, column));
   }
 
@@ -87,7 +140,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async getNumberOfElementInGrid(page) {
+  async getNumberOfElementInGrid(page: Page): Promise<number> {
     return this.getNumberFromText(page, this.profileGridTitle);
   }
 
@@ -96,7 +149,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
-  async resetAndGetNumberOfLines(page) {
+  async resetAndGetNumberOfLines(page: Page): Promise<number> {
     if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
@@ -109,7 +162,7 @@ class Profiles extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async goToEditProfilePage(page, row) {
+  async goToEditProfilePage(page: Page, row: number): Promise<void> {
     // Click on edit
     await this.clickAndWaitForNavigation(page, this.profilesListTableEditLink(row));
   }
@@ -122,7 +175,7 @@ class Profiles extends BOBasePage {
    * @param value {string} Value to put on filter
    * @returns {Promise<void>}
    */
-  async filterProfiles(page, filterType, filterBy, value = '') {
+  async filterProfiles(page: Page, filterType: string, filterBy: string, value: string = ''): Promise<void> {
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.profileFilterInput(filterBy), value);
@@ -143,7 +196,7 @@ class Profiles extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<string>}
    */
-  async deleteProfile(page, row) {
+  async deleteProfile(page: Page, row: number): Promise<string> {
     // Click on dropDown
     await Promise.all([
       page.click(this.profilesListTableToggleDropDown(row)),
@@ -166,7 +219,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
-  async confirmDeleteProfiles(page) {
+  async confirmDeleteProfiles(page: Page): Promise<void> {
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
   }
 
@@ -175,10 +228,10 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async deleteBulkActions(page) {
+  async deleteBulkActions(page: Page): Promise<string> {
     // Click on Select All
     await Promise.all([
-      page.$eval(this.selectAllRowsLabel, (el) => el.click()),
+      page.$eval(this.selectAllRowsLabel, (el: HTMLElement) => el.click()),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
     // Click on Button Bulk actions
@@ -203,7 +256,7 @@ class Profiles extends BOBasePage {
    * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
-  async selectPaginationLimit(page, number) {
+  async selectPaginationLimit(page: Page, number: number): Promise<string> {
     await this.selectByVisibleText(page, this.pagesPaginationLimitSelect, number);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
@@ -214,7 +267,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationNext(page) {
+  async paginationNext(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationNextLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
@@ -225,7 +278,7 @@ class Profiles extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async paginationPrevious(page) {
+  async paginationPrevious(page: Page): Promise<string> {
     await this.clickAndWaitForNavigation(page, this.pagesPaginationPreviousLink);
 
     return this.getTextContent(page, this.pagesPaginationLabel);
@@ -238,11 +291,11 @@ class Profiles extends BOBasePage {
    * @param column {string} Column name to get text content
    * @returns {Promise<Array<string>>}
    */
-  async getAllRowsColumnContent(page, column) {
+  async getAllRowsColumnContent(page: Page, column: string): Promise<string[]> {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
-    const allRowsContentTable = [];
+    const allRowsContentTable: string[] = [];
 
-    for (let i = 1; i <= rowsNumber; i++) {
+    for (let i: number = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextContent(page, this.profilesListTableColumn(i, column));
       allRowsContentTable.push(rowContent);
     }
@@ -257,11 +310,11 @@ class Profiles extends BOBasePage {
    * @param sortDirection {string} Sort direction asc or desc
    * @returns {Promise<void>}
    */
-  async sortTable(page, sortBy, sortDirection = 'asc') {
+  async sortTable(page: Page, sortBy: string, sortDirection: string = 'asc'): Promise<void> {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
-    let i = 0;
+    let i: number = 0;
     while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
@@ -271,4 +324,4 @@ class Profiles extends BOBasePage {
   }
 }
 
-module.exports = new Profiles();
+export default new Profiles();

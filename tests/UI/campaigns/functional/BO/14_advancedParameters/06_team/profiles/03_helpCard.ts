@@ -42,7 +42,6 @@ describe('BO - Advanced Parameters - Team : Help card in Profiles page', async (
       dashboardPage.advancedParametersLink,
       dashboardPage.teamLink,
     );
-
     await employeesPage.closeSfToolBar(page);
 
     const pageTitle = await employeesPage.getPageTitle(page);

@@ -92,7 +92,6 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedSQLQuery', baseContext);
 
       await sqlManagerPage.resetFilter(page);
-
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
@@ -143,7 +142,6 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'filterToEditSqlQuery', baseContext);
 
       await sqlManagerPage.resetFilter(page);
-
       await sqlManagerPage.filterSQLQuery(page, 'name', sqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
@@ -154,6 +152,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
       await sqlManagerPage.goToEditSQLQueryPage(page, 1);
+
       const pageTitle = await addSqlQueryPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
     });
@@ -174,7 +173,6 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdatedSQlQuery', baseContext);
 
       await sqlManagerPage.resetFilter(page);
-
       await sqlManagerPage.filterSQLQuery(page, 'name', editSqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
@@ -185,6 +183,7 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'goToViewUpdatedSQLQueryPage', baseContext);
 
       await sqlManagerPage.goToViewSQLQueryPage(page, 1);
+
       const pageTitle = await viewQueryManagerPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewQueryManagerPage.pageTitle);
     });
@@ -224,7 +223,6 @@ describe('BO - Advanced Parameters - Database : Create, View, update and delete 
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteSQLQuery', baseContext);
 
       await sqlManagerPage.resetFilter(page);
-
       await sqlManagerPage.filterSQLQuery(page, 'name', editSqlQueryData.name);
 
       const sqlQueryName = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');

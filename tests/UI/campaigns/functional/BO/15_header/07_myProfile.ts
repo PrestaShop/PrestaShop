@@ -17,7 +17,7 @@ import loginPage from '@pages/BO/login';
 import dashboardPage from '@pages/BO/dashboard';
 import productsPage from '@pages/BO/catalog/products/index';
 import creditSlipsPage from '@pages/BO/orders/creditSlips';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import myProfilePage from '@pages/BO/advancedParameters/team/myProfile';
 
 // Import data
@@ -80,7 +80,6 @@ describe('BO - Header : My profile', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMyProfilePage', baseContext);
 
       await dashboardPage.goToMyProfile(page);
-
       await myProfilePage.closeSfToolBar(page);
 
       const pageTitle = await myProfilePage.getPageTitle(page);

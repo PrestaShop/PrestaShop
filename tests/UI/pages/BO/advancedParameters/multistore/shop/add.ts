@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type ShopData from '@data/faker/shop';
+
+import type {Page} from 'playwright';
 
 /**
  * Add shop page, contains functions that can be used on the page
@@ -7,6 +10,20 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddShop extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly nameInput: string;
+
+  private readonly colorInput: string;
+
+  private readonly shopGroupSelect: string;
+
+  private readonly categoryRootSelect: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add shop page
@@ -35,13 +52,13 @@ class AddShop extends BOBasePage {
    * @param shopData {ShopData} Data to set on create/edit shop form
    * @returns {Promise<string>}
    */
-  async setShop(page, shopData) {
+  async setShop(page: Page, shopData: ShopData): Promise<string> {
     await this.setValue(page, this.nameInput, shopData.name);
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
     await Promise.all([
-      page.$eval(this.saveButton, (el) => el.click()),
+      page.$eval(this.saveButton, (el: HTMLElement) => el.click()),
       page.waitForNavigation({waitUntil: 'networkidle', timeout: 30000}),
     ]);
 
@@ -49,4 +66,4 @@ class AddShop extends BOBasePage {
   }
 }
 
-module.exports = new AddShop();
+export default new AddShop();

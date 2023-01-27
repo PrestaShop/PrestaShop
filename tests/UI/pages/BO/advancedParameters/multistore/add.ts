@@ -1,12 +1,31 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type ShopGroupData from '@data/faker/shopGroup';
+
+import type {Page} from 'playwright';
 
 /**
- * Add shop page page, contains functions that can be used on the page
+ * Add shop group page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
 class AddShopGroup extends BOBasePage {
+  public readonly pageTitleCreate: string;
+
+  public readonly pageTitleEdit: string;
+
+  private readonly shopGroupForm: string;
+
+  private readonly nameInput: string;
+
+  private readonly shareCustomersToggleInput: (toggle: string) => string;
+
+  private readonly shareAvailableQuantitiesToggleLabel: (toggle: string) => string;
+
+  private readonly statusToggleLabel: (toggle: string) => string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add shop page page
@@ -20,9 +39,9 @@ class AddShopGroup extends BOBasePage {
     // Selectors
     this.shopGroupForm = '#shop_group_form';
     this.nameInput = '#name';
-    this.shareCustomersToggleInput = (toggle) => `${this.shopGroupForm} #share_customer_${toggle}`;
-    this.shareAvailableQuantitiesToggleLabel = (toggle) => `${this.shopGroupForm} #share_customer_${toggle}`;
-    this.statusToggleLabel = (toggle) => `${this.shopGroupForm} #share_customer_${toggle}`;
+    this.shareCustomersToggleInput = (toggle: string) => `${this.shopGroupForm} #share_customer_${toggle}`;
+    this.shareAvailableQuantitiesToggleLabel = (toggle: string) => `${this.shopGroupForm} #share_customer_${toggle}`;
+    this.statusToggleLabel = (toggle: string) => `${this.shopGroupForm} #share_customer_${toggle}`;
     this.saveButton = '#shop_group_form_submit_btn';
   }
 
@@ -36,7 +55,7 @@ class AddShopGroup extends BOBasePage {
    * @param shopGroupData {ShopGroupData} Data to set on add/edit shop group form
    * @returns {Promise<string>}
    */
-  async setShopGroup(page, shopGroupData) {
+  async setShopGroup(page: Page, shopGroupData: ShopGroupData): Promise<string> {
     await this.setValue(page, this.nameInput, shopGroupData.name);
 
     await this.setChecked(page, this.shareCustomersToggleInput(shopGroupData.shareCustomer ? 'on' : 'off'));
@@ -51,4 +70,4 @@ class AddShopGroup extends BOBasePage {
   }
 }
 
-module.exports = new AddShopGroup();
+export default new AddShopGroup();

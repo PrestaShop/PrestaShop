@@ -50,7 +50,6 @@ describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delet
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);

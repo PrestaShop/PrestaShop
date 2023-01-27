@@ -1,5 +1,8 @@
-require('module-alias/register');
-const EmployeeBasePage = require('@pages/BO/advancedParameters/team/employeeBasePage');
+import EmployeeBasePage from '@pages/BO/advancedParameters/team/employeeBasePage';
+
+import type EmployeeData from '@data/faker/employee';
+
+import type {Page} from 'playwright';
 
 /**
  * Add employee page, contains functions that can be used on the page
@@ -7,6 +10,10 @@ const EmployeeBasePage = require('@pages/BO/advancedParameters/team/employeeBase
  * @extends EmployeeBasePage
  */
 class AddEmployee extends EmployeeBasePage {
+  public readonly pageTitleCreate: string;
+
+  private readonly passwordInput: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add employee page
@@ -30,7 +37,7 @@ class AddEmployee extends EmployeeBasePage {
    * @param employeeData {EmployeeData} Data to set on add/edit employee form
    * @returns {Promise<string>}
    */
-  async createEditEmployee(page, employeeData) {
+  async createEditEmployee(page: Page, employeeData: EmployeeData): Promise<string> {
     await this.setValue(page, this.firstNameInput, employeeData.firstName);
     await this.setValue(page, this.lastNameInput, employeeData.lastName);
     await this.setValue(page, this.emailInput, employeeData.email);
@@ -48,4 +55,4 @@ class AddEmployee extends EmployeeBasePage {
   }
 }
 
-module.exports = new AddEmployee();
+export default new AddEmployee();

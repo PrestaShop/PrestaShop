@@ -1,5 +1,8 @@
-require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+import BOBasePage from '@pages/BO/BObasePage';
+
+import type SqlQueryData from '@data/faker/sqlQuery';
+
+import type {Page} from 'playwright';
 
 /**
  * Add sql query page, contains functions that can be used on the page
@@ -7,6 +10,14 @@ const BOBasePage = require('@pages/BO/BObasePage');
  * @extends BOBasePage
  */
 class AddSQLQuery extends BOBasePage {
+  public readonly pageTitle: string;
+
+  private readonly sqlQueryNameInput: string;
+
+  private readonly sqlQueryTextArea: string;
+
+  private readonly saveButton: string;
+
   /**
    * @constructs
    * Setting up texts and selectors to use on add sql query page
@@ -32,7 +43,7 @@ class AddSQLQuery extends BOBasePage {
    * @param sqlQueryData {sqlQueryData} Data to set on create/edit sql query
    * @returns {Promise<string>}
    */
-  async createEditSQLQuery(page, sqlQueryData) {
+  async createEditSQLQuery(page: Page, sqlQueryData: SqlQueryData): Promise<string> {
     await this.setValue(page, this.sqlQueryNameInput, sqlQueryData.name);
     await this.setValue(page, this.sqlQueryTextArea, sqlQueryData.sqlQuery);
     await this.clickAndWaitForNavigation(page, this.saveButton);
@@ -40,4 +51,4 @@ class AddSQLQuery extends BOBasePage {
   }
 }
 
-module.exports = new AddSQLQuery();
+export default new AddSQLQuery();

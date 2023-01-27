@@ -187,7 +187,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
-      const paginationNumber = await emailPage.selectPaginationLimit(page, '10');
+      const paginationNumber = await emailPage.selectPaginationLimit(page, 10);
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
@@ -208,7 +208,7 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
     it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
-      const paginationNumber = await emailPage.selectPaginationLimit(page, '20');
+      const paginationNumber = await emailPage.selectPaginationLimit(page, 20);
       expect(paginationNumber).to.contains('(page 1 / 1)');
     });
   });
@@ -300,8 +300,8 @@ describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async
         const sortedTable = await emailPage.getAllRowsColumnContent(page, test.args.sortBy);
 
         if (test.args.isFloat) {
-          const nonSortedTableFloat = nonSortedTable.map((text: string): number => parseFloat(text));
-          const sortedTableFloat = sortedTable.map((text: string): number => parseFloat(text));
+          const nonSortedTableFloat: number[] = nonSortedTable.map((text: string): number => parseFloat(text));
+          const sortedTableFloat: number[] = sortedTable.map((text: string): number => parseFloat(text));
 
           const expectedResult = await basicHelper.sortArrayNumber(nonSortedTableFloat);
 

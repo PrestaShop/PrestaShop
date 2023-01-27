@@ -49,7 +49,6 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       dashboardPage.advancedParametersLink,
       dashboardPage.webserviceLink,
     );
-
     await webservicePage.closeSfToolBar(page);
 
     const pageTitle = await webservicePage.getPageTitle(page);

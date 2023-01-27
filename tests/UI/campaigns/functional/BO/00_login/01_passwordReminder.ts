@@ -9,7 +9,7 @@ import loginCommon from '@commonTests/BO/loginBO';
 
 // Import pages
 import addEmployeePage from '@pages/BO/advancedParameters/team/add';
-import employeesPage from '@pages/BO/advancedParameters/team/index';
+import employeesPage from '@pages/BO/advancedParameters/team';
 import dashboardPage from '@pages/BO/dashboard';
 import loginPage from '@pages/BO/login';
 
