@@ -27,7 +27,6 @@ Feature: Copy product from shop to shop.
     And category "clothes" in default language named "Clothes" exists
     And category "women" in default language named "Women" exists
     And category "accessories" in default language named "Accessories" exists
-    And I set "women" as default category for shop shop2
     And I edit home category "home" with following details:
       | associated shops | shop1,shop2,shop3,shop4 |
     And I edit category "clothes" with following details:
@@ -37,11 +36,12 @@ Feature: Copy product from shop to shop.
     # Men is only associated in shop1
     And I edit category "men" with following details:
       | associated shops | shop1 |
-    # Men is only associated in shop2
+    # Women is only associated in shop2 and is the default category
     And I edit category "women" with following details:
       | associated shops | shop2 |
+    And I set "women" as default category for shop shop2
 
-  Scenario: I assign product to categories they are the same on all shops, but default one can be different
+  Scenario: I assign product to categories which are associated to different shops, the default fallback depends on which shops are associated
     Given I add product "product1" to shop shop2 with following information:
       | name[en-US] | eastern european tracksuit |
       | type        | standard                   |
@@ -50,7 +50,8 @@ Feature: Copy product from shop to shop.
       | id reference | name  | is default |
       | women        | Women | true       |
     When I copy product product1 from shop shop2 to shop shop1
-    # Women is not associated to shop1, so shop1's default category is used as default, thus it is also part of shop2's categories
+    # Women is not associated to shop1, we need to pick another default category for shop1 (home is picked since it's the shop's default category)
+    # Since the associations are common to all shops, shop2 is already assigned to home now
     Then product "product1" should be assigned to following categories for shop shop2:
       | id reference | name  | is default |
       | women        | Women | true       |
@@ -58,10 +59,10 @@ Feature: Copy product from shop to shop.
     And product "product1" should be assigned to following categories for shop shop1:
       | id reference | name | is default |
       | home         | Home | true       |
+    # Now we set categories for shop1 with some categories common to all shops, and one specific to shop1 (men)
     When I assign product product1 to following categories for shop shop1:
       | categories       | [home, men, clothes] |
       | default category | clothes              |
-    # The associations are shared on all shops, but the default category can be different
     Then product product1 should be assigned to following categories for shops "shop1":
       | id reference | name    | is default |
       | home         | Home    | false      |
