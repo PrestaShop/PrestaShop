@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Category;
+use Doctrine\DBAL\Connection;
 use GroupReduction;
 use Image;
 use Language;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Util\String\StringModifierInterface;
@@ -78,21 +80,29 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     private $stringModifier;
 
     /**
-     * @param ProductMultiShopRepository $productRepository
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param TranslatorInterface $translator
-     * @param StringModifierInterface $stringModifier
+     * @var Connection
      */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
     public function __construct(
         ProductMultiShopRepository $productRepository,
         HookDispatcherInterface $hookDispatcher,
         TranslatorInterface $translator,
-        StringModifierInterface $stringModifier
+        StringModifierInterface $stringModifier,
+        Connection $connection,
+        string $dbPrefix
     ) {
         $this->productRepository = $productRepository;
         $this->hookDispatcher = $hookDispatcher;
         $this->translator = $translator;
         $this->stringModifier = $stringModifier;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
@@ -431,18 +441,15 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
     /**
      * @param int $oldProductId
      * @param int $newProductId
-     *
-     * @throws CannotDuplicateProductException
-     * @throws CoreException
      */
     private function duplicateTags(int $oldProductId, int $newProductId): void
     {
-        /* @see Product::duplicateTags() */
-        $this->duplicateRelation(
-            [Product::class, 'duplicateTags'],
-            [$oldProductId, $newProductId],
-            CannotDuplicateProductException::FAILED_DUPLICATE_TAGS
-        );
+        $oldTags = $this->getRows('product_tag', ['id_product' => $oldProductId]);
+        if (empty($oldTags)) {
+            return;
+        }
+        $newTags = $this->replaceInRows($oldTags, ['id_product' => $newProductId]);
+        $this->bulkInsert('product_tag', $newTags);
     }
 
     /**
@@ -591,5 +598,76 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
                 implode('::', $staticCallback)
             ));
         }
+    }
+
+    /**
+     * Bulk insert some row values, all row must be formatted with the exact same keys and in the same order
+     * so that the defined column match the values for each row.
+     *
+     * @param string $table
+     * @param array $rowValues
+     */
+    private function bulkInsert(string $table, array $rowValues): void
+    {
+        $insertKeys = array_keys(reset($rowValues));
+        $bulkInsertSql = 'INSERT IGNORE INTO ' . $this->dbPrefix . $table . ' (' . implode(',', $insertKeys) . ') VALUES ';
+        foreach ($rowValues as $i => $rowValue) {
+            if (array_keys($rowValue) !== $insertKeys) {
+                throw new InvalidArgumentException('The provided data has different keys in some rows');
+            }
+
+            $bulkInsertSql .= '(' . implode(',', $rowValue) . ')';
+            if ($i < count($rowValues) - 1) {
+                $bulkInsertSql .= ',';
+            } else {
+                $bulkInsertSql .= ';';
+            }
+        }
+
+        $this->connection->executeStatement($bulkInsertSql);
+    }
+
+    /**
+     * Replace columns values in every row.
+     *
+     * @param array $rows
+     * @param array $replacements
+     *
+     * @return array
+     */
+    private function replaceInRows(array $rows, array $replacements): array
+    {
+        $replacedRows = [];
+        foreach ($rows as $key => $row) {
+            $replacedRows[$key] = array_merge($row, $replacements);
+        }
+
+        return $replacedRows;
+    }
+
+    /**
+     * Returns all the columns of a specific table, you can add criteria to filter, prefix is automatically added.
+     *
+     * @param string $table
+     * @param array $criteria
+     *
+     * @return array
+     */
+    private function getRows(string $table, array $criteria = []): array
+    {
+        $qb = $this->connection
+            ->createQueryBuilder()
+            ->from($this->dbPrefix . $table)
+            ->select('*')
+        ;
+
+        foreach ($criteria as $column => $value) {
+            $qb
+                ->andWhere("$column = :$column")
+                ->setParameter(":$column", $value)
+            ;
+        }
+
+        return $qb->execute()->fetchAllAssociative();
     }
 }

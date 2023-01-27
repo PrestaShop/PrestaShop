@@ -408,11 +408,10 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\DeleteProductFromShopsCommand
 
   PrestaShop\PrestaShop\Adapter\Product\Update\ProductDuplicator:
+    autowire: true
     arguments:
-      - '@PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository'
-      - '@PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface'
-      - '@translator'
-      - '@PrestaShop\PrestaShop\Core\Util\String\StringModifier'
+      $connection: '@doctrine.dbal.default_connection'
+      $dbPrefix: '%database_prefix%'
 
   PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater:
     arguments:
